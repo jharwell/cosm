@@ -1,2 +1,79 @@
-# cosm
-Core Swarm
+# COSM (Core Swarm)
+
+[![Build Status](https://travis-ci.org/swarm-robotics/rcppsw.svg?branch=devel)](https://travis-ci.org/swarm-robotics/rcppsw.svg?branch=devel)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+This is a collection of non application, method, or controller specific software
+components that can be reused across multiple swarm robotics projects
+(i.e. semi-generic in the context of swarm-robotics).
+
+## Pre-cloning Setup
+
+1. This project uses the build scaffolding provided by
+   [cmake-config](https://github.com/jharwell/cmake-config). Please look at the
+   platform requirements for that project and install any needed
+   packages/libraries.
+
+2. Install the following libraries:
+
+   - boost >= 1.58 (`libboost-all-dev` on ubuntu)
+   - log4cxx (`liblog4cxx-dev` on ubuntu)
+   - catch (`catch` on ubuntu)
+
+## Post-cloning
+
+1. Check out the development branch, as that has not only the latest semi-stable
+   release, but also the most up-to-date documentation, including this README.
+
+        git checkout devel
+
+2. Pull in the cmake project scaffolding and other submodules:
+
+        git submodule update --init --recursive  --remote
+
+3. Build via:
+
+        mkdir build && cd build
+        cmake ..
+        make
+
+    This will build for the default HAL configuration (see below). to build for
+    a different configuration, pass the desired flag to cmake via `-D`.
+
+    There are a number of configuration options that can be passed to cmake that
+    are specific to rcppsw, which are shown in the table below. For other,
+    additional configuration options, please see the README in [libra](https://github.com/swarm-robotics/libra) repo:
+
+
+   | Option            | Meaning                                                       | Options                                                                    | Default            |
+   |-------------------|---------------------------------------------------------------|----------------------------------------------------------------------------|--------------------|
+   | `WITH_HAL_CONFIG` | Specify which hardware configuration to enable. At most *ONE* | `"argos-footbot"`: Build for the footbot robot within the argos simulator. | `"argos-footbot""` |
+   |                   | configuration can be enabled at a time.                       |                                                                            |                    |
+
+
+To build the documentation, do the following from the build directory:
+
+    make documentation
+
+# Contributing
+
+For contributing to `rcppsw`, see [CONTRIBUTING](docs/CONTRIBUTING.md)
+
+# Troubleshooting
+
+- If you are having trouble building:
+
+  1. Make sure you are on the `devel` branch.
+
+  2. Update the cmake submodule via `git submodule update`
+
+  If the problem perists, open an issue.
+
+# License
+This project is licensed under GPL 3.0. See [LICENSE](LICENSE.md).
+
+# Donate
+If you've found this project helpful, please consider donating somewhere between
+a cup of coffe and a nice meal:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/jharwell1406)
