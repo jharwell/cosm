@@ -38,8 +38,9 @@ NS_START(cosm, fsm);
 explore_for_goal_fsm::explore_for_goal_fsm(
     subsystem::saa_subsystem2D* const saa,
     std::unique_ptr<expstrat::base_expstrat> behavior,
+    rmath::rng* rng,
     const std::function<bool(void)>& goal_detect)
-    : util_hfsm(saa, ekST_MAX_STATES),
+    : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.fsm.explore_for_goal"),
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(explore, hfsm::top_state()),

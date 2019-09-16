@@ -100,7 +100,7 @@ class force_calculator : public rer::client<force_calculator> {
   /**
    * @brief Calculate the \ref wander_force for this timestep.
    */
-  rmath::vector2d wander(void);
+  rmath::vector2d wander(rmath::rng* rng);
 
   /**
    * @brief Calculate the \ref avoidance_force for this timestep.

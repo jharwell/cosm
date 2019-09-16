@@ -50,7 +50,7 @@ NS_START(kin2D);
  * @brief A differential drive whose maximum speed can be set in a temporally
  * varyng manner via \ref tv::switchable_tv_generator, if configured to do so.
  */
-class governed_diff_drive : public kin2D::diff_drive {
+class governed_diff_drive final : public kin2D::diff_drive {
  public:
   governed_diff_drive(const config::diff_drive_config* config,
                       const hal::actuators::diff_drive_actuator& actuator,

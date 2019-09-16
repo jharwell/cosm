@@ -45,7 +45,7 @@ NS_START(cosm, steer2D, config);
  * @struct force_calculator_config
  * @ingroup cosm steer2D config
  */
-struct force_calculator_config : public rconfig::base_config {
+struct force_calculator_config final : public rconfig::base_config {
   struct avoidance_force_config avoidance{};
   struct arrival_force_config arrival{};
   struct wander_force_config wander{};

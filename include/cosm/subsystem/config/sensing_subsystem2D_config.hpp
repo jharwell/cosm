@@ -40,7 +40,7 @@ NS_START(cosm, subsystem, config);
  * @struct sensing_subsystem2D_config
  * @ingroup cosm subsystem config
  */
-struct sensing_subsystem2D_config : public rconfig::base_config {
+struct sensing_subsystem2D_config final : public rconfig::base_config {
   hal::sensors::config::proximity_sensor_config proximity {};
   hal::sensors::config::ground_sensor_config ground {};
 };

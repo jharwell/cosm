@@ -42,7 +42,7 @@ NS_START(cosm, convergence, config);
  * @struct convergence_config
  * @ingroup cosm convergence config
  */
-struct convergence_config : public rconfig::base_config {
+struct convergence_config final : public rconfig::base_config {
   uint                             n_threads{0};
   double                           epsilon{0};
 

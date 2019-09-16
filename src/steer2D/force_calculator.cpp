@@ -80,8 +80,8 @@ rmath::vector2d force_calculator::seek_to(const rmath::vector2d& target) {
   return force;
 } /* seek_to() */
 
-rmath::vector2d force_calculator::wander(void) {
-  rmath::vector2d force = m_wander(m_entity);
+rmath::vector2d force_calculator::wander(rmath::rng* rng) {
+  rmath::vector2d force = m_wander(m_entity, rng);
   ER_DEBUG("Wander force: (%f, %f)@%f [%f]",
            force.x(),
            force.y(),

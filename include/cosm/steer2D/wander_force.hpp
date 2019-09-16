@@ -24,10 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <random>
 
 #include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/radians.hpp"
+#include "rcppsw/math/rng.hpp"
 
 #include "cosm/steer2D/boid.hpp"
 
@@ -55,22 +55,21 @@ class wander_force {
  public:
   explicit wander_force(const config::wander_force_config* config);
 
-  rmath::vector2d operator()(const boid& entity);
+  rmath::vector2d operator()(const boid& entity,
+                             rmath::rng* rng);
 
  private:
   /* clang-format off */
-  uint                             m_interval;
-  int                              m_count{-1};
-  bool                             m_use_normal;
-  double                           m_max;
-  double                           m_circle_distance;
-  double                           m_circle_radius;
-  double                           m_max_angle_delta;
-  double                           m_last_angle{0.0};
-  rmath::radians                    m_angle;
-  std::default_random_engine       m_rng{};
-  std::normal_distribution<double> m_normal_dist;
-  std::uniform_real_distribution<> m_uniform_dist;
+  const bool     mc_use_normal;
+  const double   mc_max;
+  const double   mc_circle_distance;
+  const double   mc_circle_radius;
+  const double   mc_max_angle_delta;
+
+  uint           m_interval;
+  int            m_count{-1};
+  double         m_last_angle{0.0};
+  rmath::radians m_angle{0};
   /* clang-format on */
 };
 

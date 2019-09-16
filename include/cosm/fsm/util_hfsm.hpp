@@ -25,11 +25,11 @@
  * Includes
  ******************************************************************************/
 #include <memory>
-#include <random>
 #include <string>
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/fsm/hfsm.hpp"
+#include "rcppsw/math/rng.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/collision_tracker.hpp"
@@ -67,18 +67,20 @@ class util_hfsm : public rpfsm::hfsm,
                   public rer::client<util_hfsm>,
                   public metrics::collision_metrics {
  public:
-  util_hfsm(subsystem::saa_subsystem2D* saa, uint8_t max_states);
+  util_hfsm(subsystem::saa_subsystem2D* saa,
+            rmath::rng* rng,
+            uint8_t max_states);
 
   ~util_hfsm(void) override = default;
 
   util_hfsm(const util_hfsm& fsm) = delete;
   util_hfsm& operator=(const util_hfsm& fsm) = delete;
 
-  virtual subsystem::sensing_subsystem2D* sensing(void);
-  virtual const subsystem::sensing_subsystem2D* sensing(void) const;
+  subsystem::sensing_subsystem2D* sensing(void);
+  const subsystem::sensing_subsystem2D* sensing(void) const;
 
-  virtual subsystem::actuation_subsystem2D* actuation(void);
-  virtual const subsystem::actuation_subsystem2D* actuation(void) const;
+  subsystem::actuation_subsystem2D* actuation(void);
+  const subsystem::actuation_subsystem2D* actuation(void) const;
 
   const collision_tracker* ca_tracker(void) const { return &m_tracker; }
 
@@ -88,6 +90,8 @@ class util_hfsm : public rpfsm::hfsm,
    * change.
    */
   rmath::radians random_angle(void);
+  rmath::rng* rng(void) { return m_rng; }
+  const rmath::rng* rng(void) const { return m_rng; }
 
   const subsystem::saa_subsystem2D* saa(void) const { return m_saa; }
   subsystem::saa_subsystem2D* saa(void) { return m_saa; }
@@ -193,9 +197,9 @@ class util_hfsm : public rpfsm::hfsm,
   uint                              m_nest_count{0};
   uint                              m_new_dir_count{0};
   rmath::radians                    m_new_dir{};
-  std::default_random_engine        m_rng;
   subsystem::saa_subsystem2D* const m_saa;
   collision_tracker                 m_tracker;
+  rmath::rng*                       m_rng;
   /* clang-format on */
 
  public:

@@ -119,12 +119,15 @@ class acquire_goal_fsm : public util_hfsm,
    * @param behavior The exploration behavior to use; can be NULL if goal
    * acquisition should always be performed via vectoring.
    *
+   * @param rng Random number generator for use internally.
+   *
    * @param hooks List of function callbacks that derived classes should pass in
    *              ordr to make use of the general purpose machinery in this
    *              class.
    */
   acquire_goal_fsm(subsystem::saa_subsystem2D* saa,
                    std::unique_ptr<expstrat::base_expstrat> behavior,
+                   rmath::rng* rng,
                    const struct hook_list& hooks);
   ~acquire_goal_fsm(void) override = default;
 

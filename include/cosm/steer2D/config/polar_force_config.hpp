@@ -41,7 +41,7 @@ NS_START(cosm, steer2D, config);
  * @struct polar_force_config
  * @ingroup cosm steer2D config
  */
-struct polar_force_config : public rconfig::base_config {
+struct polar_force_config final : public rconfig::base_config {
   /**
    * The upper limit for polar force magnitude.
    */

@@ -40,7 +40,7 @@ NS_START(cosm, convergence, config);
  * @struct positional_entropy_config
  * @ingroup cosm convergence config
  */
-struct positional_entropy_config : public rconfig::base_config {
+struct positional_entropy_config final : public rconfig::base_config {
   positional_entropy_config(void) noexcept = default;
 
   bool enable{false};

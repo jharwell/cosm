@@ -41,7 +41,7 @@ NS_START(cosm, steer2D, config);
  * @struct arrival_force_config
  * @ingroup cosm steer2D config
  */
-struct avoidance_force_config : public rconfig::base_config {
+struct avoidance_force_config final : public rconfig::base_config {
   /**
    * The upper limit for avoidance force magnitude.
    */

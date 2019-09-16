@@ -78,6 +78,7 @@ class explore_for_goal_fsm final : public util_hfsm,
 
   explore_for_goal_fsm(subsystem::saa_subsystem2D* saa,
                        std::unique_ptr<expstrat::base_expstrat> behavior,
+                       rmath::rng* rng,
                        const std::function<bool(void)>& goal_detect);
   ~explore_for_goal_fsm(void) override = default;
 

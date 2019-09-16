@@ -40,7 +40,7 @@ NS_START(cosm, hal, sensors, config);
  * @struct ground_sensor_detection_config
  * @ingroup cosm hal sensors config
  */
-struct ground_sensor_detection_config : public rconfig::base_config {
+struct ground_sensor_detection_config final : public rconfig::base_config {
   /* clang-format off */
   rmath::ranged range{-1, -1};
   uint         consensus{0};

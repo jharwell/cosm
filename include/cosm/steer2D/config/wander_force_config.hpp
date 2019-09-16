@@ -41,7 +41,7 @@ NS_START(cosm, steer2D, config);
  * @struct wander_force_config
  * @ingroup cosm steer2D config
  */
-struct wander_force_config : public rconfig::base_config {
+struct wander_force_config final : public rconfig::base_config {
   /**
    * @brief How often to apply the wander force. 1 = apply every time it is
    * asked. > 1 only apply every nth time it is asked. Depending on the

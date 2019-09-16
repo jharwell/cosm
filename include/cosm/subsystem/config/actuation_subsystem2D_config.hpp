@@ -41,7 +41,7 @@ NS_START(cosm, subsystem, config);
  * @struct actuation_subsystem2D_config
  * @ingroup cosm subsystem config
  */
-struct actuation_subsystem2D_config : public rconfig::base_config {
+struct actuation_subsystem2D_config final : public rconfig::base_config {
   kin2D::config::diff_drive_config diff_drive{};
   steer2D::config::force_calculator_config steering{};
 };

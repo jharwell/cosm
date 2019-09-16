@@ -39,7 +39,7 @@ NS_START(cosm, convergence, config);
  * @struct angular_order_config
  * @ingroup cosm convergence config
  */
-struct angular_order_config : public rconfig::base_config {
+struct angular_order_config final : public rconfig::base_config {
   bool enable{false};
 };
 

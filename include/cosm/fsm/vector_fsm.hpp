@@ -54,7 +54,7 @@ class vector_fsm final : public util_hfsm,
                          public rer::client<vector_fsm>,
                          public rta::taskable {
  public:
-  explicit vector_fsm(subsystem::saa_subsystem2D* saa);
+  vector_fsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng);
 
   vector_fsm& operator=(const vector_fsm& fsm) = delete;
 

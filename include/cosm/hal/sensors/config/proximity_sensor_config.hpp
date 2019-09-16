@@ -41,7 +41,7 @@ NS_START(cosm, hal, sensors, config);
  * @struct proximity_sensor_config
  * @ingroup cosm hal sensors config
  */
-struct proximity_sensor_config : public rconfig::base_config {
+struct proximity_sensor_config final : public rconfig::base_config {
   /*
    * Maximum tolerance for the proximity reading between the robot and the
    * closest obstacle.  The proximity reading is 0 when nothing is detected and

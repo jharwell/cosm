@@ -23,8 +23,6 @@
  ******************************************************************************/
 #include "cosm/fsm/util_hfsm.hpp"
 
-#include <chrono>
-
 #include "cosm/fsm/new_direction_data.hpp"
 #include "cosm/fsm/util_signal.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
@@ -39,15 +37,17 @@ NS_START(cosm, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-util_hfsm::util_hfsm(subsystem::saa_subsystem2D* const saa, uint8_t max_states)
+util_hfsm::util_hfsm(subsystem::saa_subsystem2D* const saa,
+                     rmath::rng* rng,
+                     uint8_t max_states)
     : rpfsm::hfsm(max_states),
       ER_CLIENT_INIT("cosm.fsm.util_hfsm"),
       HFSM_CONSTRUCT_STATE(transport_to_nest, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(new_direction, hfsm::top_state()),
-      m_rng(std::chrono::system_clock::now().time_since_epoch().count()),
       m_saa(saa),
-      m_tracker(sensing()) {}
+    m_tracker(sensing()),
+    m_rng(rng) {}
 
 /*******************************************************************************
  * States
@@ -74,7 +74,7 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   } else {
     m_tracker.ca_exit();
   }
-  m_saa->steer_force2D().accum(m_saa->steer_force2D().wander());
+  m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
 
   if (!m_saa->sensing()->sensor<hal::sensors::ground_sensor>()->detect(
           hal::sensors::ground_sensor::kNestTarget)) {
@@ -97,7 +97,7 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
   if (m_saa->sensing()->sensor<hal::sensors::ground_sensor>()->detect(
           hal::sensors::ground_sensor::kNestTarget)) {
     if (m_nest_count++ < kNEST_COUNT_MAX_STEPS) {
-      m_saa->steer_force2D().accum(m_saa->steer_force2D().wander());
+      m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
       return util_signal::ekHANDLED;
     } else {
       m_nest_count = 0;
@@ -109,7 +109,7 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
    * Add a bit of wander force when returning to the nest so that we do not
    * beeline for its center directly to decrease congestion.
    */
-  m_saa->steer_force2D().accum(m_saa->steer_force2D().wander());
+  m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
   m_saa->steer_force2D().accum(m_saa->steer_force2D().phototaxis(
       m_saa->sensing()->sensor<hal::sensors::light_sensor>()->readings()));
 
@@ -192,8 +192,7 @@ HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
  * General Member Functions
  ******************************************************************************/
 rmath::radians util_hfsm::random_angle(void) {
-  std::uniform_real_distribution<> dist(0.0, 1.0);
-  return rmath::radians(dist(m_rng));
+  return rmath::radians(m_rng->uniform(0.0, 1.0));
 } /* randomize_vector_angle() */
 
 subsystem::sensing_subsystem2D* util_hfsm::sensing(void) {

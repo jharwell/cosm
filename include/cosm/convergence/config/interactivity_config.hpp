@@ -39,7 +39,7 @@ NS_START(cosm, convergence, config);
  * @struct interactivity_config
  * @ingroup cosm convergence config
  */
-struct interactivity_config : public rconfig::base_config {
+struct interactivity_config final : public rconfig::base_config {
   bool enable{false};
 };
 

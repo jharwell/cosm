@@ -4,7 +4,7 @@
  * @copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
- *
+nn *
  * COSM is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
@@ -37,25 +37,18 @@ NS_START(cosm, steer2D);
  * Constructors/Destructor
  ******************************************************************************/
 wander_force::wander_force(const config::wander_force_config* const config)
-    : m_interval(config->interval),
-      m_use_normal(config->normal_dist),
-      m_max(config->max),
-      m_circle_distance(config->circle_distance),
-      m_circle_radius(config->circle_radius),
-      m_max_angle_delta(config->max_angle_delta),
-      m_angle(0),
-      /*
-       * Both min and max are 3 std deviations away from the mean of 0, so it is
-       * very unlikely that we will get a value outside the max deviation. If we
-       * do, just shrink the max angle in the input parameters.
-       */
-      m_normal_dist(0, 2 * m_max_angle_delta / 6.0),
-      m_uniform_dist(0.0, 1.0) {}
+    : mc_use_normal(config->normal_dist),
+      mc_max(config->max),
+      mc_circle_distance(config->circle_distance),
+      mc_circle_radius(config->circle_radius),
+      mc_max_angle_delta(config->max_angle_delta),
+      m_interval(config->interval) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::vector2d wander_force::operator()(const boid& entity) {
+rmath::vector2d wander_force::operator()(const boid& entity,
+                                         rmath::rng* rng) {
   /*
    * Only actually apply the wander force at the specified cadence. Otherwise
    * random perturbations between [-n, n] will sum to 0 (no net wandering) over
@@ -75,12 +68,12 @@ rmath::vector2d wander_force::operator()(const boid& entity) {
   }
 
   rmath::vector2d circle_center =
-      (velocity).normalize().scale(m_circle_distance);
+      (velocity).normalize().scale(mc_circle_distance);
 
   /* calculate displacement force (the actual wandering) */
   rmath::vector2d displacement(
-      m_circle_radius * std::cos((m_angle + velocity.angle()).value()),
-      m_circle_radius * std::sin((m_angle + velocity.angle()).value()));
+      mc_circle_radius * std::cos((m_angle + velocity.angle()).value()),
+      mc_circle_radius * std::sin((m_angle + velocity.angle()).value()));
 
   /*
    * Update wander angle so it won't have the same value next time with a
@@ -88,13 +81,18 @@ rmath::vector2d wander_force::operator()(const boid& entity) {
    */
 
   double val;
-  if (m_use_normal) {
-    val = m_normal_dist(m_rng);
+  if (mc_use_normal) {
+    /*
+     * Both min and max are 3 std deviations away from the mean of 0, so it is
+     * very unlikely that we will get a value outside the max deviation. If we
+     * do, just shrink the max angle in the input parameters.
+     */
+    val = rng->gaussian(0, 2 * mc_max_angle_delta / 6.0);
   } else {
-    val = -m_max_angle_delta + 2 * m_max_angle_delta * m_uniform_dist(m_rng);
+    val = -mc_max_angle_delta + 2 * mc_max_angle_delta * rng->uniform(0.0, 1.0);
   }
   rmath::degrees perturbation(
-      std::fmod(rmath::to_degrees(m_angle).value() + val, m_max_angle_delta));
+      std::fmod(rmath::to_degrees(m_angle).value() + val, mc_max_angle_delta));
   m_angle = rmath::to_radians(perturbation);
 
   /*
@@ -120,7 +118,7 @@ rmath::vector2d wander_force::operator()(const boid& entity) {
 
   rmath::vector2d wander((circle_center + displacement).length(),
                          rmath::radians(angle_diff));
-  return wander.normalize() * m_max;
+  return wander.normalize() * mc_max;
 } /* operator()() */
 
 NS_END(steer2D, cosm);

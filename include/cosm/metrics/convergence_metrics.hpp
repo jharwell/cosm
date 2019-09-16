@@ -27,6 +27,7 @@
 #include <tuple>
 
 #include "rcppsw/metrics/base_metrics.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

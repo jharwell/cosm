@@ -37,8 +37,9 @@ NS_START(cosm, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa)
-    : util_hfsm(saa, ekST_MAX_STATES),
+vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa,
+                       rmath::rng* rng)
+    : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.fsm.vector"),
       HFSM_CONSTRUCT_STATE(new_direction, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
@@ -86,7 +87,7 @@ FSM_STATE_DEFINE_ND(vector_fsm, collision_avoidance) {
      * calculations. To fix this, add a bit of wander force.
      */
     if (saa()->linear_velocity().length() <= 0.1) {
-      saa()->steer_force2D().accum(saa()->steer_force2D().wander());
+      saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
     }
   } else {
     /*
