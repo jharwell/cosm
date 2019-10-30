@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"

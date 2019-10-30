@@ -25,9 +25,9 @@
  * Includes
  ******************************************************************************/
 
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/steer2D/boid.hpp"
 
@@ -55,8 +55,7 @@ class wander_force {
  public:
   explicit wander_force(const config::wander_force_config* config);
 
-  rmath::vector2d operator()(const boid& entity,
-                             rmath::rng* rng);
+  rmath::vector2d operator()(const boid& entity, rmath::rng* rng);
 
  private:
   /* clang-format off */

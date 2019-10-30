@@ -101,6 +101,15 @@ class sensing_subsystem2D {
 
   rtypes::timestep tick(void) const { return m_tick; }
 
+  template <typename TSensor>
+  bool replace(const TSensor& sensor) {
+    if (m_sensors.end() != m_sensors.find(typeid(sensor))) {
+      m_sensors.erase(m_sensors.find(typeid(sensor)));
+      return m_sensors.insert(map_entry_create(sensor)).second;
+    }
+    return false;
+  }
+
   /**
    * @brief Set the robot's current location.
    */
@@ -146,7 +155,7 @@ class sensing_subsystem2D {
   rmath::vector2d  m_prev_position{};
   rmath::radians   m_heading{};
   rmath::vector2u  m_discrete_position{};
-  sensor_map      m_sensors;
+  sensor_map       m_sensors;
   /* clang-format off */
 };
 

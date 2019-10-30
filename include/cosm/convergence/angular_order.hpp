@@ -26,8 +26,9 @@
  ******************************************************************************/
 #include <vector>
 
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/radians.hpp"
+#include "rcppsw/rcppsw.hpp"
+
 #include "cosm/convergence/convergence_measure.hpp"
 
 /*******************************************************************************

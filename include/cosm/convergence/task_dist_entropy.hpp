@@ -24,11 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
 #include <algorithm>
+#include <vector>
 
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/ientropy.hpp"
+#include "rcppsw/rcppsw.hpp"
+
 #include "cosm/convergence/convergence_measure.hpp"
 
 /*******************************************************************************
@@ -50,7 +51,6 @@ class task_dist_entropy final : public convergence_measure {
  public:
   explicit task_dist_entropy(double epsilon) : convergence_measure(epsilon) {}
 
-
   /**
    * @brief Calculate the task distribution entropy of the swarm.
    *
@@ -58,15 +58,15 @@ class task_dist_entropy final : public convergence_measure {
    *              non-negative integer).
    */
   bool operator()(const std::vector<int>& tasks) {
-    int n_tasks = *std::max_element(tasks.begin(),
-                                    tasks.end()) + 1; /* 0-based indexing */
+    int n_tasks = *std::max_element(tasks.begin(), tasks.end()) +
+                  1; /* 0-based indexing */
 
     if (-1 == n_tasks) { /* no controller have active tasks */
       return false;
     }
     /* Count occurences of each task to obtain a discretized distribution */
     std::vector<int> accum(n_tasks);
-    for (auto &t : tasks) {
+    for (auto& t : tasks) {
       if (-1 != t) { /* -1 indicates no active task */
         accum[t]++;
       }

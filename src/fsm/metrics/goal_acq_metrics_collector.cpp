@@ -63,8 +63,7 @@ void goal_acq_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-void goal_acq_metrics_collector::collect(
-    const rmetrics::base_metrics& metrics) {
+void goal_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
   auto [is_exp, true_exp] = m.is_exploring_for_goal();
 

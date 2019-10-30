@@ -27,9 +27,9 @@
 #include <memory>
 #include <string>
 
+#include "rcppsw/math/rng.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/fsm/hfsm.hpp"
-#include "rcppsw/math/rng.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/collision_tracker.hpp"
@@ -67,9 +67,7 @@ class util_hfsm : public rpfsm::hfsm,
                   public rer::client<util_hfsm>,
                   public metrics::collision_metrics {
  public:
-  util_hfsm(subsystem::saa_subsystem2D* saa,
-            rmath::rng* rng,
-            uint8_t max_states);
+  util_hfsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng, uint8_t max_states);
 
   ~util_hfsm(void) override = default;
 

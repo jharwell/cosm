@@ -28,6 +28,7 @@
 #include <string>
 
 #include "rcppsw/metrics/spatial/grid2D_avg_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -44,7 +45,8 @@ NS_START(cosm, metrics);
  *
  * @brief Collector for \ref dist2D_metrics.
  */
-class spatial_dist2D_pos_metrics_collector final : public rmetrics::spatial::grid2D_avg_metrics_collector {
+class spatial_dist2D_pos_metrics_collector final
+    : public rmetrics::spatial::grid2D_avg_metrics_collector {
  public:
   /**
    * @param ofname The output file name.
@@ -52,8 +54,8 @@ class spatial_dist2D_pos_metrics_collector final : public rmetrics::spatial::gri
    * @param dims Dimensions of arena.
    */
   spatial_dist2D_pos_metrics_collector(const std::string& ofname,
-                           uint interval,
-                           const rmath::vector2u& dims)
+                                       uint interval,
+                                       const rmath::vector2u& dims)
       : grid2D_avg_metrics_collector(ofname, interval, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;

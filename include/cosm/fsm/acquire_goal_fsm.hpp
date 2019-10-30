@@ -82,6 +82,9 @@ class acquire_goal_fsm : public util_hfsm,
    * candidates_exist Function used to determine if any goal candidates are
    *                  currently available/eligible for acquisition.
    *
+   * begin_acq_cb     Callback called on the first timestep of goal acquisition,
+   *                  in case state needs to be reset after goal selection.
+   *
    * goal_acquired_cb Callback used after a goal has been acquired for sanity
    *                  check/verification of state. Will be passed \c TRUE if the
    *                  acquired goal was obtained via exploration, rather than
@@ -107,6 +110,7 @@ class acquire_goal_fsm : public util_hfsm,
     acquisition_goal_ftype    acquisition_goal{nullptr};
     goal_select_ftype         goal_select{nullptr};
     std::function<bool(void)> candidates_exist{nullptr};
+    std::function<void(void)> begin_acq_cb{nullptr};
     std::function<bool(bool)> goal_acquired_cb{nullptr};
     std::function<bool(void)> explore_term_cb{nullptr};
     goal_valid_ftype          goal_valid_cb{nullptr};
@@ -244,6 +248,7 @@ class acquire_goal_fsm : public util_hfsm,
 
   /* clang-format off */
   int                       m_acq_id{-1};
+  bool                      m_first_acq_step{false};
   struct hook_list          m_hooks;
   vector_fsm                m_vector_fsm;
   explore_for_goal_fsm      m_explore_fsm;

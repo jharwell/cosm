@@ -46,8 +46,8 @@ util_hfsm::util_hfsm(subsystem::saa_subsystem2D* const saa,
       HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(new_direction, hfsm::top_state()),
       m_saa(saa),
-    m_tracker(sensing()),
-    m_rng(rng) {}
+      m_tracker(sensing()),
+      m_rng(rng) {}
 
 /*******************************************************************************
  * States

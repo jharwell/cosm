@@ -24,9 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <limits>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 #include "rcppsw/math/expression.hpp"
 #include "rcppsw/math/normalize.hpp"

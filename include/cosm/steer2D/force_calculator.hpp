@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/kin/twist.hpp"
 #include "cosm/steer2D/arrival_force.hpp"

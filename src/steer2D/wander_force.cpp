@@ -47,8 +47,7 @@ wander_force::wander_force(const config::wander_force_config* const config)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::vector2d wander_force::operator()(const boid& entity,
-                                         rmath::rng* rng) {
+rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
   /*
    * Only actually apply the wander force at the specified cadence. Otherwise
    * random perturbations between [-n, n] will sum to 0 (no net wandering) over

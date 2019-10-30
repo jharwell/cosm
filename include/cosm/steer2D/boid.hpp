@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/cosm.hpp"
 

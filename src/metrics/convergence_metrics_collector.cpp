@@ -76,17 +76,21 @@ bool convergence_metrics_collector::csv_line_build(std::string& line) {
    * are almost the same thing, and much more useful when calculating
    * convergence.
    */
+  line += csv_entry_intavg(m_interact_stats.raw);
+  line += csv_entry_intavg(m_interact_stats.norm);
+  line += csv_entry_intavg(m_interact_stats.converged);
+
+  line += csv_entry_intavg(m_order_stats.raw);
+  line += csv_entry_intavg(m_order_stats.norm);
+  line += csv_entry_intavg(m_order_stats.converged);
+
   line += csv_entry_intavg(m_tdist_ent_stats.raw);
   line += csv_entry_intavg(m_tdist_ent_stats.norm);
   line += csv_entry_intavg(m_tdist_ent_stats.converged);
 
   line += csv_entry_intavg(m_pos_ent_stats.raw);
   line += csv_entry_intavg(m_pos_ent_stats.norm);
-  line += csv_entry_intavg(m_pos_ent_stats.converged);
-
-  line += csv_entry_intavg(m_order_stats.raw);
-  line += csv_entry_intavg(m_order_stats.norm);
-  line += csv_entry_intavg(m_order_stats.converged, true);
+  line += csv_entry_intavg(m_pos_ent_stats.converged, true);
 
   return true;
 } /* csv_line_build() */

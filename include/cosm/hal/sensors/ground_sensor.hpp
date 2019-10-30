@@ -28,6 +28,8 @@
 #include <string>
 
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/sensors/config/ground_sensor_config.hpp"
 
@@ -63,7 +65,7 @@ NS_END(detail);
  * - ARGoS footbot
  */
 template <typename TSensor>
-class _ground_sensor {
+class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
  public:
   static constexpr char kNestTarget[] = "nest";
 
@@ -84,8 +86,10 @@ class _ground_sensor {
 
   _ground_sensor(TSensor * const sensor,
                  const config::ground_sensor_config* const config)
-      : mc_config(*config),
+      : ER_CLIENT_INIT("cosm.hal.sensors.ground_sensor"),
+        mc_config(*config),
         m_sensor(sensor) {}
+  ~_ground_sensor(void) override final = default;
 
   const _ground_sensor& operator=(const _ground_sensor&) = delete;
   _ground_sensor(const _ground_sensor&) = default;
@@ -117,7 +121,11 @@ class _ground_sensor {
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ground_sensor<U>::value)>
   bool detect(const std::string& name) const {
+    ER_ASSERT(mc_config.detect_map.end() != mc_config.detect_map.find(name),
+              "Detection %s not found in configured map",
+              name.c_str());
     auto &detection = mc_config.detect_map.find(name)->second;
+
     uint sum = 0;
     for (auto &r : readings()) {
       sum += static_cast<uint>(detection.range.contains(r.value));

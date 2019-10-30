@@ -65,7 +65,7 @@ class governed_diff_drive final : public kin2D::diff_drive {
    *
    * @return A percent [0.0,1.0]
    */
-  double active_throttle(void) const;
+  double active_throttle(void) const RCSW_PURE;
 
   /**
    * @brief Get the current value of the governor if it was active (it might not
@@ -73,7 +73,7 @@ class governed_diff_drive final : public kin2D::diff_drive {
    *
    * @return A percent [0.0,1.0]
    */
-  double applied_throttle(void) const;
+  double applied_throttle(void) const RCSW_PURE;
 
   /**
    * @brief Set the variance generator. This is a function, rather than part of

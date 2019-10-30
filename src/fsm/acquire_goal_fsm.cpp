@@ -239,7 +239,13 @@ bool acquire_goal_fsm::acquire_known_goal(void) {
     point_argument v(std::get<1>(selection.get()), std::get<0>(selection.get()));
     m_acq_id = std::get<2>(selection.get());
     m_vector_fsm.task_start(&v);
+    m_first_acq_step = true;
     return false;
+  }
+
+  /* First timestep of acquisition */
+  if (m_first_acq_step && m_hooks.begin_acq_cb) {
+    m_hooks.begin_acq_cb();
   }
 
   /* we are vectoring */

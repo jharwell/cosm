@@ -63,8 +63,7 @@ void collision_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-void collision_metrics_collector::collect(
-    const rmetrics::base_metrics& metrics) {
+void collision_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const collision_metrics&>(metrics);
   m_interval.n_in_avoidance += static_cast<uint>(m.in_collision_avoidance());
   m_cum.n_in_avoidance += static_cast<uint>(m.in_collision_avoidance());

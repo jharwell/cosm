@@ -24,10 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
 #include <list>
+#include <string>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -46,14 +47,14 @@ NS_START(cosm, metrics);
  *
  * Metrics are written out each timestep.
  */
-class convergence_metrics_collector final : public rmetrics::base_metrics_collector {
+class convergence_metrics_collector final
+    : public rmetrics::base_metrics_collector {
  public:
   /**
    * @param ofname The output file name.
    * @param interval Collection interval.
    */
-  convergence_metrics_collector(const std::string& ofname,
-                                uint interval);
+  convergence_metrics_collector(const std::string& ofname, uint interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;
@@ -62,7 +63,7 @@ class convergence_metrics_collector final : public rmetrics::base_metrics_collec
   struct convergence_measure_stats {
     double raw{0.0};
     double norm{0.0};
-    uint   converged{0};
+    uint converged{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;

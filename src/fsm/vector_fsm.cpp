@@ -37,8 +37,7 @@ NS_START(cosm, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa,
-                       rmath::rng* rng)
+vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.fsm.vector"),
       HFSM_CONSTRUCT_STATE(new_direction, hfsm::top_state()),

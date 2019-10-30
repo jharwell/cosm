@@ -71,8 +71,7 @@ bool movement_metrics_collector::csv_line_build(std::string& line) {
   return true;
 } /* csv_line_build() */
 
-void movement_metrics_collector::collect(
-    const rmetrics::base_metrics& metrics) {
+void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const movement_metrics&>(metrics);
   ++m_interval.robot_count;
   ++m_cum.robot_count;

@@ -27,15 +27,16 @@
 #include <boost/variant.hpp>
 #include <vector>
 
-#include "cosm/convergence/config/convergence_config.hpp"
-#include "cosm/convergence/interactivity.hpp"
-#include "cosm/convergence/angular_order.hpp"
-#include "cosm/convergence/positional_entropy.hpp"
-#include "cosm/convergence/task_dist_entropy.hpp"
-#include "cosm/metrics/convergence_metrics.hpp"
 #include "rcppsw/ds/type_map.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/mpl/typelist.hpp"
+
+#include "cosm/convergence/angular_order.hpp"
+#include "cosm/convergence/config/convergence_config.hpp"
+#include "cosm/convergence/interactivity.hpp"
+#include "cosm/convergence/positional_entropy.hpp"
+#include "cosm/convergence/task_dist_entropy.hpp"
+#include "cosm/metrics/convergence_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,8 +58,9 @@ NS_START(cosm, convergence);
  * convergence calculation is enabled, then you obviously need to pass a valid
  * callback to calculate the necessary input data).
  */
-class convergence_calculator final : public metrics::convergence_metrics,
-                                     public rer::client<convergence_calculator> {
+class convergence_calculator final
+    : public metrics::convergence_metrics,
+      public rer::client<convergence_calculator> {
  public:
   /**
    * @brief Callback function that returns a vector of robot headings (1 per
@@ -67,7 +69,8 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using swarm_headings_calc_ftype = std::function<std::vector<rmath::radians>(uint)>;
+  using swarm_headings_calc_ftype =
+      std::function<std::vector<rmath::radians>(uint)>;
 
   /**
    * @brief Callback function that returns a vector of nearest neighbor
