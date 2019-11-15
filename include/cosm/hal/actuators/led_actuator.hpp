@@ -29,11 +29,11 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
 #else
 #error "Selected component has no LEDs!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -128,9 +128,9 @@ class _led_actuator {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using led_actuator = _led_actuator<argos::CCI_LEDsActuator>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

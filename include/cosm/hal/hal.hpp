@@ -28,6 +28,12 @@
  * @brief The configuration definition to compile for the footbot robot within
  * the ARGoS simulator.
  */
-#define HAL_CONFIG_ARGOS_FOOTBOT 1
+#define HAL_TARGET_ARGOS_FOOTBOT 1
+
+/*
+ * @brief The configuration definition to compile for the Lego Mindstorm EV3
+ * robot.
+ */
+#define HAL_TARGET_EV3 2
 
 #endif /* INCLUDE_COSM_HAL_HAL_HPP_ */

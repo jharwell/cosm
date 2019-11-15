@@ -27,11 +27,11 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_sensor.h>
 #else
 #error "Selected hardware has no differential drive sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -108,9 +108,9 @@ class _diff_drive_sensor {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using diff_drive_sensor = _diff_drive_sensor<argos::CCI_DifferentialSteeringSensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

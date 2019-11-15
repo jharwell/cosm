@@ -35,11 +35,11 @@
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
 #else
 #error "Selected hardware has no proximity sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -128,9 +128,9 @@ class _proximity_sensor {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using proximity_sensor = _proximity_sensor<argos::CCI_FootBotProximitySensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

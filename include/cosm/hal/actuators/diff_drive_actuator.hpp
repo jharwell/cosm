@@ -27,11 +27,11 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
 #else
 #error "Selected hardware has no differential drive actuator!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -91,9 +91,9 @@ class _diff_drive_actuator {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using diff_drive_actuator = _diff_drive_actuator<argos::CCI_DifferentialSteeringActuator>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

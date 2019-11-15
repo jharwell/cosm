@@ -28,11 +28,11 @@
 #include "cosm/hal/wifi_packet.hpp"
 #include "rcppsw/math/radians.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h>
 #else
 #error "Selected hardware has no RAB wireless communication sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -88,9 +88,9 @@ class _wifi_sensor  {
   TSensor* m_sensor;
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using wifi_sensor = _wifi_sensor<argos::CCI_RangeAndBearingSensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

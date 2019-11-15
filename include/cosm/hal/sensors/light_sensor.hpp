@@ -28,11 +28,11 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_light_sensor.h>
 #else
 #error "Selected hardware has no light sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -104,9 +104,9 @@ class _light_sensor {
   TSensor* const m_sensor;
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using light_sensor = _light_sensor<argos::CCI_FootBotLightSensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

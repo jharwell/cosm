@@ -38,7 +38,7 @@ namespace steer2D {}
 namespace convergence {}
 namespace metrics {}
 namespace repr {}
-
+namespace controller {}
 namespace robots {
 namespace footbot {}
 } /* namespace robots */
@@ -62,6 +62,7 @@ namespace metrics {}
  */
 
 namespace csubsystem = cosm::subsystem;
+namespace ccontroller = cosm::controller;
 namespace cfsm = cosm::fsm;
 namespace cfmetrics = cfsm::metrics;
 namespace chal = cosm::hal;

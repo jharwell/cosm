@@ -29,11 +29,11 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/wifi_packet.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h>
 #else
 #error "Selected component has no RAB actuator!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -106,9 +106,9 @@ class _wifi_actuator {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using wifi_actuator = _wifi_actuator<argos::CCI_RangeAndBearingActuator>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

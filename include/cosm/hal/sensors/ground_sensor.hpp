@@ -33,11 +33,11 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/sensors/config/ground_sensor_config.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h>
 #else
 #error "Selected hardware has no ground sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -140,9 +140,9 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
   /* clang-format on */
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using ground_sensor = _ground_sensor<argos::CCI_FootBotMotorGroundSensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

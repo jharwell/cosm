@@ -31,11 +31,11 @@
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/cosm.hpp"
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_colored_blob_omnidirectional_camera_sensor.h>
 #else
 #error "Selected hardware has no blob camera sensor!"
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -114,10 +114,10 @@ class _colored_blob_camera_sensor {
   TSensor* const m_sensor;
 };
 
-#if HAL_CONFIG == HAL_CONFIG_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using colored_blob_camera_sensor =
     _colored_blob_camera_sensor<argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
-#endif /* HAL_CONFIG */
+#endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 
