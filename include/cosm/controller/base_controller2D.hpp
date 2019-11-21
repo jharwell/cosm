@@ -1,7 +1,7 @@
 /**
- * @file base_controller2D.hpp
+ * \file base_controller2D.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,11 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <ext/ticpp/ticpp.h>
+
 #include <memory>
 #include <string>
 #include <typeindex>
-
-#include <ext/ticpp/ticpp.h>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
@@ -37,8 +37,8 @@
 
 #include "cosm/fsm/metrics/goal_acq_metrics.hpp"
 #include "cosm/fsm/metrics/movement_metrics.hpp"
-#include "cosm/metrics/spatial_dist2D_metrics.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/metrics/spatial_dist2D_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -59,10 +59,10 @@ NS_START(controller);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class base_controller2D
- * @ingroup cosm controller
+ * \class base_controller2D_impl
+ * \ingroup controller
  *
- * @brief The implementation of base controller class that the controllers for
+ * \brief The implementation of base controller class that the controllers for
  * all robots that operate in 2D derive. It holds all functionality
  * common to all controllers, as well that some that is stubbed out here, but
  * overridden in derived classes which allows this class to be used as the robot
@@ -82,12 +82,12 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   base_controller2D_impl& operator=(const base_controller2D_impl& other) = delete;
 
   /**
-   * @brief Initialize the controller from XML configuration.
+   * \brief Initialize the controller from XML configuration.
    */
   virtual void init(ticpp::Element&) RCSW_COLD = 0;
 
   /**
-   * @brief Resut the controller before initialization, after simulation
+   * \brief Resut the controller before initialization, after simulation
    * finishes, etc. Should be idempotent, making starting running the controller
    * after calling this function the same as if the controller had just been
    * created.
@@ -95,12 +95,12 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   virtual void reset(void) RCSW_COLD = 0;
 
   /**
-   * @brief Run the main controller loop.
+   * \brief Run the main controller loop.
    */
   virtual void control_step(void) = 0;
 
   /**
-   * @brief Return the \ref std::type_index of the derived class. This is useful
+   * \brief Return the \ref std::type_index of the derived class. This is useful
    * in conjunction with \ref boost::variant and \ref boost::apply_visitor, as
    * it allows for run-time reflection based on the actual type of the
    * controller.
@@ -108,7 +108,7 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   virtual std::type_index type_index(void) const = 0;
 
   /**
-   * @brief Get the ID of the entity, which is unique among all entities of the
+   * \brief Get the ID of the entity, which is unique among all entities of the
    * same type in simulation. For real robots, it doesn't have to be unique, but
    * it probably still should be to assist with debugging.
    */
@@ -124,19 +124,19 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   rmath::vector2d heading2D(void) const override final RCSW_PURE;
 
   /**
-   * @brief Set whether or not a robot is supposed to display it's ID above its
+   * \brief Set whether or not a robot is supposed to display it's ID above its
    * head during simulation.
    */
   void display_id(bool display_id) { m_display_id = display_id; }
 
   /**
-   * @brief If \c TRUE, then the robot should display its ID above its head
+   * \brief If \c TRUE, then the robot should display its ID above its head
    * during simulation.
    */
   bool display_id(void) const { return m_display_id; }
 
   /**
-   * @brief Set the current clock tick.
+   * \brief Set the current clock tick.
    *
    * In a real world, each robot would maintain its own clock tick, and overall
    * there would no doubt be considerable skew; this is a simulation hack that
@@ -145,7 +145,7 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   void tick(rtypes::timestep tick);
 
   /**
-   * @brief Set the current location of the robot.
+   * \brief Set the current location of the robot.
    *
    * This is a hack, as real world robot's would have to do their own
    * localization. This is far superior to that, in terms of ease of
@@ -158,36 +158,36 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   void heading(const rmath::radians& h);
 
   /**
-   * @brief Convenience function to add footbot ID to salient messages during
+   * \brief Convenience function to add footbot ID to salient messages during
    * loop function execution (timestep is already there).
    */
   void ndc_push(void) { ER_NDC_PUSH("[" + std::to_string(entity_id()) + "]"); }
 
   /**
-   * @brief Convenience function to add robot ID+timestep to messages during
+   * \brief Convenience function to add robot ID+timestep to messages during
    * the control step.
    */
   void ndc_pusht(void);
 
   /**
-   * @brief Remove the last NDC.
+   * \brief Remove the last NDC.
    */
   void ndc_pop(void) { ER_NDC_POP(); }
 
   /**
-   * @brief Return a handle to the \ref rmath::rng used for random number
+   * \brief Return a handle to the \ref rcppsw::math::rng used for random number
    * generation by this robot.
    */
   rmath::rng* rng(void) { return m_rng; }
 
  protected:
   /**
-   * @brief Initialize controller output (i.e. where it will log events of
+   * \brief Initialize controller output (i.e. where it will log events of
    * interest).
    *
-   * @param output_root Absolute or relative path to the output root for the
+   * \param output_root Absolute or relative path to the output root for the
    * robot.
-   * @param output_dir Directory name within the output root that things should
+   * \param output_dir Directory name within the output root that things should
    * be logged into. This is a separate argument than output_root, because there
    * are special values of it that have different behavior.
    *
@@ -197,17 +197,17 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
    * - cosm.fsm -> fsm.log
    * - cosm.subsystem.saa -> saa.log
    *
-   * @return Absolute path to the output directory.
+   * \return Absolute path to the output directory.
    */
   std::string output_init(const std::string& output_root,
                           const std::string& output_dir);
 
   /**
-   * @brief Initialize random number generation for the controller.
+   * \brief Initialize random number generation for the controller.
    *
-   * @param seed The seed to use. -1 results in time seeded RNG, otherwise the
+   * \param seed The seed to use. -1 results in time seeded RNG, otherwise the
    *             seed value is used.
-   * @param category The category of the RNG so that multiple robots can share
+   * \param category The category of the RNG so that multiple robots can share
    *                 RNG (or not), depending on configuration.
    */
   void rng_init(int seed, const std::string& category);
@@ -238,6 +238,12 @@ NS_START(cosm, controller);
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 
+/**
+ * \class base_controller2D
+ * \ingroup controller
+ *
+ * \brief The implementation of base controller when building for ARGoS.
+ */
 class base_controller2D : public base_controller2D_impl,
                           public argos::CCI_Controller {
  public:

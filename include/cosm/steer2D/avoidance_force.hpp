@@ -1,7 +1,7 @@
 /**
- * @file avoidance_force.hpp
+ * \file avoidance_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -42,10 +42,10 @@ struct avoidance_force_config;
  ******************************************************************************/
 
 /**
- * @class avoidance_force
- * @ingroup cosm steer2D
+ * \class avoidance_force
+ * \ingroup steer2D
  *
- * @brief A force pushing the robot away from perceived obstacles. Only active
+ * \brief A force pushing the robot away from perceived obstacles. Only active
  * when threatening obstacles are detected.
  */
 class avoidance_force {
@@ -53,11 +53,11 @@ class avoidance_force {
   explicit avoidance_force(const config::avoidance_force_config* config);
 
   /**
-   * @brief Calculate the avoidance force that should be applied to the
+   * \brief Calculate the avoidance force that should be applied to the
    * robot. Avoidance force will point from the robot away from the cloest
    * obstacle.
    *
-   * @param closest The closest known obstacle to the robot.
+   * \param closest The closest known obstacle to the robot.
    */
   rmath::vector2d operator()(const boid&, const rmath::vector2d& closest) const;
 

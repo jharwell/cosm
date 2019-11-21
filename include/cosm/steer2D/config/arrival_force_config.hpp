@@ -1,7 +1,7 @@
 /**
- * @file arrival_force_config.hpp
+ * \file arrival_force_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,8 +38,10 @@ NS_START(cosm, steer2D, config);
  ******************************************************************************/
 
 /**
- * @struct arrival_force_config
- * @ingroup cosm steer2D config
+ * \struct arrival_force_config
+ * \ingroup steer2D config
+ *
+ * \brief Configuration for the arrival force, as described in \todo ref
  */
 struct arrival_force_config final : public rconfig::base_config {
   /**

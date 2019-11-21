@@ -1,7 +1,7 @@
 /**
- * @file led_actuator.hpp
+ * \file led_actuator.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -53,42 +53,47 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class led_actuator_
- * @ingroup cosm hal
+ * \class led_actuator_impl
+ * \ingroup hal
  *
- * @brief LED actuator wrapper for the following supported robots:
+ * \brief LED actuator wrapper.
+ *
+ *  Supports the following robots:
  *
  * - ARGoS footbot
- * - NULL robot (robot without LEDs to actuate). This is used to compile out
- *   the selected robot sensor, and as such does not have a preprocessor
- *   definition.
+ *
+ * \tparam TActuator The underlying actuator handle type abstracted away by the
+ *                   HAL. If nullptr, then that effectively disables the
+ *                   actuator at compile time, and SFINAE ensures no member
+ *                   functions can be called.
  */
-template<typename T>
-class _led_actuator {
+template<typename TActuator>
+class led_actuator_impl {
  public:
-  explicit _led_actuator(T* const leds) : m_leds(leds) {}
+  explicit led_actuator_impl(TActuator* const leds) : m_leds(leds) {}
 
   /**
-   * @brief Reset the LED actuator.
+   * \brief Reset the LED actuator.
    */
   void reset(void) {}
 
   /**
-   * @brief Set a single LED on the footbot robot to a specific color (or set
+   * \brief Set a single LED on the footbot robot to a specific color (or set
    * all LEDs to a specific color).
    *
-   * @param id Which LED to change color. This is application defined. However,
+   * \param id Which LED to change color. This is application defined. However,
    * the reserved value of -1 should be interpreted to mean set the color of
    * \c ALL LEDs on the robot.
    *
-   * @param color The color to change the LED to. This is application defined.
+   * \param color The color to change the LED to. This is application defined.
    */
-  template <typename U = T,
+  template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_color(int id, const rutils::color& color) {
     if (nullptr == m_leds) {
       return;
     }
+
     if (-1 == id) {
       m_leds->SetAllColors(argos::CColor(color.red(),
                                          color.green(),
@@ -103,18 +108,22 @@ class _led_actuator {
   }
 
   /**
-   * @brief Set intensity for a single LED on the footbot robot (or set
+   * \brief Set intensity for a single LED on the footbot robot (or set
    * intensity of all LEDs).
    *
-   * @param id Which LED to set intensity for. This is application
+   * \param id Which LED to set intensity for. This is application
    * defined. However, the reserved value of -1 should be interpreted to mean
    * set the intensity of \c ALL LEDs on the robot.
    *
-   * @param intensity In the range [0,255]. Application defined meaning.
+   * \param intensity In the range [0,255]. Application defined meaning.
    */
-  template <typename U = T,
+  template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_intensity(int id, uint8_t intensity) {
+    if (nullptr == m_leds) {
+      return;
+    }
+
     if (-1 == id) {
       m_leds->SetAllIntensities(intensity);
     } else {
@@ -124,14 +133,14 @@ class _led_actuator {
 
  private:
   /* clang-format off */
-  T* m_leds;
+  TActuator* m_leds;
   /* clang-format on */
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using led_actuator = _led_actuator<argos::CCI_LEDsActuator>;
+using led_actuator = led_actuator_impl<argos::CCI_LEDsActuator>;
 #endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_LED_ACTUATOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_ACTUATORSLED_ACTUATOR_IMPL_HPP_ */

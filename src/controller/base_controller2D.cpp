@@ -1,7 +1,7 @@
 /**
- * @file base_controller2D.cpp
+ * \file base_controller2D.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -30,10 +30,10 @@
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rngm.hpp"
 
+#include "cosm/steer2D/config/force_calculator_config.hpp"
 #include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
 #include "cosm/subsystem/config/sensing_subsystem2D_config.hpp"
 #include "cosm/subsystem/saa_subsystem2D.hpp"
-#include "cosm/steer2D/config/force_calculator_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -45,8 +45,7 @@ namespace fs = std::experimental::filesystem;
  * Constructors/Destructor
  ******************************************************************************/
 base_controller2D_impl::base_controller2D_impl(void)
-    : ER_CLIENT_INIT("cosm.controller2D.base"),
-      m_saa(nullptr) {}
+    : ER_CLIENT_INIT("cosm.controller2D.base"), m_saa(nullptr) {}
 
 base_controller2D_impl::~base_controller2D_impl(void) = default;
 
@@ -70,15 +69,15 @@ void base_controller2D_impl::discrete_position(const rmath::vector2u& loc) {
 }
 
 std::string base_controller2D_impl::output_init(const std::string& output_root,
-                                         const std::string& output_dir) {
+                                                const std::string& output_dir) {
   std::string dir;
   if ("__current_date__" == output_dir) {
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    dir = output_root + "/" + std::to_string(now.date().year()) +
-                  "-" + std::to_string(now.date().month()) + "-" +
-                  std::to_string(now.date().day()) + ":" +
-                  std::to_string(now.time_of_day().hours()) + "-" +
-                  std::to_string(now.time_of_day().minutes());
+    dir = output_root + "/" + std::to_string(now.date().year()) + "-" +
+          std::to_string(now.date().month()) + "-" +
+          std::to_string(now.date().day()) + ":" +
+          std::to_string(now.time_of_day().hours()) + "-" +
+          std::to_string(now.time_of_day().minutes());
   } else {
     dir = output_root + "/" + output_dir;
   }
@@ -98,7 +97,7 @@ std::string base_controller2D_impl::output_init(const std::string& output_root,
                       dir + "/controller.log");
   client::set_logfile(log4cxx::Logger::getLogger("cosm.fsm"), dir + "/fsm.log");
   client::set_logfile(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
-                       dir + "/saa.log");
+                      dir + "/saa.log");
 #endif
 
   return dir;
@@ -121,11 +120,9 @@ void base_controller2D_impl::tick(rtypes::timestep tick) {
 } /* tick() */
 
 void base_controller2D_impl::ndc_pusht(void) {
-  ER_NDC_PUSH(std::string("[t=") +
-              std::to_string(m_saa->sensing()->tick().v()) +
-              std::string("] [") +
-              std::to_string(entity_id()) +
-              std::string("]"));
+  ER_NDC_PUSH(
+      std::string("[t=") + std::to_string(m_saa->sensing()->tick().v()) +
+      std::string("] [") + std::to_string(entity_id()) + std::string("]"));
 }
 
 /*******************************************************************************

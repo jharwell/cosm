@@ -1,7 +1,7 @@
 /**
- * @file collision_tracker.hpp
+ * \file collision_tracker.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class collision_tracker
- * @ingroup cosm fsm
+ * \class collision_tracker
+ * \ingroup fsm
  *
- * @brief Utility class for tracking when a robot enters/exits a collision
+ * \brief Utility class for tracking when a robot enters/exits a collision
  * avoidance state, and the time spent in that state.
  */
 class collision_tracker : public metrics::collision_metrics {
@@ -63,13 +63,13 @@ class collision_tracker : public metrics::collision_metrics {
   rmath::vector2u avoidance_loc(void) const override final RCSW_PURE;
 
   /**
-   * @brief Handle all logic for entering collision avoidance; classes should
+   * \brief Handle all logic for entering collision avoidance; classes should
    * only have to call this function whenever they detect an obstacle.
    */
   void ca_enter(void);
 
   /**
-   * @brief Handle all logic for exiting collision avoidance; classes should
+   * \brief Handle all logic for exiting collision avoidance; classes should
    * only have to call this function whenever they no longer detect any
    * obstacles.
    */

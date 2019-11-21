@@ -1,7 +1,7 @@
 /**
- * @file footbot_saa_subsystem.hpp
+ * \file footbot_saa_subsystem.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, robots, footbot);
  ******************************************************************************/
 
 /**
- * @class footbot_saa_subsystem
- * @ingroup cosm robots footbot
+ * \class footbot_saa_subsystem
+ * \ingroup robots footbot
  *
- * @brief Sensing and Actuation (SAA) subsystem for the footbot
+ * \brief Sensing and Actuation (SAA) subsystem for the footbot
  * robot.
  */
 class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
@@ -60,7 +60,7 @@ class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
   rmath::vector2d position(void) const override RCSW_PURE;
 
   /**
-   * @brief Apply the summed steering forces; change wheel speeds. Resets the
+   * \brief Apply the summed steering forces; change wheel speeds. Resets the
    * summed forces.
    */
   void steer_force2D_apply(void) override;

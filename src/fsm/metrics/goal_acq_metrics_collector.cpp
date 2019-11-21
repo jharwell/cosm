@@ -1,7 +1,7 @@
 /**
- * @file goal_acq_metrics_collector.cpp
+ * \file goal_acq_metrics_collector.cpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *

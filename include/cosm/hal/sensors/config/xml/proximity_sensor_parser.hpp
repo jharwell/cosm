@@ -1,7 +1,7 @@
 /**
- * @file proximity_sensor_parser.hpp
+ * \file proximity_sensor_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, hal, sensors, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class proximity_sensor_parser
- * @ingroup cosm hal sensors config xml
+ * \class proximity_sensor_parser
+ * \ingroup hal sensors config xml
  *
- * @brief Parses XML parameters relating to HAL proximity sensor into \ref
+ * \brief Parses XML parameters relating to HAL proximity sensor into \ref
  * proximity_sensor_config.
  */
 class proximity_sensor_parser : public rconfig::xml::xml_config_parser {
@@ -52,7 +52,7 @@ class proximity_sensor_parser : public rconfig::xml::xml_config_parser {
   ~proximity_sensor_parser(void) override = default;
 
   /**
-   * @brief The root tag that all robot proximity sensor parameters should lie
+   * \brief The root tag that all robot proximity sensor parameters should lie
    * under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "proximity_sensor";

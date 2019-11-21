@@ -1,7 +1,7 @@
 /**
- * @file avoidance_force_config.hpp
+ * \file avoidance_force_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -34,12 +34,14 @@
 NS_START(cosm, steer2D, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Struct Definitions
  ******************************************************************************/
-
 /**
- * @struct arrival_force_config
- * @ingroup cosm steer2D config
+ * \struct avoidance_force_config
+ * \ingroup steer2D config
+ *
+ * \brief Configuration for the virtual avoidance force, as described in \todo
+ * ref.
  */
 struct avoidance_force_config final : public rconfig::base_config {
   /**

@@ -1,7 +1,7 @@
 /**
- * @file actuation_subsystem2D.hpp
+ * \file actuation_subsystem2D.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -44,17 +44,18 @@ NS_START(cosm, subsystem);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class actuation_subsystem2D
- * @ingroup cosm subsystem
+ * \class actuation_subsystem2D
+ * \ingroup subsystem
  *
- * @brief The  actuation subsystem for all actuators used by robot
+ * \brief The  actuation subsystem for all actuators used by robot
  * controllers that operate in 2D.
  *
- * Any controller with a sensing subsystem can choose any number of the
- * supported sensors to pass to the subsystem to manage:
+ * Any controller with an actuation subsystem can choose any number of the
+ * supported actutaion to pass to the subsystem to manage:
  *
- * - \ref hal::led_actuator
- * - \ref hal::wifi_actuator
+ * - \ref hal::actuators::led_actuator
+ * - \ref hal::actuators::wifi_actuator
+ * - \ref hal::actuators::diff_drive_actuator
  *
  * In addition, the following "augmented" actuators can also be used, in order
  * to provide more functionality than the "raw" actuators can provide:
@@ -77,13 +78,13 @@ class actuation_subsystem2D {
   }
 
   /**
-   * @param actuators Map of handles to actuator devices, indexed by typeid.
+   * \param actuators Map of handles to actuator devices, indexed by typeid.
    */
   explicit actuation_subsystem2D(const actuator_map& actuators)
       : m_actuators(actuators) {}
 
   /**
-   * @brief Reset all actuators, including stopping the robot.
+   * \brief Reset all actuators, including stopping the robot.
    */
   void reset(void);
 

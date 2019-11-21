@@ -1,7 +1,7 @@
 /**
- * @file task_dist_entropy.hpp
+ * \file task_dist_entropy.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, convergence);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class task_dist_entropy
- * @ingroup cosm convergence
+ * \class task_dist_entropy
+ * \ingroup convergence
  *
- * @brief Calculate the task_dist entropy of the swarm, using the methods
+ * \brief Calculate the task_dist entropy of the swarm, using the methods
  * outlined in Balch2000 and Turgut2008.
  */
 class task_dist_entropy final : public convergence_measure {
@@ -52,9 +52,9 @@ class task_dist_entropy final : public convergence_measure {
   explicit task_dist_entropy(double epsilon) : convergence_measure(epsilon) {}
 
   /**
-   * @brief Calculate the task distribution entropy of the swarm.
+   * \brief Calculate the task distribution entropy of the swarm.
    *
-   * @param tasks The current task distribution (each task is a unique
+   * \param tasks The current task distribution (each task is a unique
    *              non-negative integer).
    */
   bool operator()(const std::vector<int>& tasks) {

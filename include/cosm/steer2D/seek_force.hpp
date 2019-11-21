@@ -1,7 +1,7 @@
 /**
- * @file seek_force.hpp
+ * \file seek_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, steer2D);
  ******************************************************************************/
 
 /**
- * @class seek_force
- * @ingroup cosm steer2D
+ * \class seek_force
+ * \ingroup steer2D
  *
- * @brief A force pulling the robot to a target and then through the target
+ * \brief A force pulling the robot to a target and then through the target
  * (i.e. the robot does not slow down to "arrive").
  */
 class seek_force {

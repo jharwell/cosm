@@ -1,7 +1,7 @@
 /**
- * @file sensing_subsystem2D_config.hpp
+ * \file sensing_subsystem2D_config.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,8 +37,11 @@ NS_START(cosm, subsystem, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct sensing_subsystem2D_config
- * @ingroup cosm subsystem config
+ * \struct sensing_subsystem2D_config
+ * \ingroup subsystem config
+ *
+ * \brief Sensing subsystem configuration for wheeled robots that operate in 2D
+ * space.
  */
 struct sensing_subsystem2D_config final : public rconfig::base_config {
   hal::sensors::config::proximity_sensor_config proximity {};

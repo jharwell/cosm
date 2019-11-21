@@ -1,7 +1,7 @@
 /**
- * @file light_sensor.hpp
+ * \file light_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -52,20 +52,27 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class light_sensor
- * @ingroup cosm hal sensors
+ * \class light_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Light sensor wrapper for the following supported robots:
+ * \brief Light sensor wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot. The simulated sensor is expensive to update each timestep,
  *   so it is disabled upon creation, so robots can selectively enable/disable
  *   it as needed for maximum speed.
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _light_sensor {
+class light_sensor_impl {
  public:
   /**
-   * @brief A light sensor reading (value, angle) pair.
+   * \brief A light sensor reading (value, angle) pair.
    *
    * The first argument is the value of the sensor (distance to light), and the
    * second argument is the angle of the sensor on the robot in relation to the
@@ -78,12 +85,12 @@ class _light_sensor {
     reading(double _value, double _angle) : value(_value), angle(_angle) {}
   };
 
-  explicit _light_sensor(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit light_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
-   * @brief Get the current light sensor readings for the footbot robot.
+   * \brief Get the current light sensor readings for the footbot robot.
    *
-   * @return A vector of \ref reading.
+   * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
@@ -101,11 +108,13 @@ class _light_sensor {
   void disable(void) const { m_sensor->Disable(); }
 
  private:
+  /* clang-format off */
   TSensor* const m_sensor;
+  /* clang-format on */
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using light_sensor = _light_sensor<argos::CCI_FootBotLightSensor>;
+using light_sensor = light_sensor_impl<argos::CCI_FootBotLightSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

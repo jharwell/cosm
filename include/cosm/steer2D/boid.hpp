@@ -1,7 +1,7 @@
 /**
- * @file boid.hpp
+ * \file boid.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,10 +38,10 @@ NS_START(cosm, steer2D);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class boid
- * @ingroup cosm steer2D
+ * \class boid
+ * \ingroup steer2D
  *
- * @brief Interface representing an entity upon which kinematic forces can act
+ * \brief Interface representing an entity upon which kinematic forces can act
  * (i.e. any class that wants to use the \ref force_calculator must conform to
  * this interface).
  */
@@ -51,23 +51,23 @@ class boid {
   virtual ~boid(void) = default;
 
   /**
-   * @brief Should return the current linear velocity of the entity.
+   * \brief Should return the current linear velocity of the entity.
    */
   virtual rmath::vector2d linear_velocity(void) const = 0;
 
   /**
-   * @brief Should return the current angular velocity of the entity.
+   * \brief Should return the current angular velocity of the entity.
    */
   virtual double angular_velocity(void) const = 0;
 
   /**
-   * @brief Should return the maximum speed of the entity. This can vary in
+   * \brief Should return the maximum speed of the entity. This can vary in
    * time, if desired.
    */
   virtual double max_speed(void) const = 0;
 
   /**
-   * @brief Return the current position of the entity. Hopefully, this DOES vary
+   * \brief Return the current position of the entity. Hopefully, this DOES vary
    * with time otherwise your entity is very uninteresting.
    */
   virtual rmath::vector2d position(void) const = 0;

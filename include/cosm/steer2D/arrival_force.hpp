@@ -1,7 +1,7 @@
 /**
- * @file arrival_force.hpp
+ * \file arrival_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -42,10 +42,10 @@ struct arrival_force_config;
  ******************************************************************************/
 
 /**
- * @class arrival_force
- * @ingroup cosm steer2D
+ * \class arrival_force
+ * \ingroup steer2D
  *
- * @brief A force pulling the robot to a target (i.e. the robot DOES slow down
+ * \brief A force pulling the robot to a target (i.e. the robot DOES slow down
  * to "arrive"). Once the robot comes within range of the slowing radius, its
  * speed is ramped down linearly from its current speed to the specified minimal
  * slowing speed.

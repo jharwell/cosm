@@ -1,7 +1,7 @@
 /**
- * @file movement_metrics_collector.hpp
+ * \file movement_metrics_collector.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,18 +41,18 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class movement_metrics_collector
- * @ingroup cosm fsm metrics
+ * \class movement_metrics_collector
+ * \ingroup fsm metrics
  *
- * @brief Collector for \ref movement_metrics.
+ * \brief Collector for \ref movement_metrics.
  *
  * Metrics are written out every timestep.
  */
 class movement_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * @param ofname The output file name.
-   * @param interval Collection interval.
+   * \param ofname The output file name.
+   * \param interval Collection interval.
    */
   movement_metrics_collector(const std::string& ofname, uint interval);
 
@@ -62,7 +62,7 @@ class movement_metrics_collector final : public rmetrics::base_metrics_collector
 
  private:
   /**
-   * @brief Container for holding collected statistics. Must be atomic so counts
+   * \brief Container for holding collected statistics. Must be atomic so counts
    * are valid in parallel metric collection contexts. Ideally the distances
    * would be atomic \ref rtypes::spatial_dist, but that type does not meet the
    * std::atomic requirements.

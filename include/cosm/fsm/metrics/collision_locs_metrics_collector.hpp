@@ -1,7 +1,7 @@
 /**
- * @file collision_locs_metrics_collector.hpp
+ * \file collision_locs_metrics_collector.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,18 +39,18 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class collision_locs_metrics_collector
- * @ingroup cosm fsm metrics
+ * \class collision_locs_metrics_collector
+ * \ingroup fsm metrics
  *
- * @brief Collector for \ref collision_metrics as a 2D grid of where controller most
+ * \brief Collector for \ref collision_metrics as a 2D grid of where controller most
  * frequently encounter other controller.
  */
 class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_avg_metrics_collector {
  public:
   /**
-   * @param ofname The output file name.
-   * @param interval Collection interval.
-   * @param dims Dimensions of the arena.
+   * \param ofname The output file name.
+   * \param interval Collection interval.
+   * \param dims Dimensions of the arena.
    */
   collision_locs_metrics_collector(const std::string& ofname,
                              uint interval,

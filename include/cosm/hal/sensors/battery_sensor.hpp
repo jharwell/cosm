@@ -1,7 +1,7 @@
 /**
- * @file battery_sensor.hpp
+ * \file battery_sensor.hpp
  *
- * @copyright 2018 The Nimer Inc., All rights reserved.
+ * \copyright 2018 The Nimer Inc., All rights reserved.
  * This file is part of COSM.
  *
  * COSM is free software: you can redistribute it and/or modify it under the
@@ -50,18 +50,23 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class battery_sensor
- * @ingroup cosm hal sensors
+ * \class battery_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Battery sensor wrapper for the following supported robots:
+ * \brief Battery sensor wrapper for the following supported robots:
  *
  * - ARGoS footbot
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _battery_sensor {
+class battery_sensor_impl {
  public:
   /**
-   * @brief A battery sensor reading.
+   * \brief A battery sensor reading.
    *
    * The first argument is the amount of battery left as a percent between 0 and
    * 1, and the second argument is the amount of time left for the robot.
@@ -78,10 +83,10 @@ class _battery_sensor {
           time_left(_time_left) {}
   };
 
-  explicit _battery_sensor(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit battery_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
-   * @brief Get the current battery sensor reading for the footbot robot.
+   * \brief Get the current battery sensor reading for the footbot robot.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_battery_sensor<U>::value)>
@@ -98,7 +103,7 @@ class _battery_sensor {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using battery_sensor = _battery_sensor<argos::CCI_BatterySensor>;
+using battery_sensor = battery_sensor_impl<argos::CCI_BatterySensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

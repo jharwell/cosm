@@ -1,7 +1,7 @@
 /**
- * @file polar_force_config.hpp
+ * \file polar_force_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,8 +38,10 @@ NS_START(cosm, steer2D, config);
  ******************************************************************************/
 
 /**
- * @struct polar_force_config
- * @ingroup cosm steer2D config
+ * \struct polar_force_config
+ * \ingroup steer2D config
+ *
+ * \brief Configuration for the polar virtual force.
  */
 struct polar_force_config final : public rconfig::base_config {
   /**

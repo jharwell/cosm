@@ -1,7 +1,7 @@
 /**
- * @file hal.hpp
+ * \file hal.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -25,13 +25,13 @@
  * Constant Definitions
  ******************************************************************************/
 /*
- * @brief The configuration definition to compile for the footbot robot within
+ * \brief The configuration definition to compile for the footbot robot within
  * the ARGoS simulator.
  */
 #define HAL_TARGET_ARGOS_FOOTBOT 1
 
 /*
- * @brief The configuration definition to compile for the Lego Mindstorm EV3
+ * \brief The configuration definition to compile for the Lego Mindstorm EV3
  * robot.
  */
 #define HAL_TARGET_EV3 2

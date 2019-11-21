@@ -1,7 +1,7 @@
 /**
- * @file swarm_irv_manager.cpp
+ * \file swarm_irv_manager.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -22,6 +22,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/tv/swarm_irv_manager.hpp"
+
 #include "cosm/tv/config/swarm_irv_manager_config.hpp"
 
 /*******************************************************************************
@@ -32,11 +33,11 @@ NS_START(cosm, tv);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-swarm_irv_manager::swarm_irv_manager(const tv::config::swarm_irv_manager_config* config)
+swarm_irv_manager::swarm_irv_manager(
+    const tv::config::swarm_irv_manager_config* config)
     : ER_CLIENT_INIT("cosm.tv.swarm_irv_manager") {
   if (!config->motion_throttle.type.empty()) {
-    mc_motion_throttle_config =
-        boost::make_optional(config->motion_throttle);
+    mc_motion_throttle_config = boost::make_optional(config->motion_throttle);
   }
 }
 

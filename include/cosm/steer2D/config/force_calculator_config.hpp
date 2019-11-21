@@ -1,7 +1,7 @@
 /**
- * @file force_calculator_config.hpp
+ * \file force_calculator_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -42,8 +42,8 @@ NS_START(cosm, steer2D, config);
  ******************************************************************************/
 
 /**
- * @struct force_calculator_config
- * @ingroup cosm steer2D config
+ * \struct force_calculator_config
+ * \ingroup steer2D config
  */
 struct force_calculator_config final : public rconfig::base_config {
   struct avoidance_force_config avoidance{};

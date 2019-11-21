@@ -1,7 +1,7 @@
 /**
- * @file wifi_sensor.hpp
+ * \file wifi_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -52,23 +52,28 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class wifi_sensor
- * @ingroup cosm hal sensors
+ * \class wifi_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Wireless communication sensor with range and bearing information for
+ * \brief Wireless communication sensor with range and bearing information for
  * the following supported robots:
  *
  * - ARGoS footbot
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _wifi_sensor  {
+class wifi_sensor_impl  {
  public:
-  explicit _wifi_sensor(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit wifi_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
-   * @brief Get the current rab wifi sensor readings for the footbot robot.
+   * \brief Get the current rab wifi sensor readings for the footbot robot.
    *
-   * @return A vector of \ref wifi_packet.
+   * \return A vector of \ref wifi_packet.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_sensor<U>::value)>
@@ -89,7 +94,7 @@ class _wifi_sensor  {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using wifi_sensor = _wifi_sensor<argos::CCI_RangeAndBearingSensor>;
+using wifi_sensor = wifi_sensor_impl<argos::CCI_RangeAndBearingSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

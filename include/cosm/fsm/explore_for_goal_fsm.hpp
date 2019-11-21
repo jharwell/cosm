@@ -1,7 +1,7 @@
 /**
- * @file explore_for_goal_fsm.hpp
+ * \file explore_for_goal_fsm.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class explore_for_goal_fsm
- * @ingroup cosm fsm
+ * \class explore_for_goal_fsm
+ * \ingroup fsm
  *
- * @brief Robots executing this task will execute a specified exploration
+ * \brief Robots executing this task will execute a specified exploration
  * behavior while looking for an instance of their goal. Once they have found
  * one, the FSM will signal that its task is complete.
  *
@@ -113,34 +113,34 @@ class explore_for_goal_fsm final : public util_hfsm,
   /* exploration states */
 
   /**
-   * @brief Starting/reset state for FSM. Has no purpose other than that.
+   * \brief Starting/reset state for FSM. Has no purpose other than that.
    */
   HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, start);
 
   /**
-   * @brief The main state for the explore FSM. Robots in this state maintain
+   * \brief The main state for the explore FSM. Robots in this state maintain
    * their heading, looking for SOMETHING of interest, until they find it or
    * exceed the direction change threshold.
    */
   HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, explore);
 
   /**
-   * @brief Once a goal has been acquired, controller wait in this state until
+   * \brief Once a goal has been acquired, controller wait in this state until
    * reset by a higher level FSM.
    */
   HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, finished);
 
   /**
-   * @brief Simple state for entry in the main exploration state, used to change
+   * \brief Simple state for entry in the main exploration state, used to change
    * LED color for visualization purposes.
    */
   HFSM_ENTRY_DECLARE_ND(explore_for_goal_fsm, entry_explore);
 
   /**
-   * @brief Defines the state map for the FSM.
+   * \brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
-   * states in \enum states, or things will not work correctly.
+   * states in \enum state, or things will not work correctly.
    */
   HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];
@@ -149,7 +149,7 @@ class explore_for_goal_fsm final : public util_hfsm,
   HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /**
-   * @brief The minimum # of timesteps that a robot must explore before goal
+   * \brief The minimum # of timesteps that a robot must explore before goal
    * acquisition will be checked. Needed to force some tasks to not pick up the
    * block they just dropped if it is the only one they know about (The
    * exceptions list disables vectoring to it, BUT they can still explore for

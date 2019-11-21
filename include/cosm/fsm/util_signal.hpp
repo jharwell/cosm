@@ -1,7 +1,7 @@
 /**
- * @file util_signal.hpp
+ * \file util_signal.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,10 +37,10 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class util_signal
- * @ingroup cosm fsm
+ * \class util_signal
+ * \ingroup fsm
  *
- * @brief Signals that sub-states can return in order to notify their super
+ * \brief Signals that sub-states can return in order to notify their super
  * states that a condition that they do not know how to handle has arisen.
  */
 class util_signal : public rpfsm::event_signal {
@@ -57,7 +57,7 @@ class util_signal : public rpfsm::event_signal {
     ekENTERED_NEST,
 
     /**
-     * @brief Applications wishing to defined their own event signals
+     * \brief Applications wishing to defined their own event signals
      * should start here.
      */
     ekEXTERNAL_SIGNALS

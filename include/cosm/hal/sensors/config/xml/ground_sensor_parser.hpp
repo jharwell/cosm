@@ -1,7 +1,7 @@
 /**
- * @file ground_sensor_parser.hpp
+ * \file ground_sensor_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, hal, sensors, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class ground_sensor_parser
- * @ingroup cosm hal sensors config xml
+ * \class ground_sensor_parser
+ * \ingroup hal sensors config xml
  *
- * @brief Parses XML parameters relating to HAL ground sensor into \ref
+ * \brief Parses XML parameters relating to HAL ground sensor into \ref
  * ground_sensor_config.
  */
 class ground_sensor_parser : public rconfig::xml::xml_config_parser {
@@ -54,7 +54,7 @@ class ground_sensor_parser : public rconfig::xml::xml_config_parser {
   ~ground_sensor_parser(void) override = default;
 
   /**
-   * @brief The root tag that all robot ground sensor parameters should lie
+   * \brief The root tag that all robot ground sensor parameters should lie
    * under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "ground_sensor";
@@ -65,7 +65,7 @@ class ground_sensor_parser : public rconfig::xml::xml_config_parser {
   std::string xml_root(void) const override { return kXMLRoot; }
 
   /**
-   * @brief Add a detection target name to the list of names which will be
+   * \brief Add a detection target name to the list of names which will be
    * parsed from the XML subtree rooted at \ref kXMLRoot.
    */
   void detection_add(const std::string& target) { m_targets.push_back(target); }

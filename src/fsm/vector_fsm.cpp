@@ -1,7 +1,7 @@
 /**
- * @file vector_fsm.cpp
+ * \file vector_fsm.cpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *

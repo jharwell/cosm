@@ -1,7 +1,7 @@
 /**
- * @file angular_order.hpp
+ * \file angular_order.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, convergence);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class angular_order
- * @ingroup cosm convergence
+ * \class angular_order
+ * \ingroup convergence
  *
- * @brief Calculates the angular order within a swarm for a given instant. From
+ * \brief Calculates the angular order within a swarm for a given instant. From
  * Turgut2008.
  */
 class angular_order final : public convergence_measure {
@@ -51,10 +51,10 @@ class angular_order final : public convergence_measure {
   explicit angular_order(double epsilon) : convergence_measure(epsilon) {}
 
   /**
-   * @brief Calculates the raw and normalized angular order for the swarm (from
+   * \brief Calculates the raw and normalized angular order for the swarm (from
    * Turgut2008).
    *
-   * @return \c TRUE iff convergence has been achieved according to configured
+   * \return \c TRUE iff convergence has been achieved according to configured
    * parameters and the current state of the swarm.
    */
   bool operator()(const std::vector<rmath::radians>& headings,

@@ -1,7 +1,7 @@
 /**
- * @file diff_drive.hpp
+ * \file diff_drive.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -44,10 +44,10 @@ struct diff_drive_config;
  ******************************************************************************/
 
 /**
- * @class diff_drive
- * @ingroup cosm kin2D
+ * \class diff_drive
+ * \ingroup kin2D
  *
- * @brief Model for a TWO wheeled diff drive robot, providing a number of
+ * \brief Model for a TWO wheeled diff drive robot, providing a number of
  * operating modes:
  *
  * \ref drive_type::kTankDrive
@@ -56,16 +56,23 @@ struct diff_drive_config;
 class diff_drive : public rer::client<diff_drive> {
  public:
   enum class drive_type {
-    kTankDrive, /// Controls like those of a tank
-    kFSMDrive   /// Control via soft/hard turn FSM
+    /**
+     * \brief Controls like those of a tank
+     */
+    kTankDrive,
+
+    /**
+     * \brief Control via soft/hard turn FSM
+     */
+    kFSMDrive
   };
 
   /**
-   * @brief Initialize diff drive kin model.
+   * \brief Initialize diff drive kin model.
    *
-   * @param type The drive type; see \ref drive_type
-   * @param actuator The underlying differential steering actuator (via HAL)
-   * @param config Configuration.
+   * \param type The drive type; see \ref drive_type
+   * \param actuator The underlying differential steering actuator (via HAL)
+   * \param config Configuration.
    */
   diff_drive(const config::diff_drive_config* config,
              const hal::actuators::diff_drive_actuator& actuator,
@@ -78,36 +85,36 @@ class diff_drive : public rer::client<diff_drive> {
   double max_speed(void) const { return m_max_speed; }
 
   /*
-   * @brief Gets a new speed/heading angle and transforms it into wheel commands
+   * \brief Gets a new speed/heading angle and transforms it into wheel commands
    * via an FSM.
    *
-   * @param desired_speed The new linear speed of the robot. Can be any value,
+   * \param desired_speed The new linear speed of the robot. Can be any value,
    *        but is clamped by internal FSM to the maximum speed set during
    *        construction.
-   * @param angle_delta The difference from the robot's CURRENT heading
+   * \param angle_delta The difference from the robot's CURRENT heading
    *                    (i.e."change this much from the direction you are
    *                    currently going in").
    *
-   * @return \ref status_t.
+   * \return \ref status_t.
    */
   status_t fsm_drive(double desired_speed, const rmath::radians& angle_delta);
 
   /**
    * Tank drive method (i.e. how a tank moves.)
    *
-   * @param left_speed The robot left side's speed along the X axis
+   * \param left_speed The robot left side's speed along the X axis
    *                   [-1.0..1.0]. Forward is positive.
-   * @param right_speed The robot right side's speed along the X axis
+   * \param right_speed The robot right side's speed along the X axis
    *                    [-1.0..1.0]. Forward is positive.
-   * @param square_inputs If set, decreases the input sensitivity at low
+   * \param square_inputs If set, decreases the input sensitivity at low
    *                      speeds.
-   * @return \ref status_t.
+   * \return \ref status_t.
    */
   status_t tank_drive(double left_speed, double right_speed, bool square_inputs);
 
  private:
   /**
-   * @brief Limit the value to [-1, 1].
+   * \brief Limit the value to [-1, 1].
    */
   double limit(double value) const RCSW_PURE;
 

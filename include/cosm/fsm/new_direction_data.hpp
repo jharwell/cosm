@@ -1,7 +1,7 @@
 /**
- * @file new_direction_data.hpp
+ * \file new_direction_data.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,10 +38,10 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @struct new_direction_data
- * @ingroup cosm fsm
+ * \struct new_direction_data
+ * \ingroup fsm
  *
- * @brief An argument that can be passed to an FSM state, containing randomness
+ * \brief An argument that can be passed to an FSM state, containing randomness
  * to inject into robot motion by having them change their direction.
  */
 struct new_direction_data : public rpfsm::event_data {

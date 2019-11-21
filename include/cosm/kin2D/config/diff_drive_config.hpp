@@ -1,7 +1,7 @@
 /**
- * @file diff_drive_config.hpp
+ * \file diff_drive_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,8 +37,10 @@ NS_START(cosm, kin2D, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct diff_drive_config
- * @ingroup cosm kin2D config
+ * \struct diff_drive_config
+ * \ingroup kin2D config
+ *
+ * \brief Configuration for differential drive actuator.
  */
 struct diff_drive_config final : public rconfig::base_config {
   /**

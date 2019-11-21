@@ -1,7 +1,7 @@
 /**
- * @file spatial_dist2D_pos_metrics_collector.hpp
+ * \file spatial_dist2D_pos_metrics_collector.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,18 +40,18 @@ NS_START(cosm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class spatial_dist2D_pos_metrics_collector
- * @ingroup rcppsw metrics swarm spatial
+ * \class spatial_dist2D_pos_metrics_collector
+ * \ingroup rcppsw metrics swarm spatial
  *
- * @brief Collector for \ref dist2D_metrics.
+ * \brief Collector for \ref spatial_dist2D_metrics.
  */
 class spatial_dist2D_pos_metrics_collector final
     : public rmetrics::spatial::grid2D_avg_metrics_collector {
  public:
   /**
-   * @param ofname The output file name.
-   * @param interval Collection interval.
-   * @param dims Dimensions of arena.
+   * \param ofname The output file name.
+   * \param interval Collection interval.
+   * \param dims Dimensions of arena.
    */
   spatial_dist2D_pos_metrics_collector(const std::string& ofname,
                                        uint interval,

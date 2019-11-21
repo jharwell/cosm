@@ -1,7 +1,7 @@
 /**
- * @file convergence_calculator.hpp
+ * \file convergence_calculator.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -47,10 +47,10 @@ NS_START(cosm, convergence);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class convergence_calculator
- * @ingroup cosm convergence
+ * \class convergence_calculator
+ * \ingroup convergence
  *
- * @brief Convenience class for managing calculation of swarm convergence using
+ * \brief Convenience class for managing calculation of swarm convergence using
  * any enabled methods.
  *
  * Takes a set of optional callbacks for during construction for calculating the
@@ -63,7 +63,7 @@ class convergence_calculator final
       public rer::client<convergence_calculator> {
  public:
   /**
-   * @brief Callback function that returns a vector of robot headings (1 per
+   * \brief Callback function that returns a vector of robot headings (1 per
    * robot). Used to calculate swarm angular order.
    *
    * Takes a single integer argument specifying the # OpenMP threads to be
@@ -73,7 +73,7 @@ class convergence_calculator final
       std::function<std::vector<rmath::radians>(uint)>;
 
   /**
-   * @brief Callback function that returns a vector of nearest neighbor
+   * \brief Callback function that returns a vector of nearest neighbor
    * distances (1 per robot). Used to calculate swarm interactivity.
    *
    * Takes a single integer argument specifying the # OpenMP threads to be
@@ -82,7 +82,7 @@ class convergence_calculator final
   using swarm_nn_calc_ftype = std::function<std::vector<double>(uint)>;
 
   /**
-   * @brief Callback function that returns a vector of robot positions (1 per
+   * \brief Callback function that returns a vector of robot positions (1 per
    * robot). Used to calculate swarm positional entropy.
    *
    * Takes a single integer argument specifying the # OpenMP threads to be
@@ -91,7 +91,7 @@ class convergence_calculator final
   using swarm_pos_calc_ftype = std::function<std::vector<rmath::vector2d>(uint)>;
 
   /**
-   * @brief Callback function that returns a vector of robot tasks (as unique
+   * \brief Callback function that returns a vector of robot tasks (as unique
    * non-negative numbers, 1 per robot). Used to calculate swarm task
    * distribution entropy.
    *
@@ -106,7 +106,7 @@ class convergence_calculator final
                          swarm_pos_calc_ftype pos_calc);
 
   /**
-   * @brief Not included in the constructor arguments because not all swarms use
+   * \brief Not included in the constructor arguments because not all swarms use
    * tasks.
    */
   void task_dist_init(const swarm_tasks_calc_ftype& tasks_calc);
@@ -120,13 +120,13 @@ class convergence_calculator final
   void reset_metrics(void) override;
 
   /**
-   * @brief Return swarm convergence status in an OR fashion (i.e. if ANY of the
+   * \brief Return swarm convergence status in an OR fashion (i.e. if ANY of the
    * configured methods say convergence has occured, return \c TRUE).
    */
   bool converged(void) const RCSW_PURE;
 
   /**
-   * @brief Update convergence calculations for the current timestep
+   * \brief Update convergence calculations for the current timestep
    */
   void update(void);
 

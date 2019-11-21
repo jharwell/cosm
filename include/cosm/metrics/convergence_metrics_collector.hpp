@@ -1,7 +1,7 @@
 /**
- * @file convergence_metrics_collector.hpp
+ * \file convergence_metrics_collector.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class convergence_metrics_collector
- * @ingroup cosm metrics
+ * \class convergence_metrics_collector
+ * \ingroup metrics
  *
- * @brief Collector for \ref convergence_metrics.
+ * \brief Collector for \ref convergence_metrics.
  *
  * Metrics are written out each timestep.
  */
@@ -51,8 +51,8 @@ class convergence_metrics_collector final
     : public rmetrics::base_metrics_collector {
  public:
   /**
-   * @param ofname The output file name.
-   * @param interval Collection interval.
+   * \param ofname The output file name.
+   * \param interval Collection interval.
    */
   convergence_metrics_collector(const std::string& ofname, uint interval);
 

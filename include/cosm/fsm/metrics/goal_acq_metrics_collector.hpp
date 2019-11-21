@@ -1,7 +1,7 @@
 /**
- * @file goal_acq_metrics_collector.hpp
+ * \file goal_acq_metrics_collector.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,18 +40,18 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class goal_acq_metrics_collector
- * @ingroup cosm fsm metrics
+ * \class goal_acq_metrics_collector
+ * \ingroup fsm metrics
  *
- * @brief Collector for \ref goal_acq_metrics.
+ * \brief Collector for \ref goal_acq_metrics.
  *
  * Metrics are written out at the end of the specified interval.
  */
 class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * @param ofname Output file name.
-   * @param interval The collection interval.
+   * \param ofname Output file name.
+   * \param interval The collection interval.
    */
   goal_acq_metrics_collector(const std::string& ofname, uint interval);
 
@@ -61,7 +61,7 @@ class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector
 
  private:
   /**
-   * @brief Container for holding collected statistics. Must be atomic so counts
+   * \brief Container for holding collected statistics. Must be atomic so counts
    * are valid in parallel metric collection contexts.
    */
   struct stats {

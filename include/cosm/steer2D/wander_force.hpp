@@ -1,7 +1,7 @@
 /**
- * @file wander_force.hpp
+ * \file wander_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -44,10 +44,10 @@ struct wander_force_config;
  ******************************************************************************/
 
 /**
- * @class wander_force
- * @ingroup cosm steer2D
+ * \class wander_force
+ * \ingroup steer2D
  *
- * @brief A small random perturbation that can be added to a robot's current
+ * \brief A small random perturbation that can be added to a robot's current
  * velocity in order to make it move randomly throughout the environment. This
  * can be thought of as a directed random walk.
  */

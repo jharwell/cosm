@@ -1,7 +1,7 @@
 /**
- * @file sensing_subsystem2D.hpp
+ * \file sensing_subsystem2D.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -47,10 +47,10 @@ NS_START(cosm, subsystem);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class sensing_subsystem2D
- * @ingroup cosm subsystem
+ * \class sensing_subsystem2D
+ * \ingroup subsystem
  *
- * @brief The sensing subsystem for all sensors used by robotics controllers
+ * \brief The sensing subsystem for all sensors used by robotics controllers
  * that operate in 2D.
  *
  * Any controller with a sensing subsystem can choose any number of the
@@ -81,14 +81,14 @@ class sensing_subsystem2D {
   }
 
   /**
-   * @param sensors Map of handles to sensing devices, indexed by typeid.
+   * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
   explicit sensing_subsystem2D(sensor_map& sensors) : m_sensors(sensors) {}
 
   /**
-   * @brief Get the robot's current location.
+   * \brief Get the robot's current location.
    *
-   * @note This is set via an external process and that controller are *NOT*
+   * \note This is set via an external process and that controller are *NOT*
    * capable of self-localizing. That's not the point of this project, and this
    * was much faster/easier.
    */
@@ -111,7 +111,7 @@ class sensing_subsystem2D {
   }
 
   /**
-   * @brief Set the robot's current location.
+   * \brief Set the robot's current location.
    */
   void position(const rmath::vector2d& position) {
     m_prev_position = m_position;
@@ -123,7 +123,7 @@ class sensing_subsystem2D {
   }
 
   /**
-   * @brief Get how far the robot has traveled in the last timestep, as well as
+   * \brief Get how far the robot has traveled in the last timestep, as well as
    * the direction/magnitude.
    */
   rmath::vector2d tick_travel(void) const {
@@ -131,10 +131,10 @@ class sensing_subsystem2D {
   }
 
   /**
-   * @brief Get the angle of the current robot's heading. A shortcut to help
+   * \brief Get the angle of the current robot's heading. A shortcut to help
    * reduce the ache in my typing fingers.
    *
-   * @return The heading angle.
+   * \return The heading angle.
    */
   const rmath::radians& heading(void) const { return m_heading; }
   void heading(const rmath::radians& r) { m_heading = r; }

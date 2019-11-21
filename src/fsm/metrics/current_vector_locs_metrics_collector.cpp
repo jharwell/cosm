@@ -1,7 +1,7 @@
 /**
- * @file current_vector_locs_metrics_collector.cpp
+ * \file current_vector_locs_metrics_collector.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *

@@ -1,7 +1,7 @@
 /**
- * @file irv_recipient_controller.hpp
+ * \file irv_recipient_controller.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(controller);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class irv_recipent_controller
- * @ingroup cosm controller
+ * \class irv_recipient_controller
+ * \ingroup controller
  *
- * @brief Internal Temporal Variance (IRV) recipient controller. Defines the
+ * \brief Internal Temporal Variance (IRV) recipient controller. Defines the
  * interface for all controllers that can have temporal variance applied to
  * their internal state, as distinct from the variance that can be applied when
  * the robot interacts with the environment.
@@ -55,15 +55,15 @@ class irv_recipient_controller {
   virtual ~irv_recipient_controller(void) = default;
 
   /**
-   * @brief Return the applied movement throttling for the robot. This is not
+   * \brief Return the applied movement throttling for the robot. This is not
    * necessarily the same as the active/configured throttling.
    */
   virtual double applied_movement_throttle(void) const = 0;
 
   /**
-   * @brief Perform necessary initializations to register the controller with
-   * the provided \ref tv::swarm_irv_manager, types of variances to apply, etc,
-   * as configured.
+   * \brief Perform necessary initializations to register the controller with
+   * the provided \ref swarm_irv_manager, types of variances to apply, etc, as
+   * configured.
    */
   virtual void irv_init(const tv::swarm_irv_manager* irv_manager) = 0;
 };

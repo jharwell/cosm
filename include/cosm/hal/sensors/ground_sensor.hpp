@@ -1,7 +1,7 @@
 /**
- * @file ground_sensor.hpp
+ * \file ground_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -57,20 +57,25 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class ground_sensor
- * @ingroup cosm hal sensors
+ * \class ground_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Ground sensor wrapper for the following supported robots:
+ * \brief Ground sensor wrapper for the following supported robots:
  *
  * - ARGoS footbot
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
+class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>> {
  public:
   static constexpr char kNestTarget[] = "nest";
 
   /**
-   * @brief A ground sensor reading (value, distance) pair.
+   * \brief A ground sensor reading (value, distance) pair.
    *
    * The first argument is the value of the sensor (a robot can have a variable
    * number of sensors), and the second
@@ -84,20 +89,20 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
     double distance;
   };
 
-  _ground_sensor(TSensor * const sensor,
+  ground_sensor_impl(TSensor * const sensor,
                  const config::ground_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.ground_sensor"),
         mc_config(*config),
         m_sensor(sensor) {}
-  ~_ground_sensor(void) override final = default;
+  ~ground_sensor_impl(void) override final = default;
 
-  const _ground_sensor& operator=(const _ground_sensor&) = delete;
-  _ground_sensor(const _ground_sensor&) = default;
+  const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
+  ground_sensor_impl(const ground_sensor_impl&) = default;
 
   /**
-   * @brief Get the current ground sensor readings for the footbot robot.
+   * \brief Get the current ground sensor readings for the footbot robot.
    *
-   * @return A vector of \ref reading.
+   * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ground_sensor<U>::value)>
@@ -111,12 +116,12 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
   }
 
   /**
-   * @brief Detect if a certain condition is met by examining footbot ground
+   * \brief Detect if a certain condition is met by examining footbot ground
    * sensor readings.
    *
-   * @param name The name of the configured detection to check.
+   * \param name The name of the configured detection to check.
    *
-   * @return \c TRUE iff the condition was detected by the specified # readings.
+   * \return \c TRUE iff the condition was detected by the specified # readings.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ground_sensor<U>::value)>
@@ -141,7 +146,7 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using ground_sensor = _ground_sensor<argos::CCI_FootBotMotorGroundSensor>;
+using ground_sensor = ground_sensor_impl<argos::CCI_FootBotMotorGroundSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

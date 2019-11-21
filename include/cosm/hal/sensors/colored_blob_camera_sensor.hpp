@@ -1,7 +1,7 @@
 /**
- * @file colored_blob_camera_sensor.hpp
+ * \file colored_blob_camera_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -56,34 +56,40 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class colored_blob_camera_sensor
- * @ingroup cosm hal sensors
+ * \class colored_blob_camera_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Omnidirectional colored blob camera sensor wrapper for the following
- * supported robots:
+ * \brief Omnidirectional colored blob camera sensor wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot. The simulated sensor is expensive to update each timestep,
  *   so it is disabled upon creation, so robots can selectively enable/disable
  *   it as needed for maximum speed.
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _colored_blob_camera_sensor {
+class colored_blob_camera_sensor_impl {
  public:
   /**
-   * @brief A camera sensor reading (color, distance, angle) tuple.
+   * \brief A camera sensor reading (color, distance, angle) tuple.
    */
   struct reading {
     rmath::vector2d vec;
     rutils::color color;
   };
 
-  explicit _colored_blob_camera_sensor(TSensor * const sensor)
+  explicit colored_blob_camera_sensor_impl(TSensor * const sensor)
       : m_sensor(sensor) {}
 
   /**
-   * @brief Get the sensor readings for the footbot robot.
+   * \brief Get the sensor readings for the footbot robot.
    *
-   * @return A vector of \ref reading.
+   * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_blob_camera_sensor<U>::value)>
@@ -116,9 +122,9 @@ class _colored_blob_camera_sensor {
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 using colored_blob_camera_sensor =
-    _colored_blob_camera_sensor<argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
+    colored_blob_camera_sensor_impl<argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_BLOB_CAMERA_SENSOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_ */

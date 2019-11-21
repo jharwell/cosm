@@ -1,7 +1,7 @@
 /**
- * @file convergence_config.hpp
+ * \file convergence_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_CONFIG_HPP_
-#define INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_CONFIG_HPP_
+#ifndef INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_HPP_
+#define INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
@@ -39,8 +39,11 @@ NS_START(cosm, convergence, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct convergence_config
- * @ingroup cosm convergence config
+ * \struct convergence_config
+ * \ingroup convergence config
+ *
+ * \brief Container for the configuration of different swarm covergence
+ * measures.
  */
 struct convergence_config final : public rconfig::base_config {
   uint                             n_threads{0};

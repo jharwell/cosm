@@ -1,7 +1,7 @@
 /**
- * @file diff_drive_sensor.hpp
+ * \file diff_drive_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -51,19 +51,22 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class diff_drive_sensor
- * @ingroup cosm hal sensors
+ * \class diff_drive_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Differential drive sensor wrapper for the following supported
- * robots:
+ * \brief Differential drive sensor wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot
- * - NULL robot (robot without differential drive capabilities). This is used to
- * - compile out the selected robot's sensor, and as such does not have a
- *   preprocessor definition.
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _diff_drive_sensor {
+class diff_drive_sensor_impl {
  public:
   struct reading {
     double vel_left;
@@ -73,10 +76,10 @@ class _diff_drive_sensor {
     double axle_length;
   };
 
-  explicit _diff_drive_sensor(TSensor* const sensor) : m_sensor(sensor) {}
+  explicit diff_drive_sensor_impl(TSensor* const sensor) : m_sensor(sensor) {}
 
   /**
-   * @brief Get the current battery sensor reading for the footbot robot.
+   * \brief Get the current battery sensor reading for the footbot robot.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ds_sensor<U>::value)>
@@ -90,7 +93,7 @@ class _diff_drive_sensor {
   }
 
   /**
-   * @brief Return the current speed of the robot (average of the 2 wheel
+   * \brief Return the current speed of the robot (average of the 2 wheel
    * speeds).
    */
   template <typename U = TSensor,
@@ -109,9 +112,9 @@ class _diff_drive_sensor {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using diff_drive_sensor = _diff_drive_sensor<argos::CCI_DifferentialSteeringSensor>;
+using diff_drive_sensor = diff_drive_sensor_impl<argos::CCI_DifferentialSteeringSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_DIFF_DRIVE_SENSOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_SENSORSDIFF_DRIVE_SENSOR_HPP_ */

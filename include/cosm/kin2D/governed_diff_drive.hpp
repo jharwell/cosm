@@ -1,7 +1,7 @@
 /**
- * @file governed_diff_drive.hpp
+ * \file governed_diff_drive.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -44,10 +44,10 @@ NS_START(kin2D);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class governed_diff_drive
- * @ingroup cosm kin2D
+ * \class kin2D::governed_diff_drive
+ * \ingroup kin2D
  *
- * @brief A differential drive whose maximum speed can be set in a temporally
+ * \brief A differential drive whose maximum speed can be set in a temporally
  * varyng manner via \ref tv::switchable_tv_generator, if configured to do so.
  */
 class governed_diff_drive final : public kin2D::diff_drive {
@@ -61,22 +61,22 @@ class governed_diff_drive final : public kin2D::diff_drive {
   governed_diff_drive(const governed_diff_drive&) = default;
 
   /**
-   * @brief Get the current value of the governor.
+   * \brief Get the current value of the governor.
    *
-   * @return A percent [0.0,1.0]
+   * \return A percent [0.0,1.0]
    */
   double active_throttle(void) const RCSW_PURE;
 
   /**
-   * @brief Get the current value of the governor if it was active (it might not
+   * \brief Get the current value of the governor if it was active (it might not
    * be).
    *
-   * @return A percent [0.0,1.0]
+   * \return A percent [0.0,1.0]
    */
   double applied_throttle(void) const RCSW_PURE;
 
   /**
-   * @brief Set the variance generator. This is a function, rather than part of
+   * \brief Set the variance generator. This is a function, rather than part of
    * the constructor because the creation of variance generators is only
    * performed if a certain type of variance is enabled (e.g. motion throttling
    * when certain conditions are met).

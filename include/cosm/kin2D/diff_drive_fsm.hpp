@@ -1,7 +1,7 @@
 /**
- * @file diff_drive_fsm.hpp
+ * \file diff_drive_fsm.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,30 +41,30 @@ NS_START(cosm, kin2D);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class diff_drive_fsm
- * @ingroup cosm kin2D
+ * \class diff_drive_fsm
+ * \ingroup kin2D
  *
- * @brief Handles the control of the diff drive for the robot, in terms
+ * \brief Handles the control of the diff drive for the robot, in terms
  * of how quickly/how much to change wheel speeds. Does NOT actually change the
  * wheel speeds.
  */
 class diff_drive_fsm final : public rpfsm::simple_fsm {
  public:
   /**
-   * @brief Initialize the FSM.
+   * \brief Initialize the FSM.
    *
-   * @param max_speed Maximum wheel velocity.
-   * @param soft_turn_max Maximum angle difference between current and new
+   * \param max_speed Maximum wheel velocity.
+   * \param soft_turn_max Maximum angle difference between current and new
    *                      heading that will not trigger a hard (in place) turn.
    */
   diff_drive_fsm(double max_speed, const rmath::radians& soft_turn_max);
 
   /*
-   * @brief Gets a direction vector as input and transforms it into wheel
+   * \brief Gets a direction vector as input and transforms it into wheel
    * speeds internally.
    *
-   * @param speed The new linear speed of the robot.
-   * @param angle The difference from the robot's CURRENT heading (i.e."change
+   * \param speed The new linear speed of the robot.
+   * \param angle The difference from the robot's CURRENT heading (i.e."change
    *              this much from the direction you are currently going in").
    */
   void change_velocity(double speed, const rmath::radians& angle);
@@ -73,23 +73,23 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
 
  private:
   /**
-   * @brief Set the wheel speeds according to the heading.
+   * \brief Set the wheel speeds according to the heading.
    *
-   * @param speed1 Speed of left wheel.
-   * @param speed2 Speed of right wheel.
-   * @param heading Robot heading, which is used to determine which speed to
+   * \param speed1 Speed of left wheel.
+   * \param speed2 Speed of right wheel.
+   * \param heading Robot heading, which is used to determine which speed to
    *                apply to which wheel, so that the proper turn direction is
    *                executed.
    */
   void set_wheel_speeds(double speed1, double speed2, rmath::radians heading);
 
   /**
-   * @brief Clamp the desired speed to a maximum (maximum will be either the
+   * \brief Clamp the desired speed to a maximum (maximum will be either the
    * global maximum or the throttled maximum).
    *
-   * @param desired The desired wheel speed.
+   * \param desired The desired wheel speed.
    *
-   * @return The clamped speed.
+   * \return The clamped speed.
    */
   double clamp_wheel_speed(double desired);
 
@@ -103,7 +103,7 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
   };
 
   /**
-   * @brief Turning data for input into the state machine, to translate the
+   * \brief Turning data for input into the state machine, to translate the
    * desired heading change into wheel speeds.
    */
   struct turn_data final : public rpfsm::event_data {
@@ -115,14 +115,14 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
   };
 
   /**
-   * @brief Robots in this state will execute a gradual turn in the desired
+   * \brief Robots in this state will execute a gradual turn in the desired
    * heading direction. Threshold for this type of turn is controlled by
    * parameters.
    */
   FSM_STATE_DECLARE(diff_drive_fsm, soft_turn, turn_data);
 
   /**
-   * @brief Robots in this state will execute an in-place turn (a spin really)
+   * \brief Robots in this state will execute an in-place turn (a spin really)
    * in the direction of the desired heading. Threshold for this type of turn
    * is controlled by parameters.
    */

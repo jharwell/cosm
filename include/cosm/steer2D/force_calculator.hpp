@@ -1,7 +1,7 @@
 /**
- * @file force_calculator.hpp
+ * \file force_calculator.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -46,29 +46,26 @@ struct force_calculator_config;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
- * @class force_calculator
- * @ingroup cosm steer2D
+ * \class force_calculator
+ * \ingroup steer2D
  *
- * @brief Class encapsulating steering of entities through 2D space via summing
+ * \brief Class encapsulating steering of entities through 2D space via summing
  * selectable forces that act on the entity each timestep. To use this class,
  * entities must conform to the \ref boid interface.
- *
- * Once conformant, see \ref force_type for available force types.
  */
 class force_calculator : public rer::client<force_calculator> {
  public:
   force_calculator(boid& entity, const config::force_calculator_config* config);
 
   /**
-   * @brief Return the current steering force as a velocity vector.
+   * \brief Return the current steering force as a velocity vector.
    */
   const rmath::vector2d& value(void) const { return m_force_accum; }
   void value(const rmath::vector2d& val) { m_force_accum = val; }
 
   /**
-   * @brief Return the current steering force as twist acting on the managed
+   * \brief Return the current steering force as twist acting on the managed
    * entity.
    */
   kin::twist value_as_twist(void) const { return to_twist(m_force_accum); }
@@ -76,21 +73,21 @@ class force_calculator : public rer::client<force_calculator> {
   kin::twist to_twist(const rmath::vector2d& force) const;
 
   /**
-   * @brief Reset the sum of forces acting on the entity.
+   * \brief Reset the sum of forces acting on the entity.
    */
   void reset(void) { m_force_accum.set(0, 0); }
 
   /**
-   * @brief Calculate the \ref arrival_force for this timestep.
+   * \brief Calculate the \ref arrival_force for this timestep.
    *
-   * @param target The target to seek to.
+   * \param target The target to seek to.
    */
   rmath::vector2d seek_through(const rmath::vector2d& target);
 
   /**
-   * @brief Calculate the \ref seek_force for this timestep.
+   * \brief Calculate the \ref seek_force for this timestep.
    *
-   * @param target The target to seek to.
+   * \param target The target to seek to.
    */
   rmath::vector2d seek_to(const rmath::vector2d& target);
 
@@ -98,51 +95,57 @@ class force_calculator : public rer::client<force_calculator> {
     return m_arrival.within_slowing_radius();
   }
   /**
-   * @brief Calculate the \ref wander_force for this timestep.
+   * \brief Calculate the \ref wander_force for this timestep.
    */
   rmath::vector2d wander(rmath::rng* rng);
 
   /**
-   * @brief Calculate the \ref avoidance_force for this timestep.
+   * \brief Calculate the \ref avoidance_force for this timestep.
    *
    * If no threatening obstacle exists, this force is 0.
    *
-   * @param closest_obstacle Where is the closest obstacle, relative to robot's
+   * \param closest_obstacle Where is the closest obstacle, relative to robot's
    * current position AND heading.
    */
   rmath::vector2d avoidance(const rmath::vector2d& closest_obstacle);
 
   /**
-   * @brief Calculate the \ref phototaxis_force for this timestep.
+   * \brief Calculate the \ref phototaxis_force for this timestep.
    *
-   * @param readings The current light sensor readings.
+   * \param readings The current light sensor readings.
    */
   rmath::vector2d phototaxis(
       const phototaxis_force::light_sensor_readings& readings);
 
   /**
-   * @brief Calculate the \ref phototaxis_force for this timestep.
+   * \brief Calculate the \ref phototaxis_force for this timestep.
    *
-   * @param readings The current camera sensor readings.
+   * \param readings The current camera sensor readings.
+   * \param color The color of the light source to taxis towards. If any of the
+   *              camera sensor readings are not this color, they are ignored in
+   *              the force calculation.
    */
   rmath::vector2d phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
       const rutils::color& color);
 
   /**
-   * @brief Calculate the negative of the \ref phototaxis_force for this
+   * \brief Calculate the negative of the \ref phototaxis_force for this
    * timestep.
    *
-   * @param readings The current light sensor readings.
+   * \param readings The current light sensor readings.
    */
   rmath::vector2d anti_phototaxis(
       const phototaxis_force::light_sensor_readings& readings);
 
   /**
-   * @brief Calculate the negative of the \ref phototaxis_force for this
+   * \brief Calculate the negative of the \ref phototaxis_force for this
    * timestep.
    *
-   * @param readings The current camera sensor readings.
+   * \param readings The current camera sensor readings.
+   * \param color The color of the light source to taxis towards. If any of the
+   *              camera sensor readings are not this color, they are ignored in
+   *              the force calculation.
    */
   rmath::vector2d anti_phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,

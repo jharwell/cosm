@@ -1,7 +1,7 @@
 /**
- * @file twist.hpp
+ * \file twist.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -36,10 +36,10 @@ NS_START(cosm, kin);
  ******************************************************************************/
 
 /**
- * @struct twist
- * @ingroup cosm kin
+ * \struct twist
+ * \ingroup kin
  *
- * @brief Representation of the twist of a  robot. ROS already has this, but
+ * \brief Representation of the twist of a  robot. ROS already has this, but
  * does not work with all robotic simulators (such as ARGoS)/models, hence the
  * need for me to implement this.
  */

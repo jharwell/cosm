@@ -1,7 +1,7 @@
 /**
- * @file acquire_goal_fsm.hpp
+ * \file acquire_goal_fsm.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -48,10 +48,10 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class acquire_goal_fsm
- * @ingroup cosm fsm
+ * \class acquire_goal_fsm
+ * \ingroup fsm
  *
- * @brief The base FSM for an acquiring a goal in the arena.
+ * \brief The base FSM for an acquiring a goal in the arena.
  *
  * Each robot executing this FSM will acquire an instance of its goal (either a
  * known instance or via random exploration). Once the instance has been
@@ -62,70 +62,101 @@ class acquire_goal_fsm : public util_hfsm,
                          public rta::taskable,
                          public metrics::goal_acq_metrics {
  public:
+  /**
+   * \brief Tuple representing a goal to be acquired: A location, the utility
+   * associated with that location, and an integer identifier for the location
+   * (e.g. UUID of the object), which can be -1 if unused.
+   */
   using candidate_type = std::tuple<rmath::vector2d, double, int>;
-  using goal_select_ftype = std::function<boost::optional<candidate_type>(void)>;
-  using acquisition_goal_ftype =
-      std::function<goal_acq_metrics::goal_type(void)>;
-  using goal_valid_ftype = std::function<bool(const rmath::vector2d&, uint)>;
 
   /**
-   * acquisition_goal Function used to tell the FSM what is the ultimate goal of
-   *                  the acquisition. However, the return of \ref
-   *                  acquisition_goal() may not always be the same as the
-   *                  specified goal, depending on what the current FSM state
-   *                  is.
-   *
-   * goal_select      Function used to select a goal from the list of
-   *                  candidates. Should return the "best" candidate that should
-   *                  be acquired.
-   *
-   * candidates_exist Function used to determine if any goal candidates are
-   *                  currently available/eligible for acquisition.
-   *
-   * begin_acq_cb     Callback called on the first timestep of goal acquisition,
-   *                  in case state needs to be reset after goal selection.
-   *
-   * goal_acquired_cb Callback used after a goal has been acquired for sanity
-   *                  check/verification of state. Will be passed \c TRUE if the
-   *                  acquired goal was obtained via exploration, rather than
-   *                  vectoring, and false if it was obtained via
-   *                  vectoring. Should return \c TRUE if the goal has REALLY
-   *                  been acquired, and \c FALSE otherwise (the goal may have
-   *                  vanished if it was a block/cache, for example).
-   *
-   * explore_term_cb Callback for goal detection during exploration. This fsm
-   *                 can't know when a goal has been reached without losing its
-   *                 generality when exploring, so this callback is provided to
-   *                 it for that purpose. Should return \c TRUE if the goal has
-   *                 been detected/reached and exploration should terminate, and
-   *                 \c FALSE otherwise.
-   *
-   * goal_valid_cb Callback for verifying goal validity during
-   *               vectoring/exploration. If for any reason the specific goal
-   *               becomes invalid before the robot has acquired it, then it
-   *               should return \c FALSE.
+   * \brief Function type returning a \ref candidate_type if any is found, and
+   * an empty boost::optional<> otherwise.
    */
+  using goal_select_ftype = std::function<boost::optional<candidate_type>(void)>;
+
+  /**
+   * \brief Function type which returns the FSM's current goal via \ref
+   * goal_acq_metrics::goal_type.
+   */
+  using acquisition_goal_ftype =
+      std::function<goal_acq_metrics::goal_type(void)>;
+
+  /**
+   * \brief Function type which returns if the current acquisition goal is still
+   * valid for acquisition, given its location and the ID of the goal. This is
+   * necessary as the state of the arena may change between when a goal is
+   * selected for acqusition and when a robot arrives, and we don't want to
+   * waste effort attempting to acquire a goal that no longer exists (for
+   * example).
+   */
+  using goal_valid_ftype = std::function<bool(const rmath::vector2d&, int)>;
+
   struct hook_list {
     /* clang-format off */
+    /**
+     * \brief Callback used to tell the FSM what is the ultimate goal of the
+     * acquisition. However, the return of \ref acquisition_goal() may not
+     * always be the same as the specified goal, depending on what the current
+     * FSM state is.
+     */
     acquisition_goal_ftype    acquisition_goal{nullptr};
+
+    /**
+     * \brief Function used to select a goal from the list of candidates. Should
+     * return the "best" candidate that should be acquired.
+     */
     goal_select_ftype         goal_select{nullptr};
+
+    /**
+     * \brief Callback used to determine if any goal candidates are
+     * currently available/eligible for acquisition.
+     */
     std::function<bool(void)> candidates_exist{nullptr};
+
+    /**
+     * \brief Callback called on the first timestep of goal acquisition, in case
+     * state needs to be reset after goal selection.
+     */
     std::function<void(void)> begin_acq_cb{nullptr};
+
+    /**
+     * \brief Callback used after a goal has been acquired for sanity
+     * check/verification of state. Will be passed \c TRUE if the acquired goal
+     * was obtained via exploration, rather than vectoring, and false if it was
+     * obtained via vectoring. Should return \c TRUE if the goal has REALLY been
+     * acquired, and \c FALSE otherwise (the goal may have vanished if it was a
+     * block/cache, for example).
+     */
     std::function<bool(bool)> goal_acquired_cb{nullptr};
+
+    /**
+    * \brief Callback for goal detection during exploration. This fsm can't know
+    * when a goal has been reached without losing its generality when exploring,
+    * so this callback is provided to it for that purpose. Should return \c TRUE
+    * if the goal has been detected/reached and exploration should terminate,
+    * and \c FALSE otherwise.
+    */
     std::function<bool(void)> explore_term_cb{nullptr};
-    goal_valid_ftype          goal_valid_cb{nullptr};
+
+    /**
+     * \brief Callback for verifying goal validity during
+     * vectoring/exploration. If for any reason the specific goal becomes
+     * invalid before the robot has acquired it, then it should return \c FALSE.
+     */
+     goal_valid_ftype goal_valid_cb{nullptr};
     /* clang-format on */
   };
 
   /**
-   * @param saa Handle to sensing and actuation subsystem.
+   * \param saa Handle to sensing and actuation subsystem.
    *
-   * @param behavior The exploration behavior to use; can be NULL if goal
+   * \param behavior The exploration behavior to use; can be NULL if goal
    * acquisition should always be performed via vectoring.
    *
-   * @param rng Random number generator for use internally.
+   * \param rng Random number generator for use internally.
    *
-   * @param hooks List of function callbacks that derived classes should pass in
+   * \param hooks List of function callbacks that derived classes should pass in
    *              ordr to make use of the general purpose machinery in this
    *              class.
    */
@@ -189,55 +220,55 @@ class acquire_goal_fsm : public util_hfsm,
 
  private:
   /**
-   * @brief Acquire a known goal or discover one via random exploration.
+   * \brief Acquire a known goal or discover one via random exploration.
    *
-   * @return \c TRUE if a goal has been acquired, \c FALSE otherwise.
+   * \return \c TRUE if a goal has been acquired, \c FALSE otherwise.
    */
   bool acquire_goal(void);
 
   /**
-   * @brief Acquire an unknown goal via exploration.
+   * \brief Acquire an unknown goal via exploration.
    *
-   * @return \c TRUE if a goal has been acquired \c FALSE otherwise.
+   * \return \c TRUE if a goal has been acquired \c FALSE otherwise.
    */
   bool acquire_unknown_goal(void);
 
   /**
-   * @brief Acquire a known goal via exploration.
+   * \brief Acquire a known goal via exploration.
    *
-   * @return \c TRUE if a goal has been acquired \c FALSE otherwise.
+   * \return \c TRUE if a goal has been acquired \c FALSE otherwise.
    */
   bool acquire_known_goal(void);
 
   /* goal acquisition states */
 
   /**
-   * @brief Starting/reset state for FSM. Has no purpose other than that.
+   * \brief Starting/reset state for FSM. Has no purpose other than that.
    */
   HFSM_STATE_DECLARE_ND(acquire_goal_fsm, start);
 
   /**
-   * @brief Main state for the FSM. Robots in this state vectoring to an a
+   * \brief Main state for the FSM. Robots in this state vectoring to an a
    * derised object's location if any objects of the target type are known, and
    * explore for a desired object otherwise.
    */
   HFSM_STATE_DECLARE_ND(acquire_goal_fsm, fsm_acquire_goal);
 
   /**
-   * @brief Once a goal has been acquired, controller wait in this state until
+   * \brief Once a goal has been acquired, controller wait in this state until
    * reset by a higher level FSM.
    */
   HFSM_STATE_DECLARE_ND(acquire_goal_fsm, finished);
 
   /**
-   * @brief Simple state for exit in the main exploration state, used to reset
+   * \brief Simple state for exit in the main exploration state, used to reset
    * internal \ref vector_fsm and \ref explore_for_goal_fsm.
    * LED color for visualization purposes.
    */
   HFSM_EXIT_DECLARE(acquire_goal_fsm, exit_fsm_acquire_goal);
 
   /**
-   * @brief Defines the state map for the FSM.
+   * \brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
    * states in \enum states, or things will not work correctly.

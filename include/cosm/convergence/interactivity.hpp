@@ -1,7 +1,7 @@
 /**
- * @file interactivity.hpp
+ * \file interactivity.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, convergence);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class interactivity
- * @ingroup cosm
+ * \class interactivity
+ * \ingroup
  *
- * @brief Calculates the degree of interaction of the swarm, given a list of
+ * \brief Calculates the degree of interaction of the swarm, given a list of
  * robot nearest neighbor distances from a swarm for a given instant. From
  * Szabo2014.
  *
@@ -53,7 +53,7 @@ class interactivity final : public convergence_measure {
   explicit interactivity(double epsilon) : convergence_measure(epsilon) {}
 
   /*
-   * @brief Compute the interaction degree.
+   * \brief Compute the interaction degree.
    *
    * Note that each robot's distance to closest neighbor does not necessarily
    * appear in the same place in the result array on subsequent timesteps. This

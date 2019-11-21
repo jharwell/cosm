@@ -1,7 +1,7 @@
 /**
- * @file interactivity_config.hpp
+ * \file interactivity_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -36,8 +36,11 @@ NS_START(cosm, convergence, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct interactivity_config
- * @ingroup cosm convergence config
+ * \struct interactivity_config
+ * \ingroup convergence config
+ *
+ * \brief Configuration for the interactivity convergence measure, as described
+ * in \todo paper ref.
  */
 struct interactivity_config final : public rconfig::base_config {
   bool enable{false};

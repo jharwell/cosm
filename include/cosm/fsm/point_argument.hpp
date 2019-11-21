@@ -1,7 +1,7 @@
 /**
- * @file point_argument.hpp
+ * \file point_argument.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,12 +38,12 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class point_argument
- * @ingroup cosm fsm
+ * \class point_argument
+ * \ingroup fsm
  *
- * @brief An argument that can be passed to a \ref ta::taskable function which
- * contains a 2D point and a tolerance, for use in specifying a location in 2D
- * space which should be acquired.
+ * \brief An argument that can be passed to a \ref rcppsw::ta::taskable function
+ * which contains a 2D point and a tolerance, for use in specifying a location
+ * in 2D space which should be acquired.
  */
 class point_argument : public rta::taskable_argument {
  public:

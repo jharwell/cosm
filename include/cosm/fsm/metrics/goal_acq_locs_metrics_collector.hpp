@@ -1,7 +1,7 @@
 /**
- * @file goal_acq_locs_metrics_collector.hpp
+ * \file goal_acq_locs_metrics_collector.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class goal_acq_locs_metrics_collector
- * @ingroup cosm fsm metrics
+ * \class goal_acq_locs_metrics_collector
+ * \ingroup fsm metrics
  *
- * @brief Collector for \ref goal_acq_metrics goal locations, which is
+ * \brief Collector for \ref goal_acq_metrics goal locations, which is
  * collected as a 2D array, and needs its own collector separate from the \ref
  * goal_acq_metrics_collector (1 .csv per collector).
  */
@@ -50,9 +50,9 @@ class goal_acq_locs_metrics_collector final :
     public rmetrics::spatial::grid2D_avg_metrics_collector {
  public:
   /**
-   * @param ofname The output file name.
-   * @param interval Collection interval.
-   * @param dims Dimensions of the arena.
+   * \param ofname The output file name.
+   * \param interval Collection interval.
+   * \param dims Dimensions of the arena.
    */
   goal_acq_locs_metrics_collector(const std::string& ofname,
                                   uint interval,

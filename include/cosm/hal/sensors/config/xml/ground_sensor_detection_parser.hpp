@@ -1,7 +1,7 @@
 /**
- * @file ground_sensor_detection_parser.hpp
+ * \file ground_sensor_detection_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, hal, sensors, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class ground_sensor_detection_parser
- * @ingroup cosm hal sensors config xml
+ * \class ground_sensor_detection_parser
+ * \ingroup hal sensors config xml
  *
- * @brief Parses XML parameters relating to HAL ground sensor into \ref
+ * \brief Parses XML parameters relating to HAL ground sensor into \ref
  * ground_sensor_detection_config.
  */
 class ground_sensor_detection_parser : public rconfig::xml::xml_config_parser {

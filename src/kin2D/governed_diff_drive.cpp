@@ -1,7 +1,7 @@
 /**
- * @file governed_diff_drive.cpp
+ * \file governed_diff_drive.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *

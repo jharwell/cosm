@@ -1,7 +1,7 @@
 /**
- * @file swarm_irv_manager_config.hpp
+ * \file swarm_irv_manager_config.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,8 +37,11 @@ NS_START(cosm, tv, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct swarm_irv_manager_config
- * @ingroup cosm tv config
+ * \struct swarm_irv_manager_config
+ * \ingroup tv config
+ *
+ * \brief Configuration for the swarm Intra Robot Variance (IRV) manager (\ref
+ * swarm_irv_manager).
  */
 struct swarm_irv_manager_config final : public rconfig::base_config {
   rct::config::waveform_config motion_throttle{};

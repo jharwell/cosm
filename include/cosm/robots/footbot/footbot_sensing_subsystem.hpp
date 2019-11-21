@@ -1,7 +1,7 @@
 /**
- * @file footbot_sensing_subsystem.hpp
+ * \file footbot_sensing_subsystem.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -35,10 +35,10 @@ NS_START(cosm, robots, footbot);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class footbot_sensing_subsystem
- * @ingroup cosm robots footbot
+ * \class footbot_sensing_subsystem
+ * \ingroup robots footbot
  *
- * @brief The sensing subsystem the footbot robot.
+ * \brief The sensing subsystem the footbot robot.
  */
 class footbot_sensing_subsystem : public subsystem::sensing_subsystem2D {
  public:

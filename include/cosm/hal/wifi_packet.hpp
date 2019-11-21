@@ -1,7 +1,7 @@
 /**
- * @file wifi_packet.hpp
+ * \file wifi_packet.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,7 +37,7 @@ NS_START(cosm, hal);
  * Class Definitions
  ******************************************************************************/
 /**
- * @brief A wireless communication sensor payload.
+ * \brief A wireless communication sensor payload.
  */
 struct wifi_packet {
   std::vector<uint8_t> data;

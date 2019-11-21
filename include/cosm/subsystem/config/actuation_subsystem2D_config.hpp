@@ -1,7 +1,7 @@
 /**
- * @file actuation_subsystem2D_config.hpp
+ * \file actuation_subsystem2D_config.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,8 +38,11 @@ NS_START(cosm, subsystem, config);
  ******************************************************************************/
 
 /**
- * @struct actuation_subsystem2D_config
- * @ingroup cosm subsystem config
+ * \struct actuation_subsystem2D_config
+ * \ingroup subsystem config
+ *
+ * \brief Configuration for the actuation subsystem for wheeled robots that
+ * operate in two dimensions.
  */
 struct actuation_subsystem2D_config final : public rconfig::base_config {
   kin2D::config::diff_drive_config diff_drive{};

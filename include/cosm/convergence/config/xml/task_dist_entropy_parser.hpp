@@ -1,7 +1,7 @@
 /**
- * @file task_dist_entropy_parser.hpp
+ * \file task_dist_entropy_parser.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, convergence, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class task_dist_entropy_parser
- * @ingroup cosm convergence config xml
+ * \class task_dist_entropy_parser
+ * \ingroup convergence config xml
  *
- * @brief Parses XML configuration related the calculation of swarm task
+ * \brief Parses XML configuration related the calculation of swarm task
  * distribution entropy into \ref task_dist_entropy_config.
  */
 class task_dist_entropy_parser : public rconfig::xml::xml_config_parser {
@@ -51,7 +51,7 @@ class task_dist_entropy_parser : public rconfig::xml::xml_config_parser {
   using config_type = task_dist_entropy_config;
 
   /**
-   * @brief The root tag that all loop functions relating to task_dist_entropy
+   * \brief The root tag that all loop functions relating to task_dist_entropy
    * parameters should lie under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "task_dist_entropy";

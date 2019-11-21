@@ -1,7 +1,7 @@
 /**
- * @file wander_force_config.hpp
+ * \file wander_force_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,12 +38,14 @@ NS_START(cosm, steer2D, config);
  ******************************************************************************/
 
 /**
- * @struct wander_force_config
- * @ingroup cosm steer2D config
+ * \struct wander_force_config
+ * \ingroup steer2D config
+ *
+ * \brief Configuration for the wander force, as described in \todo ref here.
  */
 struct wander_force_config final : public rconfig::base_config {
   /**
-   * @brief How often to apply the wander force. 1 = apply every time it is
+   * \brief How often to apply the wander force. 1 = apply every time it is
    * asked. > 1 only apply every nth time it is asked. Depending on the
    * kinematics of the entity in question, applying the wander force every time
    * may not produce the desired level of exploration, because +/- random
@@ -53,26 +55,26 @@ struct wander_force_config final : public rconfig::base_config {
   uint interval{0};
 
   /**
-   * @brief Maximum value of the wander force.
+   * \brief Maximum value of the wander force.
    */
   double max{0.0};
 
   /**
-   * @brief Distance of the center of the circle used to calculate the wander
+   * \brief Distance of the center of the circle used to calculate the wander
    * force from the entity. Larger value = higher magnitude of wander force
    * vector.
    */
   double circle_distance{0};
 
   /**
-   * @brief Radius of the center of the circle used to calculate the wander
+   * \brief Radius of the center of the circle used to calculate the wander
    * force. Large value = higher magnitude of wander force vector.
    *
    */
   double circle_radius{0};
 
   /**
-   * @brief Defines the range [0, value] from which a random value will be
+   * \brief Defines the range [0, value] from which a random value will be
    * sampled uniformly each timestep in order to determine how much +/- angle
    * deviation from a straight line trajectory should be applied. High value =
    * higher average per-timestep deviation/more visibly random wandering.y
@@ -80,7 +82,7 @@ struct wander_force_config final : public rconfig::base_config {
   double max_angle_delta{0};
 
   /**
-   * @brief If \c TRUE, then a normal distribution is used instead of a uniform
+   * \brief If \c TRUE, then a normal distribution is used instead of a uniform
    * distribution to generate the wander angle.
    */
   bool normal_dist{false};

@@ -1,7 +1,7 @@
 /**
- * @file convergence_calculator.cpp
+ * \file convergence_calculator.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, convergence);
  * Type Definitions
  ******************************************************************************/
 /**
- * @struct convergence_measure_updater
- * @ingroup cosm convergence
+ * \struct convergence_measure_updater
+ * \ingroup convergence
  *
- * @brief Visitor class for mapping a given convergence measure to the actions
+ * \brief Visitor class for mapping a given convergence measure to the actions
  * necessary to update it. Needed because not all convergence measures take the
  * same number/type of parameters. This could also be solved with a parameter
  * base class/derived classes and dynamic casting, but I think this is cleaner.
@@ -83,10 +83,10 @@ struct convergence_measure_updater : public boost::static_visitor<void> {
 };
 
 /**
- * @struct convergence_status_updater
- * @ingroup cosm convergence
+ * \struct convergence_status_updater
+ * \ingroup convergence
  *
- * @brief Visitor class for gather the convergence status of each enabled type
+ * \brief Visitor class for gather the convergence status of each enabled type
  * of convergence calculation.
  */
 struct convergence_status_collator : public boost::static_visitor<bool> {

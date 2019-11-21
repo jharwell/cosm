@@ -1,7 +1,7 @@
 /**
- * @file interactivity_parser.hpp
+ * \file interactivity_parser.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, convergence, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class interactivity_parser
- * @ingroup cosm convergence config xml
+ * \class interactivity_parser
+ * \ingroup convergence config xml
  *
- * @brief Parses XML configuration related the calculation of swarm interactivty
+ * \brief Parses XML configuration related the calculation of swarm interactivty
  * into \ref interactivity_config.
  */
 class interactivity_parser : public rconfig::xml::xml_config_parser {
@@ -51,7 +51,7 @@ class interactivity_parser : public rconfig::xml::xml_config_parser {
   using config_type = interactivity_config;
 
   /**
-   * @brief The root tag that all XML configuration relating to interactivity
+   * \brief The root tag that all XML configuration relating to interactivity
    * parameters should lie under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "interactivity";

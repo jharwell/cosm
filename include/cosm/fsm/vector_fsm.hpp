@@ -1,7 +1,7 @@
 /**
- * @file vector_fsm.hpp
+ * \file vector_fsm.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, fsm);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class vector_fsm
- * @ingroup cosm fsm
+ * \class vector_fsm
+ * \ingroup fsm
  *
- * @brief An FSM used to send a robot to a particular ABSOLUTE location in the
+ * \brief An FSM used to send a robot to a particular ABSOLUTE location in the
  * arena.
  *
  * Vectoring is controlled by two PID loops: one for angle between robot heading
@@ -72,7 +72,7 @@ class vector_fsm final : public util_hfsm,
   const rmath::vector2d& target(void) const { return m_goal_data.loc; }
 
   /**
-   * @brief Initialize/re-initialize the vector_fsm fsm. After arriving at a
+   * \brief Initialize/re-initialize the vector_fsm fsm. After arriving at a
    * goal, this function must be called before vectoring to a new goal will
    * work.
    */
@@ -120,7 +120,7 @@ class vector_fsm final : public util_hfsm,
   };
 
   /**
-   * @brief A structure containing all the information needed for the controller
+   * \brief A structure containing all the information needed for the controller
    * to tell the FSM where to travel to next.
    */
   struct goal_data final : public rpfsm::event_data {
@@ -137,25 +137,25 @@ class vector_fsm final : public util_hfsm,
   };
 
   /**
-   * @brief The # of timesteps according to collision recovery. This is mainly
+   * \brief The # of timesteps according to collision recovery. This is mainly
    * to ensure that you do not repeatedly get 2 controller butting heads as they try
    * to travel to opposite goals.
    */
   static constexpr uint kCOLLISION_RECOVERY_TIME = 10;
 
   /**
-   * @brief If a robotics sees a threatening obstacle more than twice in this
+   * \brief If a robotics sees a threatening obstacle more than twice in this
    * interval, it is considered to be colliding too frequently, and will enter
    * collision recovery.
    */
   static constexpr uint kFREQ_COLLISION_THRESH = 300;
 
   /**
-   * @brief Calculates the relative vector from the robot to the current goal.
+   * \brief Calculates the relative vector from the robot to the current goal.
    *
-   * @param goal The current goal.
+   * \param goal The current goal.
    *
-   * @return The vector, specified with the tail at the robot and the head
+   * \return The vector, specified with the tail at the robot and the head
    * pointing towards the goal.
    */
   rmath::vector2d calc_vector_to_goal(const rmath::vector2d& goal) RCSW_PURE;
@@ -178,10 +178,10 @@ class vector_fsm final : public util_hfsm,
   FSM_EXIT_DECLARE(vector_fsm, exit_collision_avoidance);
 
   /**
-   * @brief Defines the state map for the FSM.
+   * \brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
-   * states in \enum fsm_states, or things will not work correctly.
+   * states in \enum state, or things will not work correctly.
    *
    * Note also that all controller will share the SAME state map in memory, so you
    * cannot change the parent of any statein this FSM for only SOME other

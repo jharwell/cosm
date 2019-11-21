@@ -1,7 +1,7 @@
 /**
- * @file pheromone_density.hpp
+ * \file pheromone_density.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -39,10 +39,10 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class pheromone_density
- * @ingroup cosm repr
+ * \class pheromone_density
+ * \ingroup repr
  *
- * @brief Calculates the pheromone density associated with something,
+ * \brief Calculates the pheromone density associated with something,
  * which decays over time on its, but can be reinforced by additional entities
  * other than the current one reporting the same thing and reinforcing the
  * density/information relevance.
@@ -56,7 +56,7 @@ class pheromone_density final : public rmath::expression<double>,
                                 public rer::client<pheromone_density> {
  public:
   /**
-   * @brief Convenience constant for use it adding pheromones to a density.
+   * \brief Convenience constant for use it adding pheromones to a density.
    */
   static constexpr double kUNIT_QUANTITY = 1.0;
 
@@ -73,13 +73,13 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Calculates the new pheromone density based on:
+   * \brief Calculates the new pheromone density based on:
    *
    * - The current density
    * - How many unit deposits have been made since the last calculation
    * - The decay rate.
    *
-   * @return The new density.
+   * \return The new density.
    */
   double update(void) {
     ER_ASSERT(m_rho > 0, "Bad rho: %f", m_rho);
@@ -89,24 +89,24 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Add a deposit of pheromone. Does not update the current
+   * \brief Add a deposit of pheromone. Does not update the current
    * value--that must be done separately, so that multiple deposits are batched
    * together for a single value update.
    *
-   * @param val The amount of the pheromone deposit. Should pretty much always
+   * \param val The amount of the pheromone deposit. Should pretty much always
    * be 1.0, unless there is a good reason not to do so.
    */
   void pheromone_add(double val) { m_delta += val; }
 
   /**
-   * @brief Set the pheromone density to the specified value. This is useful
+   * \brief Set the pheromone density to the specified value. This is useful
    * when repeated pheromone deposits are not desired, but you want to have a
    * way to reset the density of something to a maximum value (e.g. seeing the
    * same block on subsequent timesteps).
    *
    * Also sets the batched/pending updates to 0.
    *
-   * @param val The value to set.
+   * \param val The value to set.
    */
   void pheromone_set(double val) {
     eval(val);
@@ -114,7 +114,7 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Subtract two pheromone density objects. Only subtracts the current
+   * \brief Subtract two pheromone density objects. Only subtracts the current
    * values, ignoring the current deltas for each object.
    */
   pheromone_density operator-(const pheromone_density& other) const {
@@ -124,7 +124,7 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Subtract one pheromone density object from another. Only subtracts
+   * \brief Subtract one pheromone density object from another. Only subtracts
    * the the current values, ignoring the current deltas for each object.
    */
   pheromone_density& operator-=(const pheromone_density& other) {
@@ -133,7 +133,7 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Add two pheromone density objects. Only adds the current values,
+   * \brief Add two pheromone density objects. Only adds the current values,
    * ignoring the current deltas for each object.
    */
   pheromone_density operator+(const pheromone_density& other) const {
@@ -143,7 +143,7 @@ class pheromone_density final : public rmath::expression<double>,
   }
 
   /**
-   * @brief Add one pheromone density to another. Only adds the the current
+   * \brief Add one pheromone density to another. Only adds the the current
    * values, ignoring the current deltas for each object.
    */
   pheromone_density& operator+=(const pheromone_density& other) {
@@ -151,7 +151,7 @@ class pheromone_density final : public rmath::expression<double>,
     return *this;
   }
   /**
-   * @brief Divides a density by a constant factor, ignoring current deltas for
+   * \brief Divides a density by a constant factor, ignoring current deltas for
    * the object.
    */
   pheromone_density operator/(double div) const {

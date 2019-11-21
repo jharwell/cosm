@@ -1,7 +1,7 @@
 /**
- * @file positional_entropy.hpp
+ * \file positional_entropy.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -45,10 +45,10 @@ NS_START(cosm, convergence);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class positional_entropy
- * @ingroup cosm convergence
+ * \class positional_entropy
+ * \ingroup convergence
  *
- * @brief Calculate the positional entropy of the swarm, using the methods
+ * \brief Calculate the positional entropy of the swarm, using the methods
  * outlined in Balch2000 and Turgut2008.
  */
 class positional_entropy final
@@ -67,7 +67,7 @@ class positional_entropy final
   using entropy_balch2000::entropy_balch2000;
 
   /**
-   * @brief Calculate the positional entropy in 2D space of a swarm.
+   * \brief Calculate the positional entropy in 2D space of a swarm.
    */
   bool operator()(const std::vector<rmath::vector2d>& data) {
     auto dist_func = [](const rmath::vector2d& v1, const rmath::vector2d& v2) {

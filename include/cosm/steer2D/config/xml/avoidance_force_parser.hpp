@@ -1,7 +1,7 @@
 /**
- * @file avoidance_force_parser.hpp
+ * \file avoidance_force_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 
 /**
- * @class avoidance_force_parser
- * @ingroup cosm steer2D config xml
+ * \class avoidance_force_parser
+ * \ingroup steer2D config xml
  *
- * @brief Parses XML configuration for \ref avoidance_force into \ref
+ * \brief Parses XML configuration for \ref avoidance_force into \ref
  * avoidance_force_config. Assumes it is handed an XML parent in which the child
  * tag \ref kXMLRoot is found.
  *
@@ -55,7 +55,11 @@ class avoidance_force_parser final : public rconfig::xml::xml_config_parser {
  public:
   using config_type = avoidance_force_config;
 
-  static constexpr char kXMLRoot[] = "avoidance_force";
+  /**
+   * \brief The XML root tag that all \ref avoidance_force configuration should
+   * lie under in the XML tree.
+   */
+ static constexpr char kXMLRoot[] = "avoidance_force";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(cold, pure);

@@ -1,7 +1,7 @@
 /**
- * @file sensing_subsystem2D_parser.hpp
+ * \file sensing_subsystem2D_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, subsystem, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class sensing_subsystem2D_parser
- * @ingroup cosm subsystem config xml
+ * \class sensing_subsystem2D_parser
+ * \ingroup subsystem config xml
  *
- * @brief Parses XML parameters relating to sensings into \ref
+ * \brief Parses XML parameters relating to sensings into \ref
  * sensing_subsystem2D_config.
  */
 class sensing_subsystem2D_parser final : public rconfig::xml::xml_config_parser {
@@ -54,7 +54,7 @@ class sensing_subsystem2D_parser final : public rconfig::xml::xml_config_parser 
   ~sensing_subsystem2D_parser(void) override = default;
 
   /**
-   * @brief The root tag that all robot 2D sensing subsystem parameters should
+   * \brief The root tag that all robot 2D sensing subsystem parameters should
    * lie under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "sensing_subsystem2D";

@@ -1,7 +1,7 @@
 /**
- * @file task_dist_entropy_parser.cpp
+ * \file task_dist_entropy_parser.cpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *

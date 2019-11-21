@@ -1,7 +1,7 @@
 /**
- * @file convergence_parser.hpp
+ * \file convergence_parser.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -44,10 +44,10 @@ NS_START(cosm, convergence, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class convergence_parser
- * @ingroup cosm convergence config
+ * \class convergence_parser
+ * \ingroup convergence config
  *
- * @brief Parses XML configuration related to calculating swarm convergence into
+ * \brief Parses XML configuration related to calculating swarm convergence into
  * \ref convergence_config.
  */
 class convergence_parser final : public rconfig::xml::xml_config_parser {
@@ -57,7 +57,7 @@ class convergence_parser final : public rconfig::xml::xml_config_parser {
   ~convergence_parser(void) override = default;
 
   /**
-   * @brief The root tag that all XML configuration relating to convergence
+   * \brief The root tag that all XML configuration relating to convergence
    * parameters should lie under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "convergence";

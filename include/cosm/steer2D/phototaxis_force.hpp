@@ -1,7 +1,7 @@
 /**
- * @file phototaxis_force.hpp
+ * \file phototaxis_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -43,10 +43,10 @@ struct phototaxis_force_config;
  ******************************************************************************/
 
 /**
- * @class phototaxis_force
- * @ingroup cosm steer2D
+ * \class phototaxis_force
+ * \ingroup steer2D
  *
- * @brief A force pushing the robot away from light sources.
+ * \brief A force pushing the robot away from light sources.
  */
 class phototaxis_force {
  public:
@@ -58,7 +58,7 @@ class phototaxis_force {
   rmath::vector2d operator()(const light_sensor_readings& readings) const;
 
   /**
-   * @brief Calculate force vector to the average location of objects of the
+   * \brief Calculate force vector to the average location of objects of the
    * specified color.
    */
   rmath::vector2d operator()(const camera_sensor_readings& readings,

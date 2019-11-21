@@ -1,7 +1,7 @@
 /**
- * @file spatial_dist2D_metrics.hpp
+ * \file spatial_dist2D_metrics.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -37,10 +37,10 @@ NS_START(cosm, metrics);
  ******************************************************************************/
 
 /**
- * @class spatial_dist2D_metrics
- * @ingroup cosm metrics spatial
+ * \class spatial_dist2D_metrics
+ * \ingroup metrics spatial
  *
- * @brief Defines the metrics to be collected from swarms regarding spatial
+ * \brief Defines the metrics to be collected from swarms regarding spatial
  * distributions of robots within 2D space.
  */
 class spatial_dist2D_metrics : public virtual rmetrics::base_metrics {
@@ -48,18 +48,18 @@ class spatial_dist2D_metrics : public virtual rmetrics::base_metrics {
   spatial_dist2D_metrics(void) = default;
 
   /**
-   * @brief Return a single robot's current position in 2D space in real
+   * \brief Return a single robot's current position in 2D space in real
    * coordinates.
    */
   virtual const rmath::vector2d& position2D(void) const = 0;
 
   /**
-   * @brief Return a single robot's discretized position in 2D space.
+   * \brief Return a single robot's discretized position in 2D space.
    */
   virtual const rmath::vector2u& discrete_position2D(void) const = 0;
 
   /**
-   * @brief Return a single robot's current heading in 2D space.
+   * \brief Return a single robot's current heading in 2D space.
    */
   virtual rmath::vector2d heading2D(void) const = 0;
 };

@@ -1,7 +1,7 @@
 /**
- * @file collision_metrics.hpp
+ * \file collision_metrics.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,10 +38,10 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class collision_metrics
- * @ingroup cosm fsm metrics
+ * \class collision_metrics
+ * \ingroup fsm metrics
  *
- * @brief Interface defining what metrics should be collected regarding
+ * \brief Interface defining what metrics should be collected regarding
  * collision avoidance as controller go about their tasks.
  */
 class collision_metrics : public virtual rmetrics::base_metrics {
@@ -50,32 +50,32 @@ class collision_metrics : public virtual rmetrics::base_metrics {
   ~collision_metrics(void) override = default;
 
   /**
-   * @brief If \c TRUE, then a robot is currently engaged in collision avoidance.
+   * \brief If \c TRUE, then a robot is currently engaged in collision avoidance.
    */
   virtual bool in_collision_avoidance(void) const = 0;
 
   /**
-   * @brief If \c TRUE, then a robot has just entered collision avoidance. This
+   * \brief If \c TRUE, then a robot has just entered collision avoidance. This
    * should return \c FALSE on all subsequent steps the robot is in collision
    * avoidance.
    */
   virtual bool entered_collision_avoidance(void) const = 0;
 
   /**
-   * @brief If \c TRUE, then a robot has just exited collision avoidance. This
+   * \brief If \c TRUE, then a robot has just exited collision avoidance. This
    * should return \c FALSE on all previous steps the robot is in collision
    * avoidance, and all steps afterwards when it returns to normal operation.
    */
   virtual bool exited_collision_avoidance(void) const = 0;
 
   /**
-   * @brief If \ref exited_collision_avoidance() returns \c TRUE, then this
+   * \brief If \ref exited_collision_avoidance() returns \c TRUE, then this
    * should return the duration of the collision avoidance in timesteps.
    */
   virtual rtypes::timestep collision_avoidance_duration(void) const = 0;
 
   /**
-   * @brief When \ref in_collision_avoidance() returns \c TRUE, then this should
+   * \brief When \ref in_collision_avoidance() returns \c TRUE, then this should
    * return the robot's current position as is in collision avoidance.
    */
   virtual rmath::vector2u avoidance_loc(void) const = 0;

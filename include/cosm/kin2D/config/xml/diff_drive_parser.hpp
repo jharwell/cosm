@@ -1,7 +1,7 @@
 /**
- * @file diff_drive_parser.hpp
+ * \file diff_drive_parser.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, kin2D, config, xml);
  ******************************************************************************/
 
 /**
- * @class diff_drive_parser
- * @ingroup cosm kin2D config xml
+ * \class diff_drive_parser
+ * \ingroup kin2D config xml
  *
- * @brief Parses XML configuration relating to the \ref diff_drive into
+ * \brief Parses XML configuration relating to the \ref diff_drive into
  * \ref diff_drive_config.
  */
 class diff_drive_parser : public rconfig::xml::xml_config_parser {
@@ -52,7 +52,7 @@ class diff_drive_parser : public rconfig::xml::xml_config_parser {
   using config_type = diff_drive_config;
 
   /**
-   * @brief The root tag that all diff drive configuration values
+   * \brief The root tag that all diff drive configuration values
    * should lie under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "diff_drive";

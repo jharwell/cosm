@@ -1,7 +1,7 @@
 /**
- * @file switchable_tv_generator.hpp
+ * \file switchable_tv_generator.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, tv);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class switchable_tv_generator
- * @ingroup cosm tv
+ * \class tv::switchable_tv_generator
+ * \ingroup tv
  *
- * @brief Switchable (on/off) generator to produce a temporally varying signal
+ * \brief Switchable (on/off) generator to produce a temporally varying signal
  * via a configured waveform.
  */
 class switchable_tv_generator {
@@ -53,25 +53,25 @@ class switchable_tv_generator {
   ~switchable_tv_generator(void);
 
   /**
-   * @brief Get the applied amount of temporal variance (a percentage between 0
+   * \brief Get the applied amount of temporal variance (a percentage between 0
    * and 1) that should be applied to the robot.
    */
   double active_tv(void) const { return m_active; }
 
   /**
-   * @brief Get the current amount of motion_throttling (a percentage between 0
+   * \brief Get the current amount of motion_throttling (a percentage between 0
    * and 1) that is configured for for the robot (regardless if it is active or
    * not).
    */
   double applied_tv(void) const { return m_applied; }
 
   /**
-   * @brief Enable/disable application of the temporal variance.
+   * \brief Enable/disable application of the temporal variance.
    */
   void toggle(bool en) { m_en = en; }
 
   /**
-   * @brief Update the value of the temporal variance in accordance with the
+   * \brief Update the value of the temporal variance in accordance with the
    * configured waveform and current timestep.
    */
   void update(const rtypes::timestep& t);

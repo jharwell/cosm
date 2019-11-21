@@ -1,7 +1,7 @@
 /**
- * @file wifi_actuator.hpp
+ * \file wifi_actuator.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -52,24 +52,28 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class wifi_actuator_
- * @ingroup cosm hal
+ * \class wifi_actuator_impl
+ * \ingroup hal actuators
  *
- * @brief WIFI actuator wrapper for the following supported robots:
+ * \brief WIFI actuator wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot. These robots will use wifi to broadcast data every timestep
  *   to all robots in range until told to do otherwise.
- * - NULL robot (robot without wifi capabilities). This is used to compile out
- *   the selected robot's actuator, and as such does not have a preprocessor
- *   definition.
+ *
+ * \tparam TActuator The underlying actuator handle type abstracted away by the
+ *                   HAL. If nullptr, then that effectively disables the
+ *                   actuator at compile time, and SFINAE ensures no member
+ *                   functions can be called.
  */
 template<typename T>
-class _wifi_actuator {
+class wifi_actuator_impl {
  public:
-  explicit _wifi_actuator(T* const wifi) : m_wifi(wifi) {}
+  explicit wifi_actuator_impl(T* const wifi) : m_wifi(wifi) {}
 
   /**
-   * @brief Start broadcasting the specified data to all footbots within range.
+   * \brief Start broadcasting the specified data to all footbots within range.
    */
   template <typename U = T,
             RCPPSW_SFINAE_FUNC(detail::is_argos_rab_actuator<U>::value)>
@@ -80,7 +84,7 @@ class _wifi_actuator {
   }
 
   /**
-   * @brief Stop broadcasting the previously specified data to all footbots
+   * \brief Stop broadcasting the previously specified data to all footbots
    * within range.
    */
   template <typename U = T,
@@ -90,7 +94,7 @@ class _wifi_actuator {
   }
 
   /**
-   * @brief Reset the wifi device.
+   * \brief Reset the wifi device.
    */
   template <typename U = T,
             RCPPSW_SFINAE_FUNC(detail::is_argos_rab_actuator<U>::value)>
@@ -107,7 +111,7 @@ class _wifi_actuator {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using wifi_actuator = _wifi_actuator<argos::CCI_RangeAndBearingActuator>;
+using wifi_actuator = wifi_actuator_impl<argos::CCI_RangeAndBearingActuator>;
 #endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);

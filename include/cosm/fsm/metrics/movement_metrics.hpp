@@ -1,7 +1,7 @@
 /**
- * @file movement_metrics.hpp
+ * \file movement_metrics.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,10 +38,10 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class movement_metrics
- * @ingroup cosm fsm metrics
+ * \class movement_metrics
+ * \ingroup fsm metrics
  *
- * @brief Interface defining what metrics regarding movement traveled should be
+ * \brief Interface defining what metrics regarding movement traveled should be
  * collected from all controller.
  */
 class movement_metrics : virtual public rmetrics::base_metrics {
@@ -50,7 +50,7 @@ class movement_metrics : virtual public rmetrics::base_metrics {
   ~movement_metrics(void) override = default;
 
   /**
-   * @brief Get the movement that a robot has traveled in a single timestep.
+   * \brief Get the movement that a robot has traveled in a single timestep.
    *
    * This will be called every timestep by the \ref movement_metrics_collector
    * on all controller.
@@ -58,7 +58,7 @@ class movement_metrics : virtual public rmetrics::base_metrics {
   virtual rtypes::spatial_dist distance(void) const = 0;
 
   /**
-   * @brief Get the velocity that a robot has on a single timestep.
+   * \brief Get the velocity that a robot has on a single timestep.
    */
   virtual rmath::vector2d velocity(void) const = 0;
 };

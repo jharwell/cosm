@@ -1,7 +1,7 @@
 /**
- * @file ground_sensor_config.hpp
+ * \file ground_sensor_config.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,8 +40,14 @@ NS_START(cosm, hal, sensors, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct ground_sensor_config
- * @ingroup cosm hal sensors config
+ * \struct ground_sensor_config
+ * \ingroup hal sensors config
+ *
+ * \brief Configuration for ground sensors, for robots that have them.
+ *
+ * Robots are:
+ *
+ * - ARGoS footbot
  */
 struct ground_sensor_config final : public rconfig::base_config {
   std::map<std::string, ground_sensor_detection_config> detect_map{};

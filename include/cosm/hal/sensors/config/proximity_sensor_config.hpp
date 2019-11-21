@@ -1,7 +1,7 @@
 /**
- * @file proximity_sensor_config.hpp
+ * \file proximity_sensor_config.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -38,8 +38,14 @@ NS_START(cosm, hal, sensors, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * @struct proximity_sensor_config
- * @ingroup cosm hal sensors config
+ * \struct proximity_sensor_config
+ * \ingroup hal sensors config
+ *
+ * \brief Configuration for proximity sensors, for robots which have them.
+ *
+ * Robots are:
+ *
+ * - ARGoS footbot
  */
 struct proximity_sensor_config final : public rconfig::base_config {
   /*

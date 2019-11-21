@@ -1,7 +1,7 @@
 /**
- * @file diff_drive_actuator.hpp
+ * \file diff_drive_actuator.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -51,50 +51,61 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class diff_drive_actuator
- * @ingroup cosm hal actuators
+ * \class diff_drive_actuator_impl
+ * \ingroup hal actuators
  *
- * @brief Differential drive actuator wrapper for the following supported
- * robots:
+ * \brief Differential drive actuator wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot
- * - NULL robot (robot without differential drive capabilities). This is used to
- * - compile out the selected robot's actuator, and as such does not have a
- *   preprocessor definition.
+ *
+* \tparam TActuator The underlying actuator handle type abstracted away by the
+ * HAL. If nullptr, then that effectively disables the actuator at compile time,
+ * and SFINAE ensures no member functions can be called.
  */
-template <typename TSensor>
-class _diff_drive_actuator {
+template <typename TActuator>
+class diff_drive_actuator_impl {
  public:
-  explicit _diff_drive_actuator(TSensor* const wheels) : m_wheels(wheels) {}
+  /**
+   * \brief Construct the wrapper actuator.
+   *
+   * \param wheels The underlying actuator. If NULL, then that effectively
+   *               disables the actuator, and therefore subsequently calling any
+   *               member function will have no effect.
+   */
+  explicit diff_drive_actuator_impl(TActuator* const wheels) : m_wheels(wheels) {}
 
   /**
-   * @brief Set the wheel speeds for the current timestep for a footbot
+   * \brief Set the wheel speeds for the current timestep for a footbot
    * robot. Bounds checking is not performed.
    */
-  template <typename U = TSensor,
+  template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    m_wheels->SetLinearVelocity(left, right);
+    if (nullptr == m_wheels) {
+      m_wheels->SetLinearVelocity(left, right);
+    }
   }
 
   /**
-   * @brief Stop the wheels of a footbot robot. As far as I know, this is an
+   * \brief Stop the wheels of a footbot robot. As far as I know, this is an
    * immediate stop (i.e. no rampdown).
    */
-  template <typename U = TSensor,
+  template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
   void reset(void) { set_wheel_speeds(0.0, 0.0); }
 
  private:
   /* clang-format off */
-  TSensor* const m_wheels;
+  TActuator* const m_wheels;
   /* clang-format on */
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using diff_drive_actuator = _diff_drive_actuator<argos::CCI_DifferentialSteeringActuator>;
+using diff_drive_actuator = diff_drive_actuator_impl<argos::CCI_DifferentialSteeringActuator>;
 #endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_ACTUATORS_DIFF_DRIVE_ACTUATOR_IMPL_HPP_ */

@@ -1,7 +1,7 @@
 /**
- * @file footbot_actuation_subsystem.hpp
+ * \file footbot_actuation_subsystem.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -35,10 +35,10 @@ NS_START(cosm, robots, footbot);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class footbot_actuation_subsystem
- * @ingroup cosm robots footbot
+ * \class footbot_actuation_subsystem
+ * \ingroup robots footbot
  *
- * @brief The actuation subsystem for the footbot.
+ * \brief The actuation subsystem for the footbot.
  */
 class footbot_actuation_subsystem : public subsystem::actuation_subsystem2D {
  public:

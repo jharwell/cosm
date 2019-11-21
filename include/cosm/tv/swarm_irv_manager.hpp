@@ -1,7 +1,7 @@
 /**
- * @file swarm_irv_manager.hpp
+ * \file swarm_irv_manager.hpp
  *
- * @copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,29 +24,31 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <map>
 #include <boost/optional.hpp>
+#include <map>
+
+#include "rcppsw/ds/type_map.hpp"
+#include "rcppsw/er/client.hpp"
 
 #include "cosm/tv/switchable_tv_generator.hpp"
-
-#include "rcppsw/er/client.hpp"
-#include "rcppsw/ds/type_map.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, tv);
 
-namespace config { struct swarm_irv_manager_config; }
+namespace config {
+struct swarm_irv_manager_config;
+}
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * @class swarm_irv_manager
- * @ingroup cosm tv
+ * \class swarm_irv_manager
+ * \ingroup tv
  *
- * @brief Internal Robot Variance (IRV) manager. Orchestrates all application of
+ * \brief Internal Robot Variance (IRV) manager. Orchestrates all application of
  * temporal variance all robots in the swarm as it relates to their internal
  * state (no environmental/inter-robot variances).
  *
@@ -69,13 +71,13 @@ class swarm_irv_manager : public rer::client<swarm_irv_manager> {
   const swarm_irv_manager& operator=(const swarm_irv_manager& other) = delete;
 
   /**
-   * @brief Update the state of all applied variances. Should be called once per
+   * \brief Update the state of all applied variances. Should be called once per
    * timestep.
    */
   virtual void update(void) = 0;
 
   /**
-   * @brief Compute the average motion throttle that is currently being applied
+   * \brief Compute the average motion throttle that is currently being applied
    * to the swarm.
    */
   virtual double avg_motion_throttle(void) const = 0;
@@ -84,16 +86,17 @@ class swarm_irv_manager : public rer::client<swarm_irv_manager> {
     return (mc_motion_throttle_config) ? true : false;
   }
 
-  const ctv::switchable_tv_generator* motion_throttling_handler(int robot_id) const {
+  const ctv::switchable_tv_generator* motion_throttling_handler(
+      int robot_id) const {
     return &m_motion_throttling.at(robot_id);
   }
 
   /**
-   * @brief Register a robot controller to the temporal variance controller so
+   * \brief Register a robot controller to the temporal variance controller so
    * that all necessary handlers for all possible types of variance that could
    * be applied to a given controller are setup.
    *
-   * @param robot_id The ID of the robot controller, assumed to be unique (not
+   * \param robot_id The ID of the robot controller, assumed to be unique (not
    * checked).
    */
   void register_controller(int robot_id);

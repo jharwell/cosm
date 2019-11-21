@@ -1,7 +1,7 @@
 /**
- * @file polar_force.hpp
+ * \file polar_force.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ struct polar_force_config;
  ******************************************************************************/
 
 /**
- * @class polar_force
- * @ingroup cosm steer2D
+ * \class polar_force
+ * \ingroup steer2D
  *
- * @brief A force radiating from a fixed point in space towards the robot, that
+ * \brief A force radiating from a fixed point in space towards the robot, that
  * always pushes the robot away. Used to add curvature to otherwise straight
  * trajectories.
  */

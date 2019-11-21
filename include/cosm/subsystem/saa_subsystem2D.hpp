@@ -1,7 +1,7 @@
 /**
- * @file saa_subsystem2D.hpp
+ * \file saa_subsystem2D.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -40,10 +40,10 @@ NS_START(cosm, subsystem);
  ******************************************************************************/
 
 /**
- * @class saa_subsystem2D
- * @ingroup cosm subsystem
+ * \class saa_subsystem2D
+ * \ingroup subsystem
  *
- * @brief Sensing and Actuation (SAA) subsystem for the robot. Implements the
+ * \brief Sensing and Actuation (SAA) subsystem for the robot. Implements the
  * BOID interface, which requires both sensors and actuators.
  */
 class saa_subsystem2D : public steer2D::boid,
@@ -59,7 +59,7 @@ class saa_subsystem2D : public steer2D::boid,
         m_steer2D_calc(*this, steer_config) {}
 
   /**
-   * @brief Apply the summed steering forces; change wheel speeds. Resets the
+   * \brief Apply the summed steering forces; change wheel speeds. Resets the
    * summed forces.
    */
   virtual void steer_force2D_apply(void) = 0;

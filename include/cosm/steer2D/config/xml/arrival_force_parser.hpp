@@ -1,7 +1,7 @@
 /**
- * @file arrival_force_parser.hpp
+ * \file arrival_force_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 
 /**
- * @class arrival_force_parser
- * @ingroup cosm steer2D config xml
+ * \class arrival_force_parser
+ * \ingroup steer2D config xml
  *
- * @brief Parses XML configuration for \ref arrival_force into \ref
+ * \brief Parses XML configuration for \ref arrival_force into \ref
  * arrival_force_config. Assumes it is handed an XML parent in which the child
  * tag \ref kXMLRoot is found.
  *
@@ -55,6 +55,10 @@ class arrival_force_parser final : public rconfig::xml::xml_config_parser {
  public:
   using config_type = arrival_force_config;
 
+  /**
+   * \brief The XML root tag that all \ref arrival_force configuration should
+   * lie under in the XML tree.
+   */
   static constexpr char kXMLRoot[] = "arrival_force";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;

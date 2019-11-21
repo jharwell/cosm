@@ -1,7 +1,7 @@
 /**
- * @file util_hfsm.hpp
+ * \file util_hfsm.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -54,10 +54,10 @@ struct new_direction_data;
  * Class Definitions
  ******************************************************************************/
 /**
- * @class util_hfsm
- * @ingroup cosm fsm
+ * \class util_hfsm
+ * \ingroup fsm
  *
- * @brief A collection of base states/common functionality that FSMs can use if
+ * \brief A collection of base states/common functionality that FSMs can use if
  * they choose.
  *
  * This class cannot be instantiated on its own, as does not define an FSM
@@ -84,7 +84,7 @@ class util_hfsm : public rpfsm::hfsm,
 
  protected:
   /**
-   * @brief Calculate a random angle in [0, pi] for the purposes of direction
+   * \brief Calculate a random angle in [0, pi] for the purposes of direction
    * change.
    */
   rmath::radians random_angle(void);
@@ -96,15 +96,15 @@ class util_hfsm : public rpfsm::hfsm,
   collision_tracker* ca_tracker(void) { return &m_tracker; }
 
   /**
-   * @brief Robots entering this state will return to the nest.
+   * \brief Robots entering this state will return to the nest.
    *
    * This state MUST have a parent state defined that is not
-   * \ref rpatterns::fsm::hfsm::top_state().
+   * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
   HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, rpfsm::event_data);
 
   /**
-   * @brief Robots entering this state will leave the nest (they are assumed to
+   * \brief Robots entering this state will leave the nest (they are assumed to
    * already be in the nest when this state is entered).
    *
    * This state MUST have a parent state defined that is not \ref
@@ -113,7 +113,7 @@ class util_hfsm : public rpfsm::hfsm,
   HFSM_STATE_DECLARE(util_hfsm, leaving_nest, rpfsm::event_data);
 
   /**
-   * @brief Robots entering this state will randomly change their exploration
+   * \brief Robots entering this state will randomly change their exploration
    * direction to the specified direction. All signals are ignored in this
    * state. Once the direction change has been accomplished, the robot will
    * transition back to its previous state.
@@ -121,7 +121,7 @@ class util_hfsm : public rpfsm::hfsm,
   HFSM_STATE_DECLARE(util_hfsm, new_direction, rpfsm::event_data);
 
   /**
-   * @brief Entry state for returning to nest.
+   * \brief Entry state for returning to nest.
    *
    * Used to:
    *
@@ -132,25 +132,25 @@ class util_hfsm : public rpfsm::hfsm,
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_transport_to_nest);
 
   /**
-   * @brief A simple entry state for leaving nest, used to set LED colors for
+   * \brief A simple entry state for leaving nest, used to set LED colors for
    * visualization purposes.
    */
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_leaving_nest);
 
   /**
-   * @brief Simple state for entry into the new direction state, used to change
+   * \brief Simple state for entry into the new direction state, used to change
    * LED color for visualization purposes.
    */
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_new_direction);
 
   /**
-   * @brief Simple state for entry into the "wait for signal" state, used to
+   * \brief Simple state for entry into the "wait for signal" state, used to
    * change LED color for visualization purposes.
    */
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_wait_for_signal);
 
   /**
-   * @brief Exit state for returning to nest (i.e. when the robot arrives in the
+   * \brief Exit state for returning to nest (i.e. when the robot arrives in the
    * nest).
    *
    * Used to:
@@ -163,7 +163,7 @@ class util_hfsm : public rpfsm::hfsm,
 
  private:
   /**
-   * @brief When changing direction, a robot is spinning at such a speed that it
+   * \brief When changing direction, a robot is spinning at such a speed that it
    * may overshoot its desired new direction, but as long as it does not
    * overshoot by more than this tolerance, the direction change will still be
    * considered to have occurred successfully.
@@ -171,7 +171,7 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr double kDIR_CHANGE_TOL = 0.25;
 
   /**
-   * @brief When changing direction, it may not be enough to have an arrival
+   * \brief When changing direction, it may not be enough to have an arrival
    * tolerance for the new heading; it is possible that given the new direction,
    * the robot's initial heading, and the spinning speed, and it is impossible
    * for the robot to arrive within tolerance of the desired new direction. So,
@@ -184,7 +184,7 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr uint kDIR_CHANGE_MAX_STEPS = 10;
 
   /**
-   * @brief When entering the nest, you want to continue to wander a bit before
+   * \brief When entering the nest, you want to continue to wander a bit before
    * signaling upper FSMs that you are in the nest, so that there is (slightly)
    * less congestion by the edge. This is a stopgap solution; a more elegant fix
    * may be forthcoming in the future if warranted.

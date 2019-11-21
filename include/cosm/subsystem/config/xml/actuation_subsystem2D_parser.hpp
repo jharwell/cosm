@@ -1,7 +1,7 @@
 /**
- * @file actuation_subsystem2D_parser.hpp
+ * \file actuation_subsystem2D_parser.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -41,10 +41,10 @@ NS_START(cosm, subsystem, config, xml);
  ******************************************************************************/
 
 /**
- * @class actuation_subsystem2D_parser
- * @ingroup cosm subsystem config xml
+ * \class actuation_subsystem2D_parser
+ * \ingroup subsystem config xml
  *
- * @brief Parses XML parameters for \ref actuation_subsystem2D into
+ * \brief Parses XML parameters for \ref actuation_subsystem2D into
  * \ref actuation_subsystem2D_config.
  */
 class actuation_subsystem2D_parser final : public rconfig::xml::xml_config_parser {
@@ -52,7 +52,7 @@ class actuation_subsystem2D_parser final : public rconfig::xml::xml_config_parse
   using config_type = actuation_subsystem2D_config;
 
   /**
-   * @brief The root tag that all 2D actuation subsystem parameters should lie
+   * \brief The root tag that all 2D actuation subsystem parameters should lie
    * under in the XML tree.
    */
   static constexpr char kXMLRoot[] = "actuation_subsystem2D";

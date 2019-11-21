@@ -1,7 +1,7 @@
 /**
- * @file proximity_sensor.hpp
+ * \file proximity_sensor.hpp
  *
- * @copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -59,28 +59,35 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class proximity_sensor
- * @ingroup cosm hal sensors
+ * \class proximity_sensor_impl
+ * \ingroup hal sensors
  *
- * @brief Proxmity sensor wrapper for the following supported robots:
+ * \brief Proxmity sensor wrapper.
+ *
+ * Supports the following robots:
  *
  * - ARGoS footbot
+ *
+ * \tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _proximity_sensor {
+class proximity_sensor_impl {
  public:
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
-   _proximity_sensor(TSensor * const sensor,
+   proximity_sensor_impl(TSensor * const sensor,
                      const config::proximity_sensor_config* const config)
       : mc_config(*config),
         m_sensor(sensor) {}
 
-  const _proximity_sensor& operator=(const _proximity_sensor&) = delete;
-  _proximity_sensor(const _proximity_sensor&) = default;
+  const proximity_sensor_impl& operator=(const proximity_sensor_impl&) = delete;
+  proximity_sensor_impl(const proximity_sensor_impl&) = default;
 
   /**
-   * @brief Return the average object reading within proximity for the
+   * \brief Return the average object reading within proximity for the
    * robot. Proximity is defined as:
    *
    * - Within the "go straight" angle range for the robot
@@ -106,9 +113,9 @@ class _proximity_sensor {
 
  private:
   /**
-   * @brief Get the current proximity sensor readings for the footbot robot.
+   * \brief Get the current proximity sensor readings for the footbot robot.
    *
-   * @return A vector of (X,Y) pairs of sensor readings corresponding to
+   * \return A vector of (X,Y) pairs of sensor readings corresponding to
    * object distances.
    */
   template <typename U = TSensor,
@@ -129,7 +136,7 @@ class _proximity_sensor {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using proximity_sensor = _proximity_sensor<argos::CCI_FootBotProximitySensor>;
+using proximity_sensor = proximity_sensor_impl<argos::CCI_FootBotProximitySensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

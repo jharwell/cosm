@@ -1,7 +1,7 @@
 /**
- * @file force_calculator_parser.hpp
+ * \file force_calculator_parser.hpp
  *
- * @copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -46,10 +46,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 
 /**
- * @class force_calculator_parser
- * @ingroup cosm steer2D config xml
+ * \class force_calculator_parser
+ * \ingroup steer2D config xml
  *
- * @brief Parses XML configuration for \ref force_calculator into
+ * \brief Parses XML configuration for \ref force_calculator into
  * \ref force_calculator_config. Assumes it is handed an XML parent in which the
  * child tag \ref kXMLRoot is found.
  */
@@ -57,6 +57,10 @@ class force_calculator_parser : public rconfig::xml::xml_config_parser {
  public:
   using config_type = force_calculator_config;
 
+  /**
+   * \brief The XML root tag that all \ref force_calculator configuration should
+   * lie under in the XML tree.
+   */
   static constexpr char kXMLRoot[] = "force_calculator";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
