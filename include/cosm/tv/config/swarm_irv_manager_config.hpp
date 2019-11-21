@@ -39,6 +39,9 @@ NS_START(cosm, tv, config);
 /**
  * @struct swarm_irv_manager_config
  * @ingroup cosm tv config
+ *
+ * @brief Configuration for the swarm Intra Robot Variance (IRV) manager (@ref
+ * swarm_irv_manager).
  */
 struct swarm_irv_manager_config final : public rconfig::base_config {
   rct::config::waveform_config motion_throttle{};

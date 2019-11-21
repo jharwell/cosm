@@ -41,7 +41,7 @@ NS_START(controller);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class irv_recipent_controller
+ * @class irv_recipient_controller
  * @ingroup cosm controller
  *
  * @brief Internal Temporal Variance (IRV) recipient controller. Defines the
@@ -62,8 +62,8 @@ class irv_recipient_controller {
 
   /**
    * @brief Perform necessary initializations to register the controller with
-   * the provided \ref tv::swarm_irv_manager, types of variances to apply, etc,
-   * as configured.
+   * the provided \ref swarm_irv_manager, types of variances to apply, etc, as
+   * configured.
    */
   virtual void irv_init(const tv::swarm_irv_manager* irv_manager) = 0;
 };

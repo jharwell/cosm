@@ -56,8 +56,8 @@ struct diff_drive_config;
 class diff_drive : public rer::client<diff_drive> {
  public:
   enum class drive_type {
-    kTankDrive, /// Controls like those of a tank
-    kFSMDrive   /// Control via soft/hard turn FSM
+    kTankDrive,  /// Controls like those of a tank
+    kFSMDrive    /// Control via soft/hard turn FSM
   };
 
   /**

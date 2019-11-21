@@ -181,7 +181,7 @@ class vector_fsm final : public util_hfsm,
    * @brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
-   * states in \enum fsm_states, or things will not work correctly.
+   * states in \enum state, or things will not work correctly.
    *
    * Note also that all controller will share the SAME state map in memory, so you
    * cannot change the parent of any statein this FSM for only SOME other

@@ -40,6 +40,12 @@ NS_START(cosm, hal, sensors, config);
 /**
  * @struct proximity_sensor_config
  * @ingroup cosm hal sensors config
+ *
+ * @brief Configuration for proximity sensors, for robots which have them.
+ *
+ * Robots are:
+ *
+ * - ARGoS footbot
  */
 struct proximity_sensor_config final : public rconfig::base_config {
   /*

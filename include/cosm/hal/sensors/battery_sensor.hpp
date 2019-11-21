@@ -50,15 +50,20 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class battery_sensor
+ * @class battery_sensor_impl
  * @ingroup cosm hal sensors
  *
  * @brief Battery sensor wrapper for the following supported robots:
  *
  * - ARGoS footbot
+ *
+ * @tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _battery_sensor {
+class battery_sensor_impl {
  public:
   /**
    * @brief A battery sensor reading.
@@ -78,13 +83,13 @@ class _battery_sensor {
           time_left(_time_left) {}
   };
 
-  explicit _battery_sensor(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit battery_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
    * @brief Get the current battery sensor reading for the footbot robot.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_battery_sensor<U>::value)>
+            RCPPSW_SFINAE_FUNC(detail::is_argosbattery_sensor_impl<U>::value)>
   struct reading readings(void) const {
     argos::CCI_BatterySensor::SReading temp = m_sensor->GetReading();
     reading ret(temp.AvailableCharge, temp.TimeLeft);
@@ -98,7 +103,7 @@ class _battery_sensor {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using battery_sensor = _battery_sensor<argos::CCI_BatterySensor>;
+using battery_sensor = battery_sensor_impl<argos::CCI_BatterySensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

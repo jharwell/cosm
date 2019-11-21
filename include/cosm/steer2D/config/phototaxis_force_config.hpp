@@ -38,6 +38,8 @@ NS_START(cosm, steer2D, config);
 /**
  * @struct phototaxis_force_config
  * @ingroup cosm steer2D config
+ *
+ * @brief Configuration for virtual phototaxis force.
  */
 struct phototaxis_force_config final : public rconfig::base_config {
   double max{0};

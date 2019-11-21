@@ -53,20 +53,24 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class led_actuator_
+ * @class led_actuator_impl
  * @ingroup cosm hal
  *
- * @brief LED actuator wrapper for the following supported robots:
+ * @brief LED actuator wrapper.
+ *
+ *  Supports the following robots:
  *
  * - ARGoS footbot
- * - NULL robot (robot without LEDs to actuate). This is used to compile out
- *   the selected robot sensor, and as such does not have a preprocessor
- *   definition.
+ *
+ * @tparam TActuator The underlying actuator handle type abstracted away by the
+ *                   HAL. If nullptr, then that effectively disables the
+ *                   actuator at compile time, and SFINAE ensures no member
+ *                   functions can be called.
  */
-template<typename T>
-class _led_actuator {
+template<typename TActuator>
+class led_actuator_impl {
  public:
-  explicit _led_actuator(T* const leds) : m_leds(leds) {}
+  explicit led_actuator_impl(TActuator* const leds) : m_leds(leds) {}
 
   /**
    * @brief Reset the LED actuator.
@@ -83,12 +87,13 @@ class _led_actuator {
    *
    * @param color The color to change the LED to. This is application defined.
    */
-  template <typename U = T,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_FUNC(detail::is_argosled_actuator_impl<U>::value)>
   void set_color(int id, const rutils::color& color) {
     if (nullptr == m_leds) {
       return;
     }
+
     if (-1 == id) {
       m_leds->SetAllColors(argos::CColor(color.red(),
                                          color.green(),
@@ -112,9 +117,13 @@ class _led_actuator {
    *
    * @param intensity In the range [0,255]. Application defined meaning.
    */
-  template <typename U = T,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_FUNC(detail::is_argosled_actuator_impl<U>::value)>
   void set_intensity(int id, uint8_t intensity) {
+    if (nullptr == m_leds) {
+      return;
+    }
+
     if (-1 == id) {
       m_leds->SetAllIntensities(intensity);
     } else {
@@ -124,14 +133,14 @@ class _led_actuator {
 
  private:
   /* clang-format off */
-  T* m_leds;
+  TActuator* m_leds;
   /* clang-format on */
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using led_actuator = _led_actuator<argos::CCI_LEDsActuator>;
+using led_actuator = led_actuator_impl<argos::CCI_LEDsActuator>;
 #endif /* HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_LED_ACTUATOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_ACTUATORSLED_ACTUATOR_IMPL_HPP_ */

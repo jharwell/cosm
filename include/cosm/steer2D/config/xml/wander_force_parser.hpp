@@ -52,6 +52,10 @@ class wander_force_parser final : public rconfig::xml::xml_config_parser {
  public:
   using config_type = wander_force_config;
 
+  /**
+   * @brief The XML root tag that all \ref wander_force configuration should lie
+   * under in the XML tree.
+   */
   static constexpr char kXMLRoot[] = "wander_force";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;

@@ -140,7 +140,7 @@ class explore_for_goal_fsm final : public util_hfsm,
    * @brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
-   * states in \enum states, or things will not work correctly.
+   * states in \enum state, or things will not work correctly.
    */
   HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];

@@ -38,6 +38,9 @@ NS_START(cosm, convergence, config);
 /**
  * @struct task_dist_entropy_config
  * @ingroup cosm convergence config
+ *
+ * @brief Configuration for the task distribution entropy measure, as described
+ * in @todo ref here.
  */
 struct task_dist_entropy_config final : public rconfig::base_config {
   bool enable{false};

@@ -49,6 +49,12 @@ NS_START(cosm, fsm, metrics);
  */
 class goal_acq_metrics : public virtual rmetrics::base_metrics {
  public:
+  /**
+   * @brief A strong named type representing the goal the robot is currently
+   * trying to acquire. A -1 value is used to indicate that no goal is currently
+   * being acquired.
+   */
+
   using goal_type = rtypes::named_type<int, struct goal_type_tag>;
 
   goal_acq_metrics(void) = default;
@@ -73,14 +79,14 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
   virtual goal_type acquisition_goal(void) const = 0;
 
   /**
-   * @brief Output only defined if \ref goal_type() is not -1.
+   * @brief Output only defined if \ref goal_type is not -1.
    *
    * @return \ref exp_status.
    */
   virtual exp_status is_exploring_for_goal(void) const = 0;
 
   /**
-   * @brief Output only defined if \ref goal_type() is not -1. If \c TRUE, then
+   * @brief Output only defined if \ref goal_type is not -1. If \c TRUE, then
    * the robot is vectoring towards its goal (i.e. it knows where it is).
    */
   virtual bool is_vectoring_to_goal(void) const = 0;

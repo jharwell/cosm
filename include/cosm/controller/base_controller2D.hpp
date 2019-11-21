@@ -59,7 +59,7 @@ NS_START(controller);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class base_controller2D
+ * @class base_controller2D_impl
  * @ingroup cosm controller
  *
  * @brief The implementation of base controller class that the controllers for
@@ -175,7 +175,7 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   void ndc_pop(void) { ER_NDC_POP(); }
 
   /**
-   * @brief Return a handle to the \ref rmath::rng used for random number
+   * @brief Return a handle to the @ref rcppsw::math::rng used for random number
    * generation by this robot.
    */
   rmath::rng* rng(void) { return m_rng; }
@@ -238,6 +238,12 @@ NS_START(cosm, controller);
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 
+/**
+ * @class base_controller2D
+ * @ingroup cosm controller
+ *
+ * @brief The implementation of base controller when building for ARGoS.
+ */
 class base_controller2D : public base_controller2D_impl,
                           public argos::CCI_Controller {
  public:

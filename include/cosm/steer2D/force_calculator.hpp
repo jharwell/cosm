@@ -46,7 +46,6 @@ struct force_calculator_config;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
  * @class force_calculator
  * @ingroup cosm steer2D
@@ -54,8 +53,6 @@ struct force_calculator_config;
  * @brief Class encapsulating steering of entities through 2D space via summing
  * selectable forces that act on the entity each timestep. To use this class,
  * entities must conform to the \ref boid interface.
- *
- * Once conformant, see \ref force_type for available force types.
  */
 class force_calculator : public rer::client<force_calculator> {
  public:
@@ -124,6 +121,9 @@ class force_calculator : public rer::client<force_calculator> {
    * @brief Calculate the \ref phototaxis_force for this timestep.
    *
    * @param readings The current camera sensor readings.
+   * @param color The color of the light source to taxis towards. If any of the
+   *              camera sensor readings are not this color, they are ignored in
+   *              the force calculation.
    */
   rmath::vector2d phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
@@ -143,6 +143,9 @@ class force_calculator : public rer::client<force_calculator> {
    * timestep.
    *
    * @param readings The current camera sensor readings.
+   * @param color The color of the light source to taxis towards. If any of the
+   *              camera sensor readings are not this color, they are ignored in
+   *              the force calculation.
    */
   rmath::vector2d anti_phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,

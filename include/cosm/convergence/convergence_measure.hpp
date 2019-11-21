@@ -63,6 +63,9 @@ class convergence_measure : public rmath::expression<double> {
     m_raw_min = std::min(m_raw, m_raw_min);
     m_raw_max = std::max(m_raw, m_raw_max);
   }
+  /**
+   * @brief Return the raw value of the convergence measure.
+   */
   double raw(void) const { return m_raw; }
   double raw_min(void) const { return m_raw_min; }
   double raw_max(void) const { return m_raw_max; }

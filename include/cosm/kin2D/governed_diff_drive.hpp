@@ -44,7 +44,7 @@ NS_START(kin2D);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class governed_diff_drive
+ * @class kin2D::governed_diff_drive
  * @ingroup cosm kin2D
  *
  * @brief A differential drive whose maximum speed can be set in a temporally

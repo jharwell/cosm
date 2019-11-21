@@ -99,7 +99,7 @@ class util_hfsm : public rpfsm::hfsm,
    * @brief Robots entering this state will return to the nest.
    *
    * This state MUST have a parent state defined that is not
-   * \ref rpatterns::fsm::hfsm::top_state().
+   * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
   HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, rpfsm::event_data);
 

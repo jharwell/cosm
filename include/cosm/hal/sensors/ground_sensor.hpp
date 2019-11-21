@@ -57,15 +57,20 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class ground_sensor
+ * @class ground_sensor_impl
  * @ingroup cosm hal sensors
  *
  * @brief Ground sensor wrapper for the following supported robots:
  *
  * - ARGoS footbot
+ *
+ * @tparam TSensor The underlying sensor handle type abstracted away by the
+ *                  HAL. If nullptr, then that effectively disables the sensor
+ *                  at compile time, and SFINAE ensures no member functions can
+ *                  be called.
  */
 template <typename TSensor>
-class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
+class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>> {
  public:
   static constexpr char kNestTarget[] = "nest";
 
@@ -84,15 +89,15 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
     double distance;
   };
 
-  _ground_sensor(TSensor * const sensor,
+  ground_sensor_impl(TSensor * const sensor,
                  const config::ground_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.ground_sensor"),
         mc_config(*config),
         m_sensor(sensor) {}
-  ~_ground_sensor(void) override final = default;
+  ~ground_sensor_impl(void) override final = default;
 
-  const _ground_sensor& operator=(const _ground_sensor&) = delete;
-  _ground_sensor(const _ground_sensor&) = default;
+  const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
+  ground_sensor_impl(const ground_sensor_impl&) = default;
 
   /**
    * @brief Get the current ground sensor readings for the footbot robot.
@@ -100,7 +105,7 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
    * @return A vector of \ref reading.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ground_sensor<U>::value)>
+            RCPPSW_SFINAE_FUNC(detail::is_argosground_sensor_impl<U>::value)>
   std::vector<reading> readings(void) const {
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings()) {
@@ -119,7 +124,7 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
    * @return \c TRUE iff the condition was detected by the specified # readings.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ground_sensor<U>::value)>
+            RCPPSW_SFINAE_FUNC(detail::is_argosground_sensor_impl<U>::value)>
   bool detect(const std::string& name) const {
     ER_ASSERT(mc_config.detect_map.end() != mc_config.detect_map.find(name),
               "Detection %s not found in configured map",
@@ -141,7 +146,7 @@ class _ground_sensor : public rer::client<_ground_sensor<TSensor>> {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using ground_sensor = _ground_sensor<argos::CCI_FootBotMotorGroundSensor>;
+using ground_sensor = ground_sensor_impl<argos::CCI_FootBotMotorGroundSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);

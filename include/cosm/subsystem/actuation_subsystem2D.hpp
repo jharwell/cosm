@@ -50,11 +50,12 @@ NS_START(cosm, subsystem);
  * @brief The  actuation subsystem for all actuators used by robot
  * controllers that operate in 2D.
  *
- * Any controller with a sensing subsystem can choose any number of the
- * supported sensors to pass to the subsystem to manage:
+ * Any controller with an actuation subsystem can choose any number of the
+ * supported actutaion to pass to the subsystem to manage:
  *
- * - \ref hal::led_actuator
- * - \ref hal::wifi_actuator
+ * - \ref hal::actuators::led_actuator
+ * - \ref hal::actuators::wifi_actuator
+ * - \ref hal::actuators::diff_drive_actuator
  *
  * In addition, the following "augmented" actuators can also be used, in order
  * to provide more functionality than the "raw" actuators can provide:

@@ -40,7 +40,7 @@ NS_START(cosm, tv);
  * Class Definitions
  ******************************************************************************/
 /**
- * @class switchable_tv_generator
+ * @class tv::switchable_tv_generator
  * @ingroup cosm tv
  *
  * @brief Switchable (on/off) generator to produce a temporally varying signal

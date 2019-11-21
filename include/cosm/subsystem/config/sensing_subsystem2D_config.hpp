@@ -39,6 +39,9 @@ NS_START(cosm, subsystem, config);
 /**
  * @struct sensing_subsystem2D_config
  * @ingroup cosm subsystem config
+ *
+ * @brief Sensing subsystem configuration for wheeled robots that operate in 2D
+ * space.
  */
 struct sensing_subsystem2D_config final : public rconfig::base_config {
   hal::sensors::config::proximity_sensor_config proximity {};

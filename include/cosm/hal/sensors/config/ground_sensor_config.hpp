@@ -42,6 +42,12 @@ NS_START(cosm, hal, sensors, config);
 /**
  * @struct ground_sensor_config
  * @ingroup cosm hal sensors config
+ *
+ * @brief Configuration for ground sensors, for robots that have them.
+ *
+ * Robots are:
+ *
+ * - ARGoS footbot
  */
 struct ground_sensor_config final : public rconfig::base_config {
   std::map<std::string, ground_sensor_detection_config> detect_map{};

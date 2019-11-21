@@ -41,9 +41,9 @@ NS_START(cosm, fsm);
  * @class point_argument
  * @ingroup cosm fsm
  *
- * @brief An argument that can be passed to a \ref ta::taskable function which
- * contains a 2D point and a tolerance, for use in specifying a location in 2D
- * space which should be acquired.
+ * @brief An argument that can be passed to a @ref rcppsw::ta::taskable function
+ * which contains a 2D point and a tolerance, for use in specifying a location
+ * in 2D space which should be acquired.
  */
 class point_argument : public rta::taskable_argument {
  public:

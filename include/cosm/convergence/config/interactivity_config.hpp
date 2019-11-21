@@ -38,6 +38,9 @@ NS_START(cosm, convergence, config);
 /**
  * @struct interactivity_config
  * @ingroup cosm convergence config
+ *
+ * @brief Configuration for the interactivity convergence measure, as described
+ * in @todo paper ref.
  */
 struct interactivity_config final : public rconfig::base_config {
   bool enable{false};

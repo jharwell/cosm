@@ -39,6 +39,8 @@ NS_START(cosm, kin2D, config);
 /**
  * @struct diff_drive_config
  * @ingroup cosm kin2D config
+ *
+ * @brief Configuration for differential drive actuator.
  */
 struct diff_drive_config final : public rconfig::base_config {
   /**

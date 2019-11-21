@@ -43,7 +43,7 @@ NS_START(cosm, metrics);
  * @class spatial_dist2D_pos_metrics_collector
  * @ingroup rcppsw metrics swarm spatial
  *
- * @brief Collector for \ref dist2D_metrics.
+ * @brief Collector for \ref spatial_dist2D_metrics.
  */
 class spatial_dist2D_pos_metrics_collector final
     : public rmetrics::spatial::grid2D_avg_metrics_collector {

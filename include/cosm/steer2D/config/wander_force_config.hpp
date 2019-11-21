@@ -40,6 +40,8 @@ NS_START(cosm, steer2D, config);
 /**
  * @struct wander_force_config
  * @ingroup cosm steer2D config
+ *
+ * @brief Configuration for the wander force, as described in @todo ref here.
  */
 struct wander_force_config final : public rconfig::base_config {
   /**

@@ -34,12 +34,14 @@
 NS_START(cosm, steer2D, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Struct Definitions
  ******************************************************************************/
-
 /**
- * @struct arrival_force_config
+ * @struct avoidance_force_config
  * @ingroup cosm steer2D config
+ *
+ * @brief Configuration for the virtual avoidance force, as described in @todo
+ * ref.
  */
 struct avoidance_force_config final : public rconfig::base_config {
   /**

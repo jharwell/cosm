@@ -57,6 +57,10 @@ class force_calculator_parser : public rconfig::xml::xml_config_parser {
  public:
   using config_type = force_calculator_config;
 
+  /**
+   * @brief The XML root tag that all \ref force_calculator configuration should
+   * lie under in the XML tree.
+   */
   static constexpr char kXMLRoot[] = "force_calculator";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
