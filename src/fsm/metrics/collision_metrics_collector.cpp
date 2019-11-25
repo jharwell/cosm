@@ -83,10 +83,11 @@ void collision_metrics_collector::collect(const rmetrics::base_metrics& metrics)
   }
 } /* collect() */
 
-bool collision_metrics_collector::csv_line_build(std::string& line) {
+boost::optional<std::string> collision_metrics_collector::csv_line_build(void) {
   if (!((timestep() + 1) % interval() == 0)) {
-    return false;
+    return boost::none;
   }
+  std::string line;
 
   line += csv_entry_intavg(m_interval.n_in_avoidance.load());
   line += csv_entry_tsavg(m_cum.n_in_avoidance.load());
@@ -96,7 +97,8 @@ bool collision_metrics_collector::csv_line_build(std::string& line) {
   line += csv_entry_tsavg(m_cum.n_exited_avoidance.load());
   line += csv_entry_intavg(m_interval.avoidance_duration.load());
   line += csv_entry_tsavg(m_cum.avoidance_duration.load(), true);
-  return true;
+
+  return boost::make_optional(line);
 } /* csv_line_build() */
 
 void collision_metrics_collector::reset_after_interval(void) {

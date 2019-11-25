@@ -81,10 +81,12 @@ void goal_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
   m_cum.n_vectoring_to_goal += static_cast<uint>(m.is_vectoring_to_goal());
 } /* collect() */
 
-bool goal_acq_metrics_collector::csv_line_build(std::string& line) {
+boost::optional<std::string> goal_acq_metrics_collector::csv_line_build(void) {
   if (!((timestep() + 1) % interval() == 0)) {
-    return false;
+    return boost::none;
   }
+  std::string line;
+
   line += csv_entry_intavg(m_interval.n_acquiring_goal.load());
   line += csv_entry_tsavg(m_cum.n_acquiring_goal.load());
   line += csv_entry_intavg(m_interval.n_vectoring_to_goal.load());
@@ -94,7 +96,7 @@ bool goal_acq_metrics_collector::csv_line_build(std::string& line) {
   line += csv_entry_intavg(m_interval.n_false_exploring_for_goal.load());
   line += csv_entry_tsavg(m_cum.n_false_exploring_for_goal.load(), true);
 
-  return true;
+  return boost::make_optional(line);
 } /* store_foraging_stats() */
 
 void goal_acq_metrics_collector::reset_after_interval(void) {
