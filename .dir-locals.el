@@ -11,6 +11,11 @@
                                         (concat (projectile-project-root)
                                                 "include")
                                         "/usr/include/lua5.2"
+                                        "/usr/include/x86_64-linux-gnu/qt5/"
+                                        "/usr/include/x86_64-linux-gnu/qt5/QtWidgets"
+                                        "/usr/include/x86_64-linux-gnu/qt5/QtGui"
+                                        "/usr/include/x86_64-linux-gnu/qt5/QtCore"
+                                        "/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64"
                                         )))
                     (setq flycheck-clang-include-path includes-list)
                     (add-to-list 'flycheck-clang-args "-fPIC")

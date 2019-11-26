@@ -91,6 +91,8 @@
 * \defgroup metrics metrics
 * \brief General purpose metric interfaces and collectors for FSMs.
 *
+* \defgroup vis vis
+* \brief Qt visualization bindings.
 * @}
 */
 namespace cosm {
@@ -103,6 +105,7 @@ namespace convergence {}
 namespace metrics {}
 namespace repr {}
 namespace controller {}
+
 namespace robots {
 namespace footbot {}
 } /* namespace robots */
@@ -111,6 +114,7 @@ namespace fsm {
 namespace metrics {}
 } /* namespace fsm */
 
+namespace vis {}
 } /* namespace cosm */
 
 /** @} */
@@ -129,5 +133,6 @@ namespace cconvergence = cosm::convergence;
 namespace cmetrics = cosm::metrics;
 namespace ctv = cosm::tv;
 namespace crepr = cosm::repr;
+namespace cvis = cosm::vis;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

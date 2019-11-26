@@ -1,12 +1,25 @@
 ################################################################################
 # Configuration Options                                                        #
 ################################################################################
-set(COSM_HAL_TARGET "None" CACHE STRING "Specify the Hardware Abstraction Layer (HAL) target")
-define_property(
-  CACHED_VARIABLE PROPERTY "COSM_HAL_TARGET"
+set(COSM_HAL_TARGET "NONE" CACHE STRING "Specify the Hardware Abstraction Layer (HAL) target")
+define_property(CACHED_VARIABLE PROPERTY "COSM_HAL_TARGET"
 		BRIEF_DOCS "Specify the Hardware Abstraction Layer (HAL) target"
-		FULL_DOCS "Must be exactly one of: [argos-footbot,ev3]"
-	        )
+		FULL_DOCS "Must be exactly one of: [argos-footbot,lego-ev3]"
+                )
+
+# Conditionally compile/link Qt visualizations.
+#
+# - Qt not reliably available when building for MSI
+# - Getting it to work with the EV3 would require building Qt from source, and
+#   there is no GUI stuff anyway so...
+# - Qt cmake module is only available on Linux when building for ARGoS, and when
+#   the compiler is not Intel, because the cmake module for Qt does not play
+#   nice with the Intel compiler.
+if ("${LIBRA_BUILD_FOR}" MATCHES "ARGOS" AND
+    NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
+  set(COSM_WITH_VIS "YES")
+endif()
+
 set(${target}_CHECK_LANGUAGE "CXX")
 
 ################################################################################
@@ -14,6 +27,21 @@ set(${target}_CHECK_LANGUAGE "CXX")
 ################################################################################
 # RCPPSW
 add_subdirectory(ext/rcppsw)
+
+if (${COSM_WITH_VIS})
+  set(CMAKE_AUTOMOC ON)
+  find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
+  set(CMAKE_AUTOMOC OFF)
+endif()
+
+################################################################################
+# Sources                                                                      #
+################################################################################
+if (NOT ${COSM_WITH_VIS})
+    list(REMOVE_ITEM ${target}_ROOT_SRC
+    ${${target}_SRC_PATH}/vis/block_carry_visualizer.cpp
+    ${${target}_SRC_PATH}/vis/task_visualizer.cpp)
+endif()
 
 ################################################################################
 # Includes                                                                     #
@@ -51,6 +79,12 @@ set(${target}_SYS_INCLUDE_DIRS
 set(${target}_LIBRARIES
   rcppsw
   )
+if (${COSM_WITH_VIS})
+  set(${target}_LIBRARIES ${${target}_LIBRARIES}
+    Qt5::Widgets
+    Qt5::Core
+    Qt5::Gui)
+endif()
 
 set(${target}_LIBRARY_DIRS ${rcppsw_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
@@ -59,6 +93,7 @@ if ("${LIBRA_BUILD_FOR}" MATCHES "MSI")
     ${${target}_LIBRARY_DIRS}
     ${LOCAL_INSTALL_PREFIX}/lib/argos3)
 endif()
+
 
 if (NOT TARGET ${target})
   add_library(${target} STATIC ${${target}_SRC})
@@ -69,10 +104,10 @@ if (NOT TARGET ${target})
   if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
     target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.2)
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_ARGOS_FOOTBOT)
-  elseif("${COSM_HAL_TARGET}" MATCHES "ev3")
-    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_EV3)
+  elseif("${COSM_HAL_TARGET}" MATCHES "lego-ev3")
+    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_LEGO_EV3)
   else()
-    message(FATAL_ERROR "Bad HAL Target ${COSM_HAL_TARGET}. Must be [ev3,argos-footbot]")
+    message(FATAL_ERROR "Bad HAL Target ${COSM_HAL_TARGET}. Must be [lego-ev3,argos-footbot]")
   endif()
 endif()
 
@@ -85,4 +120,5 @@ if (NOT IS_ROOT_PROJECT)
   set(${target}_SYS_INCLUDE_DIRS "${${target}_SYS_INCLUDE_DIRS}" PARENT_SCOPE)
   set(${target}_LIBRARIES "${${target}_LIBRARIES}" PARENT_SCOPE)
   set(${target}_LIBRARY_DIRS "${${target}_LIBRARY_DIRS}" PARENT_SCOPE)
+  set(COSM_WITH_VIS ${COSM_WITH_VIS} PARENT_SCOPE)
 endif()

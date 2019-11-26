@@ -34,6 +34,6 @@
  * \brief The configuration definition to compile for the Lego Mindstorm EV3
  * robot.
  */
-#define HAL_TARGET_EV3 2
+#define HAL_TARGET_LEGO_EV3 2
 
 #endif /* INCLUDE_COSM_HAL_HAL_HPP_ */

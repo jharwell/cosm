@@ -249,10 +249,11 @@ class base_controller2D : public base_controller2D_impl,
  public:
   void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
   void Reset(void) override RCSW_COLD { reset(); }
+  void ControlStep(void) override { control_step(); }
 };
-#elif COSM_HAL_TARGET == HAL_TARGET_EV3
-class base_controller2D : public base_controller2D_impl {};
-#else
+#elif COSM_HAL_TARGET == HAL_TARGET_LEGO_EV3
+cpplass base_controller2D : public base_controller2D_impl {};
+p#else
 #error "Unsupported HAL target"
 #endif
 

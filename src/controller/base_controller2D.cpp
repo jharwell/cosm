@@ -98,6 +98,8 @@ std::string base_controller2D_impl::output_init(const std::string& output_root,
   client::set_logfile(log4cxx::Logger::getLogger("cosm.fsm"), dir + "/fsm.log");
   client::set_logfile(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
                       dir + "/saa.log");
+  client::set_logfile(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
+                      dir + "/saa.log");
 #endif
 
   return dir;
