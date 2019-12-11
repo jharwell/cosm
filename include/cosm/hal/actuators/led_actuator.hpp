@@ -28,6 +28,7 @@
 #include "rcppsw/utils/color.hpp"
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
+#include "rcsw/common/fpc.h"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
@@ -90,9 +91,7 @@ class led_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_color(int id, const rutils::color& color) {
-    if (nullptr == m_leds) {
-      return;
-    }
+    RCSW_FPC_RET_V(nullptr != m_leds);
 
     if (-1 == id) {
       m_leds->SetAllColors(argos::CColor(color.red(),
@@ -120,9 +119,7 @@ class led_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_intensity(int id, uint8_t intensity) {
-    if (nullptr == m_leds) {
-      return;
-    }
+    RCSW_FPC_RET_V(nullptr != m_leds);
 
     if (-1 == id) {
       m_leds->SetAllIntensities(intensity);

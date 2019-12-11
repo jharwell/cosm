@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
+#include "rcsw/common/fpc.h"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
@@ -83,10 +84,8 @@ class diff_drive_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    printf("left: %f, right: %f\n", left, right);
-    if (nullptr == m_wheels) {
-      m_wheels->SetLinearVelocity(left, right);
-    }
+    RCSW_FPC_RET_V(nullptr != m_wheels);
+    m_wheels->SetLinearVelocity(left, right);
   }
 
   /**

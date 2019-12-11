@@ -102,7 +102,8 @@ if (NOT TARGET ${target})
   target_include_directories(${target} SYSTEM PRIVATE "${${target}_SYS_INCLUDE_DIRS}")
 
   if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
-    target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.2)
+    # Not needed for compilation, but for rtags
+    target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_ARGOS_FOOTBOT)
   elseif("${COSM_HAL_TARGET}" MATCHES "lego-ev3")
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_LEGO_EV3)
