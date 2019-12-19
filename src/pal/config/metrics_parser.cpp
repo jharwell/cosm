@@ -1,7 +1,7 @@
 /**
- * \file swarm_irv_manager_config.hpp
+ * \file metrics_parser.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,35 +18,46 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_CONFIG_SWARM_IRV_MANAGER_CONFIG_HPP_
-#define INCLUDE_COSM_TV_CONFIG_SWARM_IRV_MANAGER_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-#include "rcppsw/control/config/waveform_config.hpp"
-#include "cosm/cosm.hpp"
+#include "cosm/pal/config/xml/metrics_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, config);
+NS_START(cosm, pal, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct swarm_irv_manager_config
- * \ingroup tv config
- *
- * \brief Configuration for the swarm Intra Robot Variance (IRV) manager (\ref
- * swarm_irv_manager).
- */
-struct swarm_irv_manager_config final : public rconfig::base_config {
-  rct::config::waveform_config motion_throttle{};
-};
+void metrics_parser::parse(const ticpp::Element& node) {
+  /* loop functions metrics not part of controller XML tree  */
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element mnode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-NS_END(config, tv, cosm);
+    XML_PARSE_ATTR(mnode, m_config, output_dir);
+    XML_PARSE_ATTR(mnode, m_config, output_interval);
 
-#endif /* INCLUDE_COSM_TV_CONFIG_SWARM_IRV_MANAGER_CONFIG_HPP_ */
+    for (auto& m : xml_attr()) {
+      if (mnode.HasAttribute(m)) {
+        std::string tmp;
+        node_attr_get(mnode, m, tmp);
+        m_config->enabled[m] = tmp;
+      }
+    } /* for(&m..) */
+  }
+} /* parse() */
+
+bool metrics_parser::validate(void) const {
+  if (is_parsed()) {
+    RCSW_CHECK(m_config->output_interval > 0);
+  }
+  return true;
+
+error:
+  return false;
+} /* validate() */
+
+NS_END(xml, config, pal, cosm);

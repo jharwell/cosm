@@ -1,7 +1,7 @@
 /**
- * \file cube_block2D.hpp
+ * \file robot_dynamics_applicator_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,51 +18,34 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_
+#define INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block2D.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/control/config/waveform_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, tv, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \class cube_block2D
- * \ingroup cosm repr
+ * \struct robot_dynamics_applicator_config
+ * \ingroup tv config
  *
- * \brief A 2D representation of a 3D cubical block within the arena. Cube
- * blocks are 1 cell in size.
+ * \brief Configuration for the (\ref robot_dynamics_applicator).
  */
-class cube_block2D final : public base_block2D {
- public:
-  explicit cube_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLACK, rtypes::constants::kNoUUID) {}
-
-  cube_block2D(const rmath::vector2d& dim,
-               const rtypes::type_uuid& id) noexcept
-      : base_block2D(dim, rutils::color::kBLACK, id) {}
-
-  repr::block_type type(void) const override {
-    return repr::block_type::ekCUBE;
-  }
-  std::unique_ptr<base_block2D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block2D>(dims(), id());
-    tmp->dloc(this->dloc());
-    tmp->rloc(this->rloc());
-    tmp->reset_robot_id();
-    tmp->copy_metrics(*this);
-    return tmp;
-  } /* clone() */
+struct robot_dynamics_applicator_config final : public rconfig::base_config {
+  rct::config::waveform_config motion_throttle{};
 };
 
-NS_END(repr, cosm);
+NS_END(config, tv, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_ */
+#endif /* INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_ */

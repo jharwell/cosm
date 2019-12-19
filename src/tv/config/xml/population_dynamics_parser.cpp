@@ -1,5 +1,5 @@
 /**
- * \file cube_block2D.hpp
+ * \file population_dynamics_parser.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,51 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/tv/config/xml/population_dynamics_parser.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, tv, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \class cube_block2D
- * \ingroup cosm repr
- *
- * \brief A 2D representation of a 3D cubical block within the arena. Cube
- * blocks are 1 cell in size.
- */
-class cube_block2D final : public base_block2D {
- public:
-  explicit cube_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLACK, rtypes::constants::kNoUUID) {}
+void population_dynamics_parser::parse(const ticpp::Element& node) {
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element anode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-  cube_block2D(const rmath::vector2d& dim,
-               const rtypes::type_uuid& id) noexcept
-      : base_block2D(dim, rutils::color::kBLACK, id) {}
-
-  repr::block_type type(void) const override {
-    return repr::block_type::ekCUBE;
+    XML_PARSE_ATTR_DFLT(anode, m_config, birth_mu, 0.0);
+    XML_PARSE_ATTR_DFLT(anode, m_config, death_lambda, 0.0);
+    XML_PARSE_ATTR_DFLT(anode, m_config, repair_lambda, 0.0);
+    XML_PARSE_ATTR_DFLT(anode, m_config, repair_mu, 0.0);
+    XML_PARSE_ATTR_DFLT(anode, m_config, max_size, 0UL);
   }
-  std::unique_ptr<base_block2D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block2D>(dims(), id());
-    tmp->dloc(this->dloc());
-    tmp->rloc(this->rloc());
-    tmp->reset_robot_id();
-    tmp->copy_metrics(*this);
-    return tmp;
-  } /* clone() */
-};
+} /* parse() */
 
-NS_END(repr, cosm);
+bool population_dynamics_parser::validate(void) const {
+  if (is_parsed()) {
+    RCSW_CHECK(m_config->birth_mu >= 0.0);
+    RCSW_CHECK(m_config->death_lambda >= 0.0);
+    RCSW_CHECK(m_config->repair_lambda >= 0.0);
+    RCSW_CHECK(m_config->repair_mu >= 0.0);
+  }
+  return true;
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_ */
+error:
+  return false;
+} /* validate() */
+
+NS_END(xml, config, tv, cosm);

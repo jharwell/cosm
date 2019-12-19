@@ -45,9 +45,9 @@ NS_START(cosm, repr);
 class ramp_block2D final : public base_block2D {
  public:
   explicit ramp_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLUE, -1) {}
+      : base_block2D(dim, rutils::color::kBLUE, rtypes::constants::kNoUUID) {}
 
-  ramp_block2D(const rmath::vector2d& dim, int id) noexcept
+  ramp_block2D(const rmath::vector2d& dim, const rtypes::type_uuid& id) noexcept
       : base_block2D(dim, rutils::color::kBLUE, id) {}
 
   repr::block_type type(void) const override {

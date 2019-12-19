@@ -1,7 +1,7 @@
 /**
- * \file cube_block2D.hpp
+ * \file argos_controller2D_adaptor.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,51 +18,47 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
+#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/hal/hal.hpp"
+#include "cosm/controller/base_controller2D.hpp"
+
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#include <argos3/core/control_interface/ci_controller.h>
+#endif
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, pal);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+
 /**
- * \class cube_block2D
- * \ingroup cosm repr
+ * \class argos_controller2D_adaptor
+ * \ingroup pal
  *
- * \brief A 2D representation of a 3D cubical block within the arena. Cube
- * blocks are 1 cell in size.
+ * \brief The implementation of base controller when building for ARGoS.
  */
-class cube_block2D final : public base_block2D {
+class argos_controller2D_adaptor : public controller::base_controller2D,
+                                        public argos::CCI_Controller {
  public:
-  explicit cube_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLACK, rtypes::constants::kNoUUID) {}
-
-  cube_block2D(const rmath::vector2d& dim,
-               const rtypes::type_uuid& id) noexcept
-      : base_block2D(dim, rutils::color::kBLACK, id) {}
-
-  repr::block_type type(void) const override {
-    return repr::block_type::ekCUBE;
-  }
-  std::unique_ptr<base_block2D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block2D>(dims(), id());
-    tmp->dloc(this->dloc());
-    tmp->rloc(this->rloc());
-    tmp->reset_robot_id();
-    tmp->copy_metrics(*this);
-    return tmp;
-  } /* clone() */
+  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
+  void Reset(void) override RCSW_COLD { reset(); }
+  void ControlStep(void) override { control_step(); }
 };
 
-NS_END(repr, cosm);
+#else
+#error "Unsupported HAL target"
+#endif
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_ */
+NS_END(pal, cosm);
+
+#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_ */

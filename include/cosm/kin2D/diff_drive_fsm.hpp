@@ -58,6 +58,8 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    *                      heading that will not trigger a hard (in place) turn.
    */
   diff_drive_fsm(double max_speed, const rmath::radians& soft_turn_max);
+  diff_drive_fsm(const diff_drive_fsm& other);
+  diff_drive_fsm& operator=(const diff_drive_fsm&) = delete;
 
   /*
    * \brief Gets a direction vector as input and transforms it into wheel
@@ -97,9 +99,9 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    * @enum The robot can be in three different turning states.
    */
   enum fsm_states {
-    kST_SOFT_TURN, /// Both wheels rotating forward at slightly different speeds
-    kST_HARD_TURN, /// Wheels are turning with opposite & max speeds
-    kST_MAX_STATES
+    ekST_SOFT_TURN, /// Both wheels rotating forward at slightly different speeds
+    ekST_HARD_TURN, /// Wheels are turning with opposite & max speeds
+    ekST_MAX_STATES
   };
 
   /**
@@ -128,18 +130,18 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    */
   FSM_STATE_DECLARE(diff_drive_fsm, hard_turn, turn_data);
 
+
   FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
-    FSM_DEFINE_STATE_MAP(state_map, kSTATE_MAP){
-        FSM_STATE_MAP_ENTRY(&soft_turn),
-        FSM_STATE_MAP_ENTRY(&hard_turn),
-    };
-    FSM_VERIFY_STATE_MAP(state_map, kSTATE_MAP, kST_MAX_STATES);
-    return &kSTATE_MAP[index];
+    return &mc_state_map[index];
   }
   /* clang-format off */
   const double              mc_max_speed;
   const rmath::radians      mc_soft_turn_max;
-  std::pair<double, double> m_wheel_speeds;
+  std::pair<double, double> m_wheel_speeds{};
+
+  FSM_DECLARE_STATE_MAP(state_map,
+                        mc_state_map,
+                        ekST_MAX_STATES);
   /* clang-format on */
 };
 

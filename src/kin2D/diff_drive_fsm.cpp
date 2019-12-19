@@ -35,20 +35,30 @@ NS_START(cosm, kin2D);
  ******************************************************************************/
 diff_drive_fsm::diff_drive_fsm(double max_speed,
                                const rmath::radians& soft_turn_max)
-    : rpfsm::simple_fsm(kST_MAX_STATES),
-      mc_max_speed(max_speed),
-      mc_soft_turn_max(soft_turn_max),
-      m_wheel_speeds() {}
+    : rpfsm::simple_fsm(ekST_MAX_STATES),
+    mc_max_speed(max_speed),
+    mc_soft_turn_max(soft_turn_max),
+    FSM_DEFINE_STATE_MAP(mc_state_map,
+                         FSM_STATE_MAP_ENTRY(&soft_turn),
+                         FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+
+diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
+    : rpfsm::simple_fsm(ekST_MAX_STATES),
+    mc_max_speed(other.mc_max_speed),
+    mc_soft_turn_max(other.mc_soft_turn_max),
+    FSM_DEFINE_STATE_MAP(mc_state_map,
+                         FSM_STATE_MAP_ENTRY(&soft_turn),
+                         FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 /*******************************************************************************
  * Events
  ******************************************************************************/
 void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      kST_SOFT_TURN, /* slow turn */
-      kST_HARD_TURN, /* hard turn */
+      ekST_SOFT_TURN, /* slow turn */
+      ekST_HARD_TURN, /* hard turn */
   };
-  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, kST_MAX_STATES);
+  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
                  std::make_unique<turn_data>(speed, angle));
 } /* set_rel_heading() */
@@ -62,7 +72,7 @@ FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
   rmath::radians angle = data->angle;
   /* too large of a direction change for soft turn--go to hard turn */
   if (!range.contains(angle.signed_normalize())) {
-    internal_event(kST_HARD_TURN);
+    internal_event(ekST_HARD_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
 
@@ -81,7 +91,7 @@ FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
 
   /* too little of a direction change for hard turn--go to soft turn */
   if (range.contains(angle.signed_normalize())) {
-    internal_event(kST_SOFT_TURN);
+    internal_event(ekST_SOFT_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
   set_wheel_speeds(-mc_max_speed, mc_max_speed, data->angle);

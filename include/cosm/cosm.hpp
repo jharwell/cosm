@@ -96,7 +96,10 @@
 * @}
 */
 namespace cosm {
-namespace tv {}
+namespace tv {
+namespace metrics {}
+} /* namespace tv */
+
 namespace subsystem {}
 namespace hal {}
 namespace kin2D {}
@@ -115,6 +118,11 @@ namespace metrics {}
 } /* namespace fsm */
 
 namespace vis {}
+
+namespace pal {
+namespace config{}
+} /* namespace pal */
+
 } /* namespace cosm */
 
 /** @} */
@@ -132,7 +140,10 @@ namespace ctv = cosm::tv;
 namespace cconvergence = cosm::convergence;
 namespace cmetrics = cosm::metrics;
 namespace ctv = cosm::tv;
+namespace ctmetrics = ctv::metrics;
 namespace crepr = cosm::repr;
 namespace cvis = cosm::vis;
+namespace cpal = cosm::pal;
+namespace cpconfig = cpal::config;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

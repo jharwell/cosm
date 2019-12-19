@@ -46,15 +46,16 @@ acquire_goal_fsm::acquire_goal_fsm(
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(fsm_acquire_goal, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
+      HFSM_DEFINE_STATE_MAP(mc_state_map,
+                            HFSM_STATE_MAP_ENTRY_EX(&start),
+                            HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
+                                                        nullptr,
+                                                        nullptr,
+                                                        &exit_fsm_acquire_goal),
+                            HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_hooks(hooks),
       m_vector_fsm(saa, rng),
-      m_explore_fsm(saa, std::move(behavior), rng, m_hooks.explore_term_cb),
-      mc_state_map{HFSM_STATE_MAP_ENTRY_EX(&start),
-                   HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
-                                               nullptr,
-                                               nullptr,
-                                               &exit_fsm_acquire_goal),
-                   HFSM_STATE_MAP_ENTRY_EX(&finished)} {
+      m_explore_fsm(saa, std::move(behavior), rng, m_hooks.explore_term_cb) {
   m_explore_fsm.change_parent(explore_for_goal_fsm::state::ekST_EXPLORE,
                               &fsm_acquire_goal);
 }
@@ -231,7 +232,7 @@ bool acquire_goal_fsm::acquire_known_goal(void) {
 
     m_explore_fsm.task_reset();
     m_vector_fsm.task_reset();
-    m_acq_id = -1;
+    m_acq_id = rtypes::constants::kNoUUID;
 
     ER_INFO("Start acquiring goal@%s tol=%f",
             std::get<0>(selection.get()).to_str().c_str(),

@@ -76,9 +76,9 @@ boost::optional<std::string> transport_metrics_collector::csv_line_build(void) {
   }
   std::string line;
 
-  line += std::to_string(m_cum.transported) + separator();
-  line += std::to_string(m_cum.ramp_transported) + separator();
-  line += std::to_string(m_cum.cube_transported) + separator();
+  line += rcppsw::to_string(m_cum.transported) + separator();
+  line += rcppsw::to_string(m_cum.ramp_transported) + separator();
+  line += rcppsw::to_string(m_cum.cube_transported) + separator();
 
   line += csv_entry_intavg(m_interval.transported);
   line += csv_entry_tsavg(m_cum.transported);

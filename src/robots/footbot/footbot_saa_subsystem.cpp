@@ -63,6 +63,7 @@ void footbot_saa_subsystem::steer_force2D_apply(void) {
   double desired_speed = steer_force2D().value().length() * throttle;
   actuation()->governed_diff_drive()->fsm_drive(desired_speed,
                                                 steer_force2D().value().angle());
+
   steer_force2D().reset();
 } /* steer_force2D_apply() */
 

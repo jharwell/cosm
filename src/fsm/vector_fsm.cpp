@@ -45,7 +45,32 @@ vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
       HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(collision_avoidance, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(collision_recovery, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()) {}
+      HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()),
+      HFSM_DEFINE_STATE_MAP(mc_state_map,
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&start,
+                                                       nullptr,
+                                                       nullptr,
+                                                       nullptr),
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&vector,
+                                                       nullptr,
+                                                       &entry_vector,
+                                                       nullptr),
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&collision_avoidance,
+                                                       nullptr,
+                                                       &entry_collision_avoidance,
+                                                       &exit_collision_avoidance),
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&collision_recovery,
+                                                       nullptr,
+                                                       &entry_collision_recovery,
+                                                       nullptr),
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&new_direction,
+                                                       nullptr,
+                                                       &entry_new_direction,
+                                                       nullptr),
+                            FSM_STATE_MAP_ENTRY_EX_ALL(&arrived,
+                                                       nullptr,
+                                                       nullptr,
+                                                       nullptr)) {}
 
 /*******************************************************************************
  * States

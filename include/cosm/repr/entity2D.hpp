@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/math/range.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -66,8 +67,8 @@ class entity2D {
     return rmath::ranged(loc.y() - 0.5 * ydim, loc.y() + 0.5 * ydim);
   }
 
-  entity2D(void) : entity2D{-1} {}
-  explicit entity2D(int id) : m_id(id) {}
+  entity2D(void) : entity2D{rtypes::constants::kNoUUID} {}
+  explicit entity2D(const rtypes::type_uuid& id) : m_id(id) {}
 
   entity2D(const entity2D& other) = default;
   entity2D& operator=(const entity2D& other) = default;
@@ -103,12 +104,12 @@ class entity2D {
   /**
    * \brief Set the ID of the object.
    */
-  void id(int id) { m_id = id; }
+  void id(const rtypes::type_uuid& id) { m_id = id; }
 
   /**
    * \brief Get the ID of the object.
    */
-  int id(void) const { return m_id; }
+  const rtypes::type_uuid& id(void) const { return m_id; }
 
   /**
    * \brief Set if the ID of the entity should be visualized or not if
@@ -123,8 +124,8 @@ class entity2D {
 
  private:
   /* clang-format off */
-  bool m_vis_id{false};
-  int  m_id;
+  bool                m_vis_id{false};
+  rtypes::type_uuid m_id{rtypes::constants::kNoUUID};
   /* clang-format on */
 };
 

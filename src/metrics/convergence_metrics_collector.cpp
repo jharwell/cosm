@@ -69,7 +69,7 @@ boost::optional<std::string> convergence_metrics_collector::csv_line_build(void)
     return boost::none;
   }
   std::string line;
-  line += std::to_string(m_conv_epsilon) + separator();
+  line += rcppsw::to_string(m_conv_epsilon) + separator();
 
   /*
    * There are no cumulative metrics, because we also output dt values, which

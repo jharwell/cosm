@@ -32,7 +32,7 @@
 NS_START(cosm);
 
 namespace tv {
-class swarm_irv_manager;
+class robot_dynamics_applicator;
 } /* namespace tv */
 
 NS_START(controller);
@@ -44,10 +44,10 @@ NS_START(controller);
  * \class irv_recipient_controller
  * \ingroup controller
  *
- * \brief Internal Temporal Variance (IRV) recipient controller. Defines the
- * interface for all controllers that can have temporal variance applied to
- * their internal state, as distinct from the variance that can be applied when
- * the robot interacts with the environment.
+ * \brief Defines the interface for all Internal Robot Variance (IRV) accepting
+ * controllers that can have temporal variance applied to their internal state,
+ * as distinct from the variance that can be applied when the robot interacts
+ * with the environment.
  */
 class irv_recipient_controller {
  public:
@@ -62,10 +62,10 @@ class irv_recipient_controller {
 
   /**
    * \brief Perform necessary initializations to register the controller with
-   * the provided \ref swarm_irv_manager, types of variances to apply, etc, as
-   * configured.
+   * the provided \ref robot_dynamics_applicator, types of variances to apply,
+   * etc, as configured.
    */
-  virtual void irv_init(const tv::swarm_irv_manager* irv_manager) = 0;
+  virtual void irv_init(const tv::robot_dynamics_applicator* irv) = 0;
 };
 
 NS_END(controller, cosm);

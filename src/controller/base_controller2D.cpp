@@ -44,40 +44,40 @@ namespace fs = std::experimental::filesystem;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_controller2D_impl::base_controller2D_impl(void)
+base_controller2D::base_controller2D(void)
     : ER_CLIENT_INIT("cosm.controller2D.base"), m_saa(nullptr) {}
 
-base_controller2D_impl::~base_controller2D_impl(void) = default;
+base_controller2D::~base_controller2D(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_controller2D_impl::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
+void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
 
-void base_controller2D_impl::position(const rmath::vector2d& loc) {
+void base_controller2D::position(const rmath::vector2d& loc) {
   m_saa->sensing()->position(loc);
 }
 
-void base_controller2D_impl::heading(const rmath::radians& h) {
+void base_controller2D::heading(const rmath::radians& h) {
   m_saa->sensing()->heading(h);
 }
 
-void base_controller2D_impl::discrete_position(const rmath::vector2u& loc) {
+void base_controller2D::discrete_position(const rmath::vector2u& loc) {
   m_saa->sensing()->discrete_position(loc);
 }
 
-std::string base_controller2D_impl::output_init(const std::string& output_root,
+std::string base_controller2D::output_init(const std::string& output_root,
                                                 const std::string& output_dir) {
   std::string dir;
   if ("__current_date__" == output_dir) {
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    dir = output_root + "/" + std::to_string(now.date().year()) + "-" +
-          std::to_string(now.date().month()) + "-" +
-          std::to_string(now.date().day()) + ":" +
-          std::to_string(now.time_of_day().hours()) + "-" +
-          std::to_string(now.time_of_day().minutes());
+    dir = output_root + "/" + rcppsw::to_string(now.date().year()) + "-" +
+          rcppsw::to_string(now.date().month()) + "-" +
+          rcppsw::to_string(now.date().day()) + ":" +
+          rcppsw::to_string(now.time_of_day().hours()) + "-" +
+          rcppsw::to_string(now.time_of_day().minutes());
   } else {
     dir = output_root + "/" + output_dir;
   }
@@ -105,7 +105,7 @@ std::string base_controller2D_impl::output_init(const std::string& output_root,
   return dir;
 } /* output_init() */
 
-void base_controller2D_impl::rng_init(int seed, const std::string& category) {
+void base_controller2D::rng_init(int seed, const std::string& category) {
   rmath::rngm::instance().register_type<rmath::rng>(category);
   if (-1 == seed) {
     ER_INFO("Using time seeded RNG for category '%s'", category.c_str());
@@ -117,36 +117,36 @@ void base_controller2D_impl::rng_init(int seed, const std::string& category) {
   }
 } /* rng_init() */
 
-void base_controller2D_impl::tick(rtypes::timestep tick) {
+void base_controller2D::tick(const rtypes::timestep& tick) {
   m_saa->sensing()->tick(tick);
 } /* tick() */
 
-void base_controller2D_impl::ndc_pusht(void) {
+void base_controller2D::ndc_pusht(void) {
   ER_NDC_PUSH(
-      std::string("[t=") + std::to_string(m_saa->sensing()->tick().v()) +
-      std::string("] [") + std::to_string(entity_id()) + std::string("]"));
+      std::string("[t=") + rcppsw::to_string(m_saa->sensing()->tick()) +
+      std::string("] [ent") + rcppsw::to_string(entity_id()) + std::string("]"));
 }
 
 /*******************************************************************************
  * Movement Metrics
  ******************************************************************************/
-rtypes::spatial_dist base_controller2D_impl::distance(void) const {
+rtypes::spatial_dist base_controller2D::distance(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
-  if (saa()->sensing()->tick() > 1) {
+  if (saa()->sensing()->tick() > 1U) {
     return rtypes::spatial_dist(saa()->sensing()->tick_travel().length());
   }
   return rtypes::spatial_dist(0.0);
 } /* distance() */
 
-rmath::vector2d base_controller2D_impl::velocity(void) const {
+rmath::vector2d base_controller2D::velocity(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
-  if (saa()->sensing()->tick() > 1) {
+  if (saa()->sensing()->tick() > 1U) {
     return saa()->linear_velocity();
   }
   return {0, 0};
@@ -155,14 +155,14 @@ rmath::vector2d base_controller2D_impl::velocity(void) const {
 /*******************************************************************************
  * Swarm Spatial Metrics
  ******************************************************************************/
-const rmath::vector2d& base_controller2D_impl::position2D(void) const {
+const rmath::vector2d& base_controller2D::position2D(void) const {
   return m_saa->sensing()->position();
 }
-const rmath::vector2u& base_controller2D_impl::discrete_position2D(void) const {
+const rmath::vector2u& base_controller2D::discrete_position2D(void) const {
   return m_saa->sensing()->discrete_position();
 }
 
-rmath::vector2d base_controller2D_impl::heading2D(void) const {
+rmath::vector2d base_controller2D::heading2D(void) const {
   return {1.0, m_saa->sensing()->heading()};
 }
 

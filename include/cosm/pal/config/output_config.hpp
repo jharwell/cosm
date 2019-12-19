@@ -1,7 +1,7 @@
 /**
- * \file cube_block2D.hpp
+ * \file output_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,51 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
+#define INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block2D.hpp"
+#include <string>
+
+#include "rcppsw/config/base_config.hpp"
+
+#include "cosm/pal/config/metrics_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, pal, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \class cube_block2D
- * \ingroup cosm repr
+ * \struct output_config
+ * \ingroup cosm pal config
  *
- * \brief A 2D representation of a 3D cubical block within the arena. Cube
- * blocks are 1 cell in size.
+ * \brief Configuration for metrics logging.
  */
-class cube_block2D final : public base_block2D {
- public:
-  explicit cube_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLACK, rtypes::constants::kNoUUID) {}
-
-  cube_block2D(const rmath::vector2d& dim,
-               const rtypes::type_uuid& id) noexcept
-      : base_block2D(dim, rutils::color::kBLACK, id) {}
-
-  repr::block_type type(void) const override {
-    return repr::block_type::ekCUBE;
-  }
-  std::unique_ptr<base_block2D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block2D>(dims(), id());
-    tmp->dloc(this->dloc());
-    tmp->rloc(this->rloc());
-    tmp->reset_robot_id();
-    tmp->copy_metrics(*this);
-    return tmp;
-  } /* clone() */
+struct output_config final : public rconfig::base_config {
+  std::string            output_root{};
+  std::string            output_dir{};
+  metrics_config metrics {};
 };
 
-NS_END(repr, cosm);
+NS_END(config, pal, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_ */
+#endif /* INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_ */

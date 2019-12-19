@@ -32,6 +32,7 @@
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/ta/taskable.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/explore_for_goal_fsm.hpp"
@@ -65,9 +66,12 @@ class acquire_goal_fsm : public util_hfsm,
   /**
    * \brief Tuple representing a goal to be acquired: A location, the utility
    * associated with that location, and an integer identifier for the location
-   * (e.g. UUID of the object), which can be -1 if unused.
+   * (e.g. UUID of the object), which can be \ref rtypes::constants::kNoUUID if
+   * unused.
    */
-  using candidate_type = std::tuple<rmath::vector2d, double, int>;
+  using candidate_type = std::tuple<rmath::vector2d,
+                                    double,
+                                    rtypes::type_uuid>;
 
   /**
    * \brief Function type returning a \ref candidate_type if any is found, and
@@ -90,7 +94,8 @@ class acquire_goal_fsm : public util_hfsm,
    * waste effort attempting to acquire a goal that no longer exists (for
    * example).
    */
-  using goal_valid_ftype = std::function<bool(const rmath::vector2d&, int)>;
+  using goal_valid_ftype = std::function<bool(const rmath::vector2d&,
+                                              const rtypes::type_uuid&)>;
 
   struct hook_list {
     /* clang-format off */
@@ -277,15 +282,15 @@ class acquire_goal_fsm : public util_hfsm,
     return &mc_state_map[index];
   }
 
+  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
+
   /* clang-format off */
-  int                       m_acq_id{-1};
+  rtypes::type_uuid       m_acq_id{rtypes::constants::kNoUUID};
   bool                      m_first_acq_step{false};
   struct hook_list          m_hooks;
   vector_fsm                m_vector_fsm;
   explore_for_goal_fsm      m_explore_fsm;
   /* clang-format on */
-
-  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 };
 
 NS_END(fsm, cosm);

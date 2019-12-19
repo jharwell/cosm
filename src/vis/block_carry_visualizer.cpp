@@ -76,7 +76,7 @@ void block_carry_visualizer::draw(const repr::base_block2D* const block,
   if (block->vis_id()) {
     m_qt->DrawText(argos::CVector3(0.0, 0.0, m_text_vis_offset),
                    std::string(id_len + 3, ' ') + "[b" +
-                   std::to_string(block->id()) + "]",
+                   rcppsw::to_string(block->id()) + "]",
                    argos::CColor::GREEN);
   }
 } /* draw() */

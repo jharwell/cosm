@@ -98,21 +98,21 @@ class unicell_entity2D : public entity2D {
   unicell_entity2D(const rmath::vector2d& dim,
                    const rmath::vector2d& loc,
                    rtypes::discretize_ratio resolution)
-      : unicell_entity2D{dim, loc, resolution, -1} {}
+      : unicell_entity2D{dim, loc, resolution, rtypes::constants::kNoUUID} {}
 
   unicell_entity2D(const rmath::vector2d& dim,
                    const rmath::vector2d& loc,
                    rtypes::discretize_ratio resolution,
-                   int id)
+                   const rtypes::type_uuid& id)
       : entity2D(id),
         m_dim(dim),
         m_rloc(loc),
         m_dloc(rmath::dvec2uvec(loc, resolution.v())) {}
 
   explicit unicell_entity2D(const rmath::vector2d& dim)
-      : unicell_entity2D{dim, -1} {}
+      : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
 
-  unicell_entity2D(const rmath::vector2d& dim, int id)
+  unicell_entity2D(const rmath::vector2d& dim, const rtypes::type_uuid&id)
       : entity2D(id), m_dim(dim), m_rloc(), m_dloc() {}
 
   /**

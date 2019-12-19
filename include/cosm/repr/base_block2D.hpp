@@ -27,6 +27,7 @@
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/prototype/clonable.hpp"
 #include "rcppsw/types/timestep.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/repr/colored_entity.hpp"
 #include "cosm/repr/unicell_movable_entity2D.hpp"
@@ -72,14 +73,17 @@ class base_block2D : public unicell_movable_entity2D,
    * from 0.
    */
   base_block2D(const rmath::vector2d& dim, const rutils::color& color)
-      : unicell_movable_entity2D(dim, -1), colored_entity(color) {}
+      : unicell_movable_entity2D(dim, rtypes::constants::kNoUUID),
+        colored_entity(color) {}
 
   /**
    * \param dim 2 element vector of the dimensions of the block.
    * \param color The color of the block.
    * \param id The id of the block.
    */
-  base_block2D(const rmath::vector2d& dim, const rutils::color& color, int id)
+  base_block2D(const rmath::vector2d& dim,
+               const rutils::color& color,
+               const rtypes::type_uuid& id)
       : unicell_movable_entity2D(dim, id), colored_entity(color) {}
 
   ~base_block2D(void) override = default;
@@ -137,7 +141,7 @@ class base_block2D : public unicell_movable_entity2D,
    * - Move the block's position out of sight so that it is not discoverable by
    *   other robots.
    */
-  void robot_pickup_event(int robot_id) {
+  void robot_pickup_event(const rtypes::type_uuid& robot_id) {
     ++m_transporters;
     m_robot_id = robot_id;
     move_out_of_sight();
@@ -184,15 +188,15 @@ class base_block2D : public unicell_movable_entity2D,
    * \return The robot index, or -1 if no robot is currently carrying this
    * block.
    */
-  int robot_id(void) const { return m_robot_id; }
-  void robot_id(int id) { m_robot_id = id; }
+  const rtypes::type_uuid& robot_id(void) const { return m_robot_id; }
+  void robot_id(const rtypes::type_uuid& id) { m_robot_id = id; }
 
   /**
    * \brief Reset the the blocks carried/not carried state when it is not
    * carried by a robot anymore, but has not yet made it to its final
    * destination.
    */
-  void reset_robot_id(void) { m_robot_id = -1; }
+  void reset_robot_id(void) { m_robot_id = rtypes::constants::kNoUUID; }
 
  protected:
   /**
@@ -218,12 +222,12 @@ class base_block2D : public unicell_movable_entity2D,
   }
 
   /* clang-format off */
-  int              m_robot_id{-1};
-  uint             m_transporters{0};
-  bool             m_first_pickup{false};
-  rtypes::timestep m_first_pickup_time{0};
-  rtypes::timestep m_dist_time{0};
-  rtypes::timestep m_dest_drop_time{0};
+  rtypes::type_uuid m_robot_id{rtypes::constants::kNoUUID};
+  uint                m_transporters{0};
+  bool                m_first_pickup{false};
+  rtypes::timestep    m_first_pickup_time{0};
+  rtypes::timestep    m_dist_time{0};
+  rtypes::timestep    m_dest_drop_time{0};
   /* clang-format on */
 };
 

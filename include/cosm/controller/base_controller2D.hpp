@@ -34,10 +34,10 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/types/timestep.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/fsm/metrics/goal_acq_metrics.hpp"
 #include "cosm/fsm/metrics/movement_metrics.hpp"
-#include "cosm/hal/hal.hpp"
 #include "cosm/metrics/spatial_dist2D_metrics.hpp"
 
 /*******************************************************************************
@@ -59,7 +59,7 @@ NS_START(controller);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class base_controller2D_impl
+ * \class base_controller2D
  * \ingroup controller
  *
  * \brief The implementation of base controller class that the controllers for
@@ -70,16 +70,16 @@ NS_START(controller);
  *
  * It should never be derived from directly.
  */
-class base_controller2D_impl : public cfmetrics::movement_metrics,
+class base_controller2D : public cfmetrics::movement_metrics,
                                public cfmetrics::goal_acq_metrics,
                                public cmetrics::spatial_dist2D_metrics,
-                               public rer::client<base_controller2D_impl> {
+                               public rer::client<base_controller2D> {
  public:
-  base_controller2D_impl(void) RCSW_COLD;
-  ~base_controller2D_impl(void) override RCSW_COLD;
+  base_controller2D(void) RCSW_COLD;
+  ~base_controller2D(void) override RCSW_COLD;
 
-  base_controller2D_impl(const base_controller2D_impl& other) = delete;
-  base_controller2D_impl& operator=(const base_controller2D_impl& other) = delete;
+  base_controller2D(const base_controller2D&) = delete;
+  base_controller2D& operator=(const base_controller2D&) = delete;
 
   /**
    * \brief Initialize the controller from XML configuration.
@@ -112,7 +112,7 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
    * same type in simulation. For real robots, it doesn't have to be unique, but
    * it probably still should be to assist with debugging.
    */
-  virtual int entity_id(void) const = 0;
+  virtual rtypes::type_uuid entity_id(void) const = 0;
 
   /* movement metrics */
   rtypes::spatial_dist distance(void) const override RCSW_PURE;
@@ -142,7 +142,7 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
    * there would no doubt be considerable skew; this is a simulation hack that
    * makes things much nicer/easier to deal with.
    */
-  void tick(rtypes::timestep tick);
+  void tick(const rtypes::timestep& tick);
 
   /**
    * \brief Set the current location of the robot.
@@ -161,7 +161,9 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
    * \brief Convenience function to add footbot ID to salient messages during
    * loop function execution (timestep is already there).
    */
-  void ndc_push(void) { ER_NDC_PUSH("[" + std::to_string(entity_id()) + "]"); }
+  void ndc_push(void) {
+    ER_NDC_PUSH("[" + rcppsw::to_string(entity_id().v()) + "]");
+  }
 
   /**
    * \brief Convenience function to add robot ID+timestep to messages during
@@ -227,35 +229,6 @@ class base_controller2D_impl : public cfmetrics::movement_metrics,
   std::unique_ptr<subsystem::saa_subsystem2D> m_saa;
   /* clang-format on */
 };
-
-NS_END(controller, cosm);
-
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-#include <argos3/core/control_interface/ci_controller.h>
-#endif
-
-NS_START(cosm, controller);
-
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-
-/**
- * \class base_controller2D
- * \ingroup controller
- *
- * \brief The implementation of base controller when building for ARGoS.
- */
-class base_controller2D : public base_controller2D_impl,
-                          public argos::CCI_Controller {
- public:
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void ControlStep(void) override { control_step(); }
-};
-#elif COSM_HAL_TARGET == HAL_TARGET_LEGO_EV3
-cpplass base_controller2D : public base_controller2D_impl {};
-p#else
-#error "Unsupported HAL target"
-#endif
 
 NS_END(controller, cosm);
 

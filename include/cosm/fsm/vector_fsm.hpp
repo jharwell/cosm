@@ -56,7 +56,8 @@ class vector_fsm final : public util_hfsm,
  public:
   vector_fsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng);
 
-  vector_fsm& operator=(const vector_fsm& fsm) = delete;
+  vector_fsm& operator=(const vector_fsm&) = delete;
+  vector_fsm(const vector_fsm&) = delete;
 
   /* taskable overrides */
   void task_reset(void) override { init(); }
@@ -171,37 +172,17 @@ class vector_fsm final : public util_hfsm,
   HFSM_STATE_DECLARE_ND(vector_fsm, collision_recovery);
   HFSM_STATE_DECLARE(vector_fsm, arrived, struct goal_data);
 
-  FSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
-  FSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_avoidance);
-  FSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_recovery);
+  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
+  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_avoidance);
+  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_recovery);
 
-  FSM_EXIT_DECLARE(vector_fsm, exit_collision_avoidance);
+  HFSM_EXIT_DECLARE(vector_fsm, exit_collision_avoidance);
 
-  /**
-   * \brief Defines the state map for the FSM.
-   *
-   * Note that the order of the states in the map MUST match the order of the
-   * states in \enum state, or things will not work correctly.
-   *
-   * Note also that all controller will share the SAME state map in memory, so you
-   * cannot change the parent of any statein this FSM for only SOME other
-   * objects. But that should not be necessary, as it is taskable.
-   */
-  FSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
-    FSM_DEFINE_STATE_MAP(state_map_ex, kSTATE_MAP){
-        FSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
-        FSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
-        FSM_STATE_MAP_ENTRY_EX_ALL(&collision_avoidance,
-                                   nullptr,
-                                   &entry_collision_avoidance,
-                                   &exit_collision_avoidance),
-        FSM_STATE_MAP_ENTRY_EX_ALL(
-            &collision_recovery, nullptr, &entry_collision_recovery, nullptr),
-        FSM_STATE_MAP_ENTRY_EX_ALL(
-            &new_direction, nullptr, &entry_new_direction, nullptr),
-        FSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)};
-    return &kSTATE_MAP[index];
+  HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
+    return &mc_state_map[index];
   }
+
+  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /* clang-format off */
   struct fsm_state m_state{};
