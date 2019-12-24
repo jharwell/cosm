@@ -49,3 +49,8 @@ compile_options.json
 build
 node_modules
 ext/rcppsw
+
+# Sphinx
+docs/_build/
+docs/api
+docs/_ext/__pycache__
