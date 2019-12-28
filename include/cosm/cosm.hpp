@@ -123,6 +123,10 @@ namespace pal {
 namespace config{}
 } /* namespace pal */
 
+namespace ta {
+namespace metrics {}
+} /* namespace ta */
+
 } /* namespace cosm */
 
 /** @} */
@@ -140,10 +144,12 @@ namespace ctv = cosm::tv;
 namespace cconvergence = cosm::convergence;
 namespace cmetrics = cosm::metrics;
 namespace ctv = cosm::tv;
-namespace ctmetrics = ctv::metrics;
+namespace ctvmetrics = ctv::metrics;
 namespace crepr = cosm::repr;
 namespace cvis = cosm::vis;
 namespace cpal = cosm::pal;
 namespace cpconfig = cpal::config;
+namespace cta = cosm::ta;
+namespace ctametrics = cta::metrics;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

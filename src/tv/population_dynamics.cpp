@@ -24,6 +24,7 @@
 #include "cosm/tv/population_dynamics.hpp"
 
 #include "rcppsw/math/config/rng_config.hpp"
+
 #include "cosm/tv/config/population_dynamics_config.hpp"
 
 /*******************************************************************************
@@ -48,34 +49,29 @@ population_dynamics::population_dynamics(
 /*******************************************************************************
  * Metrics
  ******************************************************************************/
-population_dynamics::queue_status population_dynamics::death_queue_status(void) const {
-  return queue_status {
-    .size_change = m_timestep == m_last_death,
-        .size = m_kills.size(),
-        .lambda = mc_config.death_lambda,
-        .mu = std::numeric_limits<double>::infinity()
-        };
+population_dynamics::queue_status population_dynamics::death_queue_status(
+    void) const {
+  return queue_status{.size_change = m_timestep == m_last_death,
+                      .size = m_kills.size(),
+                      .lambda = mc_config.death_lambda,
+                      .mu = std::numeric_limits<double>::infinity()};
 } /* death_queue_status() */
 
-population_dynamics::queue_status population_dynamics::birth_queue_status(void) const {
-  return queue_status {
-    .size_change = m_timestep == m_last_birth,
-        .size = mc_max_pop - m_current_pop,
-        .lambda = std::numeric_limits<double>::infinity(),
-        .mu = mc_config.birth_mu
-        };
+population_dynamics::queue_status population_dynamics::birth_queue_status(
+    void) const {
+  return queue_status{.size_change = m_timestep == m_last_birth,
+                      .size = mc_max_pop - m_current_pop,
+                      .lambda = std::numeric_limits<double>::infinity(),
+                      .mu = mc_config.birth_mu};
 } /* birth_queue_status() */
 
-population_dynamics::queue_status population_dynamics::repair_queue_status(void) const {
-  return queue_status {
-    .size_change = m_timestep == m_last_repair,
-        .size = m_repairing.size(),
-        .lambda = mc_config.repair_lambda,
-        .mu = mc_config.repair_mu
-        };
+population_dynamics::queue_status population_dynamics::repair_queue_status(
+    void) const {
+  return queue_status{.size_change = m_timestep == m_last_repair,
+                      .size = m_repairing.size(),
+                      .lambda = mc_config.repair_lambda,
+                      .mu = mc_config.repair_mu};
 } /* repair_queue_status() */
-
-
 
 /*******************************************************************************
  * Member Functions
@@ -131,8 +127,7 @@ void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
 } /* birth_dynamics() */
 
 void population_dynamics::malfunction_dynamics(const rtypes::timestep& t) {
-  if (m_last_malfunction + t >=
-      m_rng->exponential(mc_config.repair_lambda)) {
+  if (m_last_malfunction + t >= m_rng->exponential(mc_config.repair_lambda)) {
     auto res = robot_malfunction();
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop,

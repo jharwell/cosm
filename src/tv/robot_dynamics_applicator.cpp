@@ -54,7 +54,8 @@ void robot_dynamics_applicator::register_controller(const rtypes::type_uuid& id)
   }
 } /* register_controller() */
 
-void robot_dynamics_applicator::unregister_controller(const rtypes::type_uuid& id) {
+void robot_dynamics_applicator::unregister_controller(
+    const rtypes::type_uuid& id) {
   if (mc_motion_throttle_config) {
     m_motion_throttlers.erase(id);
     ER_INFO("Unregistered controller with ID=%d", id.v());

@@ -69,7 +69,7 @@ void base_controller2D::discrete_position(const rmath::vector2u& loc) {
 }
 
 std::string base_controller2D::output_init(const std::string& output_root,
-                                                const std::string& output_dir) {
+                                           const std::string& output_dir) {
   std::string dir;
   if ("__current_date__" == output_dir) {
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
@@ -122,9 +122,9 @@ void base_controller2D::tick(const rtypes::timestep& tick) {
 } /* tick() */
 
 void base_controller2D::ndc_pusht(void) {
-  ER_NDC_PUSH(
-      std::string("[t=") + rcppsw::to_string(m_saa->sensing()->tick()) +
-      std::string("] [ent") + rcppsw::to_string(entity_id()) + std::string("]"));
+  ER_NDC_PUSH(std::string("[t=") + rcppsw::to_string(m_saa->sensing()->tick()) +
+              std::string("] [ent") + rcppsw::to_string(entity_id()) +
+              std::string("]"));
 }
 
 /*******************************************************************************

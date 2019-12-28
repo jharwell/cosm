@@ -25,12 +25,14 @@
  * Includes
  ******************************************************************************/
 #include <ext/ticpp/ticpp.h>
+
 #include <string>
 
 #include "rcppsw/common/common.hpp"
+#include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
-#include "rcppsw/math/config/rng_config.hpp"
+
 #include "cosm/hal/hal.hpp"
 
 /*******************************************************************************
@@ -99,8 +101,8 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
 NS_END(cosm, pal);
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-#include <argos3/core/simulator/loop_functions.h>
 #include <argos3/core/simulator/entity/floor_entity.h>
+#include <argos3/core/simulator/loop_functions.h>
 #endif
 
 NS_START(cosm, pal);
@@ -110,7 +112,7 @@ class swarm_manager : public swarm_manager_impl,
                       public argos::CLoopFunctions,
                       public rer::client<swarm_manager> {
  public:
-  swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {  }
+  swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {}
 
   virtual ~swarm_manager(void) override = default;
 
@@ -129,7 +131,8 @@ class swarm_manager : public swarm_manager_impl,
 
  protected:
   void ndc_push(void) {
-    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) + "]");
+    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
+                "]");
   }
   void ndc_pop(void) { ER_NDC_POP(); }
 

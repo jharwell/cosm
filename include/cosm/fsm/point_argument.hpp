@@ -25,9 +25,9 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
-#include "rcppsw/ta/taskable_argument.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/ta/taskable_argument.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,11 +41,11 @@ NS_START(cosm, fsm);
  * \class point_argument
  * \ingroup fsm
  *
- * \brief An argument that can be passed to a \ref rcppsw::ta::taskable function
+ * \brief An argument that can be passed to a \ref ta::taskable function
  * which contains a 2D point and a tolerance, for use in specifying a location
  * in 2D space which should be acquired.
  */
-class point_argument : public rta::taskable_argument {
+class point_argument : public ta::taskable_argument {
  public:
   point_argument(double tolerance, const rmath::vector2d& v)
       : m_tolerance(tolerance), m_point(v) {}
@@ -57,7 +57,7 @@ class point_argument : public rta::taskable_argument {
 
  private:
   /* clang-format off */
-  double         m_tolerance;
+  double          m_tolerance;
   rmath::vector2d m_point;
   /* clang-format on */
 };

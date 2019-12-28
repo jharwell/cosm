@@ -112,7 +112,7 @@ class unicell_entity2D : public entity2D {
   explicit unicell_entity2D(const rmath::vector2d& dim)
       : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
 
-  unicell_entity2D(const rmath::vector2d& dim, const rtypes::type_uuid&id)
+  unicell_entity2D(const rmath::vector2d& dim, const rtypes::type_uuid& id)
       : entity2D(id), m_dim(dim), m_rloc(), m_dloc() {}
 
   /**

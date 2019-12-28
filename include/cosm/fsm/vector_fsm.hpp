@@ -25,10 +25,10 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
-#include "rcppsw/ta/taskable.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/util_hfsm.hpp"
+#include "cosm/ta/taskable.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,7 +52,7 @@ NS_START(cosm, fsm);
  */
 class vector_fsm final : public util_hfsm,
                          public rer::client<vector_fsm>,
-                         public rta::taskable {
+                         public ta::taskable {
  public:
   vector_fsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng);
 
@@ -65,7 +65,7 @@ class vector_fsm final : public util_hfsm,
     return current_state() != ekST_START && current_state() != ekST_ARRIVED;
   }
   void task_execute(void) override;
-  void task_start(const rta::taskable_argument* c_arg) override;
+  void task_start(const ta::taskable_argument* c_arg) override;
   bool task_finished(void) const override {
     return current_state() == ekST_ARRIVED;
   }

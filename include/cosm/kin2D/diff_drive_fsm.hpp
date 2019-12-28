@@ -130,7 +130,6 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    */
   FSM_STATE_DECLARE(diff_drive_fsm, hard_turn, turn_data);
 
-
   FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];
   }

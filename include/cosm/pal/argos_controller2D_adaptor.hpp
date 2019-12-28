@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/hal.hpp"
 #include "cosm/controller/base_controller2D.hpp"
+#include "cosm/hal/hal.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <argos3/core/control_interface/ci_controller.h>
@@ -48,7 +48,7 @@ NS_START(cosm, pal);
  * \brief The implementation of base controller when building for ARGoS.
  */
 class argos_controller2D_adaptor : public controller::base_controller2D,
-                                        public argos::CCI_Controller {
+                                   public argos::CCI_Controller {
  public:
   void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
   void Reset(void) override RCSW_COLD { reset(); }

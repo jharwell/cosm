@@ -29,10 +29,10 @@
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/repr/colored_entity.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
 #include "cosm/metrics/blocks/transport_metrics.hpp"
 #include "cosm/repr/block_type.hpp"
+#include "cosm/repr/colored_entity.hpp"
+#include "cosm/repr/unicell_movable_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -60,10 +60,9 @@ class base_block2D : public unicell_movable_entity2D,
    * \brief Out of sight location blocks are moved to when a robot picks them
    * up, for visualization/rendering purposes.
    */
-  static constexpr rmath::vector2u kOutOfSightDLoc = rmath::vector2u(1000,
-                                                                     1000);
-  static constexpr rmath::vector2d kOutOfSightRLoc = rmath::vector2d(1000.0,
-                                                                     1000.0);
+  static constexpr rmath::vector2u kOutOfSightDLoc = rmath::vector2u(1000, 1000);
+  static constexpr rmath::vector2d kOutOfSightRLoc =
+      rmath::vector2d(1000.0, 1000.0);
 
   /**
    * \param dim 2 element vector of the dimensions of the block.

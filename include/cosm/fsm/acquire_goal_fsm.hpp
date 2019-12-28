@@ -31,7 +31,6 @@
 #include <tuple>
 
 #include "rcppsw/math/vector2.hpp"
-#include "rcppsw/ta/taskable.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
@@ -39,6 +38,7 @@
 #include "cosm/fsm/metrics/goal_acq_metrics.hpp"
 #include "cosm/fsm/util_hfsm.hpp"
 #include "cosm/fsm/vector_fsm.hpp"
+#include "cosm/ta/taskable.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -60,7 +60,7 @@ NS_START(cosm, fsm);
  */
 class acquire_goal_fsm : public util_hfsm,
                          public rer::client<acquire_goal_fsm>,
-                         public rta::taskable,
+                         public ta::taskable,
                          public metrics::goal_acq_metrics {
  public:
   /**
@@ -69,9 +69,7 @@ class acquire_goal_fsm : public util_hfsm,
    * (e.g. UUID of the object), which can be \ref rtypes::constants::kNoUUID if
    * unused.
    */
-  using candidate_type = std::tuple<rmath::vector2d,
-                                    double,
-                                    rtypes::type_uuid>;
+  using candidate_type = std::tuple<rmath::vector2d, double, rtypes::type_uuid>;
 
   /**
    * \brief Function type returning a \ref candidate_type if any is found, and
@@ -94,8 +92,8 @@ class acquire_goal_fsm : public util_hfsm,
    * waste effort attempting to acquire a goal that no longer exists (for
    * example).
    */
-  using goal_valid_ftype = std::function<bool(const rmath::vector2d&,
-                                              const rtypes::type_uuid&)>;
+  using goal_valid_ftype =
+      std::function<bool(const rmath::vector2d&, const rtypes::type_uuid&)>;
 
   struct hook_list {
     /* clang-format off */
@@ -176,7 +174,7 @@ class acquire_goal_fsm : public util_hfsm,
 
   /* taskable overrides */
   void task_execute(void) override final;
-  void task_start(const rta::taskable_argument*) override {}
+  void task_start(const ta::taskable_argument*) override {}
   bool task_finished(void) const override final {
     return ekST_FINISHED == current_state();
   }

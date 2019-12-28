@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/fsm/metrics/collision_metrics.hpp"
-#include "rcppsw/ta/taskable.hpp"
+#include "cosm/ta/taskable.hpp"
 #include "rcppsw/utils/color.hpp"
 #include "cosm/cosm.hpp"
 
@@ -51,7 +51,7 @@ NS_START(fsm, expstrat);
  * exhibit when looking for stuff.
  */
 class base_expstrat : public fsm::metrics::collision_metrics,
-                      public rta::taskable {
+                      public ta::taskable {
  public:
   struct params {
     explicit params(subsystem::saa_subsystem2D* const saa_in)

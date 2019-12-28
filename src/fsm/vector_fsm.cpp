@@ -46,31 +46,23 @@ vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
       HFSM_CONSTRUCT_STATE(collision_avoidance, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(collision_recovery, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()),
-      HFSM_DEFINE_STATE_MAP(mc_state_map,
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&start,
-                                                       nullptr,
-                                                       nullptr,
-                                                       nullptr),
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&vector,
-                                                       nullptr,
-                                                       &entry_vector,
-                                                       nullptr),
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&collision_avoidance,
-                                                       nullptr,
-                                                       &entry_collision_avoidance,
-                                                       &exit_collision_avoidance),
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&collision_recovery,
-                                                       nullptr,
-                                                       &entry_collision_recovery,
-                                                       nullptr),
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&new_direction,
-                                                       nullptr,
-                                                       &entry_new_direction,
-                                                       nullptr),
-                            FSM_STATE_MAP_ENTRY_EX_ALL(&arrived,
-                                                       nullptr,
-                                                       nullptr,
-                                                       nullptr)) {}
+      HFSM_DEFINE_STATE_MAP(
+          mc_state_map,
+          FSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&collision_avoidance,
+                                     nullptr,
+                                     &entry_collision_avoidance,
+                                     &exit_collision_avoidance),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&collision_recovery,
+                                     nullptr,
+                                     &entry_collision_recovery,
+                                     nullptr),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&new_direction,
+                                     nullptr,
+                                     &entry_new_direction,
+                                     nullptr),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
 
 /*******************************************************************************
  * States
@@ -249,7 +241,7 @@ rmath::vector2u vector_fsm::avoidance_loc(void) const {
 /*******************************************************************************
  * General Member Functions
  ******************************************************************************/
-void vector_fsm::task_start(const rta::taskable_argument* const c_arg) {
+void vector_fsm::task_start(const ta::taskable_argument* const c_arg) {
   static const uint8_t kTRANSITIONS[] = {
       ekST_VECTOR,            /* start */
       ekST_VECTOR,            /* vector */

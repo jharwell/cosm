@@ -50,7 +50,7 @@ class unicell_movable_entity2D : public unicell_entity2D {
   using unicell_entity2D::rloc;
   using unicell_entity2D::unicell_entity2D;
 
-  static constexpr bool is_movable(void)  { return true; }
+  static constexpr bool is_movable(void) { return true; }
 
   ~unicell_movable_entity2D(void) override = default;
 

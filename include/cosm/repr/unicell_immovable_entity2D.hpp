@@ -49,8 +49,8 @@ class unicell_immovable_entity2D : public unicell_entity2D {
   static constexpr bool is_movable(void) { return false; }
 
   unicell_immovable_entity2D(const rmath::vector2d& dim,
-                           const rmath::vector2d& loc,
-                           const rtypes::discretize_ratio& resolution)
+                             const rmath::vector2d& loc,
+                             const rtypes::discretize_ratio& resolution)
       : unicell_entity2D(dim, loc, resolution, rtypes::constants::kNoUUID) {}
 
   unicell_immovable_entity2D(const rmath::vector2d& dim,

@@ -41,7 +41,8 @@ population_dynamics_metrics_collector::population_dynamics_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(void) const {
+std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(
+    void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
       /* clang-format off */
@@ -69,7 +70,8 @@ void population_dynamics_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-boost::optional<std::string> population_dynamics_metrics_collector::csv_line_build(void) {
+boost::optional<std::string> population_dynamics_metrics_collector::csv_line_build(
+    void) {
   if (!((timestep() + 1) % interval() == 0)) {
     return boost::none;
   }
@@ -99,7 +101,8 @@ boost::optional<std::string> population_dynamics_metrics_collector::csv_line_bui
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-void population_dynamics_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+void population_dynamics_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const population_dynamics_metrics&>(metrics);
 
   /* misc */
@@ -123,7 +126,7 @@ void population_dynamics_metrics_collector::collect(const rmetrics::base_metrics
   m_cum.death_lambda = death.lambda;
 
   /* repair queue */
-  auto repair  = m.repair_queue_status();
+  auto repair = m.repair_queue_status();
   m_interval.repair_queue_size += repair.size;
   m_interval.repair_lambda = repair.lambda;
   m_interval.repair_mu = repair.mu;

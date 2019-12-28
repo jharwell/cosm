@@ -55,7 +55,7 @@ NS_START(cosm, fsm);
  * currently known.
  */
 class explore_for_goal_fsm final : public util_hfsm,
-                                   public rta::taskable,
+                                   public ta::taskable,
                                    public rer::client<explore_for_goal_fsm> {
  public:
   enum state {
@@ -104,7 +104,7 @@ class explore_for_goal_fsm final : public util_hfsm,
       m_explore_behavior->task_reset();
     }
   }
-  void task_start(const rta::taskable_argument* c_arg) override {
+  void task_start(const ta::taskable_argument* c_arg) override {
     if (nullptr != m_explore_behavior) {
       m_explore_behavior->task_start(c_arg);
     }

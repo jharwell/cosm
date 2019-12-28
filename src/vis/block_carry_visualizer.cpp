@@ -42,14 +42,13 @@ void block_carry_visualizer::draw(const repr::base_block2D* const block,
                                   uint id_len) {
   switch (block->type()) {
     case repr::block_type::ekCUBE:
-      m_qt->DrawBox(argos::CVector3(0.0, 0.0, m_block_vis_offset),
-                    argos::CQuaternion(),
-                    argos::CVector3(block->xdimr(),
-                                    block->xdimr(),
-                                    block->xdimr()),
-                    argos::CColor(block->color().red(),
-                                  block->color().green(),
-                                  block->color().blue()));
+      m_qt->DrawBox(
+          argos::CVector3(0.0, 0.0, m_block_vis_offset),
+          argos::CQuaternion(),
+          argos::CVector3(block->xdimr(), block->xdimr(), block->xdimr()),
+          argos::CColor(block->color().red(),
+                        block->color().green(),
+                        block->color().blue()));
       break;
     case repr::block_type::ekRAMP:
       /*
@@ -58,25 +57,25 @@ void block_carry_visualizer::draw(const repr::base_block2D* const block,
        * purposes). But, drawing ramp blocks in ARGos is a pain in the ass, so
        * use the spherical cow approach.
        */
-      m_qt->DrawBox(argos::CVector3(0.0, 0.0, m_block_vis_offset),
-                    argos::CQuaternion(),
-                    argos::CVector3(block->xdimr(),
-                                    block->ydimr(),
-                                    block->ydimr()),
-                    argos::CColor(block->color().red(),
-                                  block->color().green(),
-                                  block->color().blue()));
+      m_qt->DrawBox(
+          argos::CVector3(0.0, 0.0, m_block_vis_offset),
+          argos::CQuaternion(),
+          argos::CVector3(block->xdimr(), block->ydimr(), block->ydimr()),
+          argos::CColor(block->color().red(),
+                        block->color().green(),
+                        block->color().blue()));
 
       break;
     default:
       /* Unknown block type */
-      ER_FATAL_SENTINEL("Cannot visualize unknown block type: Not cube or ramp");
+      ER_FATAL_SENTINEL(
+          "Cannot visualize unknown block type: Not cube or ramp");
   } /* switch() */
 
   if (block->vis_id()) {
     m_qt->DrawText(argos::CVector3(0.0, 0.0, m_text_vis_offset),
                    std::string(id_len + 3, ' ') + "[b" +
-                   rcppsw::to_string(block->id()) + "]",
+                       rcppsw::to_string(block->id()) + "]",
                    argos::CColor::GREEN);
   }
 } /* draw() */

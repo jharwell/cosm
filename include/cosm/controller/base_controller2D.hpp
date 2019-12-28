@@ -71,9 +71,9 @@ NS_START(controller);
  * It should never be derived from directly.
  */
 class base_controller2D : public cfmetrics::movement_metrics,
-                               public cfmetrics::goal_acq_metrics,
-                               public cmetrics::spatial_dist2D_metrics,
-                               public rer::client<base_controller2D> {
+                          public cfmetrics::goal_acq_metrics,
+                          public cmetrics::spatial_dist2D_metrics,
+                          public rer::client<base_controller2D> {
  public:
   base_controller2D(void) RCSW_COLD;
   ~base_controller2D(void) override RCSW_COLD;
@@ -177,7 +177,7 @@ class base_controller2D : public cfmetrics::movement_metrics,
   void ndc_pop(void) { ER_NDC_POP(); }
 
   /**
-   * \brief Return a handle to the \ref rcppsw::math::rng used for random number
+   * \brief Return a handle to the \ref rcppsw::rmath::rng used for random number
    * generation by this robot.
    */
   rmath::rng* rng(void) { return m_rng; }

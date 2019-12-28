@@ -27,7 +27,7 @@
 #include <argos3/core/utility/math/vector3.h>
 #include <argos3/plugins/simulator/visualizations/qt-opengl/qtopengl_user_functions.h>
 
-#include "rcppsw/ta/logical_task.hpp"
+#include "cosm/ta/logical_task.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,7 +37,7 @@ NS_START(cosm, vis);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void task_visualizer::draw(const rta::logical_task* const current_task) {
+void task_visualizer::draw(const ta::logical_task* const current_task) {
   if (nullptr != current_task) {
     m_qt->DrawText(argos::CVector3(0.0, 0.0, m_text_vis_offset),
                    current_task->name(),

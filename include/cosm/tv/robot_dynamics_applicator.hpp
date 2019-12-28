@@ -72,10 +72,12 @@ struct robot_dynamics_applicator_config;
  */
 class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> {
  public:
-  explicit robot_dynamics_applicator(const config::robot_dynamics_applicator_config* config);
+  explicit robot_dynamics_applicator(
+      const config::robot_dynamics_applicator_config* config);
 
   robot_dynamics_applicator(const robot_dynamics_applicator&) = delete;
-  const robot_dynamics_applicator& operator=(const robot_dynamics_applicator&) = delete;
+  const robot_dynamics_applicator& operator=(const robot_dynamics_applicator&) =
+      delete;
 
   /**
    * \brief Update the state of all applied variances. Should be called once per

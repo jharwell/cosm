@@ -46,8 +46,7 @@ class cube_block2D final : public base_block2D {
   explicit cube_block2D(const rmath::vector2d& dim)
       : base_block2D(dim, rutils::color::kBLACK, rtypes::constants::kNoUUID) {}
 
-  cube_block2D(const rmath::vector2d& dim,
-               const rtypes::type_uuid& id) noexcept
+  cube_block2D(const rmath::vector2d& dim, const rtypes::type_uuid& id) noexcept
       : base_block2D(dim, rutils::color::kBLACK, id) {}
 
   repr::block_type type(void) const override {

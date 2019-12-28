@@ -35,11 +35,11 @@
 namespace argos {
 class CQTOpenGLUserFunctions;
 }
-namespace rcppsw { namespace ta {
+NS_START(cosm);
+namespace ta {
 class logical_task;
-}} // namespace rcppsw::ta
-
-NS_START(cosm, vis);
+} /* namespace ta */
+NS_START(vis);
 
 /*******************************************************************************
  * Classes
@@ -68,7 +68,7 @@ class task_visualizer : public rer::client<task_visualizer> {
    *
    * \param current_task The current task the robot is executing.
    */
-  void draw(const rta::logical_task* current_task);
+  void draw(const ta::logical_task* current_task);
 
   /* clang-format off */
   double                               m_text_vis_offset{0.0};

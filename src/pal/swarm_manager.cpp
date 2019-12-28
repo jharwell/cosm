@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/pal/swarm_manager.hpp"
 
-#include <chrono>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <chrono>
 
 #include "rcppsw/math/rngm.hpp"
 

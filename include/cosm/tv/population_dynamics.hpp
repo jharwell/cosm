@@ -24,16 +24,17 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <algorithm>
 #include <queue>
 #include <utility>
 #include <vector>
-#include <algorithm>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
-#include "rcppsw/types/timestep.hpp"
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+
 #include "cosm/tv/config/population_dynamics_config.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics.hpp"
 
@@ -100,9 +101,10 @@ class population_dynamics : public rer::client<population_dynamics>,
 
  protected:
   bool already_killed(const rtypes::type_uuid& id) {
-    return m_kills.end() != std::find_if(m_kills.begin(),
-                                         m_kills.end(),
-                                         [&](const auto& a) { return a == id; });
+    return m_kills.end() !=
+           std::find_if(m_kills.begin(), m_kills.end(), [&](const auto& a) {
+             return a == id;
+           });
   }
 
   /**
@@ -123,8 +125,7 @@ class population_dynamics : public rer::client<population_dynamics>,
    * \return The ID of the robot that was added (\ref rtypes::constants::kNoUUID
    * if the robot could not be added), along with the current swarm size.
    */
-  virtual op_result robot_add(size_t max_pop,
-                               const rtypes::type_uuid& id) = 0;
+  virtual op_result robot_add(size_t max_pop, const rtypes::type_uuid& id) = 0;
 
   /**
    * \brief Temporarily remove a robot from simulation/the swarm.

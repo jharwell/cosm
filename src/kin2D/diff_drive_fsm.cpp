@@ -36,19 +36,19 @@ NS_START(cosm, kin2D);
 diff_drive_fsm::diff_drive_fsm(double max_speed,
                                const rmath::radians& soft_turn_max)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
-    mc_max_speed(max_speed),
-    mc_soft_turn_max(soft_turn_max),
-    FSM_DEFINE_STATE_MAP(mc_state_map,
-                         FSM_STATE_MAP_ENTRY(&soft_turn),
-                         FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+      mc_max_speed(max_speed),
+      mc_soft_turn_max(soft_turn_max),
+      FSM_DEFINE_STATE_MAP(mc_state_map,
+                           FSM_STATE_MAP_ENTRY(&soft_turn),
+                           FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
-    mc_max_speed(other.mc_max_speed),
-    mc_soft_turn_max(other.mc_soft_turn_max),
-    FSM_DEFINE_STATE_MAP(mc_state_map,
-                         FSM_STATE_MAP_ENTRY(&soft_turn),
-                         FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+      mc_max_speed(other.mc_max_speed),
+      mc_soft_turn_max(other.mc_soft_turn_max),
+      FSM_DEFINE_STATE_MAP(mc_state_map,
+                           FSM_STATE_MAP_ENTRY(&soft_turn),
+                           FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 /*******************************************************************************
  * Events
