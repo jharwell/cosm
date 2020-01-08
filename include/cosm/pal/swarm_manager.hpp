@@ -32,6 +32,7 @@
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -39,10 +40,6 @@
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, pal);
-
-namespace config {
-struct output_config;
-} /* namespace config */
 
 /*******************************************************************************
  * Class Definitions
@@ -83,11 +80,14 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
   const std::string& output_root(void) const { return m_output_root; }
 
   /**
-   * \brief Initialize logging for all support/loop function code.
+   * \brief Initialize output directories.
    *
-   * \param output Parsed output parameters.
+   * \param output_root Absolute/relative path to output root.
+   * \param output_dir Directory within the overall output root to use as the
+   *                   root directory for THIS experiment's outputs
    */
-  void output_init(const config::output_config* output) RCSW_COLD;
+  void output_init(const std::string& output_root,
+                   const std::string& output_dir) RCSW_COLD;
 
   rmath::rng* rng(void) { return m_rng; }
 
@@ -130,11 +130,16 @@ class swarm_manager : public swarm_manager_impl,
   void PostStep(void) override { post_step(); }
 
  protected:
-  void ndc_push(void) {
+#if (LIBRA_ER >= LIBRA_ER_ALL)
+  void ndc_push(void) const {
     ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
-                "]");
+                      "]");
   }
-  void ndc_pop(void) { ER_NDC_POP(); }
+  void ndc_pop(void) const { ER_NDC_PUSH(); }
+#else
+  void ndc_push(void) const {}
+  void ndc_pop(void) const {}
+#endif
 
   argos::CFloorEntity* floor(void) const { return m_floor; }
 

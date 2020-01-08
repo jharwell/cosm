@@ -18,31 +18,32 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONFIG_OUTPUT_PARSER_HPP_
-#define INCLUDE_COSM_CONFIG_OUTPUT_PARSER_HPP_
+#ifndef INCLUDE_COSM_METRICS_CONFIG_XML_OUTPUT_PARSER_HPP_
+#define INCLUDE_COSM_METRICS_CONFIG_XML_OUTPUT_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <memory>
 #include <string>
+#include <list>
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/pal/config/xml/metrics_parser.hpp"
-#include "cosm/pal/config/output_config.hpp"
+#include "cosm/metrics/config/xml/metrics_parser.hpp"
+#include "cosm/metrics/config/output_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+NS_START(cosm, metrics, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class output_parser
- * \ingroup cosm pal config xml
+ * \ingroup cosm metrics config xml
  *
  * \brief Parses XML parameters relating to simulation outputs into
  * \ref output_config.
@@ -73,6 +74,6 @@ class output_parser final : public rconfig::xml::xml_config_parser {
   /* clang-format on */
 };
 
-NS_END(xml, config, pal, cosm);
+NS_END(xml, config, metrics, cosm);
 
-#endif /* INCLUDE_COSM_CONFIG_OUTPUT_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_METRICS_CONFIG_XML_OUTPUT_PARSER_HPP_ */

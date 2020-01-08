@@ -1,5 +1,5 @@
 /**
- * \file output_parser.cpp
+ * \file metrics_config.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,39 +18,41 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_
+#define INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/pal/config/xml/output_parser.hpp"
+#include <map>
+#include <string>
 
-#include "rcppsw/utils/line_parser.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+NS_START(cosm, metrics, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void output_parser::parse(const ticpp::Element& node) {
-  ticpp::Element onode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \struct metrics_config
+ * \ingroup cosm metrics config
+ *
+ * Each member represents the filename to which a specific type of metrics
+ * should be logged. Empty filename=no metrics of that type will be collected.
+ */
+struct metrics_config final : public rconfig::base_config {
+  using enabled_map_type = std::map<std::string, std::string>;
 
-  std::vector<std::string> res, res2;
+  std::string      output_dir{};
+  uint             output_interval{0};
+  enabled_map_type enabled{};
+};
 
-  m_metrics_parser.parse(onode);
-  if (m_metrics_parser.is_parsed()) {
-    m_config->metrics =
-        *m_metrics_parser.config_get<metrics_parser::config_type>();
-  }
+NS_END(config, metrics, cosm);
 
-  XML_PARSE_ATTR(onode, m_config, output_root);
-  XML_PARSE_ATTR(onode, m_config, output_dir);
-} /* parse() */
-
-bool output_parser::validate(void) const {
-  return m_metrics_parser.validate();
-} /* validate() */
-
-NS_END(xml, config, pal, cosm);
+#endif /* INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_ */

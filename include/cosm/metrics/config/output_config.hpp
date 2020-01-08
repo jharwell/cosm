@@ -1,5 +1,5 @@
 /**
- * \file metrics_parser.cpp
+ * \file output_config.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,46 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_
+#define INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/pal/config/xml/metrics_parser.hpp"
+#include <string>
+
+#include "rcppsw/config/base_config.hpp"
+
+#include "cosm/metrics/config/metrics_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+NS_START(cosm, metrics, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void metrics_parser::parse(const ticpp::Element& node) {
-  /* loop functions metrics not part of controller XML tree  */
-  if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ticpp::Element mnode = node_get(node, kXMLRoot);
-    m_config = std::make_unique<config_type>();
+/**
+ * \struct output_config
+ * \ingroup cosm metrics config
+ *
+ * \brief Configuration for metrics logging.
+ */
+struct output_config final : public rconfig::base_config {
+  std::string            output_root{};
+  std::string            output_dir{};
+  metrics_config metrics {};
+};
 
-    XML_PARSE_ATTR(mnode, m_config, output_dir);
-    XML_PARSE_ATTR(mnode, m_config, output_interval);
+NS_END(config, metrics, cosm);
 
-    for (auto& m : xml_attr()) {
-      if (mnode.HasAttribute(m)) {
-        std::string tmp;
-        node_attr_get(mnode, m, tmp);
-        m_config->enabled[m] = tmp;
-      }
-    } /* for(&m..) */
-  }
-} /* parse() */
-
-bool metrics_parser::validate(void) const {
-  if (is_parsed()) {
-    RCSW_CHECK(m_config->output_interval > 0);
-  }
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(xml, config, pal, cosm);
+#endif /* INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_ */

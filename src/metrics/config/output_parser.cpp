@@ -1,5 +1,5 @@
 /**
- * \file output_config.hpp
+ * \file output_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,38 +18,39 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
-#define INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
+#include "cosm/metrics/config/xml/output_parser.hpp"
 
-#include "rcppsw/config/base_config.hpp"
-
-#include "cosm/pal/config/metrics_config.hpp"
+#include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config);
+NS_START(cosm, metrics, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct output_config
- * \ingroup cosm pal config
- *
- * \brief Configuration for metrics logging.
- */
-struct output_config final : public rconfig::base_config {
-  std::string            output_root{};
-  std::string            output_dir{};
-  metrics_config metrics {};
-};
+void output_parser::parse(const ticpp::Element& node) {
+  ticpp::Element onode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-NS_END(config, pal, cosm);
+  std::vector<std::string> res, res2;
 
-#endif /* INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_ */
+  m_metrics_parser.parse(onode);
+  if (m_metrics_parser.is_parsed()) {
+    m_config->metrics =
+        *m_metrics_parser.config_get<metrics_parser::config_type>();
+  }
+
+  XML_PARSE_ATTR(onode, m_config, output_root);
+  XML_PARSE_ATTR(onode, m_config, output_dir);
+} /* parse() */
+
+bool output_parser::validate(void) const {
+  return m_metrics_parser.validate();
+} /* validate() */
+
+NS_END(xml, config, metrics, cosm);

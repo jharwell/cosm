@@ -93,13 +93,13 @@ std::string base_controller2D::output_init(const std::string& output_root,
    * lines within it are not always ordered, which is not overly helpful for
    * debugging.
    */
-  client::set_logfile(log4cxx::Logger::getLogger("cosm.controller2D"),
-                      dir + "/controller.log");
-  client::set_logfile(log4cxx::Logger::getLogger("cosm.fsm"), dir + "/fsm.log");
-  client::set_logfile(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
-                      dir + "/saa.log");
-  client::set_logfile(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
-                      dir + "/saa.log");
+  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.controller2D"),
+                 dir + "/controller.log");
+  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.fsm"), dir + "/fsm.log");
+  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
+                 dir + "/saa.log");
+  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
+                 dir + "/saa.log");
 #endif
 
   return dir;
@@ -121,11 +121,13 @@ void base_controller2D::tick(const rtypes::timestep& tick) {
   m_saa->sensing()->tick(tick);
 } /* tick() */
 
-void base_controller2D::ndc_pusht(void) {
-  ER_NDC_PUSH(std::string("[t=") + rcppsw::to_string(m_saa->sensing()->tick()) +
+#if (LIBRA_ER >= LIBRA_ER_ALL)
+void base_controller2D::ndc_pusht(void) const {
+  ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +
               std::string("] [ent") + rcppsw::to_string(entity_id()) +
               std::string("]"));
 }
+#endif
 
 /*******************************************************************************
  * Movement Metrics

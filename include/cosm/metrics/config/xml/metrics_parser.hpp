@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_CONFIG_METRICS_PARSER_HPP_
-#define INCLUDE_COSM_PAL_CONFIG_METRICS_PARSER_HPP_
+#ifndef INCLUDE_COSM_METRICS_CONFIG_XML_METRICS_PARSER_HPP_
+#define INCLUDE_COSM_METRICS_CONFIG_XML_METRICS_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -30,20 +30,20 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/pal/config/metrics_config.hpp"
+#include "cosm/metrics/config/metrics_config.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+NS_START(cosm, metrics, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class metrics_parser
- * \ingroup cosm pal config xml
+ * \ingroup cosm metrics config xml
  *
  * \brief Parses XML parameters related to metric collection into
  * \ref metrics_config.
@@ -60,28 +60,6 @@ class metrics_parser : public rconfig::xml::xml_config_parser {
    */
   static constexpr char kXMLRoot[] = "metrics";
 
-  /**
-   * \brief The XML attributes specifying supported metric collectors.
-   */
-  virtual std::list<std::string> xml_attr(void) const {
-    return {
-          "fsm_movement",
-          "fsm_collision_counts",
-          "fsm_collision_locs",
-
-          "block_acq_counts",
-          "block_acq_locs",
-          "block_acq_explore_locs",
-          "block_acq_vector_locs",
-          "block_transport",
-          "block_manipulation",
-
-          "swarm_dist_pos2D",
-          "swarm_convergence",
-          "tv_population"
-          };
-  }
-
   bool validate(void) const override RCSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override;
 
@@ -92,11 +70,17 @@ class metrics_parser : public rconfig::xml::xml_config_parser {
     return m_config.get();
   }
 
+  /**
+   * \brief Determine if a particular attribute under the \ref kXMLRoot is the
+   * name of a metric collector or some other type of parameter.
+   */
+  bool is_collector_name(const ticpp::Attribute& attr) const;
+
   /* clang-format off */
   std::unique_ptr<config_type> m_config{nullptr};
   /* clang-format on */
 };
 
-NS_END(xml, config, pal, cosm);
+NS_END(xml, config, metrics, cosm);
 
-#endif /* INCLUDE_COSM_PAL_CONFIG_METRICS_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_METRICS_CONFIG_XML_METRICS_PARSER_HPP_ */

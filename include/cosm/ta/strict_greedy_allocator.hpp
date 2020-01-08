@@ -49,7 +49,7 @@ class polled_task;
  * allocation policy if the task allocation space is a matroid, (probably)
  * suboptimal otherwise.
  */
-class strict_greedy_allocator : rer::client<strict_greedy_allocator> {
+class strict_greedy_allocator : public rer::client<strict_greedy_allocator> {
  public:
   explicit strict_greedy_allocator(rmath::rng* rng)
       : ER_CLIENT_INIT("cosm.ta.strict_greedy_allocator"), m_rng(rng) {}

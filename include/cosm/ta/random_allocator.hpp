@@ -45,7 +45,7 @@ class polled_task;
  *
  * \brief Allocates a task from a given set of a tasks by choosing one randomly.
  */
-class random_allocator : rer::client<random_allocator> {
+class random_allocator : public rer::client<random_allocator> {
  public:
   explicit random_allocator(rmath::rng* rng)
       : ER_CLIENT_INIT("cosm.ta.random_allocator"), m_rng(rng) {}

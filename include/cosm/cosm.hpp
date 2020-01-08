@@ -105,7 +105,11 @@ namespace hal {}
 namespace kin2D {}
 namespace steer2D {}
 namespace convergence {}
-namespace metrics {}
+
+namespace metrics {
+namespace config {}
+} /* namespace metrics */
+
 namespace repr {}
 namespace controller {}
 
@@ -143,6 +147,7 @@ namespace crfootbot = crobots::footbot;
 namespace ctv = cosm::tv;
 namespace cconvergence = cosm::convergence;
 namespace cmetrics = cosm::metrics;
+namespace cmconfig = cmetrics::config;
 namespace ctv = cosm::tv;
 namespace ctvmetrics = ctv::metrics;
 namespace crepr = cosm::repr;

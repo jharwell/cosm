@@ -38,11 +38,9 @@ NS_START(cosm, tv);
 population_dynamics::population_dynamics(
     const config::population_dynamics_config* const config,
     size_t current_pop,
-    size_t max_pop,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.tv.population_dynamics"),
       mc_config(*config),
-      mc_max_pop(max_pop),
       m_current_pop(current_pop),
       m_rng(rng) {}
 
@@ -51,7 +49,7 @@ population_dynamics::population_dynamics(
  ******************************************************************************/
 population_dynamics::queue_status population_dynamics::death_queue_status(
     void) const {
-  return queue_status{.size_change = m_timestep == m_last_death,
+  return queue_status{.size_change = (m_timestep == m_last_death),
                       .size = m_kills.size(),
                       .lambda = mc_config.death_lambda,
                       .mu = std::numeric_limits<double>::infinity()};
@@ -59,15 +57,15 @@ population_dynamics::queue_status population_dynamics::death_queue_status(
 
 population_dynamics::queue_status population_dynamics::birth_queue_status(
     void) const {
-  return queue_status{.size_change = m_timestep == m_last_birth,
-                      .size = mc_max_pop - m_current_pop,
+  return queue_status{.size_change = (m_timestep == m_last_birth),
+                      .size = mc_config.max_size - m_current_pop,
                       .lambda = std::numeric_limits<double>::infinity(),
                       .mu = mc_config.birth_mu};
 } /* birth_queue_status() */
 
 population_dynamics::queue_status population_dynamics::repair_queue_status(
     void) const {
-  return queue_status{.size_change = m_timestep == m_last_repair,
+  return queue_status{.size_change = (m_timestep == m_last_repair),
                       .size = m_repairing.size(),
                       .lambda = mc_config.repair_lambda,
                       .mu = mc_config.repair_mu};
@@ -85,7 +83,7 @@ void population_dynamics::update(const rtypes::timestep& t) {
 } /* update() */
 
 void population_dynamics::death_dynamics(const rtypes::timestep& t) {
-  if (m_last_death + t >= m_rng->exponential(mc_config.death_lambda)) {
+  if (t - m_last_death >= m_rng->exponential(mc_config.death_lambda)) {
     auto res = robot_kill();
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop - 1,
@@ -102,13 +100,13 @@ void population_dynamics::death_dynamics(const rtypes::timestep& t) {
 } /* death_dynamics() */
 
 void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
-  if (m_last_birth + t >= m_rng->exponential(mc_config.birth_mu)) {
+  if (t - m_last_birth >= m_rng->exponential(mc_config.birth_mu)) {
     /*
      * Use max population size as the starting point for generating robot IDs
      * to guarantee uniqueness.
      */
-    auto next = rtypes::type_uuid(mc_max_pop + m_n_births);
-    auto res = robot_add(mc_max_pop, next);
+    auto next = rtypes::type_uuid(mc_config.max_size + m_n_births);
+    auto res = robot_add(mc_config.max_size, next);
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop + 1,
                 "Unexpected population change: %zu != %zu",
@@ -117,7 +115,7 @@ void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
       ER_INFO("Added new robot with ID=%d,pop_size=%zu,max_size=%zu",
               res.id.v(),
               res.pop_size,
-              mc_max_pop);
+              mc_config.max_size);
 
       ++m_n_births;
       m_last_birth = t;
@@ -127,7 +125,7 @@ void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
 } /* birth_dynamics() */
 
 void population_dynamics::malfunction_dynamics(const rtypes::timestep& t) {
-  if (m_last_malfunction + t >= m_rng->exponential(mc_config.repair_lambda)) {
+  if (t - m_last_malfunction >= m_rng->exponential(mc_config.repair_lambda)) {
     auto res = robot_malfunction();
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop,
@@ -144,7 +142,7 @@ void population_dynamics::malfunction_dynamics(const rtypes::timestep& t) {
 } /* malfunction_dynamics() */
 
 void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
-  if (m_last_repair + t >= m_rng->exponential(mc_config.repair_mu) &&
+  if (t - m_last_repair >= m_rng->exponential(mc_config.repair_mu) &&
       !m_repairing.empty()) {
     rtypes::type_uuid id = m_repairing.front();
     auto res = robot_repair(id);

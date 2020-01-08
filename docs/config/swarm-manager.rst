@@ -3,15 +3,17 @@ Swarm Manager XML Configuration
 
 The following root XML tags are defined for swarm management:
 
-+------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| Root XML tag           | Description                                                                                                                  |
-+------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``output``             | Parameters for logging simulation metrics/results.                                                                           |
-+------------------------+------------------------------------------------------------------------------------------------------------------------------+
-| ``convergence``        | Parameters for computing swarm convergence.                                                                                  |
-+------------------------+------------------------------------------------------------------------------------------------------------------------------+
-|``visualization``       | Parameters for visualizing robots in various ways during simulation.                                                         |
-+------------------------+------------------------------------------------------------------------------------------------------------------------------+
++------------------------+-----------------------------------------------------------------------+
+| Root XML tag           | Description                                                           |
++------------------------+-----------------------------------------------------------------------+
+| ``output``             | Parameters for logging simulation metrics/results.                    |
++------------------------+-----------------------------------------------------------------------+
+| ``convergence``        | Parameters for computing swarm convergence.                           |
++------------------------+-----------------------------------------------------------------------+
+| ``visualization``      | Parameters for visualizing robots in various ways during simulation.  |
++------------------------+-----------------------------------------------------------------------+
+| ``temporal_variance``  | Parameters for temporally varying swarm operating conditions.         |
++------------------------+-----------------------------------------------------------------------+
 
 ``output``
 ----------
@@ -388,7 +390,7 @@ XML configuration:
 - Required child attributes if present: none.
 - Required child tags if present: none.
 - Optional child attributes: [ ``birth_mu``, ``death_lambda`` ,
-  ``repair_lambda``, ``repair_mu`` ]. 
+  ``repair_lambda``, ``repair_mu`` ].
 - Optional child tags: none.
 
 XML configuration:

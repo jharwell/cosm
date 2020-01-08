@@ -50,9 +50,9 @@ class bi_tdgraph;
  * \brief Allocates a task from a \ref bi_tdgraph using the STOCH-NBHD1 method
  * from Harwell2020.
  */
-class stoch_nbhd1_allocator : rer::client<stoch_nbhd1_allocator> {
+class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
  public:
-  explicit stoch_nbhd1_allocator(rmath::rng* rng, ds::bi_tdgraph* graph)
+  stoch_nbhd1_allocator(rmath::rng* rng, ds::bi_tdgraph* graph)
       : ER_CLIENT_INIT("cosm.ta.stoch_nbhd1_allocator"),
         m_rng(rng),
         m_graph(graph) {}

@@ -157,24 +157,24 @@ class base_controller2D : public cfmetrics::movement_metrics,
   void discrete_position(const rmath::vector2u& loc);
   void heading(const rmath::radians& h);
 
+#if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
    * \brief Convenience function to add footbot ID to salient messages during
    * loop function execution (timestep is already there).
    */
-  void ndc_push(void) {
-    ER_NDC_PUSH("[" + rcppsw::to_string(entity_id().v()) + "]");
+  void ndc_push(void) const {
+    ER_NDC_PUSH("[ent" + rcppsw::to_string(entity_id().v()) + "]");
   }
-
+  void ndc_pop(void) const { ER_NDC_POP(); }
   /**
    * \brief Convenience function to add robot ID+timestep to messages during
    * the control step.
    */
-  void ndc_pusht(void);
-
-  /**
-   * \brief Remove the last NDC.
-   */
-  void ndc_pop(void) { ER_NDC_POP(); }
+  void ndc_pusht(void) const;
+#else
+  void ndc_pusht(void) const {}
+  void ndc_pop(void) const {}
+#endif
 
   /**
    * \brief Return a handle to the \ref rcppsw::rmath::rng used for random number

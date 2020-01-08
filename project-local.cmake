@@ -17,7 +17,9 @@ define_property(CACHED_VARIABLE PROPERTY "COSM_HAL_TARGET"
 #   nice with the Intel compiler.
 if ("${LIBRA_BUILD_FOR}" MATCHES "ARGOS" AND
     NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
-  set(COSM_WITH_VIS "YES")
+  set(COSM_WITH_VIS "ON")
+else()
+  set(COSM_WITH_VIS "OFF")
 endif()
 
 set(${target}_CHECK_LANGUAGE "CXX")
@@ -38,7 +40,7 @@ endif()
 # Sources                                                                      #
 ################################################################################
 if (NOT ${COSM_WITH_VIS})
-    list(REMOVE_ITEM ${target}_ROOT_SRC
+    list(REMOVE_ITEM ${target}_SRC
     ${${target}_SRC_PATH}/vis/block_carry_visualizer.cpp
     ${${target}_SRC_PATH}/vis/task_visualizer.cpp)
 endif()

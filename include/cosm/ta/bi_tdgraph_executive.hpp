@@ -56,8 +56,7 @@ class bi_tab;
 class bi_tdgraph_executive final : public base_executive,
                                    public rer::client<bi_tdgraph_executive> {
  public:
-  using start_notify_cb =
-      std::function<void(const polled_task*, const ds::bi_tab*)>;
+  using start_notify_cb = std::function<void(polled_task*, const ds::bi_tab*)>;
 
   bi_tdgraph_executive(const config::task_executive_config* exec_config,
                        const config::task_alloc_config* const alloc_config,

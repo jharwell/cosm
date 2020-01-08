@@ -80,7 +80,6 @@ class population_dynamics : public rer::client<population_dynamics>,
 
   population_dynamics(const config::population_dynamics_config* config,
                       size_t current_pop,
-                      size_t max_pop,
                       rmath::rng* rng);
 
   population_dynamics(const population_dynamics&) = delete;
@@ -96,7 +95,7 @@ class population_dynamics : public rer::client<population_dynamics>,
   queue_status birth_queue_status(void) const override;
   queue_status death_queue_status(void) const override;
   queue_status repair_queue_status(void) const override;
-  size_t swarm_max_population(void) const override { return mc_max_pop; }
+  size_t swarm_max_population(void) const override { return mc_config.max_size; }
   size_t swarm_population(void) const override { return m_current_pop; }
 
  protected:
@@ -154,7 +153,6 @@ class population_dynamics : public rer::client<population_dynamics>,
 
   /* clang-format off */
   const config::population_dynamics_config mc_config;
-  const size_t                             mc_max_pop;
 
   size_t                                   m_current_pop;
   size_t                                   m_total_repairs{0};

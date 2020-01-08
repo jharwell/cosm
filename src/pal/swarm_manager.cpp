@@ -28,45 +28,27 @@
 
 #include "rcppsw/math/rngm.hpp"
 
-#include "cosm/pal/config/output_config.hpp"
-
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, pal);
 
 /*******************************************************************************
- * Constructors/Destructors
- ******************************************************************************/
-
-/*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void swarm_manager_impl::output_init(const config::output_config* const output) {
-  if ("__current_date__" == output->output_dir) {
+void swarm_manager_impl::output_init(const std::string& output_root,
+                                     const std::string& output_dir) {
+  if ("__current_date__" == output_dir) {
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    m_output_root = output->output_root + "/" +
+    m_output_root = output_root + "/" +
                     rcppsw::to_string(now.date().year()) + "-" +
                     rcppsw::to_string(now.date().month()) + "-" +
                     rcppsw::to_string(now.date().day()) + ":" +
                     rcppsw::to_string(now.time_of_day().hours()) + "-" +
                     rcppsw::to_string(now.time_of_day().minutes());
   } else {
-    m_output_root = output->output_root + "/" + output->output_dir;
+    m_output_root = output_root + "/" + output_dir;
   }
-
-#if (LIBRA_ER == LIBRA_ER_ALL)
-  client::set_logfile(log4cxx::Logger::getLogger("fordyca.events"),
-                      m_output_root + "/events.log");
-  client::set_logfile(log4cxx::Logger::getLogger("fordyca.support"),
-                      m_output_root + "/support.log");
-  client::set_logfile(log4cxx::Logger::getLogger("fordyca.loop"),
-                      m_output_root + "/sim.log");
-  client::set_logfile(log4cxx::Logger::getLogger("fordyca.ds.arena_map"),
-                      m_output_root + "/sim.log");
-  client::set_logfile(log4cxx::Logger::getLogger("fordyca.metrics"),
-                      m_output_root + "/metrics.log");
-#endif
 } /* output_init() */
 
 void swarm_manager_impl::rng_init(const rmath::config::rng_config* config) {

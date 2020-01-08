@@ -52,7 +52,7 @@ class polled_task;
  *
  * From Auer2002, Pini2012
  */
-class epsilon_greedy_allocator : rer::client<epsilon_greedy_allocator> {
+class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
  public:
   static constexpr char kRegretBoundLog[] = "log";
   static constexpr char kRegretBoundLinear[] = "linear";

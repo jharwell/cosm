@@ -78,7 +78,6 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
    * Update wander angle so it won't have the same value next time with a
    * random pertubation in the range [-max delta, max_delta].
    */
-
   double val;
   if (mc_use_normal) {
     /*

@@ -48,7 +48,7 @@ class polled_task;
  * from Pini2012,Auer2002, treating the task allocation problem as a multi-armed
  * bandit and achieving a logarithmic regret bound.
  */
-class ucb1_allocator : rer::client<ucb1_allocator> {
+class ucb1_allocator : public rer::client<ucb1_allocator> {
  public:
   explicit ucb1_allocator(rmath::rng* rng)
       : ER_CLIENT_INIT("cosm.ta.ucb1_allocator"), m_rng(rng) {}
