@@ -81,6 +81,7 @@ class population_dynamics : public rer::client<population_dynamics>,
   population_dynamics(const config::population_dynamics_config* config,
                       size_t current_pop,
                       rmath::rng* rng);
+  ~population_dynamics(void) override = default;
 
   population_dynamics(const population_dynamics&) = delete;
   const population_dynamics& operator=(const population_dynamics&) = delete;

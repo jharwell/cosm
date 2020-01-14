@@ -135,7 +135,7 @@ class swarm_manager : public swarm_manager_impl,
     ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
                       "]");
   }
-  void ndc_pop(void) const { ER_NDC_PUSH(); }
+  void ndc_pop(void) const { ER_NDC_POP(); }
 #else
   void ndc_push(void) const {}
   void ndc_pop(void) const {}

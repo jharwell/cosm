@@ -166,6 +166,7 @@ class base_controller2D : public cfmetrics::movement_metrics,
     ER_NDC_PUSH("[ent" + rcppsw::to_string(entity_id().v()) + "]");
   }
   void ndc_pop(void) const { ER_NDC_POP(); }
+
   /**
    * \brief Convenience function to add robot ID+timestep to messages during
    * the control step.
@@ -173,6 +174,7 @@ class base_controller2D : public cfmetrics::movement_metrics,
   void ndc_pusht(void) const;
 #else
   void ndc_pusht(void) const {}
+  void ndc_push(void) const {}
   void ndc_pop(void) const {}
 #endif
 

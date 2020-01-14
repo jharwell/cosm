@@ -48,7 +48,6 @@ compile_options.json
 # Build process
 build
 node_modules
-ext/rcppsw
 
 # Sphinx
 docs/_build/
