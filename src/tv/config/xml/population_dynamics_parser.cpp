@@ -38,9 +38,9 @@ void population_dynamics_parser::parse(const ticpp::Element& node) {
 
     XML_PARSE_ATTR_DFLT(anode, m_config, birth_mu, 0.0);
     XML_PARSE_ATTR_DFLT(anode, m_config, death_lambda, 0.0);
-    XML_PARSE_ATTR_DFLT(anode, m_config, repair_lambda, 0.0);
+    XML_PARSE_ATTR_DFLT(anode, m_config, malfunction_lambda, 0.0);
     XML_PARSE_ATTR_DFLT(anode, m_config, repair_mu, 0.0);
-    XML_PARSE_ATTR_DFLT(anode, m_config, max_size, 0UL);
+    XML_PARSE_ATTR_DFLT(anode, m_config, max_size, 0);
   }
 } /* parse() */
 
@@ -48,7 +48,7 @@ bool population_dynamics_parser::validate(void) const {
   if (is_parsed()) {
     RCSW_CHECK(m_config->birth_mu >= 0.0);
     RCSW_CHECK(m_config->death_lambda >= 0.0);
-    RCSW_CHECK(m_config->repair_lambda >= 0.0);
+    RCSW_CHECK(m_config->malfunction_lambda >= 0.0);
     RCSW_CHECK(m_config->repair_mu >= 0.0);
   }
   return true;

@@ -42,21 +42,23 @@ NS_START(cosm, tv, metrics);
  * \ingroup metrics tv
  *
  * \brief Defines the metrics to be collected from \ref population_dynamics
- * about the different types of population temporal variance that can be applied
- * to the swarm.
- *
- * Not really "metrics" per-se, but more of a way to record variances for later
- * usage in post-processing.
+ * about the different types of population dynamics that can be applied to the
+ * swarm.
  *
  * Metrics are collected and output every timestep.
  */
 class population_dynamics_metrics : public virtual rmetrics::base_metrics {
  public:
+  struct queue_op_status {
+    size_t count;
+    rtypes::timestep interval_accum;
+  };
   struct queue_status {
-    bool size_change;
     size_t size;
     double lambda;
     double mu;
+    struct queue_op_status enqueue;
+    struct queue_op_status dequeue;
   };
   population_dynamics_metrics(void) = default;
 

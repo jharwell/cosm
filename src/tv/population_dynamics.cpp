@@ -42,33 +42,66 @@ population_dynamics::population_dynamics(
     : ER_CLIENT_INIT("cosm.tv.population_dynamics"),
       mc_config(*config),
       m_current_pop(current_pop),
-      m_rng(rng) {}
+      m_rng(rng),
+      m_birth(std::numeric_limits<double>::infinity(), config->birth_mu, rng),
+      m_death(config->death_lambda,
+              std::numeric_limits<double>::infinity(),
+              rng),
+      m_repair(config->malfunction_lambda, config->repair_mu, rng) {}
 
 /*******************************************************************************
  * Metrics
  ******************************************************************************/
 population_dynamics::queue_status population_dynamics::death_queue_status(
     void) const {
-  return queue_status{.size_change = (m_timestep == m_last_death),
-                      .size = m_kills.size(),
-                      .lambda = mc_config.death_lambda,
-                      .mu = std::numeric_limits<double>::infinity()};
+  auto ed = m_death.enqueue_data();
+  auto dd = m_death.dequeue_data();
+  queue_op_status enqueue = {.count = ed.count,
+                             .interval_accum = ed.interval_accum
+  };
+  queue_op_status dequeue = {.count = dd.count,
+                             .interval_accum = dd.interval_accum
+  };
+  return queue_status{.size = m_death.size(),
+        .lambda = m_death.lambda(),
+        .mu = m_death.mu(),
+        .enqueue = enqueue,
+        .dequeue = dequeue
+        };
 } /* death_queue_status() */
 
 population_dynamics::queue_status population_dynamics::birth_queue_status(
     void) const {
-  return queue_status{.size_change = (m_timestep == m_last_birth),
-                      .size = mc_config.max_size - m_current_pop,
-                      .lambda = std::numeric_limits<double>::infinity(),
-                      .mu = mc_config.birth_mu};
+  auto ed = m_birth.enqueue_data();
+  auto dd = m_birth.dequeue_data();
+  queue_op_status enqueue = {.count = ed.count,
+                             .interval_accum = ed.interval_accum
+  };
+  queue_op_status dequeue = {.count = dd.count,
+                             .interval_accum = dd.interval_accum
+  };
+  return queue_status{.size = std::numeric_limits<size_t>::infinity(),
+        .lambda = m_birth.lambda(),
+        .mu = m_birth.mu(),
+        .enqueue = enqueue,
+        .dequeue = dequeue};
 } /* birth_queue_status() */
 
 population_dynamics::queue_status population_dynamics::repair_queue_status(
     void) const {
-  return queue_status{.size_change = (m_timestep == m_last_repair),
-                      .size = m_repairing.size(),
-                      .lambda = mc_config.repair_lambda,
-                      .mu = mc_config.repair_mu};
+  auto ed = m_repair.enqueue_data();
+  auto dd = m_repair.dequeue_data();
+  queue_op_status enqueue = {.count = ed.count,
+                             .interval_accum = ed.interval_accum
+  };
+  queue_op_status dequeue = {.count = dd.count,
+                             .interval_accum = dd.interval_accum
+  };
+  return queue_status{.size = m_repair.size(),
+        .lambda = m_repair.lambda(),
+        .mu = m_repair.mu(),
+        .enqueue = enqueue,
+        .dequeue = dequeue};
 } /* repair_queue_status() */
 
 /*******************************************************************************
@@ -76,14 +109,20 @@ population_dynamics::queue_status population_dynamics::repair_queue_status(
  ******************************************************************************/
 void population_dynamics::update(const rtypes::timestep& t) {
   m_timestep = t;
+
+  m_death.reset_metrics();
   death_dynamics(t);
+
+  m_birth.reset_metrics();
   birth_dynamics(t);
+
+  m_repair.reset_metrics();
   malfunction_dynamics(t);
   repair_dynamics(t);
 } /* update() */
 
 void population_dynamics::death_dynamics(const rtypes::timestep& t) {
-  if (t - m_last_death >= m_rng->exponential(mc_config.death_lambda)) {
+  if (m_death.enqueue_check(t)) {
     auto res = robot_kill();
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop - 1,
@@ -91,41 +130,39 @@ void population_dynamics::death_dynamics(const rtypes::timestep& t) {
                 res.pop_size,
                 m_current_pop - 1);
       ER_INFO("Killed robot with ID=%d,pop_size=%zu", res.id.v(), res.pop_size);
-
-      m_kills.push_back(res.id);
-      m_last_death = t;
+      m_death.enqueue(res.id, t);
       m_current_pop = res.pop_size;
     }
   }
 } /* death_dynamics() */
 
 void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
-  if (t - m_last_birth >= m_rng->exponential(mc_config.birth_mu)) {
+  if (m_birth.dequeue_check(t)) {
     /*
      * Use max population size as the starting point for generating robot IDs
      * to guarantee uniqueness.
      */
-    auto next = rtypes::type_uuid(mc_config.max_size + m_n_births);
+    auto next = rtypes::type_uuid(mc_config.max_size +
+                                  m_birth.dequeue_data().total_count);
     auto res = robot_add(mc_config.max_size, next);
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop + 1,
                 "Unexpected population change: %zu != %zu",
                 res.pop_size,
                 m_current_pop + 1);
-      ER_INFO("Added new robot with ID=%d,pop_size=%zu,max_size=%zu",
+      ER_INFO("Added new robot with ID=%d,pop_size=%zu,max_size=%d",
               res.id.v(),
               res.pop_size,
               mc_config.max_size);
 
-      ++m_n_births;
-      m_last_birth = t;
+      m_birth.dequeue(t, true);
       m_current_pop = res.pop_size;
     }
   }
 } /* birth_dynamics() */
 
 void population_dynamics::malfunction_dynamics(const rtypes::timestep& t) {
-  if (t - m_last_malfunction >= m_rng->exponential(mc_config.repair_lambda)) {
+  if (m_repair.enqueue_check(t)) {
     auto res = robot_malfunction();
     if (rtypes::constants::kNoUUID != res.id) {
       ER_ASSERT(res.pop_size == m_current_pop,
@@ -133,19 +170,15 @@ void population_dynamics::malfunction_dynamics(const rtypes::timestep& t) {
                 res.pop_size,
                 m_current_pop);
       ER_INFO("Added robot with ID=%d to repair queue", res.id.v());
-
-      m_repairing.push(res.id);
-      ++m_total_malfunctions;
-      m_last_malfunction = t;
+      m_repair.enqueue(res.id, t);
     }
   }
 } /* malfunction_dynamics() */
 
 void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
-  if (t - m_last_repair >= m_rng->exponential(mc_config.repair_mu) &&
-      !m_repairing.empty()) {
-    rtypes::type_uuid id = m_repairing.front();
-    auto res = robot_repair(id);
+  if (m_repair.dequeue_check(t)) {
+    auto id = m_repair.dequeue(t, false);
+    auto res = robot_repair(*id);
     ER_ASSERT(res.pop_size == m_current_pop,
               "Unexpected population change: %zu != %zu",
               res.pop_size,
@@ -153,12 +186,8 @@ void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
     ER_ASSERT(res.id == id,
               "Repaired robot uuid (%d) != robot at front of repair queue (%d)",
               res.id.v(),
-              id.v());
+              id->v());
     ER_INFO("Removed robot with ID=%d from repair queue", res.id.v());
-
-    m_repairing.pop();
-    ++m_total_repairs;
-    m_last_repair = t;
   }
 } /* repair_dynamics() */
 

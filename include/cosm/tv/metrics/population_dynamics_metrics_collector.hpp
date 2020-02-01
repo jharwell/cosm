@@ -64,21 +64,30 @@ class population_dynamics_metrics_collector final : public rmetrics::base_metric
   /**
    * \brief Container for holding population dynamics statistics collected from
    * the swarm. Must be atomic so counts are valid in parallel metric collection
-   * contexts. Ideally the times would be atomic \ref rtypes::timestep, but that
-   * type does not meet the std::atomic requirements.
+   * contexts.
    */
   struct stats {
-    std::atomic_uint birth_queue_size{0};
-    std::atomic_uint death_queue_size{0};
-    std::atomic_uint repair_queue_size{0};
-
+    /* clang-format off */
+    std::atomic_uint    n_births{0};
+    std::atomic_uint    birth_interval{0};
     std::atomic<double> birth_mu{0};
+
+    std::atomic_uint    n_deaths{0};
+    std::atomic_uint    death_interval{0};
     std::atomic<double> death_lambda{0};
-    std::atomic<double> repair_lambda{0};
+
+    std::atomic_uint    repair_queue_size{0};
+    std::atomic_uint    n_malfunctions{0};
+    std::atomic_uint    malfunction_interval{0};
+    std::atomic<double> malfunction_lambda{0};
+
+    std::atomic_uint    n_repairs{0};
+    std::atomic_uint    repair_interval{0};
     std::atomic<double> repair_mu{0};
 
-    std::atomic_uint swarm_population{0};
-    std::atomic_uint swarm_max_population{0};
+    std::atomic_uint    swarm_population{0};
+    std::atomic_uint    swarm_max_population{0};
+    /* clang-format on */
   };
 
 

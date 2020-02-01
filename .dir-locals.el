@@ -24,7 +24,7 @@
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
                                                                           "$localroot/include")))
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
-                                                                          "$rcppsw")))
+                                                                          "$cosm/ext")))
 
 
                     (setq flycheck-gcc-include-path includes-list)
@@ -34,7 +34,7 @@
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
                                                                         "$localroot/include")))
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
-                                                                          "$rcppsw")))
+                                                                          "$cosm/ext")))
 
                     (let ((cc-search-dirs (list (concat (projectile-project-root) "include/cosm/*/*")
                                                 (concat (projectile-project-root) "src/*/*")

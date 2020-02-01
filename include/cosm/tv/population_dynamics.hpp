@@ -34,6 +34,7 @@
 #include "rcppsw/rcppsw.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/ds/poisson_queue.hpp"
 
 #include "cosm/tv/config/population_dynamics_config.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics.hpp"
@@ -93,23 +94,23 @@ class population_dynamics : public rer::client<population_dynamics>,
   void update(const rtypes::timestep& t);
 
   /* population dynamics metrics overrides */
-  queue_status birth_queue_status(void) const override;
-  queue_status death_queue_status(void) const override;
-  queue_status repair_queue_status(void) const override;
+  queue_status birth_queue_status(void) const override RCSW_PURE;
+  queue_status death_queue_status(void) const override RCSW_PURE;
+  queue_status repair_queue_status(void) const override RCSW_PURE;
   size_t swarm_max_population(void) const override { return mc_config.max_size; }
   size_t swarm_population(void) const override { return m_current_pop; }
-
+  void reset_metrics(void) override final {
+    m_birth.reset_metrics();
+    m_death.reset_metrics();
+    m_repair.reset_metrics();
+  }
  protected:
   bool already_killed(const rtypes::type_uuid& id) {
-    return m_kills.end() !=
-           std::find_if(m_kills.begin(), m_kills.end(), [&](const auto& a) {
-             return a == id;
-           });
+    return m_death.contains(id);
   }
 
   /**
    * \brief Kill a random robot within the swarm.
-   *
    *
    * \return The ID of the robot that was added (\ref rtypes::constants::kNoUUID
    * if the robot could not be killed), along with the current swarm size.
@@ -119,13 +120,13 @@ class population_dynamics : public rer::client<population_dynamics>,
   /**
    * \brief Add a new robot to the swarm with the specified ID.
    *
-   * \param max_pop Maximum swarm population.
+   * \param max_pop Maximum swarm population (-1 indicates no limit)
    * \param id The ID of the robot to add.
    *
    * \return The ID of the robot that was added (\ref rtypes::constants::kNoUUID
    * if the robot could not be added), along with the current swarm size.
    */
-  virtual op_result robot_add(size_t max_pop, const rtypes::type_uuid& id) = 0;
+  virtual op_result robot_add(int max_pop, const rtypes::type_uuid& id) = 0;
 
   /**
    * \brief Temporarily remove a robot from simulation/the swarm.
@@ -147,6 +148,7 @@ class population_dynamics : public rer::client<population_dynamics>,
   virtual op_result robot_repair(const rtypes::type_uuid& id) = 0;
 
  private:
+
   void death_dynamics(const rtypes::timestep& t);
   void birth_dynamics(const rtypes::timestep& t);
   void malfunction_dynamics(const rtypes::timestep& t);
@@ -156,20 +158,12 @@ class population_dynamics : public rer::client<population_dynamics>,
   const config::population_dynamics_config mc_config;
 
   size_t                                   m_current_pop;
-  size_t                                   m_total_repairs{0};
-  size_t                                   m_total_malfunctions{0};
-  size_t                                   m_n_births{0};
-
   rtypes::timestep                         m_timestep{0};
-  rtypes::timestep                         m_last_death{0};
-  rtypes::timestep                         m_last_birth{0};
-  rtypes::timestep                         m_last_malfunction{0};
-  rtypes::timestep                         m_last_repair{0};
-
-  std::queue<rtypes::type_uuid>            m_repairing{};
-  std::vector<rtypes::type_uuid>           m_kills{};
-
   rmath::rng*                              m_rng;
+
+  rds::poisson_queue<rtypes::type_uuid>    m_birth;
+  rds::poisson_queue<rtypes::type_uuid>    m_death;
+  rds::poisson_queue<rtypes::type_uuid>    m_repair;
   /* clang-format on */
 };
 

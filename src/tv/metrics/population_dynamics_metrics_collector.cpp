@@ -49,15 +49,32 @@ std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(
     "int_avg_swarm_population",
     "cum_avg_swarm_population",
     "swarm_max_population",
-    "int_avg_birth_queue_size",
-    "cum_avg_birth_queue_size",
+
+    "int_avg_birth_rate",
+    "int_avg_birth_interval",
+    "cum_avg_birth_rate",
+    "cum_avg_birth_interval",
     "birth_mu",
-    "int_avg_death_queue_size",
-    "cum_avg_death_queue_size",
+
+    "int_avg_death_rate",
+    "int_avg_death_interval",
+    "cum_avg_death_rate",
+    "cum_avg_death_interval",
     "death_lambda",
+
     "int_avg_repair_queue_size",
     "cum_avg_repair_queue_size",
-    "repair_lambda",
+
+    "int_avg_malfunction_rate",
+    "int_avg_malfunction_interval",
+    "cum_avg_malfunction_rate",
+    "cum_avg_malfunction_interval",
+    "malfunction_lambda",
+
+    "int_avg_repair_rate",
+    "int_avg_repair_interval",
+    "cum_avg_repair_rate",
+    "cum_avg_repair_interval",
     "repair_mu",
       /* clang-format on */
   };
@@ -83,20 +100,43 @@ boost::optional<std::string> population_dynamics_metrics_collector::csv_line_bui
   line += rcppsw::to_string(m_interval.swarm_max_population) + separator();
 
   /* birth queue */
-  line += csv_entry_intavg(m_interval.birth_queue_size);
-  line += csv_entry_tsavg(m_cum.birth_queue_size);
+  line += csv_entry_intavg(m_interval.n_births);
+  line += csv_entry_domavg(m_interval.birth_interval, m_interval.n_births);
+
+  line += csv_entry_tsavg(m_cum.n_births);
+  line += csv_entry_domavg(m_cum.birth_interval, m_cum.n_births);
+
   line += rcppsw::to_string(m_interval.birth_mu) + separator();
 
   /* death queue */
-  line += csv_entry_intavg(m_interval.death_queue_size);
-  line += csv_entry_tsavg(m_cum.death_queue_size);
+  line += csv_entry_intavg(m_interval.n_deaths.load());
+  line += csv_entry_domavg(m_interval.death_interval.load(),
+                           m_interval.n_deaths.load());
+
+  line += csv_entry_tsavg(m_cum.n_deaths.load());
+  line += csv_entry_domavg(m_cum.death_interval.load(), m_cum.n_deaths.load());
   line += rcppsw::to_string(m_interval.death_lambda) + separator();
 
   /* repair queue */
   line += csv_entry_intavg(m_interval.repair_queue_size);
   line += csv_entry_tsavg(m_cum.repair_queue_size);
-  line += rcppsw::to_string(m_interval.repair_lambda) + separator();
-  line += rcppsw::to_string(m_interval.repair_mu) + separator();
+
+  /* repair queue malfunctions */
+  line += csv_entry_intavg(m_interval.n_malfunctions);
+  line += csv_entry_domavg(m_interval.malfunction_interval,
+                           m_interval.n_malfunctions);
+
+  line += csv_entry_tsavg(m_cum.n_malfunctions);
+  line += csv_entry_domavg(m_cum.malfunction_interval, m_cum.n_malfunctions);
+  line += rcppsw::to_string(m_interval.malfunction_lambda) + separator();
+
+  /* repair queue repairs */
+  line += csv_entry_intavg(m_interval.n_repairs);
+  line += csv_entry_domavg(m_interval.repair_interval, m_interval.n_repairs);
+
+  line += csv_entry_tsavg(m_cum.n_repairs);
+  line += csv_entry_domavg(m_cum.repair_interval, m_cum.n_repairs);
+  line += rcppsw::to_string(m_interval.repair_mu);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
@@ -107,43 +147,75 @@ void population_dynamics_metrics_collector::collect(
 
   /* misc */
   m_interval.swarm_population += m.swarm_population();
-  m_cum.swarm_population += m.swarm_population();
   m_interval.swarm_max_population = m.swarm_max_population();
+
+  m_cum.swarm_population += m.swarm_population();
   m_cum.swarm_max_population = m.swarm_max_population();
 
   /* birth queue */
   auto birth = m.birth_queue_status();
-  m_interval.birth_queue_size += birth.size;
+  m_interval.n_births += birth.dequeue.count;
+  m_interval.birth_interval += birth.dequeue.interval_accum.v();
   m_interval.birth_mu = birth.mu;
-  m_cum.birth_queue_size += birth.size;
+
+  m_cum.n_births += birth.dequeue.count;
+  m_cum.birth_interval += birth.dequeue.interval_accum.v();
   m_cum.birth_mu = birth.mu;
 
   /* death queue */
   auto death = m.death_queue_status();
-  m_interval.death_queue_size += death.size;
+  m_interval.n_deaths += death.enqueue.count;
+  m_interval.death_interval += death.enqueue.interval_accum.v();
   m_interval.death_lambda = death.lambda;
-  m_cum.death_queue_size += death.size;
+
+  m_cum.n_deaths += death.enqueue.count;
+  m_cum.death_interval += death.enqueue.interval_accum.v();
   m_cum.death_lambda = death.lambda;
 
   /* repair queue */
   auto repair = m.repair_queue_status();
   m_interval.repair_queue_size += repair.size;
-  m_interval.repair_lambda = repair.lambda;
+
+  m_interval.n_malfunctions += repair.enqueue.count;
+  m_interval.malfunction_interval += repair.enqueue.interval_accum.v();
+  m_interval.malfunction_lambda = repair.lambda;
+
+  m_interval.n_repairs += repair.dequeue.count;
+  m_interval.repair_interval += repair.dequeue.interval_accum.v();
   m_interval.repair_mu = repair.mu;
-  m_cum.repair_lambda = repair.lambda;
+
+  m_cum.n_malfunctions += repair.enqueue.count;
+  m_cum.malfunction_interval += repair.enqueue.interval_accum.v();
+  m_cum.malfunction_lambda = repair.lambda;
+
+  m_cum.n_repairs += repair.dequeue.count;
+  m_cum.repair_interval += repair.dequeue.interval_accum.v();
+  m_cum.repair_mu = repair.mu;
+
+  m_cum.malfunction_lambda = repair.lambda;
   m_cum.repair_mu = repair.mu;
 } /* collect() */
 
 void population_dynamics_metrics_collector::reset_after_interval(void) {
   m_interval.swarm_population = 0;
   m_interval.swarm_max_population = 0;
-  m_interval.birth_queue_size = 0;
-  m_interval.death_queue_size = 0;
-  m_interval.repair_queue_size = 0;
-  m_interval.birth_mu = 0.0;
+
+  m_interval.n_births = 0;
+  m_interval.birth_interval = 0;
+  m_interval.birth_mu = 0;
+
+  m_interval.n_deaths = 0;
+  m_interval.death_interval = 0;
   m_interval.death_lambda = 0;
+
+  m_interval.repair_queue_size = 0;
+  m_interval.n_malfunctions = 0;
+  m_interval.malfunction_interval = 0;
+  m_interval.malfunction_lambda = 0;
+
+  m_interval.n_repairs = 0;
+  m_interval.repair_interval = 0;
   m_interval.repair_mu = 0;
-  m_interval.repair_lambda = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, tv, cosm);

@@ -46,9 +46,9 @@ NS_START(cosm, tv, config);
 struct population_dynamics_config final : public rconfig::base_config {
   double birth_mu{0.0};
   double death_lambda{0.0};
-  double repair_lambda{0.0};
+  double malfunction_lambda{0.0};
   double repair_mu{0.0};
-  size_t max_size{0};
+  int max_size{-1}; /* -1 is no limit */
 };
 
 NS_END(config, tv, cosm);
