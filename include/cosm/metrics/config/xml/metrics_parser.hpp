@@ -61,12 +61,12 @@ class metrics_parser : public rconfig::xml::xml_config_parser {
   static constexpr char kXMLRoot[] = "metrics";
 
   bool validate(void) const override RCSW_ATTR(pure, cold);
-  void parse(const ticpp::Element& node) override;
+  void parse(const ticpp::Element& node) override RCSW_COLD;
 
-  std::string xml_root(void) const override { return kXMLRoot; }
+  RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
  private:
-  const rconfig::base_config* config_get_impl(void) const override {
+  RCSW_COLD const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 
@@ -74,7 +74,7 @@ class metrics_parser : public rconfig::xml::xml_config_parser {
    * \brief Determine if a particular attribute under the \ref kXMLRoot is the
    * name of a metric collector or some other type of parameter.
    */
-  bool is_collector_name(const ticpp::Attribute& attr) const;
+  bool is_collector_name(const ticpp::Attribute& attr) const RCSW_COLD;
 
   /* clang-format off */
   std::unique_ptr<config_type> m_config{nullptr};

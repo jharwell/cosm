@@ -57,8 +57,8 @@ struct new_direction_data;
  * \class util_hfsm
  * \ingroup fsm
  *
- * \brief A collection of base states/common functionality that FSMs can use if
- * they choose.
+ * \brief A collection of base states/common functionality that robot FSMs can
+ * use if they choose.
  *
  * This class cannot be instantiated on its own, as does not define an FSM
  * per-se.

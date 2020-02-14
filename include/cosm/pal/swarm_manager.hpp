@@ -65,6 +65,7 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
   virtual void reset(void) = 0;
   virtual void pre_step(void) = 0;
   virtual void post_step(void) = 0;
+  virtual void destroy(void) = 0;
 
   /* Not copy constructable/assignable by default */
   swarm_manager_impl(const swarm_manager_impl&) = delete;
@@ -114,7 +115,7 @@ class swarm_manager : public swarm_manager_impl,
  public:
   swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {}
 
-  virtual ~swarm_manager(void) override = default;
+  ~swarm_manager(void) override = default;
 
   /* Not copy constructable/assignable by default */
   swarm_manager(const swarm_manager&) = delete;
@@ -128,6 +129,7 @@ class swarm_manager : public swarm_manager_impl,
   void Reset(void) override RCSW_COLD { reset(); }
   void PreStep(void) override { pre_step(); }
   void PostStep(void) override { post_step(); }
+  void Destroy(void) override { destroy(); }
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)

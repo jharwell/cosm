@@ -105,8 +105,12 @@ class population_dynamics : public rer::client<population_dynamics>,
     m_repair.reset_metrics();
   }
  protected:
-  bool already_killed(const rtypes::type_uuid& id) {
+  bool already_killed(const rtypes::type_uuid& id) const {
     return m_death.contains(id);
+  }
+
+  bool currently_repairing(const rtypes::type_uuid& id) const {
+    return m_repair.contains(id);
   }
 
   /**

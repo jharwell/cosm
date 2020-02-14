@@ -69,7 +69,7 @@ class force_calculator_parser : public rconfig::xml::xml_config_parser {
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
  private:
-  const rconfig::base_config* config_get_impl(void) const override {
+  RCSW_COLD const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 

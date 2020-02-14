@@ -81,6 +81,11 @@ class diff_drive : public rer::client<diff_drive> {
   const diff_drive& operator=(const diff_drive&) = delete;
   diff_drive(const diff_drive&) = default;
 
+  /**
+   * \brief Reset the differential drive.
+   *
+   * - Set the wheel speeds to 0.
+   */
   void reset(void) { m_actuator.reset(); }
   double max_speed(void) const { return m_max_speed; }
 

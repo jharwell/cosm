@@ -57,6 +57,17 @@ class util_signal : public rpfsm::event_signal {
     ekENTERED_NEST,
 
     /**
+     * Signal sent when a robot has mechanically malfunctioned.
+     */
+    ekMECHANICAL_MALFUNCTION,
+
+    /**
+     * Signal sent when a robot has been repaired after a mechanical
+     * malfunction.
+     */
+    ekMECHANICAL_REPAIR,
+
+    /**
      * \brief Applications wishing to defined their own event signals
      * should start here.
      */
