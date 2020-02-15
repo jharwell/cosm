@@ -36,7 +36,8 @@
 #include "cosm/convergence/interactivity.hpp"
 #include "cosm/convergence/positional_entropy.hpp"
 #include "cosm/convergence/task_dist_entropy.hpp"
-#include "cosm/metrics/convergence_metrics.hpp"
+#include "cosm/convergence/velocity.hpp"
+#include "cosm/convergence/metrics/convergence_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -83,7 +84,10 @@ class convergence_calculator final
 
   /**
    * \brief Callback function that returns a vector of robot positions (1 per
-   * robot). Used to calculate swarm positional entropy.
+   * robot). Used to calculate swarm positional entropy and velocity (SEPARATE
+   * calls per timestep). The calling application should cache the results of
+   * the computation passed to the calculator internally if separate calls to
+   * obtain the positions of each robot is expensive.
    *
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
@@ -116,6 +120,7 @@ class convergence_calculator final
   conv_status_t swarm_angular_order(void) const override;
   conv_status_t swarm_positional_entropy(void) const override;
   conv_status_t swarm_task_dist_entropy(void) const override;
+  conv_status_t swarm_velocity(void) const override;
   double swarm_conv_epsilon(void) const override { return mc_config.epsilon; }
   void reset_metrics(void) override;
 
@@ -131,12 +136,15 @@ class convergence_calculator final
   void update(void);
 
  private:
+  using measure_typelist = rmpl::typelist<positional_entropy,
+                                          task_dist_entropy,
+                                          angular_order,
+                                          interactivity,
+                                          velocity>;
   /* clang-format off */
   const config::convergence_config             mc_config;
-  rds::type_map<rmpl::typelist<positional_entropy,
-                               task_dist_entropy,
-                               angular_order,
-                               interactivity>> m_measures{};
+
+  rds::type_map<measure_typelist>              m_measures{};
   swarm_headings_calc_ftype                    m_swarm_headings_calc;
   swarm_nn_calc_ftype                          m_swarm_nn_calc;
   swarm_pos_calc_ftype                         m_swarm_pos_calc;

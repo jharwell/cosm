@@ -27,6 +27,7 @@
 #include <algorithm>
 #include <memory>
 #include <vector>
+#include <utility>
 
 #include "rcppsw/algorithm/clustering/entropy.hpp"
 #include "rcppsw/er/client.hpp"

@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_HPP_
-#define INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_HPP_
+#ifndef INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_HPP_
+#define INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
@@ -32,7 +32,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, convergence, metrics);
 
 /*******************************************************************************
  * Class Definitions
@@ -40,13 +40,13 @@ NS_START(cosm, metrics);
 
 /**
  * \class convergence_metrics
- * \ingroup metrics
+ * \ingroup convergence metrics
  *
  * \brief Defines the metrics to be collected at the ensemble level in order
  * to calculate the swarm's convergence in various ways. Measures adapted from:
  *
  * - Szabo2014 (robot interaction degree)
- * - Turgut2008 (angular order)
+ * - Turgut2008 (angular order, velocity)
  * - Turgut2008/Balch2000 (positional entropy)
  *
  * Metrics are collected every timestep.
@@ -61,8 +61,8 @@ class convergence_metrics : public virtual rmetrics::base_metrics {
    * 1 - Normalized value of convergence measure.
    * 2 - Does the measure currently indicate convergence?
    */
-
   using conv_status_t = std::tuple<double, double, bool>;
+
   /**
    * \brief Return the current convergence epsilon (threshold) for the swarm
    * (can be static or vary in time). Captured here to make graph generation
@@ -93,8 +93,14 @@ class convergence_metrics : public virtual rmetrics::base_metrics {
    * the swarm. See \ref task_dist_entropy for the calculation/input variables.
    */
   virtual conv_status_t swarm_task_dist_entropy(void) const = 0;
+
+  /**
+   * \brief Return the \ref conv_status_t for the velocity of the swarm. See
+   * \ref velocity for the calculation/input variables.
+   */
+  virtual conv_status_t swarm_velocity(void) const = 0;
 };
 
-NS_END(metrics, cosm);
+NS_END(metrics, convergence, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_HPP_ */
+#endif /* INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_HPP_ */

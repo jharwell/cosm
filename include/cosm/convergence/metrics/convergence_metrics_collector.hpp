@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -34,21 +34,20 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, convergence, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class convergence_metrics_collector
- * \ingroup metrics
+ * \ingroup convergence metrics
  *
  * \brief Collector for \ref convergence_metrics.
  *
  * Metrics are written out each timestep.
  */
-class convergence_metrics_collector final
-    : public rmetrics::base_metrics_collector {
+class convergence_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
    * \param ofname The output file name.
@@ -76,9 +75,10 @@ class convergence_metrics_collector final
   struct convergence_measure_stats m_order_stats{};
   struct convergence_measure_stats m_pos_ent_stats{};
   struct convergence_measure_stats m_tdist_ent_stats{};
+  struct convergence_measure_stats m_velocity_stats{};
   /* clang-format on */
 };
 
-NS_END(metrics, cosm);
+NS_END(convergence, metrics, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_ */

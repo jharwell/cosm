@@ -21,14 +21,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/convergence_metrics_collector.hpp"
+#include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
 
-#include "cosm/metrics/convergence_metrics.hpp"
+#include "cosm/convergence/metrics/convergence_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, convergence, metrics);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -57,7 +57,10 @@ std::list<std::string> convergence_metrics_collector::csv_header_cols(void) cons
     "int_avg_pos_entropy_converged",
     "int_avg_task_dist_entropy_raw",
     "int_avg_task_dist_entropy_norm",
-    "int_avg_task_dist_entropy_converged"
+    "int_avg_task_dist_entropy_converged",
+    "int_avg_velocity_raw",
+    "int_avg_velocity_norm",
+    "int_avg_velocity_converged"
       /* clang-format on */
   };
   merged.splice(merged.end(), cols);
@@ -90,7 +93,11 @@ boost::optional<std::string> convergence_metrics_collector::csv_line_build(void)
 
   line += csv_entry_intavg(m_pos_ent_stats.raw);
   line += csv_entry_intavg(m_pos_ent_stats.norm);
-  line += csv_entry_intavg(m_pos_ent_stats.converged, true);
+  line += csv_entry_intavg(m_pos_ent_stats.converged);
+
+  line += csv_entry_intavg(m_velocity_stats.raw);
+  line += csv_entry_intavg(m_velocity_stats.norm);
+  line += csv_entry_intavg(m_velocity_stats.converged, true);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
@@ -123,6 +130,11 @@ void convergence_metrics_collector::collect(
   m_tdist_ent_stats.raw += std::get<0>(status);
   m_tdist_ent_stats.norm += std::get<1>(status);
   m_tdist_ent_stats.converged += static_cast<uint>(std::get<2>(status));
+
+  status = m.swarm_velocity();
+  m_velocity_stats.raw += std::get<0>(status);
+  m_velocity_stats.norm += std::get<1>(status);
+  m_velocity_stats.converged += static_cast<uint>(std::get<2>(status));
 } /* collect() */
 
 void convergence_metrics_collector::reset(void) {
@@ -135,6 +147,7 @@ void convergence_metrics_collector::reset_after_interval(void) {
   m_order_stats = {0.0, 0.0, 0};
   m_pos_ent_stats = {0.0, 0.0, 0};
   m_tdist_ent_stats = {0.0, 0.0, 0};
+  m_velocity_stats = {0.0, 0.0, 0};
 } /* reset_after_interval() */
 
-NS_END(metrics, cosm);
+NS_END(metrics, convergence, cosm);

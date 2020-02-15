@@ -64,6 +64,11 @@ void convergence_parser::parse(const ticpp::Element& node) {
     m_config->ang_order =
         *m_ang_order.config_get<angular_order_parser::config_type>();
   }
+  m_velocity.parse(cnode);
+  if (m_velocity.is_parsed()) {
+    m_config->velocity =
+        *m_velocity.config_get<velocity_parser::config_type>();
+  }
 } /* parse() */
 
 bool convergence_parser::validate(void) const {
@@ -76,6 +81,7 @@ bool convergence_parser::validate(void) const {
   RCSW_CHECK(m_task_entropy.validate());
   RCSW_CHECK(m_interactivity.validate());
   RCSW_CHECK(m_ang_order.validate());
+  RCSW_CHECK(m_velocity.validate());
   return true;
 
 error:

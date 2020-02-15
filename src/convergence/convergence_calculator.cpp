@@ -70,6 +70,7 @@ struct convergence_measure_updater : public boost::static_visitor<void> {
   }
 
   void operator()(positional_entropy& pos) { pos(swarm_pos_calc(n_threads)); }
+  void operator()(velocity& vel) { vel(swarm_pos_calc(n_threads)); }
 
   void operator()(task_dist_entropy& tdist) {
     tdist(swarm_tasks_calc(n_threads));
@@ -90,14 +91,8 @@ struct convergence_measure_updater : public boost::static_visitor<void> {
  * of convergence calculation.
  */
 struct convergence_status_collator : public boost::static_visitor<bool> {
-  bool operator()(const interactivity& i) const { return i.converged(); }
-  bool operator()(const angular_order& ang) const { return ang.converged(); }
-  bool operator()(const positional_entropy& pos) const {
-    return pos.converged();
-  }
-  bool operator()(const task_dist_entropy& dist) const {
-    return dist.converged();
-  }
+  template<typename T>
+  bool operator()(const T& measure) const { return measure.converged(); }
 };
 
 /*******************************************************************************
@@ -135,6 +130,13 @@ convergence_calculator::convergence_calculator(
             std::make_unique<raclustering::detail::entropy_impl<rmath::vector2d>>(
                 mc_config.n_threads),
             &mc_config.pos_entropy));
+  }
+
+  if (config->velocity.enable) {
+    ER_ASSERT(
+        nullptr != m_swarm_pos_calc,
+        "NULL swarm positions cb with velocity convergence enabled");
+    m_measures.emplace(typeid(velocity), velocity(config->epsilon));
   }
 }
 
@@ -210,6 +212,15 @@ convergence_calculator::conv_status_t convergence_calculator::swarm_task_dist_en
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_task_dist_entropy() */
 
+convergence_calculator::conv_status_t convergence_calculator::
+swarm_velocity(void) const {
+  if (!mc_config.velocity.enable) {
+    return std::make_tuple(0.0, 0.0, false);
+  }
+  auto& tmp = boost::get<velocity>(m_measures.at(typeid(velocity)));
+  return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
+} /* swarm_positional_entropy() */
+
 void convergence_calculator::reset_metrics(void) {
   if (mc_config.interactivity.enable) {
     boost::get<interactivity>(m_measures.at(typeid(interactivity))).reset();
@@ -224,6 +235,9 @@ void convergence_calculator::reset_metrics(void) {
   if (mc_config.task_dist_entropy.enable) {
     boost::get<task_dist_entropy>(m_measures.at(typeid(task_dist_entropy)))
         .reset();
+  }
+  if (mc_config.velocity.enable) {
+    boost::get<velocity>(m_measures.at(typeid(velocity))).reset();
   }
 } /* reset_metrics() */
 

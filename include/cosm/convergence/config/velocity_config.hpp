@@ -1,7 +1,7 @@
 /**
- * \file convergence_config.hpp
+ * \file velocity_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,18 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_HPP_
-#define INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_HPP_
+#ifndef INCLUDE_COSM_CONVERGENCE_CONFIG_VELOCITY_CONFIG_HPP_
+#define INCLUDE_COSM_CONVERGENCE_CONFIG_VELOCITY_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
-#include "cosm/convergence/config/task_dist_entropy_config.hpp"
-#include "cosm/convergence/config/positional_entropy_config.hpp"
-#include "cosm/convergence/config/interactivity_config.hpp"
-#include "cosm/convergence/config/angular_order_config.hpp"
-#include "cosm/convergence/config/velocity_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -40,23 +36,16 @@ NS_START(cosm, convergence, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * \struct convergence_config
+ * \struct velocity_config
  * \ingroup convergence config
  *
- * \brief Container for the configuration of different swarm covergence
- * measures.
+ * \brief Configuration for the velocity convergence measure, as described
+ * in \todo ref here.
  */
-struct convergence_config final : public rconfig::base_config {
-  uint                             n_threads{0};
-  double                           epsilon{0};
-
-  struct task_dist_entropy_config  task_dist_entropy{};
-  struct positional_entropy_config pos_entropy{};
-  struct interactivity_config      interactivity{};
-  struct angular_order_config      ang_order{};
-  struct velocity_config           velocity{};
+struct velocity_config final : public rconfig::base_config {
+  bool enable{false};
 };
 
 NS_END(config, convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_CONFIG_CONVERGENCE_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_CONVERGENCE_CONFIG_VELOCITY_CONFIG_HPP_ */

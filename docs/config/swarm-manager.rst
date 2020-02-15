@@ -127,7 +127,7 @@ type.
 - Required child tags if present: none.
 - Optional child attributes: none.
 - Optional child tags: [ ``postional_entropy``, ``task_dist_entropy``,
-  ``interactivity``, ``angular_order`` ].
+  ``interactivity``, ``angular_order``, ``velocity`` ].
 
 XML configuration:
 
@@ -146,6 +146,9 @@ XML configuration:
        <angular_order>
        ...
        </angular_order>
+       <velocity>
+       ...
+       </velocity>
    </convergence>
 
 - ``n_threads`` - How many threads will be used for convergence calculations
@@ -259,6 +262,33 @@ XML configuration:
    <convergence>
        ...
        <task_dist_entropy
+           enable="false"/>
+       ...
+   </convergence>
+
+- ``enable`` - If this measure is enabled or not. Relatively cheap to compute in
+  large swarms.
+
+
+``convergence/velocity``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A measure of convergence using stability of swarm velocity (how much its
+geometric center moves) over time.
+
+- Required by: none.
+- Required child attributes if present: ``enable``.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <convergence>
+       ...
+       <velocity
            enable="false"/>
        ...
    </convergence>
