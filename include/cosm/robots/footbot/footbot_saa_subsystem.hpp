@@ -49,8 +49,9 @@ NS_START(cosm, robots, footbot);
 class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
   public rer::client<footbot_saa_subsystem> {
  public:
-  footbot_saa_subsystem(subsystem::sensing_subsystem2D::sensor_map& sensors,
-                        subsystem::actuation_subsystem2D::actuator_map& actuators,
+  footbot_saa_subsystem(const hal::sensors::position_sensor& pos,
+                        const subsystem::sensing_subsystem2D::sensor_map& sensors,
+                        const subsystem::actuation_subsystem2D::actuator_map& actuators,
                         const steer2D::config::force_calculator_config* steer_config);
 
   /* BOID interface */

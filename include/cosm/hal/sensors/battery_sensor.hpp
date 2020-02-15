@@ -74,13 +74,9 @@ class battery_sensor_impl {
    * Note that these are different representations of the same essential
    * information: how much energy the robot current has left.
    */
-  struct reading {
+  struct sensor_reading {
     double availible_charge;
     double time_left;
-
-    reading(double _availible_charge, double _time_left)
-        : availible_charge(_availible_charge),
-          time_left(_time_left) {}
   };
 
   explicit battery_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
@@ -90,10 +86,9 @@ class battery_sensor_impl {
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_battery_sensor<U>::value)>
-  struct reading readings(void) const {
+  sensor_reading reading(void) const {
     argos::CCI_BatterySensor::SReading temp = m_sensor->GetReading();
-    reading ret(temp.AvailableCharge, temp.TimeLeft);
-    return ret;
+    return {temp.AvailableCharge, temp.TimeLeft};
   }
 
  private:

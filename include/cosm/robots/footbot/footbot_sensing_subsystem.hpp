@@ -42,8 +42,9 @@ NS_START(cosm, robots, footbot);
  */
 class footbot_sensing_subsystem : public subsystem::sensing_subsystem2D {
  public:
-  explicit footbot_sensing_subsystem(sensor_map& sensors)
-      : sensing_subsystem2D(sensors) {}
+  footbot_sensing_subsystem(const hal::sensors::position_sensor& pos,
+                            const sensor_map& sensors)
+      : sensing_subsystem2D(pos, sensors) {}
 
   const hal::sensors::proximity_sensor* proximity(void) const {
     return sensor<hal::sensors::proximity_sensor>();

@@ -1,5 +1,5 @@
 /**
- * \file diff_drive_sensor.hpp
+ * \file position_sensor.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,19 +18,22 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_DIFF_DRIVE_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_DIFF_DRIVE_SENSOR_HPP_
+#ifndef INCLUDE_COSM_HAL_SENSORS_POSITION_SENSOR_HPP_
+#define INCLUDE_COSM_HAL_SENSORS_POSITION_SENSOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include <vector>
+#include "rcppsw/math/vector2.hpp"
+#include "cosm/cosm.hpp"
+
 #include "cosm/hal/hal.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-#include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_sensor.h>
+#include <argos3/plugins/robots/generic/control_interface/ci_positioning_sensor.h>
 #else
-#error "Selected hardware has no differential drive sensor!"
+#error "Selected hardware has no position sensor!"
 #endif /* HAL_TARGET */
 
 /*******************************************************************************
@@ -41,9 +44,9 @@ NS_START(cosm, hal, sensors, detail);
 /*******************************************************************************
  * Templates
  ******************************************************************************/
-template<typename T>
-using is_argos_ds_sensor = std::is_same<T,
-                                          argos::CCI_DifferentialSteeringSensor>;
+template<typename TSensor>
+using is_argos_position_sensor = std::is_same<TSensor,
+                                           argos::CCI_PositioningSensor>;
 
 NS_END(detail);
 
@@ -51,14 +54,14 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class diff_drive_sensor_impl
+ * \class position_sensor_impl
  * \ingroup hal sensors
  *
- * \brief Differential drive sensor wrapper.
+ * \brief Position sensor wrapper.
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
+ * - ARGoS footbot.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                 HAL. If nullptr, then that effectively disables the sensor
@@ -66,44 +69,39 @@ NS_END(detail);
  *                 be called.
  */
 template <typename TSensor>
-class diff_drive_sensor_impl {
+class position_sensor_impl {
  public:
+  /**
+   * \brief A position sensor reading, given as a 2D position and a triplet of
+   * (X,Y,Z) angles.
+   */
   struct sensor_reading {
-    double vel_left;
-    double vel_right;
-    double dist_left;
-    double dist_right;
-    double axle_length;
+    rmath::vector2d position{};
+    rmath::radians x_ang{};
+    rmath::radians y_ang{};
+    rmath::radians z_ang{};
   };
 
-  explicit diff_drive_sensor_impl(TSensor* const sensor) : m_sensor(sensor) {}
+  explicit position_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
-   * \brief Get the current battery sensor reading for the footbot robot.
+   * \brief Get the current position sensor readings for the footbot robot.
+   *
+   * \return A \ref sensor_reading.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ds_sensor<U>::value)>
+            RCPPSW_SFINAE_FUNC(detail::is_argos_position_sensor<U>::value)>
   sensor_reading reading(void) const {
     auto tmp = m_sensor->GetReading();
-    return {tmp.VelocityLeftWheel,
-          tmp.VelocityRightWheel,
-          tmp.CoveredDistanceLeftWheel,
-          tmp.CoveredDistanceRightWheel,
-          tmp.WheelAxisLength};
+    sensor_reading ret;
+    argos::CRadians x, y, z;
+    tmp.Orientation.ToEulerAngles(z, y, x);
+    ret.x_ang = rmath::radians(x.GetValue());
+    ret.y_ang = rmath::radians(y.GetValue());
+    ret.z_ang = rmath::radians(z.GetValue());
+    ret.position = rmath::vector2d(tmp.Position.GetX(), tmp.Position.GetY());
+    return ret;
   }
-
-  /**
-   * \brief Return the current speed of the robot (average of the 2 wheel
-   * speeds).
-   */
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ds_sensor<U>::value)>
-  double current_speed(void) const {
-    auto tmp = reading();
-    return (tmp.vel_left + tmp.vel_right) / 2.0;
-  }
-
-  void reset(void) {}
 
  private:
   /* clang-format off */
@@ -112,9 +110,9 @@ class diff_drive_sensor_impl {
 };
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-using diff_drive_sensor = diff_drive_sensor_impl<argos::CCI_DifferentialSteeringSensor>;
+using position_sensor = position_sensor_impl<argos::CCI_PositioningSensor>;
 #endif /* HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORSDIFF_DRIVE_SENSOR_HPP_ */
+#endif /* INCLUDE_COSM_HAL_SENSORS_POSITION_SENSOR_HPP_ */

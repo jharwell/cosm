@@ -136,26 +136,22 @@ class base_controller2D : public cfmetrics::movement_metrics,
   bool display_id(void) const { return m_display_id; }
 
   /**
-   * \brief Set the current clock tick.
+   * \brief Update the sensing for the robot.
+   *
+   * - Set the current clock tick.
+   * - Update positioning information.
    *
    * In a real world, each robot would maintain its own clock tick, and overall
    * there would no doubt be considerable skew; this is a simulation hack that
    * makes things much nicer/easier to deal with.
-   */
-  void tick(const rtypes::timestep& tick);
-
-  /**
-   * \brief Set the current location of the robot.
    *
-   * This is a hack, as real world robot's would have to do their own
-   * localization. This is far superior to that, in terms of ease of
-   * programming. Plus it helps me focus in on my actual research. Ideally,
-   * robots would calculate this from sensor values, rather than it being set by
-   * the loop functions.
+   * \param tick The current simulation clock tick.
+   * \param ratio The ratio that should be used to calculate the robot's
+   *              discrete position in the arena (should match the ratio used to
+   *              create the arena grid)).
    */
-  void position(const rmath::vector2d& loc);
-  void discrete_position(const rmath::vector2u& loc);
-  void heading(const rmath::radians& h);
+  void sensing_update(const rtypes::timestep& tick,
+                      const rtypes::discretize_ratio& ratio);
 
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
@@ -179,8 +175,8 @@ class base_controller2D : public cfmetrics::movement_metrics,
 #endif
 
   /**
-   * \brief Return a handle to the \ref rcppsw::rmath::rng used for random number
-   * generation by this robot.
+   * \brief Return a handle to the \ref rmath::rng used for random
+   * number generation by this robot.
    */
   rmath::rng* rng(void) { return m_rng; }
 
@@ -190,10 +186,11 @@ class base_controller2D : public cfmetrics::movement_metrics,
    * interest).
    *
    * \param output_root Absolute or relative path to the output root for the
-   * robot.
+   *                    robot.
    * \param output_dir Directory name within the output root that things should
-   * be logged into. This is a separate argument than output_root, because there
-   * are special values of it that have different behavior.
+   *                   be logged into. This is a separate argument than
+   *                   output_root, because there are special values of it that
+   *                   have different behavior.
    *
    * Sets up the following log files in the output directory:
    *

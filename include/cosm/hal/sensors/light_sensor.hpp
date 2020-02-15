@@ -105,6 +105,9 @@ class light_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
   void enable(void) const { m_sensor->Enable(); }
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
 
  private:

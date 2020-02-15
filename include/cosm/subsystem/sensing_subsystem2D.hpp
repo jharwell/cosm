@@ -37,6 +37,7 @@
 #include "cosm/hal/sensors/light_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/wifi_sensor.hpp"
+#include "cosm/hal/sensors/position_sensor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,9 +52,10 @@ NS_START(cosm, subsystem);
  * \ingroup subsystem
  *
  * \brief The sensing subsystem for all sensors used by robotics controllers
- * that operate in 2D.
+ * that operate in 2D, and as such have a \ref hal::sensors::position_sensor for
+ * positioning information.
  *
- * Any controller with a sensing subsystem can choose any number of the
+ * Any controller with a sensing subsystem can also choose any number of the
  * supported sensors to pass to the subsystem to manage:
  *
  * - \ref hal::sensors::proximity_sensor
@@ -63,6 +65,7 @@ NS_START(cosm, subsystem);
  * - \ref hal::sensors::battery_sensor
  * - \ref hal::sensors::diff_drive_sensor
  * - \ref hal::sensors::wifi_sensor
+ * - \ref hal::sensors::position_sensor
  */
 class sensing_subsystem2D {
  public:
@@ -83,21 +86,21 @@ class sensing_subsystem2D {
   /**
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
-  explicit sensing_subsystem2D(sensor_map& sensors) : m_sensors(sensors) {}
+  sensing_subsystem2D(const hal::sensors::position_sensor& pos,
+                      const sensor_map& sensors)
+      : m_pos_sensor(pos), m_sensors(sensors) {}
 
   /**
    * \brief Get the robot's current location.
-   *
-   * \note This is set via an external process and that controller are *NOT*
-   * capable of self-localizing. That's not the point of this project, and this
-   * was much faster/easier.
    */
   const rmath::vector2d& position(void) const { return m_position; }
-  const rmath::vector2u& discrete_position(void) const {
-    return m_discrete_position;
-  }
+  const rmath::vector2u& discrete_position(void) const { return m_dposition; }
 
-  void tick(const rtypes::timestep& t) { m_tick = t; }
+  /**
+   * \brief Get the angle of the current robot's heading. A shortcut to help
+   * reduce the ache in my typing fingers.
+   */
+  const rmath::radians& heading(void) const { return m_heading; }
 
   rtypes::timestep tick(void) const { return m_tick; }
 
@@ -111,15 +114,16 @@ class sensing_subsystem2D {
   }
 
   /**
-   * \brief Set the robot's current location.
+   * \brief Update the current time and position information for the robot.
    */
-  void position(const rmath::vector2d& position) {
+  void update(const rtypes::timestep& t,
+              const rtypes::discretize_ratio& ratio) {
+    m_tick = t;
+    auto reading = m_pos_sensor.reading();
     m_prev_position = m_position;
-    m_position = position;
-  }
-
-  void discrete_position(const rmath::vector2u& position) {
-    m_discrete_position = position;
+    m_position = reading.position;
+    m_dposition = rmath::dvec2uvec(m_position, ratio.v());
+    m_heading = reading.z_ang;
   }
 
   /**
@@ -129,15 +133,6 @@ class sensing_subsystem2D {
   rmath::vector2d tick_travel(void) const {
     return m_position - m_prev_position;
   }
-
-  /**
-   * \brief Get the angle of the current robot's heading. A shortcut to help
-   * reduce the ache in my typing fingers.
-   *
-   * \return The heading angle.
-   */
-  const rmath::radians& heading(void) const { return m_heading; }
-  void heading(const rmath::radians& r) { m_heading = r; }
 
   template <typename T>
   const T* sensor(void) const {
@@ -150,12 +145,13 @@ class sensing_subsystem2D {
 
  private:
   /* clang-format off */
-  rtypes::timestep m_tick{0};
-  rmath::vector2d  m_position{};
-  rmath::vector2d  m_prev_position{};
-  rmath::radians   m_heading{};
-  rmath::vector2u  m_discrete_position{};
-  sensor_map       m_sensors;
+  rtypes::timestep              m_tick{0};
+  rmath::vector2d               m_position{};
+  rmath::vector2d               m_prev_position{};
+  rmath::radians                m_heading{};
+  rmath::vector2u               m_dposition{};
+  hal::sensors::position_sensor m_pos_sensor;
+  sensor_map                    m_sensors;
   /* clang-format off */
 };
 

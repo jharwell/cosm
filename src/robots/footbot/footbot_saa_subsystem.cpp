@@ -35,10 +35,11 @@ NS_START(cosm, robots, footbot);
  * Constructors/Destructors
  ******************************************************************************/
 footbot_saa_subsystem::footbot_saa_subsystem(
-    subsystem::sensing_subsystem2D::sensor_map& sensors,
-    subsystem::actuation_subsystem2D::actuator_map& actuators,
+    const hal::sensors::position_sensor& pos,
+    const subsystem::sensing_subsystem2D::sensor_map& sensors,
+    const subsystem::actuation_subsystem2D::actuator_map& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
-    : saa_subsystem2D(sensors, actuators, steer_config),
+    : saa_subsystem2D(pos, sensors, actuators, steer_config),
       ER_CLIENT_INIT("cosm.robots.footbot.saa") {}
 
 /*******************************************************************************
@@ -86,7 +87,7 @@ rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {
 } /* linear_velocity() */
 
 double footbot_saa_subsystem::angular_velocity(void) const {
-  auto reading = sensing()->diff_drive()->readings();
+  auto reading = sensing()->diff_drive()->reading();
 
   return (reading.vel_right - reading.vel_left) / reading.axle_length;
 } /* angular_velocity() */

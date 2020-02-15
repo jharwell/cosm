@@ -52,21 +52,14 @@ base_controller2D::~base_controller2D(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
+void base_controller2D::sensing_update(const rtypes::timestep& tick,
+                                       const rtypes::discretize_ratio& ratio) {
+  m_saa->sensing()->update(tick, ratio);
+} /* sensing_update() */
+
 void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
-
-void base_controller2D::position(const rmath::vector2d& loc) {
-  m_saa->sensing()->position(loc);
-}
-
-void base_controller2D::heading(const rmath::radians& h) {
-  m_saa->sensing()->heading(h);
-}
-
-void base_controller2D::discrete_position(const rmath::vector2u& loc) {
-  m_saa->sensing()->discrete_position(loc);
-}
 
 std::string base_controller2D::output_init(const std::string& output_root,
                                            const std::string& output_dir) {
@@ -116,10 +109,6 @@ void base_controller2D::rng_init(int seed, const std::string& category) {
     m_rng = rmath::rngm::instance().create(category, seed);
   }
 } /* rng_init() */
-
-void base_controller2D::tick(const rtypes::timestep& tick) {
-  m_saa->sensing()->tick(tick);
-} /* tick() */
 
 #if (LIBRA_ER >= LIBRA_ER_ALL)
 void base_controller2D::ndc_pusht(void) const {

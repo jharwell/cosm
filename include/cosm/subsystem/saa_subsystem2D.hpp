@@ -50,12 +50,13 @@ class saa_subsystem2D : public steer2D::boid,
                         public rer::client<saa_subsystem2D> {
  public:
   saa_subsystem2D(
-      sensing_subsystem2D::sensor_map& sensors,
-      actuation_subsystem2D::actuator_map& actuators,
+      const hal::sensors::position_sensor& pos_sensor,
+      const sensing_subsystem2D::sensor_map& sensors,
+      const actuation_subsystem2D::actuator_map& actuators,
       const steer2D::config::force_calculator_config* const steer_config)
       : ER_CLIENT_INIT("cosm.subsystem.saa"),
         m_actuation(std::make_unique<actuation_subsystem2D>(actuators)),
-        m_sensing(std::make_unique<sensing_subsystem2D>(sensors)),
+        m_sensing(std::make_unique<sensing_subsystem2D>(pos_sensor, sensors)),
         m_steer2D_calc(*this, steer_config) {}
 
   /**
