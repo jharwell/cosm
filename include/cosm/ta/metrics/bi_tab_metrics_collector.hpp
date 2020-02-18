@@ -45,8 +45,10 @@ NS_START(cosm, ta, metrics);
  *
  * \brief Collector for metrics for \ref bi_tab_metrics about task allocation.
  *
- * Metrics should only be collected upon completion/abortion of a task. Metrics
- * are written out at the specified interval.
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported. Metrics should only be collected upon
+ * completion/abortion of a task. Metrics are written out at the specified
+ * interval.
  */
 class bi_tab_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
@@ -54,7 +56,8 @@ class bi_tab_metrics_collector final : public rmetrics::base_metrics_collector {
    * \param ofname Output file name.
    * \param interval Collection interval.
    */
-  bi_tab_metrics_collector(const std::string& ofname, uint interval);
+  bi_tab_metrics_collector(const std::string& ofname,
+                           const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;

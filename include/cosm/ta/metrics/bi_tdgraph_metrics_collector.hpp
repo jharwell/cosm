@@ -44,9 +44,12 @@ NS_START(cosm, ta, metrics);
  * \class bi_tdgraph_metrics_collector
  * \ingroup ta metrics
  *
- * \brief Collector for metrics about the current task_dist of tasks in
- * a collection of agents executing tasks in a \ref bi_tdgraph. Metrics are
- * written out at the specified interval.
+ * \brief Collector for metrics about the current task_dist of tasks in a
+ * collection of agents executing tasks in a \ref bi_tdgraph.
+ *
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported. Metrics are written out at the specified
+ * interval.
  */
 class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
@@ -56,7 +59,7 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collect
    * \param decomposition_depth The maximum depth of the \ref bi_tdgraph.
    */
   bi_tdgraph_metrics_collector(const std::string& ofname,
-                               uint interval,
+                               const rtypes::timestep& interval,
                                uint decomposition_depth);
 
   void reset(void) override;

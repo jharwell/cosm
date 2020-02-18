@@ -55,7 +55,7 @@ void metrics_parser::parse(const ticpp::Element& node) {
 
 bool metrics_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(m_config->output_interval > 0);
+    RCSW_CHECK(m_config->output_interval > 0U);
   }
   return true;
 
@@ -64,10 +64,7 @@ error:
 } /* validate() */
 
 bool metrics_parser::is_collector_name(const ticpp::Attribute& attr) const {
-  std::list<std::string> non_names = {
-    "output_dir",
-    "collect_interval"
-  };
+  std::list<std::string> non_names = {"output_dir", "collect_interval"};
   std::string name;
   attr.GetName(&name);
   return non_names.end() == std::find(non_names.begin(), non_names.end(), name);

@@ -45,7 +45,9 @@ NS_START(cosm, tv, metrics);
  *
  * \brief Collector for \ref population_dynamics_metrics.
  *
- * Metrics are written out at the specified collection interval.
+ * Metrics CAN be collected in parallel; concurrent updates to the gathered
+ * stats are supported. Metrics are written out at the specified collection
+ * interval.
  */
 class population_dynamics_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
@@ -54,7 +56,7 @@ class population_dynamics_metrics_collector final : public rmetrics::base_metric
    * \param interval Collection interval.
    */
   population_dynamics_metrics_collector(const std::string& ofname,
-                                        uint interval);
+                                        const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;

@@ -35,7 +35,7 @@ NS_START(cosm, tv, metrics);
  ******************************************************************************/
 population_dynamics_metrics_collector::population_dynamics_metrics_collector(
     const std::string& ofname,
-    uint interval)
+    const rtypes::timestep& interval)
     : base_metrics_collector(ofname, interval) {}
 
 /*******************************************************************************

@@ -34,7 +34,7 @@ NS_START(cosm, fsm, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 movement_metrics_collector::movement_metrics_collector(const std::string& ofname,
-                                                       uint interval)
+                                                       const rtypes::timestep& interval)
     : base_metrics_collector(ofname, interval) {}
 
 /*******************************************************************************

@@ -27,8 +27,8 @@
 #include <numeric>
 #include <vector>
 
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/convergence/convergence_measure.hpp"
 
@@ -55,9 +55,9 @@ class velocity final : public convergence_measure {
    * \brief Compute the velocity.
    */
   bool operator()(const std::vector<rmath::vector2d>& locs) {
-    rmath::vector2d center = std::accumulate(locs.begin(),
-                                             locs.end(),
-                                             rmath::vector2d()) / locs.size();
+    rmath::vector2d center =
+        std::accumulate(locs.begin(), locs.end(), rmath::vector2d()) /
+        locs.size();
     update_raw((center - m_prev_center).length());
     set_norm(rmath::normalize(raw_min(), raw_max(), raw()));
     m_prev_center = center;

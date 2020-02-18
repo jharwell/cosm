@@ -34,7 +34,7 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 execution_metrics_collector::execution_metrics_collector(const std::string& ofname,
-                                                         uint interval)
+                                                         const rtypes::timestep& interval)
     : base_metrics_collector(ofname, interval),
       ER_CLIENT_INIT("cosm.metrics.tasks.execution_metrics_collector") {}
 

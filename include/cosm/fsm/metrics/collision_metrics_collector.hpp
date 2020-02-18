@@ -45,7 +45,9 @@ NS_START(cosm, fsm, metrics);
  *
  * \brief Collector for \ref collision_metrics.
  *
- * Metrics are written out after the specified interval.
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported. Metrics are written out after the specified
+ * interval.
  */
 class collision_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
@@ -54,7 +56,7 @@ class collision_metrics_collector final : public rmetrics::base_metrics_collecto
    * \param interval Collection interval.
    */
   collision_metrics_collector(const std::string& ofname,
-                             uint interval);
+                              const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;

@@ -44,9 +44,7 @@ population_dynamics::population_dynamics(
       m_current_pop(current_pop),
       m_rng(rng),
       m_birth(std::numeric_limits<double>::infinity(), config->birth_mu, rng),
-      m_death(config->death_lambda,
-              std::numeric_limits<double>::infinity(),
-              rng),
+      m_death(config->death_lambda, std::numeric_limits<double>::infinity(), rng),
       m_repair(config->malfunction_lambda, config->repair_mu, rng) {}
 
 /*******************************************************************************
@@ -57,17 +55,14 @@ population_dynamics::queue_status population_dynamics::death_queue_status(
   auto ed = m_death.enqueue_data();
   auto dd = m_death.dequeue_data();
   queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum
-  };
+                             .interval_accum = ed.interval_accum};
   queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum
-  };
+                             .interval_accum = dd.interval_accum};
   return queue_status{.size = m_death.size(),
-        .lambda = m_death.lambda(),
-        .mu = m_death.mu(),
-        .enqueue = enqueue,
-        .dequeue = dequeue
-        };
+                      .lambda = m_death.lambda(),
+                      .mu = m_death.mu(),
+                      .enqueue = enqueue,
+                      .dequeue = dequeue};
 } /* death_queue_status() */
 
 population_dynamics::queue_status population_dynamics::birth_queue_status(
@@ -75,16 +70,14 @@ population_dynamics::queue_status population_dynamics::birth_queue_status(
   auto ed = m_birth.enqueue_data();
   auto dd = m_birth.dequeue_data();
   queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum
-  };
+                             .interval_accum = ed.interval_accum};
   queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum
-  };
+                             .interval_accum = dd.interval_accum};
   return queue_status{.size = std::numeric_limits<size_t>::infinity(),
-        .lambda = m_birth.lambda(),
-        .mu = m_birth.mu(),
-        .enqueue = enqueue,
-        .dequeue = dequeue};
+                      .lambda = m_birth.lambda(),
+                      .mu = m_birth.mu(),
+                      .enqueue = enqueue,
+                      .dequeue = dequeue};
 } /* birth_queue_status() */
 
 population_dynamics::queue_status population_dynamics::repair_queue_status(
@@ -92,16 +85,14 @@ population_dynamics::queue_status population_dynamics::repair_queue_status(
   auto ed = m_repair.enqueue_data();
   auto dd = m_repair.dequeue_data();
   queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum
-  };
+                             .interval_accum = ed.interval_accum};
   queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum
-  };
+                             .interval_accum = dd.interval_accum};
   return queue_status{.size = m_repair.size(),
-        .lambda = m_repair.lambda(),
-        .mu = m_repair.mu(),
-        .enqueue = enqueue,
-        .dequeue = dequeue};
+                      .lambda = m_repair.lambda(),
+                      .mu = m_repair.mu(),
+                      .enqueue = enqueue,
+                      .dequeue = dequeue};
 } /* repair_queue_status() */
 
 /*******************************************************************************

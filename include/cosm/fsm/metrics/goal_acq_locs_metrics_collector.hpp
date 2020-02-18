@@ -45,6 +45,9 @@ NS_START(cosm, fsm, metrics);
  * \brief Collector for \ref goal_acq_metrics goal locations, which is
  * collected as a 2D array, and needs its own collector separate from the \ref
  * goal_acq_metrics_collector (1 .csv per collector).
+ *
+ * Metrics MUST be collected serially; concurrent updates to the gathered stats
+ * are not supported.
  */
 class goal_acq_locs_metrics_collector final :
     public rmetrics::spatial::grid2D_avg_metrics_collector {
@@ -55,7 +58,7 @@ class goal_acq_locs_metrics_collector final :
    * \param dims Dimensions of the arena.
    */
   goal_acq_locs_metrics_collector(const std::string& ofname,
-                                  uint interval,
+                                  const rtypes::timestep& interval,
                                   const rmath::vector2u& dims) :
       grid2D_avg_metrics_collector(ofname, interval, dims) {}
 

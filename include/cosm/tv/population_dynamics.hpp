@@ -29,12 +29,12 @@
 #include <utility>
 #include <vector>
 
+#include "rcppsw/ds/poisson_queue.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/ds/poisson_queue.hpp"
 
 #include "cosm/tv/config/population_dynamics_config.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics.hpp"
@@ -97,13 +97,16 @@ class population_dynamics : public rer::client<population_dynamics>,
   queue_status birth_queue_status(void) const override RCSW_PURE;
   queue_status death_queue_status(void) const override RCSW_PURE;
   queue_status repair_queue_status(void) const override RCSW_PURE;
-  size_t swarm_max_population(void) const override { return mc_config.max_size; }
+  size_t swarm_max_population(void) const override {
+    return mc_config.max_size;
+  }
   size_t swarm_population(void) const override { return m_current_pop; }
   void reset_metrics(void) override final {
     m_birth.reset_metrics();
     m_death.reset_metrics();
     m_repair.reset_metrics();
   }
+
  protected:
   bool already_killed(const rtypes::type_uuid& id) const {
     return m_death.contains(id);
@@ -152,7 +155,6 @@ class population_dynamics : public rer::client<population_dynamics>,
   virtual op_result robot_repair(const rtypes::type_uuid& id) = 0;
 
  private:
-
   void death_dynamics(const rtypes::timestep& t);
   void birth_dynamics(const rtypes::timestep& t);
   void malfunction_dynamics(const rtypes::timestep& t);

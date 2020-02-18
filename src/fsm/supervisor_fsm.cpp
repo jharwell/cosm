@@ -22,10 +22,11 @@
  * Includes
  ******************************************************************************/
 #include "cosm/fsm/supervisor_fsm.hpp"
+
 #include "cosm/fsm/util_signal.hpp"
-#include "cosm/subsystem/saa_subsystem2D.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/kin2D/governed_diff_drive.hpp"
+#include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/subsystem/saa_subsystem2D.hpp"
 #include "cosm/ta/base_executive.hpp"
 
 /*******************************************************************************
@@ -41,12 +42,8 @@ NS_START(cosm, fsm);
  * appropriate "do normal operation" function can be called.
  */
 struct normal_visitor {
-  void operator()(ta::base_executive* executive) const {
-    executive->run();
-  }
-  void operator()(ta::taskable* taskable) const {
-    taskable->task_execute();
-  }
+  void operator()(ta::base_executive* executive) const { executive->run(); }
+  void operator()(ta::taskable* taskable) const { taskable->task_execute(); }
 };
 
 /*******************************************************************************
@@ -56,15 +53,15 @@ supervisor_fsm::supervisor_fsm(const variant_type& variant,
                                csubsystem::saa_subsystem2D* const saa)
     : rpfsm::hfsm(states::ekST_MAX_STATES, states::ekST_START),
       ER_CLIENT_INIT("cosm.fsm.supervisor"),
-    HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
-    HFSM_CONSTRUCT_STATE(normal, hfsm::top_state()),
-    HFSM_CONSTRUCT_STATE(malfunction, hfsm::top_state()),
-    HFSM_DEFINE_STATE_MAP(mc_state_map,
-                          HFSM_STATE_MAP_ENTRY(&start),
-                          HFSM_STATE_MAP_ENTRY(&normal),
-                          HFSM_STATE_MAP_ENTRY(&malfunction)),
-  m_variant(variant),
-  m_saa(saa) {}
+      HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
+      HFSM_CONSTRUCT_STATE(normal, hfsm::top_state()),
+      HFSM_CONSTRUCT_STATE(malfunction, hfsm::top_state()),
+      HFSM_DEFINE_STATE_MAP(mc_state_map,
+                            HFSM_STATE_MAP_ENTRY(&start),
+                            HFSM_STATE_MAP_ENTRY(&normal),
+                            HFSM_STATE_MAP_ENTRY(&malfunction)),
+      m_variant(variant),
+      m_saa(saa) {}
 
 /*******************************************************************************
  * States
@@ -89,20 +86,20 @@ RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
  ******************************************************************************/
 void supervisor_fsm::event_malfunction(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-        fsm::util_signal::ekFATAL, /* start */
-        states::ekST_MALFUNCTION,   /* normal */
-        fsm::util_signal::ekFATAL, /* malfunction */
-        };
+      fsm::util_signal::ekFATAL, /* start */
+      states::ekST_MALFUNCTION,  /* normal */
+      fsm::util_signal::ekFATAL, /* malfunction */
+  };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_malfunction() */
 
 void supervisor_fsm::event_repair(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-        fsm::util_signal::ekFATAL,  /* start */
-        fsm::util_signal::ekFATAL,  /* normal */
-        states::ekST_NORMAL,         /* malfunction */
-        };
+      fsm::util_signal::ekFATAL, /* start */
+      fsm::util_signal::ekFATAL, /* normal */
+      states::ekST_NORMAL,       /* malfunction */
+  };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_repair() */

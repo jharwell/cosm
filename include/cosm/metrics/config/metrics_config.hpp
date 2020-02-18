@@ -29,6 +29,7 @@
 
 #include "rcppsw/config/base_config.hpp"
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -49,7 +50,7 @@ struct metrics_config final : public rconfig::base_config {
   using enabled_map_type = std::map<std::string, std::string>;
 
   std::string      output_dir{};
-  uint             output_interval{0};
+  rtypes::timestep output_interval{0};
   enabled_map_type enabled{};
 };
 

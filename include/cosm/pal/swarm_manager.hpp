@@ -29,10 +29,10 @@
 #include <string>
 
 #include "rcppsw/common/common.hpp"
+#include "rcppsw/er/client.hpp"
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
-#include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -59,7 +59,8 @@ NS_START(cosm, pal);
 
 class swarm_manager_impl : public rer::client<swarm_manager_impl> {
  public:
-  swarm_manager_impl(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {}
+  swarm_manager_impl(void);
+
 
   virtual void init(ticpp::Element& node) = 0;
   virtual void reset(void) = 0;
@@ -135,7 +136,7 @@ class swarm_manager : public swarm_manager_impl,
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   void ndc_push(void) const {
     ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
-                      "]");
+                "]");
   }
   void ndc_pop(void) const { ER_NDC_POP(); }
 #else

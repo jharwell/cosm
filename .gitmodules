@@ -6,3 +6,6 @@
 	path = ext/rcppsw
 	url = https://github.com/swarm-robotics/rcppsw.git
         branch = devel
+[submodule "ext/ticpp"]
+	path = ext/ticpp
+	url = https://github.com/wxFormBuilder/ticpp.git

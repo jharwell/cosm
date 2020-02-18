@@ -34,10 +34,10 @@
 #include "cosm/convergence/angular_order.hpp"
 #include "cosm/convergence/config/convergence_config.hpp"
 #include "cosm/convergence/interactivity.hpp"
+#include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/positional_entropy.hpp"
 #include "cosm/convergence/task_dist_entropy.hpp"
 #include "cosm/convergence/velocity.hpp"
-#include "cosm/convergence/metrics/convergence_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
