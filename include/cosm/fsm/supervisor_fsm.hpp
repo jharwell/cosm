@@ -24,11 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <utility>
 #include <boost/variant.hpp>
+#include <utility>
+
+#include "rcppsw/patterns/fsm/hfsm.hpp"
 
 #include "cosm/cosm.hpp"
-#include "rcppsw/patterns/fsm/hfsm.hpp"
 #include "cosm/ta/taskable.hpp"
 
 /*******************************************************************************
@@ -82,11 +83,13 @@ class supervisor_fsm final : public rpfsm::hfsm,
    */
   void event_repair(void);
 
-  template<typename T>
-  void supervisee_update(T* h) { m_variant = variant_type(h); }
+  template <typename T>
+  void supervisee_update(T* h) {
+    m_variant = variant_type(h);
+  }
 
   void run(void) {
-      inject_event(rpfsm::event_signal::ekRUN, rpfsm::event_type::ekNORMAL);
+    inject_event(rpfsm::event_signal::ekRUN, rpfsm::event_type::ekNORMAL);
   }
 
  private:

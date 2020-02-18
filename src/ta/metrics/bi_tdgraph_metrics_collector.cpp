@@ -38,7 +38,7 @@ NS_START(cosm, ta, metrics);
  ******************************************************************************/
 bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
     const std::string& ofname,
-    uint interval,
+    const rtypes::timestep& interval,
     uint decomposition_depth)
     : base_metrics_collector(ofname, interval),
       m_int_depth_counts(decomposition_depth + 1),

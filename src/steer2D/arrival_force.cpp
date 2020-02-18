@@ -60,7 +60,7 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
    * into [-pi,pi], and then take the absolute value in order to get something
    * [0, pi].
    *
-   * DO NOT TOUCH THIS. See #232 for why.
+   * DO NOT TOUCH THIS. See RCPPSW#232 for why.
    */
   auto angle = rmath::radians::abs(
       (desired.angle() - entity.linear_velocity().angle()).signed_normalize());

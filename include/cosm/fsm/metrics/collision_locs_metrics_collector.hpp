@@ -42,8 +42,11 @@ NS_START(cosm, fsm, metrics);
  * \class collision_locs_metrics_collector
  * \ingroup fsm metrics
  *
- * \brief Collector for \ref collision_metrics as a 2D grid of where controller most
- * frequently encounter other controller.
+ * \brief Collector for \ref collision_metrics as a 2D grid of where robots
+ * most frequently encounter other robots.
+ *
+ * Metrics MUST be collected serially; concurrent updates to the gathered stats
+ * are not supported.
  */
 class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_avg_metrics_collector {
  public:
@@ -53,7 +56,7 @@ class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_
    * \param dims Dimensions of the arena.
    */
   collision_locs_metrics_collector(const std::string& ofname,
-                             uint interval,
+                             const rtypes::timestep& interval,
                              const rmath::vector2u& dims) :
       grid2D_avg_metrics_collector(ofname, interval, dims) {}
 

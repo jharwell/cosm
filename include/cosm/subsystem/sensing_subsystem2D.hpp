@@ -35,9 +35,9 @@
 #include "cosm/hal/sensors/diff_drive_sensor.hpp"
 #include "cosm/hal/sensors/ground_sensor.hpp"
 #include "cosm/hal/sensors/light_sensor.hpp"
+#include "cosm/hal/sensors/position_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/wifi_sensor.hpp"
-#include "cosm/hal/sensors/position_sensor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -116,8 +116,7 @@ class sensing_subsystem2D {
   /**
    * \brief Update the current time and position information for the robot.
    */
-  void update(const rtypes::timestep& t,
-              const rtypes::discretize_ratio& ratio) {
+  void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
     m_tick = t;
     auto reading = m_pos_sensor.reading();
     m_prev_position = m_position;

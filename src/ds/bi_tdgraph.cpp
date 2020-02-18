@@ -85,7 +85,7 @@ void bi_tdgraph::active_tab_init_max_depth(rmath::rng* rng) {
 } /* active_tab_init_max_depth() */
 
 void bi_tdgraph::active_tab_init_random(rmath::rng* rng) {
-  int index = rng->uniform(rmath::rangeu(0, m_tabs.size()));
+  int index = rng->uniform(rmath::rangeu(0, m_tabs.size() - 1));
   m_active_tab = &(*std::next(m_tabs.begin(), index));
 } /* active_tab_init_random() */
 

@@ -66,8 +66,7 @@ void convergence_parser::parse(const ticpp::Element& node) {
   }
   m_velocity.parse(cnode);
   if (m_velocity.is_parsed()) {
-    m_config->velocity =
-        *m_velocity.config_get<velocity_parser::config_type>();
+    m_config->velocity = *m_velocity.config_get<velocity_parser::config_type>();
   }
 } /* parse() */
 

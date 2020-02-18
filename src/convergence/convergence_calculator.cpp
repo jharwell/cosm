@@ -91,8 +91,10 @@ struct convergence_measure_updater : public boost::static_visitor<void> {
  * of convergence calculation.
  */
 struct convergence_status_collator : public boost::static_visitor<bool> {
-  template<typename T>
-  bool operator()(const T& measure) const { return measure.converged(); }
+  template <typename T>
+  bool operator()(const T& measure) const {
+    return measure.converged();
+  }
 };
 
 /*******************************************************************************
@@ -133,9 +135,8 @@ convergence_calculator::convergence_calculator(
   }
 
   if (config->velocity.enable) {
-    ER_ASSERT(
-        nullptr != m_swarm_pos_calc,
-        "NULL swarm positions cb with velocity convergence enabled");
+    ER_ASSERT(nullptr != m_swarm_pos_calc,
+              "NULL swarm positions cb with velocity convergence enabled");
     m_measures.emplace(typeid(velocity), velocity(config->epsilon));
   }
 }
@@ -212,8 +213,8 @@ convergence_calculator::conv_status_t convergence_calculator::swarm_task_dist_en
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_task_dist_entropy() */
 
-convergence_calculator::conv_status_t convergence_calculator::
-swarm_velocity(void) const {
+convergence_calculator::conv_status_t convergence_calculator::swarm_velocity(
+    void) const {
   if (!mc_config.velocity.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }

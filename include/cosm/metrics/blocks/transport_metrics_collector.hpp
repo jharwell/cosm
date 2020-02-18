@@ -53,7 +53,8 @@ class transport_metrics_collector final : public rmetrics::base_metrics_collecto
    * \param ofname The output file name.
    * \param interval Collection interval.
    */
-  transport_metrics_collector(const std::string& ofname, uint interval);
+  transport_metrics_collector(const std::string& ofname,
+                              const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;

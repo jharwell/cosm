@@ -44,6 +44,9 @@ NS_START(cosm, metrics);
  * \ingroup rcppsw metrics swarm spatial
  *
  * \brief Collector for \ref spatial_dist2D_metrics.
+ *
+ * Metrics MUST be collected serially; concurrent updates to the gathered stats
+ * are not supported.
  */
 class spatial_dist2D_pos_metrics_collector final
     : public rmetrics::spatial::grid2D_avg_metrics_collector {
@@ -54,7 +57,7 @@ class spatial_dist2D_pos_metrics_collector final
    * \param dims Dimensions of arena.
    */
   spatial_dist2D_pos_metrics_collector(const std::string& ofname,
-                                       uint interval,
+                                       const rtypes::timestep& interval,
                                        const rmath::vector2u& dims)
       : grid2D_avg_metrics_collector(ofname, interval, dims) {}
 

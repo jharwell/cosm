@@ -46,6 +46,9 @@ NS_START(cosm, ta, metrics);
  *
  * \brief Collector for metrics for an executable task across executions of that
  * task.
+ *
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported. Metrics are output at the specified interval
  */
 class execution_metrics_collector final : public rmetrics::base_metrics_collector,
                                           public rer::client<execution_metrics_collector> {
@@ -54,7 +57,8 @@ class execution_metrics_collector final : public rmetrics::base_metrics_collecto
    * \param ofname Output file name.
    * \param interval Collection interval.
    */
-  execution_metrics_collector(const std::string& ofname, uint interval);
+  execution_metrics_collector(const std::string& ofname,
+                              const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;

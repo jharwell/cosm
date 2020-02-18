@@ -73,7 +73,8 @@ set(${target}_INCLUDE_DIRS
   ${rcppsw_INCLUDE_DIRS})
 set(${target}_SYS_INCLUDE_DIRS
   ${rcppsw_SYS_INCLUDE_DIRS}
-  ${LOCAL_INSTALL_PREFIX}/include)
+  ${LOCAL_INSTALL_PREFIX}/include
+  ${CMAKE_CURRENT_SOURCE_DIR})
 
 ################################################################################
 # Libraries                                                                    #

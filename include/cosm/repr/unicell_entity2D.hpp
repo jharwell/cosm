@@ -97,12 +97,12 @@ class unicell_entity2D : public entity2D {
  protected:
   unicell_entity2D(const rmath::vector2d& dim,
                    const rmath::vector2d& loc,
-                   rtypes::discretize_ratio resolution)
+                   const rtypes::discretize_ratio& resolution)
       : unicell_entity2D{dim, loc, resolution, rtypes::constants::kNoUUID} {}
 
   unicell_entity2D(const rmath::vector2d& dim,
                    const rmath::vector2d& loc,
-                   rtypes::discretize_ratio resolution,
+                   const rtypes::discretize_ratio& resolution,
                    const rtypes::type_uuid& id)
       : entity2D(id),
         m_dim(dim),

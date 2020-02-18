@@ -45,7 +45,9 @@ NS_START(cosm, fsm, metrics);
  *
  * \brief Collector for \ref goal_acq_metrics.
  *
- * Metrics are written out at the end of the specified interval.
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported. Metrics are written out at the end of the
+ * specified interval.
  */
 class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
@@ -53,7 +55,8 @@ class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector
    * \param ofname Output file name.
    * \param interval The collection interval.
    */
-  goal_acq_metrics_collector(const std::string& ofname, uint interval);
+  goal_acq_metrics_collector(const std::string& ofname,
+                             const rtypes::timestep& interval);
 
   void reset(void) override;
   void reset_after_interval(void) override;

@@ -53,7 +53,8 @@ class convergence_metrics_collector final : public rmetrics::base_metrics_collec
    * \param ofname The output file name.
    * \param interval Collection interval.
    */
-  convergence_metrics_collector(const std::string& ofname, uint interval);
+  convergence_metrics_collector(const std::string& ofname,
+                                const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;
