@@ -28,6 +28,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <memory>
+
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/cosm.hpp"
 
@@ -59,7 +61,6 @@ struct placement_status_t {
 placement_status_t placement_conflict(const rmath::vector2d& ent1_loc,
                                       const rmath::vector2d& ent1_dims,
                                       const crepr::entity2D* entity);
-
 
 NS_END(utils, foraging, cosm);
 

@@ -98,10 +98,14 @@ bool random_distributor::distribute_block(
     ER_ASSERT(!cell->state_in_cache_extent(),
               "Destination cell part of cache extent");
 
+    /*
+     * This function is always called from the arena map, and it ensures that
+     * all locks are held, so we don't need to do anything here.
+     */
     events::arena_block_drop_visitor op(block,
                                         coords->abs,
                                         mc_resolution,
-                                        false);
+                                        cfds::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block.get(), entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",

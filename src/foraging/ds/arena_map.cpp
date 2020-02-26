@@ -123,11 +123,17 @@ rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos) const {
 } /* robot_on_cache() */
 
 bool arena_map::distribute_single_block(
-    std::shared_ptr<crepr::base_block2D>& block) {
+    std::shared_ptr<crepr::base_block2D>& block,
+    const arena_map_locking& locking) {
   /* return TRUE because the distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
     return true;
   }
+
+  maybe_lock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
+  maybe_lock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_lock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+
   /* Entities that need to be avoided during block distribution are:
    *
    * - All existing caches
@@ -145,7 +151,13 @@ bool arena_map::distribute_single_block(
     }
   } /* for(&b..) */
   entities.push_back(&m_nest);
-  return m_block_dispatcher.distribute_block(block, entities);
+  bool ret = m_block_dispatcher.distribute_block(block, entities);
+
+  maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+  maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_unlock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
+
+  return ret;
 } /* disribute_single_block() */
 
 void arena_map::distribute_all_blocks(void) {

@@ -34,6 +34,7 @@
 #include "cosm/foraging/events/block_drop_base_visit_set.hpp"
 #include "cosm/events/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
+#include "cosm/foraging/ds/arena_map_locking.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -75,10 +76,8 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
   arena_cache_block_drop& operator=(const arena_cache_block_drop& op) = delete;
 
   /**
-   * \brief Perform actual cache block drop in the arena.
-   *
-   * Assumes \ref arena_map cache mutex held by the caller. Takes \ref arena_map
-   * block mutex to perform block updates and releases afterwards.
+   * \brief Perform actual cache block drop in the arena, taking/releasing locks
+   * as needed.
    */
   void visit(cfds::arena_map& map);
 
@@ -90,10 +89,12 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
    * \param arena_block The block to drop in the cache (MUST be owned by arena).
    * \param cache Cache to drop into (owned by arena).
    * \param resolution Arena resolution.
+   * \param locking Is locking needed around block accesses?
    */
   arena_cache_block_drop(const std::shared_ptr<crepr::base_block2D>& arena_block,
                          const std::shared_ptr<cfrepr::arena_cache>& cache,
-                         const rtypes::discretize_ratio& resolution);
+                         const rtypes::discretize_ratio& resolution,
+                         const cfds::arena_map_locking& locking);
 
   const rtypes::discretize_ratio& resolution(void) const { return mc_resolution; }
   std::shared_ptr<crepr::base_block2D> arena_block(void) const {
@@ -110,6 +111,7 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
   void visit(cfrepr::arena_cache& cache);
 
   /* clang-format off */
+  const cfds::arena_map_locking        mc_locking;
   const rtypes::discretize_ratio       mc_resolution;
 
   std::shared_ptr<crepr::base_block2D> m_arena_block;

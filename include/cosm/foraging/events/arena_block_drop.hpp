@@ -31,6 +31,7 @@
 
 #include "cosm/foraging/events/block_drop_base_visit_set.hpp"
 #include "cosm/events/cell2D_op.hpp"
+#include "cosm/foraging/ds/arena_map_locking.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -72,13 +73,12 @@ class arena_block_drop : public rer::client<arena_block_drop>,
    *              by the \ref arena_map.
    * \param coord The discrete coordinates of the cell to drop the block in.
    * \param resolution The resolution of the arena map.
-   * \param cache_lock Is locking needed around arena map cache accesses, or is
-   *                   that handled by the caller?
+   * \param locking What locks are currently held by the caller?
    */
   arena_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
-                  const rmath::vector2u& coord,
-                  const rtypes::discretize_ratio& resolution,
-                  bool cache_lock);
+                   const rmath::vector2u& coord,
+                   const rtypes::discretize_ratio& resolution,
+                   const cfds::arena_map_locking& locking);
 
  public:
   using visit_typelist = visit_typelist_impl::value;
@@ -100,15 +100,20 @@ class arena_block_drop : public rer::client<arena_block_drop>,
   arena_block_drop& operator=(const arena_block_drop& op) = delete;
 
   /**
-   * \brief Perform actual free block drop in the arena.
-   *
-   * Assumes caller holds \ref arena_map grid and block mutexes. May lock \ref
-   * arena_map cache mutex, depending on configuration. If it does lock \ref
-   * arena_map cache mutex, it releases it after use. See #594.
+   * \brief Perform actual block drop in the arena, taking/releasing locks as
+   * needed.
    */
   void visit(cfds::arena_map& map);
-  void visit(crepr::base_block2D& block);
+
+  /**
+   * \brief Update the cell the block was dropped into. No locking is performed.
+   */
   void visit(cds::cell2D& cell);
+
+  /**
+   * \brief Update the dropped block. No locking is performed.
+   */
+  void visit(crepr::base_block2D& block);
 
   /**
    * \brief Get the handle on the block that has been dropped.
@@ -120,7 +125,7 @@ class arena_block_drop : public rer::client<arena_block_drop>,
 
   /* clang-format off */
   const rtypes::discretize_ratio       mc_resolution;
-  const bool                           mc_cache_lock;
+  const cfds::arena_map_locking        mc_locking;
 
   std::shared_ptr<crepr::base_block2D> m_block;
   /* clang-format on */

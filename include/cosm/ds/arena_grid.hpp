@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <tuple>
+#include <mutex>
 
 #include "rcppsw/ds/stacked_grid.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
@@ -86,6 +87,13 @@ class arena_grid : public rds::stacked_grid<arena_layer_stack> {
       } /* for(j..) */
     }   /* for(i..) */
   }     /* reset */
+
+  std::mutex* mtx(void) { return &m_mtx; }
+
+ private:
+  /* clang-format off */
+  std::mutex m_mtx{};
+  /* clang-format on */
 };
 
 NS_END(ds, cosm);

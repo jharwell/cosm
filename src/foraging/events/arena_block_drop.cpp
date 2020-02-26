@@ -40,8 +40,24 @@ using cds::arena_grid;
  ******************************************************************************/
 arena_block_drop arena_block_drop::for_block(const rmath::vector2u& coord,
                                              const rtypes::discretize_ratio& resolution) {
-  return arena_block_drop(nullptr, coord, resolution, false);
+  return arena_block_drop(nullptr,
+                          coord,
+                          resolution,
+                          cfds::arena_map_locking::ekNONE_HELD);
 } /* for_block() */
+
+static bool block_drop_overlap_with_cache(
+    const crepr::base_block2D* const block,
+    const std::shared_ptr<cfrepr::arena_cache>& cache,
+    const rmath::vector2d& drop_loc);
+
+static bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
+                                         const crepr::nest& nest,
+                                         const rmath::vector2d& drop_loc);
+
+static bool block_drop_loc_conflict(const cfds::arena_map& map,
+                                    const crepr::base_block2D* const block,
+                                    const rmath::vector2d& loc);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -49,11 +65,11 @@ arena_block_drop arena_block_drop::for_block(const rmath::vector2u& coord,
 arena_block_drop::arena_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
                                    const rmath::vector2u& coord,
                                    const rtypes::discretize_ratio& resolution,
-                                   bool cache_lock)
+                                   const cfds::arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.foraging.events.arena_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
-      mc_cache_lock(cache_lock),
+      mc_locking(locking),
       m_block(block) {}
 
 /*******************************************************************************
@@ -77,8 +93,25 @@ void arena_block_drop::visit(crepr::base_block2D& block) {
 } /* visit() */
 
 void arena_block_drop::visit(cfds::arena_map& map) {
-  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
+  /* needed for atomic check for cache overlap+do drop operation */
+  map.maybe_lock(map.cache_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
 
+  map.maybe_lock(map.block_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
+
+  /*
+   * We might be modifying this cell--don't want block distribution in ANOTHER
+   * thread to pick this cell for distribution.
+   */
+  map.maybe_lock(map.grid_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekGRID_HELD));
+
+  auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
+  bool conflict = block_drop_loc_conflict(map, m_block.get(), rloc);
+
+
+  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
@@ -89,41 +122,93 @@ void arena_block_drop::visit(cfds::arena_map& map) {
    * Dropping a block onto a cell that is part of a cache (CACHE_EXTENT), but
    * not the host cell doesn't work either (FSM state machine segfault), so we
    * need to drop the block in the host cell for the cache.
-   *
-   * 2020/2/21: Tweak logic so that if the free block drop is outside the
-   * distributable area for the arena (which can only happen if a robot aborts
-   * its task near the arena walls while carrying a block) the block is
-   * distributed rather than just dropped. This can cause problems in large
-   * simulations with groups robots tracking blocks too close to the arena edge
-   * that they ALL try to acquire, which can in some instances result in one or
-   * more of them getting pushed outside of physics engine boundaries.
-   *
-   * In that case, distribute the block somewhere within the "safe"
-   * distributable area.
    */
-  bool ok_to_drop = map.distributable_areax().contains(cell2D_op::coord().x()) &&
-                 map.distributable_areay().contains(cell2D_op::coord().y());
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
-    if (mc_cache_lock) {
-      map.cache_mtx().lock();
-    }
     arena_cache_block_drop_visitor op(m_block,
                                       std::static_pointer_cast<cfrepr::arena_cache>(
                                           cell.cache()),
-                                      mc_resolution);
+                                      mc_resolution,
+                                      cfds::arena_map_locking::ekALL_HELD);
     op.visit(map);
-    if (mc_cache_lock) {
-      map.cache_mtx().unlock();
-    }
-  } else if (cell.state_has_block() || !ok_to_drop) {
-    map.distribute_single_block(m_block);
+    map.maybe_unlock(map.cache_mtx(),
+                     !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
+  } else if (cell.state_has_block() || conflict) {
+    map.distribute_single_block(m_block, cfds::arena_map_locking::ekALL_HELD);
+    map.maybe_unlock(map.cache_mtx(),
+                     !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
   } else {
+  map.maybe_unlock(map.cache_mtx(),
+                     !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
      * on it and change the cell state.
+     *
+     * Holding arena map grid lock, block lock if locking enabled.
      */
     visit(cell);
   }
+
+  map.maybe_unlock(map.grid_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekGRID_HELD));
+  map.maybe_unlock(map.block_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
+
+/*******************************************************************************
+ * Non-Member Functions
+ ******************************************************************************/
+bool block_drop_loc_conflict(const cfds::arena_map& map,
+                             const crepr::base_block2D* const block,
+                             const rmath::vector2d& loc) {
+  /*
+   * If the robot is currently right on the edge of a cache, we can't just drop
+   * the block here, as it wipll overlap with the cache, and robots will think
+   * that is accessible, but will not be able to vector to it (not all 4 wheel
+   * sensors will report the color of a block). See FORDYCA#233.
+   */
+  bool conflict = false;
+  for (auto& cache : map.caches()) {
+    conflict |= block_drop_overlap_with_cache(block, cache, loc);
+  } /* for(cache..) */
+
+  /*
+   * If the robot is currently right on the edge of the nest, we can't just
+   * drop the block in the nest, as it will not be processed as a normal
+   * \ref nest_block_drop, and will be discoverable by a robot via LOS but
+   * not able to be acquired, as its color is hidden by that of the nest.
+   *
+   */
+  conflict |= block_drop_overlap_with_nest(block, map.nest(), loc);
+
+  /*
+   * If the robot is really close to a wall, then dropping a block may make it
+   * inaccessible to future robots trying to reach it, due to obstacle avoidance
+   * kicking in. This can result in an endless loop if said block is the only
+   * one a robot knows about (see FORDYCA#242).
+   */
+  conflict |= map.distributable_areax().contains(loc.x()) &&
+              map.distributable_areay().contains(loc.y());
+  return conflict;
+} /* block_drop_loc_conflict() */
+
+bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
+                                  const crepr::nest& nest,
+                                  const rmath::vector2d& drop_loc) {
+  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims().x());
+  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
+
+  return nest.xspan().overlaps_with(drop_xspan) &&
+      nest.yspan().overlaps_with(drop_yspan);
+} /* block_drop_overlap_with_nest() */
+
+bool block_drop_overlap_with_cache(
+    const crepr::base_block2D* const block,
+    const std::shared_ptr<cfrepr::arena_cache>& cache,
+    const rmath::vector2d& drop_loc) {
+  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims().x());
+  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
+  return cache->xspan().overlaps_with(drop_xspan) &&
+      cache->yspan().overlaps_with(drop_yspan);
+} /* block_drop_overlap_with_cache() */
 
 NS_END(events, foraging, cosm);

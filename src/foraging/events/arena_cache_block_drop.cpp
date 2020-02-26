@@ -42,9 +42,11 @@ using cds::arena_grid;
 arena_cache_block_drop::arena_cache_block_drop(
     const std::shared_ptr<crepr::base_block2D>& arena_block,
     const std::shared_ptr<cfrepr::arena_cache>& cache,
-    const rtypes::discretize_ratio& resolution)
+    const rtypes::discretize_ratio& resolution,
+    const cfds::arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.foraging.events.arena_cache_block_drop"),
       cell2D_op(cache->dloc()),
+      mc_locking(locking),
       mc_resolution(resolution),
       m_arena_block(arena_block),
       m_cache(cache) {}
@@ -69,21 +71,31 @@ void arena_cache_block_drop::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void arena_cache_block_drop::visit(cfds::arena_map& map) {
-  map.block_mtx().lock();
-  visit(*m_arena_block);
-  map.block_mtx().unlock();
+  /*
+   * We might be modifying a cell--don't want block distribution in ANOTHER
+   * thread to pick our chosen cell for distribution.
+   */
+  map.maybe_lock(map.block_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
 
-  /* Already holding cache mutex from calling context */
+  visit(*m_arena_block);
+  map.maybe_unlock(map.block_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
+
+  map.maybe_lock(map.cache_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
   visit(*m_cache);
+  map.maybe_unlock(map.cache_mtx(),
+                 !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
 
   /*
-   * Do not need to hold grid mutex because we know we are the only robot
-   * picking up from the cache right now (though others can do it later) this
-   * timestep, and caches by definition have a unique location, AND if another
-   * robot has just caused a block re-distribution, that operation avoids
-   * caches.
+   * Do not need to hold grid mutex (but might be) because we know we are the
+   * only robot picking up from the cache right now (though others can do it
+   * later) this timestep, and caches by definition have a unique location, AND
+   * if another robot has just caused a block re-distribution, that operation
+   * avoids caches.
    */
-  visit(map.access<arena_grid::kCell>(cell2D_op::x(), cell2D_op::y()));
+  visit(map.access<arena_grid::kCell>(cell2D_op::coord()));
   RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->robot_id();
 
   ER_INFO("arena_map: fb%d dropped block%d in cache%d,total=[%s] (%zu)",

@@ -32,7 +32,6 @@
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/repr/base_block2D.hpp"
-
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/foraging/ds/block_vector.hpp"
 #include "cosm/foraging/ds/cache_vector.hpp"
@@ -40,6 +39,7 @@
 #include "cosm/repr/nest.hpp"
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
+#include "cosm/foraging/ds/arena_map_locking.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -179,13 +179,15 @@ class arena_map final : public rer::client<arena_map>,
    * policy was specified in the .argos file.
    *
    * \param block The block to distribute.
+   * \param locking Is locking needed?
    *
    * \note This operation requires holding the block and grid mutexes in
    * multithreaded contexts.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_single_block(std::shared_ptr<crepr::base_block2D>& block);
+  bool distribute_single_block(std::shared_ptr<crepr::base_block2D>& block,
+                               const arena_map_locking& locking);
 
   RCPPSW_DECORATE_FUNC(xdsize, const);
   RCPPSW_DECORATE_FUNC(ydsize, const);
@@ -281,21 +283,29 @@ class arena_map final : public rer::client<arena_map>,
    */
   bool initialize(pal::swarm_manager* loop, rmath::rng* rng);
 
-  /**
-   * \brief Protects simultaneous updates to the underlying grid.
-   */
-  std::mutex& grid_mtx(void) { return m_grid_mtx; }
+  void maybe_lock(std::mutex* mtx, bool cond) {
+    if (cond) {
+      mtx->lock();
+    }
+  }
+  void maybe_unlock(std::mutex* mtx, bool cond) {
+    if (cond) {
+      mtx->unlock();
+    }
+  }
+
+  std::mutex* grid_mtx(void) { return decoratee().mtx(); }
 
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */
-  std::mutex& cache_mtx(void) { return m_cache_mtx; }
-  std::mutex& cache_mtx(void) const { return m_cache_mtx; }
+  std::mutex* cache_mtx(void) { return &m_cache_mtx; }
+  std::mutex* cache_mtx(void) const { return &m_cache_mtx; }
 
   /**
    * \brief Protects simultaneous updates to the blocks vector.
    */
-  std::mutex& block_mtx(void) { return m_block_mtx; }
+  std::mutex* block_mtx(void) { return &m_block_mtx; }
 
   /**
    * \brief Clear the list of caches that have been removed this timestep.
@@ -310,7 +320,6 @@ class arena_map final : public rer::client<arena_map>,
 
  private:
   /* clang-format off */
-  mutable std::mutex          m_grid_mtx{};
   mutable std::mutex          m_cache_mtx{};
   mutable std::mutex          m_block_mtx{};
 
