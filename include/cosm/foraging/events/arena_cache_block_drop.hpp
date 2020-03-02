@@ -31,7 +31,7 @@
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/foraging/events/block_drop_base_visit_set.hpp"
+#include "cosm/foraging/events/arena_block_op_visit_set.hpp"
 #include "cosm/events/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/foraging/ds/arena_map_locking.hpp"
@@ -43,14 +43,14 @@ namespace cosm::foraging::repr {
 class arena_cache;
 } // namespace repr
 
-NS_START(cosm, foraging, events);
+NS_START(cosm, foraging, events, detail);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class arena_cache_block_drop
- * \ingroup foraging events
+ * \ingroup foraging events detail
  *
  * \brief Created whenever a robot drops a block in a cache.
  *
@@ -61,7 +61,7 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
                          public cevents::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using inherited = boost::mpl::joint_view<block_drop_base_visit_typelist,
+    using inherited = boost::mpl::joint_view<arena_block_op_visit_typelist,
                                              cell2D_op::visit_typelist>;
 
     using value = inherited;
@@ -129,8 +129,10 @@ using arena_cache_block_drop_visitor_impl =
     rpvisitor::precise_visitor<arena_cache_block_drop,
                                arena_cache_block_drop::visit_typelist>;
 
-class arena_cache_block_drop_visitor : public arena_cache_block_drop_visitor_impl {
-  using arena_cache_block_drop_visitor_impl::arena_cache_block_drop_visitor_impl;
+NS_END(detail);
+
+class arena_cache_block_drop_visitor : public detail::arena_cache_block_drop_visitor_impl {
+  using detail::arena_cache_block_drop_visitor_impl::arena_cache_block_drop_visitor_impl;
 };
 
 NS_END(events, foraging, cosm);

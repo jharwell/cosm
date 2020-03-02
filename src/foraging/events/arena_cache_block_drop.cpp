@@ -25,14 +25,14 @@
 
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/foraging/ds/arena_map.hpp"
-#include "cosm/foraging/events/arena_block_drop.hpp"
+#include "cosm/foraging/events/arena_free_block_drop.hpp"
 #include "cosm/foraging/repr/arena_cache.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, events);
+NS_START(cosm, foraging, events, detail);
 using cds::arena_grid;
 
 /*******************************************************************************
@@ -107,9 +107,9 @@ void arena_cache_block_drop::visit(cfds::arena_map& map) {
 } /* visit() */
 
 void arena_cache_block_drop::visit(crepr::base_block2D& block) {
-  auto visitor = events::arena_block_drop_visitor::for_block(rmath::vector2u(cell2D_op::x(),
-                                                                             cell2D_op::y()),
-                                                             mc_resolution);
+  auto visitor = events::arena_free_block_drop_visitor::for_block(rmath::vector2u(cell2D_op::x(),
+                                                                                  cell2D_op::y()),
+                                                                  mc_resolution);
   visitor.visit(block);
 } /* visit() */
 
@@ -118,4 +118,4 @@ void arena_cache_block_drop::visit(cfrepr::arena_cache& cache) {
   cache.has_block_drop();
 } /* visit() */
 
-NS_END(events, foraging, cosm);
+NS_END(detail, events, foraging, cosm);

@@ -144,7 +144,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    *
    * Does not update the block's location.
    */
-  void block_remove(const std::shared_ptr<crepr::base_block2D>& block);
+  void block_remove(crepr::base_block2D* block);
 
   /**
    * \brief Get the oldest block in the cache (the one that has been in the

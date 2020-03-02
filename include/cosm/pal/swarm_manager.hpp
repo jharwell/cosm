@@ -56,7 +56,6 @@ NS_START(cosm, pal);
  * - Applications of temporal variance
  * - Computing convergence
  */
-
 class swarm_manager_impl : public rer::client<swarm_manager_impl> {
  public:
   swarm_manager_impl(void);
@@ -132,6 +131,8 @@ class swarm_manager : public swarm_manager_impl,
   void PostStep(void) override { post_step(); }
   void Destroy(void) override { destroy(); }
 
+  const std::string& led_medium(void) const { return m_led_medium; }
+
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   void ndc_push(void) const {
@@ -145,8 +146,14 @@ class swarm_manager : public swarm_manager_impl,
 #endif
 
   argos::CFloorEntity* floor(void) const { return m_floor; }
+  void led_medium(const std::string& s) { m_led_medium = s; }
 
  private:
+  /**
+   * \brief The name of the LED medium in ARGoS, for use in destroying caches.
+   */
+  std::string m_led_medium{};
+
   /* clang-format on */
   argos::CFloorEntity* m_floor{nullptr};
   /* clang-format off */

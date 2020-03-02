@@ -79,9 +79,8 @@ bool arena_map::initialize(pal::swarm_manager* sm, rmath::rng* rng) {
 } /* initialize() */
 
 void arena_map::caches_add(const cache_vector& caches,
-                           cpal::swarm_manager* sm,
-                           const std::string& led_medium) {
-  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(led_medium);
+                           cpal::swarm_manager* sm) {
+  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
   /*
    * Add all lights of caches to the arena. Cache lights are added directly to
@@ -191,10 +190,9 @@ void arena_map::distribute_all_blocks(void) {
 } /* distribute_all_blocks() */
 
 void arena_map::cache_remove(const std::shared_ptr<repr::arena_cache>& victim,
-                             pal::swarm_manager* sm,
-                             const std::string& led_medium) {
+                             pal::swarm_manager* sm) {
   /* Remove light for cache from ARGoS */
-  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(led_medium);
+  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
   medium.RemoveEntity(*victim->light());
 
   /* Remove cache */

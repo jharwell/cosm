@@ -114,22 +114,17 @@ class arena_map final : public rer::client<arena_map>,
    *
    * \param caches The caches to add.
    * \param sm The \ref swarm_manager.
-   * \param led_medium The name of the LED medium in ARGoS.
    */
-  void caches_add(const cache_vector& caches,
-                  pal::swarm_manager* sm,
-                  const std::string& led_medium);
+  void caches_add(const cache_vector& caches, pal::swarm_manager* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
    *
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
-   * \param led_medium The name of the LED medium in ARGoS.
    */
   void cache_remove(const std::shared_ptr<repr::arena_cache>& victim,
-                    pal::swarm_manager* sm,
-                    const std::string& led_medium);
+                    pal::swarm_manager* sm);
 
   /**
    * \brief Clear the cells that a cache covers while in the arena that are in

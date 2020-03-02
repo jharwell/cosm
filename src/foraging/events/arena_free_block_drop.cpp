@@ -1,5 +1,5 @@
 /**
- * \file arena_block_drop.cpp
+ * \file arena_free_block_drop.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/events/arena_block_drop.hpp"
+#include "cosm/foraging/events/arena_free_block_drop.hpp"
 
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/foraging/ds/arena_map.hpp"
@@ -32,15 +32,15 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, events);
+NS_START(cosm, foraging, events, detail);
 using cds::arena_grid;
 
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-arena_block_drop arena_block_drop::for_block(const rmath::vector2u& coord,
+arena_free_block_drop arena_free_block_drop::for_block(const rmath::vector2u& coord,
                                              const rtypes::discretize_ratio& resolution) {
-  return arena_block_drop(nullptr,
+  return arena_free_block_drop(nullptr,
                           coord,
                           resolution,
                           cfds::arena_map_locking::ekNONE_HELD);
@@ -62,11 +62,11 @@ static bool block_drop_loc_conflict(const cfds::arena_map& map,
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-arena_block_drop::arena_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
+arena_free_block_drop::arena_free_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
                                    const rmath::vector2u& coord,
                                    const rtypes::discretize_ratio& resolution,
                                    const cfds::arena_map_locking& locking)
-    : ER_CLIENT_INIT("cosm.foraging.events.arena_block_drop"),
+    : ER_CLIENT_INIT("cosm.foraging.events.arena_free_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
       mc_locking(locking),
@@ -75,24 +75,24 @@ arena_block_drop::arena_block_drop(const std::shared_ptr<crepr::base_block2D>& b
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void arena_block_drop::visit(cds::cell2D& cell) {
+void arena_free_block_drop::visit(cds::cell2D& cell) {
   visit(*m_block);
   visit(cell.fsm());
   cell.entity(m_block);
 } /* visit() */
 
-void arena_block_drop::visit(fsm::cell2D_fsm& fsm) {
+void arena_free_block_drop::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_block_drop();
 } /* visit() */
 
-void arena_block_drop::visit(crepr::base_block2D& block) {
+void arena_free_block_drop::visit(crepr::base_block2D& block) {
   block.reset_robot_id();
 
   block.rloc(rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v()));
   block.dloc(cell2D_op::coord());
 } /* visit() */
 
-void arena_block_drop::visit(cfds::arena_map& map) {
+void arena_free_block_drop::visit(cfds::arena_map& map) {
   /* needed for atomic check for cache overlap+do drop operation */
   map.maybe_lock(map.cache_mtx(),
                  !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
@@ -211,4 +211,4 @@ bool block_drop_overlap_with_cache(
       cache->yspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_cache() */
 
-NS_END(events, foraging, cosm);
+NS_END(detail, events, foraging, cosm);
