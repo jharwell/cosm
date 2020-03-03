@@ -57,9 +57,9 @@ dispatcher::dispatcher(cds::arena_grid* const grid,
        * boundaries.
        */
       mc_arena_xrange(grid->xdsize() * 0.15,
-                     (grid->xdsize() - mc_grid_padding * 2) * 0.85),
+                      (grid->xdsize() - mc_grid_padding * 2) * 0.85),
       mc_arena_yrange(grid->ydsize() * 0.15,
-                     (grid->ydsize() - mc_grid_padding * 2) * 0.85),
+                      (grid->ydsize() - mc_grid_padding * 2) * 0.85),
       m_grid(grid),
       m_dist(nullptr) {}
 
@@ -159,7 +159,7 @@ bool dispatcher::distribute_block(crepr::base_block2D* block,
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */
 
-bool dispatcher::distribute_blocks(cfds::block_vector& blocks,
+bool dispatcher::distribute_blocks(cfds::block_vectorno& blocks,
                                    cds::const_entity_list& entities) {
   return m_dist->distribute_blocks(blocks, entities);
 } /* distribute_block() */

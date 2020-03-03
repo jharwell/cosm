@@ -23,9 +23,9 @@
  ******************************************************************************/
 #include "cosm/foraging/events/arena_free_block_pickup.hpp"
 
+#include "cosm/events/cell2D_empty.hpp"
 #include "cosm/foraging/ds/arena_map.hpp"
 #include "cosm/repr/base_block2D.hpp"
-#include "cosm/events/cell2D_empty.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,10 +35,9 @@ NS_START(cosm, foraging, events, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-arena_free_block_pickup::arena_free_block_pickup(
-    const std::shared_ptr<crepr::base_block2D>& block,
-    const rtypes::type_uuid& robot_id,
-    const rtypes::timestep& t)
+arena_free_block_pickup::arena_free_block_pickup(crepr::base_block2D* block,
+                                                 const rtypes::type_uuid& robot_id,
+                                                 const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.events.arena_free_block_pickup"),
       cell2D_op(block->dloc()),
       mc_timestep(t),

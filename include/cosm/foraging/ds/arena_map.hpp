@@ -73,6 +73,10 @@ NS_START(cosm, foraging, ds);
  * changes. The idea is that the arena map should be as simple as possible,
  * providing accessors and mutators, but not more complex logic, separating the
  * data in manages from the algorithms that operate on that data.
+ *
+ * Note that the arena map does *not* expose owning access to the blocks or
+ * caches it manages. This avoids extensive use of std::shared_ptr, and greatly
+ * increases efficiency with large numbers of blocks and/or caches.
  */
 class arena_map final : public rer::client<arena_map>,
                         public rpdecorator::decorator<cds::arena_grid> {
@@ -88,40 +92,25 @@ class arena_map final : public rer::client<arena_map>,
    * Some blocks may not be visible on the arena_map, as they are being carried
    * by robots.
    */
-  block_vector& blocks(void) { return m_blocks; }
-  const block_vector& blocks(void) const { return m_blocks; }
-
-  block_vector2 blocks2(void) {
-    block_vector2 ret;
-    for (auto &b : m_blocks) {
-      ret.push_back(b.get());
-    } /* for(&b..) */
-    return ret;
-  }
+  block_vectorno& blocks(void) { return m_blocksno; }
+  const block_vectorno& blocks(void) const { return m_blocksno; }
 
   /**
    * \brief Get the # of blocks available in the arena.
    */
-  size_t n_blocks(void) const { return m_blocks.size(); }
+  size_t n_blocks(void) const { return m_blockso.size(); }
 
   /**
    * \brief Get the list of all the caches currently present in the arena and
    * active.
    */
-  cache_vector& caches(void) { return m_caches; }
-  const cache_vector& caches(void) const { return m_caches; }
+  acache_vectorno& caches(void) { return m_cachesno; }
+  const acache_vectorno& caches(void) const { return m_cachesno; }
 
-  cache_vector2 caches2(void) {
-    cache_vector2 ret;
-    for (auto &c : m_caches) {
-      ret.push_back(c.get());
-    } /* for(&b..) */
-    return ret;
-  }
   /**
    * \brief Get the # of caches currently in the arena.
    */
-  size_t n_caches(void) const { return m_caches.size(); }
+  size_t n_caches(void) const { return m_cacheso.size(); }
 
   /**
    * \brief Add caches that have been created (by a cache manager or by robots)
@@ -130,7 +119,7 @@ class arena_map final : public rer::client<arena_map>,
    * \param caches The caches to add.
    * \param sm The \ref swarm_manager.
    */
-  void caches_add(const cache_vector& caches, pal::swarm_manager* sm);
+  void caches_add(const acache_vectoro& caches, pal::swarm_manager* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -138,8 +127,7 @@ class arena_map final : public rer::client<arena_map>,
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
    */
-  void cache_remove(const std::shared_ptr<repr::arena_cache>& victim,
-                    pal::swarm_manager* sm);
+  void cache_remove(repr::arena_cache* victim, pal::swarm_manager* sm);
 
   /**
    * \brief Clear the cells that a cache covers while in the arena that are in
@@ -151,7 +139,7 @@ class arena_map final : public rer::client<arena_map>,
    * \note This operation requires holding the cache and grid mutexes in
    *       multithreaded contexts.
    */
-  void cache_extent_clear(const std::shared_ptr<repr::arena_cache>& victim);
+  void cache_extent_clear(repr::arena_cache* victim);
 
   template <uint Index>
   typename cds::arena_grid::layer_value_type<Index>::value_type& access(
@@ -330,16 +318,18 @@ class arena_map final : public rer::client<arena_map>,
    * caches.
    */
   void zombie_caches_clear(void) { m_zombie_caches.clear(); }
-  const cache_vector& zombie_caches(void) const { return m_zombie_caches; }
+  const acache_vectoro& zombie_caches(void) const { return m_zombie_caches; }
 
  private:
   /* clang-format off */
   mutable std::mutex          m_cache_mtx{};
   mutable std::mutex          m_block_mtx{};
 
-  block_vector                m_blocks;
-  cache_vector                m_caches{};
-  cache_vector                m_zombie_caches{};
+  block_vectoro               m_blockso;
+  block_vectorno              m_blocksno{};
+  acache_vectoro              m_cacheso{};
+  acache_vectorno             m_cachesno{};
+  acache_vectoro              m_zombie_caches{};
 
   crepr::nest                 m_nest;
   block_dist::dispatcher      m_block_dispatcher;

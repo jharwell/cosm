@@ -58,7 +58,7 @@ class block_manifest_processor
  public:
   explicit block_manifest_processor(const config::block_manifest* m);
 
-  ds::block_vector create_blocks(void);
+  ds::block_vectoro create_blocks(void);
 
  private:
   /* clang-format off */

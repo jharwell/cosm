@@ -58,7 +58,7 @@ random_distributor::random_distributor(const cds::arena_grid::view& grid,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool random_distributor::distribute_blocks(ds::block_vector& blocks,
+bool random_distributor::distribute_blocks(ds::block_vectorno& blocks,
                                            cds::const_entity_list& entities) {
   ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
           blocks.size(),
@@ -66,7 +66,7 @@ bool random_distributor::distribute_blocks(ds::block_vector& blocks,
           mc_yspan.to_str().c_str());
 
   return std::all_of(blocks.begin(), blocks.end(), [&](auto& b) {
-      return this->distribute_block(b.get(), entities);
+    return distribute_block(b, entities);
   });
 } /* distribute_blocks() */
 
@@ -102,10 +102,8 @@ bool random_distributor::distribute_block(crepr::base_block2D* block,
      * This function is always called from the arena map, and it ensures that
      * all locks are held, so we don't need to do anything here.
      */
-    events::arena_free_block_drop_visitor op(block,
-                                             coords->abs,
-                                             mc_resolution,
-                                             cfds::arena_map_locking::ekALL_HELD);
+    events::arena_free_block_drop_visitor op(
+        block, coords->abs, mc_resolution, cfds::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block, entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",

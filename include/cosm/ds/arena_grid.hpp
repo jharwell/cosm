@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <tuple>
 #include <mutex>
+#include <tuple>
 
 #include "rcppsw/ds/stacked_grid.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"

@@ -89,12 +89,12 @@ class base_distributor {
    * \return \c TRUE iff all block distributions were successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_blocks(cfds::block_vector& blocks,
+  virtual bool distribute_blocks(cfds::block_vectorno& blocks,
                                  cds::const_entity_list& entities) {
     return std::all_of(blocks.begin(),
                        blocks.end(),
                        [&](auto& b) {
-                         return distribute_block(b.get(), entities);
+                         return distribute_block(b, entities);
                        });
   }
   rmath::rng* rng(void) { return m_rng; }

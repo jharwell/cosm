@@ -38,34 +38,33 @@ using cds::arena_grid;
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-arena_free_block_drop arena_free_block_drop::for_block(const rmath::vector2u& coord,
-                                                       const rtypes::discretize_ratio& resolution) {
-  return arena_free_block_drop(nullptr,
-                          coord,
-                          resolution,
-                          cfds::arena_map_locking::ekNONE_HELD);
+arena_free_block_drop arena_free_block_drop::for_block(
+    const rmath::vector2u& coord,
+    const rtypes::discretize_ratio& resolution) {
+  return arena_free_block_drop(
+      nullptr, coord, resolution, cfds::arena_map_locking::ekNONE_HELD);
 } /* for_block() */
 
-static bool block_drop_overlap_with_cache(
-    const crepr::base_block2D* const block,
-    const std::shared_ptr<cfrepr::arena_cache>& cache,
-    const rmath::vector2d& drop_loc);
+static bool block_drop_overlap_with_cache(const crepr::base_block2D* block,
+                                          const cfrepr::arena_cache* cache,
+                                          const rmath::vector2d& drop_loc);
 
-static bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
+static bool block_drop_overlap_with_nest(const crepr::base_block2D* block,
                                          const crepr::nest& nest,
                                          const rmath::vector2d& drop_loc);
 
 static bool block_drop_loc_conflict(const cfds::arena_map& map,
-                                    const crepr::base_block2D* const block,
+                                    const crepr::base_block2D* block,
                                     const rmath::vector2d& loc);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-arena_free_block_drop::arena_free_block_drop(crepr::base_block2D* block,
-                                   const rmath::vector2u& coord,
-                                   const rtypes::discretize_ratio& resolution,
-                                   const cfds::arena_map_locking& locking)
+arena_free_block_drop::arena_free_block_drop(
+    crepr::base_block2D* block,
+    const rmath::vector2u& coord,
+    const rtypes::discretize_ratio& resolution,
+    const cfds::arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.foraging.events.arena_free_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
@@ -110,7 +109,6 @@ void arena_free_block_drop::visit(cfds::arena_map& map) {
   auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map, m_block, rloc);
 
-
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
    * Dropping a block onto a cell that already contains a single block (but not
@@ -149,9 +147,9 @@ void arena_free_block_drop::visit(cfds::arena_map& map) {
   }
 
   map.maybe_unlock(map.grid_mtx(),
-                 !(mc_locking & cfds::arena_map_locking::ekGRID_HELD));
+                   !(mc_locking & cfds::arena_map_locking::ekGRID_HELD));
   map.maybe_unlock(map.block_mtx(),
-                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
+                   !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 
 /*******************************************************************************
@@ -198,17 +196,16 @@ bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
   auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
 
   return nest.xspan().overlaps_with(drop_xspan) &&
-      nest.yspan().overlaps_with(drop_yspan);
+         nest.yspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_nest() */
 
-bool block_drop_overlap_with_cache(
-    const crepr::base_block2D* const block,
-    const std::shared_ptr<cfrepr::arena_cache>& cache,
-    const rmath::vector2d& drop_loc) {
+bool block_drop_overlap_with_cache(const crepr::base_block2D* const block,
+                                   const cfrepr::arena_cache* const cache,
+                                   const rmath::vector2d& drop_loc) {
   auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims().x());
   auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
   return cache->xspan().overlaps_with(drop_xspan) &&
-      cache->yspan().overlaps_with(drop_yspan);
+         cache->yspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_cache() */
 
 NS_END(detail, events, foraging, cosm);

@@ -24,8 +24,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
@@ -76,16 +74,16 @@ class arena_free_block_pickup : public rer::client<arena_free_block_pickup>,
   void visit(crepr::base_block2D& block);
 
  protected:
-  arena_free_block_pickup(const std::shared_ptr<crepr::base_block2D>& block,
+  arena_free_block_pickup(crepr::base_block2D* block,
                           const rtypes::type_uuid& robot_id,
                           const rtypes::timestep& t);
 
  private:
   /* clang-format off */
-  const rtypes::timestep               mc_timestep;
-  const rtypes::type_uuid              mc_robot_id;
+  const rtypes::timestep  mc_timestep;
+  const rtypes::type_uuid mc_robot_id;
 
-  std::shared_ptr<crepr::base_block2D> m_block;
+  crepr::base_block2D*    m_block;
   /* clang-format on */
 };
 

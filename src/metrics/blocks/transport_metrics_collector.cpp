@@ -33,8 +33,9 @@ NS_START(cosm, metrics, blocks);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-transport_metrics_collector::transport_metrics_collector(const std::string& ofname,
-                                                         const rtypes::timestep& interval)
+transport_metrics_collector::transport_metrics_collector(
+    const std::string& ofname,
+    const rtypes::timestep& interval)
     : base_metrics_collector(ofname, interval) {}
 
 /*******************************************************************************

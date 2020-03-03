@@ -49,8 +49,9 @@ multi_cluster_distributor::multi_cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool multi_cluster_distributor::distribute_block(crepr::base_block2D* block,
-                                                 cds::const_entity_list& entities) {
+bool multi_cluster_distributor::distribute_block(
+    crepr::base_block2D* block,
+    cds::const_entity_list& entities) {
   for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
     /* -1 because we are working with array indices */
     uint idx = rng()->uniform(0, m_dists.size() - 1);

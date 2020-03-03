@@ -40,7 +40,7 @@ using cfrepr::base_cache;
  * Constructors/Destructor
  ******************************************************************************/
 arena_cached_block_pickup::arena_cached_block_pickup(
-    std::shared_ptr<cfrepr::arena_cache> cache,
+    cfrepr::arena_cache* cache,
     cpal::swarm_manager* sm,
     const rtypes::type_uuid& robot_id,
     const rtypes::timestep& t)
@@ -132,13 +132,13 @@ void arena_cached_block_pickup::visit(cfds::arena_map& map) {
               base_cache::kMinBlocks);
 
     ER_INFO("fb%u: block%d from cache%d@(%u, %u),remaining=[%s] (%zu)",
-        mc_robot_id.v(),
-        m_pickup_block->id().v(),
-        cache_id.v(),
-        cell2D_op::x(),
-        cell2D_op::y(),
-        rcppsw::to_string(m_real_cache->blocks()).c_str(),
-        m_real_cache->n_blocks());
+            mc_robot_id.v(),
+            m_pickup_block->id().v(),
+            cache_id.v(),
+            cell2D_op::x(),
+            cell2D_op::y(),
+            rcppsw::to_string(m_real_cache->blocks()).c_str(),
+            m_real_cache->n_blocks());
   } else {
     /* Already holding cache mutex */
     visit(*m_real_cache);
@@ -171,7 +171,6 @@ void arena_cached_block_pickup::visit(cfds::arena_map& map) {
   std::scoped_lock lock(*map.block_mtx());
   visit(*m_pickup_block);
 } /* visit() */
-
 
 void arena_cached_block_pickup::visit(crepr::base_block2D& block) {
   ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");

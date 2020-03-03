@@ -60,7 +60,6 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
  public:
   swarm_manager_impl(void);
 
-
   virtual void init(ticpp::Element& node) = 0;
   virtual void reset(void) = 0;
   virtual void pre_step(void) = 0;

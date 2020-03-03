@@ -82,13 +82,13 @@ void arena_cache_block_drop::visit(cfds::arena_map& map) {
 
   visit(*m_arena_block);
   map.maybe_unlock(map.block_mtx(),
-                 !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
+                   !(mc_locking & cfds::arena_map_locking::ekBLOCKS_HELD));
 
   map.maybe_lock(map.cache_mtx(),
                  !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
   visit(*m_cache);
   map.maybe_unlock(map.cache_mtx(),
-                 !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
+                   !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
 
   /*
    * Do not need to hold grid mutex (but might be) because we know we are the
@@ -108,9 +108,8 @@ void arena_cache_block_drop::visit(cfds::arena_map& map) {
 } /* visit() */
 
 void arena_cache_block_drop::visit(crepr::base_block2D& block) {
-  auto visitor = events::arena_free_block_drop_visitor::for_block(rmath::vector2u(cell2D_op::x(),
-                                                                                  cell2D_op::y()),
-                                                                  mc_resolution);
+  auto visitor = events::arena_free_block_drop_visitor::for_block(
+      rmath::vector2u(cell2D_op::x(), cell2D_op::y()), mc_resolution);
   visitor.visit(block);
 } /* visit() */
 

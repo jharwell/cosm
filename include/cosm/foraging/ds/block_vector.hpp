@@ -39,23 +39,26 @@ class base_block2D;
 
 NS_START(cosm, foraging, ds);
 
-using block_vector_type = std::shared_ptr<crepr::base_block2D>;
-using block_vector_type2 = crepr::base_block2D*;
+using block_vectoro_type = std::shared_ptr<crepr::base_block2D>;
+using block_vectorno_type = crepr::base_block2D*;
+using block_vectorro_type = const crepr::base_block2D*;
 
 /*******************************************************************************
  * Type Definitions
  ******************************************************************************/
 /**
- * \class block_vector
+ * \class block_vectoro
  * \ingroup foraging ds
  *
- * \brief Specialization of \ref std::vector with an additional \ref to_str()
- * method.
+ * \brief Specialization of \ref std::vector indicating the blocks are OWNED by
+ * this class.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
  */
-class block_vector : public std::vector<block_vector_type> {
+class block_vectoro : public std::vector<block_vectoro_type> {
  public:
-  using std::vector<block_vector_type>::vector;
-  using value_type = std::vector<block_vector_type>::value_type;
+  using std::vector<block_vectoro_type>::vector;
+  using value_type = std::vector<block_vectoro_type>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.
@@ -63,10 +66,33 @@ class block_vector : public std::vector<block_vector_type> {
   std::string to_str(void) const;
 };
 
-class block_vector2 : public std::vector<block_vector_type2> {
+/*
+ * \brief Specialization of \ref std::vector indicating the blocks are NOT owned
+ * by this class.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
+ */
+class block_vectorno : public std::vector<block_vectorno_type> {
  public:
-  using std::vector<block_vector_type2>::vector;
-  using value_type = std::vector<block_vector_type2>::value_type;
+  using std::vector<block_vectorno_type>::vector;
+  using value_type = std::vector<block_vectorno_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the vector contents.
+   */
+  std::string to_str(void) const;
+};
+
+/*
+ * \brief Specialization of \ref std::vector indicating the blocks are NOT owned
+ * by this class and have read only access.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
+ */
+class block_vectorro : public std::vector<block_vectorro_type> {
+ public:
+  using std::vector<block_vectorro_type>::vector;
+  using value_type = std::vector<block_vectorro_type>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.

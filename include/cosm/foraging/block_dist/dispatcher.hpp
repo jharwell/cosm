@@ -109,7 +109,7 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_blocks(cfds::block_vector& blocks,
+  bool distribute_blocks(cfds::block_vectorno& blocks,
                          cds::const_entity_list& entities);
 
   const base_distributor* distributor(void) const { return m_dist.get(); }

@@ -35,24 +35,34 @@ NS_START(cosm, foraging, ds);
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-std::string cache_vector::to_str(void) const {
-  return std::accumulate(this->begin(),
-                         this->end(),
+template <typename TVectorType>
+std::string do_to_str(const TVectorType& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
                          std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "c" + rcppsw::to_string(b->id()) + "@" +
-                                  b->dloc().to_str() + ",";
+                         [&](const std::string& a, const auto& c) {
+                           return a + "c" + rcppsw::to_string(c->id()) + "@" +
+                                  c->dloc().to_str() + ",";
                          });
-} /* to_string() */
+} /* do_to_str() */
 
-std::string cache_vector2::to_str(void) const {
-  return std::accumulate(this->begin(),
-                         this->end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "c" + rcppsw::to_string(b->id()) + "@" +
-                                  b->dloc().to_str() + ",";
-                         });
-} /* to_string() */
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+std::string acache_vectoro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string acache_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string bcache_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string bcache_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
 NS_END(ds, foraging, cosm);

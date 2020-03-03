@@ -58,7 +58,7 @@ base_cache::base_cache(const params& p)
 void base_cache::block_remove(crepr::base_block2D* const block) {
   m_blocks.erase(std::find_if(m_blocks.begin(),
                               m_blocks.end(),
-                              [&](const auto & b) { return b->idcmp(*block); }));
+                              [&](const auto& b) { return b->idcmp(*block); }));
 } /* block_remove() */
 
 std::unique_ptr<base_cache> base_cache::clone(void) const {

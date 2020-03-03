@@ -75,7 +75,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     rtypes::spatial_dist     dimension; /* caches are square */
     rtypes::discretize_ratio resolution;
     rmath::vector2d          center;
-    const ds::block_vector2& blocks;
+    const ds::block_vectorno blocks;
     rtypes::type_uuid        id;
     /* clang-format on */
   };
@@ -127,8 +127,8 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   /**
    * \brief Get a list of the blocks currently in the cache.
    */
-  cfds::block_vector2& blocks(void) { return m_blocks; }
-  const cfds::block_vector2& blocks(void) const { return m_blocks; }
+  cfds::block_vectorno& blocks(void) { return m_blocks; }
+  const cfds::block_vectorno& blocks(void) const { return m_blocks; }
 
   /**
    * \brief Add a new block to the cache's list of blocks.
@@ -166,7 +166,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   static int                     m_next_id;
 
   rtypes::timestep               m_creation{0};
-  cfds::block_vector2            m_blocks;
+  cfds::block_vectorno           m_blocks;
   /* clang-format on */
 };
 

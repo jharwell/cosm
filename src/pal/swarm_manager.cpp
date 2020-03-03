@@ -23,12 +23,12 @@
  ******************************************************************************/
 #include "cosm/pal/swarm_manager.hpp"
 
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <sys/resource.h>
+
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/stacktrace.hpp>
 #include <chrono>
 #include <csignal>
-
-#include <boost/stacktrace.hpp>
 
 #include "rcppsw/math/rngm.hpp"
 
@@ -43,7 +43,7 @@ void ___sighandler(int signum);
  * Constructors/Destructor
  ******************************************************************************/
 swarm_manager_impl::swarm_manager_impl(void)
-: ER_CLIENT_INIT("cosm.pal.swarm_manager") {
+    : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
   /*
    * For some reason GNU parallel on MSI resets the core dump memory limit to 0
    * when running, even if you run "ulimit -s unlimited" right before. And on

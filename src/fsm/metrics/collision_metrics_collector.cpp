@@ -33,8 +33,9 @@ NS_START(cosm, fsm, metrics);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-collision_metrics_collector::collision_metrics_collector(const std::string& ofname,
-                                                         const rtypes::timestep& interval)
+collision_metrics_collector::collision_metrics_collector(
+    const std::string& ofname,
+    const rtypes::timestep& interval)
     : base_metrics_collector(ofname, interval) {}
 
 /*******************************************************************************

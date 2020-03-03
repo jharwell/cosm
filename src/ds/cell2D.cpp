@@ -47,11 +47,11 @@ crepr::base_block2D* cell2D::block(void) {
   return dynamic_cast<crepr::base_block2D*>(m_entity);
 } /* block() */
 
-cfrepr::base_cache* cell2D::cache(void) {
+cfrepr::base_cache* cell2D::cache(void) const {
   return dynamic_cast<cfrepr::base_cache*>(m_entity);
 } /* cache() */
 
-cfrepr::base_cache* cell2D::cache(void) const {
+cfrepr::base_cache* cell2D::cache(void) {
   return dynamic_cast<cfrepr::base_cache*>(m_entity);
 } /* cache() */
 

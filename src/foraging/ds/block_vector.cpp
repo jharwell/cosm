@@ -35,22 +35,29 @@ NS_START(cosm, foraging, ds);
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-std::string block_vector::to_str(void) const {
-  return std::accumulate(this->begin(),
-                         this->end(),
+template <typename TVectorType>
+std::string do_to_str(const TVectorType& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
                          std::string(),
                          [&](const std::string& a, const auto& b) {
                            return a + "b" + rcppsw::to_string(b->id()) + ",";
                          });
-} /* to_string() */
+} /* do_to_str() */
 
-std::string block_vector2::to_str(void) const {
-  return std::accumulate(this->begin(),
-                         this->end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "b" + rcppsw::to_string(b->id()) + ",";
-                         });
-} /* to_string() */
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+std::string block_vectoro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string block_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string block_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
 NS_END(ds, foraging, cosm);

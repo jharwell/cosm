@@ -47,7 +47,7 @@ arena_map::arena_map(const config::arena_map_config* config)
       decorator(config->grid.resolution,
                 static_cast<uint>(config->grid.upper.x() + arena_padding()),
                 static_cast<uint>(config->grid.upper.y() + arena_padding())),
-      m_blocks(
+      m_blockso(
           block_dist::block_manifest_processor(&config->blocks.dist.manifest)
               .create_blocks()),
       m_nest(config->nest.dims,
@@ -65,6 +65,9 @@ arena_map::arena_map(const config::arena_map_config* config)
           xdsize(),
           ydsize(),
           grid_resolution().v());
+  for (auto& b : m_blockso) {
+    m_blocksno.push_back(b.get());
+  } /* for(&b..) */
 }
 
 /*******************************************************************************
@@ -78,9 +81,10 @@ bool arena_map::initialize(pal::swarm_manager* sm, rmath::rng* rng) {
   return m_block_dispatcher.initialize(rng);
 } /* initialize() */
 
-void arena_map::caches_add(const cache_vector& caches,
+void arena_map::caches_add(const acache_vectoro& caches,
                            cpal::swarm_manager* sm) {
-  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
+  auto& medium =
+      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
   /*
    * Add all lights of caches to the arena. Cache lights are added directly to
@@ -91,12 +95,17 @@ void arena_map::caches_add(const cache_vector& caches,
     medium.AddEntity(*c->light());
   } /* for(&c..) */
 
-  m_caches.insert(m_caches.end(), caches.begin(), caches.end());
-  ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_caches.size());
+  for (auto& c : caches) {
+    m_cachesno.push_back(c.get());
+  } /* for(&c..) */
+
+  m_cacheso.insert(m_cacheso.end(), caches.begin(), caches.end());
+  ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_cacheso.size());
 } /* caches_add() */
 
-rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos,
-                                            const rtypes::type_uuid& ent_id) const {
+rtypes::type_uuid arena_map::robot_on_block(
+    const rmath::vector2d& pos,
+    const rtypes::type_uuid& ent_id) const {
   /*
    * Caches hide blocks, add even though a robot may technically be standing on
    * a block, if it is also standing in a cache, that takes priority.
@@ -114,13 +123,13 @@ rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos,
    * vector, so we have to check for that.
    */
   if (ent_id != rtypes::constants::kNoUUID &&
-      static_cast<size_t>(ent_id.v()) < m_blocks.size() &&
-      m_blocks[ent_id.v()]->contains_point(pos)) {
+      static_cast<size_t>(ent_id.v()) < m_blockso.size() &&
+      m_blockso[ent_id.v()]->contains_point(pos)) {
     return ent_id;
   }
 
   /* General case: linear scan */
-  for (auto& b : m_blocks) {
+  for (auto& b : m_blockso) {
     if (b->contains_point(pos)) {
       return b->id();
     }
@@ -128,8 +137,9 @@ rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos,
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
-rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos,
-                                            const rtypes::type_uuid& ent_id) const {
+rtypes::type_uuid arena_map::robot_on_cache(
+    const rmath::vector2d& pos,
+    const rtypes::type_uuid& ent_id) const {
   /*
    * If the robot actually is on the cache they think they are, we can short
    * circuit what may be an expensive linear search. ent_id MIGHT be for a block
@@ -137,13 +147,13 @@ rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos,
    * vector, so we have to check for that.
    */
   if (ent_id != rtypes::constants::kNoUUID &&
-      static_cast<size_t>(ent_id.v()) < m_caches.size() &&
-      m_caches[ent_id.v()]->contains_point(pos)) {
+      static_cast<size_t>(ent_id.v()) < m_cacheso.size() &&
+      m_cacheso[ent_id.v()]->contains_point(pos)) {
     return ent_id;
   }
 
   /* General case: linear scan */
-  for (auto& c : m_caches) {
+  for (auto& c : m_cacheso) {
     if (c->contains_point(pos)) {
       return c->id();
     }
@@ -151,9 +161,8 @@ rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos,
   return rtypes::constants::kNoUUID;
 } /* robot_on_cache() */
 
-bool arena_map::distribute_single_block(
-    crepr::base_block2D* block,
-    const arena_map_locking& locking) {
+bool arena_map::distribute_single_block(crepr::base_block2D* block,
+                                        const arena_map_locking& locking) {
   /* return TRUE because the distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
     return true;
@@ -170,13 +179,13 @@ bool arena_map::distribute_single_block(
    * - Nest
    */
   cds::const_entity_list entities;
-  for (auto& cache : m_caches) {
+  for (auto& cache : m_cacheso) {
     entities.push_back(cache.get());
   } /* for(&cache..) */
 
   std::shared_ptr<crepr::base_block2D> ent = nullptr;
 
-  for (auto& b : m_blocks) {
+  for (auto& b : m_blockso) {
     /*
      * Cannot compare via dloccmp() because the block being distributed is
      * currently out of sight, just like any other blocks currently carried by
@@ -190,10 +199,11 @@ bool arena_map::distribute_single_block(
   } /* for(&b..) */
   entities.push_back(&m_nest);
 
-  ER_ASSERT(ent->id() == block->id(),
-            "ID of block to distribute != ID of block in block vector: %d != %d",
-            block->id().v(),
-            ent->id().v());
+  ER_ASSERT(
+      ent->id() == block->id(),
+      "ID of block to distribute != ID of block in block vector: %d != %d",
+      block->id().v(),
+      ent->id().v());
   bool ret = m_block_dispatcher.distribute_block(ent.get(), entities);
 
   maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
@@ -209,11 +219,12 @@ void arena_map::distribute_all_blocks(void) {
 
   /* distribute blocks */
   cds::const_entity_list entities;
-  for (auto& cache : m_caches) {
+  for (auto& cache : m_cacheso) {
     entities.push_back(cache.get());
   } /* for(&cache..) */
   entities.push_back(&m_nest);
-  bool b = m_block_dispatcher.distribute_blocks(m_blocks, entities);
+
+  bool b = m_block_dispatcher.distribute_blocks(m_blocksno, entities);
   ER_ASSERT(b, "Unable to perform initial block distribution");
 
   /*
@@ -233,22 +244,49 @@ void arena_map::distribute_all_blocks(void) {
   }   /* for(i..) */
 } /* distribute_all_blocks() */
 
-void arena_map::cache_remove(const std::shared_ptr<repr::arena_cache>& victim,
-                             pal::swarm_manager* sm) {
+void arena_map::cache_remove(repr::arena_cache* victim, pal::swarm_manager* sm) {
   /* Remove light for cache from ARGoS */
-  auto& medium = sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
+  auto& medium =
+      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
   medium.RemoveEntity(*victim->light());
 
-  /* Remove cache */
-  size_t before = caches().size();
+  ER_ASSERT(m_cachesno.size() == m_cacheso.size(),
+            "Owned and access cache vectors have different sizes: %zu != %zu",
+            m_cacheso.size(),
+            m_cachesno.size());
+
+  size_t before = m_cacheso.size();
   RCSW_UNUSED rtypes::type_uuid id = victim->id();
-  m_zombie_caches.push_back(victim);
-  m_caches.erase(std::remove(m_caches.begin(), m_caches.end(), victim));
-  ER_ASSERT(caches().size() == before - 1, "Cache%d not removed", id.v());
+
+  /*
+   * Lookup the victim in the cache vector, since the i-th cache is not
+   * guaranteed to be in position i in the vector.
+   */
+  auto victim_it =
+      std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
+        return c.get() == victim;
+      });
+  /*
+   * Add cache to zombie vector to ensure accurate metric collection THIS
+   * timestep about caches.
+   */
+  m_zombie_caches.push_back(*victim_it);
+
+  /*
+   * Update owned and access cache vectors, verifying that the removal worked as
+   * expected.
+   */
+  m_cachesno.erase(std::remove(m_cachesno.begin(), m_cachesno.end(), victim));
+  m_cacheso.erase(std::remove(m_cacheso.begin(), m_cacheso.end(), *victim_it));
+  ER_ASSERT(m_cachesno.size() == before - 1,
+            "Cache%d not removed from access vector",
+            id.v());
+  ER_ASSERT(m_cacheso.size() == before - 1,
+            "Cache%d not removed from owned vector",
+            id.v());
 } /* cache_remove() */
 
-void arena_map::cache_extent_clear(
-    const std::shared_ptr<repr::arena_cache>& victim) {
+void arena_map::cache_extent_clear(repr::arena_cache* victim) {
   auto xspan = victim->xspan();
   auto yspan = victim->yspan();
 

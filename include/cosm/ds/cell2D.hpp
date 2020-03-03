@@ -89,9 +89,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /**
    * \brief Set the entity associated with this cell.
    */
-  void entity(repr::entity2D* entity) {
-    m_entity = entity;
-  }
+  void entity(repr::entity2D* entity) { m_entity = entity; }
   const repr::entity2D* entity(void) const { return m_entity; }
 
   void loc(const rmath::vector2u& loc) { m_loc = loc; }

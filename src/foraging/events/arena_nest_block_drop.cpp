@@ -34,8 +34,9 @@ NS_START(cosm, foraging, events, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-arena_nest_block_drop::arena_nest_block_drop(std::unique_ptr<crepr::base_block2D> robot_block,
-                                 const rtypes::timestep& t)
+arena_nest_block_drop::arena_nest_block_drop(
+    std::unique_ptr<crepr::base_block2D> robot_block,
+    const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.events.arena_nest_block_drop"),
       mc_timestep(t),
       m_robot_block(std::move(robot_block)) {}
@@ -69,7 +70,7 @@ void arena_nest_block_drop::visit(cfds::arena_map& map) {
   ER_ASSERT(map.blocks().end() != it,
             "Robot block%d not found in arena map blocks",
             m_robot_block->id().v());
-  m_arena_block = (*it).get();
+  m_arena_block = *it;
   map.distribute_single_block(m_arena_block,
                               cfds::arena_map_locking::ekALL_HELD);
   visit(*m_arena_block);

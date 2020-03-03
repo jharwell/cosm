@@ -31,8 +31,8 @@ NS_START(cosm, foraging, repr);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-ds::const_block_list2 block_cluster::blocks(void) const {
-  ds::const_block_list2 ret;
+ds::block_vectorro block_cluster::blocks(void) const {
+  ds::block_vectorro ret;
   for (uint i = 0; i < xdimd(); ++i) {
     for (uint j = 0; j < ydimd(); ++j) {
       const auto& cell = block_cluster::cell(i, j);

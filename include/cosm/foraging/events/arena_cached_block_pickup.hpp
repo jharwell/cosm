@@ -77,7 +77,7 @@ class arena_cached_block_pickup : public rer::client<arena_cached_block_pickup>,
    * \param robot_id The ID of the robot picking up the block.
    * \param t The current timestep.
    */
-  arena_cached_block_pickup(std::shared_ptr<cfrepr::arena_cache> cache,
+  arena_cached_block_pickup(cfrepr::arena_cache* cache,
                             cpal::swarm_manager* sm,
                             const rtypes::type_uuid& robot_id,
                             const rtypes::timestep& t);
@@ -101,23 +101,23 @@ class arena_cached_block_pickup : public rer::client<arena_cached_block_pickup>,
   void visit(cfrepr::arena_cache& cache);
 
   /* clang-format off */
-  const rtypes::type_uuid              mc_robot_id;
-  const rtypes::timestep               mc_timestep;
+  const rtypes::type_uuid mc_robot_id;
+  const rtypes::timestep  mc_timestep;
 
-  std::shared_ptr<cfrepr::arena_cache> m_real_cache;
+  cfrepr::arena_cache*    m_real_cache;
 
-  cpal::swarm_manager*                 m_sm;
+  cpal::swarm_manager*    m_sm;
 
   /**
    * \brief The block that will be picked up by the robot.
    */
-  crepr::base_block2D*                 m_pickup_block{nullptr};
+  crepr::base_block2D*    m_pickup_block{nullptr};
 
   /**
    * \brief The block that is left over when a cache devolves into a single
    * block, that needs to be sent to the cell that the cache used to live on.
    */
-  crepr::base_block2D*                 m_orphan_block{nullptr};
+  crepr::base_block2D*    m_orphan_block{nullptr};
   /* clang-format on */
 };
 

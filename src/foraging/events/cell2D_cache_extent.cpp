@@ -36,9 +36,8 @@ using cds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cell2D_cache_extent::cell2D_cache_extent(
-    const rmath::vector2u& coord,
-    cfrepr::base_cache* cache)
+cell2D_cache_extent::cell2D_cache_extent(const rmath::vector2u& coord,
+                                         cfrepr::base_cache* cache)
     : cell2D_op(coord), m_cache(cache) {}
 
 /*******************************************************************************
