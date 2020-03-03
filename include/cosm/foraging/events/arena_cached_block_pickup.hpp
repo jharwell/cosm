@@ -111,13 +111,13 @@ class arena_cached_block_pickup : public rer::client<arena_cached_block_pickup>,
   /**
    * \brief The block that will be picked up by the robot.
    */
-  std::shared_ptr<crepr::base_block2D> m_pickup_block{nullptr};
+  crepr::base_block2D*                 m_pickup_block{nullptr};
 
   /**
    * \brief The block that is left over when a cache devolves into a single
    * block, that needs to be sent to the cell that the cache used to live on.
    */
-  std::shared_ptr<crepr::base_block2D> m_orphan_block{nullptr};
+  crepr::base_block2D*                 m_orphan_block{nullptr};
   /* clang-format on */
 };
 

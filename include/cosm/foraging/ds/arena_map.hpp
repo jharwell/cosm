@@ -91,6 +91,14 @@ class arena_map final : public rer::client<arena_map>,
   block_vector& blocks(void) { return m_blocks; }
   const block_vector& blocks(void) const { return m_blocks; }
 
+  block_vector2 blocks2(void) {
+    block_vector2 ret;
+    for (auto &b : m_blocks) {
+      ret.push_back(b.get());
+    } /* for(&b..) */
+    return ret;
+  }
+
   /**
    * \brief Get the # of blocks available in the arena.
    */
@@ -103,6 +111,13 @@ class arena_map final : public rer::client<arena_map>,
   cache_vector& caches(void) { return m_caches; }
   const cache_vector& caches(void) const { return m_caches; }
 
+  cache_vector2 caches2(void) {
+    cache_vector2 ret;
+    for (auto &c : m_caches) {
+      ret.push_back(c.get());
+    } /* for(&b..) */
+    return ret;
+  }
   /**
    * \brief Get the # of caches currently in the arena.
    */
@@ -181,7 +196,7 @@ class arena_map final : public rer::client<arena_map>,
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_single_block(std::shared_ptr<crepr::base_block2D>& block,
+  bool distribute_single_block(crepr::base_block2D* block,
                                const arena_map_locking& locking);
 
   RCPPSW_DECORATE_FUNC(xdsize, const);
@@ -199,11 +214,13 @@ class arena_map final : public rer::client<arena_map>,
    * the final arbiter when deciding whether or not to trigger a given event.
    *
    * \param pos The position of a robot.
+   * \param ent_id The ID of the block the robot THINKS it is on.
    *
    * \return The ID of the block that the robot is on, or -1 if the robot is not
    * actually on a block.
    */
-  rtypes::type_uuid robot_on_block(const rmath::vector2d& pos) const RCSW_PURE;
+  rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
+                                   const rtypes::type_uuid& ent_id) const;
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the
@@ -216,11 +233,13 @@ class arena_map final : public rer::client<arena_map>,
    * event for a particular robot.
    *
    * \param pos The position of a robot.
+   * \param ent_id The ID of the cache the robot THINKS it is on.
    *
    * \return The ID of the cache that the robot is on, or -1 if the robot is not
    * actually on a cache.
    */
-  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCSW_PURE;
+  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos,
+                                   const rtypes::type_uuid& ent_id) const;
 
   /**
    * \brief Get the subgrid for use in calculating a robot's LOS.

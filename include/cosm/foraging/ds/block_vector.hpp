@@ -40,6 +40,7 @@ class base_block2D;
 NS_START(cosm, foraging, ds);
 
 using block_vector_type = std::shared_ptr<crepr::base_block2D>;
+using block_vector_type2 = crepr::base_block2D*;
 
 /*******************************************************************************
  * Type Definitions
@@ -55,6 +56,17 @@ class block_vector : public std::vector<block_vector_type> {
  public:
   using std::vector<block_vector_type>::vector;
   using value_type = std::vector<block_vector_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the vector contents.
+   */
+  std::string to_str(void) const;
+};
+
+class block_vector2 : public std::vector<block_vector_type2> {
+ public:
+  using std::vector<block_vector_type2>::vector;
+  using value_type = std::vector<block_vector_type2>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.

@@ -95,15 +95,31 @@ void arena_map::caches_add(const cache_vector& caches,
   ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_caches.size());
 } /* caches_add() */
 
-rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos) const {
+rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos,
+                                            const rtypes::type_uuid& ent_id) const {
   /*
    * Caches hide blocks, add even though a robot may technically be standing on
    * a block, if it is also standing in a cache, that takes priority.
    */
-  if (rtypes::constants::kNoUUID != robot_on_cache(pos)) {
-    ER_TRACE("Block hidden by cache%d", robot_on_cache(pos).v());
+  auto cache_id = robot_on_cache(pos, ent_id);
+  if (rtypes::constants::kNoUUID != cache_id) {
+    ER_TRACE("Block hidden by cache%d", cache_id.v());
     return rtypes::constants::kNoUUID;
   }
+
+  /*
+   * If the robot actually is on the block they think they are, we can short
+   * circuit what may be an expensive linear search. ent_id MIGHT be for a cache
+   * we have acquired, which may cause out of bounds indexing into the blocks
+   * vector, so we have to check for that.
+   */
+  if (ent_id != rtypes::constants::kNoUUID &&
+      static_cast<size_t>(ent_id.v()) < m_blocks.size() &&
+      m_blocks[ent_id.v()]->contains_point(pos)) {
+    return ent_id;
+  }
+
+  /* General case: linear scan */
   for (auto& b : m_blocks) {
     if (b->contains_point(pos)) {
       return b->id();
@@ -112,7 +128,21 @@ rtypes::type_uuid arena_map::robot_on_block(const rmath::vector2d& pos) const {
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
-rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos) const {
+rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos,
+                                            const rtypes::type_uuid& ent_id) const {
+  /*
+   * If the robot actually is on the cache they think they are, we can short
+   * circuit what may be an expensive linear search. ent_id MIGHT be for a block
+   * we have acquired, which may cause out of bounds indexing into the caches
+   * vector, so we have to check for that.
+   */
+  if (ent_id != rtypes::constants::kNoUUID &&
+      static_cast<size_t>(ent_id.v()) < m_caches.size() &&
+      m_caches[ent_id.v()]->contains_point(pos)) {
+    return ent_id;
+  }
+
+  /* General case: linear scan */
   for (auto& c : m_caches) {
     if (c->contains_point(pos)) {
       return c->id();
@@ -122,7 +152,7 @@ rtypes::type_uuid arena_map::robot_on_cache(const rmath::vector2d& pos) const {
 } /* robot_on_cache() */
 
 bool arena_map::distribute_single_block(
-    std::shared_ptr<crepr::base_block2D>& block,
+    crepr::base_block2D* block,
     const arena_map_locking& locking) {
   /* return TRUE because the distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
@@ -144,13 +174,27 @@ bool arena_map::distribute_single_block(
     entities.push_back(cache.get());
   } /* for(&cache..) */
 
+  std::shared_ptr<crepr::base_block2D> ent = nullptr;
+
   for (auto& b : m_blocks) {
-    if (b != block) {
+    /*
+     * Cannot compare via dloccmp() because the block being distributed is
+     * currently out of sight, just like any other blocks currently carried by
+     * robots, resulting in the wrong block being distributed.
+     */
+    if (!(block == b.get())) {
       entities.push_back(b.get());
+    } else {
+      ent = b;
     }
   } /* for(&b..) */
   entities.push_back(&m_nest);
-  bool ret = m_block_dispatcher.distribute_block(block, entities);
+
+  ER_ASSERT(ent->id() == block->id(),
+            "ID of block to distribute != ID of block in block vector: %d != %d",
+            block->id().v(),
+            ent->id().v());
+  bool ret = m_block_dispatcher.distribute_block(ent.get(), entities);
 
   maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
   maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));

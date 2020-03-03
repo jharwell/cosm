@@ -45,4 +45,14 @@ std::string cache_vector::to_str(void) const {
                          });
 } /* to_string() */
 
+std::string cache_vector2::to_str(void) const {
+  return std::accumulate(this->begin(),
+                         this->end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& b) {
+                           return a + "c" + rcppsw::to_string(b->id()) + "@" +
+                                  b->dloc().to_str() + ",";
+                         });
+} /* to_string() */
+
 NS_END(ds, foraging, cosm);

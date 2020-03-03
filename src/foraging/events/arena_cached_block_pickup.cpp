@@ -78,7 +78,7 @@ void arena_cached_block_pickup::visit(cds::cell2D& cell) {
 } /* visit() */
 
 void arena_cached_block_pickup::visit(cfrepr::arena_cache& cache) {
-  cache.block_remove(m_pickup_block.get());
+  cache.block_remove(m_pickup_block);
   cache.has_block_pickup();
 } /* visit() */
 

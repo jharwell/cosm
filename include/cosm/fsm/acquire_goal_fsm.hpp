@@ -199,6 +199,9 @@ class acquire_goal_fsm : public util_hfsm,
   rmath::vector2u acquisition_loc(void) const override final;
   rmath::vector2u current_explore_loc(void) const override final;
   rmath::vector2u current_vector_loc(void) const override final;
+  rtypes::type_uuid entity_acquired_id(void) const override final {
+    return m_acq_id;
+  }
 
   void init(void) override final;
 
@@ -270,7 +273,7 @@ class acquire_goal_fsm : public util_hfsm,
    */
   HFSM_EXIT_DECLARE(acquire_goal_fsm, exit_fsm_acquire_goal);
 
-  /**
+  /**p
    * \brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
@@ -283,11 +286,11 @@ class acquire_goal_fsm : public util_hfsm,
   HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /* clang-format off */
-  rtypes::type_uuid       m_acq_id{rtypes::constants::kNoUUID};
-  bool                      m_first_acq_step{false};
-  struct hook_list          m_hooks;
-  vector_fsm                m_vector_fsm;
-  explore_for_goal_fsm      m_explore_fsm;
+  rtypes::type_uuid              m_acq_id{rtypes::constants::kNoUUID};
+  bool                           m_first_acq_step{false};
+  struct hook_list               m_hooks;
+  vector_fsm                     m_vector_fsm;
+  explore_for_goal_fsm           m_explore_fsm;
   /* clang-format on */
 };
 

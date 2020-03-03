@@ -44,7 +44,25 @@ std::string block_list::to_str(void) const {
                          });
 } /* to_string() */
 
+std::string block_list2::to_str(void) const {
+  return std::accumulate(this->begin(),
+                         this->end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& b) {
+                           return a + "b" + rcppsw::to_string(b->id()) + ",";
+                         });
+} /* to_string() */
+
 std::string const_block_list::to_str(void) const {
+  return std::accumulate(this->begin(),
+                         this->end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& b) {
+                           return a + "b" + rcppsw::to_string(b->id()) + ",";
+                         });
+} /* to_string() */
+
+std::string const_block_list2::to_str(void) const {
   return std::accumulate(this->begin(),
                          this->end(),
                          std::string(),

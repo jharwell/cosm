@@ -69,7 +69,7 @@ void arena_nest_block_drop::visit(cfds::arena_map& map) {
   ER_ASSERT(map.blocks().end() != it,
             "Robot block%d not found in arena map blocks",
             m_robot_block->id().v());
-  m_arena_block = *it;
+  m_arena_block = (*it).get();
   map.distribute_single_block(m_arena_block,
                               cfds::arena_map_locking::ekALL_HELD);
   visit(*m_arena_block);

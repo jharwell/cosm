@@ -102,11 +102,6 @@ class arena_free_block_drop : public rer::client<arena_free_block_drop>,
    */
   void visit(crepr::base_block2D& block);
 
-  /**
-   * \brief Get the handle on the block that has been dropped.
-   */
-  std::shared_ptr<crepr::base_block2D> block(void) const { return m_block; }
-
  protected:
   /**
    * \param block The block to drop, which is already part of the vector owned
@@ -115,7 +110,7 @@ class arena_free_block_drop : public rer::client<arena_free_block_drop>,
    * \param resolution The resolution of the arena map.
    * \param locking What locks are currently held by the caller?
    */
-  arena_free_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
+  arena_free_block_drop(crepr::base_block2D* block,
                         const rmath::vector2u& coord,
                         const rtypes::discretize_ratio& resolution,
                         const cfds::arena_map_locking& locking);
@@ -124,10 +119,10 @@ class arena_free_block_drop : public rer::client<arena_free_block_drop>,
   void visit(fsm::cell2D_fsm& fsm);
 
   /* clang-format off */
-  const rtypes::discretize_ratio       mc_resolution;
-  const cfds::arena_map_locking        mc_locking;
+  const rtypes::discretize_ratio mc_resolution;
+  const cfds::arena_map_locking  mc_locking;
 
-  std::shared_ptr<crepr::base_block2D> m_block;
+  crepr::base_block2D*           m_block;
   /* clang-format on */
 };
 

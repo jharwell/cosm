@@ -29,7 +29,9 @@
 #include "rcppsw/metrics/base_metrics.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/types/named_type.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/repr/unicell_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -97,6 +99,16 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    * the next part of its current FSM as part of its current task.
    */
   virtual bool goal_acquired(void) const = 0;
+
+  /**
+   * \brief Return the UUID of the entity the robot THINKS it has acquired, once
+   * \ref goal_acquired() returns \c TRUE. Only valid while \ref goal_acquired()
+   * returns \c TRUE.
+   *
+   * If the acquisition was not for an entity, but a location within the arena
+   * (or something else), then this function should return kNOUUID.
+   */
+  virtual rtypes::type_uuid entity_acquired_id(void) const = 0;
 
   /**
    * \brief When \ref goal_acquired() returns \c TRUE, then this should return

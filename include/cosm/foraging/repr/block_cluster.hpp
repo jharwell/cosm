@@ -64,7 +64,7 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
 
   uint capacity(void) const { return m_capacity; }
   size_t block_count(void) const { return blocks().size(); }
-  cfds::const_block_list blocks(void) const RCSW_PURE;
+  cfds::const_block_list2 blocks(void) const RCSW_PURE;
 
  private:
   /* clang-format off */

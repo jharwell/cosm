@@ -81,7 +81,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    */
   void reset(void) {
     decoratee().init();
-    m_entity.reset();
+    m_entity = nullptr;
   }
 
   RCPPSW_DECORATE_FUNC(block_count, const);
@@ -89,10 +89,10 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /**
    * \brief Set the entity associated with this cell.
    */
-  void entity(const std::shared_ptr<repr::entity2D>& entity) {
+  void entity(repr::entity2D* entity) {
     m_entity = entity;
   }
-  const std::shared_ptr<repr::entity2D>& entity(void) const { return m_entity; }
+  const repr::entity2D* entity(void) const { return m_entity; }
 
   void loc(const rmath::vector2u& loc) { m_loc = loc; }
   const rmath::vector2u& loc(void) const { return m_loc; }
@@ -103,8 +103,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a block, so check the cell's state before
    * calling this function.
    */
-  std::shared_ptr<crepr::base_block2D> block(void) const RCSW_PURE;
-  std::shared_ptr<crepr::base_block2D> block(void) RCSW_PURE;
+  crepr::base_block2D* block(void) const RCSW_PURE;
+  crepr::base_block2D* block(void) RCSW_PURE;
 
   /**
    * \brief Get the cache entity associated with this cell.
@@ -112,13 +112,13 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a cache, so check the cell's state before
    * calling this function.
    */
-  std::shared_ptr<cfrepr::base_cache> cache(void) const RCSW_PURE;
-  std::shared_ptr<cfrepr::base_cache> cache(void) RCSW_PURE;
+  cfrepr::base_cache* cache(void) const RCSW_PURE;
+  cfrepr::base_cache* cache(void) RCSW_PURE;
 
  private:
   /* clang-format off */
-  std::shared_ptr<repr::entity2D> m_entity{nullptr};
-  rmath::vector2u                 m_loc{};
+  repr::entity2D* m_entity{nullptr};
+  rmath::vector2u m_loc{};
   /* clang-format on */
 };
 

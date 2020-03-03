@@ -24,8 +24,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/events/cell2D_op.hpp"
@@ -67,8 +65,9 @@ class cell2D_cache_extent : public cevents::cell2D_op {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  cell2D_cache_extent(const rmath::vector2u& coord,
-                    const std::shared_ptr<cfrepr::base_cache>& cache);
+  cell2D_cache_extent(const rmath::vector2u& coord, cfrepr::base_cache* cache);
+  cell2D_cache_extent& operator=(const cell2D_cache_extent&) = delete;
+  cell2D_cache_extent(const cell2D_cache_extent&) = delete;
 
   void visit(cds::cell2D& cell);
   void visit(fsm::cell2D_fsm& fsm);
@@ -76,7 +75,7 @@ class cell2D_cache_extent : public cevents::cell2D_op {
 
  private:
   /* clang-format off */
-  std::shared_ptr<cfrepr::base_cache> m_cache;
+  cfrepr::base_cache* m_cache;
   /* clang-format on */
 };
 

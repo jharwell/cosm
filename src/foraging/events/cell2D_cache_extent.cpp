@@ -38,7 +38,7 @@ using cds::arena_grid;
  ******************************************************************************/
 cell2D_cache_extent::cell2D_cache_extent(
     const rmath::vector2u& coord,
-    const std::shared_ptr<cfrepr::base_cache>& cache)
+    cfrepr::base_cache* cache)
     : cell2D_op(coord), m_cache(cache) {}
 
 /*******************************************************************************

@@ -91,18 +91,10 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
    * \param resolution Arena resolution.
    * \param locking Is locking needed around block accesses?
    */
-  arena_cache_block_drop(const std::shared_ptr<crepr::base_block2D>& arena_block,
-                         const std::shared_ptr<cfrepr::arena_cache>& cache,
+  arena_cache_block_drop(crepr::base_block2D* arena_block,
+                         cfrepr::arena_cache* cache,
                          const rtypes::discretize_ratio& resolution,
                          const cfds::arena_map_locking& locking);
-
-  const rtypes::discretize_ratio& resolution(void) const { return mc_resolution; }
-  std::shared_ptr<crepr::base_block2D> arena_block(void) const {
-    return m_arena_block;
-  }
-  std::shared_ptr<cfrepr::arena_cache> arena_cache(void) const {
-    return m_cache;
-  }
 
  private:
   void visit(cds::cell2D& cell);
@@ -111,11 +103,11 @@ class arena_cache_block_drop : public rer::client<arena_cache_block_drop>,
   void visit(cfrepr::arena_cache& cache);
 
   /* clang-format off */
-  const cfds::arena_map_locking        mc_locking;
-  const rtypes::discretize_ratio       mc_resolution;
+  const cfds::arena_map_locking  mc_locking;
+  const rtypes::discretize_ratio mc_resolution;
 
-  std::shared_ptr<crepr::base_block2D> m_arena_block;
-  std::shared_ptr<cfrepr::arena_cache> m_cache;
+  crepr::base_block2D*           m_arena_block;
+  cfrepr::arena_cache*           m_cache;
   /* clang-format on */
 };
 

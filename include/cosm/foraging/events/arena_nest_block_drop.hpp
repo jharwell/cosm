@@ -88,7 +88,7 @@ class arena_nest_block_drop : public rer::client<arena_nest_block_drop> {
   const rtypes::timestep               mc_timestep;
 
   std::unique_ptr<crepr::base_block2D> m_robot_block;
-  std::shared_ptr<crepr::base_block2D> m_arena_block{};
+  crepr::base_block2D*                 m_arena_block{nullptr};
   /* clang-format on */
 };
 

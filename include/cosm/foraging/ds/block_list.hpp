@@ -40,7 +40,9 @@ class base_block2D;
 NS_START(cosm, foraging, ds);
 
 using block_list_type = std::shared_ptr<crepr::base_block2D>;
+using block_list_type2 = crepr::base_block2D*;
 using const_block_list_type = std::shared_ptr<const crepr::base_block2D>;
+using const_block_list_type2 = const crepr::base_block2D*;
 
 /*******************************************************************************
  * Class Definitions
@@ -64,6 +66,24 @@ class block_list : public std::list<block_list_type> {
 };
 
 /**
+ * \class block_list2
+ * \ingroup foraging ds
+ *
+ * \brief Specialization of \ref std::list with an additional \ref to_str()
+ * method.
+ */
+class block_list2 : public std::list<block_list_type2> {
+ public:
+  using std::list<block_list_type2>::list;
+  using value_type = std::list<block_list_type2>::value_type;
+
+  /**
+   * \brief Get a string representation of the list contents.
+   */
+  std::string to_str(void) const;
+};
+
+/**
  * \class const_block_list
  * \ingroup foraging ds
  *
@@ -74,6 +94,24 @@ class const_block_list : public std::list<const_block_list_type> {
  public:
   using std::list<const_block_list_type>::list;
   using value_type = std::list<const_block_list_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the list contents.
+   */
+  std::string to_str(void) const;
+};
+
+/**
+ * \class const_block_list
+ * \ingroup foraging ds
+ *
+ * \brief Specialization of \ref std::list with an additional \ref to_str()
+ * method.
+ */
+class const_block_list2 : public std::list<const_block_list_type2> {
+ public:
+  using std::list<const_block_list_type2>::list;
+  using value_type = std::list<const_block_list_type2>::value_type;
 
   /**
    * \brief Get a string representation of the list contents.

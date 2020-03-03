@@ -167,6 +167,7 @@ void acquire_goal_fsm::init(void) {
   util_hfsm::init();
   m_vector_fsm.task_reset();
   m_explore_fsm.task_reset();
+  m_acq_id = rtypes::constants::kNoUUID;
 } /* init() */
 
 bool acquire_goal_fsm::acquire_goal(void) {
@@ -232,7 +233,6 @@ bool acquire_goal_fsm::acquire_known_goal(void) {
 
     m_explore_fsm.task_reset();
     m_vector_fsm.task_reset();
-    m_acq_id = rtypes::constants::kNoUUID;
 
     ER_INFO("Start acquiring goal@%s tol=%f",
             std::get<0>(selection.get()).to_str().c_str(),

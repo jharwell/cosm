@@ -52,9 +52,8 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool powerlaw_distributor::distribute_block(
-    std::shared_ptr<crepr::base_block2D>& block,
-    cds::const_entity_list& entities) {
+bool powerlaw_distributor::distribute_block(crepr::base_block2D* block,
+                                            cds::const_entity_list& entities) {
   /*
    * If we get here than either all clusters of the specified capacity are
    * full and/or one or more are not full but have additional entities

@@ -70,7 +70,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   powerlaw_distributor(const powerlaw_distributor& ) = delete;
   powerlaw_distributor& operator=(const powerlaw_distributor&) = delete;
 
-  bool distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+  bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities) override;
 
   cfds::block_cluster_vector block_clusters(void) const override;

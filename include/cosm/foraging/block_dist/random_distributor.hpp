@@ -81,7 +81,7 @@ class random_distributor final : public rer::client<random_distributor>,
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+  bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities) override;
   cfds::block_cluster_vector block_clusters(void) const override {
     return cfds::block_cluster_vector();

@@ -101,7 +101,7 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+  bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities);
 
   /**

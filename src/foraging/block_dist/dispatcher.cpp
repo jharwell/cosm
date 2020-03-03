@@ -154,7 +154,7 @@ bool dispatcher::initialize(rmath::rng* rng) {
   return true;
 } /* initialize() */
 
-bool dispatcher::distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+bool dispatcher::distribute_block(crepr::base_block2D* block,
                                   cds::const_entity_list& entities) {
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */

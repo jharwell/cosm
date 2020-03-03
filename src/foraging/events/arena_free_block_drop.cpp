@@ -39,7 +39,7 @@ using cds::arena_grid;
  * Non-Member Functions
  ******************************************************************************/
 arena_free_block_drop arena_free_block_drop::for_block(const rmath::vector2u& coord,
-                                             const rtypes::discretize_ratio& resolution) {
+                                                       const rtypes::discretize_ratio& resolution) {
   return arena_free_block_drop(nullptr,
                           coord,
                           resolution,
@@ -62,7 +62,7 @@ static bool block_drop_loc_conflict(const cfds::arena_map& map,
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-arena_free_block_drop::arena_free_block_drop(const std::shared_ptr<crepr::base_block2D>& block,
+arena_free_block_drop::arena_free_block_drop(crepr::base_block2D* block,
                                    const rmath::vector2u& coord,
                                    const rtypes::discretize_ratio& resolution,
                                    const cfds::arena_map_locking& locking)
@@ -108,7 +108,7 @@ void arena_free_block_drop::visit(cfds::arena_map& map) {
                  !(mc_locking & cfds::arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, m_block.get(), rloc);
+  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
 
 
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
@@ -125,7 +125,7 @@ void arena_free_block_drop::visit(cfds::arena_map& map) {
    */
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
     arena_cache_block_drop_visitor op(m_block,
-                                      std::static_pointer_cast<cfrepr::arena_cache>(
+                                      static_cast<cfrepr::arena_cache*>(
                                           cell.cache()),
                                       mc_resolution,
                                       cfds::arena_map_locking::ekALL_HELD);
@@ -137,7 +137,7 @@ void arena_free_block_drop::visit(cfds::arena_map& map) {
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
   } else {
-  map.maybe_unlock(map.cache_mtx(),
+    map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & cfds::arena_map_locking::ekCACHES_HELD));
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block

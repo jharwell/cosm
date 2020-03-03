@@ -75,7 +75,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     rtypes::spatial_dist     dimension; /* caches are square */
     rtypes::discretize_ratio resolution;
     rmath::vector2d          center;
-    const ds::block_vector&  blocks;
+    const ds::block_vector2& blocks;
     rtypes::type_uuid        id;
     /* clang-format on */
   };
@@ -127,15 +127,15 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   /**
    * \brief Get a list of the blocks currently in the cache.
    */
-  ds::block_vector& blocks(void) { return m_blocks; }
-  const ds::block_vector& blocks(void) const { return m_blocks; }
+  cfds::block_vector2& blocks(void) { return m_blocks; }
+  const cfds::block_vector2& blocks(void) const { return m_blocks; }
 
   /**
    * \brief Add a new block to the cache's list of blocks.
    *
    * Does not update the block's location.
    */
-  void block_add(std::shared_ptr<crepr::base_block2D> block) {
+  void block_add(crepr::base_block2D* block) {
     m_blocks.push_back(block);
   }
 
@@ -150,7 +150,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    * \brief Get the oldest block in the cache (the one that has been in the
    * cache the longest).
    */
-  std::shared_ptr<crepr::base_block2D> oldest_block(void) {
+  crepr::base_block2D* oldest_block(void) {
     return m_blocks.front();
   }
 
@@ -166,7 +166,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   static int                     m_next_id;
 
   rtypes::timestep               m_creation{0};
-  cfds::block_vector             m_blocks;
+  cfds::block_vector2            m_blocks;
   /* clang-format on */
 };
 

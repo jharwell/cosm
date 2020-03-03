@@ -74,7 +74,7 @@ class base_distributor {
    * \return \c TRUE if the block distribution was successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+  virtual bool distribute_block(crepr::base_block2D* block,
                                 cds::const_entity_list& entities) = 0;
 
   /**
@@ -93,8 +93,8 @@ class base_distributor {
                                  cds::const_entity_list& entities) {
     return std::all_of(blocks.begin(),
                        blocks.end(),
-                       [&](std::shared_ptr<crepr::base_block2D>& b) {
-                         return distribute_block(b, entities);
+                       [&](auto& b) {
+                         return distribute_block(b.get(), entities);
                        });
   }
   rmath::rng* rng(void) { return m_rng; }

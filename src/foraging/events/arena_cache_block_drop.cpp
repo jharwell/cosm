@@ -40,8 +40,8 @@ using cds::arena_grid;
  ******************************************************************************/
 
 arena_cache_block_drop::arena_cache_block_drop(
-    const std::shared_ptr<crepr::base_block2D>& arena_block,
-    const std::shared_ptr<cfrepr::arena_cache>& cache,
+    crepr::base_block2D* arena_block,
+    cfrepr::arena_cache* cache,
     const rtypes::discretize_ratio& resolution,
     const cfds::arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.foraging.events.arena_cache_block_drop"),
@@ -71,6 +71,8 @@ void arena_cache_block_drop::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void arena_cache_block_drop::visit(cfds::arena_map& map) {
+  RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->robot_id();
+
   /*
    * We might be modifying a cell--don't want block distribution in ANOTHER
    * thread to pick our chosen cell for distribution.
@@ -96,7 +98,6 @@ void arena_cache_block_drop::visit(cfds::arena_map& map) {
    * avoids caches.
    */
   visit(map.access<arena_grid::kCell>(cell2D_op::coord()));
-  RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->robot_id();
 
   ER_INFO("arena_map: fb%d dropped block%d in cache%d,total=[%s] (%zu)",
           robot_id.v(),

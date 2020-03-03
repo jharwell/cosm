@@ -56,7 +56,7 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
 
   cluster_distributor& operator=(const cluster_distributor& s) = delete;
 
-  bool distribute_block(std::shared_ptr<crepr::base_block2D>& block,
+  bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities) override;
   bool distribute_blocks(cfds::block_vector& blocks,
                          cds::const_entity_list& entities) override;

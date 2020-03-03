@@ -66,17 +66,17 @@ bool random_distributor::distribute_blocks(ds::block_vector& blocks,
           mc_yspan.to_str().c_str());
 
   return std::all_of(blocks.begin(), blocks.end(), [&](auto& b) {
-    return this->distribute_block(b, entities);
+      return this->distribute_block(b.get(), entities);
   });
 } /* distribute_blocks() */
 
-bool random_distributor::distribute_block(
-    std::shared_ptr<crepr::base_block2D>& block,
-    cds::const_entity_list& entities) {
+bool random_distributor::distribute_block(crepr::base_block2D* block,
+                                          cds::const_entity_list& entities) {
   cds::cell2D* cell = nullptr;
   auto coords = avail_coord_search(entities, block->dims());
   if (coords) {
-    ER_INFO("Found coordinates for distribution: rel=%s, abs=%s",
+    ER_INFO("Found coordinates for distributing block%d: rel=%s, abs=%s",
+            block->id().v(),
             coords->rel.to_str().c_str(),
             coords->abs.to_str().c_str());
 
@@ -107,17 +107,17 @@ bool random_distributor::distribute_block(
                                              mc_resolution,
                                              cfds::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
-    if (verify_block_dist(block.get(), entities, cell)) {
+    if (verify_block_dist(block, entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
                block->id().v(),
-               block.get(),
+               block,
                block->rloc().to_str().c_str(),
                block->dloc().to_str().c_str());
       /*
        * Now that the block has been distributed, it is another entity that
        * needs to be avoided during subsequent distributions.
        */
-      entities.push_back(block.get());
+      entities.push_back(block);
       return true;
     }
     ER_WARN("Failed to distribute block%d after finding distribution coord",
@@ -143,7 +143,7 @@ bool random_distributor::verify_block_dist(
            block->id().v());
 
   /* The cell it was distributed to should refer to it */
-  ER_CHECK(block == cell->block().get(),
+  ER_CHECK(block == cell->block(),
            "Block%d@%s not referenced by containing cell@%s",
            block->id().v(),
            block->rloc().to_str().c_str(),

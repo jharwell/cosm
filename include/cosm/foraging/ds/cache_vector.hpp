@@ -41,6 +41,7 @@ class arena_cache;
 NS_START(cosm, foraging, ds);
 
 using cache_vector_type = std::shared_ptr<cfrepr::arena_cache>;
+using cache_vector_type2 = cfrepr::arena_cache*;
 
 /*******************************************************************************
  * Type Definitions
@@ -56,6 +57,24 @@ class cache_vector : public std::vector<cache_vector_type> {
  public:
   using std::vector<cache_vector_type>::vector;
   using value_type = std::vector<cache_vector_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the vector contents.
+   */
+  std::string to_str(void) const;
+};
+
+/**
+ * \class cache_vector2
+ * \ingroup foraging ds
+ *
+ * \brief Specialization of \ref std::vector with an additional \ref to_str()
+ * method.
+ */
+class cache_vector2 : public std::vector<cache_vector_type2> {
+ public:
+  using std::vector<cache_vector_type2>::vector;
+  using value_type = std::vector<cache_vector_type2>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.

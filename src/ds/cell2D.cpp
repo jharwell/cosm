@@ -39,20 +39,20 @@ cell2D::cell2D(void) { decoratee().init(); }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::shared_ptr<crepr::base_block2D> cell2D::block(void) const {
-  return std::dynamic_pointer_cast<crepr::base_block2D>(m_entity);
+crepr::base_block2D* cell2D::block(void) const {
+  return dynamic_cast<crepr::base_block2D*>(m_entity);
 } /* block() */
 
-std::shared_ptr<crepr::base_block2D> cell2D::block(void) {
-  return std::dynamic_pointer_cast<crepr::base_block2D>(m_entity);
+crepr::base_block2D* cell2D::block(void) {
+  return dynamic_cast<crepr::base_block2D*>(m_entity);
 } /* block() */
 
-std::shared_ptr<cfrepr::base_cache> cell2D::cache(void) {
-  return std::dynamic_pointer_cast<cfrepr::base_cache>(m_entity);
+cfrepr::base_cache* cell2D::cache(void) {
+  return dynamic_cast<cfrepr::base_cache*>(m_entity);
 } /* cache() */
 
-std::shared_ptr<cfrepr::base_cache> cell2D::cache(void) const {
-  return std::dynamic_pointer_cast<cfrepr::base_cache>(m_entity);
+cfrepr::base_cache* cell2D::cache(void) const {
+  return dynamic_cast<cfrepr::base_cache*>(m_entity);
 } /* cache() */
 
 NS_END(ds, cosm);
