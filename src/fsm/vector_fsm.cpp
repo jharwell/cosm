@@ -40,7 +40,6 @@ NS_START(cosm, fsm);
 vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.fsm.vector"),
-      HFSM_CONSTRUCT_STATE(new_direction, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(collision_avoidance, hfsm::top_state()),
@@ -58,10 +57,6 @@ vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
                                      nullptr,
                                      &entry_collision_recovery,
                                      nullptr),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&new_direction,
-                                     nullptr,
-                                     &entry_new_direction,
-                                     nullptr),
           FSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
 
 /*******************************************************************************
@@ -74,20 +69,6 @@ RCSW_CONST FSM_STATE_DEFINE_ND(vector_fsm, start) {
 FSM_STATE_DEFINE_ND(vector_fsm, collision_avoidance) {
   if (ekST_COLLISION_AVOIDANCE != last_state()) {
     ER_DEBUG("Executing ekST_COLLIISION_AVOIDANCE");
-  }
-  /*
-   * If we came from the NEW_DIRECTION_STATE, then we got there from this
-   * function, and have just finished changing our direction due to a frequent
-   * collision. As such, we need to go into collision recovery, and zoom in our
-   * new direction away from whatever is causing the problem. See #243.
-   */
-  if (ekST_NEW_DIRECTION == previous_state()) {
-    rmath::vector2d force(
-        actuation()->actuator<kin2D::governed_diff_drive>()->max_speed() * 0.7,
-        rmath::radians(0.0));
-    saa()->steer_force2D().accum(force);
-    internal_event(ekST_COLLISION_RECOVERY);
-    return util_signal::ekHANDLED;
   }
 
   if (auto obs =
@@ -106,13 +87,6 @@ FSM_STATE_DEFINE_ND(vector_fsm, collision_avoidance) {
       saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
     }
   } else {
-    /*
-     * Go in whatever direction you are currently facing for collision recovery.
-     */
-    rmath::vector2d force(
-        actuation()->actuator<kin2D::governed_diff_drive>()->max_speed() * 0.7,
-        rmath::radians(0.0));
-    saa()->steer_force2D().accum(force);
     internal_event(ekST_COLLISION_RECOVERY);
   }
   return util_signal::ekHANDLED;
@@ -142,6 +116,15 @@ FSM_STATE_DEFINE_ND(vector_fsm, collision_recovery) {
     m_state.m_collision_rec_count = 0;
     internal_event(ekST_VECTOR);
   }
+  /*
+   * Go in whatever direction you are currently facing for collision
+   * recovery. You have to do this each timestep because the accumulated force
+   * is reset at the end of the robot's control loop.
+   */
+  rmath::vector2d force(
+      actuation()->actuator<kin2D::governed_diff_drive>()->max_speed() * 0.7,
+      rmath::radians(0.0));
+  saa()->steer_force2D().accum(force);
   return util_signal::ekHANDLED;
 }
 
@@ -247,7 +230,6 @@ void vector_fsm::task_start(const ta::taskable_argument* const c_arg) {
       ekST_VECTOR,            /* vector */
       util_signal::ekIGNORED, /* collision avoidance */
       util_signal::ekIGNORED, /* collision recovery */
-      util_signal::ekIGNORED, /* new direction */
       util_signal::ekIGNORED, /* arrived */
   };
   auto* const a = dynamic_cast<const point_argument*>(c_arg);

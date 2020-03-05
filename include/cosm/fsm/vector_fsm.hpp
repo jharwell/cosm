@@ -108,12 +108,6 @@ class vector_fsm final : public util_hfsm,
     ekST_COLLISION_RECOVERY,
 
     /**
-     * We have been colliding too frequently--time to change things up and
-     * hopefully move away from the problem location.
-     */
-    ekST_NEW_DIRECTION,
-
-    /**
      * We have arrived at the specified location within tolerance.
      */
     ekST_ARRIVED,
@@ -145,13 +139,6 @@ class vector_fsm final : public util_hfsm,
   static constexpr uint kCOLLISION_RECOVERY_TIME = 10;
 
   /**
-   * \brief If a robotics sees a threatening obstacle more than twice in this
-   * interval, it is considered to be colliding too frequently, and will enter
-   * collision recovery.
-   */
-  static constexpr uint kFREQ_COLLISION_THRESH = 300;
-
-  /**
    * \brief Calculates the relative vector from the robot to the current goal.
    *
    * \param goal The current goal.
@@ -160,10 +147,6 @@ class vector_fsm final : public util_hfsm,
    * pointing towards the goal.
    */
   rmath::vector2d calc_vector_to_goal(const rmath::vector2d& goal) RCSW_PURE;
-
-  /* inherited states */
-  HFSM_STATE_INHERIT(util_hfsm, new_direction, rpfsm::event_data);
-  HFSM_ENTRY_INHERIT_ND(util_hfsm, entry_new_direction);
 
   /* vector states */
   HFSM_STATE_DECLARE_ND(vector_fsm, start);
