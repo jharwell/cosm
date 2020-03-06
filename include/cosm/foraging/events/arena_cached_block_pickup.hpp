@@ -42,7 +42,7 @@ class arena_cache;
 }
 
 namespace cosm::pal {
-class swarm_manager;
+class argos_sm_adaptor;
 } /* namespace cosm::pal */
 
 NS_START(cosm, foraging, events, detail);
@@ -78,7 +78,7 @@ class arena_cached_block_pickup : public rer::client<arena_cached_block_pickup>,
    * \param t The current timestep.
    */
   arena_cached_block_pickup(cfrepr::arena_cache* cache,
-                            cpal::swarm_manager* sm,
+                            cpal::argos_sm_adaptor* sm,
                             const rtypes::type_uuid& robot_id,
                             const rtypes::timestep& t);
   ~arena_cached_block_pickup(void) override = default;
@@ -106,7 +106,7 @@ class arena_cached_block_pickup : public rer::client<arena_cached_block_pickup>,
 
   cfrepr::arena_cache*    m_real_cache;
 
-  cpal::swarm_manager*    m_sm;
+  cpal::argos_sm_adaptor* m_sm;
 
   /**
    * \brief The block that will be picked up by the robot.

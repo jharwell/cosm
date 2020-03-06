@@ -52,7 +52,7 @@ namespace cosm::repr {
 class arena_cache;
 }
 namespace cosm::pal {
-class swarm_manager;
+class argos_sm_adaptor;
 }
 namespace cosm::ds {
 class cell2D;
@@ -117,9 +117,9 @@ class arena_map final : public rer::client<arena_map>,
    * in the arena to the current set of active caches.
    *
    * \param caches The caches to add.
-   * \param sm The \ref swarm_manager.
+   * \param sm The \ref argos_sm_adaptor.
    */
-  void caches_add(const acache_vectoro& caches, pal::swarm_manager* sm);
+  void caches_add(const acache_vectoro& caches, pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -127,7 +127,7 @@ class arena_map final : public rer::client<arena_map>,
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
    */
-  void cache_remove(repr::arena_cache* victim, pal::swarm_manager* sm);
+  void cache_remove(repr::arena_cache* victim, pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Clear the cells that a cache covers while in the arena that are in
@@ -208,7 +208,7 @@ class arena_map final : public rer::client<arena_map>,
    * actually on a block.
    */
   rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
-                                   const rtypes::type_uuid& ent_id) const;
+                                   const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the
@@ -227,7 +227,7 @@ class arena_map final : public rer::client<arena_map>,
    * actually on a cache.
    */
   rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos,
-                                   const rtypes::type_uuid& ent_id) const;
+                                   const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
   /**
    * \brief Get the subgrid for use in calculating a robot's LOS.
@@ -283,7 +283,7 @@ class arena_map final : public rer::client<arena_map>,
    * - The block distributor
    * - Nest lights
    */
-  bool initialize(pal::swarm_manager* loop, rmath::rng* rng);
+  bool initialize(pal::argos_sm_adaptor* loop, rmath::rng* rng);
 
   void maybe_lock(std::mutex* mtx, bool cond) {
     if (cond) {

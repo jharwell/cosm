@@ -1,7 +1,7 @@
 /**
- * \file argos_controller2D_adaptor.hpp
+ * \file visualization_config.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
+#ifndef INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
+#define INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/base_controller2D.hpp"
-#include "cosm/hal/hal.hpp"
+#include "rcppsw/config/base_config.hpp"
 
-#include <argos3/core/control_interface/ci_controller.h>
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal);
+NS_START(cosm, vis, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \class argos_controller2D_adaptor
- * \ingroup pal
+ * \struct visualization_config
+ * \ingroup vis config
  *
- * \brief Adaptor for \ref controller::base_controller2D to provide an interface
- * for creating controllers within ARGoS.
+ * \brief Configuration for extended ARGoS visualizations.
  */
-class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos::CCI_Controller {
- public:
-  /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void ControlStep(void) override { control_step(); }
+struct visualization_config final : public rconfig::base_config {
+  bool robot_id{false};
+  bool robot_los{false};
+  bool robot_task{false};
+  bool block_id{false};
 };
 
-NS_END(pal, cosm);
+NS_END(config, vis, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_ */
+#endif /* INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_ */

@@ -1,5 +1,5 @@
 /**
- * \file argos_controller2D_adaptor.hpp
+ * \file tasking_oracle_parser.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,41 +18,27 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/base_controller2D.hpp"
-#include "cosm/hal/hal.hpp"
-
-#include <argos3/core/control_interface/ci_controller.h>
+#include "cosm/oracle/config/xml/tasking_oracle_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal);
+NS_START(cosm, oracle, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \class argos_controller2D_adaptor
- * \ingroup pal
- *
- * \brief Adaptor for \ref controller::base_controller2D to provide an interface
- * for creating controllers within ARGoS.
- */
-class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos::CCI_Controller {
- public:
-  /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void ControlStep(void) override { control_step(); }
-};
+void tasking_oracle_parser::parse(const ticpp::Element& node) {
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element tonode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-NS_END(pal, cosm);
+    XML_PARSE_ATTR_DFLT(tonode, m_config, task_exec_ests, false);
+    XML_PARSE_ATTR_DFLT(tonode, m_config, task_interface_ests, false);
+  }
+} /* parse() */
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_ */
+NS_END(xml, config, oracle, cosm);

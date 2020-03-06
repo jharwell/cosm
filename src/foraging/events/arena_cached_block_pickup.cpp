@@ -41,7 +41,7 @@ using cfrepr::base_cache;
  ******************************************************************************/
 arena_cached_block_pickup::arena_cached_block_pickup(
     cfrepr::arena_cache* cache,
-    cpal::swarm_manager* sm,
+    cpal::argos_sm_adaptor* sm,
     const rtypes::type_uuid& robot_id,
     const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.events.arena_cached_block_pickup"),

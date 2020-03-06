@@ -1,7 +1,7 @@
 /**
  * \file swarm_manager.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -42,7 +42,7 @@ void ___sighandler(int signum);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-swarm_manager_impl::swarm_manager_impl(void)
+swarm_manager::swarm_manager(void)
     : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
   /*
    * For some reason GNU parallel on MSI resets the core dump memory limit to 0
@@ -65,8 +65,8 @@ swarm_manager_impl::swarm_manager_impl(void)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void swarm_manager_impl::output_init(const std::string& output_root,
-                                     const std::string& output_dir) {
+void swarm_manager::output_init(const std::string& output_root,
+                                const std::string& output_dir) {
   if ("__current_date__" == output_dir) {
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
     m_output_root = output_root + "/" + rcppsw::to_string(now.date().year()) +
@@ -79,7 +79,7 @@ void swarm_manager_impl::output_init(const std::string& output_root,
   }
 } /* output_init() */
 
-void swarm_manager_impl::rng_init(const rmath::config::rng_config* config) {
+void swarm_manager::rng_init(const rmath::config::rng_config* config) {
   rmath::rngm::instance().register_type<rmath::rng>("swarm_manager");
   if (nullptr == config || (nullptr != config && -1 == config->seed)) {
     ER_INFO("Using time seeded RNG");
@@ -92,6 +92,9 @@ void swarm_manager_impl::rng_init(const rmath::config::rng_config* config) {
   }
 } /* rng_init() */
 
+/*******************************************************************************
+ * Non-Member Functions
+ ******************************************************************************/
 void ___sighandler(int signum) {
   /* trigger a core dump if we get a segfault or other signal */
   std::signal(signum, SIG_DFL);

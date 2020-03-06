@@ -1,7 +1,7 @@
 /**
- * \file argos_controller2D_adaptor.hpp
+ * \file tasking_oracle_config.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
+#ifndef INCLUDE_COSM_ORACLE_CONFIG_TASKING_ORACLE_CONFIG_HPP_
+#define INCLUDE_COSM_ORACLE_CONFIG_TASKING_ORACLE_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/base_controller2D.hpp"
-#include "cosm/hal/hal.hpp"
-
-#include <argos3/core/control_interface/ci_controller.h>
+#include "rcppsw/config/base_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal);
+NS_START(cosm, oracle, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \class argos_controller2D_adaptor
- * \ingroup pal
+ * \struct tasking_oracle_config
+ * \ingroup oracle config
  *
- * \brief Adaptor for \ref controller::base_controller2D to provide an interface
- * for creating controllers within ARGoS.
+ * \brief Parameters for all-seeing task allocation oracle.
  */
-class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos::CCI_Controller {
- public:
-  /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void ControlStep(void) override { control_step(); }
+struct tasking_oracle_config final : public rconfig::base_config {
+  /**
+   * \brief Should the all-knowing oracle be used when updating task execution
+   * time estimates? Only applicable to certain controllers.
+   */
+  bool task_exec_ests{false};
+
+  /**
+   * \brief Should the all-knowing oracle be used when updating task interface
+   * time estimates? Only applicable to certain controllers.
+   */
+  bool task_interface_ests{false};
 };
 
-NS_END(pal, cosm);
+NS_END(config, oracle, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_ */
+#endif /* INCLUDE_COSM_ORACLE_CONFIG_TASKING_ORACLE_CONFIG_HPP_ */

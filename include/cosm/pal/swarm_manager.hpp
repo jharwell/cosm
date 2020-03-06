@@ -25,16 +25,14 @@
  * Includes
  ******************************************************************************/
 #include <ext/ticpp/ticpp.h>
-
 #include <string>
+#include <memory>
 
 #include "rcppsw/common/common.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
-#include "rcppsw/rcppsw.hpp"
-
-#include "cosm/hal/hal.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -44,9 +42,8 @@ NS_START(cosm, pal);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
- * \class swarm_manager_impl
+ * \class swarm_manager
  * \ingroup cosm pal
  *
  * \brief Base class for the harness for support functionality that helps to
@@ -55,10 +52,13 @@ NS_START(cosm, pal);
  * - Metric collection
  * - Applications of temporal variance
  * - Computing convergence
+ *
+ * Only core functionality agnostic to the platform on which the swarm control
+ * algorithms are being executed is included here.
  */
-class swarm_manager_impl : public rer::client<swarm_manager_impl> {
+class swarm_manager : public rer::client<swarm_manager> {
  public:
-  swarm_manager_impl(void);
+  swarm_manager(void);
 
   virtual void init(ticpp::Element& node) = 0;
   virtual void reset(void) = 0;
@@ -67,8 +67,8 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
   virtual void destroy(void) = 0;
 
   /* Not copy constructable/assignable by default */
-  swarm_manager_impl(const swarm_manager_impl&) = delete;
-  const swarm_manager_impl& operator=(const swarm_manager_impl&) = delete;
+  swarm_manager(const swarm_manager&) = delete;
+  const swarm_manager& operator=(const swarm_manager&) = delete;
 
  protected:
   /**
@@ -93,74 +93,11 @@ class swarm_manager_impl : public rer::client<swarm_manager_impl> {
 
  private:
   /* clang-format off */
-  std::string m_output_root{};
-  rmath::rng* m_rng{nullptr};
+  std::string                      m_output_root{};
+  rmath::rng*                      m_rng{nullptr};
   /* clang-format on */
 };
 
 NS_END(cosm, pal);
-
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-#include <argos3/core/simulator/entity/floor_entity.h>
-#include <argos3/core/simulator/loop_functions.h>
-#endif
-
-NS_START(cosm, pal);
-
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-class swarm_manager : public swarm_manager_impl,
-                      public argos::CLoopFunctions,
-                      public rer::client<swarm_manager> {
- public:
-  swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {}
-
-  ~swarm_manager(void) override = default;
-
-  /* Not copy constructable/assignable by default */
-  swarm_manager(const swarm_manager&) = delete;
-  const swarm_manager& operator=(const swarm_manager&) = delete;
-
-  /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD {
-    m_floor = &GetSpace().GetFloorEntity();
-    init(node);
-  }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void PreStep(void) override { pre_step(); }
-  void PostStep(void) override { post_step(); }
-  void Destroy(void) override { destroy(); }
-
-  const std::string& led_medium(void) const { return m_led_medium; }
-
- protected:
-#if (LIBRA_ER >= LIBRA_ER_ALL)
-  void ndc_push(void) const {
-    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
-                "]");
-  }
-  void ndc_pop(void) const { ER_NDC_POP(); }
-#else
-  void ndc_push(void) const {}
-  void ndc_pop(void) const {}
-#endif
-
-  argos::CFloorEntity* floor(void) const { return m_floor; }
-  void led_medium(const std::string& s) { m_led_medium = s; }
-
- private:
-  /**
-   * \brief The name of the LED medium in ARGoS, for use in destroying caches.
-   */
-  std::string m_led_medium{};
-
-  /* clang-format on */
-  argos::CFloorEntity* m_floor{nullptr};
-  /* clang-format off */
-};
-#else
-#error "Unsupported HAL target"
-#endif
-
-NS_END(pal, cosm);
 
 #endif /* INCLUDE_COSM_PAL_SWARM_MANAGER_HPP_ */

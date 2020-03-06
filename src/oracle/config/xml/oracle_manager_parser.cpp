@@ -1,5 +1,5 @@
 /**
- * \file argos_controller2D_adaptor.hpp
+ * \file oracle_manager_parser.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,41 +18,45 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/base_controller2D.hpp"
-#include "cosm/hal/hal.hpp"
-
-#include <argos3/core/control_interface/ci_controller.h>
+#include "cosm/oracle/config/xml/oracle_manager_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal);
+NS_START(cosm, oracle, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \class argos_controller2D_adaptor
- * \ingroup pal
- *
- * \brief Adaptor for \ref controller::base_controller2D to provide an interface
- * for creating controllers within ARGoS.
- */
-class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos::CCI_Controller {
- public:
-  /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
-  void ControlStep(void) override { control_step(); }
-};
+void oracle_manager_parser::parse(const ticpp::Element& node) {
+  /* oracles not used */
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
+  ticpp::Element enode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-NS_END(pal, cosm);
+  m_entities.parse(enode);
+  m_tasking.parse(enode);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER2D_ADAPTOR_HPP_ */
+  if (m_entities.is_parsed()) {
+    m_config->entities =
+        *m_entities.config_get<entities_oracle_parser::config_type>();
+  }
+  if (m_tasking.is_parsed()) {
+    m_config->tasking =
+        *m_tasking.config_get<tasking_oracle_parser::config_type>();
+  }
+} /* parse() */
+
+bool oracle_manager_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+  return m_entities.validate() && m_tasking.validate();
+} /* validate() */
+
+NS_END(xml, config, oracle, cosm);

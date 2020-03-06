@@ -31,7 +31,7 @@
 #include "cosm/foraging/events/cell2D_cache_extent.hpp"
 #include "cosm/foraging/repr/arena_cache.hpp"
 #include "cosm/foraging/repr/light_type_index.hpp"
-#include "cosm/pal/swarm_manager.hpp"
+#include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
@@ -73,7 +73,7 @@ arena_map::arena_map(const config::arena_map_config* config)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool arena_map::initialize(pal::swarm_manager* sm, rmath::rng* rng) {
+bool arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
   for (auto& l : m_nest.lights()) {
     sm->AddEntity(*l);
   } /* for(&l..) */
@@ -82,7 +82,7 @@ bool arena_map::initialize(pal::swarm_manager* sm, rmath::rng* rng) {
 } /* initialize() */
 
 void arena_map::caches_add(const acache_vectoro& caches,
-                           cpal::swarm_manager* sm) {
+                           cpal::argos_sm_adaptor* sm) {
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
@@ -244,7 +244,8 @@ void arena_map::distribute_all_blocks(void) {
   }   /* for(i..) */
 } /* distribute_all_blocks() */
 
-void arena_map::cache_remove(repr::arena_cache* victim, pal::swarm_manager* sm) {
+void arena_map::cache_remove(repr::arena_cache* victim,
+                             pal::argos_sm_adaptor* sm) {
   /* Remove light for cache from ARGoS */
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());

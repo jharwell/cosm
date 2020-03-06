@@ -121,7 +121,9 @@ namespace fsm {
 namespace metrics {}
 } /* namespace fsm */
 
-namespace vis {}
+namespace vis {
+namespace config {}
+} /* namespace vis */
 
 namespace ds {
 namespace config {}
@@ -145,6 +147,10 @@ namespace block_dist {}
 } /* namespace foraging */
 
 namespace events{}
+
+namespace oracle {
+namespace config {}
+} /* namespace oracle */
 
 } /* namespace cosm */
 
@@ -176,8 +182,11 @@ namespace cfbd = cforaging::block_dist;
 namespace ctvmetrics = ctv::metrics;
 namespace crepr = cosm::repr;
 namespace cvis = cosm::vis;
+namespace cvconfig = cvis::config;
 namespace cpal = cosm::pal;
 namespace cpconfig = cpal::config;
+namespace coracle = cosm::oracle;
+namespace coconfig = coracle::config;
 namespace cta = cosm::ta;
 namespace ctametrics = cta::metrics;
 
