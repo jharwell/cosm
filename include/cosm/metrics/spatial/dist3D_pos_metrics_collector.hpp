@@ -1,7 +1,7 @@
 /**
- * \file collision_locs_metrics_collector.hpp
+ * \file dist3D_pos_metrics_collector.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,51 +18,52 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_METRICS_SPATIAL_DIST3D_POS_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_METRICS_SPATIAL_DIST3D_POS_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
 #include <list>
+#include <string>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/metrics/spatial/grid3D_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+NS_START(cosm, metrics, spatial);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class collision_locs_metrics_collector
- * \ingroup fsm metrics
+ * \class dist3D_pos_metrics_collector
+ * \ingroup rcppsw metrics swarm spatial
  *
- * \brief Collector for \ref collision_metrics as a 2D grid of where robots
- * most frequently encounter other robots.
+ * \brief Collector for \ref dist3D_metrics.
  *
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class dist3D_pos_metrics_collector final
+    : public rmetrics::spatial::grid3D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
    * \param interval Collection interval.
-   * \param dims Dimensions of the arena.
+   * \param dims Dimensions of arena.
    */
-  collision_locs_metrics_collector(const std::string& ofname,
-                             const rtypes::timestep& interval,
-                             const rmath::vector2u& dims) :
-      grid2D_metrics_collector(ofname, interval, dims) {}
+  dist3D_pos_metrics_collector(const std::string& ofname,
+                                       const rtypes::timestep& interval,
+                                       const rmath::vector3u& dims)
+      : grid3D_metrics_collector(ofname, interval, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };
 
-NS_END(metrics, fsm, cosm);
+NS_END(spatial, metrics, cosm);
 
-#endif /* INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_METRICS_SPATIAL_DIST3D_POS_METRICS_COLLECTOR_HPP_ */

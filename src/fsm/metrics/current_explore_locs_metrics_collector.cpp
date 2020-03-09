@@ -37,12 +37,7 @@ void current_explore_locs_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
   inc_total_count();
-
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      inc_cell_count(i, j, m.current_explore_loc() == rmath::vector2u(i, j));
-    } /* for(j..) */
-  }   /* for(i..) */
+  inc_cell_count(m.current_explore_loc());
 } /* collect() */
 
 NS_END(metrics, fsm, cosm);

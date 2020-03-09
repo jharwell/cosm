@@ -1,5 +1,5 @@
 /**
- * \file spatial_dist2D_pos_metrics_collector.cpp
+ * \file dist3D_pos_metrics_collector.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,28 +21,22 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/spatial_dist2D_pos_metrics_collector.hpp"
-
-#include "cosm/metrics/spatial_dist2D_metrics.hpp"
+#include "cosm/metrics/spatial/dist3D_pos_metrics_collector.hpp"
+#include "cosm/metrics/spatial/dist3D_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, metrics, spatial);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void spatial_dist2D_pos_metrics_collector::collect(
+void dist3D_pos_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const spatial_dist2D_metrics&>(metrics);
+  auto& m = dynamic_cast<const dist3D_metrics&>(metrics);
   inc_total_count();
-
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      inc_cell_count(i, j, m.discrete_position2D() == rmath::vector2u(i, j));
-    } /* for(j..) */
-  }   /* for(i..) */
+  inc_cell_count(m.dpos3D());
 } /* collect() */
 
-NS_END(metrics, cosm);
+NS_END(spatial, metrics, cosm);

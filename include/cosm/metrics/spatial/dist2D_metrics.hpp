@@ -1,7 +1,7 @@
 /**
- * \file movement_metrics.hpp
+ * \file dist2D_metrics.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,49 +18,54 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_MOVEMENT_METRICS_HPP_
-#define INCLUDE_COSM_FSM_METRICS_MOVEMENT_METRICS_HPP_
+#ifndef INCLUDE_COSM_METRICS_SPATIAL_DIST2D_METRICS_HPP_
+#define INCLUDE_COSM_METRICS_SPATIAL_DIST2D_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/math/vector2.hpp"
 #include "rcppsw/metrics/base_metrics.hpp"
-#include "rcppsw/math/vector3.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
-#include "cosm/cosm.hpp"
+#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/math/radians.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+NS_START(cosm, metrics, spatial);
 
-/*******************************************************************************
+/******************************************************************************
  * Class Definitions
  ******************************************************************************/
+
 /**
- * \class movement_metrics
- * \ingroup fsm metrics
+ * \class dist2D_metrics
+ * \ingroup metrics spatial
  *
- * \brief Interface defining what metrics regarding movement/distance traveled
- * should be collected from all controllers.
+ * \brief Defines the metrics to be collected from swarms regarding spatial
+ * distributions of robots within 2D space.
  */
-class movement_metrics : virtual public rmetrics::base_metrics {
+class dist2D_metrics : public virtual rmetrics::base_metrics {
  public:
-  movement_metrics(void) = default;
-  ~movement_metrics(void) override = default;
+  dist2D_metrics(void) = default;
 
   /**
-   * \brief Get the distance that a robot has traveled in a single timestep.
+   * \brief Return a single robot's current position in 2D space in real
+   * coordinates.
    */
-  virtual rtypes::spatial_dist distance(void) const = 0;
+  virtual rmath::vector2d pos2D(void) const = 0;
 
   /**
-   * \brief Get the velocity that a robot has on a single timestep. If the robot
-   * is only moving in 2D, then the Z component of the velocity should be 0.
+   * \brief Return a single robot's discretized position in 2D space.
    */
-  virtual rmath::vector3d velocity(void) const = 0;
+  virtual rmath::vector2u dpos2D(void) const = 0;
+
+  /**
+   * \brief Return a single robot's current heading in 2D space.
+   */
+  virtual rmath::radians heading2D(void) const = 0;
 };
 
-NS_END(metrics, fsm, cosm);
+NS_END(spatial, metrics, cosm);
 
-#endif /* INCLUDE_COSM_FSM_METRICS_MOVEMENT_METRICS_HPP_ */
+#endif /* INCLUDE_COSM_METRICS_spatial_DIST2D_METRICS_HPP_ */

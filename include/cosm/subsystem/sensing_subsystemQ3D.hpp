@@ -1,5 +1,5 @@
 /**
- * \file sensing_subsystem2D.hpp
+ * \file sensing_subsystemQ3D.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -41,59 +41,73 @@ NS_START(cosm, subsystem);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class sensing_subsystem2D
+ * \class sensing_subsystemQ3D
  * \ingroup subsystem
  *
- * \brief The sensing subsystem for all sensors used by robotics controllers
- * that operate in 2D.
+ * \brief The sensing subsystem for all sensors used by robot controllers that
+ * actuate in 2D, but can sense in 3D, and as such are "quasi" 3D. Think wheeled
+ * robots moving up hills/ramps.
  */
-class sensing_subsystem2D : public base_sensing_subsystem {
+class sensing_subsystemQ3D : public base_sensing_subsystem {
  public:
   /**
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
-  sensing_subsystem2D(const hal::sensors::position_sensor& pos,
-                      const sensor_map& sensors)
+  sensing_subsystemQ3D(const hal::sensors::position_sensor& pos,
+                       const sensor_map& sensors)
       : base_sensing_subsystem(pos, sensors) {}
 
-  virtual ~sensing_subsystem2D(void) = default;
+  virtual ~sensing_subsystemQ3D(void) = default;
 
   /**
    * \brief Get the robot's current location.
    */
-  const rmath::vector2d& position(void) const { return m_position; }
-  const rmath::vector2u& discrete_position(void) const { return m_dposition; }
+  const rmath::vector3d& position(void) const { return m_position; }
+  const rmath::vector3u& discrete_position(void) const { return m_dposition; }
 
   /**
-   * \brief Get the angle of the current robot's heading. A shortcut to help
-   * reduce the ache in my typing fingers.
+   * \brief Get the robot's current azimuth heading; this effectively is the
+   * angle of the 2D projection of the robots current position in 3D space onto
+   * the XY plane.
    */
-  const rmath::radians& heading(void) const { return m_heading; }
+  const rmath::radians& azimuth(void) const { return m_azimuth; }
 
+  /**
+   * \brief Get the robot's current inclination heading; this effectively is the
+   * angle the robots current position vector makes with the XY plane.
+   */
+  const rmath::radians& inclination(void) const { return m_inclination; }
+
+  /**
+   * \brief Update the current time and position information for the robot.
+   */
   void update(const rtypes::timestep& t,
               const rtypes::discretize_ratio& ratio) override {
     tick(t);
     auto reading = pos_sensor()->reading();
     m_prev_position = m_position;
-    m_position = reading.position.project_on_xy();
+    m_position = reading.position;
     m_dposition = rmath::dvec2uvec(m_position, ratio.v());
-    m_heading = reading.z_ang;
+    auto sphere = m_position.to_spherical();
+    m_azimuth = sphere.azimuth();
+    m_inclination = sphere.inclination();
   }
 
   /**
    * \brief Get how far the robot has traveled in the last timestep, as well as
    * the direction/magnitude.
    */
-  rmath::vector2d tick_travel(void) const {
+  rmath::vector3d tick_travel(void) const {
     return m_position - m_prev_position;
   }
 
  private:
   /* clang-format off */
-  rmath::vector2d               m_position{};
-  rmath::vector2d               m_prev_position{};
-  rmath::radians                m_heading{};
-  rmath::vector2u               m_dposition{};
+  rmath::vector3d               m_position{};
+  rmath::vector3d               m_prev_position{};
+  rmath::radians                m_azimuth{};
+  rmath::radians                m_inclination{};
+  rmath::vector3u               m_dposition{};
   /* clang-format off */
 };
 

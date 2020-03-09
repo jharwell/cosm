@@ -38,7 +38,7 @@ NS_START(cosm, robots, footbot);
  * \class footbot_actuation_subsystem
  * \ingroup robots footbot
  *
- * \brief The actuation subsystem for the footbot.
+ * \brief The 2D actuation subsystem for the foot-bot robot.
  */
 class footbot_actuation_subsystem : public subsystem::actuation_subsystem2D {
  public:

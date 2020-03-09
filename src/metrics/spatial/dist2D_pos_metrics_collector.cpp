@@ -1,7 +1,7 @@
 /**
- * \file goal_acq_locs_metrics_collector.cpp
+ * \file dist2D_pos_metrics_collector.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,23 +21,22 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/fsm/metrics/goal_acq_locs_metrics_collector.hpp"
-
-#include "cosm/fsm/metrics/goal_acq_metrics.hpp"
+#include "cosm/metrics/spatial/dist2D_pos_metrics_collector.hpp"
+#include "cosm/metrics/spatial/dist2D_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+NS_START(cosm, metrics, spatial);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void goal_acq_locs_metrics_collector::collect(
+void dist2D_pos_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
+  auto& m = dynamic_cast<const dist2D_metrics&>(metrics);
   inc_total_count();
-  inc_cell_count(m.acquisition_loc());
+  inc_cell_count(m.dpos2D());
 } /* collect() */
 
-NS_END(metrics, fsm, cosm);
+NS_END(spatial, metrics, cosm);

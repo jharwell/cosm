@@ -1,5 +1,5 @@
 /**
- * \file footbot_saa_subsystem.hpp
+ * \file footbot_saa_subsystem2D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM_HPP_
-#define INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM_HPP_
+#ifndef INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM2D_HPP_
+#define INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM2D_HPP_
 
 /*******************************************************************************
  * Includes
@@ -40,16 +40,18 @@ NS_START(cosm, robots, footbot);
  ******************************************************************************/
 
 /**
- * \class footbot_saa_subsystem
+ * \class footbot_saa_subsystem2D
  * \ingroup robots footbot
  *
- * \brief Sensing and Actuation (SAA) subsystem for the footbot
- * robot.
+ * \brief Sensing and Actuation (SAA) subsystem for the footbot robot when it is
+ * operating in strictly 2D environments.
  */
-class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
-  public rer::client<footbot_saa_subsystem> {
+class footbot_saa_subsystem2D final : public subsystem::saa_subsystem2D,
+                                      public rer::client<footbot_saa_subsystem2D> {
  public:
-  footbot_saa_subsystem(const hal::sensors::position_sensor& pos,
+  using sensing_subsystem_type = footbot_sensing_subsystem<subsystem::sensing_subsystem2D>;
+
+  footbot_saa_subsystem2D(const hal::sensors::position_sensor& pos,
                         const subsystem::sensing_subsystem2D::sensor_map& sensors,
                         const subsystem::actuation_subsystem2D::actuator_map& actuators,
                         const steer2D::config::force_calculator_config* steer_config);
@@ -66,13 +68,13 @@ class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
    */
   void steer_force2D_apply(void) override;
 
-  footbot_sensing_subsystem* sensing(void) override {
-    return static_cast<footbot_sensing_subsystem*>(
+  sensing_subsystem_type* sensing(void) override {
+    return static_cast<sensing_subsystem_type*>(
         subsystem::saa_subsystem2D::sensing_impl());
   }
 
-  const footbot_sensing_subsystem* sensing(void) const override {
-    return static_cast<const footbot_sensing_subsystem*>(
+  const sensing_subsystem_type* sensing(void) const override {
+    return static_cast<const sensing_subsystem_type*>(
         subsystem::saa_subsystem2D::sensing_impl());
   }
 
@@ -89,4 +91,4 @@ class footbot_saa_subsystem final : public subsystem::saa_subsystem2D,
 
 NS_END(footbot, robots, cosm);
 
-#endif /* INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM_HPP_ */
+#endif /* INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SAA_SUBSYSTEM2D_HPP_ */

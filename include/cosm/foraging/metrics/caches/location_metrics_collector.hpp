@@ -27,7 +27,7 @@
 #include <string>
 #include <list>
 
-#include "rcppsw/metrics/spatial/grid2D_avg_metrics_collector.hpp"
+#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -48,7 +48,7 @@ NS_START(cosm, foraging, metrics, caches);
  * are not supported.
  */
 class location_metrics_collector final :
-    public rmetrics::spatial::grid2D_avg_metrics_collector {
+    public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
@@ -58,7 +58,7 @@ class location_metrics_collector final :
   location_metrics_collector(const std::string& ofname,
                              const rtypes::timestep& interval,
                              const rmath::vector2u& dims) :
-      grid2D_avg_metrics_collector(ofname, interval, dims) {}
+      grid2D_metrics_collector(ofname, interval, dims) {}
 
 
   void collect(const rmetrics::base_metrics& metrics) override;

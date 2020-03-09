@@ -27,7 +27,7 @@
 #include <mutex>
 #include <tuple>
 
-#include "rcppsw/ds/stacked_grid.hpp"
+#include "rcppsw/ds/stacked_grid2D.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
 
 #include "cosm/ds/cell2D.hpp"
@@ -52,7 +52,7 @@ using arena_layer_stack = std::tuple<cell2D>;
  * \brief 2D grid of \ref cell2D objects containing the state of the geometrical
  * extent of the arena floor.
  */
-class arena_grid : public rds::stacked_grid<arena_layer_stack> {
+class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
  public:
   using view = rds::base_grid2D<ds::cell2D>::grid_view;
   using const_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
@@ -68,7 +68,7 @@ class arena_grid : public rds::stacked_grid<arena_layer_stack> {
    * The origin of the grid is in the lower left corner at (0,0).
    */
   arena_grid(rtypes::discretize_ratio resolution, size_t x_max, size_t y_max)
-      : stacked_grid(resolution, x_max, y_max) {
+      : stacked_grid2D(resolution, x_max, y_max) {
     for (size_t i = 0; i < xdsize(); ++i) {
       for (size_t j = 0; j < ydsize(); ++j) {
         access<kCell>(i, j).loc(rmath::vector2u(i, j));

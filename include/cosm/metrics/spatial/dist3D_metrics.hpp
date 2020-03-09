@@ -1,5 +1,5 @@
 /**
- * \file spatial_dist2D_metrics.hpp
+ * \file dist3D_metrics.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,52 +18,58 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_SPATIAL_DIST2D_METRICS_HPP_
-#define INCLUDE_COSM_METRICS_SPATIAL_DIST2D_METRICS_HPP_
+#ifndef INCLUDE_COSM_METRICS_SPATIAL_DIST3D_METRICS_HPP_
+#define INCLUDE_COSM_METRICS_SPATIAL_DIST3D_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/metrics/base_metrics.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, metrics, spatial);
 
 /******************************************************************************
  * Class Definitions
  ******************************************************************************/
 
 /**
- * \class spatial_dist2D_metrics
+ * \class dist3D_metrics
  * \ingroup metrics spatial
  *
  * \brief Defines the metrics to be collected from swarms regarding spatial
- * distributions of robots within 2D space.
+ * distributions of robots within 3D space.
  */
-class spatial_dist2D_metrics : public virtual rmetrics::base_metrics {
+class dist3D_metrics : public virtual rmetrics::base_metrics {
  public:
-  spatial_dist2D_metrics(void) = default;
+  dist3D_metrics(void) = default;
 
   /**
-   * \brief Return a single robot's current position in 2D space in real
+   * \brief Return a single robot's current position in 3D space in real
    * coordinates.
    */
-  virtual const rmath::vector2d& position2D(void) const = 0;
+  virtual rmath::vector3d pos3D(void) const = 0;
 
   /**
-   * \brief Return a single robot's discretized position in 2D space.
+   * \brief Return a single robot's discretized position in 3D space.
    */
-  virtual const rmath::vector2u& discrete_position2D(void) const = 0;
+  virtual rmath::vector3u dpos3D(void) const = 0;
 
   /**
-   * \brief Return a single robot's current heading in 2D space.
+   * \brief Return a single robot's azimuth angle in 3D space.
    */
-  virtual rmath::vector2d heading2D(void) const = 0;
+  virtual rmath::radians azimuth(void) const = 0;
+
+  /**
+   * \brief Return a single robot's inclination angle in 3D space.
+   */
+  virtual rmath::radians inclination(void) const = 0;
 };
 
-NS_END(metrics, cosm);
+NS_END(spatial, metrics, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_SPATIAL_DIST2D_METRICS_HPP_ */
+#endif /* INCLUDE_COSM_METRICS_SPATIAL_DIST3D_METRICS_HPP_ */

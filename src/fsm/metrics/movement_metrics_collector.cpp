@@ -22,7 +22,6 @@
  * Includes
  ******************************************************************************/
 #include "cosm/fsm/metrics/movement_metrics_collector.hpp"
-
 #include "cosm/fsm/metrics/movement_metrics.hpp"
 
 /*******************************************************************************

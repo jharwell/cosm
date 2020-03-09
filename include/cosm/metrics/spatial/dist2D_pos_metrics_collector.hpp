@@ -1,5 +1,5 @@
 /**
- * \file spatial_dist2D_pos_metrics_collector.hpp
+ * \file dist2D_pos_metrics_collector.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -27,43 +27,43 @@
 #include <list>
 #include <string>
 
-#include "rcppsw/metrics/spatial/grid2D_avg_metrics_collector.hpp"
+#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
 
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, metrics, spatial);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class spatial_dist2D_pos_metrics_collector
+ * \class dist2D_pos_metrics_collector
  * \ingroup rcppsw metrics swarm spatial
  *
- * \brief Collector for \ref spatial_dist2D_metrics.
+ * \brief Collector for \ref dist2D_metrics.
  *
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class spatial_dist2D_pos_metrics_collector final
-    : public rmetrics::spatial::grid2D_avg_metrics_collector {
+class dist2D_pos_metrics_collector final
+    : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
    * \param interval Collection interval.
    * \param dims Dimensions of arena.
    */
-  spatial_dist2D_pos_metrics_collector(const std::string& ofname,
+  dist2D_pos_metrics_collector(const std::string& ofname,
                                        const rtypes::timestep& interval,
                                        const rmath::vector2u& dims)
-      : grid2D_avg_metrics_collector(ofname, interval, dims) {}
+      : grid2D_metrics_collector(ofname, interval, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };
 
-NS_END(metrics, cosm);
+NS_END(spatial, metrics, cosm);
 
 #endif /* INCLUDE_COSM_METRICS_SPATIAL_DIST2D_POS_METRICS_COLLECTOR_HPP_ */

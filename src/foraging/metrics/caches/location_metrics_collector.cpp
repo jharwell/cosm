@@ -36,12 +36,7 @@ NS_START(cosm, foraging, metrics, caches);
 void location_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const location_metrics&>(metrics);
   inc_total_count();
-
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      inc_cell_count(i, j, m.location() == rmath::vector2u(i, j));
-    } /* for(j..) */
-  }   /* for(i..) */
+  inc_cell_count(m.location());
 } /* collect() */
 
 NS_END(caches, metrics, foraging, cosm);

@@ -159,7 +159,6 @@ namespace config {}
 namespace csubsystem = cosm::subsystem;
 namespace ccontroller = cosm::controller;
 namespace cfsm = cosm::fsm;
-namespace cfmetrics = cfsm::metrics;
 namespace chal = cosm::hal;
 namespace ckin2D = cosm::kin2D;
 namespace csteer2D = cosm::steer2D;

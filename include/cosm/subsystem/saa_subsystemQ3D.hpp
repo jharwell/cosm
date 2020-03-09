@@ -1,5 +1,5 @@
 /**
- * \file saa_subsystem2D.hpp
+ * \file saa_subsystemQ3D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEM2D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEM2D_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_
 
 /*******************************************************************************
  * Includes
@@ -28,7 +28,7 @@
 
 #include "cosm/steer2D/force_calculator.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,23 +39,24 @@ NS_START(cosm, subsystem);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class saa_subsystem2D
+ * \class saa_subsystemQ3D
  * \ingroup subsystem
  *
- * \brief Sensing and Actuation (SAA) subsystem for the robot. Implements the
- * BOID interface, which requires both sensors and actuators.
+ * \brief Sensing and Actuation (SAA) subsystem for robot's operating in 2D but
+ * sensing in 3D. Implements the BOID interface, which requires both sensors and
+ * actuators.
  */
-class saa_subsystem2D : public steer2D::boid,
-                        public rer::client<saa_subsystem2D> {
+class saa_subsystemQ3D : public steer2D::boid,
+                         public rer::client<saa_subsystemQ3D> {
  public:
-  saa_subsystem2D(
+  saa_subsystemQ3D(
       const hal::sensors::position_sensor& pos_sensor,
-      const sensing_subsystem2D::sensor_map& sensors,
+      const sensing_subsystemQ3D::sensor_map& sensors,
       const actuation_subsystem2D::actuator_map& actuators,
       const steer2D::config::force_calculator_config* const steer_config)
       : ER_CLIENT_INIT("cosm.subsystem.saa"),
         m_actuation(std::make_unique<actuation_subsystem2D>(actuators)),
-        m_sensing(std::make_unique<sensing_subsystem2D>(pos_sensor, sensors)),
+        m_sensing(std::make_unique<sensing_subsystemQ3D>(pos_sensor, sensors)),
         m_steer2D_calc(*this, steer_config) {}
 
   /**
@@ -69,15 +70,15 @@ class saa_subsystem2D : public steer2D::boid,
   }
   steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
 
-  virtual sensing_subsystem2D* sensing(void) = 0;
-  virtual const sensing_subsystem2D* sensing(void) const = 0;
+  virtual sensing_subsystemQ3D* sensing(void) = 0;
+  virtual const sensing_subsystemQ3D* sensing(void) const = 0;
   virtual actuation_subsystem2D* actuation(void) = 0;
   virtual const actuation_subsystem2D* actuation(void) const = 0;
 
  protected:
-  virtual sensing_subsystem2D* sensing_impl(void) { return m_sensing.get(); }
+  virtual sensing_subsystemQ3D* sensing_impl(void) { return m_sensing.get(); }
 
-  virtual const sensing_subsystem2D* sensing_impl(void) const {
+  virtual const sensing_subsystemQ3D* sensing_impl(void) const {
     return m_sensing.get();
   }
 
@@ -90,12 +91,12 @@ class saa_subsystem2D : public steer2D::boid,
 
  private:
   /* clang-format off */
-  std::unique_ptr<actuation_subsystem2D> m_actuation;
-  std::unique_ptr<sensing_subsystem2D>   m_sensing;
-  steer2D::force_calculator              m_steer2D_calc;
+  std::unique_ptr<actuation_subsystem2D>  m_actuation;
+  std::unique_ptr<sensing_subsystemQ3D>   m_sensing;
+  steer2D::force_calculator               m_steer2D_calc;
   /* clang-format on */
 };
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEM2D_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_ */

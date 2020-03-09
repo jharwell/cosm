@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "cosm/cosm.hpp"
 
 #include "cosm/hal/hal.hpp"
@@ -76,7 +76,7 @@ class position_sensor_impl {
    * (X,Y,Z) angles.
    */
   struct sensor_reading {
-    rmath::vector2d position{};
+    rmath::vector3d position{};
     rmath::radians x_ang{};
     rmath::radians y_ang{};
     rmath::radians z_ang{};
@@ -99,7 +99,9 @@ class position_sensor_impl {
     ret.x_ang = rmath::radians(x.GetValue());
     ret.y_ang = rmath::radians(y.GetValue());
     ret.z_ang = rmath::radians(z.GetValue());
-    ret.position = rmath::vector2d(tmp.Position.GetX(), tmp.Position.GetY());
+    ret.position = rmath::vector3d(tmp.Position.GetX(),
+                                   tmp.Position.GetY(),
+                                   tmp.Position.GetZ());
     return ret;
   }
 

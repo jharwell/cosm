@@ -1,5 +1,5 @@
 /**
- * \file base_controller2D.cpp
+ * \file base_controllerQ3D.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/base_controller2D.hpp"
+#include "cosm/controller/base_controllerQ3D.hpp"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <experimental/filesystem>
@@ -33,7 +33,7 @@
 #include "cosm/steer2D/config/force_calculator_config.hpp"
 #include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
 #include "cosm/subsystem/config/sensing_subsystem2D_config.hpp"
-#include "cosm/subsystem/saa_subsystem2D.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,25 +44,25 @@ namespace fs = std::experimental::filesystem;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_controller2D::base_controller2D(void) : m_saa(nullptr) {}
+base_controllerQ3D::base_controllerQ3D(void) : m_saa(nullptr) {}
 
-base_controller2D::~base_controller2D(void) = default;
+base_controllerQ3D::~base_controllerQ3D(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_controller2D::sensing_update(const rtypes::timestep& tick,
+void base_controllerQ3D::sensing_update(const rtypes::timestep& tick,
                                        const rtypes::discretize_ratio& ratio) {
   m_saa->sensing()->update(tick, ratio);
 } /* sensing_update() */
 
-void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
+void base_controllerQ3D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
 
 
 #if (LIBRA_ER >= LIBRA_ER_ALL)
-void base_controller2D::ndc_pusht(void) const {
+void base_controllerQ3D::ndc_pusht(void) const {
   ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +
               std::string("] [ent") + rcppsw::to_string(entity_id()) +
               std::string("]"));
@@ -72,7 +72,7 @@ void base_controller2D::ndc_pusht(void) const {
 /*******************************************************************************
  * Movement Metrics
  ******************************************************************************/
-rtypes::spatial_dist base_controller2D::distance(void) const {
+rtypes::spatial_dist base_controllerQ3D::distance(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
@@ -83,7 +83,7 @@ rtypes::spatial_dist base_controller2D::distance(void) const {
   return rtypes::spatial_dist(0.0);
 } /* distance() */
 
-rmath::vector3d base_controller2D::velocity(void) const {
+rmath::vector3d base_controllerQ3D::velocity(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
@@ -98,16 +98,20 @@ rmath::vector3d base_controller2D::velocity(void) const {
 /*******************************************************************************
  * Swarm Spatial Metrics
  ******************************************************************************/
-rmath::vector2d base_controller2D::pos2D(void) const {
+rmath::vector3d base_controllerQ3D::pos3D(void) const {
   return m_saa->sensing()->position();
 }
 
-rmath::vector2u base_controller2D::dpos2D(void) const {
+rmath::vector3u base_controllerQ3D::dpos3D(void) const {
   return m_saa->sensing()->discrete_position();
 }
 
-rmath::radians base_controller2D::heading2D(void) const {
-  return m_saa->sensing()->heading();
+rmath::radians base_controllerQ3D::azimuth(void) const {
+  return m_saa->sensing()->azimuth();
+}
+
+rmath::radians base_controllerQ3D::inclination(void) const {
+  return m_saa->sensing()->inclination();
 }
 
 NS_END(controller, cosm);
