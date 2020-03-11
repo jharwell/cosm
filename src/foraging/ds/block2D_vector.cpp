@@ -1,7 +1,7 @@
 /**
- * \file base_block2D.hpp
+ * \file block2D_vector.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,25 +18,46 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
+#include "cosm/foraging/ds/block2D_vector.hpp"
+
+#include <numeric>
+
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, foraging, ds);
 
 /*******************************************************************************
- * Class Definitions
+ * Non-Member Functions
  ******************************************************************************/
-using base_block2D = base_block<unicell_movable_entity2D>;
+template <typename TVectorType>
+std::string do_to_str(const TVectorType& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& b) {
+                           return a + "b" + rcppsw::to_string(b->id()) + ",";
+                         });
+} /* do_to_str() */
 
-NS_END(repr, cosm);
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+std::string block2D_vectoro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-#endif /* INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_ */
+std::string block2D_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string block2D_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+NS_END(ds, foraging, cosm);

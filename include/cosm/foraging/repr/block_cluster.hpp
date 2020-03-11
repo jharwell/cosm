@@ -27,7 +27,7 @@
 #include "rcppsw/types/discretize_ratio.hpp"
 
 #include "cosm/ds/arena_grid.hpp"
-#include "cosm/foraging/ds/block_vector.hpp"
+#include "cosm/foraging/ds/block2D_vector.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/repr/grid_view_entity.hpp"
 
@@ -64,7 +64,7 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
 
   uint capacity(void) const { return m_capacity; }
   size_t block_count(void) const { return blocks().size(); }
-  cfds::block_vectorro blocks(void) const RCSW_PURE;
+  cfds::block2D_vectorro blocks(void) const RCSW_PURE;
 
  private:
   /* clang-format off */

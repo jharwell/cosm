@@ -24,7 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block2D.hpp"
+#include <memory>
+
+#include "cosm/repr/base_block.hpp"
+#include "cosm/repr/unicell_movable_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,23 +45,30 @@ NS_START(cosm, repr);
  * they are only handled concretely in the arena in 2D (3D is only for
  * visualization purposes, and I can cheat a bit there).
  */
-class ramp_block2D final : public base_block2D {
+class ramp_block2D final : public base_block<unicell_movable_entity2D> {
  public:
   explicit ramp_block2D(const rmath::vector2d& dim)
-      : base_block2D(dim, rutils::color::kBLUE, rtypes::constants::kNoUUID) {}
+      : base_block(dim,
+                   rutils::color::kBLUE,
+                   crepr::block_type::ekRAMP,
+                   rtypes::constants::kNoUUID) {}
 
   ramp_block2D(const rmath::vector2d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block2D(dim, rutils::color::kBLUE, id) {}
+      : base_block(dim,
+                   rutils::color::kBLUE,
+                   crepr::block_type::ekRAMP,
+                   id) {}
 
-  repr::block_type type(void) const override {
-    return repr::block_type::ekRAMP;
-  }
-  std::unique_ptr<base_block2D> clone(void) const override {
+  std::unique_ptr<base_block> clone(void) const override {
     auto tmp = std::make_unique<ramp_block2D>(dims(), id());
+
+    /* copy core definition features */
     tmp->dloc(this->dloc());
     tmp->rloc(this->rloc());
-    tmp->reset_robot_id();
-    tmp->copy_metrics(*this);
+
+    /* copy metadata */
+    tmp->md()->robot_id_reset();
+    tmp->md()->metrics_copy(this->md());
     return tmp;
   } /* clone() */
 };

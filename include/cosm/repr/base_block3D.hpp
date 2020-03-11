@@ -1,5 +1,5 @@
 /**
- * \file base_block2D.hpp
+ * \file base_block3D.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,14 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_REPR_BASE_BLOCK3D_HPP_
+#define INCLUDE_COSM_REPR_BASE_BLOCK3D_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
+#include "cosm/repr/unicell_movable_entity3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -35,8 +35,8 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using base_block2D = base_block<unicell_movable_entity2D>;
+using base_block3D = base_block<unicell_movable_entity3D>;
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_ */
+#endif /* INCLUDE_COSM_REPR_BASE_BLOCK3D_HPP_ */

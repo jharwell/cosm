@@ -58,7 +58,7 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
 
   bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities) override;
-  bool distribute_blocks(cfds::block_vectorno& blocks,
+  bool distribute_blocks(cfds::block2D_vectorno& blocks,
                          cds::const_entity_list& entities) override;
 
   /**

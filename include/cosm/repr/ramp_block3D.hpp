@@ -1,5 +1,5 @@
 /**
- * \file cube_block2D.hpp
+ * \file ramp_block3D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_REPR_RAMP_BLOCK3D_HPP_
+#define INCLUDE_COSM_REPR_RAMP_BLOCK3D_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,7 +27,7 @@
 #include <memory>
 
 #include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
+#include "cosm/repr/unicell_movable_entity3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -38,28 +38,27 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cube_block2D
  * \ingroup cosm repr
  *
- * \brief A 2D representation of a 3D cubical block within the arena. Cube
- * blocks are 1 cell in size.
+ * \brief A 3D representation of a ramp block within the arena. The bounding box
+ * for ramp blocks is 2x1x1 cells in 3D.
  */
-class cube_block2D final : public base_block<unicell_movable_entity2D> {
+class ramp_block3D final : public base_block<unicell_movable_entity3D> {
  public:
-  explicit cube_block2D(const rmath::vector2d& dim)
+  explicit ramp_block3D(const rmath::vector3d& dim)
       : base_block(dim,
-                   rutils::color::kBLACK,
-                   crepr::block_type::ekCUBE,
+                   rutils::color::kBLUE,
+                   crepr::block_type::ekRAMP,
                    rtypes::constants::kNoUUID) {}
 
-  cube_block2D(const rmath::vector2d& dim, const rtypes::type_uuid& id) noexcept
+  ramp_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
       : base_block(dim,
-                   rutils::color::kBLACK,
-                   crepr::block_type::ekCUBE,
+                   rutils::color::kBLUE,
+                   crepr::block_type::ekRAMP,
                    id) {}
 
   std::unique_ptr<base_block> clone(void) const override {
-    auto tmp = std::make_unique<cube_block2D>(dims(), id());
+    auto tmp = std::make_unique<ramp_block3D>(dims(), id());
 
     /* copy core definition features */
     tmp->dloc(this->dloc());
@@ -74,4 +73,4 @@ class cube_block2D final : public base_block<unicell_movable_entity2D> {
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK2D_HPP_ */
+#endif /* INCLUDE_COSM_REPR_RAMP_BLOCK3D_HPP_ */

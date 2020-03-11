@@ -60,7 +60,7 @@ bool cluster_distributor::distribute_block(crepr::base_block2D* block,
   return m_impl.distribute_block(block, entities);
 } /* distribute_block() */
 
-bool cluster_distributor::distribute_blocks(cfds::block_vectorno& blocks,
+bool cluster_distributor::distribute_blocks(cfds::block2D_vectorno& blocks,
                                             cds::const_entity_list& entities) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG(

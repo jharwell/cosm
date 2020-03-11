@@ -71,7 +71,7 @@ void arena_cache_block_drop::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void arena_cache_block_drop::visit(cfds::arena_map& map) {
-  RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->robot_id();
+  RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->md()->robot_id();
 
   /*
    * We might be modifying a cell--don't want block distribution in ANOTHER

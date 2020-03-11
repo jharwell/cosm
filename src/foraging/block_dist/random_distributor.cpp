@@ -58,7 +58,7 @@ random_distributor::random_distributor(const cds::arena_grid::view& grid,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool random_distributor::distribute_blocks(ds::block_vectorno& blocks,
+bool random_distributor::distribute_blocks(ds::block2D_vectorno& blocks,
                                            cds::const_entity_list& entities) {
   ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
           blocks.size(),

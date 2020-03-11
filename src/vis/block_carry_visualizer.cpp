@@ -38,17 +38,17 @@ NS_START(cosm, vis);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_carry_visualizer::draw(const repr::base_block2D* const block,
+void block_carry_visualizer::draw(const crepr::base_block2D* const block,
                                   uint id_len) {
-  switch (block->type()) {
+  switch (block->md()->type()) {
     case repr::block_type::ekCUBE:
       m_qt->DrawBox(
           argos::CVector3(0.0, 0.0, m_block_vis_offset),
           argos::CQuaternion(),
           argos::CVector3(block->xdimr(), block->xdimr(), block->xdimr()),
-          argos::CColor(block->color().red(),
-                        block->color().green(),
-                        block->color().blue()));
+          argos::CColor(block->md()->color().red(),
+                        block->md()->color().green(),
+                        block->md()->color().blue()));
       break;
     case repr::block_type::ekRAMP:
       /*
@@ -61,9 +61,9 @@ void block_carry_visualizer::draw(const repr::base_block2D* const block,
           argos::CVector3(0.0, 0.0, m_block_vis_offset),
           argos::CQuaternion(),
           argos::CVector3(block->xdimr(), block->ydimr(), block->ydimr()),
-          argos::CColor(block->color().red(),
-                        block->color().green(),
-                        block->color().blue()));
+          argos::CColor(block->md()->color().red(),
+                        block->md()->color().green(),
+                        block->md()->color().blue()));
 
       break;
     default:

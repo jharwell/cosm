@@ -1,7 +1,7 @@
 /**
- * \file block_vector.cpp
+ * \file cell3D.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,43 +21,38 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/ds/block_vector.hpp"
+#include "cosm/ds/cell3D.hpp"
 
-#include <numeric>
-
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/cube_block3D.hpp"
+#include "cosm/repr/ramp_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, ds);
+NS_START(cosm, ds);
 
 /*******************************************************************************
- * Non-Member Functions
+ * Constructors/Destructor
  ******************************************************************************/
-template <typename TVectorType>
-std::string do_to_str(const TVectorType& vec) {
-  return std::accumulate(vec.begin(),
-                         vec.end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "b" + rcppsw::to_string(b->id()) + ",";
-                         });
-} /* do_to_str() */
+cell3D::cell3D(void) { decoratee().init(); }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::string block_vectoro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+crepr::cube_block3D* cell3D::cube_block(void) const {
+  return dynamic_cast<crepr::cube_block3D*>(m_entity);
+} /* cube_block() */
 
-std::string block_vectorno::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+crepr::cube_block3D* cell3D::cube_block(void) {
+  return dynamic_cast<crepr::cube_block3D*>(m_entity);
+} /* cube_block() */
 
-std::string block_vectorro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+crepr::ramp_block3D* cell3D::ramp_block(void) const {
+  return dynamic_cast<crepr::ramp_block3D*>(m_entity);
+} /* ramp_block() */
 
-NS_END(ds, foraging, cosm);
+crepr::ramp_block3D* cell3D::ramp_block(void) {
+  return dynamic_cast<crepr::ramp_block3D*>(m_entity);
+} /* ramp_block() */
+
+NS_END(ds, cosm);

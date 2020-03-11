@@ -1,5 +1,5 @@
 /**
- * \file base_block2D.hpp
+ * \file cell3D_states.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,25 +18,51 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
+#ifndef INCLUDE_COSM_FSM_CELL3D_STATES_HPP_
+#define INCLUDE_COSM_FSM_CELL3D_STATES_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, fsm);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using base_block2D = base_block<unicell_movable_entity2D>;
+/**
+ * \brief The states that a \ref cell3D_fsm can be in.
+ */
+enum cell3D_states {
+  /**
+   * \brief The cell's contents is unknown.
+   */
+  ekST_UNKNOWN,
 
-NS_END(repr, cosm);
+  /**
+   * \brief The cell is empty (does not hold a block or is part of a block's
+   * extent).
+   */
+  ekST_EMPTY,
 
-#endif /* INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_ */
+  /**
+   * \brief The cell contains a block.
+   */
+  ekST_HAS_BLOCK,
+
+  /**
+   * \brief The cell does not contain a block, but is part of the 3D space
+   * occupied by a block, in which case it also contains a reference to the
+   * bock it is a part of.
+   */
+  ekST_BLOCK_EXTENT,
+  ekST_MAX_STATES
+};
+
+NS_END(cosm, fsm);
+
+#endif /* INCLUDE_COSM_FSM_CELL3D_STATES_HPP_ */

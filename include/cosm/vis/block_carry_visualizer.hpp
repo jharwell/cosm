@@ -28,6 +28,7 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,12 +36,7 @@
 namespace argos {
 class CQTOpenGLUserFunctions;
 }
-NS_START(cosm);
-namespace repr {
-class base_block2D;
-} /* namespace repr */
-
-NS_START(vis);
+NS_START(cosm, vis);
 
 /*******************************************************************************
  * Classes
@@ -75,7 +71,7 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
    * \param id_len Length of the robot ID string (to ensure the block ID does
    *               not overlap with it, if it is visualized).
    */
-  void draw(const repr::base_block2D* block, uint id_len);
+  void draw(const crepr::base_block2D* block, uint id_len);
 
   /* clang-format off */
   double                               m_block_vis_offset{0.0};

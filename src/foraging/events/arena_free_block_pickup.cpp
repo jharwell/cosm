@@ -72,8 +72,7 @@ void arena_free_block_pickup::visit(cfds::arena_map& map) {
 
 void arena_free_block_pickup::visit(crepr::base_block2D& block) {
   ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
-  block.robot_pickup_event(mc_robot_id);
-  block.first_pickup_time(mc_timestep);
+  block.robot_pickup_event(mc_robot_id, mc_timestep);
   ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
 } /* visit() */
 

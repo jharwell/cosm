@@ -1,5 +1,5 @@
 /**
- * \file block_manifest_processor.hpp
+ * \file entity_base.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,54 +18,69 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_
+#ifndef INCLUDE_COSM_REPR_ENTITY_base_HPP_
+#define INCLUDE_COSM_REPR_ENTITY_base_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <vector>
-
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/patterns/factory/factory.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/foraging/config/block_manifest.hpp"
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+NS_START(cosm, repr);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_manifest_processor
- * \ingroup foraging block_dist
+ * \class entity_base
+ * \ingroup cosm repr
  *
- * \brief Translates the parsed XML configuration for how many/what type of
- * blocks should be used in simulation into a heterogeneous vector of actual
- * blocks.
+ * \brief A base class from which all entities that can be represented in the
+ * arena derive.
  */
-class block_manifest_processor
-    : public rpfactory::sharing_factory<crepr::base_block2D,
-                                        std::string, /* key type */
-                                        const rmath::vector2d&,
-                                        const rtypes::type_uuid&> {
+class entity_base {
  public:
-  explicit block_manifest_processor(const config::block_manifest* m);
+  entity_base(void) : entity_base{rtypes::constants::kNoUUID} {}
+  explicit entity_base(const rtypes::type_uuid& id) : m_id(id) {}
 
-  ds::block2D_vectoro create_blocks(void);
+  entity_base(const entity_base&) = default;
+  entity_base& operator=(const entity_base&) = default;
+
+  virtual ~entity_base(void) = default;
+
+  /**
+   * \brief Set the ID of the object.
+   */
+  void id(const rtypes::type_uuid& id) { m_id = id; }
+
+  /**
+   * \brief Get the ID of the object.
+   */
+  const rtypes::type_uuid& id(void) const { return m_id; }
+
+  /**
+   * \brief Set if the ID of the entity should be visualized or not if
+   * visualizations are enabled.
+   */
+  void vis_id(bool b) { m_vis_id = b; }
+
+  /**
+   * \brief Get the entity ID visualization status.
+   */
+  bool vis_id(void) const { return m_vis_id; }
 
  private:
   /* clang-format off */
-  const config::block_manifest mc_manifest;
+  bool              m_vis_id{false};
+  rtypes::type_uuid m_id{rtypes::constants::kNoUUID};
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_ */
+#endif /* INCLUDE_COSM_REPR_ENTITY_base_HPP_ */

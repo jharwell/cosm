@@ -30,16 +30,14 @@
 #include <string>
 #include <vector>
 
-#include "cosm/cosm.hpp"
 #include "rcppsw/er/client.hpp"
+
+#include "cosm/cosm.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::repr {
-class base_block2D;
-}
-
 namespace cosm::foraging::repr {
 class base_cache;
 } /* namespace cosm::foraging::repr */

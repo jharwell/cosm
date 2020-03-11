@@ -44,8 +44,8 @@ block_manifest_processor::block_manifest_processor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-ds::block_vectoro block_manifest_processor::create_blocks(void) {
-  ds::block_vectoro v;
+ds::block2D_vectoro block_manifest_processor::create_blocks(void) {
+  ds::block2D_vectoro v;
   uint i;
   for (i = 0; i < mc_manifest.n_cube; ++i) {
     v.push_back(

@@ -31,12 +31,12 @@
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/fsm/cell2D_fsm.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block2D;
 class entity2D;
 } /* namespace cosm::repr */
 

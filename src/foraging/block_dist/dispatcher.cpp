@@ -159,7 +159,7 @@ bool dispatcher::distribute_block(crepr::base_block2D* block,
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */
 
-bool dispatcher::distribute_blocks(cfds::block_vectorno& blocks,
+bool dispatcher::distribute_blocks(cfds::block2D_vectorno& blocks,
                                    cds::const_entity_list& entities) {
   return m_dist->distribute_blocks(blocks, entities);
 } /* distribute_block() */

@@ -45,7 +45,7 @@ arena_nest_block_drop::arena_nest_block_drop(
  * Member Functions
  ******************************************************************************/
 void arena_nest_block_drop::visit(cfds::arena_map& map) {
-  ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->robot_id(),
+  ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
             "Undefined robot index");
 
   /*
@@ -77,8 +77,8 @@ void arena_nest_block_drop::visit(cfds::arena_map& map) {
 } /* visit() */
 
 void arena_nest_block_drop::visit(crepr::base_block2D& block) {
-  block.reset_metrics();
-  block.distribution_time(mc_timestep);
+  block.md()->reset_metrics();
+  block.md()->distribution_time(mc_timestep);
 } /* visit() */
 
 NS_END(detail, events, foraging, cosm);
