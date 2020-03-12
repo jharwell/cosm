@@ -52,14 +52,13 @@ base_controllerQ3D::~base_controllerQ3D(void) = default;
  * Member Functions
  ******************************************************************************/
 void base_controllerQ3D::sensing_update(const rtypes::timestep& tick,
-                                       const rtypes::discretize_ratio& ratio) {
+                                        const rtypes::discretize_ratio& ratio) {
   m_saa->sensing()->update(tick, ratio);
 } /* sensing_update() */
 
 void base_controllerQ3D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
-
 
 #if (LIBRA_ER >= LIBRA_ER_ALL)
 void base_controllerQ3D::ndc_pusht(void) const {

@@ -50,10 +50,10 @@ void footbot_saa_subsystem2D::steer_force2D_apply(void) {
            sensing()->position().to_str().c_str(),
            sensing()->heading().to_str().c_str());
   ER_DEBUG("linear_vel=%s@%s [%f] angular_vel=%f",
-               linear_velocity().to_str().c_str(),
-               linear_velocity().angle().to_str().c_str(),
-               linear_velocity().length(),
-               angular_velocity());
+           linear_velocity().to_str().c_str(),
+           linear_velocity().angle().to_str().c_str(),
+           linear_velocity().length(),
+           angular_velocity());
   ER_DEBUG("steering_force=%s@%s [%f]",
            steer_force2D().value().to_str().c_str(),
            steer_force2D().value().angle().to_str().c_str(),

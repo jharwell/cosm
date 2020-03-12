@@ -50,8 +50,8 @@ NS_START(cosm, repr);
  * and what color the block is. This does NOT include the ID of the block, which
  * is part of its core definition.
  */
-class block_metadata : public metrics::blocks::transport_metrics,
-                       public colored_entity {
+class block_metadata final : public metrics::blocks::transport_metrics,
+                             public colored_entity {
  public:
   /**
    * \param dim 2 element vector of the dimensions of the block.

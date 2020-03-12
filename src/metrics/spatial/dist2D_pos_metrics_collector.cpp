@@ -22,6 +22,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/metrics/spatial/dist2D_pos_metrics_collector.hpp"
+
 #include "cosm/metrics/spatial/dist2D_metrics.hpp"
 
 /*******************************************************************************
@@ -32,8 +33,7 @@ NS_START(cosm, metrics, spatial);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void dist2D_pos_metrics_collector::collect(
-    const rmetrics::base_metrics& metrics) {
+void dist2D_pos_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const dist2D_metrics&>(metrics);
   inc_total_count();
   inc_cell_count(m.dpos2D());

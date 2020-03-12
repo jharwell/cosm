@@ -26,9 +26,8 @@
 #include <numeric>
 
 #include "cosm/foraging/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
-
 #include "cosm/oracle/config/entities_oracle_config.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces

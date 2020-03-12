@@ -60,7 +60,6 @@ void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
 
-
 #if (LIBRA_ER >= LIBRA_ER_ALL)
 void base_controller2D::ndc_pusht(void) const {
   ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +

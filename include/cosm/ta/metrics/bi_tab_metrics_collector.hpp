@@ -53,10 +53,10 @@ NS_START(cosm, ta, metrics);
 class bi_tab_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname Output file name.
+   * \param ofname_stem Output file name stem.
    * \param interval Collection interval.
    */
-  bi_tab_metrics_collector(const std::string& ofname,
+  bi_tab_metrics_collector(const std::string& ofname_stem,
                            const rtypes::timestep& interval);
 
   void reset(void) override;

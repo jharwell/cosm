@@ -54,10 +54,10 @@ class execution_metrics_collector final : public rmetrics::base_metrics_collecto
                                           public rer::client<execution_metrics_collector> {
  public:
   /**
-   * \param ofname Output file name.
+   * \param ofname_stem Output file name stem.
    * \param interval Collection interval.
    */
-  execution_metrics_collector(const std::string& ofname,
+  execution_metrics_collector(const std::string& ofname_stem,
                               const rtypes::timestep& interval);
 
   void reset(void) override;

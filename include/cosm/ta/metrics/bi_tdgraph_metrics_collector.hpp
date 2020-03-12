@@ -54,11 +54,11 @@ NS_START(cosm, ta, metrics);
 class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname Output file name.
+   * \param ofname_stem Output file name stem.
    * \param interval Collection interval.
    * \param decomposition_depth The maximum depth of the \ref bi_tdgraph.
    */
-  bi_tdgraph_metrics_collector(const std::string& ofname,
+  bi_tdgraph_metrics_collector(const std::string& ofname_stem,
                                const rtypes::timestep& interval,
                                uint decomposition_depth);
 

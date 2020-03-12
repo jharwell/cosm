@@ -34,9 +34,11 @@ NS_START(cosm, fsm, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 goal_acq_metrics_collector::goal_acq_metrics_collector(
-    const std::string& ofname,
+    const std::string& ofname_stem,
     const rtypes::timestep& interval)
-    : base_metrics_collector(ofname, interval) {}
+    : base_metrics_collector(ofname_stem,
+                             interval,
+                             rmetrics::output_mode::ekAPPEND) {}
 
 /*******************************************************************************
  * Member Functions

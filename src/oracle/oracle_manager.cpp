@@ -24,7 +24,6 @@
 #include "cosm/oracle/oracle_manager.hpp"
 
 #include "cosm/foraging/ds/arena_map.hpp"
-
 #include "cosm/oracle/config/oracle_manager_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
@@ -37,8 +36,7 @@ NS_START(cosm, oracle);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-oracle_manager::oracle_manager(
-    const coconfig::oracle_manager_config* const config)
+oracle_manager::oracle_manager(const coconfig::oracle_manager_config* const config)
     : m_entities(std::make_unique<class entities_oracle>(&config->entities)),
       m_tasking(nullptr) {}
 

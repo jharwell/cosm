@@ -32,9 +32,9 @@
 
 #include "rcppsw/math/vector2.hpp"
 
+#include "cosm/controller/base_controller.hpp"
 #include "cosm/fsm/metrics/movement_metrics.hpp"
 #include "cosm/metrics/spatial/dist2D_metrics.hpp"
-#include "cosm/controller/base_controller.hpp"
 
 /*******************************************************************************
  * Namespaces

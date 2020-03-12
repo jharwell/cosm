@@ -41,12 +41,12 @@ cell3D_fsm::cell3D_fsm(void)
 
 cell3D_fsm::cell3D_fsm(const cell3D_fsm&)
     : rpfsm::simple_fsm(states::ekST_MAX_STATES, states::ekST_UNKNOWN),
-    ER_CLIENT_INIT("cosm.fsm.cell3D"),
-    FSM_DEFINE_STATE_MAP(mc_state_map,
-                         FSM_STATE_MAP_ENTRY(&state_unknown),
-                         FSM_STATE_MAP_ENTRY(&state_empty),
-                         FSM_STATE_MAP_ENTRY(&state_block),
-                         FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
+      ER_CLIENT_INIT("cosm.fsm.cell3D"),
+      FSM_DEFINE_STATE_MAP(mc_state_map,
+                           FSM_STATE_MAP_ENTRY(&state_unknown),
+                           FSM_STATE_MAP_ENTRY(&state_empty),
+                           FSM_STATE_MAP_ENTRY(&state_block),
+                           FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
 
 /*******************************************************************************
  * Event Functions

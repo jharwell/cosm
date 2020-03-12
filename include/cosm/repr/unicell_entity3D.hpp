@@ -93,13 +93,11 @@ class unicell_entity3D : public entity3D {
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
   bool contains_point2D(const rmath::vector3d& point) const {
-    return xspan().contains(point.x()) &&
-        yspan().contains(point.y());
+    return xspan().contains(point.x()) && yspan().contains(point.y());
   }
   bool contains_point3D(const rmath::vector3d& point) const {
-    return xspan().contains(point.x()) &&
-        yspan().contains(point.y()) &&
-        zspan().contains(point.z());
+    return xspan().contains(point.x()) && yspan().contains(point.y()) &&
+           zspan().contains(point.z());
   }
 
   const rmath::vector3d& dims(void) const { return m_dim; }

@@ -33,38 +33,43 @@ NS_START(cosm, metrics, config, xml);
  ******************************************************************************/
 void metrics_parser::parse(const ticpp::Element& node) {
   /* loop functions metrics not part of controller XML tree  */
-  if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ticpp::Element mnode = node_get(node, kXMLRoot);
-    m_config = std::make_unique<config_type>();
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
 
-    XML_PARSE_ATTR(mnode, m_config, output_dir);
-    XML_PARSE_ATTR(mnode, m_config, output_interval);
+  ticpp::Element mnode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-    ticpp::Iterator<ticpp::Attribute> it;
-    for (it = mnode.FirstAttribute(); it != it.end(); ++it) {
-      if (is_collector_name(*it)) {
-        std::string name;
-        std::string value;
-        it->GetName(&name);
-        it->GetValue(&value);
-        m_config->enabled.insert({name, value});
-      }
-    } /* for(i..) */
+  XML_PARSE_ATTR(mnode, m_config, output_dir);
+
+  if (nullptr != mnode.FirstChild("create", false)) {
+    output_mode_parse(node_get(mnode, "create"), &m_config->create);
+  }
+  if (nullptr != mnode.FirstChild("append", false)) {
+    output_mode_parse(node_get(mnode, "append"), &m_config->append);
+  }
+  if (nullptr != mnode.FirstChild("truncate", false)) {
+    output_mode_parse(node_get(mnode, "truncate"), &m_config->truncate);
   }
 } /* parse() */
 
-bool metrics_parser::validate(void) const {
-  if (is_parsed()) {
-    RCSW_CHECK(m_config->output_interval > 0U);
-  }
-  return true;
-
-error:
-  return false;
-} /* validate() */
+void metrics_parser::output_mode_parse(ticpp::Element element,
+                                       metrics_output_mode_config* config) {
+  XML_PARSE_ATTR(element, config, output_interval);
+  ticpp::Iterator<ticpp::Attribute> it;
+  for (it = element.FirstAttribute(); it != it.end(); ++it) {
+    if (is_collector_name(*it)) {
+      std::string name;
+      std::string value;
+      it->GetName(&name);
+      it->GetValue(&value);
+      config->enabled.insert({name, value});
+    }
+  } /* for(it..) */
+} /* output_mode_parse() */
 
 bool metrics_parser::is_collector_name(const ticpp::Attribute& attr) const {
-  std::list<std::string> non_names = {"output_dir", "collect_interval"};
+  std::list<std::string> non_names = {"collect_interval"};
   std::string name;
   attr.GetName(&name);
   return non_names.end() == std::find(non_names.begin(), non_names.end(), name);

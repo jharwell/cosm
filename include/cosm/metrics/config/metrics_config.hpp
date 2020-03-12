@@ -39,19 +39,21 @@ NS_START(cosm, metrics, config);
 /*******************************************************************************
  * Structure Definitions
  ******************************************************************************/
-/**
- * \struct metrics_config
- * \ingroup cosm metrics config
- *
- * Each member represents the filename to which a specific type of metrics
- * should be logged. Empty filename=no metrics of that type will be collected.
- */
-struct metrics_config final : public rconfig::base_config {
+struct metrics_output_mode_config {
   using enabled_map_type = std::map<std::string, std::string>;
-
-  std::string      output_dir{};
   rtypes::timestep output_interval{0};
   enabled_map_type enabled{};
+};
+
+/**
+ * \struct metrics_config
+ * \ingroup metrics config
+ */
+struct metrics_config final : public rconfig::base_config {
+  std::string                output_dir{};
+  metrics_output_mode_config append{};
+  metrics_output_mode_config truncate{};
+  metrics_output_mode_config create{};
 };
 
 NS_END(config, metrics, cosm);

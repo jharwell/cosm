@@ -50,10 +50,10 @@ XML configuration:
 ^^^^^^^^^^^^^^^^^^
 
 - Required by: all controllers.
-- Required child attributes if present: [ ``output_dir``, ``collect_interval`` ].
+- Required child attributes if present: [ ``output_dir`` ].
 - Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags: [ ``create``, ``append``, ``truncate`` ].
 
 XML configuration:
 
@@ -62,12 +62,19 @@ XML configuration:
    <output>
        ...
        <metrics
-           output_dir="metrics"
-           output_interval="INTEGER">
-           ...
-           ...
-           ...
-           ...
+           output_dir="metrics">
+           <create
+                output_interval="INTEGER"
+                ...
+                />
+           <append
+                output_interval="INTEGER"
+                ...
+                />
+           <truncate
+                output_interval="INTEGER"
+                ...
+                />
        </metrics>
        ...
    </output>
@@ -75,49 +82,134 @@ XML configuration:
 - ``output_dir`` - Name of directory within the output root that metrics will be
   placed in.
 
-- ``output_interval`` - The timestep interval after which statistics will be
-  reset. Gathering statistics on a single timestep of a long simulation is
-  generally not useful; hence this field.
+``output/metrics/create``
+#########################
 
-Any of the attributes can be added under the ``metrics`` tag in place of one of
-the ``<...>`` above. Not defining them disables metric collection of the given
+- Required by: none.
+- Required child attributes if present: [ ``output_interval`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <metrics>
+       ...
+       <create
+            output_interval="INTEGER"
+            ...
+            />
+       ...
+   </metrics>
+
+
+- ``output_interval`` - The timestep interval after which metrics will be
+  written out to a NEW ``.csv`` file with a unique timestep tag after the
+  provided stem.
+
+Some collectors (see table below) can be added under the ``<metrics>`` tag in
+place of the ``...``. Not defining them disables metric collection of the given
 type.
 
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| XML attribute                                  | Description                                                                   | Additional Notes                                 |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``fsm_collision_counts``                       | Counts of robots entering, are in, and exiting the collision avoidance state. |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``fsm_collision_locs``                         | Spatial distribution of collision avoidance locations in the arena.           |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``fsm_movement``                               | Swarm average distance traveled/velocity.                                     |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.           |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_acq_locs``                             | Spatial distribution of where robots acquire blocks.                          |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_acq_explore_locs``                     | Spatial distribution of robots exploring for blocks.                          |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_acq_vector_locs``                      | Spatial distribution of robots vectoring to blocks.                           |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_transport``                            | # blocks collected/ # transporters.                                           |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``block_manipulation``                         | Free block pickup/drop counts/penalties.                                      |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``task_distribution``                          | TAB task allocation probabilities/counts.                                     |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``perception_dpo``                             | Metrics from each robots' decaying pheromone store.                           |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``perception_mdpo``                            | Metrics from each robot's internal map of the arena.                          |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``swarm_dist_pos2D``                           | Swarm distribution in 2D space.                                               |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``swarm_convergence``                          | Results of swarm convergence calculations.                                    | Requires convergence calculations to be enabled. |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``tv_environment``                             | Waveforms of the penalties applied to the swarm.                              | Output every timestep.                           |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
-| ``tv_population``                              | Poisson processes for governing population dynamics.                          |                                                  |
-+------------------------------------------------+-------------------------------------------------------------------------------+--------------------------------------------------+
+``output/metrics/append``
+#########################
+
+- Required by: none.
+- Required child attributes if present: [ ``output_interval`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <metrics>
+       ...
+       <append
+            output_interval="INTEGER"
+            ...
+            />
+       ...
+   </metrics>
+
+
+- ``output_interval`` - The timestep interval after which metrics will be
+  written out (appended) to the specified ``.csv`` created from the provided stem.
+
+Some collectors (see table below) can be added under the ``<metrics>`` tag in
+place of the ``...``. Not defining them disables metric collection of the given
+type.
+
+``output/metrics/truncate``
+###########################
+
+- Required by: none.
+- Required child attributes if present: [ ``output_interval`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <metrics>
+       ...
+       <truncate
+            output_interval="INTEGER"
+            ...
+            />
+       ...
+   </metrics>
+
+
+- ``output_interval`` - The timestep interval after which metrics will be
+  written out to a truncateed ``.csv`` created from the provided stem; that is,
+  each time they are output the results of the previously written out metrics
+  are lost.
+
+Some collectors (see table below) can be added under the ``<metrics>`` tag in
+place of the ``...``. Not defining them disables metric collection of the given
+type.
+
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``fsm_collision_counts``                       |  # robots entering, are in, and exiting the collision avoidance state.  |append                  |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``fsm_collision_locs``                         | Spatial distribution of collision avoidance locations in the arena.     |create,truncate         |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``fsm_movement``                               | Swarm average distance traveled/velocity.                               |append                  |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.     | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_acq_locs``                             | Spatial distribution of where robots acquire blocks.                    | create,truncate        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_acq_explore_locs``                     | Spatial distribution of robots exploring for blocks.                    | create,truncate        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_acq_vector_locs``                      | Spatial distribution of robots vectoring to blocks.                     | create,truncate        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_transport``                            | # blocks collected/ # transporters.                                     | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_manipulation``                         | Free block pickup/drop counts/penalties.                                | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``task_distribution``                          | TAB task allocation probabilities/counts.                               | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``perception_dpo``                             | Metrics from each robots' decaying pheromone store.                     | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``perception_mdpo``                            | Metrics from each robot's internal map of the arena.                    | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``swarm_dist_pos2D``                           | Swarm distribution in 2D space.                                         | create,truncate        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``swarm_convergence``                          | Results of swarm convergence calculations.                              |  append                |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``tv_environment``                             | Waveforms of the penalties applied to the swarm.                        | append                 | Output every timestep. |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 
 ``convergence``
 ---------------

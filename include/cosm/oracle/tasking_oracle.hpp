@@ -24,14 +24,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
 #include <boost/optional.hpp>
-
+#include <boost/variant.hpp>
 #include <map>
 #include <string>
 
-#include "cosm/cosm.hpp"
 #include "rcppsw/er/client.hpp"
+
+#include "cosm/cosm.hpp"
 #include "cosm/ta/time_estimate.hpp"
 
 /*******************************************************************************
@@ -47,7 +47,7 @@ class bi_tdgraph;
 
 namespace cosm::oracle::config {
 struct tasking_oracle_config;
-} /* namespace oracle */
+} // namespace cosm::oracle::config
 
 NS_START(cosm, oracle);
 

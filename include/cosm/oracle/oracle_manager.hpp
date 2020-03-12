@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+
 #include "rcppsw/common/common.hpp"
 
 #include "cosm/cosm.hpp"
@@ -60,8 +61,12 @@ class oracle_manager {
  public:
   explicit oracle_manager(const coconfig::oracle_manager_config* config);
 
-  class entities_oracle* entities_oracle(void) { return m_entities.get(); }
-  class tasking_oracle* tasking_oracle(void) { return m_tasking.get(); }
+  class entities_oracle* entities_oracle(void) {
+    return m_entities.get();
+  }
+  class tasking_oracle* tasking_oracle(void) {
+    return m_tasking.get();
+  }
   const class entities_oracle* entities_oracle(void) const {
     return m_entities.get();
   }

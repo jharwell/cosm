@@ -24,10 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <argos3/core/control_interface/ci_controller.h>
+
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/hal/hal.hpp"
-
-#include <argos3/core/control_interface/ci_controller.h>
 
 /*******************************************************************************
  * Namespaces/Decls

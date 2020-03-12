@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
 #include <boost/optional.hpp>
-
+#include <boost/variant.hpp>
 #include <string>
 #include <vector>
 
@@ -60,8 +59,7 @@ NS_START(cosm, oracle);
  */
 class entities_oracle final : public rer::client<entities_oracle> {
  public:
-  using variant_type = boost::variant<crepr::base_block2D*,
-                                      cfrepr::base_cache*>;
+  using variant_type = boost::variant<crepr::base_block2D*, cfrepr::base_cache*>;
   using variant_vector_type = std::vector<variant_type>;
 
   static std::string result_to_string(const variant_vector_type& v);

@@ -74,7 +74,6 @@ class base_sensing_subsystem {
                                       hal::sensors::diff_drive_sensor>;
   using sensor_map = std::map<std::type_index, variant_type>;
 
-
   /**
    * \param pos Position sensor.
    * \param sensors Map of handles to sensing devices, indexed by typeid.

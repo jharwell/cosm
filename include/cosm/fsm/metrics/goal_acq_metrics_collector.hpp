@@ -52,10 +52,10 @@ NS_START(cosm, fsm, metrics);
 class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname Output file name.
+   * \param ofname_stem Output file name stem.
    * \param interval The collection interval.
    */
-  goal_acq_metrics_collector(const std::string& ofname,
+  goal_acq_metrics_collector(const std::string& ofname_stem,
                              const rtypes::timestep& interval);
 
   void reset(void) override;

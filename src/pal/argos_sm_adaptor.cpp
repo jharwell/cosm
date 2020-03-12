@@ -26,12 +26,13 @@
 #include <sys/resource.h>
 
 #include "rcppsw/math/rngm.hpp"
+
 #include "cosm/foraging/config/arena_map_config.hpp"
 #include "cosm/foraging/ds/arena_map.hpp"
-#include "cosm/vis/config/visualization_config.hpp"
+#include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/oracle_manager.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
-#include "cosm/oracle/entities_oracle.hpp"
+#include "cosm/vis/config/visualization_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,10 +44,10 @@ void ___sighandler(int signum);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-argos_sm_adaptor::argos_sm_adaptor(void) :
-    ER_CLIENT_INIT("cosm.pal.argos_sm_adaptor"),
-    m_arena_map(nullptr),
-    m_oracle_manager(nullptr) {}
+argos_sm_adaptor::argos_sm_adaptor(void)
+    : ER_CLIENT_INIT("cosm.pal.argos_sm_adaptor"),
+      m_arena_map(nullptr),
+      m_oracle_manager(nullptr) {}
 
 argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 
@@ -54,9 +55,8 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
  * Member Functions
  ******************************************************************************/
 void argos_sm_adaptor::arena_map_init(
-    const cfconfig::arena_map_config * aconfig,
+    const cfconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
-
   m_arena_map = std::make_unique<cfds::arena_map>(aconfig);
 
   if (!m_arena_map->initialize(this, rng())) {

@@ -25,13 +25,15 @@
  * Includes
  ******************************************************************************/
 #include <ext/ticpp/ticpp.h>
-#include <string>
+
 #include <memory>
+#include <string>
 
 #include "rcppsw/common/common.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************

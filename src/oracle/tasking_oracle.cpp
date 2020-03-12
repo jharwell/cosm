@@ -25,11 +25,10 @@
 
 #include <functional>
 
+#include "cosm/oracle/config/tasking_oracle_config.hpp"
 #include "cosm/ta/bi_tdgraph_executive.hpp"
 #include "cosm/ta/ds/bi_tdgraph.hpp"
 #include "cosm/ta/polled_task.hpp"
-
-#include "cosm/oracle/config/tasking_oracle_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,9 +38,8 @@ NS_START(cosm, oracle);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-tasking_oracle::tasking_oracle(
-    const coconfig::tasking_oracle_config* const config,
-    const cta::ds::bi_tdgraph* const graph)
+tasking_oracle::tasking_oracle(const coconfig::tasking_oracle_config* const config,
+                               const cta::ds::bi_tdgraph* const graph)
     : ER_CLIENT_INIT("cosm.support.tasking_oracle"),
       mc_exec_ests(config->task_exec_ests),
       mc_int_ests(config->task_interface_ests) {

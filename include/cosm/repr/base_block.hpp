@@ -51,16 +51,16 @@ class unicell_movable_entity2D;
  */
 template <typename TEntityType>
 class base_block : public TEntityType,
-                     public rpprototype::clonable<base_block<TEntityType>> {
+                   public rpprototype::clonable<base_block<TEntityType>> {
  public:
-  using rloc_type = typename std::conditional<std::is_same<TEntityType,
-                                                           unicell_movable_entity2D>::value,
-                                              rmath::vector2d,
-                                              rmath::vector3d>::type;
-  using dloc_type = typename std::conditional<std::is_same<TEntityType,
-                                                           unicell_movable_entity2D>::value,
-                                              rmath::vector2u,
-                                              rmath::vector3u>::type;
+  using rloc_type = typename std::conditional<
+      std::is_same<TEntityType, unicell_movable_entity2D>::value,
+      rmath::vector2d,
+      rmath::vector3d>::type;
+  using dloc_type = typename std::conditional<
+      std::is_same<TEntityType, unicell_movable_entity2D>::value,
+      rmath::vector2u,
+      rmath::vector3u>::type;
 
   /**
    * \brief Out of sight location blocks are moved to when a robot picks them
@@ -81,8 +81,7 @@ class base_block : public TEntityType,
   base_block(const rloc_type& dim,
              const rutils::color& color,
              const crepr::block_type& type)
-      : TEntityType(dim, rtypes::constants::kNoUUID),
-        m_md(color, type) {}
+      : TEntityType(dim, rtypes::constants::kNoUUID), m_md(color, type) {}
 
   /**
    * \param dim 2 element vector of the dimensions of the block.
@@ -91,9 +90,9 @@ class base_block : public TEntityType,
    * \param id The id of the block.
    */
   base_block(const rloc_type& dim,
-               const rutils::color& color,
-               const crepr::block_type& type,
-               const rtypes::type_uuid& id)
+             const rutils::color& color,
+             const crepr::block_type& type,
+             const rtypes::type_uuid& id)
       : TEntityType(dim, id), m_md(color, type) {}
 
   ~base_block(void) override = default;
@@ -111,9 +110,7 @@ class base_block : public TEntityType,
    * \brief Compare two \ref base_block objects for equality based on their
    * ID.
    */
-  bool idcmp(const base_block& other) const {
-    return this->id() == other.id();
-  }
+  bool idcmp(const base_block& other) const { return this->id() == other.id(); }
 
   /**
    * \brief Compare two \ref base_block objects for equality based on their
@@ -147,7 +144,7 @@ class base_block : public TEntityType,
    */
   bool is_out_of_sight(void) const {
     return kOutOfSightDLoc == TEntityType::dloc() ||
-        kOutOfSightRLoc == TEntityType::rloc();
+           kOutOfSightRLoc == TEntityType::rloc();
   }
 
  private:

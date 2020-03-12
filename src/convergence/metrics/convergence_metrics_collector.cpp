@@ -34,9 +34,11 @@ NS_START(cosm, convergence, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 convergence_metrics_collector::convergence_metrics_collector(
-    const std::string& ofname,
+    const std::string& ofname_stem,
     const rtypes::timestep& interval)
-    : base_metrics_collector(ofname, interval) {}
+    : base_metrics_collector(ofname_stem,
+                             interval,
+                             rmetrics::output_mode::ekAPPEND) {}
 
 /*******************************************************************************
  * Member Functions

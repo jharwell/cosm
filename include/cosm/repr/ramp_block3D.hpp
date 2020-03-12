@@ -52,10 +52,7 @@ class ramp_block3D final : public base_block<unicell_movable_entity3D> {
                    rtypes::constants::kNoUUID) {}
 
   ramp_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block(dim,
-                   rutils::color::kBLUE,
-                   crepr::block_type::ekRAMP,
-                   id) {}
+      : base_block(dim, rutils::color::kBLUE, crepr::block_type::ekRAMP, id) {}
 
   std::unique_ptr<base_block> clone(void) const override {
     auto tmp = std::make_unique<ramp_block3D>(dims(), id());

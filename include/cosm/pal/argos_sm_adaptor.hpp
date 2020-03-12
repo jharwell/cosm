@@ -24,14 +24,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
 #include <memory>
-
-#include "cosm/pal/swarm_manager.hpp"
-#include "cosm/hal/hal.hpp"
+#include <string>
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 #include <argos3/core/simulator/loop_functions.h>
+
+#include "cosm/hal/hal.hpp"
+#include "cosm/pal/swarm_manager.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -42,11 +42,11 @@ class arena_map;
 
 namespace cosm::foraging::config {
 struct arena_map_config;
-} /* namespace cosm:foraging::config */
+} // namespace cosm::foraging::config
 
 namespace cosm::vis::config {
 struct visualization_config;
-} /* namespace cosm:vis::config */
+} // namespace cosm::vis::config
 
 namespace cosm::oracle {
 class oracle_manager;
@@ -124,7 +124,7 @@ class argos_sm_adaptor : public swarm_manager,
    *
    * \param repo Repository of parsed parameters.
    */
-  void arena_map_init(const cfconfig::arena_map_config * aconfig,
+  void arena_map_init(const cfconfig::arena_map_config* aconfig,
                       const cvconfig::visualization_config* vconfig) RCSW_COLD;
 
   /* clang-format off */

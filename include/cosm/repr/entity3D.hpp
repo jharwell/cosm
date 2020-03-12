@@ -83,7 +83,7 @@ class entity3D : public entity_base {
 
   virtual ~entity3D(void) = default;
 
-    /**
+  /**
    * \brief Calculate the span in X of a 2D entity given its location and
    * dimension in X (objects track their own location and dimension).
    *

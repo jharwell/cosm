@@ -37,10 +37,12 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
-    const std::string& ofname,
+    const std::string& ofname_stem,
     const rtypes::timestep& interval,
     uint decomposition_depth)
-    : base_metrics_collector(ofname, interval),
+    : base_metrics_collector(ofname_stem,
+                             interval,
+                             rmetrics::output_mode::ekAPPEND),
       m_int_depth_counts(decomposition_depth + 1),
       m_int_task_counts(
           static_cast<uint>(std::pow(2, decomposition_depth + 1) - 1)),

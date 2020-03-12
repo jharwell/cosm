@@ -34,9 +34,11 @@ NS_START(cosm, tv, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 population_dynamics_metrics_collector::population_dynamics_metrics_collector(
-    const std::string& ofname,
+    const std::string& ofname_stem,
     const rtypes::timestep& interval)
-    : base_metrics_collector(ofname, interval) {}
+    : base_metrics_collector(ofname_stem,
+                             interval,
+                             rmetrics::output_mode::ekAPPEND) {}
 
 /*******************************************************************************
  * Member Functions

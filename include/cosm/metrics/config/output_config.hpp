@@ -40,7 +40,7 @@ NS_START(cosm, metrics, config);
  ******************************************************************************/
 /**
  * \struct output_config
- * \ingroup cosm metrics config
+ * \ingroup metrics config
  *
  * \brief Configuration for metrics logging.
  */

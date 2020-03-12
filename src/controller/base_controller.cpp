@@ -84,7 +84,6 @@ std::string base_controller::output_init(const std::string& output_root,
   return dir;
 } /* output_init() */
 
-
 void base_controller::rng_init(int seed, const std::string& category) {
   rmath::rngm::instance().register_type<rmath::rng>(category);
   if (-1 == seed) {

@@ -53,10 +53,7 @@ class cube_block2D final : public base_block<unicell_movable_entity2D> {
                    rtypes::constants::kNoUUID) {}
 
   cube_block2D(const rmath::vector2d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block(dim,
-                   rutils::color::kBLACK,
-                   crepr::block_type::ekCUBE,
-                   id) {}
+      : base_block(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {}
 
   std::unique_ptr<base_block> clone(void) const override {
     auto tmp = std::make_unique<cube_block2D>(dims(), id());
