@@ -24,7 +24,7 @@
 #include "cosm/controller/base_controller.hpp"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 
 #include "rcppsw/math/config/rng_config.hpp"
@@ -34,7 +34,7 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, controller);
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Constructors/Destructor

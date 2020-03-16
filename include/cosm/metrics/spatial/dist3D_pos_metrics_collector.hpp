@@ -55,11 +55,13 @@ class dist3D_pos_metrics_collector final
    * \param ofname The output file name.
    * \param interval Collection interval.
    * \param dims Dimensions of arena.
+   * \param mode The selected output mode.
    */
   dist3D_pos_metrics_collector(const std::string& ofname,
-                                       const rtypes::timestep& interval,
-                                       const rmath::vector3u& dims)
-      : grid3D_metrics_collector(ofname, interval, dims) {}
+                               const rtypes::timestep& interval,
+                               const rmath::vector3u& dims,
+                               const rmetrics::output_mode& mode)
+      : grid3D_metrics_collector(ofname, interval, dims, mode) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };

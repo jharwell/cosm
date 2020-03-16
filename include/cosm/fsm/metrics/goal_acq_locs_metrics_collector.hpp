@@ -56,11 +56,13 @@ class goal_acq_locs_metrics_collector final :
    * \param ofname The output file name.
    * \param interval Collection interval.
    * \param dims Dimensions of the arena.
+   * \param mode The selected output mode.
    */
   goal_acq_locs_metrics_collector(const std::string& ofname,
                                   const rtypes::timestep& interval,
-                                  const rmath::vector2u& dims) :
-      grid2D_metrics_collector(ofname, interval, dims) {}
+                                  const rmath::vector2u& dims,
+                                  const rmetrics::output_mode& mode) :
+      grid2D_metrics_collector(ofname, interval, dims, mode) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };
