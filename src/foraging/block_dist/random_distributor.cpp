@@ -58,7 +58,7 @@ random_distributor::random_distributor(const cds::arena_grid::view& grid,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool random_distributor::distribute_blocks(ds::block2D_vectorno& blocks,
+bool random_distributor::distribute_blocks(cds::block2D_vectorno& blocks,
                                            cds::const_entity_list& entities) {
   ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
           blocks.size(),
@@ -133,11 +133,8 @@ bool random_distributor::verify_block_dist(
     const cds::const_entity_list& entities,
     RCSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
-  ER_CHECK(crepr::base_block2D::kOutOfSightDLoc != block->dloc(),
+  ER_CHECK(!block->is_out_of_sight(),
            "Block%d discrete coord still out of sight after distribution",
-           block->id().v());
-  ER_CHECK(crepr::base_block2D::kOutOfSightRLoc != block->rloc(),
-           "Block%d real coord still out of sight after distribution",
            block->id().v());
 
   /* The cell it was distributed to should refer to it */

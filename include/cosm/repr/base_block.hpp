@@ -37,6 +37,7 @@
  ******************************************************************************/
 NS_START(cosm, repr);
 class unicell_movable_entity2D;
+class unicell_movable_entity3D;
 
 /*******************************************************************************
  * Class Definitions
@@ -53,22 +54,17 @@ template <typename TEntityType>
 class base_block : public TEntityType,
                    public rpprototype::clonable<base_block<TEntityType>> {
  public:
-  using rloc_type = typename std::conditional<
-      std::is_same<TEntityType, unicell_movable_entity2D>::value,
-      rmath::vector2d,
-      rmath::vector3d>::type;
-  using dloc_type = typename std::conditional<
-      std::is_same<TEntityType, unicell_movable_entity2D>::value,
-      rmath::vector2u,
-      rmath::vector3u>::type;
+  template <typename T>
+  using is2D = std::is_same<TEntityType, unicell_movable_entity2D>;
+  template <typename T>
+  using is3D = std::is_same<TEntityType, unicell_movable_entity3D>;
 
-  /**
-   * \brief Out of sight location blocks are moved to when a robot picks them
-   * up, for visualization/rendering purposes. These are the same for 2D and 3D,
-   * because you are just moving the block somewhere out of the way.
-   */
-  static constexpr rloc_type kOutOfSightRLoc = rloc_type(1000.0, 1000.0);
-  static constexpr dloc_type kOutOfSightDLoc = dloc_type(1000, 1000);
+  using rloc_type = typename std::conditional<is2D<TEntityType>::value,
+                                              rmath::vector2d,
+                                              rmath::vector3d>::type;
+  using dloc_type = typename std::conditional<is2D<TEntityType>::value,
+                                              rmath::vector2u,
+                                              rmath::vector3u>::type;
 
   /**
    * \param dim 2 element vector of the dimensions of the block.
@@ -143,18 +139,40 @@ class base_block : public TEntityType,
    * This should only happen if the block is being carried by a robot.
    */
   bool is_out_of_sight(void) const {
-    return kOutOfSightDLoc == TEntityType::dloc() ||
-           kOutOfSightRLoc == TEntityType::rloc();
+    return kOutOfSight.dloc == TEntityType::dloc() ||
+        kOutOfSight.rloc == TEntityType::rloc();
   }
 
  private:
+  /**
+   * \brief Out of sight location blocks are moved to when a robot picks them
+   * up, for visualization/rendering purposes.
+   */
+
+  struct out_of_sight2D {
+    rloc_type rloc{1000.0, 1000.0};
+    dloc_type dloc{1000, 1000};
+  };
+
+  struct out_of_sight3D {
+    rloc_type rloc{1000.0, 1000.0, 0.0};
+    dloc_type dloc{1000, 1000, 0};
+  };
+
+  using out_of_sight_type = typename std::conditional<is2D<TEntityType>::value,
+                                                      out_of_sight2D,
+                                                      out_of_sight3D>::type;
+
+  static constexpr out_of_sight_type kOutOfSight{};
+
+
   /**
    * \brief Change the block's location to something outside the visitable space
    * in the arena when it is being carried by robot.
    */
   void move_out_of_sight(void) {
-    TEntityType::rloc(kOutOfSightRLoc);
-    TEntityType::dloc(kOutOfSightDLoc);
+    TEntityType::rloc(kOutOfSight.rloc);
+    TEntityType::dloc(kOutOfSight.dloc);
   }
 
   /* clang-format off */

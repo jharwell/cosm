@@ -31,7 +31,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
 #include "cosm/ds/entity_list.hpp"
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/ds/block2D_vector.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/er/client.hpp"
@@ -107,7 +107,7 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_blocks(cfds::block2D_vectorno& blocks,
+  bool distribute_blocks(cds::block2D_vectorno& blocks,
                          cds::const_entity_list& entities);
 
   const base_distributor* distributor(void) const { return m_dist.get(); }

@@ -32,7 +32,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/foraging/config/block_manifest.hpp"
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/ds/block2D_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -58,7 +58,7 @@ class block_manifest_processor
  public:
   explicit block_manifest_processor(const config::block_manifest* m);
 
-  ds::block2D_vectoro create_blocks(void);
+  cds::block2D_vectoro create_blocks(void);
 
  private:
   /* clang-format off */

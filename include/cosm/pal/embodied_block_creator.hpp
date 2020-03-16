@@ -1,7 +1,7 @@
 /**
- * \file block_type.hpp
+ * \file embodied_block_creator.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,48 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_
-#define INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_
+#ifndef INCLUDE_COSM_PAL_EMBODIED_BLOCK_CREATOR_HPP_
+#define INCLUDE_COSM_PAL_EMBODIED_BLOCK_CREATOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/math/radians.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/repr/embodied_block.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
+class cube_block3D;
+class ramp_block3D;
+} /* namespace cosm::repr */
+
+NS_START(cosm, pal);
+
+class argos_sm_adaptor;
 
 /*******************************************************************************
- * Class Definitionsn
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \brief The different types of blocks available in simulation. This
- * enumeration is used to eliminate the need to include the actual block type
- * header files everywhere.
+ * \struct embodied_block_creator
+ * \ingroup pal
+ *
+ * \brief Action class for taking a 3D block of a given type and creating an
+ * embodied representation within ARGoS for it.
  */
-enum class block_type {
-  ekNONE,
-  /**
-   * \brief A simple cubical block, AxAxA.
-   */
-  ekCUBE,
-
-  /**
-   * \brief A ramp block of dimension AxBxA, where A = 2B (shaped like a
-   * doorstop).
-   */
-  ekRAMP
+struct embodied_block_creator {
+  crepr::embodied_block_variant operator()(const crepr::cube_block3D* block,
+                                           cpal::argos_sm_adaptor* sm,
+                                           const rmath::radians& z_rotation) const;
+  crepr::embodied_block_variant operator()(const crepr::ramp_block3D* block,
+                                           cpal::argos_sm_adaptor* sm,
+                                           const rmath::radians& z_rotation) const;
 };
 
-NS_END(repr, cosm);
+NS_END(pal, cosm);
 
-#endif /* INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_ */
+#endif /* INCLUDE_COSM_PAL_EMBODIED_BLOCK_CREATOR_HPP_ */

@@ -49,24 +49,20 @@ struct normal_visitor {
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-supervisor_fsm::supervisor_fsm(const variant_type& variant,
-                               csubsystem::saa_subsystem2D* const saa)
-    : rpfsm::hfsm(states::ekST_MAX_STATES, states::ekST_START),
+supervisor_fsm::supervisor_fsm(csubsystem::saa_subsystem2D* const saa)
+    : rpfsm::simple_fsm(states::ekST_MAX_STATES, states::ekST_START),
       ER_CLIENT_INIT("cosm.fsm.supervisor"),
-      HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(normal, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(malfunction, hfsm::top_state()),
-      HFSM_DEFINE_STATE_MAP(mc_state_map,
-                            HFSM_STATE_MAP_ENTRY(&start),
-                            HFSM_STATE_MAP_ENTRY(&normal),
-                            HFSM_STATE_MAP_ENTRY(&malfunction)),
-      m_variant(variant),
+      FSM_DEFINE_STATE_MAP(mc_state_map,
+                           FSM_STATE_MAP_ENTRY(&start),
+                           FSM_STATE_MAP_ENTRY(&normal),
+                           FSM_STATE_MAP_ENTRY(&malfunction)),
       m_saa(saa) {}
 
 /*******************************************************************************
  * States
  ******************************************************************************/
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
+  internal_event(ekST_NORMAL);
   return cfsm::util_signal::ekHANDLED;
 }
 
@@ -86,7 +82,8 @@ RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
  ******************************************************************************/
 void supervisor_fsm::event_malfunction(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      fsm::util_signal::ekFATAL, /* start */
+    /* Possible to have a malfunction event on first timestep  */
+      states::ekST_MALFUNCTION,  /* start */
       states::ekST_MALFUNCTION,  /* normal */
       fsm::util_signal::ekFATAL, /* malfunction */
   };
@@ -96,7 +93,8 @@ void supervisor_fsm::event_malfunction(void) {
 
 void supervisor_fsm::event_repair(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      fsm::util_signal::ekFATAL, /* start */
+    /* Possible to have repair malfunction event on first timestep  */
+      states::ekST_NORMAL,       /* start */
       fsm::util_signal::ekFATAL, /* normal */
       states::ekST_NORMAL,       /* malfunction */
   };

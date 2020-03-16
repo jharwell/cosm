@@ -48,9 +48,11 @@ std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
       /* clang-format off */
-    "int_avg_swarm_population",
-    "cum_avg_swarm_population",
-    "swarm_max_population",
+    "int_avg_total_population",
+    "int_avg_active_population",
+    "cum_avg_total_population",
+    "cum_avg_active_population",
+    "max_population",
 
     "int_avg_birth_rate",
     "int_avg_birth_interval",
@@ -91,15 +93,17 @@ void population_dynamics_metrics_collector::reset(void) {
 
 boost::optional<std::string> population_dynamics_metrics_collector::csv_line_build(
     void) {
-  if (!((timestep() + 1) % interval() == 0)) {
+  if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
   std::string line;
 
-  /* misc */
-  line += csv_entry_intavg(m_interval.swarm_population);
-  line += csv_entry_tsavg(m_cum.swarm_population);
-  line += rcppsw::to_string(m_interval.swarm_max_population) + separator();
+  /* population */
+  line += csv_entry_intavg(m_interval.total_population);
+  line += csv_entry_intavg(m_interval.active_population);
+  line += csv_entry_tsavg(m_cum.total_population);
+  line += csv_entry_tsavg(m_cum.active_population);
+  line += rcppsw::to_string(m_interval.max_population) + separator();
 
   /* birth queue */
   line += csv_entry_intavg(m_interval.n_births);
@@ -147,12 +151,13 @@ void population_dynamics_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const population_dynamics_metrics&>(metrics);
 
-  /* misc */
-  m_interval.swarm_population += m.swarm_population();
-  m_interval.swarm_max_population = m.swarm_max_population();
+  /* population */
+  m_interval.total_population += m.swarm_total_population();
+  m_interval.active_population += m.swarm_active_population();
+  m_interval.max_population = m.swarm_max_population();
 
-  m_cum.swarm_population += m.swarm_population();
-  m_cum.swarm_max_population = m.swarm_max_population();
+  m_cum.total_population += m.swarm_total_population();
+  m_cum.active_population += m.swarm_active_population();
 
   /* birth queue */
   auto birth = m.birth_queue_status();
@@ -177,6 +182,7 @@ void population_dynamics_metrics_collector::collect(
   /* repair queue */
   auto repair = m.repair_queue_status();
   m_interval.repair_queue_size += repair.size;
+  m_cum.repair_queue_size += repair.size;
 
   m_interval.n_malfunctions += repair.enqueue.count;
   m_interval.malfunction_interval += repair.enqueue.interval_accum.v();
@@ -199,8 +205,9 @@ void population_dynamics_metrics_collector::collect(
 } /* collect() */
 
 void population_dynamics_metrics_collector::reset_after_interval(void) {
-  m_interval.swarm_population = 0;
-  m_interval.swarm_max_population = 0;
+  m_interval.total_population = 0;
+  m_interval.active_population = 0;
+  m_interval.max_population = 0;
 
   m_interval.n_births = 0;
   m_interval.birth_interval = 0;

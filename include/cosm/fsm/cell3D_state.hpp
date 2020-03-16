@@ -1,7 +1,7 @@
 /**
- * \file block2D_vector.cpp
+ * \file cell3D_state.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,46 +18,54 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_FSM_CELL3D_STATE_HPP_
+#define INCLUDE_COSM_FSM_CELL3D_STATE_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/ds/block2D_vector.hpp"
-
-#include <numeric>
-
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, ds);
+NS_START(cosm, fsm);
 
 /*******************************************************************************
- * Non-Member Functions
+ * Class Definitions
  ******************************************************************************/
-template <typename TVectorType>
-std::string do_to_str(const TVectorType& vec) {
-  return std::accumulate(vec.begin(),
-                         vec.end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "b" + rcppsw::to_string(b->id()) + ",";
-                         });
-} /* do_to_str() */
+/**
+ * \brief The state that a \ref cell3D_fsm can be in.
+ */
+class cell3D_state {
+ public:
+  enum {
+    /**
+     * \brief The cell's contents is unknown.
+     */
+    ekST_UNKNOWN,
 
-/*******************************************************************************
- * Member Functions
- ******************************************************************************/
-std::string block2D_vectoro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+    /**
+     * \brief The cell is empty (does not hold a block or is part of a block's
+     * extent).
+     */
+    ekST_EMPTY,
 
-std::string block2D_vectorno::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+    /**
+     * \brief The cell contains a block.
+     */
+    ekST_HAS_BLOCK,
 
-std::string block2D_vectorro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+    /**
+     * \brief The cell does not contain a block, but is part of the 3D space
+     * occupied by a block, in which case it also contains a reference to the
+     * bock it is a part of.
+     */
+    ekST_BLOCK_EXTENT,
+    ekST_MAX_STATES
+  };
+};
 
-NS_END(ds, foraging, cosm);
+NS_END(cosm, fsm);
+
+#endif /* INCLUDE_COSM_FSM_CELL3D_STATE_HPP_ */

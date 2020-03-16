@@ -35,7 +35,7 @@
 #include "cosm/repr/colored_entity.hpp"
 #include "cosm/repr/unicell_immovable_entity2D.hpp"
 
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/ds/block2D_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -72,11 +72,11 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    */
   struct params {
     /* clang-format off */
-    rtypes::spatial_dist       dimension; /* caches are square */
-    rtypes::discretize_ratio   resolution;
-    rmath::vector2d            center;
-    const ds::block2D_vectorno blocks;
-    rtypes::type_uuid          id;
+    rtypes::spatial_dist        dimension; /* caches are square */
+    rtypes::discretize_ratio    resolution;
+    rmath::vector2d             center;
+    const cds::block2D_vectorno blocks;
+    rtypes::type_uuid           id;
     /* clang-format on */
   };
   /**
@@ -127,8 +127,8 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   /**
    * \brief Get a list of the blocks currently in the cache.
    */
-  cfds::block2D_vectorno& blocks(void) { return m_blocks; }
-  const cfds::block2D_vectorno& blocks(void) const { return m_blocks; }
+  cds::block2D_vectorno& blocks(void) { return m_blocks; }
+  const cds::block2D_vectorno& blocks(void) const { return m_blocks; }
 
   /**
    * \brief Add a new block to the cache's list of blocks.
@@ -166,7 +166,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   static int                     m_next_id;
 
   rtypes::timestep               m_creation{0};
-  cfds::block2D_vectorno         m_blocks;
+  cds::block2D_vectorno          m_blocks;
   /* clang-format on */
 };
 

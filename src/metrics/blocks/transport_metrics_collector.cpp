@@ -74,7 +74,7 @@ void transport_metrics_collector::reset(void) {
 } /* reset() */
 
 boost::optional<std::string> transport_metrics_collector::csv_line_build(void) {
-  if (!((timestep() + 1) % interval() == 0)) {
+  if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
   std::string line;

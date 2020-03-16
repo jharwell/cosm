@@ -29,13 +29,23 @@
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 #include <argos3/core/simulator/loop_functions.h>
+#include <argos3/plugins/simulator/entities/box_entity.h>
+
+#include "rcppsw/math/radians.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/swarm_manager.hpp"
+#include "cosm/repr/embodied_block.hpp"
+#include "cosm/repr/block3D_variant.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::repr {
+class cube_block3D;
+class ramp_block3D;
+} /* namespace cosm::repr */
+
 namespace cosm::foraging::ds {
 class arena_map;
 } /* namespace cosm::foraging::ds */
@@ -93,6 +103,13 @@ class argos_sm_adaptor : public swarm_manager,
   const coracle::oracle_manager* oracle_manager(void) const {
     return m_oracle_manager.get();
   }
+  /**
+   * \brief Create a 3D embodied representation of the block and add it to
+   * ARGoS, returning a handle to the created representation.
+   */
+  crepr::embodied_block_variant make_embodied(
+      const crepr::block3D_variant& block,
+      const rmath::radians& z_rotation);
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
@@ -112,6 +129,7 @@ class argos_sm_adaptor : public swarm_manager,
   coracle::oracle_manager* oracle_manager(void) {
     return m_oracle_manager.get();
   }
+
   /**
    * \brief Initialize oracular information injection.
    *
@@ -126,6 +144,7 @@ class argos_sm_adaptor : public swarm_manager,
    */
   void arena_map_init(const cfconfig::arena_map_config* aconfig,
                       const cvconfig::visualization_config* vconfig) RCSW_COLD;
+
 
   /* clang-format off */
   /**

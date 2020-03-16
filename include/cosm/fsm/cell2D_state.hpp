@@ -1,7 +1,7 @@
 /**
- * \file block_cluster.cpp
+ * \file cell2D_state.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,40 +18,59 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_FSM_CELL2D_STATE_HPP_
+#define INCLUDE_COSM_FSM_CELL2D_STATE_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/repr/block_cluster.hpp"
+#include "rcppsw/common/common.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, repr);
+NS_START(cosm, fsm);
 
 /*******************************************************************************
- * Member Functions
+ * Class Definitions
  ******************************************************************************/
-cds::block2D_vectorro block_cluster::blocks(void) const {
-  cds::block2D_vectorro ret;
-  for (uint i = 0; i < xdimd(); ++i) {
-    for (uint j = 0; j < ydimd(); ++j) {
-      const auto& cell = block_cluster::cell(i, j);
-      ER_ASSERT(!cell.state_has_cache(),
-                "Cell@%s in HAS_CACHE state",
-                cell.loc().to_str().c_str());
-      ER_ASSERT(!cell.state_in_cache_extent(),
-                "Cell@%s in CACHE_EXTENT state",
-                cell.loc().to_str().c_str());
-      if (cell.state_has_block()) {
-        auto block = cell.block();
-        ER_ASSERT(nullptr != block,
-                  "Cell@%s null block",
-                  cell.loc().to_str().c_str());
-        ret.push_back(block);
-      }
-    } /* for(j..) */
-  }   /* for(i..) */
-  return ret;
-} /* blocks() */
+/**
+ * \brief The state that a \ref cell2D_fsm can be in.
+ */
+class cell2D_state {
+ public:
+  enum {
+    /**
+     * \brief The cell's contents is unknown (only used by \ref
+     * depth0::mdpo_controller and its derived variants).
+     */
+    ekST_UNKNOWN,
 
-NS_END(repr, foraging, cosm);
+    /**
+     * \brief The cell is empty (does not hold a cache or block).
+     */
+    ekST_EMPTY,
+
+    /**
+     * \brief The cell contains a block.
+     */
+    ekST_HAS_BLOCK,
+
+    /**
+     * \brief The cell contains a cache.
+     */
+    ekST_HAS_CACHE,
+
+    /**
+     * \brief The cell does not contain a cache, but is part of the 2D space
+     * occupied by a cache, in which case it also contains a reference to the
+     * cache it is a part of.
+     */
+    ekST_CACHE_EXTENT,
+    ekST_MAX_STATES
+  };
+};
+
+NS_END(cosm, fsm);
+
+#endif /* INCLUDE_COSM_FSM_CELL2D_STATE_HPP_ */

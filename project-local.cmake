@@ -24,6 +24,9 @@ endif()
 
 set(${target}_CHECK_LANGUAGE "CXX")
 
+set(LOCAL_INSTALL_PREFIX "/opt/data/local" CACHE STRING "Prefix for where ARGoS
+and other packages needed by the project have been installed.")
+
 ################################################################################
 # External Projects                                                            #
 ################################################################################
@@ -52,20 +55,15 @@ if("${LIBRA_BUILD_FOR}" MATCHES "MSI" )
   message(STATUS "Building for MSI")
   set(LOCAL_INSTALL_PREFIX /home/gini/shared/swarm/$ENV{MSICLUSTER})
   set(COSM_HAL_TARGET "argos-footbot")
-elseif("${LIBRA_BUILD_FOR}" MATCHES "TRAVIS")
-  message(STATUS "Building for TRAVIS")
-  set(LOCAL_INSTALL_PREFIX /usr/local)
-  set(COSM_HAL_TARGET "argos-footbot")
 elseif("${LIBRA_BUILD_FOR}" MATCHES "ARGOS")
   message(STATUS "Building for ARGoS")
-  set(LOCAL_INSTALL_PREFIX /opt/data/local)
   set(COSM_HAL_TARGET "argos-footbot")
 elseif("${LIBRA_BUILD_FOR}" MATCHES "EV3")
   message(STATUS "Building for EV3")
     set(COSM_HAL_TARGET "ev3")
 else()
   message(FATAL_ERROR
-    "Unknown build target '${LIBRA_BUILD_FOR}'. Must be: [MSI,TRAVIS,ARGOS,EV3]")
+    "Unknown build target '${LIBRA_BUILD_FOR}'. Must be: [MSI,ARGOS,EV3]")
 endif()
 
 set(${target}_INCLUDE_DIRS

@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_DS_BLOCK2D_VECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_DS_BLOCK2D_VECTOR_HPP_
+#ifndef INCLUDE_COSM_DS_BLOCK2D_VECTOR_HPP_
+#define INCLUDE_COSM_DS_BLOCK2D_VECTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -34,7 +34,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, ds);
+NS_START(cosm, ds);
 
 using block2D_vectoro_type = std::shared_ptr<crepr::base_block2D>;
 using block2D_vectorno_type = crepr::base_block2D*;
@@ -45,7 +45,7 @@ using block2D_vectorro_type = const crepr::base_block2D*;
  ******************************************************************************/
 /**
  * \class block2D_vectoro
- * \ingroup foraging ds
+ * \ingroup ds
  *
  * \brief Specialization of \ref std::vector indicating the blocks are OWNED by
  * this class.
@@ -97,6 +97,6 @@ class block2D_vectorro : public std::vector<block2D_vectorro_type> {
   std::string to_str(void) const;
 };
 
-NS_END(ds, foraging, cosm);
+NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_DS_BLOCK2D_VECTOR_HPP_ */
+#endif /* INCLUDE_COSM_DS_BLOCK2D_VECTOR_HPP_ */

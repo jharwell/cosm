@@ -1,5 +1,5 @@
 /**
- * \file block_cluster.cpp
+ * \file block2D_vector.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,37 +21,43 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/ds/block2D_vector.hpp"
+
+#include <numeric>
+
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, repr);
+NS_START(cosm, ds);
+
+/*******************************************************************************
+ * Non-Member Functions
+ ******************************************************************************/
+template <typename TVectorType>
+std::string do_to_str(const TVectorType& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& b) {
+                           return a + "b" + rcppsw::to_string(b->id()) + ",";
+                         });
+} /* do_to_str() */
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-cds::block2D_vectorro block_cluster::blocks(void) const {
-  cds::block2D_vectorro ret;
-  for (uint i = 0; i < xdimd(); ++i) {
-    for (uint j = 0; j < ydimd(); ++j) {
-      const auto& cell = block_cluster::cell(i, j);
-      ER_ASSERT(!cell.state_has_cache(),
-                "Cell@%s in HAS_CACHE state",
-                cell.loc().to_str().c_str());
-      ER_ASSERT(!cell.state_in_cache_extent(),
-                "Cell@%s in CACHE_EXTENT state",
-                cell.loc().to_str().c_str());
-      if (cell.state_has_block()) {
-        auto block = cell.block();
-        ER_ASSERT(nullptr != block,
-                  "Cell@%s null block",
-                  cell.loc().to_str().c_str());
-        ret.push_back(block);
-      }
-    } /* for(j..) */
-  }   /* for(i..) */
-  return ret;
-} /* blocks() */
+std::string block2D_vectoro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-NS_END(repr, foraging, cosm);
+std::string block2D_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string block2D_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+NS_END(ds, cosm);

@@ -33,6 +33,7 @@
 #include "cosm/oracle/oracle_manager.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
 #include "cosm/vis/config/visualization_config.hpp"
+#include "cosm/pal/embodied_block_creator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -83,5 +84,15 @@ void argos_sm_adaptor::oracle_init(
     m_oracle_manager = std::make_unique<coracle::oracle_manager>(oraclep);
   }
 } /* oracle_init() */
+
+crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
+    const crepr::block3D_variant& block,
+    const rmath::radians& z_rotation) {
+  auto visitor = std::bind(embodied_block_creator(),
+                           std::placeholders::_1,
+                           this,
+                           z_rotation);
+  return boost::apply_visitor(visitor, block);
+} /* make_embodied() */
 
 NS_END(pal, cosm);

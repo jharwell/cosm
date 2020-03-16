@@ -31,7 +31,7 @@
 #include "rcppsw/patterns/fsm/simple_fsm.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/fsm/cell2D_states.hpp"
+#include "cosm/fsm/cell2D_state.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,7 +51,7 @@ NS_START(cosm, fsm);
 class cell2D_fsm final : public rpfsm::simple_fsm,
                          public rer::client<cell2D_fsm> {
  public:
-  using states = cell2D_states;
+  using state = cell2D_state;
 
   cell2D_fsm(void);
 
@@ -78,24 +78,19 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   void init(void) override;
 
   bool state_is_known(void) const {
-    return current_state() !=
-           std::underlying_type<states>::type(states::ekST_UNKNOWN);
+    return current_state() != state::ekST_UNKNOWN;
   }
   bool state_has_block(void) const {
-    return current_state() ==
-           std::underlying_type<states>::type(states::ekST_HAS_BLOCK);
+    return current_state() == state::ekST_HAS_BLOCK;
   }
   bool state_has_cache(void) const {
-    return current_state() ==
-           std::underlying_type<states>::type(states::ekST_HAS_CACHE);
+    return current_state() == state::ekST_HAS_CACHE;
   }
   bool state_in_cache_extent(void) const {
-    return current_state() ==
-           std::underlying_type<states>::type(states::ekST_CACHE_EXTENT);
+    return current_state() == state::ekST_CACHE_EXTENT;
   }
   bool state_is_empty(void) const {
-    return current_state() ==
-           std::underlying_type<states>::type(states::ekST_EMPTY);
+    return current_state() == state::ekST_EMPTY;
   }
 
   /* events */
@@ -123,7 +118,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
     return &mc_state_map[index];
   }
 
-  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
+  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, state::ekST_MAX_STATES);
   /* clang-format off */
   uint m_block_count{0};
   /* clang-format on */

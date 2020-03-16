@@ -29,7 +29,7 @@
 #include "rcppsw/patterns/fsm/simple_fsm.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/fsm/cell3D_states.hpp"
+#include "cosm/fsm/cell3D_state.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -49,7 +49,7 @@ NS_START(cosm, fsm);
 class cell3D_fsm final : public rpfsm::simple_fsm,
                          public rer::client<cell3D_fsm> {
  public:
-  using states = cell3D_states;
+  using state = cell3D_state;
 
   cell3D_fsm(void);
   ~cell3D_fsm(void) override = default;
@@ -70,16 +70,16 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
   cell3D_fsm(const cell3D_fsm& other);
 
   bool state_is_known(void) const {
-    return current_state() != rcppsw::as_underlying(states::ekST_UNKNOWN);
+    return current_state() != state::ekST_UNKNOWN;
   }
   bool state_has_block(void) const {
-    return current_state() == rcppsw::as_underlying(states::ekST_HAS_BLOCK);
+    return current_state() == state::ekST_HAS_BLOCK;
   }
   bool state_in_block_extent(void) const {
-    return current_state() == rcppsw::as_underlying(states::ekST_BLOCK_EXTENT);
+    return current_state() == state::ekST_BLOCK_EXTENT;
   }
   bool state_is_empty(void) const {
-    return current_state() == rcppsw::as_underlying(states::ekST_EMPTY);
+    return current_state() == state::ekST_EMPTY;
   }
 
   /* events */
@@ -98,7 +98,7 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
     return &mc_state_map[index];
   }
 
-  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
+  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, state::ekST_MAX_STATES);
 };
 
 NS_END(fsm, cosm);

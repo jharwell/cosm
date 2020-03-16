@@ -27,7 +27,7 @@
 #include <boost/variant.hpp>
 #include <utility>
 
-#include "rcppsw/patterns/fsm/hfsm.hpp"
+#include "rcppsw/patterns/fsm/simple_fsm.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/ta/taskable.hpp"
@@ -61,12 +61,12 @@ NS_START(fsm);
  * normal operation can be replaced by something else (e.g. stopping all robot
  * motion if a robot malfunction event is received).
  */
-class supervisor_fsm final : public rpfsm::hfsm,
+class supervisor_fsm final : public rpfsm::simple_fsm,
                              public rer::client<supervisor_fsm> {
   using variant_type = boost::variant<ta::taskable*, ta::base_executive*>;
 
  public:
-  supervisor_fsm(const variant_type& variant, subsystem::saa_subsystem2D* saa);
+  explicit supervisor_fsm(subsystem::saa_subsystem2D* saa);
 
   supervisor_fsm& operator=(const supervisor_fsm&) = delete;
   supervisor_fsm(const supervisor_fsm&) = delete;
@@ -109,18 +109,18 @@ class supervisor_fsm final : public rpfsm::hfsm,
   };
 
   /* supervisor states */
-  HFSM_STATE_DECLARE_ND(supervisor_fsm, start);
-  HFSM_STATE_DECLARE_ND(supervisor_fsm, normal);
-  HFSM_STATE_DECLARE_ND(supervisor_fsm, malfunction);
+  FSM_STATE_DECLARE_ND(supervisor_fsm, start);
+  FSM_STATE_DECLARE_ND(supervisor_fsm, normal);
+  FSM_STATE_DECLARE_ND(supervisor_fsm, malfunction);
 
-  HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
+  FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];
   }
 
-  HFSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
+  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
 
   /* clang-format off */
-  variant_type                      m_variant;
+  variant_type                      m_variant{};
   subsystem::saa_subsystem2D* const m_saa;
   /* clang-format on */
 };

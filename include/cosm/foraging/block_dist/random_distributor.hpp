@@ -67,7 +67,7 @@ class random_distributor final : public rer::client<random_distributor>,
 
   random_distributor& operator=(const random_distributor& s) = delete;
 
-  bool distribute_blocks(cfds::block2D_vectorno& blocks,
+  bool distribute_blocks(cds::block2D_vectorno& blocks,
                          cds::const_entity_list& entities) override;
 
   /**

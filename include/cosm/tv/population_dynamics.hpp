@@ -76,11 +76,13 @@ class population_dynamics : public rer::client<population_dynamics>,
  public:
   struct op_result {
     rtypes::type_uuid id;
-    size_t pop_size;
+    size_t total_pop;
+    size_t active_pop;
   };
 
   population_dynamics(const config::population_dynamics_config* config,
-                      size_t current_pop,
+                      size_t total_pop,
+                      size_t active_pop,
                       rmath::rng* rng);
   ~population_dynamics(void) override = default;
 
@@ -100,7 +102,8 @@ class population_dynamics : public rer::client<population_dynamics>,
   size_t swarm_max_population(void) const override {
     return mc_config.max_size;
   }
-  size_t swarm_population(void) const override { return m_current_pop; }
+  size_t swarm_total_population(void) const override { return m_total_pop; }
+  size_t swarm_active_population(void) const override { return m_active_pop; }
   void reset_metrics(void) override final {
     m_birth.reset_metrics();
     m_death.reset_metrics();
@@ -163,7 +166,8 @@ class population_dynamics : public rer::client<population_dynamics>,
   /* clang-format off */
   const config::population_dynamics_config mc_config;
 
-  size_t                                   m_current_pop;
+  size_t                                   m_total_pop;
+  size_t                                   m_active_pop;
   rtypes::timestep                         m_timestep{0};
   rmath::rng*                              m_rng;
 

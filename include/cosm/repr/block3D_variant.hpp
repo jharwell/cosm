@@ -1,5 +1,5 @@
 /**
- * \file cell3D_states.hpp
+ * \file block3D_variant.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,51 +18,29 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_CELL3D_STATES_HPP_
-#define INCLUDE_COSM_FSM_CELL3D_STATES_HPP_
+#ifndef INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_
+#define INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <boost/variant.hpp>
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, fsm);
+NS_START(cosm, repr);
+
+class cube_block3D;
+class ramp_block3D;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \brief The states that a \ref cell3D_fsm can be in.
- */
-enum cell3D_states {
-  /**
-   * \brief The cell's contents is unknown.
-   */
-  ekST_UNKNOWN,
+using block3D_variant = boost::variant<cube_block3D*, ramp_block3D*>;
 
-  /**
-   * \brief The cell is empty (does not hold a block or is part of a block's
-   * extent).
-   */
-  ekST_EMPTY,
+NS_END(repr, cosm);
 
-  /**
-   * \brief The cell contains a block.
-   */
-  ekST_HAS_BLOCK,
-
-  /**
-   * \brief The cell does not contain a block, but is part of the 3D space
-   * occupied by a block, in which case it also contains a reference to the
-   * bock it is a part of.
-   */
-  ekST_BLOCK_EXTENT,
-  ekST_MAX_STATES
-};
-
-NS_END(cosm, fsm);
-
-#endif /* INCLUDE_COSM_FSM_CELL3D_STATES_HPP_ */
+#endif /* INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_ */

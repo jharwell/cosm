@@ -33,7 +33,7 @@
 
 #include "cosm/repr/base_block2D.hpp"
 #include "cosm/ds/arena_grid.hpp"
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/foraging/ds/cache_vector.hpp"
 #include "cosm/foraging/repr/arena_cache.hpp"
 #include "cosm/repr/nest.hpp"
@@ -92,8 +92,8 @@ class arena_map final : public rer::client<arena_map>,
    * Some blocks may not be visible on the arena_map, as they are being carried
    * by robots.
    */
-  block2D_vectorno& blocks(void) { return m_blocksno; }
-  const block2D_vectorno& blocks(void) const { return m_blocksno; }
+  cds::block2D_vectorno& blocks(void) { return m_blocksno; }
+  const cds::block2D_vectorno& blocks(void) const { return m_blocksno; }
 
   /**
    * \brief Get the # of blocks available in the arena.
@@ -325,8 +325,8 @@ class arena_map final : public rer::client<arena_map>,
   mutable std::mutex          m_cache_mtx{};
   mutable std::mutex          m_block_mtx{};
 
-  block2D_vectoro             m_blockso;
-  block2D_vectorno            m_blocksno{};
+  cds::block2D_vectoro        m_blockso;
+  cds::block2D_vectorno       m_blocksno{};
   acache_vectoro              m_cacheso{};
   acache_vectorno             m_cachesno{};
   acache_vectoro              m_zombie_caches{};

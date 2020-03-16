@@ -65,7 +65,18 @@ class population_dynamics_metrics : public virtual rmetrics::base_metrics {
   virtual queue_status death_queue_status(void) const = 0;
   virtual queue_status birth_queue_status(void) const = 0;
   virtual queue_status repair_queue_status(void) const = 0;
-  virtual size_t swarm_population(void) const = 0;
+
+  /**
+   * \brief Return the total number of robots in the arena, regardless of
+   * whether they are active or not (i.e. including ones being repaired).
+   */
+  virtual size_t swarm_total_population(void) const = 0;
+
+  /**
+   * \brief Return the total number of robots in the arena that are active
+   * (i.e. in the arena and NOT being repaired).
+   */
+  virtual size_t swarm_active_population(void) const = 0;
 
   /**
    * \brief Return the maximum size of the swarm, which is assumed to be

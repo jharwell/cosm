@@ -87,8 +87,9 @@ class population_dynamics_metrics_collector final : public rmetrics::base_metric
     std::atomic_uint    repair_interval{0};
     std::atomic<double> repair_mu{0};
 
-    std::atomic_uint    swarm_population{0};
-    std::atomic_uint    swarm_max_population{0};
+    std::atomic_uint    total_population{0};
+    std::atomic_uint    active_population{0};
+    std::atomic_uint    max_population{0};
     /* clang-format on */
   };
 

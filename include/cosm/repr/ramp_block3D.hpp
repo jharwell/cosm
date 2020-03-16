@@ -28,6 +28,12 @@
 
 #include "cosm/repr/base_block.hpp"
 #include "cosm/repr/unicell_movable_entity3D.hpp"
+#include "cosm/hal/hal.hpp"
+
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#include <boost/optional.hpp>
+#include "cosm/repr/embodied_block.hpp"
+#endif
 
 /*******************************************************************************
  * Namespaces
@@ -66,6 +72,22 @@ class ramp_block3D final : public base_block<unicell_movable_entity3D> {
     tmp->md()->metrics_copy(this->md());
     return tmp;
   } /* clone() */
+
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+  boost::optional<embodied_ramp_block> set_embodiment(void) const {
+    return m_embodiment;
+  }
+  void embodiment(boost::optional<embodied_ramp_block> b) {
+    m_embodiment = b;
+  }
+#endif
+
+ private:
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+  /* clang-format off */
+  boost::optional<embodied_ramp_block> m_embodiment{};
+  /* clang-format on */
+#endif
 };
 
 NS_END(repr, cosm);

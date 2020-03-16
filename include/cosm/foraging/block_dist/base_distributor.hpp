@@ -28,7 +28,7 @@
 #include <vector>
 
 #include "rcppsw/er/client.hpp"
-#include "cosm/foraging/ds/block2D_vector.hpp"
+#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/ds/entity_list.hpp"
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
 #include "rcppsw/math/rng.hpp"
@@ -89,7 +89,7 @@ class base_distributor {
    * \return \c TRUE iff all block distributions were successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_blocks(cfds::block2D_vectorno& blocks,
+  virtual bool distribute_blocks(cds::block2D_vectorno& blocks,
                                  cds::const_entity_list& entities) {
     return std::all_of(blocks.begin(),
                        blocks.end(),
