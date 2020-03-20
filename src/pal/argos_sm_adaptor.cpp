@@ -28,7 +28,7 @@
 #include "rcppsw/math/rngm.hpp"
 
 #include "cosm/foraging/config/arena_map_config.hpp"
-#include "cosm/foraging/ds/arena_map.hpp"
+#include "cosm/arena/arena_map.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/oracle_manager.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
@@ -58,7 +58,7 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 void argos_sm_adaptor::arena_map_init(
     const cfconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
-  m_arena_map = std::make_unique<cfds::arena_map>(aconfig);
+  m_arena_map = std::make_unique<carena::arena_map>(aconfig);
 
   if (!m_arena_map->initialize(this, rng())) {
     ER_ERR("Could not initialize arena map");

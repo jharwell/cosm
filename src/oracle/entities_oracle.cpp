@@ -25,7 +25,7 @@
 
 #include <numeric>
 
-#include "cosm/foraging/repr/base_cache.hpp"
+#include "cosm/arena/repr/base_cache.hpp"
 #include "cosm/oracle/config/entities_oracle_config.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
@@ -67,7 +67,7 @@ std::string entities_oracle::result_to_string(const variant_vector_type& v) {
              ",";
     } else if (1 == ent.which()) {
       return a + "c" +
-             rcppsw::to_string(boost::get<cfrepr::base_cache*>(ent)->id()) + ",";
+             rcppsw::to_string(boost::get<carepr::base_cache*>(ent)->id()) + ",";
     } else {
       return a + "unknown entity type,";
     }

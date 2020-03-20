@@ -1,7 +1,7 @@
 /**
- * \file cell2D.cpp
+ * \file location_metrics.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_HPP_
+#define INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
-
-#include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "rcppsw/metrics/base_metrics.hpp"
+#include "rcppsw/math/vector2.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, metrics, caches);
 
 /*******************************************************************************
- * Constructors/Destructor
+ * Class Definitions
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+/**
+ * \class location_metrics
+ * \ingroup arena metrics caches
+ *
+ * \brief Defines the metrics to be collected from a \ref arena_cache regarding
+ * its location in the arena.
+ *
+ * Metrics are collected every timestep.
+ */
+class location_metrics : public virtual rmetrics::base_metrics {
+ public:
+  location_metrics(void) = default;
 
-/*******************************************************************************
- * Member Functions
- ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+  /**
+   * \brief Should return the discrete location of the cache.
+   */
+  virtual rcppsw::math::vector2u location(void) const = 0;
+};
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+NS_END(caches, metrics, arena, cosm);
 
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+#endif /* INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_HPP_ */

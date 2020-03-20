@@ -1,7 +1,7 @@
 /**
- * \file cell2D.cpp
+ * \file cache_vector.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,38 +21,48 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
+#include "cosm/arena/ds/cache_vector.hpp"
 
-#include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include <numeric>
+
+#include "cosm/arena/repr/arena_cache.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, ds);
 
 /*******************************************************************************
- * Constructors/Destructor
+ * Non-Member Functions
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+template <typename TVectorType>
+std::string do_to_str(const TVectorType& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& c) {
+                           return a + "c" + rcppsw::to_string(c->id()) + "@" +
+                                  c->dloc().to_str() + ",";
+                         });
+} /* do_to_str() */
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+std::string acache_vectoro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+std::string acache_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
+std::string bcache_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
+std::string bcache_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-NS_END(ds, cosm);
+NS_END(ds, arena, cosm);

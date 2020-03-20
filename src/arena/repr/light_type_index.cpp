@@ -1,7 +1,7 @@
 /**
- * \file cell2D.cpp
+ * \file light_type_index.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,38 +21,18 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
-
-#include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/arena/repr/light_type_index.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, repr);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+light_type_index::light_type_index(void)
+    : m_index({{kNest, rutils::color::kYELLOW}, {kCache, rutils::color::kRED}}) {
+}
 
-/*******************************************************************************
- * Member Functions
- ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
-
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
-
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+NS_END(repr, arena, cosm);

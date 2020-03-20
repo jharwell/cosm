@@ -1,7 +1,7 @@
 /**
- * \file cell2D.cpp
+ * \file location_metrics_collector.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,38 +21,22 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
+#include "cosm/arena/metrics/caches/location_metrics_collector.hpp"
 
-#include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/arena/metrics/caches/location_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
-
-/*******************************************************************************
- * Constructors/Destructor
- ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+NS_START(cosm, arena, metrics, caches);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+void location_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+  auto& m = dynamic_cast<const location_metrics&>(metrics);
+  inc_total_count();
+  inc_cell_count(m.location());
+} /* collect() */
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
-
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+NS_END(caches, metrics, arena, cosm);

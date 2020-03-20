@@ -1,7 +1,7 @@
 /**
- * \file cell2D.cpp
+ * \file cell2D_cache_extent.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,38 +21,39 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
+#include "cosm/arena/operations/cell2D_cache_extent.hpp"
 
+#include "cosm/ds/arena_grid.hpp"
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, operations, detail);
+using cds::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+cell2D_cache_extent::cell2D_cache_extent(const rmath::vector2u& coord,
+                                         carepr::base_cache* cache)
+    : cell2D_op(coord), m_cache(cache) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+void cell2D_cache_extent::visit(cds::cell2D& cell) {
+  cell.entity(m_cache);
+  visit(cell.fsm());
+} /* visit() */
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+void cell2D_cache_extent::visit(fsm::cell2D_fsm& fsm) {
+  fsm.event_cache_extent();
+} /* visit() */
 
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
+void cell2D_cache_extent::visit(cds::arena_grid& grid) {
+  visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
+} /* visit() */
 
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+NS_END(detail, operations, arena, cosm);

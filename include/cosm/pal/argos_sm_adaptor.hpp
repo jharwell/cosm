@@ -46,9 +46,9 @@ class cube_block3D;
 class ramp_block3D;
 } /* namespace cosm::repr */
 
-namespace cosm::foraging::ds {
+namespace cosm::arena {
 class arena_map;
-} /* namespace cosm::foraging::ds */
+} /* namespace cosm */
 
 namespace cosm::foraging::config {
 struct arena_map_config;
@@ -99,7 +99,7 @@ class argos_sm_adaptor : public swarm_manager,
   void Destroy(void) override { destroy(); }
 
   const std::string& led_medium(void) const { return m_led_medium; }
-  const cfds::arena_map* arena_map(void) const { return m_arena_map.get(); }
+  const carena::arena_map* arena_map(void) const { return m_arena_map.get(); }
   const coracle::oracle_manager* oracle_manager(void) const {
     return m_oracle_manager.get();
   }
@@ -125,7 +125,7 @@ class argos_sm_adaptor : public swarm_manager,
 
   argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
-  cfds::arena_map* arena_map(void) { return m_arena_map.get(); }
+  carena::arena_map* arena_map(void) { return m_arena_map.get(); }
   coracle::oracle_manager* oracle_manager(void) {
     return m_oracle_manager.get();
   }
@@ -152,7 +152,7 @@ class argos_sm_adaptor : public swarm_manager,
    */
   std::string                              m_led_medium{};
   argos::CFloorEntity*                     m_floor{nullptr};
-  std::unique_ptr<cfds::arena_map>         m_arena_map;
+  std::unique_ptr<carena::arena_map>       m_arena_map;
   std::unique_ptr<coracle::oracle_manager> m_oracle_manager;
   /* clang-format on */
 };

@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/oracle/oracle_manager.hpp"
 
-#include "cosm/foraging/ds/arena_map.hpp"
+#include "cosm/arena/arena_map.hpp"
 #include "cosm/oracle/config/oracle_manager_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
@@ -47,7 +47,7 @@ void oracle_manager::tasking_oracle(std::unique_ptr<class tasking_oracle> o) {
   m_tasking = std::move(o);
 } /* tasking_oracle */
 
-void oracle_manager::update(cfds::arena_map* const map) {
+void oracle_manager::update(carena::arena_map* const map) {
   if (m_entities->blocks_enabled()) {
     entities_oracle::variant_vector_type v;
     /*

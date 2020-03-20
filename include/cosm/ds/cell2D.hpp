@@ -40,9 +40,9 @@ namespace cosm::repr {
 class entity2D;
 } /* namespace cosm::repr */
 
-namespace cosm::foraging::repr {
+namespace cosm::arena::repr {
 class base_cache;
-} /* namespace cosm::foraging::repr */
+} /* namespace cosm::arena::repr */
 
 NS_START(cosm, ds);
 
@@ -110,8 +110,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a cache, so check the cell's state before
    * calling this function.
    */
-  cfrepr::base_cache* cache(void) const RCSW_PURE;
-  cfrepr::base_cache* cache(void) RCSW_PURE;
+  carepr::base_cache* cache(void) const RCSW_PURE;
+  carepr::base_cache* cache(void) RCSW_PURE;
 
  private:
   /* clang-format off */

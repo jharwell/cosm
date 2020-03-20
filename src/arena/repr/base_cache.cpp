@@ -1,5 +1,5 @@
 /**
- * \file cell2D.cpp
+ * \file base_cache.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,38 +21,49 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
-
 #include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, repr);
+
+/*******************************************************************************
+ * Static Members
+ ******************************************************************************/
+int base_cache::m_next_id = 0;
+constexpr size_t base_cache::kMinBlocks;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+base_cache::base_cache(const params& p)
+    : unicell_immovable_entity2D(rmath::vector2d(p.dimension.v(),
+                                                 p.dimension.v()),
+                                 p.center,
+                                 p.resolution),
+      colored_entity(rutils::color::kGRAY40),
+      mc_resolution(p.resolution),
+      m_blocks(p.blocks) {
+  if (rtypes::constants::kNoUUID == p.id) {
+    entity2D::id(rtypes::type_uuid(m_next_id++));
+  } else {
+    entity2D::id(rtypes::type_uuid(p.id));
+  }
+}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+void base_cache::block_remove(crepr::base_block2D* const block) {
+  m_blocks.erase(std::find_if(m_blocks.begin(),
+                              m_blocks.end(),
+                              [&](const auto& b) { return b->idcmp(*block); }));
+} /* block_remove() */
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+std::unique_ptr<base_cache> base_cache::clone(void) const {
+  return std::make_unique<base_cache>(params{
+      rtypes::spatial_dist(xdimr()), mc_resolution, rloc(), m_blocks, id()});
+} /* clone() */
 
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+NS_END(repr, arena, cosm);

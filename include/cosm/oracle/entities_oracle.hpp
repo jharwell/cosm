@@ -37,9 +37,9 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::foraging::repr {
+namespace cosm::arena::repr {
 class base_cache;
-} /* namespace cosm::foraging::repr */
+} /* namespace cosm::arena::repr */
 
 namespace cosm::oracle::config {
 struct entities_oracle_config;
@@ -59,7 +59,7 @@ NS_START(cosm, oracle);
  */
 class entities_oracle final : public rer::client<entities_oracle> {
  public:
-  using variant_type = boost::variant<crepr::base_block2D*, cfrepr::base_cache*>;
+  using variant_type = boost::variant<crepr::base_block2D*, carepr::base_cache*>;
   using variant_vector_type = std::vector<variant_type>;
 
   static std::string result_to_string(const variant_vector_type& v);

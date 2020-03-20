@@ -26,7 +26,7 @@
 #include <algorithm>
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/foraging/events/arena_free_block_drop.hpp"
+#include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/foraging/utils/utils.hpp"
 #include "cosm/repr/base_block2D.hpp"
 #include "cosm/repr/unicell_immovable_entity2D.hpp"
@@ -102,8 +102,8 @@ bool random_distributor::distribute_block(crepr::base_block2D* block,
      * This function is always called from the arena map, and it ensures that
      * all locks are held, so we don't need to do anything here.
      */
-    events::arena_free_block_drop_visitor op(
-        block, coords->abs, mc_resolution, cfds::arena_map_locking::ekALL_HELD);
+    caops::free_block_drop_visitor op(
+        block, coords->abs, mc_resolution, carena::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block, entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",

@@ -138,15 +138,20 @@ namespace metrics {}
 } /* namespace ta */
 
 namespace foraging {
-namespace ds {}
-namespace repr {}
 namespace config {}
-namespace events {}
 namespace block_dist {}
-
+namespace repr {}
+namespace ds {}
 } /* namespace foraging */
 
-namespace events{}
+namespace arena {
+namespace operations {}
+namespace ds {}
+namespace repr {}
+namespace metrics {}
+} /* namespace arena */
+
+namespace events {}
 
 namespace oracle {
 namespace config {}
@@ -173,9 +178,13 @@ namespace cmetrics = cosm::metrics;
 namespace cmconfig = cmetrics::config;
 namespace ctv = cosm::tv;
 namespace cforaging = cosm::foraging;
-namespace cfds = cforaging::ds;
 namespace cfrepr = cforaging::repr;
-namespace cfevents = cforaging::events;
+namespace cfds = cforaging::ds;
+namespace carena = cosm::arena;
+namespace cads = carena::ds;
+namespace cametrics = carena::metrics;
+namespace carepr = carena::repr;
+namespace caops = carena::operations;
 namespace cfconfig = cforaging::config;
 namespace cfbd = cforaging::block_dist;
 namespace ctvmetrics = ctv::metrics;

@@ -1,5 +1,5 @@
 /**
- * \file cell2D.cpp
+ * \file arena_cache.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,38 +21,34 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/cell2D.hpp"
-
-#include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/arena/repr/arena_cache.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, arena, repr);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cell2D::cell2D(void) { decoratee().init(); }
+arena_cache::arena_cache(const base_cache::params& p,
+                         const rutils::color& light_color)
+    : base_cache(p),
+      m_light(
+          new argos::CLightEntity("cache_light" + rcppsw::to_string(id()),
+                                  argos::CVector3(rloc().x(), rloc().y(), 0.0),
+                                  argos::CColor(light_color.red(),
+                                                light_color.green(),
+                                                light_color.blue()),
+                                  1.0)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+void arena_cache::reset_metrics(void) {
+  m_block_pickups = 0;
+  m_block_drops = 0;
+  m_penalty_count = rtypes::timestep(0);
+} /* reset_metrics() */
 
-crepr::base_block2D* cell2D::block(void) {
-  return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
-
-carepr::base_cache* cell2D::cache(void) const {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-carepr::base_cache* cell2D::cache(void) {
-  return dynamic_cast<carepr::base_cache*>(m_entity);
-} /* cache() */
-
-NS_END(ds, cosm);
+NS_END(repr, arena, cosm);

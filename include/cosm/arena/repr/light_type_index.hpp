@@ -1,5 +1,5 @@
 /**
- * \file loop_utils.cpp
+ * \file light_type_index.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,27 +18,59 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_ARENA_REPR_LIGHT_TYPE_INDEX_HPP_
+#define INCLUDE_COSM_ARENA_REPR_LIGHT_TYPE_INDEX_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/utils/utils.hpp"
-#include "cosm/repr/entity2D.hpp"
+#include <map>
+#include <string>
+
+#include "rcppsw/utils/color.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, utils);
+NS_START(cosm, arena, repr);
 
 /*******************************************************************************
- * Functions
+ * Class Definitions
  ******************************************************************************/
-placement_status_t placement_conflict(const rmath::vector2d& ent1_loc,
-                                      const rmath::vector2d& ent1_dims,
-                                      const crepr::entity2D* const entity) {
-  auto loc_xspan = crepr::entity2D::xspan(ent1_loc, ent1_dims.x());
-  auto loc_yspan = crepr::entity2D::yspan(ent1_loc, ent1_dims.y());
-  return placement_status_t{entity->xspan().overlaps_with(loc_xspan),
-                            entity->yspan().overlaps_with(loc_yspan)};
-} /* placement_conflict() */
+/**
+ * \class light_type_index
+ * \ingroup arena repr
+ *
+ * \brief Index mapping an entity type to the color of the light that should be
+ * associated with it, so that what things should have lights of what color is
+ * not hardcoded in multiple places in the code, and is instead centralized
+ * here. For usage by both robots and loop functions.
+ *
+ * Currently maps:
+ *
+ * - \ref repr::nest
+ * - \ref repr::arena_cache
+ */
 
-NS_END(utils, foraging, cosm);
+class light_type_index {
+ public:
+  static constexpr char kNest[] = "nest";
+  static constexpr char kCache[] = "cache";
+
+  light_type_index(void);
+
+  const rutils::color& operator[](const std::string& key) {
+    return m_index[key];
+  }
+
+ private:
+  /* clang-format off */
+  std::map<std::string, rutils::color> m_index;
+  /* clang-format on */
+};
+
+NS_END(repr, arena, cosm);
+
+#endif /* INCLUDE_COSM_ARENA_REPR_LIGHT_TYPE_INDEX_HPP_ */

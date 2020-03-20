@@ -33,9 +33,9 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::foraging::ds {
+namespace cosm::arena {
 class arena_map;
-} /* namespace cosm::foraging::ds */
+} /* namespace cosm::arena */
 
 namespace cosm::oracle::config {
 struct oracle_manager_config;
@@ -86,7 +86,7 @@ class oracle_manager {
    * from the loop functions before processing any robots for that timestep (at
    * a minimum).
    */
-  void update(cfds::arena_map* map);
+  void update(carena::arena_map* map);
 
  private:
   /* clang-format off */
