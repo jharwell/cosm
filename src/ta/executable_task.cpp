@@ -56,7 +56,7 @@ executable_task::executable_task(const std::string& name,
 int executable_task::active_interface(void) const {
   for (size_t i = 0; i < m_interface_in_prog.size(); ++i) {
     if (m_interface_in_prog[i]) {
-      return i;
+      return static_cast<int>(i);
     }
   } /* for(i..) */
 

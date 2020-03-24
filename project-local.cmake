@@ -27,6 +27,19 @@ set(${target}_CHECK_LANGUAGE "CXX")
 set(LOCAL_INSTALL_PREFIX "/opt/data/local" CACHE STRING "Prefix for where ARGoS
 and other packages needed by the project have been installed.")
 
+set(ARGOS_ROBOT_TYPE "" CACHE STRING "The name of the type of robots
+within the swarm from the POV of ARGoS. Must match the type of robots in the XML
+input file.")
+
+set(ARGOS_ROBOT_NAME_PREFIX "" CACHE STRING "The prefix that
+all robot names have within ARGoS. Must match the XML input file.")
+
+set(ARGOS_CONTROLLER_XML_ID "" CACHE STRING "The unique name attached to the
+controller of the desired type in the XML input file.")
+
+set(WITH_ARGOS_ROBOT_LEDS "NO" CACHE STRING "Enable robots to control their LEDS via actuators")
+configure_file(${${target}_INC_PATH}/${target}/config.hpp.in ${${target}_INC_PATH}/${target}/config.hpp @ONLY)
+
 ################################################################################
 # External Projects                                                            #
 ################################################################################
@@ -113,7 +126,14 @@ if (NOT TARGET ${target})
   endif()
 endif()
 
-
+################################################################################
+# Compile Options/Definitions                                                  #
+################################################################################
+if ("${LIBRA_BUILD_FOR}" MATCHES "ARGOS")
+  if (WITH_ARGOS_ROBOT_LEDS)
+    target_compile_definitions(${target} PUBLIC COSM_WITH_ARGOS_ROBOT_LEDS)
+  endif()
+endif()
 ################################################################################
 # Exports                                                                      #
 ################################################################################

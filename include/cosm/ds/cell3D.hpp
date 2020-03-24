@@ -60,7 +60,7 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   cell3D(void);
 
   cell3D(const cell3D&) = default;
-  cell3D& operator=(const cell3D&) = default;
+  cell3D& operator=(const cell3D&) = delete;
 
   bool operator==(const cell3D& other) const { return other.loc() == m_loc; }
 

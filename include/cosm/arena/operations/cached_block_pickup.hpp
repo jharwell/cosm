@@ -30,7 +30,7 @@
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 
 #include "cosm/arena/operations/block_op_visit_set.hpp"
 
@@ -60,7 +60,7 @@ NS_START(cosm, arena, operations, detail);
  * being created, at a higher level.
  */
 class cached_block_pickup : public rer::client<cached_block_pickup>,
-                            public cevents::cell2D_op {
+                            public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using value =
@@ -135,6 +135,7 @@ NS_END(detail);
 
 class cached_block_pickup_visitor
     : public detail::cached_block_pickup_visitor_impl {
+ public:
   using detail::cached_block_pickup_visitor_impl::cached_block_pickup_visitor_impl;
 };
 

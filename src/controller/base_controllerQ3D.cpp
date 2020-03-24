@@ -101,6 +101,11 @@ rmath::vector3d base_controllerQ3D::pos3D(void) const {
   return m_saa->sensing()->position();
 }
 
+rmath::vector2d base_controllerQ3D::pos2D(void) const {
+  auto pos = pos3D();
+  return rmath::vector2d(pos.x(), pos.y());
+}
+
 rmath::vector3u base_controllerQ3D::dpos3D(void) const {
   return m_saa->sensing()->discrete_position();
 }

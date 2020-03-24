@@ -91,6 +91,12 @@ class base_controllerQ3D : public base_controller,
   void sensing_update(const rtypes::timestep& tick,
                       const rtypes::discretize_ratio& ratio) override;
 
+  /**
+   * \brief For less typing when doing operations with the arena map, which is
+   * (logically) a 2D object.
+   */
+  rmath::vector2d pos2D(void) const RCSW_PURE;
+
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
    * \brief Convenience function to add robot ID+timestep to messages during

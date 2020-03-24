@@ -54,7 +54,6 @@ class block_metadata final : public metrics::blocks::transport_metrics,
                              public colored_entity {
  public:
   /**
-   * \param dim 2 element vector of the dimensions of the block.
    * \param color The color of the block.
    *
    * Using this constructor, blocks are assigned the next available id, starting

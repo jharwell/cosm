@@ -1,5 +1,5 @@
 /**
- * \file cell2D_op.hpp
+ * \file cell2D_empty.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,64 +18,60 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_EVENTS_CELL2D_OP_HPP_
-#define INCLUDE_COSM_EVENTS_CELL2D_OP_HPP_
+#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL2D_EMPTY_HPP_
+#define INCLUDE_COSM_DS_OPERATIONS_CELL2D_EMPTY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
-#include "rcppsw/patterns/visitor/visitor.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::ds {
-class cell2D;
-}
-namespace cosm::fsm {
-class cell2D_fsm;
-}
+class arena_grid;
+} // namespace cosm::ds
 
-NS_START(cosm, events);
+NS_START(cosm, ds, operations);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cell2D_op
- * \ingroup events
+ * \class cell2D_empty
+ * \ingroup ds operations detail
  *
- * \brief Non-abstract interface specifying the minimum set of classes that all
- * events that operate on \ref cell2D objects within an \ref ds::arena_grid need
- * to visit.
+ * \brief Created whenever a cell needs to go from some other state to being
+ * empty.
  *
- * Also provided are the (x, y) coordinates of the cell to which the event is
- * directed. Not all derived events may need them, but they are there.
+ * The most common example of this is when a free block is picked up, and the
+ * square that the block was on is now (probably) empty. It might not be if in
+ * the same timestep a new cache is created on that same cell.
  *
  * This class should never be instantiated, only derived from. To visit \ref
- * cell2D objects, use \ref cell2D_visitor.
+ * cell2D objects, use \ref cell2D_empty_visitor.
  */
-class cell2D_op {
- protected:
-  explicit cell2D_op(const rmath::vector2u& coord) : m_coord(coord) {}
+class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
+ private:
+  struct visit_typelist_impl {
+    using inherited = cell2D_op::visit_typelist;
+    using others = rmpl::typelist<cds::arena_grid>;
+    using value = boost::mpl::joint_view<inherited::type, others::type>;
+  };
 
  public:
-  using visit_typelist = rmpl::typelist<ds::cell2D, fsm::cell2D_fsm>;
+  using visit_typelist = visit_typelist_impl::value;
 
-  virtual ~cell2D_op(void) = default;
+  explicit cell2D_empty(const rmath::vector2u& coord)
+      : cell2D_op(coord), ER_CLIENT_INIT("cosm.operations.cell2D_empty") {}
 
-  uint x(void) const { return m_coord.x(); }
-  uint y(void) const { return m_coord.y(); }
-
-  const rmath::vector2u& coord(void) const { return m_coord; }
-
- private:
-  /* clang-format on */
-  rmath::vector2u m_coord;
-  /* clang-format off */
+  void visit(ds::cell2D& cell);
+  void visit(fsm::cell2D_fsm& fsm);
+  void visit(ds::arena_grid& grid);
 };
 
 /**
@@ -84,8 +80,13 @@ class cell2D_op {
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell2D_op_visitor = rpvisitor::precise_visitor<cell2D_op,
-                                                     cell2D_op::visit_typelist>;
-NS_END(events, cosm);
+using cell2D_empty_visitor_impl =
+    rpvisitor::precise_visitor<cell2D_empty, cell2D_empty::visit_typelist>;
 
-#endif /* INCLUDE_COSM_EVENTS_CELL2D_OP_HPP_ */
+class cell2D_empty_visitor : public cell2D_empty_visitor_impl {
+  using cell2D_empty_visitor_impl::cell2D_empty_visitor_impl;
+};
+
+NS_END(operations, ds, cosm);
+
+#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_EMPTY_HPP_ */

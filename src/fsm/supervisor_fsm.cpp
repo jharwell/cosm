@@ -27,6 +27,7 @@
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/saa_subsystem2D.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/ta/base_executive.hpp"
 
 /*******************************************************************************
@@ -41,15 +42,35 @@ NS_START(cosm, fsm);
  * \brief Disambiguate the type of the thing being supervised so that the
  * appropriate "do normal operation" function can be called.
  */
-struct normal_visitor {
+struct normal_op_visitor {
   void operator()(ta::base_executive* executive) const { executive->run(); }
   void operator()(ta::taskable* taskable) const { taskable->task_execute(); }
+};
+
+/**
+ * \brief Disambiguate the type of the SAA subsystem being used when applying 2D
+ * forces.
+ */
+struct saa_force_apply_visitor {
+  template<typename T>
+  void operator()(T* saa) const { saa->steer_force2D_apply(); }
+};
+
+/**
+ * \brief Disambiguate the type of the SAA subsystem being used when resetting
+ * the differential drive.
+ */
+struct saa_diff_drive_reset_visitor {
+  template<typename T>
+  void operator()(T* saa) const {
+    saa->actuation()->template actuator<ckin2D::governed_diff_drive>()->reset();
+  }
 };
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-supervisor_fsm::supervisor_fsm(csubsystem::saa_subsystem2D* const saa)
+supervisor_fsm::supervisor_fsm(const saa_variant_type& saa)
     : rpfsm::simple_fsm(states::ekST_MAX_STATES, states::ekST_START),
       ER_CLIENT_INIT("cosm.fsm.supervisor"),
       FSM_DEFINE_STATE_MAP(mc_state_map,
@@ -67,13 +88,13 @@ RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
 }
 
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
-  boost::apply_visitor(normal_visitor(), m_variant);
-  m_saa->steer_force2D_apply();
+  boost::apply_visitor(normal_op_visitor(), m_supervisee);
+  boost::apply_visitor(saa_force_apply_visitor(), m_saa);
   return fsm::util_signal::ekHANDLED;
 }
 
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
-  m_saa->actuation()->actuator<ckin2D::governed_diff_drive>()->reset();
+  boost::apply_visitor(saa_diff_drive_reset_visitor(), m_saa);
   return fsm::util_signal::ekHANDLED;
 }
 

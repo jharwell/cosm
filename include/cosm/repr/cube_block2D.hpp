@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <utility>
 
 #include "cosm/repr/base_block.hpp"
 #include "cosm/repr/unicell_movable_entity2D.hpp"
@@ -65,7 +66,7 @@ class cube_block2D final : public base_block<unicell_movable_entity2D> {
     /* copy metadata */
     tmp->md()->robot_id_reset();
     tmp->md()->metrics_copy(this->md());
-    return tmp;
+    return std::move(tmp);
   } /* clone() */
 };
 

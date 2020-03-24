@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM2D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM2D_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
 
 /*******************************************************************************
  * Includes
@@ -57,7 +57,7 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
                        const sensor_map& sensors)
       : base_sensing_subsystem(pos, sensors) {}
 
-  virtual ~sensing_subsystemQ3D(void) = default;
+  ~sensing_subsystemQ3D(void) override = default;
 
   /**
    * \brief Get the robot's current location.
@@ -113,4 +113,4 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM2D _HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D _HPP_ */

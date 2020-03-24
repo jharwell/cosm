@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/cosm.hpp"
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,7 +57,8 @@ NS_START(cosm, arena, operations, detail);
  * \note This operation requires holding the cache and grid mutexes in
  *       multithreaded contexts.
  */
-class cache_extent_clear : public cevents::cell2D_op {
+class cache_extent_clear : public rer::client<cache_extent_clear>,
+                           public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
@@ -95,6 +96,7 @@ using cache_extent_clear_visitor_impl =
 NS_END(detail);
 
 class cache_extent_clear_visitor : public detail::cache_extent_clear_visitor_impl {
+ public:
   using detail::cache_extent_clear_visitor_impl::cache_extent_clear_visitor_impl;
 };
 

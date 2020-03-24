@@ -124,7 +124,6 @@ class diff_drive : public rer::client<diff_drive> {
   double limit(double value) const RCSW_PURE;
 
   /* clang-format off */
-  bool                                m_hard_turn{false};
   drive_type                          m_drive_type;
   double                              m_max_speed;
   diff_drive_fsm                      m_fsm;

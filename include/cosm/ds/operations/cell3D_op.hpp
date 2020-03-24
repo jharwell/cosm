@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_EVENTS_CELL3D_OP_HPP_
-#define INCLUDE_COSM_EVENTS_CELL3D_OP_HPP_
+#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL3D_OP_HPP_
+#define INCLUDE_COSM_DS_OPERATIONS_CELL3D_OP_HPP_
 
 /*******************************************************************************
  * Includes
@@ -39,20 +39,20 @@ namespace cosm::fsm {
 class cell3D_fsm;
 }
 
-NS_START(cosm, events);
+NS_START(cosm, ds, operations);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class cell3D_op
- * \ingroup events
+ * \ingroup ds operations
  *
  * \brief Non-abstract interface specifying the minimum set of classes that all
- * events that operate on \ref cell3D objects.
+ * operations that operate on \ref cell3D objects.
  *
  * Also provided are the (x, y, z) coordinates of the cell to which the event is
- * directed. Not all derived events may need them, but they are there.
+ * directed. Not all derived operations may need them, but they are there.
  *
  * This class should never be instantiated, only derived from. To visit \ref
  * cell3D objects, use \ref cell3D_visitor.
@@ -86,6 +86,6 @@ class cell3D_op {
  */
 using cell3D_op_visitor = rpvisitor::precise_visitor<cell3D_op,
                                                      cell3D_op::visit_typelist>;
-NS_END(events, cosm);
+NS_END(operations, ds, cosm);
 
-#endif /* INCLUDE_COSM_EVENTS_CELL3D_OP_HPP_ */
+#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL3D_OP_HPP_ */

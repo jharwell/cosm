@@ -48,6 +48,7 @@ compile_options.json
 # Build process
 build
 node_modules
+include/cosm/config.hpp
 
 # Sphinx
 docs/_build/

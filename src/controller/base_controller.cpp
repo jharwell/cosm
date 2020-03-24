@@ -30,6 +30,8 @@
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rngm.hpp"
 
+#include "cosm/fsm/supervisor_fsm.hpp"
+
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -40,7 +42,8 @@ namespace fs = std::filesystem;
  * Constructors/Destructor
  ******************************************************************************/
 base_controller::base_controller(void)
-    : ER_CLIENT_INIT("cosm.controller.base") {}
+    : ER_CLIENT_INIT("cosm.controller.base"),
+      m_supervisor(nullptr) {}
 
 base_controller::~base_controller(void) = default;
 
@@ -95,5 +98,9 @@ void base_controller::rng_init(int seed, const std::string& category) {
     m_rng = rmath::rngm::instance().create(category, seed);
   }
 } /* rng_init() */
+
+void base_controller::supervisor(std::unique_ptr<cfsm::supervisor_fsm> fsm) {
+  m_supervisor = std::move(fsm);
+} /* supervisor() */
 
 NS_END(controller, cosm);

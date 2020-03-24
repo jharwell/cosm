@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
 
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -54,7 +54,7 @@ NS_START(cosm, arena, operations, detail);
  * state in order to avoid corner cases when picking up from/dropping in a
  * cache.
  */
-class cell2D_cache_extent : public cevents::cell2D_op {
+class cell2D_cache_extent : public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
@@ -92,6 +92,7 @@ using cell2D_cache_extent_visitor_impl =
 NS_END(detail);
 
 class cell2D_cache_extent_visitor : public detail::cell2D_cache_extent_visitor_impl {
+ public:
   using detail::cell2D_cache_extent_visitor_impl::cell2D_cache_extent_visitor_impl;
 };
 

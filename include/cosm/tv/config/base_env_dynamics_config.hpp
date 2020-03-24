@@ -1,7 +1,7 @@
 /**
- * \file cell2D_unknown.cpp
+ * \file base_env_dynamics_config.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,28 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
+#define INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/events/cell2D_unknown.hpp"
-
-#include "cosm/ds/cell2D.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "cosm/tv/config/robot_dynamics_applicator_config.hpp"
+#include "cosm/tv/config/population_dynamics_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, events);
+NS_START(cosm, tv, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void cell2D_unknown::visit(cds::cell2D& cell) {
-  cell.entity(nullptr);
-  visit(cell.fsm());
-} /* visit() */
+/**
+ * \struct base_env_dynamics_config
+ * \ingroup tv config
+ *
+ * \brief Base configuration that can be reused for the environmental dynamics
+ * managers defined in projects built on COSM.
+ */
+struct base_env_dynamics_config : public rconfig::base_config {
+  ctv::config::robot_dynamics_applicator_config rda{};
+  rct::config::waveform_config block_manip_penalty{};
+};
 
-void cell2D_unknown::visit(fsm::cell2D_fsm& fsm) {
-  fsm.event_unknown();
-} /* visit() */
+NS_END(tv, config, cosm);
 
-NS_END(events, cosm);
+#endif /* INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_ */

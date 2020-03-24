@@ -55,6 +55,17 @@ class nest_block_drop : public rer::client<nest_block_drop> {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
+  /**
+   * \brief Initialize a nest block drop event.
+   *
+   * \param robot_block Handle to the block the robot is currently carrying
+   *                    (originally a clone of an arena block), which it has
+   *                    given up ownership of for the drop.
+   * \param t Current timestep.
+   */
+  nest_block_drop(std::unique_ptr<crepr::base_block2D> robot_block,
+                  const rtypes::timestep& t);
+
   ~nest_block_drop(void) override = default;
 
   nest_block_drop(const nest_block_drop&) = delete;
@@ -68,18 +79,6 @@ class nest_block_drop : public rer::client<nest_block_drop> {
    * COSM#594.
    */
   void visit(arena_map& map);
-
- protected:
-  /**
-   * \brief Initialize a nest block drop event.
-   *
-   * \param robot_block Handle to the block the robot is currently carrying
-   *                    (originally a clone of an arena block), which it has
-   *                    given up ownership of for the drop.
-   * \param t Current timestep.
-   */
-  nest_block_drop(std::unique_ptr<crepr::base_block2D> robot_block,
-                        const rtypes::timestep& t);
 
  private:
   void visit(crepr::base_block2D& block);
@@ -105,6 +104,7 @@ using nest_block_drop_visitor_impl =
 NS_END(detail);
 
 class nest_block_drop_visitor : public detail::nest_block_drop_visitor_impl {
+ public:
   using detail::nest_block_drop_visitor_impl::nest_block_drop_visitor_impl;
 };
 

@@ -24,10 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <argos3/core/control_interface/ci_controller.h>
-
 #include "cosm/controller/base_controller2D.hpp"
-#include "cosm/hal/hal.hpp"
+#include "cosm/pal/argos_controller_adaptor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -45,7 +43,7 @@ NS_START(cosm, pal);
  * for creating controllers within ARGoS.
  */
 class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos::CCI_Controller {
+                                   public argos_controller_adaptor {
  public:
   /* ARGoS hook overrides */
   void Init(ticpp::Element& node) override RCSW_COLD { init(node); }

@@ -59,6 +59,9 @@ swarm_manager::swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
   getrlimit(RLIMIT_CORE, &r);
   r.rlim_cur = RLIM_INFINITY;
   setrlimit(RLIMIT_CORE, &r);
+
+  /* verify environment variables set up for logging */
+  ER_ENV_VERIFY();
 }
 
 /*******************************************************************************

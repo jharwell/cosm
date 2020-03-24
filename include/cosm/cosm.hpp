@@ -26,6 +26,8 @@
  ******************************************************************************/
 #include "rcppsw/rcppsw.hpp"
 
+#include "cosm/config.hpp"
+
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
@@ -127,10 +129,13 @@ namespace config {}
 
 namespace ds {
 namespace config {}
+namespace operations {}
 } /* namespace ds */
 
 namespace pal {
 namespace config {}
+namespace operations {}
+namespace tv {}
 } /* namespace pal */
 
 namespace ta {
@@ -151,8 +156,6 @@ namespace repr {}
 namespace metrics {}
 } /* namespace arena */
 
-namespace events {}
-
 namespace oracle {
 namespace config {}
 } /* namespace oracle */
@@ -172,7 +175,7 @@ namespace crfootbot = crobots::footbot;
 namespace ctv = cosm::tv;
 namespace cds = cosm::ds;
 namespace cdconfig = cds::config;
-namespace cevents = cosm::events;
+namespace cdops = cds::operations;
 namespace cconvergence = cosm::convergence;
 namespace cmetrics = cosm::metrics;
 namespace cmconfig = cmetrics::config;
@@ -192,7 +195,9 @@ namespace crepr = cosm::repr;
 namespace cvis = cosm::vis;
 namespace cvconfig = cvis::config;
 namespace cpal = cosm::pal;
+namespace cpops = cpal::operations;
 namespace cpconfig = cpal::config;
+namespace cptv = cpal::tv;
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
 namespace cta = cosm::ta;

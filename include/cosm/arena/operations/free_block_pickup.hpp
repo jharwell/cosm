@@ -28,7 +28,7 @@
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 
 #include "cosm/arena/operations/block_op_visit_set.hpp"
 
@@ -48,11 +48,11 @@ NS_START(cosm, arena, operations, detail);
  * that is not part of a cache).
  */
 class free_block_pickup : public rer::client<free_block_pickup>,
-                          public cevents::cell2D_op {
+                          public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using value = boost::mpl::joint_view<block_op_visit_typelist,
-                                         cevents::cell2D_op::visit_typelist>;
+                                         cdops::cell2D_op::visit_typelist>;
   };
 
  public:
@@ -100,6 +100,7 @@ using free_block_pickup_visitor_impl =
 NS_END(detail);
 
 class free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl {
+ public:
   using detail::free_block_pickup_visitor_impl::free_block_pickup_visitor_impl;
 };
 

@@ -40,6 +40,10 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::fsm {
+class supervisor_fsm;
+} /* namespace cosm::fsm */
+
 NS_START(cosm, controller);
 
 /*******************************************************************************
@@ -151,6 +155,9 @@ class base_controller : public cfsm::metrics::goal_acq_metrics,
    */
   rmath::rng* rng(void) { return m_rng; }
 
+  cfsm::supervisor_fsm* supervisor(void) { return m_supervisor.get(); }
+  const cfsm::supervisor_fsm* supervisor(void) const { return m_supervisor.get(); }
+
  protected:
   /**
    * \brief Initialize controller output (i.e. where it will log events of
@@ -184,10 +191,13 @@ class base_controller : public cfsm::metrics::goal_acq_metrics,
    */
   void rng_init(int seed, const std::string& category);
 
+  void supervisor(std::unique_ptr<cfsm::supervisor_fsm> fsm);
+
  private:
   /* clang-format off */
-  bool                                        m_display_id{false};
-  rmath::rng*                                 m_rng{nullptr};
+  bool                                  m_display_id{false};
+  rmath::rng*                           m_rng{nullptr};
+  std::unique_ptr<cfsm::supervisor_fsm> m_supervisor;
   /* clang-format on */
 };
 

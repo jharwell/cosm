@@ -54,7 +54,8 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
                       rmath::rng* rng);
   ~cluster_distributor(void) override = default;
 
-  cluster_distributor& operator=(const cluster_distributor& s) = delete;
+  /* not copy-constructible or copy-assignable by default */
+  cluster_distributor& operator=(const cluster_distributor& ) = delete;
 
   bool distribute_block(crepr::base_block2D* block,
                         cds::const_entity_list& entities) override;

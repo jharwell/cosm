@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cached_block_pickup.hpp"
 
-#include "cosm/events/cell2D_empty.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/arena/arena_map.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"

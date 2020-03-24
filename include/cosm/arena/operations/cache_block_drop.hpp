@@ -32,7 +32,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/arena/operations/block_op_visit_set.hpp"
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
 
@@ -58,7 +58,7 @@ NS_START(cosm, arena, operations, detail);
  * but at a higher level.
  */
 class cache_block_drop : public rer::client<cache_block_drop>,
-                         public cevents::cell2D_op {
+                         public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using inherited = boost::mpl::joint_view<block_op_visit_typelist,
@@ -124,6 +124,7 @@ using cache_block_drop_visitor_impl =
 NS_END(detail);
 
 class cache_block_drop_visitor : public detail::cache_block_drop_visitor_impl {
+ public:
   using detail::cache_block_drop_visitor_impl::cache_block_drop_visitor_impl;
 };
 

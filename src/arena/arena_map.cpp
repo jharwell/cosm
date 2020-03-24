@@ -25,7 +25,7 @@
 #include <argos3/plugins/simulator/media/led_medium.h>
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/events/cell2D_empty.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/foraging/block_dist/block_manifest_processor.hpp"
 #include "cosm/foraging/config/arena_map_config.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
@@ -236,7 +236,7 @@ void arena_map::distribute_all_blocks(void) {
       cds::cell2D& cell = decoratee().access<cds::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
           !cell.state_in_cache_extent()) {
-        cevents::cell2D_empty_visitor op(cell.loc());
+        cdops::cell2D_empty_visitor op(cell.loc());
         op.visit(cell);
       }
     } /* for(j..) */

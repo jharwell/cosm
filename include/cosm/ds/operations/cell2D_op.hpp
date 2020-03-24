@@ -1,5 +1,5 @@
 /**
- * \file cell2D_empty.hpp
+ * \file cell2D_op.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,60 +18,64 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_EVENTS_CELL2D_EMPTY_HPP_
-#define INCLUDE_COSM_EVENTS_CELL2D_EMPTY_HPP_
+#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_
+#define INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/patterns/visitor/visitor.hpp"
 
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::ds {
-class arena_grid;
-} // namespace cosm::ds
+class cell2D;
+}
+namespace cosm::fsm {
+class cell2D_fsm;
+}
 
-NS_START(cosm, events);
+NS_START(cosm, ds, operations);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cell2D_empty
- * \ingroup events detail
+ * \class cell2D_op
+ * \ingroup ds operations
  *
- * \brief Created whenever a cell needs to go from some other state to being
- * empty.
+ * \brief Non-abstract interface specifying the minimum set of classes that all
+ * operations that operate on \ref cell2D objects within an \ref ds::arena_grid need
+ * to visit.
  *
- * The most common example of this is when a free block is picked up, and the
- * square that the block was on is now (probably) empty. It might not be if in
- * the same timestep a new cache is created on that same cell.
+ * Also provided are the (x, y) coordinates of the cell to which the event is
+ * directed. Not all derived operations may need them, but they are there.
  *
  * This class should never be instantiated, only derived from. To visit \ref
- * cell2D objects, use \ref cell2D_empty_visitor.
+ * cell2D objects, use \ref cell2D_visitor.
  */
-class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
- private:
-  struct visit_typelist_impl {
-    using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<cds::arena_grid>;
-    using value = boost::mpl::joint_view<inherited::type, others::type>;
-  };
+class cell2D_op {
+ protected:
+  explicit cell2D_op(const rmath::vector2u& coord) : m_coord(coord) {}
 
  public:
-  using visit_typelist = visit_typelist_impl::value;
+  using visit_typelist = rmpl::typelist<ds::cell2D, fsm::cell2D_fsm>;
 
-  explicit cell2D_empty(const rmath::vector2u& coord)
-      : cell2D_op(coord), ER_CLIENT_INIT("cosm.events.cell2D_empty") {}
+  virtual ~cell2D_op(void) = default;
 
-  void visit(ds::cell2D& cell);
-  void visit(fsm::cell2D_fsm& fsm);
-  void visit(ds::arena_grid& grid);
+  uint x(void) const { return m_coord.x(); }
+  uint y(void) const { return m_coord.y(); }
+
+  const rmath::vector2u& coord(void) const { return m_coord; }
+
+ private:
+  /* clang-format on */
+  rmath::vector2u m_coord;
+  /* clang-format off */
 };
 
 /**
@@ -80,13 +84,8 @@ class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell2D_empty_visitor_impl =
-    rpvisitor::precise_visitor<cell2D_empty, cell2D_empty::visit_typelist>;
+using cell2D_op_visitor = rpvisitor::precise_visitor<cell2D_op,
+                                                     cell2D_op::visit_typelist>;
+NS_END(operations, ds, cosm);
 
-class cell2D_empty_visitor : public cell2D_empty_visitor_impl {
-  using cell2D_empty_visitor_impl::cell2D_empty_visitor_impl;
-};
-
-NS_END(events, cosm);
-
-#endif /* INCLUDE_COSM_EVENTS_CELL2D_EMPTY_HPP_ */
+#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_ */

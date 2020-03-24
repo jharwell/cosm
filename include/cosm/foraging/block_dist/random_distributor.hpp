@@ -65,7 +65,7 @@ class random_distributor final : public rer::client<random_distributor>,
                      const rtypes::discretize_ratio& resolution,
                      rmath::rng* rng);
 
-  random_distributor& operator=(const random_distributor& s) = delete;
+  random_distributor& operator=(const random_distributor&) = delete;
 
   bool distribute_blocks(cds::block2D_vectorno& blocks,
                          cds::const_entity_list& entities) override;

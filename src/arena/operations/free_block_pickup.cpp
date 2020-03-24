@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/arena/operations/free_block_pickup.hpp"
 
-#include "cosm/events/cell2D_empty.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/arena/arena_map.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
@@ -52,7 +52,7 @@ void free_block_pickup::visit(arena_map& map) {
             "Coordinates for block/cell do not agree");
   RCSW_UNUSED rmath::vector2d old_r = m_block->rloc();
 
-  cevents::cell2D_empty_visitor op(cell2D_op::coord());
+  cdops::cell2D_empty_visitor op(cell2D_op::coord());
   map.grid_mtx()->lock();
   op.visit(map.decoratee());
   map.grid_mtx()->unlock();

@@ -1,7 +1,7 @@
 /**
- * \file cell2D_empty.cpp
+ * \file penalty_id_calculator.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,31 +21,32 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/events/cell2D_empty.hpp"
-
-#include "cosm/ds/arena_grid.hpp"
-#include "cosm/ds/cell2D.hpp"
+#include "cosm/foraging/tv/penalty_id_calculator.hpp"
+#include "cosm/arena/arena_map.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, events);
-using cds::arena_grid;
+NS_START(cosm, foraging, tv);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void cell2D_empty::visit(cds::cell2D& cell) {
-  cell.entity(nullptr);
-  visit(cell.fsm());
-} /* visit() */
+rtypes::type_uuid penalty_id_calculator::from_nest_drop(
+    const crepr::base_block2D* block) const {
+  ER_ASSERT(nullptr != block &&
+            rtypes::constants::kNoUUID != block->id(),
+            "Robot not carrying block?");
+  return block->id();
+} /* from_nest_drop() */
 
-void cell2D_empty::visit(fsm::cell2D_fsm& fsm) {
-  fsm.event_empty();
-} /* visit() */
+rtypes::type_uuid penalty_id_calculator::from_free_pickup(
+    const rmath::vector2d& loc,
+    const rtypes::type_uuid& acq_id,
+    const carena::arena_map* map) const {
+  auto id = map->robot_on_block(loc, acq_id);
+  ER_ASSERT(rtypes::constants::kNoUUID != id, "Robot not on block?");
+  return id;
+} /* from_free_pickup() */
 
-void cell2D_empty::visit(cds::arena_grid& grid) {
-  visit(grid.access<arena_grid::kCell>(x(), y()));
-} /* visit() */
-
-NS_END(events, cosm);
+NS_END(tv, foraging, cosm);

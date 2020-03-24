@@ -56,7 +56,7 @@ class sensing_subsystem2D : public base_sensing_subsystem {
                       const sensor_map& sensors)
       : base_sensing_subsystem(pos, sensors) {}
 
-  virtual ~sensing_subsystem2D(void) = default;
+  ~sensing_subsystem2D(void) override = default;
 
   /**
    * \brief Get the robot's current location.

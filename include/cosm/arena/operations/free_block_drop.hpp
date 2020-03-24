@@ -30,7 +30,7 @@
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/arena/operations/block_op_visit_set.hpp"
-#include "cosm/events/cell2D_op.hpp"
+#include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
 
 /*******************************************************************************
@@ -60,7 +60,7 @@ NS_START(cosm, arena, operations, detail);
  * free_block_drop_visitor.
  */
 class free_block_drop : public rer::client<free_block_drop>,
-                              public cevents::cell2D_op {
+                              public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using value = boost::mpl::joint_view<block_op_visit_typelist,
@@ -139,6 +139,7 @@ using free_block_drop_visitor_impl =
 NS_END(detail);
 
 class free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
+ public:
   using detail::free_block_drop_visitor_impl::free_block_drop_visitor_impl;
 };
 

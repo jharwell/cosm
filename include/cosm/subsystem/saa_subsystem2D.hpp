@@ -26,9 +26,9 @@
  ******************************************************************************/
 #include <memory>
 
-#include "cosm/steer2D/force_calculator.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/base_saa_subsystem2DQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -45,8 +45,8 @@ NS_START(cosm, subsystem);
  * \brief Sensing and Actuation (SAA) subsystem for the robot. Implements the
  * BOID interface, which requires both sensors and actuators.
  */
-class saa_subsystem2D : public steer2D::boid,
-                        public rer::client<saa_subsystem2D> {
+class saa_subsystem2D : public rer::client<saa_subsystem2D>,
+                        public base_saa_subsystem2DQ3D {
  public:
   saa_subsystem2D(
       const hal::sensors::position_sensor& pos_sensor,
@@ -54,20 +54,9 @@ class saa_subsystem2D : public steer2D::boid,
       const actuation_subsystem2D::actuator_map& actuators,
       const steer2D::config::force_calculator_config* const steer_config)
       : ER_CLIENT_INIT("cosm.subsystem.saa"),
+        base_saa_subsystem2DQ3D(steer_config),
         m_actuation(std::make_unique<actuation_subsystem2D>(actuators)),
-        m_sensing(std::make_unique<sensing_subsystem2D>(pos_sensor, sensors)),
-        m_steer2D_calc(*this, steer_config) {}
-
-  /**
-   * \brief Apply the summed steering forces; change wheel speeds. Resets the
-   * summed forces.
-   */
-  virtual void steer_force2D_apply(void) = 0;
-
-  const steer2D::force_calculator& steer_force2D(void) const {
-    return m_steer2D_calc;
-  }
-  steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
+        m_sensing(std::make_unique<sensing_subsystem2D>(pos_sensor, sensors)) {}
 
   virtual sensing_subsystem2D* sensing(void) = 0;
   virtual const sensing_subsystem2D* sensing(void) const = 0;
@@ -92,7 +81,6 @@ class saa_subsystem2D : public steer2D::boid,
   /* clang-format off */
   std::unique_ptr<actuation_subsystem2D> m_actuation;
   std::unique_ptr<sensing_subsystem2D>   m_sensing;
-  steer2D::force_calculator              m_steer2D_calc;
   /* clang-format on */
 };
 

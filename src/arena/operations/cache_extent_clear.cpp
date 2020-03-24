@@ -26,7 +26,7 @@
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/arena_map.hpp"
-#include "cosm/events/cell2D_empty.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -38,7 +38,9 @@ NS_START(cosm, arena, operations, detail);
  ******************************************************************************/
 cache_extent_clear::cache_extent_clear(const rmath::vector2u& coord,
                                        carepr::arena_cache* victim)
-    : cell2D_op(coord), m_victim(victim) {}
+    : ER_CLIENT_INIT("cosm.arena.operations.cache_extent_clear"),
+      cell2D_op(coord),
+      m_victim(victim) {}
 
 /*******************************************************************************
  * Member Functions
@@ -79,7 +81,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
                   i,
                   j,
                   cell.fsm().current_state());
-        cevents::cell2D_empty_visitor e(c);
+        cdops::cell2D_empty_visitor e(c);
         e.visit(cell);
       }
     } /* for(j..) */
