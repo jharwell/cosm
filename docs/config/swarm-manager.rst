@@ -3,17 +3,21 @@ Swarm Manager XML Configuration
 
 The following root XML tags are defined for swarm management:
 
-+------------------------+-----------------------------------------------------------------------+
-| Root XML tag           | Description                                                           |
-+------------------------+-----------------------------------------------------------------------+
-| ``output``             | Parameters for logging simulation metrics/results.                    |
-+------------------------+-----------------------------------------------------------------------+
-| ``convergence``        | Parameters for computing swarm convergence.                           |
-+------------------------+-----------------------------------------------------------------------+
-| ``visualization``      | Parameters for visualizing robots in various ways during simulation.  |
-+------------------------+-----------------------------------------------------------------------+
-| ``temporal_variance``  | Parameters for temporally varying swarm operating conditions.         |
-+------------------------+-----------------------------------------------------------------------+
++------------------------+------------------------------------------------------------------------------+
+| Root XML tag           | Description                                                                  |
++------------------------+------------------------------------------------------------------------------+
+| ``output``             | Parameters for logging simulation metrics/results.                           |
++------------------------+------------------------------------------------------------------------------+
+| ``convergence``        | Parameters for computing swarm convergence.                                  |
++------------------------+------------------------------------------------------------------------------+
+| ``arena_map``          | Parameters for the 2D arena/foraging.                                        |
++------------------------+------------------------------------------------------------------------------+
+| ``temporal_variance``  | Parameters for temporally varying swarm operating conditions.                |
++------------------------+------------------------------------------------------------------------------+
+| ``visualization``      | Parameters for visualizing robots in various ways during simulation.         |
++------------------------+------------------------------------------------------------------------------+
+|  ``oracle_manager``    | Parameters for providing perfect information to the swarm during simulation. |
++------------------------+------------------------------------------------------------------------------+
 
 ``output``
 ----------
@@ -171,18 +175,19 @@ XML configuration:
   each time they are output the results of the previously written out metrics
   are lost.
 
-Some collectors (see table below) can be added under the ``<metrics>`` tag in
-place of the ``...``. Not defining them disables metric collection of the given
-type.
+Collectors (see table below) can be added under *exactly* one of the
+``<append>,<create>,<truncate>"`` tags in place of the ``...``, for. Not
+defining them disables metric collection of the given type. Defining the same
+metric collector in more than one category is undefined.
 
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_collision_counts``                       |  # robots entering, are in, and exiting the collision avoidance state.  |append                  |                        |
+| ``fsm_collision_counts``                       |  # robots entering, are in, and exiting the collision avoidance state.  | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_collision_locs``                         | Spatial distribution of collision avoidance locations in the arena.     |create,truncate         |                        |
+| ``fsm_collision_locs``                         | Spatial distribution of collision avoidance locations in the arena.     | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_movement``                               | Swarm average distance traveled/velocity.                               |append                  |                        |
+| ``fsm_movement``                               | Swarm average distance traveled/velocity.                               | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -194,22 +199,18 @@ type.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_transport``                            | # blocks collected/ # transporters.                                     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_manipulation``                         | Free block pickup/drop counts/penalties.                                | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``task_distribution``                          | TAB task allocation probabilities/counts.                               | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``perception_dpo``                             | Metrics from each robots' decaying pheromone store.                     | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``perception_mdpo``                            | Metrics from each robot's internal map of the arena.                    | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``swarm_dist_pos2D``                           | Swarm distribution in 2D space.                                         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``swarm_convergence``                          | Results of swarm convergence calculations.                              |  append                |                        |
+| ``swarm_dist_pos3D``                           | Swarm distribution in 3D space.                                         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``tv_environment``                             | Waveforms of the penalties applied to the swarm.                        | append                 | Output every timestep. |
+| ``swarm_convergence``                          | Results of swarm convergence calculations.                              | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``oracle_manager``                             | Enable swarms to make decisions based on perfect information.           | append                 |                        |
++------------------------+----------------------------+---------------------------------------------------------------------------------------------+------------------------+
 
 ``convergence``
 ---------------
@@ -363,7 +364,7 @@ XML configuration:
 
 
 ``convergence/velocity``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 A measure of convergence using stability of swarm velocity (how much its
 geometric center moves) over time.
@@ -387,6 +388,267 @@ XML configuration:
 
 - ``enable`` - If this measure is enabled or not. Relatively cheap to compute in
   large swarms.
+
+``arena_map``
+-------------
+
+- Required by: all.
+- Required child attributes if present: none.
+- Required child tags if present: [ ``grid``, ``blocks``, ``nest`` ].
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <arena_map>
+       <grid>
+       ...
+       </grid>
+       <blocks>
+       ...
+       </blocks>
+       <nest>
+       ...
+       </nest>
+   </arena_map>
+
+``arena_map/grid``
+^^^^^^^^^^^^^^^^^^
+
+- Required by: all.
+- Required child attributes if present: [ ``resolution``, ``size`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <arena_map>
+       ...
+       <grid
+           resolution="FLOAT"
+           size="X, Y, Z"/>
+       ...
+   </arena_map>
+
+- ``resolution`` - The resolution that the arena will be represented at, in
+  terms of the size of grid cells. Must be the same as the value passed to the
+  robot controllers.
+
+- ``size`` - The size of the arena.
+
+``arena_map/blocks``
+^^^^^^^^^^^^^^^^^^^^
+
+- Required by: all.
+- Required child attributes if present: none.
+- Required child tags if present: [ ``distribution``, ``manifest`` ].
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <arena_map>
+       ...
+       <blocks>
+           <distribution>
+           ...
+           </distribution>
+           <manifest>
+           ...
+           </manifest>
+       </blocks>
+       ...
+   </arena_map>
+
+``arena_map/blocks/distribution``
+"""""""""""""""""""""""""""""""""
+
+- Required by: all.
+- Required child attributes if present: ``dist_type``.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: [ ``redist_governor``, ``powerlaw`` ].
+
+XML configuration:
+
+.. code-block:: XML
+
+   <blocks>
+       ...
+       <distribution
+       dist_type="random|powerlaw|single_source|dual_source|quad_source">
+       ...
+       </distribution>
+       ...
+   </blocks>
+
+- ``dist_type`` - The distribution model for the blocks. When blocks are
+  distributed to a new location in the arena and made available for robots to
+  pickup (either initially or after a block is deposited in the nest), they are
+  placed in the arena in one of the following ways:
+
+  - ``random``: Placed in a random location in the arena.
+
+  - ``powerlaw``: Distributed according to a powerlaw.
+
+  - ``single_source`` - Placed within an arena opposite about 90% of the way
+    from the nest to the other side of the arena (assumes horizontal,
+    rectangular arena).
+
+  - ``dual_source`` - Placed in two sources on either side of a central nest
+    (assumes a horizontal, rectangular arena).
+
+  - ``quad_source`` - Placed in 4 sources at each cardinal direction in the
+    arena. Assumes a square arena.
+
+``arena_map/blocks/distribution/redist_governor``
+#################################################
+
+- Required by: none.
+- Required child attributes if present: ``trigger``.
+- Required child tags if present: none.
+- Optional child attributes: [ ``recurrence_policy``, ``timestep``, ``block_count`` ].
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <distribution>
+       ...
+       <redist_governor
+           trigger="Null"
+           recurrence_policy="mult|single"
+           timestep="INTEGER"
+           block_count="INTEGER"/>
+       ...
+   </distribution>
+
+
+- ``trigger`` - The trigger for (possibly) stopping block redistribution:
+
+  - ``Null`` - Disables the governor.
+
+  - ``timestep`` - Blocks will be redistributed until the specified timestep. This
+                 trigger type can be used with the [ ``single`` ] recurrence policy.
+
+  - ``block_count`` - Blocks will be redistributed until the specified # of
+    blocks have been collected. This trigger type can be used with the
+    ``single`` recurrence policy.
+
+  - ``convergence`` - Blocks will be redistributed until the swarm has
+    converged. This trigger type can be used with the ``single``, ``multi``
+    recurrence policies.
+
+- ``recurrence_policy`` - The policy for determining how block redistribution
+  status can change as the simulation progresses.
+
+  - ``single`` - Once the specified trigger is tripped, then block
+    redistribution will stop permanently.
+
+  - ``multi`` - Blocks will be redistributed as long as the specified trigger
+    has not been tripped. Once it has been tripped, block distribution will stop
+    until the trigger is no longer tripped, in which case it will resume.
+
+- ``timestep`` - The timestep to stop block redistribution at. Only required if
+  ``trigger`` is ``timestep``.
+
+- ``block_count`` - The collection count to stop block redistribution at. Only
+  required if ``trigger`` is ``block_count``.
+
+``arena_map/blocks/distribution/manifest``
+##########################################
+
+- Required by: all.
+- Required child attributes if present: At least one of [ ``n_cube``, ``n_ramp`` ],
+  ``unit_dimm``.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: At most one of [ ``n_cube``, ``n_ramp`` ].
+
+XML configuration:
+
+.. code-block:: XML
+
+    <distribution>
+        ...
+        <manifest
+            n_cube="INTEGER"
+            n_ramp="INTEGER"
+            unit_dim="FLOAT"/>
+        ...
+    </distribution>
+
+
+- ``n_cube`` - # Cube blocks that should be used.
+
+- ``n_ramp`` - # Ramp blocks that should be used.
+
+- ``unit_dim`` - Unit dimension of blocks. Cubes are 1x1 of this, ramps are 2x1 of
+  this.
+
+``arena_map/blocks/distribution/powerlaw``
+##########################################
+
+- Required by: all iff ``dist_type`` is ``powerlaw``.
+- Required child attributes if present: [ ``pwr_min``, ``pwr_max``, ``n_clusters`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <distribution>
+       ...
+       <powerlaw
+           pwr_min="INTEGER"
+           pwr_max="INTEGER"
+           n_clusters="INTEGER"/>
+       ...
+   </distribution>
+
+- ``pwr_min`` - Minimum power of 2 for cluster sizes.
+
+- ``pwr_max`` - Maximum power of 2 for cluster sizes.
+
+- ``n_clusters`` - Max # of clusters the arena.
+
+``arena_map/nest``
+^^^^^^^^^^^^^^^^^^
+
+- Required by: all.
+- Required child attributes if present: [ ``size``, ``center`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <arena_map>
+       ...
+       <nest
+       size="X, Y"
+       center="X, Y"/>
+       ...
+   </arena_map>
+
+- ``size`` - The size of the nest. Must be specified in a tuple like so:
+  ``0.5, 0.5``. Note the space--parsing does not work if it is omitted.
+
+- ``center`` - Location for center of the nest (nest is a square).  Must be
+  specified in a tuple like so: ``1.5, 1.5``. Note the space--parsing does not
+  work if it is omitted.
 
 
 ``temporal_variance``
@@ -548,6 +810,88 @@ All parameters have the default values shown above if omitted.
   the simulation will be restored (i.e. removed from repair queue).
 
 - ``max_size`` - The maximum swarm size achievable using the pure birth process.
+
+``oracle_manager``
+------------------
+
+- Required by: none.
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: [ ``tasking_oracle``, ``entities_oracle`` ].
+
+XML configuration:
+
+.. code-block:: XML
+
+   <oracle_manager>
+       <tasking_oracle>
+       ...
+       </tasking_oracle>
+       <entities_oracle>
+       ...
+       </entities_oracle>
+   </oracle_manager>
+
+
+``oracle_manager/tasking_oracle``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Required by: none.
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child attributes: [ ``task_exec_ests``, ``task_interface_ests`` ].
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <oracle_manager>
+       ...
+       <tasking_oracle
+           task_exec_ests="false"
+           task_interface_ests="false"/>
+       ...
+   </oracle_manager>
+
+
+All attributes default as shown above if omitted.
+
+- ``task_exec_ests`` - If enabled, then this will inject perfect estimates of
+  task execution time based on the performance of the entire swarm into each
+  robot when it performs task allocation.
+
+- ``task_interface_ests`` - If enabled, then this will inject perfect estimates
+  of task interface time based on the performance of the entire swarm into each
+  robot when it performs task allocation.
+
+``oracle_manager/entities_oracle``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Required by: none.
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child attributes: [ ``blocks``, ``caches`` ].
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <oracle_manager>
+       ...
+       <entities_oracle
+           blocks="false"
+           caches="false"/>
+       ...
+   </oracle_manager>
+
+- ``blocks`` - Inject perfect knowledge of all block locations into the
+  swarm every timestep.
+
+- ``caches`` - Inject perfect knowledge of all cache locations into the
+  swarm every timestep.
 
 ``visualization``
 -----------------

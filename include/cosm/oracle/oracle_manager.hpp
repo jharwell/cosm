@@ -34,7 +34,8 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
-class arena_map;
+class base_arena_map;
+class caching_arena_map;
 } /* namespace cosm::arena */
 
 namespace cosm::oracle::config {
@@ -86,7 +87,8 @@ class oracle_manager {
    * from the loop functions before processing any robots for that timestep (at
    * a minimum).
    */
-  void update(carena::arena_map* map);
+  void update(carena::caching_arena_map* map);
+  void update(carena::base_arena_map* map);
 
  private:
   /* clang-format off */

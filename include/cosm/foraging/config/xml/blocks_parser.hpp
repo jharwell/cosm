@@ -1,5 +1,5 @@
 /**
- * \file block_dist_parser.hpp
+ * \file blocks_parser.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,47 +18,46 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_BLOCK_DIST_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_BLOCK_DIST_PARSER_HPP_
+#ifndef INCLUDE_COSM_DS_CONFIG_XML_ARENA_BLOCKS_PARSER_HPP_
+#define INCLUDE_COSM_DS_CONFIG_XML_ARENA_BLOCKS_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
 #include <memory>
+#include <string>
 
-#include "cosm/foraging/config/block_dist_config.hpp"
-#include "cosm/foraging/config/powerlaw_dist_parser.hpp"
-#include "cosm/foraging/config/block_manifest_parser.hpp"
-#include "cosm/foraging/config/block_redist_governor_parser.hpp"
-
-#include "cosm/cosm.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
+#include "rcppsw/control/config/xml/waveform_parser.hpp"
+
+#include "cosm/foraging/config/blocks_config.hpp"
+#include "cosm/cosm.hpp"
+#include "cosm/foraging/config/xml/block_dist_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_dist_parser
- * \ingroup foraging config
+ * \class blocks_parser
+ * \ingroup foraging config xml
  *
- * \brief Parses XML parameters related to block distribution
- * into \ref block_dist_config.
+ * \brief Parses XML parameters related to blocks in the \ref arena_map into
+ * \ref blocks_config.
  */
-class block_dist_parser : public rconfig::xml::xml_config_parser {
+class blocks_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = block_dist_config;
+  using config_type = blocks_config;
 
   /**
-   * \brief The root tag that all block distribution parameters should lie under
-   * in the XML tree.
+   * \brief The root tag that all block parameters should lie under in the
+   * XML tree.
    */
-  static constexpr char kXMLRoot[] = "distribution";
+  static constexpr char kXMLRoot[] = "blocks";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);
@@ -71,13 +70,11 @@ class block_dist_parser : public rconfig::xml::xml_config_parser {
   }
 
   /* clang-format off */
+  block_dist_parser            m_dist{};
   std::unique_ptr<config_type> m_config{nullptr};
-  block_manifest_parser        m_manifest{};
-  powerlaw_dist_parser         m_powerlaw{};
-  block_redist_governor_parser m_redist_governor{};
   /* clang-format on */
 };
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_BLOCK_DIST_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_DS_CONFIG_XML_ARENA_BLOCKS_PARSER_HPP_ */

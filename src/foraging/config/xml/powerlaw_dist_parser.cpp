@@ -1,7 +1,7 @@
 /**
- * \file grid_parser.cpp
+ * \file powerlaw_dist_parser.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,45 +21,40 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/config/grid_parser.hpp"
+#include "cosm/foraging/config/xml/powerlaw_dist_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void grid_parser::parse(const ticpp::Element& node) {
-  /*
-   * May not exist if we are parsing part of an XML tree for perception that
-   * does not use grids.
-   */
+void powerlaw_dist_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ticpp::Element gnode = node_get(node, kXMLRoot);
+    ticpp::Element bnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
-    std::vector<std::string> res;
-    rcppsw::utils::line_parser parser(' ');
-    res = parser.parse(gnode.GetAttribute("size"));
-
-    XML_PARSE_ATTR(gnode, m_config, resolution);
-    m_config->lower.set(0, 0);
-    m_config->upper.set(std::atoi(res[0].c_str()), std::atoi(res[1].c_str()));
+    XML_PARSE_ATTR(bnode, m_config, pwr_min);
+    XML_PARSE_ATTR(bnode, m_config, pwr_max);
+    XML_PARSE_ATTR(bnode, m_config, n_clusters);
   }
 } /* parse() */
 
-bool grid_parser::validate(void) const {
-  RCSW_CHECK(m_config->resolution.v() > 0.0);
-  RCSW_CHECK(m_config->upper.x() > 0.0);
-  RCSW_CHECK(m_config->upper.y() > 0.0);
+bool powerlaw_dist_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+  RCSW_CHECK(m_config->pwr_min > 2);
+  RCSW_CHECK(m_config->pwr_max >= m_config->pwr_min);
+  RCSW_CHECK(m_config->n_clusters > 0);
   return true;
 
 error:
   return false;
 } /* validate() */
 
-NS_END(config, ds, cosm);
+NS_END(xml, config, foraging, cosm);

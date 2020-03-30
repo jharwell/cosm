@@ -26,7 +26,7 @@
 #include "rcppsw/control/config/xml/waveform_parser.hpp"
 
 #include "cosm/convergence/config/xml/convergence_parser.hpp"
-#include "cosm/foraging/config/arena_map_parser.hpp"
+#include "cosm/arena/config/xml/arena_map_parser.hpp"
 #include "cosm/metrics/config/xml/output_parser.hpp"
 #include "cosm/oracle/config/xml/oracle_manager_parser.hpp"
 #include "cosm/tv/config/xml/population_dynamics_parser.hpp"
@@ -43,8 +43,8 @@ NS_START(cosm, pal, config, xml);
 base_sm_repository::base_sm_repository(void) noexcept {
   parser_register<cmconfig::xml::output_parser, cmconfig::output_config>(
       cmconfig::xml::output_parser::kXMLRoot);
-  parser_register<cfconfig::arena_map_parser, cfconfig::arena_map_config>(
-      cfconfig::arena_map_parser::kXMLRoot);
+  parser_register<caconfig::xml::arena_map_parser, caconfig::arena_map_config>(
+      caconfig::xml::arena_map_parser::kXMLRoot);
   parser_register<cvconfig::xml::visualization_parser,
                   cvconfig::visualization_config>(
       cvconfig::xml::visualization_parser::kXMLRoot);

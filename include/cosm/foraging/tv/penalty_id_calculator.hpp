@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_PENALTY_ID_CALCULATOR_HPP_
-#define INCLUDE_COSM_TV_PENALTY_ID_CALCULATOR_HPP_
+#ifndef INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_
+#define INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -35,7 +35,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
-class arena_map;
+class base_arena_map;
 } /* namespace cosm::arena */
 
 NS_START(cosm, foraging, tv);
@@ -76,13 +76,13 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
    * \param loc The robots current location.
    * \param acq_id The ID of the thing (probably a block) that the robot THINKS
    *               it has acquired.
-   * \param map The \ref carena::arena_map.
+   * \param map The \ref carena::base_arena_map.
    */
   rtypes::type_uuid from_free_pickup(const rmath::vector2d& loc,
                                      const rtypes::type_uuid& acq_id,
-                                     const carena::arena_map* map) const RCSW_PURE;
+                                     const carena::base_arena_map* map) const RCSW_PURE;
 };
 
 NS_END(tv, foraging, cosm);
 
-#endif /* INCLUDE_COSM_TV_PENALTY_ID_CALCULATOR_HPP_ */
+#endif /* INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_ */

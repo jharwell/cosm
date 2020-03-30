@@ -1,5 +1,5 @@
 /**
- * \file powerlaw_dist_parser.cpp
+ * \file arena_map_config.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,43 +18,35 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_ARENA_CONFIG_ARENA_MAP_CONFIG_HPP_
+#define INCLUDE_COSM_ARENA_CONFIG_ARENA_MAP_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/powerlaw_dist_parser.hpp"
-
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/foraging/config/blocks_config.hpp"
+#include "cosm/ds/config/grid_config.hpp"
+#include "cosm/repr/config/nest_config.hpp"
+#include "rcppsw/config/base_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, arena, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void powerlaw_dist_parser::parse(const ticpp::Element& node) {
-  if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ticpp::Element bnode = node_get(node, kXMLRoot);
-    m_config = std::make_unique<config_type>();
+/**
+ * \struct arena_map_config
+ * \ingroup arena config
+ */
+struct arena_map_config final : public rconfig::base_config {
+  struct cds::config::grid_config grid {};
+  struct cfconfig::blocks_config blocks {};
+  struct crepr::config::nest_config nest {};
+};
 
-    XML_PARSE_ATTR(bnode, m_config, pwr_min);
-    XML_PARSE_ATTR(bnode, m_config, pwr_max);
-    XML_PARSE_ATTR(bnode, m_config, n_clusters);
-  }
-} /* parse() */
+NS_END(config, arena, cosm);
 
-bool powerlaw_dist_parser::validate(void) const {
-  if (!is_parsed()) {
-    return true;
-  }
-  RCSW_CHECK(m_config->pwr_min > 2);
-  RCSW_CHECK(m_config->pwr_max >= m_config->pwr_min);
-  RCSW_CHECK(m_config->n_clusters > 0);
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(config, foraging, cosm);
+#endif /* INCLUDE_COSM_ARENA_CONFIG_ARENA_MAP_CONFIG_HPP_ */

@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/free_block_pickup.hpp"
 
 #include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
@@ -36,8 +36,8 @@ NS_START(cosm, arena, operations, detail);
  * Constructors/Destructor
  ******************************************************************************/
 free_block_pickup::free_block_pickup(crepr::base_block2D* block,
-                                                 const rtypes::type_uuid& robot_id,
-                                                 const rtypes::timestep& t)
+                                     const rtypes::type_uuid& robot_id,
+                                     const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.operations.free_block_pickup"),
       cell2D_op(block->dloc()),
       mc_timestep(t),
@@ -47,7 +47,7 @@ free_block_pickup::free_block_pickup(crepr::base_block2D* block,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(arena_map& map) {
+void free_block_pickup::visit(base_arena_map& map) {
   ER_ASSERT(m_block->dloc() == rmath::vector2u(cell2D_op::x(), cell2D_op::y()),
             "Coordinates for block/cell do not agree");
   RCSW_UNUSED rmath::vector2d old_r = m_block->rloc();

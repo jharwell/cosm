@@ -1,5 +1,5 @@
 /**
- * \file nest_parser.cpp
+ * \file block_dist_parser.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,41 +21,44 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/config/nest_parser.hpp"
+#include "cosm/foraging/config/xml/block_dist_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_parser::parse(const ticpp::Element& node) {
-  ticpp::Element nnode = node_get(node, kXMLRoot);
-
-  std::vector<std::string> res;
-  rcppsw::utils::line_parser parser(' ');
-
-  res = parser.parse(nnode.GetAttribute("center"));
-
+void block_dist_parser::parse(const ticpp::Element& node) {
+  ticpp::Element bnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
-  m_config->center =
-      rmath::vector2d(std::atof(res[0].c_str()), std::atof(res[1].c_str()));
-  res = parser.parse(nnode.GetAttribute("size"));
-  m_config->dims.x(std::atof(res[0].c_str()));
-  m_config->dims.y(std::atof(res[1].c_str()));
+
+  XML_PARSE_ATTR(bnode, m_config, dist_type);
+
+  if ("powerlaw" == m_config->dist_type) {
+    m_powerlaw.parse(bnode);
+    m_config->powerlaw =
+        *m_powerlaw.config_get<powerlaw_dist_parser::config_type>();
+  }
+
+  m_manifest.parse(bnode);
+  m_config->manifest =
+      *m_manifest.config_get<block_manifest_parser::config_type>();
+
+  m_redist_governor.parse(bnode);
+  if (m_redist_governor.is_parsed()) {
+    m_config->redist_governor =
+        *m_redist_governor.config_get<block_redist_governor_parser::config_type>();
+  }
 } /* parse() */
 
-bool nest_parser::validate(void) const {
-  RCSW_CHECK(m_config->center.is_pd());
-  RCSW_CHECK(m_config->dims.is_pd());
-  return true;
-
-error:
-  return false;
+bool block_dist_parser::validate(void) const {
+  return m_powerlaw.validate() && m_manifest.validate() &&
+         m_redist_governor.validate();
 } /* validate() */
 
-NS_END(config, repr, cosm);
+NS_END(xml, config, foraging, cosm);

@@ -47,10 +47,10 @@ class ramp_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::arena {
-class arena_map;
+class base_arena_map;
 } /* namespace cosm */
 
-namespace cosm::foraging::config {
+namespace cosm::arena::config {
 struct arena_map_config;
 } // namespace cosm::foraging::config
 
@@ -99,7 +99,10 @@ class argos_sm_adaptor : public swarm_manager,
   void Destroy(void) override { destroy(); }
 
   const std::string& led_medium(void) const { return m_led_medium; }
-  const carena::arena_map* arena_map(void) const { return m_arena_map.get(); }
+  template <typename TArenaMapType = carena::base_arena_map>
+  const TArenaMapType* arena_map(void) const {
+    return static_cast<TArenaMapType*>(m_arena_map.get());
+  }
   const coracle::oracle_manager* oracle_manager(void) const {
     return m_oracle_manager.get();
   }
@@ -125,7 +128,10 @@ class argos_sm_adaptor : public swarm_manager,
 
   argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
-  carena::arena_map* arena_map(void) { return m_arena_map.get(); }
+  template<typename TArenaMapType = carena::base_arena_map>
+  TArenaMapType* arena_map(void) {
+    return static_cast<TArenaMapType*>(m_arena_map.get());
+  }
   coracle::oracle_manager* oracle_manager(void) {
     return m_oracle_manager.get();
   }
@@ -142,7 +148,8 @@ class argos_sm_adaptor : public swarm_manager,
    *
    * \param repo Repository of parsed parameters.
    */
-  void arena_map_init(const cfconfig::arena_map_config* aconfig,
+  template<typename TArenaMapType>
+  void arena_map_init(const caconfig::arena_map_config* aconfig,
                       const cvconfig::visualization_config* vconfig) RCSW_COLD;
 
 
@@ -152,7 +159,7 @@ class argos_sm_adaptor : public swarm_manager,
    */
   std::string                              m_led_medium{};
   argos::CFloorEntity*                     m_floor{nullptr};
-  std::unique_ptr<carena::arena_map>       m_arena_map;
+  std::unique_ptr<carena::base_arena_map>  m_arena_map;
   std::unique_ptr<coracle::oracle_manager> m_oracle_manager;
   /* clang-format on */
 };

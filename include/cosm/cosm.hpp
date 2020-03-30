@@ -154,6 +154,8 @@ namespace operations {}
 namespace ds {}
 namespace repr {}
 namespace metrics {}
+namespace config {}
+
 } /* namespace arena */
 
 namespace oracle {
@@ -185,6 +187,7 @@ namespace cfrepr = cforaging::repr;
 namespace cfds = cforaging::ds;
 namespace carena = cosm::arena;
 namespace cads = carena::ds;
+namespace caconfig = carena::config;
 namespace cametrics = carena::metrics;
 namespace carepr = carena::repr;
 namespace caops = carena::operations;

@@ -1,5 +1,5 @@
 /**
- * \file arena_map_config.hpp
+ * \file block_parser.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,35 +18,31 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_ARENA_MAP_CONFIG_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_ARENA_MAP_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/blocks_config.hpp"
-#include "cosm/ds/config/grid_config.hpp"
-#include "cosm/repr/config/nest_config.hpp"
-#include "rcppsw/config/base_config.hpp"
+#include "cosm/foraging/config/xml/blocks_parser.hpp"
+
+#include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct arena_map_config
- * \ingroup foraging config
- */
-struct arena_map_config final : public rconfig::base_config {
-  struct cds::config::grid_config grid {};
-  struct blocks_config blocks {};
-  struct crepr::config::nest_config nest {};
-};
+void blocks_parser::parse(const ticpp::Element& node) {
+  ticpp::Element bnode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-NS_END(config, foraging, cosm);
+  m_dist.parse(bnode);
+  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
+} /* parse() */
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_ARENA_MAP_CONFIG_HPP_ */
+bool blocks_parser::validate(void) const {
+  return m_dist.validate();
+} /* validate() */
+
+NS_END(xml, config, foraging, cosm);

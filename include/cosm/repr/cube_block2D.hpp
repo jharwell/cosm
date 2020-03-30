@@ -66,7 +66,7 @@ class cube_block2D final : public base_block<unicell_movable_entity2D> {
     /* copy metadata */
     tmp->md()->robot_id_reset();
     tmp->md()->metrics_copy(this->md());
-    return std::move(tmp);
+    return tmp;
   } /* clone() */
 };
 

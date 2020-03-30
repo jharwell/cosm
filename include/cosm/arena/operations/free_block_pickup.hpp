@@ -29,12 +29,15 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
-
-#include "cosm/arena/operations/block_op_visit_set.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::arena {
+class base_arena_map;
+} /* namespace cosm::arena */
+
 NS_START(cosm, arena, operations, detail);
 
 /*******************************************************************************
@@ -51,8 +54,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
                           public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using value = boost::mpl::joint_view<block_op_visit_typelist,
-                                         cdops::cell2D_op::visit_typelist>;
+    using value = rmpl::typelist<base_arena_map, crepr::base_block2D>;
   };
 
  public:
@@ -70,7 +72,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
    * updates. \ref arena_map block mutex assumed to be held when calling this
    * function.
    */
-  void visit(arena_map& map);
+  void visit(base_arena_map& map);
   void visit(crepr::base_block2D& block);
 
  protected:

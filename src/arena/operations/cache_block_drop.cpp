@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/cache_block_drop.hpp"
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/repr/base_block2D.hpp"
@@ -38,7 +38,6 @@ using cds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-
 cache_block_drop::cache_block_drop(
     crepr::base_block2D* arena_block,
     carepr::arena_cache* cache,
@@ -70,7 +69,7 @@ void cache_block_drop::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_block_drop();
 } /* visit() */
 
-void cache_block_drop::visit(arena_map& map) {
+void cache_block_drop::visit(caching_arena_map& map) {
   RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->md()->robot_id();
 
   /*

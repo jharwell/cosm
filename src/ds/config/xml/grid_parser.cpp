@@ -1,5 +1,5 @@
 /**
- * \file grid_parser.hpp
+ * \file grid_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,61 +18,48 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CONFIG_GRID_PARSER_HPP_
-#define INCLUDE_COSM_DS_CONFIG_GRID_PARSER_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-#include <string>
+#include "cosm/ds/config/xml/grid_parser.hpp"
 
-#include "rcppsw/config/xml/xml_config_parser.hpp"
-
-#include "cosm/ds/config/grid_config.hpp"
-#include "cosm/cosm.hpp"
+#include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config);
+NS_START(cosm, ds, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \class grid_parser
- * \ingroup ds config
- *
- * \brief Parses XML parameters for \ref arena_grid grid structures into \ref
- * grid_config.
- */
-
-class grid_parser : public rconfig::xml::xml_config_parser {
- public:
-  using config_type = grid_config;
-
-  /**
-   * \brief The root tag that all grid parameters should lie under in the
-   * XML tree.
+void grid_parser::parse(const ticpp::Element& node) {
+  /*
+   * May not exist if we are parsing part of an XML tree for perception that
+   * does not use grids.
    */
-  static constexpr char kXMLRoot[] = "grid";
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element gnode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-  bool validate(void) const override RCSW_PURE;
-  void parse(const ticpp::Element& node) override;
+    std::vector<std::string> res;
+    rcppsw::utils::line_parser parser(' ');
+    res = parser.parse(gnode.GetAttribute("size"));
 
-  std::string xml_root(void) const override { return kXMLRoot; }
-
- private:
-  const rconfig::base_config* config_get_impl(void) const override {
-    return m_config.get();
+    XML_PARSE_ATTR(gnode, m_config, resolution);
+    m_config->lower.set(0, 0);
+    m_config->upper.set(std::atoi(res[0].c_str()), std::atoi(res[1].c_str()));
   }
+} /* parse() */
 
-  /* clang-format off */
-  std::unique_ptr<grid_config> m_config{nullptr};
-  /* clang-format on */
-};
+bool grid_parser::validate(void) const {
+  RCSW_CHECK(m_config->resolution.v() > 0.0);
+  RCSW_CHECK(m_config->upper.x() > 0.0);
+  RCSW_CHECK(m_config->upper.y() > 0.0);
+  return true;
 
-NS_END(config, ds, cosm);
+error:
+  return false;
+} /* validate() */
 
-#endif /* INCLUDE_COSM_DS_CONFIG_GRID_PARSER_HPP_ */
+NS_END(xml, config, ds, cosm);

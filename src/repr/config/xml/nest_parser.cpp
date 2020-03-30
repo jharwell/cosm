@@ -1,5 +1,5 @@
 /**
- * \file block_parser.cpp
+ * \file nest_parser.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,28 +21,41 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/blocks_parser.hpp"
+#include "cosm/repr/config/xml/nest_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, repr, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void blocks_parser::parse(const ticpp::Element& node) {
-  ticpp::Element bnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+void nest_parser::parse(const ticpp::Element& node) {
+  ticpp::Element nnode = node_get(node, kXMLRoot);
 
-  m_dist.parse(bnode);
-  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
+  std::vector<std::string> res;
+  rcppsw::utils::line_parser parser(' ');
+
+  res = parser.parse(nnode.GetAttribute("center"));
+
+  m_config = std::make_unique<config_type>();
+  m_config->center =
+      rmath::vector2d(std::atof(res[0].c_str()), std::atof(res[1].c_str()));
+  res = parser.parse(nnode.GetAttribute("size"));
+  m_config->dims.x(std::atof(res[0].c_str()));
+  m_config->dims.y(std::atof(res[1].c_str()));
 } /* parse() */
 
-bool blocks_parser::validate(void) const {
-  return m_dist.validate();
+bool nest_parser::validate(void) const {
+  RCSW_CHECK(m_config->center.is_pd());
+  RCSW_CHECK(m_config->dims.is_pd());
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, repr, cosm);

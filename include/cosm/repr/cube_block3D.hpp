@@ -72,7 +72,7 @@ class cube_block3D final : public base_block<unicell_movable_entity3D> {
     /* copy metadata */
     tmp->md()->robot_id_reset();
     tmp->md()->metrics_copy(this->md());
-    return std::move(tmp);
+    return tmp;
   } /* clone() */
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT

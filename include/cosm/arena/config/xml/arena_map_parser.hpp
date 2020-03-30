@@ -1,5 +1,5 @@
 /**
- * \file powerlaw_dist_parser.hpp
+ * \file arena_map_parser.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_POWERLAW_DIST_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_POWERLAW_DIST_PARSER_HPP_
+#ifndef INCLUDE_COSM_ARENA_CONFIG_XML_ARENA_MAP_PARSER_HPP_
+#define INCLUDE_COSM_ARENA_CONFIG_XML_ARENA_MAP_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,37 +27,40 @@
 #include <string>
 #include <memory>
 
-#include "cosm/foraging/config/powerlaw_dist_config.hpp"
+#include "cosm/arena/config/arena_map_config.hpp"
+#include "cosm/foraging/config/xml/blocks_parser.hpp"
+#include "cosm/ds/config/xml/grid_parser.hpp"
+#include "cosm/repr/config/xml/nest_parser.hpp"
+
 #include "cosm/cosm.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, arena, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class powerlaw_dist_parser
- * \ingroup foraging config
+ * \class arena_map_parser
+ * \ingroup arena config xml
  *
- * \brief Parses XML parameters for related to \ref powerlaw_distributor
- * objects into \ref powerlaw_dist_config.
+ * \brief Parses XML parameters for \ref arena_map into \ref arena_map_config.
  */
-class powerlaw_dist_parser final : public rconfig::xml::xml_config_parser {
+class arena_map_parser final : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = powerlaw_dist_config;
+  using config_type = arena_map_config;
 
   /**
-   * \brief The root tag that all powerlaw dist parameters should lie
-   * under in the XML tree.
+   * \brief The root tag that all arena map parameters should lie under in the
+   * XML tree.
    */
-  static constexpr char kXMLRoot[] = "powerlaw";
+  static constexpr char kXMLRoot[] = "arena_map";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
-  bool validate(void) const override RCSW_ATTR(pure, cold);
+  bool validate(void) const override RCSW_ATTR(cold, pure);
 
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
@@ -67,10 +70,13 @@ class powerlaw_dist_parser final : public rconfig::xml::xml_config_parser {
   }
 
   /* clang-format off */
-  std::unique_ptr<powerlaw_dist_config> m_config{nullptr};
+  std::shared_ptr<config_type>    m_config{nullptr};
+  cds::config::xml::grid_parser   m_grid{};
+  cfconfig::xml::blocks_parser    m_blocks{};
+  crepr::config::xml::nest_parser m_nest{};
   /* clang-format on */
 };
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, arena, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_POWERLAW_DIST_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_ARENA_CONFIG_ML_ARENA_MAP_PARSER_HPP_ */

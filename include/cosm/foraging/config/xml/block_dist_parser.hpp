@@ -1,7 +1,7 @@
 /**
- * \file block_redist_governor_parser.hpp
+ * \file block_dist_parser.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_BLOCK_REDIST_GOVERNOR_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_BLOCK_REDIST_GOVERNOR_PARSER_HPP_
+#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_DIST_PARSER_HPP_
+#define INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_DIST_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,7 +27,10 @@
 #include <string>
 #include <memory>
 
-#include "cosm/foraging/config/block_redist_governor_config.hpp"
+#include "cosm/foraging/config/block_dist_config.hpp"
+#include "cosm/foraging/config/xml/powerlaw_dist_parser.hpp"
+#include "cosm/foraging/config/xml/block_manifest_parser.hpp"
+#include "cosm/foraging/config/xml/block_redist_governor_parser.hpp"
 
 #include "cosm/cosm.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
@@ -35,29 +38,30 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_redist_governor_parser
- * \ingroup foraging config
+ * \class block_dist_parser
+ * \ingroup foraging config xml
  *
- * \brief Parses XML parameters related to block redistribution by the \ref
- * redist_governor.
+ * \brief Parses XML parameters related to block distribution
+ * into \ref block_dist_config.
  */
-class block_redist_governor_parser : public rconfig::xml::xml_config_parser {
+class block_dist_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = block_redist_governor_config;
+  using config_type = block_dist_config;
 
   /**
-   * \brief The root tag that all block redistribution parameters should lie
-   * under in the XML tree.
+   * \brief The root tag that all block distribution parameters should lie under
+   * in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "redist_governor";
+  static constexpr char kXMLRoot[] = "distribution";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
+  bool validate(void) const override RCSW_ATTR(pure, cold);
 
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
@@ -68,9 +72,12 @@ class block_redist_governor_parser : public rconfig::xml::xml_config_parser {
 
   /* clang-format off */
   std::unique_ptr<config_type> m_config{nullptr};
+  block_manifest_parser        m_manifest{};
+  powerlaw_dist_parser         m_powerlaw{};
+  block_redist_governor_parser m_redist_governor{};
   /* clang-format on */
 };
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_BLOCK_REDIST_GOVERNOR_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_DIST_PARSER_HPP_ */

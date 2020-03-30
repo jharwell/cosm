@@ -22,7 +22,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/foraging/tv/penalty_id_calculator.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,7 +43,7 @@ rtypes::type_uuid penalty_id_calculator::from_nest_drop(
 rtypes::type_uuid penalty_id_calculator::from_free_pickup(
     const rmath::vector2d& loc,
     const rtypes::type_uuid& acq_id,
-    const carena::arena_map* map) const {
+    const carena::base_arena_map* map) const {
   auto id = map->robot_on_block(loc, acq_id);
   ER_ASSERT(rtypes::constants::kNoUUID != id, "Robot not on block?");
   return id;

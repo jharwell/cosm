@@ -21,14 +21,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/block_redist_governor_parser.hpp"
+#include "cosm/foraging/config/xml/block_redist_governor_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, foraging, config, xml);
 
 /*******************************************************************************
  * Member Functions
@@ -46,4 +46,4 @@ void block_redist_governor_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR_DFLT(lnode, m_config, block_count, 0U);
 } /* parse() */
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, foraging, cosm);

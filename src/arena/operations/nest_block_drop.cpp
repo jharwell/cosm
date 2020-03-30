@@ -23,13 +23,21 @@
  ******************************************************************************/
 #include "cosm/arena/operations/nest_block_drop.hpp"
 
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, arena, operations, detail);
+
+/*******************************************************************************
+ * Forward Declarations
+ ******************************************************************************/
+static void do_lock(caching_arena_map& map);
+static void do_lock(base_arena_map& map);
+static void do_unlock(caching_arena_map& map);
+static void do_unlock(base_arena_map& map);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -44,20 +52,26 @@ nest_block_drop::nest_block_drop(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_block_drop::visit(arena_map& map) {
+void nest_block_drop::visit(base_arena_map& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
             "Undefined robot index");
 
-  /*
-   * We don't need the cache mutex held here, BUT we do need the other two, and
-   * all mutexes always have to be acquired in the same order everywhere in
-   * order to avoid deadlocks. If we let arena map acquire the cache mutex
-   * during block distribution, we can get a deadlock due to ordering.
-   */
-  std::scoped_lock lock1(*map.cache_mtx());
-  std::scoped_lock lock2(*map.block_mtx());
-  std::scoped_lock lock3(*map.grid_mtx());
+  do_lock(map);
+  do_visit(map);
+  do_unlock(map);
+} /* visit() */
 
+void nest_block_drop::visit(caching_arena_map& map) {
+  ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
+            "Undefined robot index");
+
+  do_lock(map);
+  do_visit(map);
+  do_unlock(map);
+} /* visit() */
+
+template <typename TArenaMapType>
+void nest_block_drop::do_visit(TArenaMapType& map) {
   /*
    * The robot owns a unique copy of a block originally from the arena, so we
    * need to look it up rather than implicitly converting its unique_ptr to a
@@ -65,20 +79,50 @@ void nest_block_drop::visit(arena_map& map) {
    */
   auto it =
       std::find_if(map.blocks().begin(), map.blocks().end(), [&](const auto& b) {
-        return m_robot_block->id() == b->id();
-      });
+          return m_robot_block->id() == b->id();
+        });
   ER_ASSERT(map.blocks().end() != it,
             "Robot block%d not found in arena map blocks",
             m_robot_block->id().v());
   m_arena_block = *it;
   map.distribute_single_block(m_arena_block,
                               arena_map_locking::ekALL_HELD);
-  visit(*m_arena_block);
-} /* visit() */
+} /* do_visit() */
 
 void nest_block_drop::visit(crepr::base_block2D& block) {
   block.md()->reset_metrics();
   block.md()->distribution_time(mc_timestep);
 } /* visit() */
+
+/*******************************************************************************
+ * Free Functions
+ ******************************************************************************/
+void do_lock(caching_arena_map& map) {
+  /*
+   * We don't need the cache mutex held here, BUT we do need the other two, and
+   * all mutexes always have to be acquired in the same order everywhere in
+   * order to avoid deadlocks. If we let arena map acquire the cache mutex
+   * during block distribution, we can get a deadlock due to ordering.
+   */
+  map.cache_mtx()->lock();
+  map.block_mtx()->lock();
+  map.grid_mtx()->lock();
+} /* do_lock() */
+
+void do_unlock(caching_arena_map& map) {
+  map.grid_mtx()->lock();
+  map.block_mtx()->lock();
+  map.cache_mtx()->lock();
+} /* do_unlock() */
+
+void do_lock(base_arena_map& map) {
+  map.block_mtx()->lock();
+  map.grid_mtx()->lock();
+} /* do_lock() */
+
+void do_unlock(base_arena_map& map) {
+  map.grid_mtx()->lock();
+  map.block_mtx()->lock();
+} /* do_unlock() */
 
 NS_END(detail, operations, arena, cosm);

@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/cached_block_pickup.hpp"
 
 #include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
 #include "cosm/repr/base_block2D.hpp"
@@ -83,7 +83,7 @@ void cached_block_pickup::visit(carepr::arena_cache& cache) {
   cache.has_block_pickup();
 } /* visit() */
 
-void cached_block_pickup::visit(arena_map& map) {
+void cached_block_pickup::visit(caching_arena_map& map) {
   ER_ASSERT(m_real_cache->n_blocks() >= base_cache::kMinBlocks,
             "< %zu blocks in cache",
             base_cache::kMinBlocks);

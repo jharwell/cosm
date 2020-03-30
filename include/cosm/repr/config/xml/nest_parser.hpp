@@ -1,5 +1,5 @@
 /**
- * \file blocks_parser.hpp
+ * \file nest_parser.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,45 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CONFIG_ARENA_BLOCKS_PARSER_HPP_
-#define INCLUDE_COSM_DS_CONFIG_ARENA_BLOCKS_PARSER_HPP_
+#ifndef INCLUDE_COSM_REPR_CONFIG_XML_NEST_PARSER_HPP_
+#define INCLUDE_COSM_REPR_CONFIG_XML_NEST_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
 #include <string>
+#include <memory>
 
-#include "cosm/foraging/config/blocks_config.hpp"
+#include "cosm/repr/config/nest_config.hpp"
 #include "cosm/cosm.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
-#include "rcppsw/control/config/xml/waveform_parser.hpp"
-#include "cosm/foraging/config/block_dist_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, repr, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class blocks_parser
- * \ingroup ds config arena
+ * \class nest_parser
+ * \ingroup repr config xml
  *
- * \brief Parses XML parameters related to blocks in the \ref arena_map into
- * \ref blocks_config.
+ * \brief Parses XML parameters for related to \ref nest objects into
+ * \ref nest_config.
  */
-class blocks_parser : public rconfig::xml::xml_config_parser {
+class nest_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = blocks_config;
+  using config_type = nest_config;
 
   /**
-   * \brief The root tag that all block parameters should lie under in the
+   * \brief The root tag that all nest parameters should lie under in the
    * XML tree.
    */
-  static constexpr char kXMLRoot[] = "blocks";
+  static constexpr char kXMLRoot[] = "nest";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);
@@ -69,11 +67,10 @@ class blocks_parser : public rconfig::xml::xml_config_parser {
   }
 
   /* clang-format off */
-  block_dist_parser            m_dist{};
-  std::unique_ptr<config_type> m_config{nullptr};
+  std::unique_ptr<nest_config> m_config{nullptr};
   /* clang-format on */
 };
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, repr, cosm);
 
-#endif /* INCLUDE_COSM_DS_CONFIG_ARENA_BLOCKS_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_REPR_CONFIG_XML_NEST_PARSER_HPP_ */

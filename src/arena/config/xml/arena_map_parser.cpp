@@ -21,14 +21,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/arena_map_parser.hpp"
+#include "cosm/arena/config/xml/arena_map_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+NS_START(cosm, arena, config, xml);
 
 /*******************************************************************************
  * Member Functions
@@ -38,17 +38,17 @@ void arena_map_parser::parse(const ticpp::Element& node) {
   m_config = std::make_unique<config_type>();
 
   m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::grid_parser::config_type>();
+  m_config->grid = *m_grid.config_get<cds::config::xml::grid_parser::config_type>();
 
   m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<blocks_parser::config_type>();
+  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
 
   m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::nest_parser::config_type>();
+  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
 } /* parse() */
 
 bool arena_map_parser::validate(void) const {
   return m_grid.validate() && m_blocks.validate() && m_nest.validate();
 } /* validate() */
 
-NS_END(config, foraging, cosm);
+NS_END(xml, config, arena, cosm);

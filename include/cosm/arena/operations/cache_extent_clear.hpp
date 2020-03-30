@@ -31,11 +31,12 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
-class arena_map;
+class caching_arena_map;
+
 namespace repr {
 class arena_cache;
-} /* namespace repr */
-} /* namespace cosm::arena */
+}
+}
 
 namespace cosm::ds {
 class arena_grid;
@@ -61,9 +62,7 @@ class cache_extent_clear : public rer::client<cache_extent_clear>,
                            public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<arena_map, cds::arena_grid>;
-    using value = boost::mpl::joint_view<inherited::type, others::type>;
+    using value = rmpl::typelist<caching_arena_map, cds::arena_grid>;
   };
 
  public:
@@ -73,7 +72,7 @@ class cache_extent_clear : public rer::client<cache_extent_clear>,
   cache_extent_clear& operator=(const cache_extent_clear&) = delete;
   cache_extent_clear(const cache_extent_clear&) = delete;
 
-  void visit(arena_map& map);
+  void visit(caching_arena_map& map);
 
  private:
   void visit(cds::arena_grid& grid);

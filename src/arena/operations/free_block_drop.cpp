@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/free_block_drop.hpp"
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/cache_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/repr/base_block2D.hpp"
@@ -53,7 +53,11 @@ static bool block_drop_overlap_with_nest(const crepr::base_block2D* block,
                                          const crepr::nest& nest,
                                          const rmath::vector2d& drop_loc);
 
-static bool block_drop_loc_conflict(const arena_map& map,
+static bool block_drop_loc_conflict(const base_arena_map& map,
+                                    const crepr::base_block2D* block,
+                                    const rmath::vector2d& loc);
+
+static bool block_drop_loc_conflict(const caching_arena_map& map,
                                     const crepr::base_block2D* block,
                                     const rmath::vector2d& loc);
 
@@ -91,7 +95,47 @@ void free_block_drop::visit(crepr::base_block2D& block) {
   block.dloc(cell2D_op::coord());
 } /* visit() */
 
-void free_block_drop::visit(arena_map& map) {
+void free_block_drop::visit(base_arena_map& map) {
+  map.maybe_lock(map.block_mtx(),
+                 !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+
+  /*
+   * We might be modifying this cell--don't want block distribution in ANOTHER
+   * thread to pick this cell for distribution.
+   */
+  map.maybe_lock(map.grid_mtx(),
+                 !(mc_locking & arena_map_locking::ekGRID_HELD));
+
+  auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
+  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
+
+  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
+  /*
+   * Dropping a block onto a cell that already contains a single block (but not
+   * a cache) does not work. Failing to do this results robots that are carrying
+   * a block and that abort their current task causing the cell that they drop
+   * the block onto to go into a HAS_CACHE state, when the cell entity is not a
+   * cache.
+   */
+  if (cell.state_has_block() || conflict) {
+    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
+  } else {
+    /*
+     * Cell does not have a block/cache on it, so it is safe to drop the block
+     * on it and change the cell state.
+     *
+     * Holding arena map grid lock, block lock if locking enabled.
+     */
+    visit(cell);
+  }
+
+  map.maybe_unlock(map.grid_mtx(),
+                   !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_unlock(map.block_mtx(),
+                   !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+} /* visit() */
+
+void free_block_drop::visit(caching_arena_map& map) {
   /* needed for atomic check for cache overlap+do drop operation */
   map.maybe_lock(map.cache_mtx(),
                  !(mc_locking & arena_map_locking::ekCACHES_HELD));
@@ -155,20 +199,9 @@ void free_block_drop::visit(arena_map& map) {
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-bool block_drop_loc_conflict(const arena_map& map,
+bool block_drop_loc_conflict(const base_arena_map& map,
                              const crepr::base_block2D* const block,
                              const rmath::vector2d& loc) {
-  /*
-   * If the robot is currently right on the edge of a cache, we can't just drop
-   * the block here, as it wipll overlap with the cache, and robots will think
-   * that is accessible, but will not be able to vector to it (not all 4 wheel
-   * sensors will report the color of a block). See FORDYCA#233.
-   */
-  bool conflict = false;
-  for (auto& cache : map.caches()) {
-    conflict |= block_drop_overlap_with_cache(block, cache, loc);
-  } /* for(cache..) */
-
   /*
    * If the robot is currently right on the edge of the nest, we can't just
    * drop the block in the nest, as it will not be processed as a normal
@@ -176,7 +209,7 @@ bool block_drop_loc_conflict(const arena_map& map,
    * not able to be acquired, as its color is hidden by that of the nest.
    *
    */
-  conflict |= block_drop_overlap_with_nest(block, map.nest(), loc);
+  bool conflict = block_drop_overlap_with_nest(block, map.nest(), loc);
 
   /*
    * If the robot is really close to a wall, then dropping a block may make it
@@ -186,6 +219,25 @@ bool block_drop_loc_conflict(const arena_map& map,
    */
   conflict |= map.distributable_areax().contains(loc.x()) &&
               map.distributable_areay().contains(loc.y());
+  return conflict;
+} /* block_drop_loc_conflict() */
+
+bool block_drop_loc_conflict(const caching_arena_map& map,
+                             const crepr::base_block2D* const block,
+                             const rmath::vector2d& loc) {
+  bool conflict = block_drop_loc_conflict(static_cast<const base_arena_map&>(map),
+                                          block,
+                                          loc);
+
+  /*
+   * If the robot is currently right on the edge of a cache, we can't just drop
+   * the block here, as it wipll overlap with the cache, and robots will think
+   * that is accessible, but will not be able to vector to it (not all 4 wheel
+   * sensors will report the color of a block). See FORDYCA#233.
+   */
+  for (auto& cache : map.caches()) {
+    conflict |= block_drop_overlap_with_cache(block, cache, loc);
+  } /* for(cache..) */
   return conflict;
 } /* block_drop_loc_conflict() */
 

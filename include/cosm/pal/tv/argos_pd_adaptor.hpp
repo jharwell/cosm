@@ -38,7 +38,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
-class arena_map;
+class base_arena_map;
 } /* namespace arena */
 
 namespace cosm::controller {
@@ -87,7 +87,7 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
 
   argos_pd_adaptor(const ctv::config::population_dynamics_config* config,
                    cpal::argos_sm_adaptor* sm,
-                   carena::arena_map * map,
+                   carena::base_arena_map * map,
                    env_dynamics_type *envd,
                    rmath::rng* rng);
 
@@ -111,7 +111,7 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
   virtual void pre_kill_cleanup(TControllerType*) {}
 
  protected:
-  carena::arena_map* arena_map(void) const { return m_map; }
+  carena::base_arena_map* arena_map(void) const { return m_map; }
 
  private:
   TControllerType* malfunction_victim_locate(size_t total_pop) const;
@@ -121,7 +121,7 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
   /* clang-format off */
   const cpal::argos_sm_adaptor* mc_sm;
 
-  carena::arena_map *           m_map;
+  carena::base_arena_map*       m_map;
   env_dynamics_type*            m_envd;
   rmath::rng*                   m_rng;
   cpal::argos_sm_adaptor*       m_sm;

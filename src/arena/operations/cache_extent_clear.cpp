@@ -25,7 +25,7 @@
 
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 
 /*******************************************************************************
@@ -45,7 +45,7 @@ cache_extent_clear::cache_extent_clear(const rmath::vector2u& coord,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void cache_extent_clear::visit(arena_map& map) {
+void cache_extent_clear::visit(caching_arena_map& map) {
   visit(map.decoratee());
 } /* visit() */
 

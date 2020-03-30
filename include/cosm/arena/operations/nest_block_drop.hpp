@@ -30,11 +30,16 @@
 #include "rcppsw/patterns/visitor/visitor.hpp"
 #include "rcppsw/types/timestep.hpp"
 
-#include "cosm/arena/operations/block_op_visit_set.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::arena {
+class base_arena_map;
+class caching_arena_map;
+} /* namespace cosm::arena */
+
 NS_START(cosm, arena, operations, detail);
 
 /*******************************************************************************
@@ -49,7 +54,9 @@ NS_START(cosm, arena, operations, detail);
 class nest_block_drop : public rer::client<nest_block_drop> {
  private:
   struct visit_typelist_impl {
-    using value = block_op_visit_typelist;
+    using value = rmpl::typelist<base_arena_map,
+                                 caching_arena_map,
+                                 crepr::base_block2D>;
   };
 
  public:
@@ -74,14 +81,18 @@ class nest_block_drop : public rer::client<nest_block_drop> {
   /**
    * \brief Perform actual nest block drop in the arena.
    *
-   * Takes \ref arena_map block and grid mutexes to protect block
+   * Takes \ref caching_arena_map block and grid mutexes to protect block
    * re-distribution and block updates, and releases afterwards. See
    * COSM#594.
    */
-  void visit(arena_map& map);
+  void visit(caching_arena_map& map);
+  void visit(base_arena_map& map);
 
  private:
   void visit(crepr::base_block2D& block);
+
+  template <typename TArenaMapType>
+  void do_visit(TArenaMapType& map);
 
   /* clang-format off */
   const rtypes::timestep               mc_timestep;

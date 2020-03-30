@@ -31,8 +31,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
-
-#include "cosm/arena/operations/block_op_visit_set.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,6 +39,9 @@
 namespace cosm::arena::repr {
 class arena_cache;
 }
+namespace cosm::arena {
+class caching_arena_map;
+} /* namespace cosm::arena */
 
 namespace cosm::pal {
 class argos_sm_adaptor;
@@ -63,9 +65,9 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
                             public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using value =
-        boost::mpl::joint_view<cell2D_op::visit_typelist::type,
-                               block_op_visit_typelist::type>;
+    using inherited = cell2D_op::visit_typelist;
+    using others = rmpl::typelist<caching_arena_map, crepr::base_block2D>;
+    using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
  public:
@@ -78,9 +80,9 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
    * \param t The current timestep.
    */
   cached_block_pickup(carepr::arena_cache* cache,
-                            cpal::argos_sm_adaptor* sm,
-                            const rtypes::type_uuid& robot_id,
-                            const rtypes::timestep& t);
+                      cpal::argos_sm_adaptor* sm,
+                      const rtypes::type_uuid& robot_id,
+                      const rtypes::timestep& t);
   ~cached_block_pickup(void) override = default;
 
   cached_block_pickup(const cached_block_pickup&) = delete;
@@ -89,10 +91,10 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   /**
    * \brief Perform actual cache block pickup in the arena.
    *
-   * Assumes caller is holding \ref arena_map cache mutex. Takes \ref arena_map
-   * block mutex, and then releases it after cache updates.
+   * Assumes caller is holding \ref caching_arena_map cache mutex. Takes \ref
+   * caching_arena_map block mutex, and then releases it after cache updates.
    */
-  void visit(arena_map& map);
+  void visit(caching_arena_map& map);
 
  private:
   void visit(cds::cell2D& cell);

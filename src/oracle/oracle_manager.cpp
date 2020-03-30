@@ -23,7 +23,8 @@
  ******************************************************************************/
 #include "cosm/oracle/oracle_manager.hpp"
 
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 #include "cosm/oracle/config/oracle_manager_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
@@ -47,7 +48,26 @@ void oracle_manager::tasking_oracle(std::unique_ptr<class tasking_oracle> o) {
   m_tasking = std::move(o);
 } /* tasking_oracle */
 
-void oracle_manager::update(carena::arena_map* const map) {
+void oracle_manager::update(carena::base_arena_map* const map) {
+  if (m_entities->blocks_enabled()) {
+    entities_oracle::variant_vector_type v;
+    /*
+     * Updates to oracle manager can happen in parallel, so we want to make sure
+     * we don't get a set of blocks in a partially updated state. See #594.
+     */
+    std::scoped_lock lock(*map->block_mtx());
+
+    std::copy_if(map->blocks().begin(),
+                 map->blocks().end(),
+                 std::back_inserter(v),
+                 [&](const auto& b) {
+                   /* don't include blocks robot's are carrying */
+                   return rtypes::constants::kNoUUID == b->md()->robot_id(); });
+    m_entities->set_blocks(v);
+  }
+} /* update() */
+
+void oracle_manager::update(carena::caching_arena_map* const map) {
   if (m_entities->blocks_enabled()) {
     entities_oracle::variant_vector_type v;
     /*

@@ -31,7 +31,7 @@
 #include "cosm/pal/argos_controller2D_adaptor.hpp"
 #include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
-#include "cosm/arena/arena_map.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,7 +47,7 @@ template<typename TControllerType>
 argos_pd_adaptor<TControllerType>::argos_pd_adaptor(
     const ctv::config::population_dynamics_config* config,
     cpal::argos_sm_adaptor* const sm,
-    carena::arena_map* map,
+    carena::base_arena_map* map,
     env_dynamics_type* envd,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.pal.tv.argos_pd_adaptor"),

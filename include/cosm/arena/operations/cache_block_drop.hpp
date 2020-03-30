@@ -31,10 +31,10 @@
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/arena/operations/block_op_visit_set.hpp"
 #include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
+#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,6 +42,10 @@
 namespace cosm::arena::repr {
 class arena_cache;
 } // namespace repr
+
+namespace cosm::arena {
+class caching_arena_map;
+} /* namespace cosm::arena */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -61,10 +65,9 @@ class cache_block_drop : public rer::client<cache_block_drop>,
                          public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using inherited = boost::mpl::joint_view<block_op_visit_typelist,
-                                             cell2D_op::visit_typelist>;
-
-    using value = inherited;
+    using inherited = cell2D_op::visit_typelist;
+    using others = rmpl::typelist<caching_arena_map, crepr::base_block2D>;
+    using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
  public:
@@ -79,7 +82,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
    * \brief Perform actual cache block drop in the arena, taking/releasing locks
    * as needed.
    */
-  void visit(arena_map& map);
+  void visit(caching_arena_map& map);
 
  protected:
   /**
