@@ -67,22 +67,22 @@ struct sigmoid_sel_config;
 class partition_probability : public rmath::sigmoid,
                               public rer::client<partition_probability> {
  public:
-  static constexpr char kMethodPini2011[] = "pini2011";
-  static constexpr char kMethodRandom[] = "random";
+  static constexpr const char kMethodPini2011[] = "pini2011";
+  static constexpr const char kMethodRandom[] = "random";
 
   /*
    * A default reactivity value determined experimentally to work well.
    */
-  static constexpr double kDEFAULT_REACTIVITY = 1.5;
+  static constexpr const double kDEFAULT_REACTIVITY = 1.5;
 
   /*
    * A default reactivity value that does *not* induce singularities in the
    * overall equation. Choose not to employ it at your own risk...
    */
-  static constexpr double kDEFAULT_OFFSET = 1.0;
+  static constexpr const double kDEFAULT_OFFSET = 1.0;
 
   /* A default gamma value because there needs to be one */
-  static constexpr double kDEFAULT_GAMMA = 1.0;
+  static constexpr const double kDEFAULT_GAMMA = 1.0;
 
   /**
    * \brief Initialize partitioning probability with default values based on

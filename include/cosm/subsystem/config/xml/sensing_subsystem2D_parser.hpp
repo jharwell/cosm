@@ -57,7 +57,7 @@ class sensing_subsystem2D_parser final : public rconfig::xml::xml_config_parser 
    * \brief The root tag that all robot 2D sensing subsystem parameters should
    * lie under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "sensing_subsystem2D";
+  static constexpr const char kXMLRoot[] = "sensing_subsystem2D";
 
   bool validate(void) const override RCSW_PURE;
   void parse(const ticpp::Element& node) override;

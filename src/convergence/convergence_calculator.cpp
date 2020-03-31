@@ -28,6 +28,8 @@
  * crash with an exception.
  */
 #define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
+#include <boost/variant.hpp>
+
 #include "cosm/convergence/convergence_calculator.hpp"
 
 /*******************************************************************************
@@ -36,7 +38,7 @@
 NS_START(cosm, convergence);
 
 /*******************************************************************************
- * Type Definitions
+ * Class Definitions
  ******************************************************************************/
 /**
  * \struct convergence_measure_updater
@@ -52,35 +54,57 @@ NS_START(cosm, convergence);
  * the necessary input data is generated, as this may be as expensive as the
  * actual convergence calculation itself.
  */
-struct convergence_measure_updater : public boost::static_visitor<void> {
+class convergence_measure_updater : public boost::static_visitor<void> {
+ public:
   convergence_measure_updater(
       uint n,
-      convergence_calculator::swarm_headings_calc_ftype headings_calc,
-      convergence_calculator::swarm_nn_calc_ftype nn_calc,
-      convergence_calculator::swarm_pos_calc_ftype pos_calc,
-      convergence_calculator::swarm_tasks_calc_ftype tasks_calc)
-      : n_threads(n),
-        swarm_headings_calc(std::move(headings_calc)),
-        swarm_nn_calc(std::move(nn_calc)),
-        swarm_pos_calc(std::move(pos_calc)),
-        swarm_tasks_calc(std::move(tasks_calc)) {}
-  void operator()(interactivity& i) { i(swarm_nn_calc(n_threads)); }
+      const boost::optional<convergence_calculator::headings_calc_cb_type>& headings_calc,
+      const boost::optional<convergence_calculator::nn_calc_cb_type>& nn_calc,
+      const boost::optional<convergence_calculator::pos_calc_cb_type>& pos_calc,
+      const boost::optional<convergence_calculator::tasks_calc_cb_type>& tasks_calc)
+      : m_n_threads(n),
+        m_headings_calc(headings_calc),
+        m_nn_calc(nn_calc),
+        m_pos_calc(pos_calc),
+        m_tasks_calc(tasks_calc) {}
+  void operator()(interactivity& i) {
+    if (m_nn_calc) {
+      i((*m_nn_calc)(m_n_threads)); }
+    }
+
   void operator()(angular_order& ang) {
-    ang(swarm_headings_calc(n_threads), n_threads);
+    if (m_headings_calc) {
+      ang((*m_headings_calc)(m_n_threads), m_n_threads);
+    }
   }
 
-  void operator()(positional_entropy& pos) { pos(swarm_pos_calc(n_threads)); }
-  void operator()(velocity& vel) { vel(swarm_pos_calc(n_threads)); }
+  void operator()(positional_entropy& pos) {
+    if (m_pos_calc) {
+      pos((*m_pos_calc)(m_n_threads));
+    }
+  }
+
+  void operator()(velocity& vel) {
+    if (m_pos_calc) {
+      vel((*m_pos_calc)(m_n_threads));
+
+    }
+  }
 
   void operator()(task_dist_entropy& tdist) {
-    tdist(swarm_tasks_calc(n_threads));
+    if (m_tasks_calc) {
+      tdist((*m_tasks_calc)(m_n_threads));
+    }
   }
 
-  uint n_threads;
-  convergence_calculator::swarm_headings_calc_ftype swarm_headings_calc;
-  convergence_calculator::swarm_nn_calc_ftype swarm_nn_calc;
-  convergence_calculator::swarm_pos_calc_ftype swarm_pos_calc;
-  convergence_calculator::swarm_tasks_calc_ftype swarm_tasks_calc;
+ private:
+  /* clang-format off */
+  uint                                                           m_n_threads;
+  boost::optional<convergence_calculator::headings_calc_cb_type> m_headings_calc;
+  boost::optional<convergence_calculator::nn_calc_cb_type>       m_nn_calc;
+  boost::optional<convergence_calculator::pos_calc_cb_type>      m_pos_calc;
+  boost::optional<convergence_calculator::tasks_calc_cb_type>    m_tasks_calc;
+  /* clang-format on */
 };
 
 /**
@@ -98,70 +122,52 @@ struct convergence_status_collator : public boost::static_visitor<bool> {
 };
 
 /*******************************************************************************
- * Constructors/Destructors
+ * Member Functions
  ******************************************************************************/
-convergence_calculator::convergence_calculator(
-    const config::convergence_config* const config,
-    swarm_headings_calc_ftype headings_calc,
-    swarm_nn_calc_ftype nn_calc,
-    swarm_pos_calc_ftype pos_calc)
-    : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
-      mc_config(*config),
-      m_swarm_headings_calc(std::move(headings_calc)),
-      m_swarm_nn_calc(std::move(nn_calc)),
-      m_swarm_pos_calc(std::move(pos_calc)) {
-  if (config->interactivity.enable) {
-    ER_ASSERT(nullptr != m_swarm_nn_calc,
-              "NULL swarm nn cb with interactivity convergence enabled");
-    m_measures.emplace(typeid(interactivity), interactivity(config->epsilon));
-  }
-  if (config->ang_order.enable) {
-    ER_ASSERT(nullptr != m_swarm_headings_calc,
-              "NULL swarm headings cb with angular order convergence enabled");
-    m_measures.emplace(typeid(angular_order), angular_order(config->epsilon));
-  }
+void convergence_calculator::angular_order_init(const headings_calc_cb_type& cb) {
+  m_headings_calc = boost::make_optional(cb);
+  m_measures.emplace(typeid(angular_order), angular_order(mc_config.epsilon));
+} /* angular_order_init() */
 
-  if (config->pos_entropy.enable) {
-    ER_ASSERT(
-        nullptr != m_swarm_pos_calc,
-        "NULL swarm positions cb with positional entropy convergence enabled");
+void convergence_calculator::interactivity_init(const nn_calc_cb_type& cb) {
+  m_nn_calc = boost::make_optional(cb);
+  m_measures.emplace(typeid(interactivity), interactivity(mc_config.epsilon));
+} /* interactivity_init() */
+
+void convergence_calculator::task_dist_entropy_init(const tasks_calc_cb_type &cb) {
+  m_tasks_calc = boost::make_optional(cb);
+    m_measures.emplace(typeid(task_dist_entropy),
+                       task_dist_entropy(mc_config.epsilon));
+} /* task_dist_init() */
+
+void convergence_calculator::positional_entropy_init(const pos_calc_cb_type &cb) {
+  /* velocity and positional entropy use the same callback */
+  if (!m_pos_calc) {
+    m_pos_calc = boost::make_optional(cb);
+  }
     m_measures.emplace(
         typeid(positional_entropy),
         positional_entropy(
-            config->epsilon,
+            mc_config.epsilon,
             std::make_unique<raclustering::detail::entropy_impl<rmath::vector2d>>(
                 mc_config.n_threads),
             &mc_config.pos_entropy));
-  }
+} /* positional_entropy_init() */
 
-  if (config->velocity.enable) {
-    ER_ASSERT(nullptr != m_swarm_pos_calc,
-              "NULL swarm positions cb with velocity convergence enabled");
-    m_measures.emplace(typeid(velocity), velocity(config->epsilon));
+void convergence_calculator::velocity_init(const pos_calc_cb_type& cb) {
+  /* velocity and positional entropy use the same callback */
+  if (!m_pos_calc) {
+    m_pos_calc = boost::make_optional(cb);
   }
-}
-
-/*******************************************************************************
- * Member Functions
- ******************************************************************************/
-void convergence_calculator::task_dist_init(
-    const swarm_tasks_calc_ftype& tasks_calc) {
-  m_swarm_tasks_calc = tasks_calc;
-  if (mc_config.task_dist_entropy.enable) {
-    ER_ASSERT(nullptr != m_swarm_tasks_calc,
-              "NULL swarm tasks cb with task distribution entropy convergence "
-              "enabled");
-    m_measures.emplace(typeid(task_dist_entropy),
-                       task_dist_entropy(mc_config.epsilon));
-  }
-} /* task_dist_init() */
+  m_measures.emplace(typeid(velocity), velocity(mc_config.epsilon));
+} /* velocity_init() */
 
 void convergence_calculator::update(void) {
   convergence_measure_updater u{mc_config.n_threads,
-                                m_swarm_headings_calc,
-                                m_swarm_nn_calc,
-                                m_swarm_pos_calc,
-                                m_swarm_tasks_calc};
+                                m_headings_calc,
+                                m_nn_calc,
+                                m_pos_calc,
+                                m_tasks_calc};
   for (auto& m : m_measures) {
     boost::apply_visitor(u, m.second);
   } /* for(&m..) */

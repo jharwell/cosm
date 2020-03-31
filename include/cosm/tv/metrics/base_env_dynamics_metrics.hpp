@@ -64,9 +64,9 @@ class base_env_dynamics_metrics : public virtual rmetrics::base_metrics {
 
   /**
    * \brief Return the current value of the block manipulation penalty present
-   * in the environment.
+   * in the arena.
    */
-  virtual rtypes::timestep block_manip_penalty(void) const = 0;
+  virtual rtypes::timestep arena_block_manip_penalty(void) const = 0;
 };
 
 NS_END(metrics, tv, cosm);

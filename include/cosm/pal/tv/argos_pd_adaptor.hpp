@@ -83,7 +83,7 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
    * @brief When adding/removing a robot, try this many times to complete the
    * operation.
    */
-  static constexpr size_t kMaxOperationAttempts = 1000;
+  static constexpr const size_t kMaxOperationAttempts = 1000;
 
   argos_pd_adaptor(const ctv::config::population_dynamics_config* config,
                    cpal::argos_sm_adaptor* sm,

@@ -55,7 +55,7 @@ class visualization_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all visualization loop functions parameters should
    * lie under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "visualization";
+  static constexpr const char kXMLRoot[] = "visualization";
 
   void parse(const ticpp::Element& node) override;
 

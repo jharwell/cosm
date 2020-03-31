@@ -1,5 +1,5 @@
 /**
- * \file oracle_manager_parser.cpp
+ * \file aggregate_oracle_parser.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/oracle/config/xml/oracle_manager_parser.hpp"
+#include "cosm/oracle/config/xml/aggregate_oracle_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -31,7 +31,7 @@ NS_START(cosm, oracle, config, xml);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void oracle_manager_parser::parse(const ticpp::Element& node) {
+void aggregate_oracle_parser::parse(const ticpp::Element& node) {
   /* oracles not used */
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
     return;
@@ -52,7 +52,7 @@ void oracle_manager_parser::parse(const ticpp::Element& node) {
   }
 } /* parse() */
 
-bool oracle_manager_parser::validate(void) const {
+bool aggregate_oracle_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }

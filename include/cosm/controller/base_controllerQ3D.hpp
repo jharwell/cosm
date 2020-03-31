@@ -97,6 +97,12 @@ class base_controllerQ3D : public base_controller,
    */
   rmath::vector2d pos2D(void) const RCSW_PURE;
 
+  /**
+   * \brief Provided for compatibility with 2D metric gathering without having
+   * to resort to template trickery.
+   */
+  rmath::radians heading2D(void) const RCSW_PURE;
+
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
    * \brief Convenience function to add robot ID+timestep to messages during

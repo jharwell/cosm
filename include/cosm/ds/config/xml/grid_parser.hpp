@@ -56,7 +56,7 @@ class grid_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all grid parameters should lie under in the
    * XML tree.
    */
-  static constexpr char kXMLRoot[] = "grid";
+  static constexpr const char kXMLRoot[] = "grid";
 
   bool validate(void) const override RCSW_PURE;
   void parse(const ticpp::Element& node) override;

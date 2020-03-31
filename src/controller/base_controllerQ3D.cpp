@@ -114,6 +114,10 @@ rmath::radians base_controllerQ3D::azimuth(void) const {
   return m_saa->sensing()->azimuth();
 }
 
+rmath::radians base_controllerQ3D::heading2D(void) const {
+  return azimuth();
+}
+
 rmath::radians base_controllerQ3D::inclination(void) const {
   return m_saa->sensing()->inclination();
 }

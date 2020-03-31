@@ -28,7 +28,7 @@
 #include "cosm/convergence/config/xml/convergence_parser.hpp"
 #include "cosm/arena/config/xml/arena_map_parser.hpp"
 #include "cosm/metrics/config/xml/output_parser.hpp"
-#include "cosm/oracle/config/xml/oracle_manager_parser.hpp"
+#include "cosm/oracle/config/xml/aggregate_oracle_parser.hpp"
 #include "cosm/tv/config/xml/population_dynamics_parser.hpp"
 #include "cosm/vis/config/xml/visualization_parser.hpp"
 
@@ -49,9 +49,9 @@ base_sm_repository::base_sm_repository(void) noexcept {
                   cvconfig::visualization_config>(
       cvconfig::xml::visualization_parser::kXMLRoot);
 
-  parser_register<coconfig::xml::oracle_manager_parser,
-                  coconfig::oracle_manager_config>(
-      coconfig::xml::oracle_manager_parser::kXMLRoot);
+  parser_register<coconfig::xml::aggregate_oracle_parser,
+                  coconfig::aggregate_oracle_config>(
+      coconfig::xml::aggregate_oracle_parser::kXMLRoot);
   parser_register<cconvergence::config::xml::convergence_parser,
                   cconvergence::config::convergence_config>(
       cconvergence::config::xml::convergence_parser::kXMLRoot);

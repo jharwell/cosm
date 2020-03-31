@@ -106,14 +106,20 @@ namespace subsystem {}
 namespace hal {}
 namespace kin2D {}
 namespace steer2D {}
-namespace convergence {}
+
+namespace convergence {
+namespace config {}
+}
 
 namespace metrics {
 namespace config {}
 } /* namespace metrics */
 
 namespace repr {}
-namespace controller {}
+namespace controller {
+namespace operations {}
+namespace metrics {}
+} /* namespace controller */
 
 namespace robots {
 namespace footbot {}
@@ -147,6 +153,9 @@ namespace config {}
 namespace block_dist {}
 namespace repr {}
 namespace ds {}
+namespace operations {}
+namespace utils {}
+namespace oracle {}
 } /* namespace foraging */
 
 namespace arena {
@@ -162,12 +171,16 @@ namespace oracle {
 namespace config {}
 } /* namespace oracle */
 
+namespace operations {}
 } /* namespace cosm */
 
 /** @} */
 
 namespace csubsystem = cosm::subsystem;
+namespace cops = cosm::operations;
 namespace ccontroller = cosm::controller;
+namespace ccops = ccontroller::operations;
+namespace ccmetrics = ccontroller::metrics;
 namespace cfsm = cosm::fsm;
 namespace chal = cosm::hal;
 namespace ckin2D = cosm::kin2D;
@@ -179,12 +192,16 @@ namespace cds = cosm::ds;
 namespace cdconfig = cds::config;
 namespace cdops = cds::operations;
 namespace cconvergence = cosm::convergence;
+namespace ccconfig = cconvergence::config;
 namespace cmetrics = cosm::metrics;
 namespace cmconfig = cmetrics::config;
 namespace ctv = cosm::tv;
 namespace cforaging = cosm::foraging;
 namespace cfrepr = cforaging::repr;
+namespace cforacle = cforaging::oracle;
+namespace cfutils = cforaging::utils;
 namespace cfds = cforaging::ds;
+namespace cfops = cforaging::operations;
 namespace carena = cosm::arena;
 namespace cads = carena::ds;
 namespace caconfig = carena::config;

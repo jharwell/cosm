@@ -54,7 +54,7 @@ class nest_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all nest parameters should lie under in the
    * XML tree.
    */
-  static constexpr char kXMLRoot[] = "nest";
+  static constexpr const char kXMLRoot[] = "nest";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

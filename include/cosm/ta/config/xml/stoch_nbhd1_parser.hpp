@@ -56,7 +56,7 @@ class stoch_nbhd1_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all task allocation XML configuration should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "stoch_nbhd1";
+  static constexpr char const kXMLRoot[] = "stoch_nbhd1";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

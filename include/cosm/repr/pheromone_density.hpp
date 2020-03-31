@@ -58,7 +58,7 @@ class pheromone_density final : public rmath::expression<double>,
   /**
    * \brief Convenience constant for use it adding pheromones to a density.
    */
-  static constexpr double kUNIT_QUANTITY = 1.0;
+  static constexpr const double kUNIT_QUANTITY = 1.0;
 
   pheromone_density(void) : pheromone_density{-1.0} {}
 

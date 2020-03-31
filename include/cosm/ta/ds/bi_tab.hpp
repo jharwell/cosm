@@ -61,10 +61,10 @@ NS_START(ds);
 class bi_tab final : public metrics::bi_tab_metrics,
                      public rer::client<bi_tab> {
  public:
-  static constexpr char kPartitionSrcExec[] = "exec";
-  static constexpr char kPartitionSrcInterface[] = "interface";
-  static constexpr char kSubtaskSelSrcExec[] = "exec";
-  static constexpr char kSubtaskSelSrcInterface[] = "interface";
+  static constexpr const char kPartitionSrcExec[] = "exec";
+  static constexpr const char kPartitionSrcInterface[] = "interface";
+  static constexpr const char kSubtaskSelSrcExec[] = "exec";
+  static constexpr const char kSubtaskSelSrcInterface[] = "interface";
 
   struct elements {
     const bi_tdgraph* graph;

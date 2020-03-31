@@ -54,7 +54,7 @@ class powerlaw_dist_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all powerlaw dist parameters should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "powerlaw";
+  static constexpr const char kXMLRoot[] = "powerlaw";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

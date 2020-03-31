@@ -56,8 +56,8 @@ NS_START(cosm, arena, repr);
 
 class light_type_index {
  public:
-  static constexpr char kNest[] = "nest";
-  static constexpr char kCache[] = "cache";
+  static constexpr const char kNest[] = "nest";
+  static constexpr const char kCache[] = "cache";
 
   light_type_index(void);
 

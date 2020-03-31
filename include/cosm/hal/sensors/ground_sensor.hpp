@@ -72,7 +72,7 @@ NS_END(detail);
 template <typename TSensor>
 class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>> {
  public:
-  static constexpr char kNestTarget[] = "nest";
+  static constexpr const char kNestTarget[] = "nest";
 
   /**
    * \brief A ground sensor reading (value, distance) pair.

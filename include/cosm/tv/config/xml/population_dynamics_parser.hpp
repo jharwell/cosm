@@ -59,7 +59,7 @@ class population_dynamics_parser final : public rconfig::xml::xml_config_parser 
    * \brief The XML root tag that all \ref population_dynamics
    * configuration should lie under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "population_dynamics";
+  static constexpr const char kXMLRoot[] = "population_dynamics";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

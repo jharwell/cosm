@@ -158,7 +158,7 @@ class explore_for_goal_fsm final : public util_hfsm,
    * it, and without this minimum they will immediately acquire it and bypass
    * the list).
    */
-  static constexpr uint kMIN_EXPLORE_TIME = 50;
+  static constexpr const uint kMIN_EXPLORE_TIME = 50;
 
   /* clang-format off */
   uint                                     m_explore_time{0};

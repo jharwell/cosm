@@ -83,7 +83,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    * \brief The minimum # of blocks required for a cache to exist (less than
    * this and you just have a bunch of blocks).
    */
-  static constexpr size_t kMinBlocks = 2;
+  static constexpr const size_t kMinBlocks = 2;
 
   explicit base_cache(const params& p);
   ~base_cache(void) override = default;

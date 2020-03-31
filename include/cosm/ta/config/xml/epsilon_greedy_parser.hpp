@@ -53,7 +53,7 @@ class epsilon_greedy_parser final : public rcppsw::config::xml::xml_config_parse
    * \brief The root tag that all task allocation XML configuration should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "epsilon_greedy";
+  static constexpr const char kXMLRoot[] = "epsilon_greedy";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

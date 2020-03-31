@@ -83,12 +83,12 @@ struct src_sigmoid_sel_config;
 class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
                                public rmath::sigmoid {
  public:
-  static constexpr double kHARWELL2019_REACTIVITY = 8.0;
-  static constexpr double kHARWELL2019_OFFSET = 1.25;
-  static constexpr double kHARWELL2019_GAMMA = 1.0;
+  static constexpr const double kHARWELL2019_REACTIVITY = 8.0;
+  static constexpr const double kHARWELL2019_OFFSET = 1.25;
+  static constexpr const double kHARWELL2019_GAMMA = 1.0;
 
-  static constexpr char kMethodHarwell2019[] = "harwell2019";
-  static constexpr char kMethodRandom[] = "random";
+  static constexpr const char kMethodHarwell2019[] = "harwell2019";
+  static constexpr const char kMethodRandom[] = "random";
 
   /**
    * \brief Initialize subtask sel probability with default values, based

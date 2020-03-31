@@ -58,13 +58,6 @@ namespace cosm::vis::config {
 struct visualization_config;
 } // namespace cosm::vis::config
 
-namespace cosm::oracle {
-class oracle_manager;
-namespace config {
-struct oracle_manager_config;
-} /* namespace config */
-} /* namespace cosm::oracle */
-
 NS_START(cosm, pal);
 
 /*******************************************************************************
@@ -103,9 +96,6 @@ class argos_sm_adaptor : public swarm_manager,
   const TArenaMapType* arena_map(void) const {
     return static_cast<TArenaMapType*>(m_arena_map.get());
   }
-  const coracle::oracle_manager* oracle_manager(void) const {
-    return m_oracle_manager.get();
-  }
   /**
    * \brief Create a 3D embodied representation of the block and add it to
    * ARGoS, returning a handle to the created representation.
@@ -132,16 +122,6 @@ class argos_sm_adaptor : public swarm_manager,
   TArenaMapType* arena_map(void) {
     return static_cast<TArenaMapType*>(m_arena_map.get());
   }
-  coracle::oracle_manager* oracle_manager(void) {
-    return m_oracle_manager.get();
-  }
-
-  /**
-   * \brief Initialize oracular information injection.
-   *
-   * \param oraclep Parsed \ref oracle_manager parameters.
-   */
-  void oracle_init(const coconfig::oracle_manager_config* oraclep) RCSW_COLD;
 
   /**
    * \brief Initialize the arena contents.
@@ -160,7 +140,6 @@ class argos_sm_adaptor : public swarm_manager,
   std::string                              m_led_medium{};
   argos::CFloorEntity*                     m_floor{nullptr};
   std::unique_ptr<carena::base_arena_map>  m_arena_map;
-  std::unique_ptr<coracle::oracle_manager> m_oracle_manager;
   /* clang-format on */
 };
 

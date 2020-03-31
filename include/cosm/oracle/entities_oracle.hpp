@@ -24,27 +24,15 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/optional.hpp>
-#include <boost/variant.hpp>
 #include <string>
 #include <vector>
-
-#include "rcppsw/er/client.hpp"
+#include <numeric>
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::arena::repr {
-class base_cache;
-} /* namespace cosm::arena::repr */
-
-namespace cosm::oracle::config {
-struct entities_oracle_config;
-} /* namespace cosm::oracle::config */
-
 NS_START(cosm, oracle);
 
 /*******************************************************************************
@@ -54,43 +42,38 @@ NS_START(cosm, oracle);
  * \class entities_oracle
  * \ingroup oracle
  *
- * \brief Repository of perfect knowledge about entities in the arena (blocks,
- * caches, etc).
+ * \brief Repository of perfect knowledge about entities the swarm may encounter
+ * (blocks, caches, etc).
  */
-class entities_oracle final : public rer::client<entities_oracle> {
+template<class TEntityType>
+class entities_oracle {
  public:
-  using variant_type = boost::variant<crepr::base_block2D*, carepr::base_cache*>;
-  using variant_vector_type = std::vector<variant_type>;
-
-  static std::string result_to_string(const variant_vector_type& v);
-
-  explicit entities_oracle(const coconfig::entities_oracle_config* config);
+  using knowledge_type = std::vector<TEntityType*>;
 
   /**
-   * \brief Ask the oracle something.
-   *
-   * \param query The question to ask. Currently oracles:
-   *
-   * entities.blocks
-   * entities.caches
-   *
-   * \return The answer to the query. Empty answer if query was ill-formed.
+   * \brief Get a string representation of the oracle's knowledge. Entities are
+   * prefixed by the specified prefix.
    */
-  boost::optional<variant_vector_type> ask(const std::string& query) const;
+  static std::string knowledge_to_string(const std::string& prefix,
+                                         const knowledge_type& v) {
+    auto lambda = [&](const std::string& a, const auto& ent) {
+      return a + prefix +
+      rcppsw::to_string(ent->id()) + ",";
+    };
+    return std::accumulate(v.begin(), v.end(), std::string(), lambda);
+  }
 
-  void set_blocks(const variant_vector_type& ents) { m_blocks = ents; }
-  void set_caches(const variant_vector_type& ents) { m_caches = ents; }
+  /**
+   * \brief Ask the oracle to return its knowledge about the entities it
+   * currently holds.
+   */
+  const knowledge_type& ask(void) const { return m_knowledge; }
 
-  bool caches_enabled(void) const { return mc_caches; }
-  bool blocks_enabled(void) const { return mc_blocks; }
+  void set_knowledge(const knowledge_type& k) { m_knowledge = k; }
 
  private:
   /* clang-format off */
-  const bool          mc_blocks;
-  const bool          mc_caches;
-
-  variant_vector_type m_blocks{};
-  variant_vector_type m_caches{};
+  knowledge_type m_knowledge{};
   /* clang-format on */
 };
 

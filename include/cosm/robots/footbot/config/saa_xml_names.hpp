@@ -47,15 +47,15 @@ NS_START(cosm, robots, footbot, config);
  * interest of DRY.
  */
 struct saa_xml_names {
-  static constexpr char diff_steering_saa[] = "differential_steering";
-  static constexpr char leds_saa[] = "leds";
-  static constexpr char rab_saa[] = "range_and_bearing";
-  static constexpr char prox_sensor[] = "footbot_proximity";
-  static constexpr char position_sensor[] = "positioning";
-  static constexpr char camera_sensor[] = "colored_blob_omnidirectional_camera";
-  static constexpr char light_sensor[] = "footbot_light";
-  static constexpr char ground_sensor[] = "footbot_motor_ground";
-  static constexpr char battery_sensor[] = "battery";
+  static constexpr const char diff_steering_saa[] = "differential_steering";
+  static constexpr const char leds_saa[] = "leds";
+  static constexpr const char rab_saa[] = "range_and_bearing";
+  static constexpr const char prox_sensor[] = "footbot_proximity";
+  static constexpr const char position_sensor[] = "positioning";
+  static constexpr const char camera_sensor[] = "colored_blob_omnidirectional_camera";
+  static constexpr const char light_sensor[] = "footbot_light";
+  static constexpr const char ground_sensor[] = "footbot_motor_ground";
+  static constexpr const char battery_sensor[] = "battery";
 };
 
 NS_END(config, footbot, robots, cosm);

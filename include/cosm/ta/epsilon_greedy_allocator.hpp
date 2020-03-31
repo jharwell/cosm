@@ -54,14 +54,14 @@ class polled_task;
  */
 class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
  public:
-  static constexpr char kRegretBoundLog[] = "log";
-  static constexpr char kRegretBoundLinear[] = "linear";
+  static constexpr const char kRegretBoundLog[] = "log";
+  static constexpr const char kRegretBoundLinear[] = "linear";
 
   /*
    * From Auer2002, 5.0 is considered large enough to give a logarithmic regret
    * bound.
    */
-  static constexpr double kC = 5.0;
+  static constexpr const double kC = 5.0;
 
   epsilon_greedy_allocator(const config::epsilon_greedy_config* config,
                            rmath::rng* rng)

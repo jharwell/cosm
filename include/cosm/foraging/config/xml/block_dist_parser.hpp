@@ -58,7 +58,7 @@ class block_dist_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all block distribution parameters should lie under
    * in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "distribution";
+  static constexpr const char kXMLRoot[] = "distribution";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

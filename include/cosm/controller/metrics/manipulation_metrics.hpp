@@ -1,7 +1,7 @@
 /**
- * \file oracle_manager_config.hpp
+ * \file manipulation_metrics.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,37 +18,48 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_CONFIG_ORACLE_MANAGER_CONFIG_HPP_
-#define INCLUDE_COSM_ORACLE_CONFIG_ORACLE_MANAGER_CONFIG_HPP_
+#ifndef INCLUDE_COSM_CONTROLLER_METRICS_MANIPULATION_METRICS_HPP_
+#define INCLUDE_COSM_CONTROLLER_METRICS_MANIPULATION_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/metrics/base_metrics.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/oracle/config/tasking_oracle_config.hpp"
-#include "cosm/oracle/config/entities_oracle_config.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config);
+NS_START(cosm, controller, metrics);
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
 /**
- * \struct oracle_manager_config
- * \ingroup oracle config
+ * \class manipulation_metrics
+ * \ingroup controller metrics
  *
- * \brief Parameters for the various oracles that can be employed during
- * simulation.
+ * \brief Defines the metrics to be collected from controllers as they
+ * manipulate their environment ( block pickup, block drop, etc.)
  */
-struct oracle_manager_config final : public rconfig::base_config {
-  struct tasking_oracle_config tasking{};
-  struct entities_oracle_config entities{};
+class manipulation_metrics : public virtual rmetrics::base_metrics {
+ public:
+  manipulation_metrics(void) = default;
+  ~manipulation_metrics(void) override = default;
+
+  /**
+   * \brief If \c TRUE, then the specified event occurred this timestep.
+   */
+  virtual bool status(uint event) const = 0;
+
+  /**
+   * \brief The penalty the robot was subjected to for which calling \ref
+   * status() with the specified event returned \c true.
+   */
+  virtual rtypes::timestep penalty(uint event) const = 0;
 };
 
-NS_END(config, oracle, cosm);
+NS_END(metrics, controller, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_CONFIG_ORACLE_MANAGER_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_CONTROLLER_METRICS_MANIPULATION_METRICS_HPP_ */

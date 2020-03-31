@@ -55,7 +55,7 @@ class task_partition_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all task task_partition parameters should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "task_partition";
+  static constexpr const char kXMLRoot[] = "task_partition";
 
   bool validate(void) const override RCSW_COLD;
   void parse(const ticpp::Element& node) override RCSW_COLD;

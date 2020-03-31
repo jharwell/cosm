@@ -163,7 +163,7 @@ class base_block : public TEntityType,
                                                       out_of_sight2D,
                                                       out_of_sight3D>::type;
 
-  static constexpr out_of_sight_type kOutOfSight{};
+  static constexpr const out_of_sight_type kOutOfSight{};
 
 
   /**

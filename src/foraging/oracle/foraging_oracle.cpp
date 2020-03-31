@@ -1,7 +1,7 @@
 /**
- * \file oracle_manager.cpp
+ * \file foraging_oracle.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,36 +21,42 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/oracle/oracle_manager.hpp"
+#include "cosm/foraging/oracle/foraging_oracle.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/oracle/config/oracle_manager_config.hpp"
+#include "cosm/oracle/config/aggregate_oracle_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, oracle);
+NS_START(cosm, foraging, oracle);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-oracle_manager::oracle_manager(const coconfig::oracle_manager_config* const config)
-    : m_entities(std::make_unique<class entities_oracle>(&config->entities)),
-      m_tasking(nullptr) {}
+foraging_oracle::foraging_oracle(const coconfig::aggregate_oracle_config* config)
+    : aggregate_oracle(config) {
+  oracle_add(kBlocks,
+             std::make_unique<coracle::entities_oracle<crepr::base_block2D>>());
+  oracle_add(kCaches,
+             std::make_unique<coracle::entities_oracle<carepr::base_cache>>());
+}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void oracle_manager::tasking_oracle(std::unique_ptr<class tasking_oracle> o) {
-  m_tasking = std::move(o);
+void foraging_oracle::tasking_oracle(std::unique_ptr<coracle::tasking_oracle> o) {
+  oracle_add(kTasks, std::move(o));
 } /* tasking_oracle */
 
-void oracle_manager::update(carena::base_arena_map* const map) {
-  if (m_entities->blocks_enabled()) {
-    entities_oracle::variant_vector_type v;
+
+void foraging_oracle::update(carena::base_arena_map* const map) {
+  auto blocks_it = config()->entities.types.find("blocks");
+  if (config()->entities.types.end() != blocks_it && blocks_it->second) {
+    coracle::entities_oracle<crepr::base_block2D>::knowledge_type v;
     /*
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
@@ -63,13 +69,14 @@ void oracle_manager::update(carena::base_arena_map* const map) {
                  [&](const auto& b) {
                    /* don't include blocks robot's are carrying */
                    return rtypes::constants::kNoUUID == b->md()->robot_id(); });
-    m_entities->set_blocks(v);
+    oracle_get<coracle::entities_oracle<crepr::base_block2D>>(kBlocks)->set_knowledge(v);
   }
 } /* update() */
 
-void oracle_manager::update(carena::caching_arena_map* const map) {
-  if (m_entities->blocks_enabled()) {
-    entities_oracle::variant_vector_type v;
+void foraging_oracle::update(carena::caching_arena_map* const map) {
+  auto blocks_it = config()->entities.types.find("blocks");
+  if (config()->entities.types.end() != blocks_it && blocks_it->second) {
+    coracle::entities_oracle<crepr::base_block2D>::knowledge_type v;
     /*
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
@@ -82,7 +89,7 @@ void oracle_manager::update(carena::caching_arena_map* const map) {
                  [&](const auto& b) {
                    /* don't include blocks robot's are carrying */
                    return rtypes::constants::kNoUUID == b->md()->robot_id() &&
-                          /*
+                       /*
                         * Don't include blocks that are currently in a cache
                         * (harmless, but causes repeated "removed block hidden
                         * behind cache" warnings)
@@ -93,17 +100,18 @@ void oracle_manager::update(carena::caching_arena_map* const map) {
                                          return c->contains_block(b);
                                        });
                  });
-    m_entities->set_blocks(v);
+    oracle_get<coracle::entities_oracle<crepr::base_block2D>>(kBlocks)->set_knowledge(v);
   }
 
-  if (m_entities->caches_enabled()) {
+  auto caches_it = config()->entities.types.find("caches");
+  if (config()->entities.types.end() != caches_it && caches_it->second) {
     std::scoped_lock lock(*map->cache_mtx());
-    entities_oracle::variant_vector_type v;
+    coracle::entities_oracle<carepr::base_cache>::knowledge_type v;
     for (auto& c : map->caches()) {
       v.push_back(c);
     } /* for(&b..) */
-    m_entities->set_caches(v);
+    oracle_get<coracle::entities_oracle<carepr::base_cache>>(kCaches)->set_knowledge(v);
   }
 } /* update() */
 
-NS_END(oracle, cosm);
+NS_END(oracle, foraging, cosm);

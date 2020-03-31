@@ -55,7 +55,7 @@ class block_redist_governor_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all block redistribution parameters should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "redist_governor";
+  static constexpr const char kXMLRoot[] = "redist_governor";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
 

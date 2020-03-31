@@ -75,17 +75,17 @@ struct sigmoid_sel_config;
 class subtask_sel_probability : public rer::client<subtask_sel_probability>,
                                 public rmath::sigmoid {
  public:
-  static constexpr double kHARWELL2018_REACTIVITY = 8.0;
-  static constexpr double kHARWELL2018_OFFSET = 1.25;
-  static constexpr double kHARWELL2018_GAMMA = 1.0;
+  static constexpr const double kHARWELL2018_REACTIVITY = 8.0;
+  static constexpr const double kHARWELL2018_OFFSET = 1.25;
+  static constexpr const double kHARWELL2018_GAMMA = 1.0;
 
-  static constexpr double kBRUTSCHY2014_REACTIVITY = 1.0;
-  static constexpr double kBRUTSCHY2014_OFFSET = 8.0;
-  static constexpr double kBRUTSCHY2014_GAMMA = 0.01;
+  static constexpr const double kBRUTSCHY2014_REACTIVITY = 1.0;
+  static constexpr const double kBRUTSCHY2014_OFFSET = 8.0;
+  static constexpr const double kBRUTSCHY2014_GAMMA = 0.01;
 
-  static constexpr char kMethodBrutschy2014[] = "brutschy2014";
-  static constexpr char kMethodHarwell2018[] = "harwell2018";
-  static constexpr char kMethodRandom[] = "random";
+  static constexpr const char kMethodBrutschy2014[] = "brutschy2014";
+  static constexpr const char kMethodHarwell2018[] = "harwell2018";
+  static constexpr const char kMethodRandom[] = "random";
 
   /**
    * \brief Initialize subtask sel probability with default values, based

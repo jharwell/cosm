@@ -52,9 +52,9 @@ NS_START(cosm, ta, ds);
  */
 class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
  public:
-  static constexpr char kTABInitRoot[] = "root";
-  static constexpr char kTABInitRandom[] = "random";
-  static constexpr char kTABInitMaxDepth[] = "max_depth";
+  static constexpr const char kTABInitRoot[] = "root";
+  static constexpr const char kTABInitRandom[] = "random";
+  static constexpr const char kTABInitMaxDepth[] = "max_depth";
 
   explicit bi_tdgraph(const config::task_alloc_config* config);
 

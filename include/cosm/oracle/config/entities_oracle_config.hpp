@@ -24,6 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <map>
+#include <string>
+
+
 #include "rcppsw/config/base_config.hpp"
 #include "cosm/cosm.hpp"
 
@@ -42,8 +46,7 @@ NS_START(cosm, oracle, config);
  * \brief Parameters for all-seeing oracle of entity location/size/etc.
  */
 struct entities_oracle_config final : public rconfig::base_config {
-  bool caches{false};
-  bool blocks{false};
+  std::map<std::string, bool> types{};
 };
 
 NS_END(config, oracle, cosm);

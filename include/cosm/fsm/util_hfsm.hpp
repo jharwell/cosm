@@ -168,7 +168,7 @@ class util_hfsm : public rpfsm::hfsm,
    * overshoot by more than this tolerance, the direction change will still be
    * considered to have occurred successfully.
    */
-  static constexpr double kDIR_CHANGE_TOL = 0.25;
+  static constexpr const double kDIR_CHANGE_TOL = 0.25;
 
   /**
    * \brief When changing direction, it may not be enough to have an arrival
@@ -181,7 +181,7 @@ class util_hfsm : public rpfsm::hfsm,
    * Not doing this leads to controller that will spin more or less indefinitely
    * when changing direction on occasion.
    */
-  static constexpr uint kDIR_CHANGE_MAX_STEPS = 10;
+  static constexpr const uint kDIR_CHANGE_MAX_STEPS = 10;
 
   /**
    * \brief When entering the nest, you want to continue to wander a bit before
@@ -189,7 +189,7 @@ class util_hfsm : public rpfsm::hfsm,
    * less congestion by the edge. This is a stopgap solution; a more elegant fix
    * may be forthcoming in the future if warranted.
    */
-  static constexpr uint kNEST_COUNT_MAX_STEPS = 25;
+  static constexpr const uint kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
   uint                              m_nest_count{0};

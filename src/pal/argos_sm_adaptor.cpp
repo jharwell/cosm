@@ -30,9 +30,6 @@
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/oracle/entities_oracle.hpp"
-#include "cosm/oracle/oracle_manager.hpp"
-#include "cosm/oracle/tasking_oracle.hpp"
 #include "cosm/vis/config/visualization_config.hpp"
 #include "cosm/pal/embodied_block_creator.hpp"
 
@@ -48,8 +45,7 @@ void ___sighandler(int signum);
  ******************************************************************************/
 argos_sm_adaptor::argos_sm_adaptor(void)
     : ER_CLIENT_INIT("cosm.pal.argos_sm_adaptor"),
-      m_arena_map(nullptr),
-      m_oracle_manager(nullptr) {}
+      m_arena_map(nullptr) {}
 
 argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 
@@ -78,15 +74,6 @@ void argos_sm_adaptor::arena_map_init(
     } /* for(&block..) */
   }
 } /* arena_map_init() */
-
-
-void argos_sm_adaptor::oracle_init(
-    const coconfig::oracle_manager_config* const oraclep) {
-  if (nullptr != oraclep) {
-    ER_INFO("Creating oracle manager");
-    m_oracle_manager = std::make_unique<coracle::oracle_manager>(oraclep);
-  }
-} /* oracle_init() */
 
 crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
     const crepr::block3D_variant& block,

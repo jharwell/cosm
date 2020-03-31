@@ -55,7 +55,7 @@ class src_sigmoid_sel_parser : public rcppsw::config::xml::xml_config_parser {
    * \brief The root tag that all XML configuration should lie under in the XML
    * tree.
    */
-  static constexpr char kXMLRoot[] = "src_sigmoid_sel";
+  static constexpr const char kXMLRoot[] = "src_sigmoid_sel";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

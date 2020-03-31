@@ -63,23 +63,23 @@ class abort_probability : public rmath::sigmoid {
   /*
    * A default reactivity value found experimentally to work well.
    */
-  static constexpr double kDEFAULT_REACTIVITY = 8.0;
+  static constexpr const double kDEFAULT_REACTIVITY = 8.0;
 
   /*
    * A default offset value found experimentally to work well.
    */
-  static constexpr double kDEFAULT_OFFSET = 3.0;
+  static constexpr const double kDEFAULT_OFFSET = 3.0;
 
   /*
    * A default gamma value because there needs to be one.
    */
-  static constexpr double kDEFAULT_GAMMA = 1.0;
+  static constexpr const double kDEFAULT_GAMMA = 1.0;
 
   /*
    * \brief All tasks need to have a small abort probability, so that they don't
    * get stuck indefinitely.
    */
-  static constexpr double kMIN_ABORT_PROB = 0.0001;
+  static constexpr const double kMIN_ABORT_PROB = 0.0001;
 
   /**
    * \brief Initialize an abort probability calculation with default values.

@@ -74,9 +74,9 @@ class executable_task : public logical_task,
   /*
    * For now...
    */
-  static constexpr uint kMAX_INTERFACES = 1;
-  static constexpr char kAbortSrcExec[] = "exec";
-  static constexpr char kAbortSrcInterface[] = "interface";
+  static constexpr const uint kMAX_INTERFACES = 1;
+  static constexpr const char kAbortSrcExec[] = "exec";
+  static constexpr const char kAbortSrcInterface[] = "interface";
 
   executable_task(const std::string& name,
                   const config::src_sigmoid_sel_config* abort,

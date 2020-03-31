@@ -1,5 +1,5 @@
 /**
- * \file oracle_manager_parser.hpp
+ * \file aggregate_oracle_parser.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_CONFIG_XML_ORACLE_MANAGER_PARSER_HPP_
-#define INCLUDE_COSM_ORACLE_CONFIG_XML_ORACLE_MANAGER_PARSER_HPP_
+#ifndef INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_
+#define INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,7 +27,7 @@
 #include <string>
 #include <memory>
 
-#include "cosm/oracle/config/oracle_manager_config.hpp"
+#include "cosm/oracle/config/aggregate_oracle_config.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 #include "cosm/oracle/config/xml/entities_oracle_parser.hpp"
 #include "cosm/oracle/config/xml/tasking_oracle_parser.hpp"
@@ -41,20 +41,20 @@ NS_START(cosm, oracle, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class oracle_manager_parser
- * \ingroup oracle config xml
+ * \class aggregate_oracle_parser
+ * \ingroup aggregate oracle config xml
  *
  * \brief Parses XML parameters used for oracles at the start of simulation.
  */
-class oracle_manager_parser final : public rconfig::xml::xml_config_parser {
+class aggregate_oracle_parser final : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = oracle_manager_config;
+  using config_type = aggregate_oracle_config;
 
   /**
    * \brief The root tag that all cache parameters should lie under in the
    * XML tree.
    */
-  static constexpr char kXMLRoot[] = "oracle_manager";
+  static constexpr const char kXMLRoot[] = "aggregate_oracle";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(const, cold);
@@ -67,12 +67,12 @@ class oracle_manager_parser final : public rconfig::xml::xml_config_parser {
   }
 
   /* clang-format off */
-  std::unique_ptr<config_type> m_config{nullptr};
-  entities_oracle_parser       m_entities{};
-  tasking_oracle_parser        m_tasking{};
+  std::unique_ptr<config_type>          m_config{nullptr};
+  coconfig::xml::entities_oracle_parser m_entities{};
+  coconfig::xml::tasking_oracle_parser  m_tasking{};
   /* clang-format on */
 };
 
 NS_END(xml, config, oracle, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_CONFIG_XML_ORACLE_MANAGER_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_ */

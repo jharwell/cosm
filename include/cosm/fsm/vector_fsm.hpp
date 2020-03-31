@@ -136,7 +136,7 @@ class vector_fsm final : public util_hfsm,
    * to ensure that you do not repeatedly get 2 controller butting heads as they try
    * to travel to opposite goals.
    */
-  static constexpr uint kCOLLISION_RECOVERY_TIME = 10;
+  static constexpr const uint kCOLLISION_RECOVERY_TIME = 10;
 
   /**
    * \brief Calculates the relative vector from the robot to the current goal.

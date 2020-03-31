@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <boost/optional.hpp>
 #include <vector>
 
 #include "rcppsw/ds/type_map.hpp"
@@ -70,17 +70,16 @@ class convergence_calculator final
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using swarm_headings_calc_ftype =
-      std::function<std::vector<rmath::radians>(uint)>;
+  using headings_calc_cb_type = std::function<std::vector<rmath::radians>(uint)>;
 
   /**
    * \brief Callback function that returns a vector of nearest neighbor
    * distances (1 per robot). Used to calculate swarm interactivity.
    *
    * Takes a single integer argument specifying the # OpenMP threads to be
-   * used, per configuration
+   * used, per configuration.
    */
-  using swarm_nn_calc_ftype = std::function<std::vector<double>(uint)>;
+  using nn_calc_cb_type = std::function<std::vector<double>(uint)>;
 
   /**
    * \brief Callback function that returns a vector of robot positions (1 per
@@ -92,7 +91,7 @@ class convergence_calculator final
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using swarm_pos_calc_ftype = std::function<std::vector<rmath::vector2d>(uint)>;
+  using pos_calc_cb_type = std::function<std::vector<rmath::vector2d>(uint)>;
 
   /**
    * \brief Callback function that returns a vector of robot tasks (as unique
@@ -102,18 +101,11 @@ class convergence_calculator final
    * Tasks a single integer argument specifying the # OpenMP threads to be used,
    * per configuration.
    */
-  using swarm_tasks_calc_ftype = std::function<std::vector<int>(uint)>;
+  using tasks_calc_cb_type = std::function<std::vector<int>(uint)>;
 
-  convergence_calculator(const config::convergence_config* config,
-                         swarm_headings_calc_ftype headings_calc,
-                         swarm_nn_calc_ftype nn_calc,
-                         swarm_pos_calc_ftype pos_calc);
-
-  /**
-   * \brief Not included in the constructor arguments because not all swarms use
-   * tasks.
-   */
-  void task_dist_init(const swarm_tasks_calc_ftype& tasks_calc);
+  convergence_calculator(const config::convergence_config* config)
+      : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
+        mc_config(*config) {}
 
   /* convergence metrics */
   conv_status_t swarm_interactivity(void) const override;
@@ -123,6 +115,41 @@ class convergence_calculator final
   conv_status_t swarm_velocity(void) const override;
   double swarm_conv_epsilon(void) const override { return mc_config.epsilon; }
   void reset_metrics(void) override;
+
+  /**
+   * \brief Set the callback for calculating \ref angular_order. In order to
+   * actually calculate it time \ref update is called, it must have also been
+   * enabled in configuration.
+   */
+  void angular_order_init(const headings_calc_cb_type& cb);
+
+  /**
+   * \brief Set the callback for calculating \ref interactivity. In order to
+   * actually calculate it time \ref update is called, it must have also been
+   * enabled in configuration.
+   */
+  void interactivity_init(const nn_calc_cb_type& cb);
+
+  /**
+   * \brief Set the callback for calculating \ref task_dist_entropy. In order to
+   * actually calculate it time \ref update is called, it must have also been
+   * enabled in configuration.
+   */
+  void task_dist_entropy_init(const tasks_calc_cb_type& cb);
+
+  /**
+   * \brief Set the callback for calculating \ref positional_entropy. In order
+   * to actually calculate it time \ref update is called, it must have also been
+   * enabled in configuration.
+   */
+  void positional_entropy_init(const pos_calc_cb_type& cb);
+
+  /**
+   * \brief Set the callback for calculating \ref velocity. In order to
+   * actually calculate it time \ref update is called, it must have also been
+   * enabled in configuration.
+   */
+  void velocity_init(const pos_calc_cb_type& cb);
 
   /**
    * \brief Return swarm convergence status in an OR fashion (i.e. if ANY of the
@@ -142,13 +169,13 @@ class convergence_calculator final
                                           interactivity,
                                           velocity>;
   /* clang-format off */
-  const config::convergence_config             mc_config;
+  const config::convergence_config       mc_config;
 
-  rds::type_map<measure_typelist>              m_measures{};
-  swarm_headings_calc_ftype                    m_swarm_headings_calc;
-  swarm_nn_calc_ftype                          m_swarm_nn_calc;
-  swarm_pos_calc_ftype                         m_swarm_pos_calc;
-  swarm_tasks_calc_ftype                       m_swarm_tasks_calc{nullptr};
+  rds::type_map<measure_typelist>        m_measures{};
+  boost::optional<headings_calc_cb_type> m_headings_calc{nullptr};
+  boost::optional<nn_calc_cb_type>       m_nn_calc{nullptr};
+  boost::optional<pos_calc_cb_type>      m_pos_calc{nullptr};
+  boost::optional<tasks_calc_cb_type>    m_tasks_calc{nullptr};
   /* clang-format on */
 };
 

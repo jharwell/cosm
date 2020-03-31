@@ -56,7 +56,7 @@ class polar_force_parser final : public rconfig::xml::xml_config_parser {
    * \brief The XML root tag that all \ref polar_force configuration should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "polar_force";
+  static constexpr const char kXMLRoot[] = "polar_force";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(cold, pure);

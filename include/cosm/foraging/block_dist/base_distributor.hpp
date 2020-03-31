@@ -53,7 +53,7 @@ class base_distributor {
    * \brief How many times to attempt to distribute all blocks before giving up,
    * causing an assertion failure on distribution.
    */
-  static constexpr uint kMAX_DIST_TRIES = 1000;
+  static constexpr const uint kMAX_DIST_TRIES = 1000;
 
   explicit base_distributor(rmath::rng* const rng) : m_rng(rng) {}
   virtual ~base_distributor(void) = default;

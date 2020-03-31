@@ -55,7 +55,7 @@ class task_executive_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all task task_executive parameters should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "task_executive";
+  static constexpr const char kXMLRoot[] = "task_executive";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }

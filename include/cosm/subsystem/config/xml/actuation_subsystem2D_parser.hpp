@@ -55,7 +55,7 @@ class actuation_subsystem2D_parser final : public rconfig::xml::xml_config_parse
    * \brief The root tag that all 2D actuation subsystem parameters should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "actuation_subsystem2D";
+  static constexpr const char kXMLRoot[] = "actuation_subsystem2D";
 
   bool validate(void) const override RCSW_PURE;
   void parse(const ticpp::Element& node) override RCSW_COLD;

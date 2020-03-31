@@ -40,6 +40,14 @@ namespace cosm::repr {
 class entity2D;
 } /* namespace cosm::repr */
 
+namespace cosm::arena {
+class base_arena_map;
+} /* namespace cosm::foraging::repr */
+
+namespace cosm::foraging::repr {
+class foraging_los;
+}
+
 NS_START(cosm, foraging, utils);
 
 /*******************************************************************************
@@ -61,6 +69,33 @@ struct placement_status_t {
 placement_status_t placement_conflict(const rmath::vector2d& ent1_loc,
                                       const rmath::vector2d& ent1_dims,
                                       const crepr::entity2D* entity);
+
+/**
+ * \brief Compute the line of sight for a given robot.
+ *
+ * Needed to eliminate header dependencies in this file.
+ */
+std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
+    const carena::base_arena_map& map,
+    uint los_grid_size,
+    const rmath::vector2d& pos);
+
+/**
+ * \brief Set the LOS of a robot in the arena.
+ *
+ * This is a hack that makes getting my research up and running easier.
+ *
+ * \todo This should eventually be replaced by a calculation of a robot's LOS by
+ * the robot, probably using on-board cameras.
+ */
+template <typename T>
+void set_robot_los(T* const controller,
+                   uint los_grid_size,
+                   carena::base_arena_map& map) {
+  controller->los(std::move(compute_robot_los(map,
+                                              los_grid_size,
+                                              controller->pos2D())));
+}
 
 NS_END(utils, foraging, cosm);
 

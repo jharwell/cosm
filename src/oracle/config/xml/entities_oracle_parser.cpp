@@ -36,8 +36,14 @@ void entities_oracle_parser::parse(const ticpp::Element& node) {
     ticpp::Element cnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
-    XML_PARSE_ATTR_DFLT(cnode, m_config, caches, false);
-    XML_PARSE_ATTR_DFLT(cnode, m_config, blocks, false);
+    ticpp::Iterator<ticpp::Attribute> it;
+    for (it = cnode.FirstAttribute(); it != it.end(); ++it) {
+      std::string name;
+      bool value;
+      it->GetName(&name);
+      it->GetValue(&value);
+      m_config->types.insert({name, value});
+    } /* for(it..) */
   }
 } /* parse() */
 
