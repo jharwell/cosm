@@ -107,7 +107,7 @@ void cache_block_drop::visit(caching_arena_map& map) {
 } /* visit() */
 
 void cache_block_drop::visit(crepr::base_block2D& block) {
-  auto visitor = operations::free_block_drop_visitor::for_block(
+  auto visitor = operations::free_block_drop_visitor<crepr::base_block2D>::for_block(
       rmath::vector2u(cell2D_op::x(), cell2D_op::y()), mc_resolution);
   visitor.visit(block);
 } /* visit() */

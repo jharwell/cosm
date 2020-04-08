@@ -35,9 +35,9 @@ NS_START(cosm, arena, operations, detail);
  * Forward Declarations
  ******************************************************************************/
 static void do_lock(caching_arena_map& map);
-static void do_lock(base_arena_map& map);
+static void do_lock(base_arena_map<crepr::base_block2D>& map);
 static void do_unlock(caching_arena_map& map);
-static void do_unlock(base_arena_map& map);
+static void do_unlock(base_arena_map<crepr::base_block2D>& map);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -52,7 +52,7 @@ nest_block_drop::nest_block_drop(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_block_drop::visit(base_arena_map& map) {
+void nest_block_drop::visit(base_arena_map<crepr::base_block2D>& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
             "Undefined robot index");
 
@@ -115,12 +115,12 @@ void do_unlock(caching_arena_map& map) {
   map.cache_mtx()->lock();
 } /* do_unlock() */
 
-void do_lock(base_arena_map& map) {
+void do_lock(base_arena_map<crepr::base_block2D>& map) {
   map.block_mtx()->lock();
   map.grid_mtx()->lock();
 } /* do_lock() */
 
-void do_unlock(base_arena_map& map) {
+void do_unlock(base_arena_map<crepr::base_block2D>& map) {
   map.grid_mtx()->lock();
   map.block_mtx()->lock();
 } /* do_unlock() */

@@ -43,6 +43,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
+template<typename T>
 class base_arena_map;
 class caching_arena_map;
 } /* namespace cosm::arena */
@@ -121,7 +122,8 @@ class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
    * a minimum).
    */
   void update(carena::caching_arena_map* map);
-  void update(carena::base_arena_map* map);
+  template<typename TBlockType>
+  void update(carena::base_arena_map<TBlockType>* map);
 };
 
 NS_END(oracle, foraging, cosm);

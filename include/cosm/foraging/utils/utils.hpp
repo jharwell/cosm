@@ -31,6 +31,7 @@
 #include <memory>
 
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -38,9 +39,11 @@
  ******************************************************************************/
 namespace cosm::repr {
 class entity2D;
+class entity3D;
 } /* namespace cosm::repr */
 
 namespace cosm::arena {
+template<typename T>
 class base_arena_map;
 } /* namespace cosm::foraging::repr */
 
@@ -66,19 +69,34 @@ struct placement_status_t {
  * entity of \p ent1_dims dimensions placed at \p ent1_loc, (2) an entity of \p
  * ent1_dims that currently exists at \p ent1_loc.
  */
-placement_status_t placement_conflict(const rmath::vector2d& ent1_loc,
-                                      const rmath::vector2d& ent1_dims,
-                                      const crepr::entity2D* entity);
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+                                        const rmath::vector2d& ent1_dims,
+                                        const crepr::entity2D* entity);
+
+/**
+ * \brief Determine entity overlap with \p entity in two cases: (1) placing an
+ * entity of \p ent1_dims dimensions placed at \p ent1_loc, (2) an entity of \p
+ * ent1_dims that currently exists at \p ent1_loc. Only 2D overlap is considered
+ * (i.e. Z dimension is ignored).
+ */
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+                                        const rmath::vector2d& ent1_dims,
+                                        const crepr::entity3D* entity);
 
 /**
  * \brief Compute the line of sight for a given robot.
  *
  * Needed to eliminate header dependencies in this file.
  */
+template<typename TArenaMapType>
 std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
-    const carena::base_arena_map& map,
+    const TArenaMapType& map,
     uint los_grid_size,
-    const rmath::vector2d& pos);
+    const rmath::vector2d& pos) {
+  rmath::vector2u position = rmath::dvec2uvec(pos, map.grid_resolution().v());
+  return std::make_unique<cfrepr::foraging_los>(
+      map.subgrid(position.x(), position.y(), los_grid_size), position);
+} /* compute_robot_los */
 
 /**
  * \brief Set the LOS of a robot in the arena.
@@ -88,10 +106,10 @@ std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
  * \todo This should eventually be replaced by a calculation of a robot's LOS by
  * the robot, probably using on-board cameras.
  */
-template <typename T>
-void set_robot_los(T* const controller,
+template <typename TControllerType, typename TBlockType>
+void set_robot_los(TControllerType* const controller,
                    uint los_grid_size,
-                   carena::base_arena_map& map) {
+                   carena::base_arena_map<TBlockType>& map) {
   controller->los(std::move(compute_robot_los(map,
                                               los_grid_size,
                                               controller->pos2D())));

@@ -68,7 +68,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
     for (uint j = ymin; j < ymax; ++j) {
       rmath::vector2u c = rmath::vector2u(i, j);
       if (c != m_victim->dloc()) {
-        ER_ASSERT(m_victim->contains_point(
+        ER_ASSERT(m_victim->contains_point2D(
             rmath::uvec2dvec(c, grid.resolution().v())),
                   "Cache%d does not contain point (%u, %u) within its extent",
                   m_victim->id().v(),

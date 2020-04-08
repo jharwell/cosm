@@ -24,7 +24,6 @@
 #include "cosm/ds/cell2D.hpp"
 
 #include "cosm/arena/repr/base_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,13 +38,21 @@ cell2D::cell2D(void) { decoratee().init(); }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::base_block2D* cell2D::block(void) const {
+crepr::base_block2D* cell2D::block2D(void) const {
   return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+} /* block2D() */
 
-crepr::base_block2D* cell2D::block(void) {
+crepr::base_block2D* cell2D::block2D(void) {
   return dynamic_cast<crepr::base_block2D*>(m_entity);
-} /* block() */
+} /* block2D() */
+
+crepr::base_block3D* cell2D::block3D(void) const {
+  return dynamic_cast<crepr::base_block3D*>(m_entity);
+} /* block3D() */
+
+crepr::base_block3D* cell2D::block3D(void) {
+  return dynamic_cast<crepr::base_block3D*>(m_entity);
+} /* block3D() */
 
 carepr::base_cache* cell2D::cache(void) const {
   return dynamic_cast<carepr::base_cache*>(m_entity);

@@ -52,8 +52,8 @@ void foraging_oracle::tasking_oracle(std::unique_ptr<coracle::tasking_oracle> o)
   oracle_add(kTasks, std::move(o));
 } /* tasking_oracle */
 
-
-void foraging_oracle::update(carena::base_arena_map* const map) {
+template<typename TBlockType>
+void foraging_oracle::update(carena::base_arena_map<TBlockType>* const map) {
   auto blocks_it = config()->entities.types.find("blocks");
   if (config()->entities.types.end() != blocks_it && blocks_it->second) {
     coracle::entities_oracle<crepr::base_block2D>::knowledge_type v;

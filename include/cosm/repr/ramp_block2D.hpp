@@ -57,7 +57,7 @@ class ramp_block2D final : public base_block<unicell_movable_entity2D> {
       : base_block(dim, rutils::color::kBLUE, crepr::block_type::ekRAMP, id) {}
 
   std::unique_ptr<base_block> clone(void) const override {
-    auto tmp = std::make_unique<ramp_block2D>(dims(), id());
+    auto tmp = std::make_unique<ramp_block2D>(dims2D(), id());
 
     /* copy core definition features */
     tmp->dloc(this->dloc());

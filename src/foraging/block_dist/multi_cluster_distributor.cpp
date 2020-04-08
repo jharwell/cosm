@@ -34,28 +34,29 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-multi_cluster_distributor::multi_cluster_distributor(
+template<typename TBlockType>
+multi_cluster_distributor<TBlockType>::multi_cluster_distributor(
     std::vector<cds::arena_grid::view>& grids,
     rtypes::discretize_ratio resolution,
     uint maxsize,
-    rmath::rng* rng)
+    rmath::rng* rng_in)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.multi_cluster"),
-      base_distributor(rng) {
+      base_distributor<TBlockType>(rng_in) {
   for (auto& g : grids) {
-    m_dists.emplace_back(g, resolution, maxsize, rng);
+    m_dists.emplace_back(g, resolution, maxsize, rng_in);
   } /* for(i..) */
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool multi_cluster_distributor::distribute_block(
-    crepr::base_block2D* block,
-    cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool multi_cluster_distributor<TBlockType>::distribute_block(TBlockType* block,
+                                                             cds::const_entity_vector& entities) {
   for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
     /* -1 because we are working with array indices */
     uint idx = rng()->uniform(0, m_dists.size() - 1);
-    cluster_distributor& dist = m_dists[idx];
+    cluster_distributor<TBlockType>& dist = m_dists[idx];
 
     /* Always/only 1 cluster per cluster distributor, so this is safe to do */
     auto* clust = dist.block_clusters().front();
@@ -76,8 +77,9 @@ bool multi_cluster_distributor::distribute_block(
   return false;
 } /* distribute_block() */
 
-cfds::block_cluster_vector multi_cluster_distributor::block_clusters(void) const {
-  cfds::block_cluster_vector ret;
+template<typename TBlockType>
+cfds::block_cluster_vector<TBlockType> multi_cluster_distributor<TBlockType>::block_clusters(void) const {
+  cfds::block_cluster_vector<TBlockType> ret;
 
   for (auto& dist : m_dists) {
     auto bclusts = dist.block_clusters();
@@ -85,5 +87,11 @@ cfds::block_cluster_vector multi_cluster_distributor::block_clusters(void) const
   } /* for(&dist..) */
   return ret;
 } /* block_clusters() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class multi_cluster_distributor<crepr::base_block2D>;
+template class multi_cluster_distributor<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

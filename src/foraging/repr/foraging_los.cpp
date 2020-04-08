@@ -34,17 +34,17 @@ NS_START(cosm, foraging, repr);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-cds::block2D_vectorno foraging_los::blocks(void) const {
-  cds::block2D_vectorno blocks{};
+cds::entity_vector foraging_los::blocks(void) const {
+  cds::entity_vector blocks{};
   for (uint i = 0; i < xsize(); ++i) {
     for (uint j = 0; j < ysize(); ++j) {
       const cds::cell2D& cell = mc_view[i][j];
       if (cell.state_has_block()) {
-        ER_ASSERT(nullptr != cell.block(),
+        ER_ASSERT(nullptr != cell.block2D() || nullptr != cell.block3D(),
                   "Cell at(%u,%u) in HAS_BLOCK state, but does not have block",
                   i,
                   j);
-        blocks.push_back(cell.block());
+        blocks.push_back(cell.entity());
       }
     } /* for(j..) */
   }   /* for(i..) */

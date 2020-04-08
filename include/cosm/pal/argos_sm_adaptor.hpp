@@ -36,23 +36,21 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/swarm_manager.hpp"
 #include "cosm/repr/embodied_block.hpp"
-#include "cosm/repr/block3D_variant.hpp"
+#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/block_variant.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::repr {
-class cube_block3D;
-class ramp_block3D;
-} /* namespace cosm::repr */
-
-namespace cosm::arena {
-class base_arena_map;
-} /* namespace cosm */
-
 namespace cosm::arena::config {
 struct arena_map_config;
 } // namespace cosm::foraging::config
+
+namespace cosm::arena {
+template<class T>
+class base_arena_map;
+class caching_arena_map;
+} /* namespace cosm */
 
 namespace cosm::vis::config {
 struct visualization_config;
@@ -74,6 +72,10 @@ class argos_sm_adaptor : public swarm_manager,
                          public argos::CLoopFunctions,
                          public rer::client<argos_sm_adaptor> {
  public:
+  using arena_map_variant_type = boost::variant<std::unique_ptr<carena::base_arena_map<crepr::base_block2D>>,
+                                                std::unique_ptr<carena::base_arena_map<crepr::base_block3D>>,
+                                                std::unique_ptr<carena::caching_arena_map>>;
+
   argos_sm_adaptor(void);
   ~argos_sm_adaptor(void) override;
 
@@ -92,9 +94,9 @@ class argos_sm_adaptor : public swarm_manager,
   void Destroy(void) override { destroy(); }
 
   const std::string& led_medium(void) const { return m_led_medium; }
-  template <typename TArenaMapType = carena::base_arena_map>
+  template<typename TArenaMapType>
   const TArenaMapType* arena_map(void) const {
-    return static_cast<TArenaMapType*>(m_arena_map.get());
+    return boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
   }
   /**
    * \brief Create a 3D embodied representation of the block and add it to
@@ -103,6 +105,8 @@ class argos_sm_adaptor : public swarm_manager,
   crepr::embodied_block_variant make_embodied(
       const crepr::block3D_variant& block,
       const rmath::radians& z_rotation);
+
+  argos::CFloorEntity* floor(void) const { return m_floor; }
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
@@ -116,11 +120,10 @@ class argos_sm_adaptor : public swarm_manager,
   void ndc_pop(void) const {}
 #endif
 
-  argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
-  template<typename TArenaMapType = carena::base_arena_map>
+  template<typename TArenaMapType>
   TArenaMapType* arena_map(void) {
-    return static_cast<TArenaMapType*>(m_arena_map.get());
+    return boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
   }
 
   /**
@@ -137,9 +140,9 @@ class argos_sm_adaptor : public swarm_manager,
   /**
    * \brief The name of the LED medium in ARGoS, for use in destroying caches.
    */
-  std::string                              m_led_medium{};
-  argos::CFloorEntity*                     m_floor{nullptr};
-  std::unique_ptr<carena::base_arena_map>  m_arena_map;
+  std::string            m_led_medium{};
+  argos::CFloorEntity*   m_floor{nullptr};
+  arena_map_variant_type m_arena_map{};
   /* clang-format on */
 };
 

@@ -1,5 +1,5 @@
 /**
- * \file block_manifest_processor.hpp
+ * \file block2D_manifest_processor.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,21 +18,13 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <vector>
+#include "cosm/foraging/block_dist/block2D_manifest_processor.hpp"
 
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/patterns/factory/factory.hpp"
-#include "rcppsw/types/type_uuid.hpp"
-
-#include "cosm/foraging/config/block_manifest.hpp"
-#include "cosm/ds/block2D_vector.hpp"
+#include "cosm/repr/cube_block2D.hpp"
+#include "cosm/repr/ramp_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,32 +32,35 @@
 NS_START(cosm, foraging, block_dist);
 
 /*******************************************************************************
- * Class Definitions
+ * Constructors/Destructor
  ******************************************************************************/
-/**
- * \class block_manifest_processor
- * \ingroup foraging block_dist
- *
- * \brief Translates the parsed XML configuration for how many/what type of
- * blocks should be used in simulation into a heterogeneous vector of actual
- * blocks.
- */
-class block_manifest_processor
-    : public rpfactory::sharing_factory<crepr::base_block2D,
-                                        std::string, /* key type */
-                                        const rmath::vector2d&,
-                                        const rtypes::type_uuid&> {
- public:
-  explicit block_manifest_processor(const config::block_manifest* m);
+block2D_manifest_processor::block2D_manifest_processor(
+    const config::block_manifest* const m)
+    : mc_manifest(*m) {
+  register_type<crepr::cube_block2D>("cube2D");
+  register_type<crepr::ramp_block2D>("ramp2D");
+}
 
-  cds::block2D_vectoro create_blocks(void);
-
- private:
-  /* clang-format off */
-  const config::block_manifest mc_manifest;
-  /* clang-format on */
-};
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+cds::block2D_vectoro block2D_manifest_processor::operator()(void) {
+  cds::block2D_vectoro v;
+  uint i;
+  for (i = 0; i < mc_manifest.n_cube; ++i) {
+    v.push_back(
+        create("cube2D",
+               rmath::vector2d(mc_manifest.unit_dim, mc_manifest.unit_dim),
+               rtypes::type_uuid(i)));
+  } /* for(i..) */
+  for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
+       ++i) {
+    v.push_back(
+        create("ramp2D",
+               rmath::vector2d(mc_manifest.unit_dim * 2, mc_manifest.unit_dim),
+               rtypes::type_uuid(i)));
+  } /* for(i..) */
+  return v;
+} /* operator()() */
 
 NS_END(block_dist, foraging, cosm);
-
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK_MANIFEST_PROCESSOR_HPP_ */

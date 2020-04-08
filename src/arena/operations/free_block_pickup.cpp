@@ -47,7 +47,8 @@ free_block_pickup::free_block_pickup(crepr::base_block2D* block,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(base_arena_map& map) {
+template<typename TBlockType>
+void free_block_pickup::visit(base_arena_map<TBlockType>& map) {
   ER_ASSERT(m_block->dloc() == rmath::vector2u(cell2D_op::x(), cell2D_op::y()),
             "Coordinates for block/cell do not agree");
   RCSW_UNUSED rmath::vector2d old_r = m_block->rloc();
@@ -75,5 +76,12 @@ void free_block_pickup::visit(crepr::base_block2D& block) {
   block.robot_pickup_event(mc_robot_id, mc_timestep);
   ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
 } /* visit() */
+
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template void free_block_pickup::visit(carena::base_arena_map<crepr::base_block2D>&);
+template void free_block_pickup::visit(carena::base_arena_map<crepr::base_block3D>&);
 
 NS_END(detail, operations, arena, cosm);

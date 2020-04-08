@@ -32,14 +32,11 @@
 
 #include "cosm/fsm/cell2D_fsm.hpp"
 #include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::repr {
-class entity2D;
-} /* namespace cosm::repr */
-
 namespace cosm::arena::repr {
 class base_cache;
 } /* namespace cosm::arena::repr */
@@ -89,8 +86,9 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /**
    * \brief Set the entity associated with this cell.
    */
-  void entity(repr::entity2D* entity) { m_entity = entity; }
-  const repr::entity2D* entity(void) const { return m_entity; }
+  void entity(repr::entity_base* entity) { m_entity = entity; }
+  repr::entity_base* entity(void) const { return m_entity; }
+  repr::entity_base* entity(void) { return m_entity; }
 
   void loc(const rmath::vector2u& loc) { m_loc = loc; }
   const rmath::vector2u& loc(void) const { return m_loc; }
@@ -101,8 +99,11 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a block, so check the cell's state before
    * calling this function.
    */
-  crepr::base_block2D* block(void) const RCSW_PURE;
-  crepr::base_block2D* block(void) RCSW_PURE;
+  crepr::base_block2D* block2D(void) const RCSW_PURE;
+  crepr::base_block2D* block2D(void) RCSW_PURE;
+
+  crepr::base_block3D* block3D(void) const RCSW_PURE;
+  crepr::base_block3D* block3D(void) RCSW_PURE;
 
   /**
    * \brief Get the cache entity associated with this cell.
@@ -115,8 +116,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
 
  private:
   /* clang-format off */
-  repr::entity2D* m_entity{nullptr};
-  rmath::vector2u m_loc{};
+  repr::entity_base* m_entity{nullptr};
+  rmath::vector2u    m_loc{};
   /* clang-format on */
 };
 

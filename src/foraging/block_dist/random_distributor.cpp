@@ -39,11 +39,12 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-random_distributor::random_distributor(const cds::arena_grid::view& grid,
-                                       const rtypes::discretize_ratio& resolution,
-                                       rmath::rng* rng)
+template<typename TBlockType>
+random_distributor<TBlockType>::random_distributor(const cds::arena_grid::view& grid,
+                                                   const rtypes::discretize_ratio& resolution,
+                                                   rmath::rng* rng_in)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.random"),
-      base_distributor(rng),
+      base_distributor<TBlockType>(rng_in),
       mc_resolution(resolution),
       mc_origin(grid.origin()->loc()),
       mc_xspan(mc_origin.x(), mc_origin.x() + grid.shape()[0]),
@@ -58,8 +59,9 @@ random_distributor::random_distributor(const cds::arena_grid::view& grid,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool random_distributor::distribute_blocks(cds::block2D_vectorno& blocks,
-                                           cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool random_distributor<TBlockType>::distribute_blocks(block_vectorno_type& blocks,
+                                           cds::const_entity_vector& entities) {
   ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
           blocks.size(),
           mc_xspan.to_str().c_str(),
@@ -70,10 +72,12 @@ bool random_distributor::distribute_blocks(cds::block2D_vectorno& blocks,
   });
 } /* distribute_blocks() */
 
-bool random_distributor::distribute_block(crepr::base_block2D* block,
-                                          cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool random_distributor<TBlockType>::distribute_block(TBlockType* block,
+                                                      cds::const_entity_vector& entities) {
   cds::cell2D* cell = nullptr;
-  auto coords = avail_coord_search(entities, block->dims());
+  auto coords = avail_coord_search(entities,
+                                   block->dims2D());
   if (coords) {
     ER_INFO("Found coordinates for distributing block%d: rel=%s, abs=%s",
             block->id().v(),
@@ -102,7 +106,7 @@ bool random_distributor::distribute_block(crepr::base_block2D* block,
      * This function is always called from the arena map, and it ensures that
      * all locks are held, so we don't need to do anything here.
      */
-    caops::free_block_drop_visitor op(
+    caops::free_block_drop_visitor<TBlockType> op(
         block, coords->abs, mc_resolution, carena::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block, entities, cell)) {
@@ -128,9 +132,10 @@ bool random_distributor::distribute_block(crepr::base_block2D* block,
   }
 } /* distribute_block() */
 
-bool random_distributor::verify_block_dist(
-    const crepr::base_block2D* const block,
-    const cds::const_entity_list& entities,
+template<typename TBlockType>
+bool random_distributor<TBlockType>::verify_block_dist(
+    const TBlockType* const block,
+    const cds::const_entity_vector& entities,
     RCSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
   ER_CHECK(!block->is_out_of_sight(),
@@ -138,7 +143,7 @@ bool random_distributor::verify_block_dist(
            block->id().v());
 
   /* The cell it was distributed to should refer to it */
-  ER_CHECK(block == cell->block(),
+  ER_CHECK(block == cell->entity(),
            "Block%d@%s not referenced by containing cell@%s",
            block->id().v(),
            block->rloc().to_str().c_str(),
@@ -149,7 +154,16 @@ bool random_distributor::verify_block_dist(
     if (e == block) {
       continue;
     }
-    auto status = utils::placement_conflict(block->rloc(), block->dims(), e);
+    utils::placement_status_t status;
+    if (crepr::entity_dimensionality::ek2D == e->dimensionality()) {
+      status = utils::placement_conflict2D(block->rloc2D(),
+                                           block->dims2D(),
+                                           static_cast<const crepr::entity2D*>(e));
+    } else {
+      status = utils::placement_conflict2D(block->rloc2D(),
+                                           block->dims2D(),
+                                           static_cast<const crepr::entity3D*>(e));
+    }
     ER_ASSERT(!(status.x_conflict && status.y_conflict),
               "Entity contains block%d@%s/%s after distribution",
               block->id().v(),
@@ -162,8 +176,9 @@ error:
   return false;
 } /* verify_block_dist() */
 
-boost::optional<random_distributor::coord_search_res_t> random_distributor::
-    avail_coord_search(const cds::const_entity_list& entities,
+template<typename TBlockType>
+boost::optional<typename random_distributor<TBlockType>::coord_search_res_t> random_distributor<TBlockType>::
+    avail_coord_search(const cds::const_entity_vector& entities,
                        const rmath::vector2d& block_dim) {
   rmath::vector2u rel;
   rmath::vector2u abs;
@@ -193,13 +208,28 @@ boost::optional<random_distributor::coord_search_res_t> random_distributor::
     abs = {rel.x() + mc_origin.x(), rel.y() + mc_origin.y()};
   } while (std::any_of(entities.begin(), entities.end(), [&](const auto* ent) {
     rmath::vector2d abs_r = rmath::uvec2dvec(abs, mc_resolution.v());
-    auto status = utils::placement_conflict(abs_r, block_dim, ent);
+    utils::placement_status_t status;
+    if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
+      status = utils::placement_conflict2D(abs_r,
+                                           block_dim,
+                                           static_cast<const crepr::entity2D*>(ent));
+    } else {
+      status = utils::placement_conflict2D(abs_r,
+                                           block_dim,
+                                           static_cast<const crepr::entity3D*>(ent));
+    }
     return status.x_conflict && status.y_conflict && count++ <= kMAX_DIST_TRIES;
   }));
   if (count <= kMAX_DIST_TRIES) {
     return boost::make_optional(coord_search_res_t{rel, abs});
   }
-  return boost::optional<coord_search_res_t>();
+  return boost::none;
 } /* avail_coord_search() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class random_distributor<crepr::base_block2D>;
+template class random_distributor<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

@@ -43,7 +43,7 @@ nest::nest(const rmath::vector2d& dim,
  * Member Functions
  ******************************************************************************/
 nest::light_list nest::init_lights(const rutils::color& color) const {
-  if (std::fabs(dims().x() - dims().y()) <=
+  if (std::fabs(dims2D().x() - dims2D().y()) <=
       std::numeric_limits<double>::epsilon()) {
     return init_square(color);
   } else {

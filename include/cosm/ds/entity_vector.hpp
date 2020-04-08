@@ -1,5 +1,5 @@
 /**
- * \file entity_list.hpp
+ * \file entity_vector.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,13 +18,13 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_ENTITY_LIST_HPP_
-#define INCLUDE_COSM_DS_ENTITY_LIST_HPP_
+#ifndef INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_
+#define INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <list>
+#include <vector>
 
 #include "cosm/cosm.hpp"
 
@@ -33,19 +33,33 @@
  ******************************************************************************/
 namespace cosm::repr {
 class unicell_entity2D;
+class unicell_entity3D;
+class entity_base;
 } // namespace cosm::repr
 
 NS_START(cosm, ds);
 
-using entity_list_type = crepr::unicell_entity2D*;
-using const_entity_list_type = const crepr::unicell_entity2D*;
+using entity2D_vector_type = crepr::unicell_entity2D*;
+using const_entity2D_vector_type = const crepr::unicell_entity2D*;
+
+using entity3D_vector_type = crepr::unicell_entity3D*;
+using const_entity3D_vector_type = const crepr::unicell_entity3D*;
+
+using entity_vector_type = crepr::entity_base*;
+using const_entity_vector_type = const crepr::entity_base*;
 
 /*******************************************************************************
  * Type Definitions
  ******************************************************************************/
-using entity_list = std::list<entity_list_type>;
-using const_entity_list = std::list<const_entity_list_type>;
+using entity2D_vector = std::vector<entity2D_vector_type>;
+using const_entity2D_vector = std::vector<const_entity2D_vector_type>;
+
+using entity3D_vector = std::vector<entity3D_vector_type>;
+using const_entity3D_vector = std::vector<const_entity3D_vector_type>;
+
+using entity_vector = std::vector<entity_vector_type>;
+using const_entity_vector = std::vector<const_entity_vector_type>;
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_ENTITY_LIST_HPP_ */
+#endif /* INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_ */

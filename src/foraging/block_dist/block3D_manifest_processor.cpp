@@ -1,5 +1,5 @@
 /**
- * \file block_manifest_processor.cpp
+ * \file block3D_manifest_processor.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,10 +21,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/block_dist/block_manifest_processor.hpp"
+#include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
 
-#include "cosm/repr/cube_block2D.hpp"
-#include "cosm/repr/ramp_block2D.hpp"
+#include "cosm/repr/cube_block3D.hpp"
+#include "cosm/repr/ramp_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -34,33 +34,37 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-block_manifest_processor::block_manifest_processor(
+block3D_manifest_processor::block3D_manifest_processor(
     const config::block_manifest* const m)
     : mc_manifest(*m) {
-  register_type<crepr::cube_block2D>("cube");
-  register_type<crepr::ramp_block2D>("ramp");
+  register_type<crepr::cube_block3D>("cube3D");
+  register_type<crepr::ramp_block3D>("ramp3D");
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-cds::block2D_vectoro block_manifest_processor::create_blocks(void) {
-  cds::block2D_vectoro v;
+cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
+  cds::block3D_vectoro v;
   uint i;
   for (i = 0; i < mc_manifest.n_cube; ++i) {
     v.push_back(
-        create("cube",
-               rmath::vector2d(mc_manifest.unit_dim, mc_manifest.unit_dim),
+        create("cube3D",
+               rmath::vector3d(mc_manifest.unit_dim,
+                               mc_manifest.unit_dim,
+                               mc_manifest.unit_dim),
                rtypes::type_uuid(i)));
   } /* for(i..) */
   for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
        ++i) {
     v.push_back(
-        create("ramp",
-               rmath::vector2d(mc_manifest.unit_dim * 2, mc_manifest.unit_dim),
+        create("ramp3D",
+               rmath::vector3d(mc_manifest.unit_dim * 2,
+                               mc_manifest.unit_dim,
+                               mc_manifest.unit_dim),
                rtypes::type_uuid(i)));
   } /* for(i..) */
   return v;
-} /* create_blocks() */
+} /* operator()() */
 
 NS_END(block_dist, foraging, cosm);

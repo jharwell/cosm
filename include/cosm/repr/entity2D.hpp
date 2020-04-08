@@ -100,6 +100,13 @@ class entity2D : public entity_base {
    * \brief Get the size of the 2D entity in the Y direction in real coordinates.
    */
   virtual double ydimr(void) const = 0;
+
+  virtual rmath::vector2d rloc2D(void) const = 0;
+  virtual rmath::vector2u dloc2D(void) const = 0;
+
+  entity_dimensionality dimensionality(void) const override final {
+    return entity_dimensionality::ek2D;
+  }
 };
 
 NS_END(repr, cosm);

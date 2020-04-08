@@ -56,24 +56,25 @@ NS_START(cosm, foraging, block_dist);
  * - Blocks are assumed to be the same size as arena resolution (this is not
  *   checked).
  */
-class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
-                                   public base_distributor {
+template<typename TBlockType>
+class powerlaw_distributor final : public rer::client<powerlaw_distributor<TBlockType>>,
+                                   public base_distributor<TBlockType> {
  public:
-  /**
-   * \brief Initialize the distributor.
-   */
+  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
+  using base_distributor<TBlockType>::rng;
+  using base_distributor<TBlockType>::kMAX_DIST_TRIES;
+
   powerlaw_distributor(const config::powerlaw_dist_config* config,
                        const rtypes::discretize_ratio& resolution,
-                       rmath::rng* rng);
+                       rmath::rng* rng_in);
 
   /* not copy constructible or copy assignable by default */
   powerlaw_distributor(const powerlaw_distributor& ) = delete;
   powerlaw_distributor& operator=(const powerlaw_distributor&) = delete;
 
-  bool distribute_block(crepr::base_block2D* block,
-                        cds::const_entity_list& entities) override;
-
-  cfds::block_cluster_vector block_clusters(void) const override;
+  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override;
+  bool distribute_block(TBlockType* block,
+                        cds::const_entity_vector& entities) override;
 
   /**
    * \brief Computer cluster locations such that no two clusters overlap, and
@@ -93,6 +94,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   };
 
   using cluster_paramvec = std::vector<cluster_config>;
+  using dist_map_value_type = std::list<cluster_distributor<TBlockType>>;
 
   /**
    * \brief Assign cluster centers randomly, with the only restriction that the
@@ -126,11 +128,11 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
                                               uint n_clusters);
 
   /* clang-format off */
-  const rtypes::discretize_ratio                 mc_resolution;
+  const rtypes::discretize_ratio             mc_resolution;
 
-  uint                                           m_n_clusters{0};
-  std::map<uint, std::list<cluster_distributor>> m_dist_map{};
-  rcppsw::math::binned_powerlaw_distribution     m_pwrdist;
+  uint                                       m_n_clusters{0};
+  std::map<uint, dist_map_value_type>        m_dist_map{};
+  rcppsw::math::binned_powerlaw_distribution m_pwrdist;
   /* clang-format on */
 };
 

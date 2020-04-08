@@ -36,6 +36,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::arena {
+template <typename T>
 class base_arena_map;
 class caching_arena_map;
 } /* namespace cosm::arena */
@@ -54,7 +55,7 @@ NS_START(cosm, arena, operations, detail);
 class nest_block_drop : public rer::client<nest_block_drop> {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<base_arena_map,
+    using value = rmpl::typelist<base_arena_map<crepr::base_block2D>,
                                  caching_arena_map,
                                  crepr::base_block2D>;
   };
@@ -86,7 +87,7 @@ class nest_block_drop : public rer::client<nest_block_drop> {
    * COSM#594.
    */
   void visit(caching_arena_map& map);
-  void visit(base_arena_map& map);
+  void visit(base_arena_map<crepr::base_block2D>& map);
 
  private:
   void visit(crepr::base_block2D& block);

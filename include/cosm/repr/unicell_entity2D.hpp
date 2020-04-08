@@ -61,18 +61,20 @@ class unicell_entity2D : public entity2D {
   /**
    * \brief Get the real location (center) of the object.
    */
-  const rmath::vector2d& rloc(void) const { return m_rloc; }
+  rmath::vector2d rloc(void) const { return m_rloc; }
+  rmath::vector2d rloc2D(void) const override final { return m_rloc; }
 
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  const rmath::vector2u& dloc(void) const { return m_dloc; }
+  rmath::vector2u dloc(void) const { return m_dloc; }
+  rmath::vector2u dloc2D(void) const override final { return m_dloc; }
 
   rmath::ranged xspan(void) const override final {
-    return entity2D::xspan(rloc(), xdimr());
+    return entity2D::xspan(rloc2D(), xdimr());
   }
   rmath::ranged yspan(void) const override final {
-    return entity2D::yspan(rloc(), ydimr());
+    return entity2D::yspan(rloc2D(), ydimr());
   }
   double xdimr(void) const override final { return m_dim.x(); }
   double ydimr(void) const override final { return m_dim.y(); }
@@ -88,11 +90,11 @@ class unicell_entity2D : public entity2D {
    *
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
-  bool contains_point(const rmath::vector2d& point) const {
+  bool contains_point2D(const rmath::vector2d& point) const {
     return xspan().contains(point.x()) && yspan().contains(point.y());
   }
 
-  const rmath::vector2d& dims(void) const { return m_dim; }
+  const rmath::vector2d& dims2D(void) const { return m_dim; }
 
  protected:
   unicell_entity2D(const rmath::vector2d& dim,

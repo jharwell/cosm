@@ -47,8 +47,8 @@ template<typename TControllerType>
 argos_pd_adaptor<TControllerType>::argos_pd_adaptor(
     const ctv::config::population_dynamics_config* config,
     cpal::argos_sm_adaptor* const sm,
-    carena::base_arena_map* map,
     env_dynamics_type* envd,
+    const rmath::vector2d& arena_dim,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.pal.tv.argos_pd_adaptor"),
       population_dynamics(config,
@@ -56,7 +56,7 @@ argos_pd_adaptor<TControllerType>::argos_pd_adaptor(
                           sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
                           rng),
       mc_sm(sm),
-      m_map(map),
+      mc_arena_dim(arena_dim),
       m_envd(envd),
       m_rng(rng),
       m_sm(sm) {}
@@ -231,8 +231,8 @@ bool argos_pd_adaptor<TControllerType>::robot_attempt_add(const rtypes::type_uui
    * close to the boundaries of physics engines, which can cause "no engine can
    * house entity" exceptions in rare cases otherwise.
    */
-  rmath::ranged xrange(2.0, mc_sm->arena_map()->xrsize() - 2.0);
-  rmath::ranged yrange(2.0, mc_sm->arena_map()->yrsize() - 2.0);
+  rmath::ranged xrange(2.0, mc_arena_dim.x() - 2.0);
+  rmath::ranged yrange(2.0, mc_arena_dim.y() - 2.0);
   argos::CFootBotEntity* fb = nullptr;
 
   auto x = m_rng->uniform(xrange);
@@ -249,7 +249,7 @@ bool argos_pd_adaptor<TControllerType>::robot_attempt_add(const rtypes::type_uui
    *
    * This is a @bug in ARGoS, and so this code can be reverted to something like
    * what is was originally once this is fixed in the ARGoS master. Diffing the
-   * branch for #623 against the previous commit should show the changes.
+   * branch for FORDYCA#623 against the previous commit should show the changes.
    */
   try {
     /* ick raw pointers--thanks ARGoS... */

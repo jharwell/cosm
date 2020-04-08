@@ -40,13 +40,25 @@ rtypes::type_uuid penalty_id_calculator::from_nest_drop(
   return block->id();
 } /* from_nest_drop() */
 
+template<typename TBlockType>
 rtypes::type_uuid penalty_id_calculator::from_free_pickup(
     const rmath::vector2d& loc,
     const rtypes::type_uuid& acq_id,
-    const carena::base_arena_map* map) const {
+    const carena::base_arena_map<TBlockType>* map) const {
   auto id = map->robot_on_block(loc, acq_id);
   ER_ASSERT(rtypes::constants::kNoUUID != id, "Robot not on block?");
   return id;
 } /* from_free_pickup() */
+
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template rtypes::type_uuid penalty_id_calculator::from_free_pickup(const rmath::vector2d& loc,
+                                                                   const rtypes::type_uuid& acq_id,
+                                                                   const carena::base_arena_map<crepr::base_block2D>*) const;
+template rtypes::type_uuid penalty_id_calculator::from_free_pickup(const rmath::vector2d& loc,
+                                                                   const rtypes::type_uuid& acq_id,
+                                                                   const carena::base_arena_map<crepr::base_block3D>*) const;
 
 NS_END(tv, foraging, cosm);

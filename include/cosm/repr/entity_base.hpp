@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_ENTITY_base_HPP_
-#define INCLUDE_COSM_REPR_ENTITY_base_HPP_
+#ifndef INCLUDE_COSM_REPR_ENTITY_BASE_HPP_
+#define INCLUDE_COSM_REPR_ENTITY_BASE_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,6 +27,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/repr/entity_dimensionality.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,6 +53,11 @@ class entity_base {
   entity_base& operator=(const entity_base&) = default;
 
   virtual ~entity_base(void) = default;
+
+  /**
+   * \brief Return whether the entity is 2D or 3D.
+   */
+  virtual entity_dimensionality dimensionality(void) const = 0;
 
   /**
    * \brief Set the ID of the object.
@@ -83,4 +89,4 @@ class entity_base {
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_ENTITY_base_HPP_ */
+#endif /* INCLUDE_COSM_REPR_ENTITY_BASE_HPP_ */

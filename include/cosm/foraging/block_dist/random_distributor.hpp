@@ -58,17 +58,22 @@ NS_START(foraging, block_dist);
  * that no blocks overlap with each other or other entities already present in
  * the arena (nest, cache, etc.).
  */
-class random_distributor final : public rer::client<random_distributor>,
-                                 public base_distributor {
+template<typename TBlockType>
+class random_distributor : public rer::client<random_distributor<TBlockType>>,
+                           public base_distributor<TBlockType> {
  public:
+  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
+  using base_distributor<TBlockType>::rng;
+  using base_distributor<TBlockType>::kMAX_DIST_TRIES;
+
   random_distributor(const cds::arena_grid::view& grid,
                      const rtypes::discretize_ratio& resolution,
-                     rmath::rng* rng);
+                     rmath::rng* rng_in);
 
   random_distributor& operator=(const random_distributor&) = delete;
 
-  bool distribute_blocks(cds::block2D_vectorno& blocks,
-                         cds::const_entity_list& entities) override;
+  bool distribute_blocks(block_vectorno_type& blocks,
+                         cds::const_entity_vector& entities) override;
 
   /**
    * \brief Distribution a single block in the arena.
@@ -81,10 +86,11 @@ class random_distributor final : public rer::client<random_distributor>,
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(crepr::base_block2D* block,
-                        cds::const_entity_list& entities) override;
-  cfds::block_cluster_vector block_clusters(void) const override {
-    return cfds::block_cluster_vector();
+  bool distribute_block(TBlockType* block,
+                        cds::const_entity_vector& entities) override;
+
+  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override {
+    return cfds::block_cluster_vector<TBlockType>();
   }
 
  private:
@@ -100,7 +106,7 @@ class random_distributor final : public rer::client<random_distributor>,
    * \param entities The entities to avoid.
    */
   boost::optional<coord_search_res_t> avail_coord_search(
-      const cds::const_entity_list& entities,
+      const cds::const_entity_vector& entities,
       const rmath::vector2d& block_dim);
 
   /**
@@ -111,8 +117,8 @@ class random_distributor final : public rer::client<random_distributor>,
    * - The cell it was distributed into should refer to it.
    * - No entity should overlap with the block after distribution.
    */
-  bool verify_block_dist(const crepr::base_block2D* block,
-                         const cds::const_entity_list& entities,
+  bool verify_block_dist(const TBlockType* block,
+                         const cds::const_entity_vector& entities,
                          const cds::cell2D* cell) RCSW_PURE;
 
   /* clang-format off */

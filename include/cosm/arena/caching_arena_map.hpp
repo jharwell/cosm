@@ -51,7 +51,7 @@ NS_START(cosm, arena);
  * \brief Decorates \ref base_arena_map to add the ability to manage caches.
  */
 class caching_arena_map final : public rer::client<caching_arena_map>,
-                                public base_arena_map {
+                                public base_arena_map<crepr::base_block2D> {
  public:
   explicit caching_arena_map(const caconfig::arena_map_config* config);
 
@@ -74,7 +74,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \param caches The caches to add.
    * \param sm The \ref argos_sm_adaptor.
    */
-  void caches_add(const cads::acache_vectoro& caches, pal::argos_sm_adaptor* sm);
+  void caches_add(const cads::acache_vectoro& caches,
+                  pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -82,7 +83,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
    */
-  void cache_remove(repr::arena_cache* victim, pal::argos_sm_adaptor* sm);
+  void cache_remove(repr::arena_cache* victim,
+                    pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the

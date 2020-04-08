@@ -55,6 +55,9 @@ class entity3D : public entity_base {
   static rmath::ranged xspan(const rmath::vector3d& loc, double xdim) {
     return rmath::ranged(loc.x() - 0.5 * xdim, loc.x() + 0.5 * xdim);
   }
+  static rmath::ranged xspan(const rmath::vector2d& loc, double xdim) {
+    return xspan(rmath::vector3d(loc), xdim);
+  }
 
   /**
    * \brief Calculate the span in Y of an entity given its location and
@@ -64,6 +67,9 @@ class entity3D : public entity_base {
    */
   static rmath::ranged yspan(const rmath::vector3d& loc, double ydim) {
     return rmath::ranged(loc.y() - 0.5 * ydim, loc.y() + 0.5 * ydim);
+  }
+  static rmath::ranged yspan(const rmath::vector2d& loc, double ydim) {
+    return yspan(rmath::vector3d(loc), ydim);
   }
   /**
    * \brief Calculate the span in Z of an entity given its location and
@@ -121,6 +127,15 @@ class entity3D : public entity_base {
    * \brief Get the size of the 3D entity in the Z direction in real coordinates.
    */
   virtual double zdimr(void) const = 0;
+
+  virtual rmath::vector2d rloc2D(void) const = 0;
+  virtual rmath::vector2u dloc2D(void) const = 0;
+  virtual rmath::vector3d rloc3D(void) const = 0;
+  virtual rmath::vector3u dloc3D(void) const = 0;
+
+  entity_dimensionality dimensionality(void) const override final {
+    return entity_dimensionality::ek3D;
+  }
 };
 
 NS_END(repr, cosm);

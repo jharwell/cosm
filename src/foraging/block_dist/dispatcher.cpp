@@ -39,10 +39,11 @@ using cds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-dispatcher::dispatcher(cds::arena_grid* const grid,
-                       const rtypes::discretize_ratio& resolution,
-                       const config::block_dist_config* const config,
-                       double grid_padding)
+template<typename TBlockType>
+dispatcher<TBlockType>::dispatcher(cds::arena_grid* const grid,
+                                   const rtypes::discretize_ratio& resolution,
+                                   const config::block_dist_config* const config,
+                                   double grid_padding)
     : mc_grid_padding(grid_padding),
       mc_resolution(resolution),
       mc_config(*config),
@@ -63,12 +64,14 @@ dispatcher::dispatcher(cds::arena_grid* const grid,
       m_grid(grid),
       m_dist(nullptr) {}
 
-dispatcher::~dispatcher(void) = default;
+template<typename TBlockType>
+dispatcher<TBlockType>::~dispatcher(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool dispatcher::initialize(rmath::rng* rng) {
+template<typename TBlockType>
+bool dispatcher<TBlockType>::initialize(rmath::rng* rng) {
   /* clang-format off */
     cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
       static_cast<size_t>(mc_arena_xrange.lb()),
@@ -77,15 +80,16 @@ bool dispatcher::initialize(rmath::rng* rng) {
       static_cast<size_t>(mc_arena_yrange.ub()));
 
   if (kDistRandom == mc_dist_type) {
-    m_dist = std::make_unique<random_distributor>(arena,
-                                                  mc_resolution, rng);
+    m_dist = std::make_unique<random_distributor<TBlockType>>(arena,
+                                                             mc_resolution,
+                                                             rng);
   } else if (kDistSingleSrc == mc_dist_type) {
     cds::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(
         static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
         static_cast<size_t>(mc_arena_yrange.lb()),
         static_cast<size_t>(mc_arena_xrange.ub()),
         static_cast<size_t>(mc_arena_yrange.ub()));
-    m_dist = std::make_unique<cluster_distributor>(
+    m_dist = std::make_unique<cluster_distributor<TBlockType>>(
         area,
         mc_resolution,
         std::numeric_limits<uint>::max(),
@@ -102,7 +106,7 @@ bool dispatcher::initialize(rmath::rng* rng) {
         static_cast<size_t>(mc_arena_xrange.ub()),
         static_cast<size_t>(mc_arena_yrange.ub()));
     std::vector<cds::arena_grid::view> grids{area_l, area_r};
-    m_dist = std::make_unique<multi_cluster_distributor>(
+    m_dist = std::make_unique<multi_cluster_distributor<TBlockType>>(
         grids,
         mc_resolution,
         std::numeric_limits<uint>::max(),
@@ -135,15 +139,15 @@ bool dispatcher::initialize(rmath::rng* rng) {
         static_cast<size_t>(mc_arena_xrange.ub()),
         static_cast<size_t>(mc_arena_yrange.ub()));
     std::vector<cds::arena_grid::view> grids{area_l, area_r, area_b, area_u};
-    m_dist = std::make_unique<multi_cluster_distributor>(
+    m_dist = std::make_unique<multi_cluster_distributor<TBlockType>>(
         grids,
         mc_resolution,
         std::numeric_limits<uint>::max(),
         rng);
   } else if (kDistPowerlaw == mc_dist_type) {
-    auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,
-                                                    mc_resolution,
-                                                    rng);
+    auto p = std::make_unique<powerlaw_distributor<TBlockType>>(&mc_config.powerlaw,
+                                                                mc_resolution,
+                                                                rng);
     if (!p->map_clusters(m_grid)) {
       return false;
     }
@@ -154,14 +158,22 @@ bool dispatcher::initialize(rmath::rng* rng) {
   return true;
 } /* initialize() */
 
-bool dispatcher::distribute_block(crepr::base_block2D* block,
-                                  cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool dispatcher<TBlockType>::distribute_block(TBlockType* block,
+                                  cds::const_entity_vector& entities) {
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */
 
-bool dispatcher::distribute_blocks(cds::block2D_vectorno& blocks,
-                                   cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool dispatcher<TBlockType>::distribute_blocks(block_vectorno_type& blocks,
+                                               cds::const_entity_vector& entities) {
   return m_dist->distribute_blocks(blocks, entities);
 } /* distribute_block() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class dispatcher<crepr::base_block2D>;
+template class dispatcher<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

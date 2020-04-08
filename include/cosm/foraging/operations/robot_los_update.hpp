@@ -29,8 +29,6 @@
 
 #include "rcppsw/er/client.hpp"
 
-#include "cosm/arena/base_arena_map.hpp"
-
 #include "cosm/foraging/utils/utils.hpp"
 
 /*******************************************************************************
@@ -47,12 +45,12 @@ NS_START(cosm, foraging, operations);
  *
  * \brief Functor to update robot LOS each timestep.
  */
-template <typename TControllerType>
+template <typename TControllerType, typename TArenaMapType>
 class robot_los_update final
     : public boost::static_visitor<void>,
-      public rer::client<robot_los_update<TControllerType>> {
+      public rer::client<robot_los_update<TControllerType, TArenaMapType>> {
  public:
-  explicit robot_los_update(carena::base_arena_map* const map)
+  explicit robot_los_update(TArenaMapType* const map)
       : ER_CLIENT_INIT("cosm.support.robot_los_update"), m_map(map) {}
 
   /*
@@ -87,7 +85,7 @@ class robot_los_update final
 
  private:
   /* clang-format off */
-  carena::base_arena_map * const m_map;
+  TArenaMapType* const m_map;
   /* clang-format on */
 };
 

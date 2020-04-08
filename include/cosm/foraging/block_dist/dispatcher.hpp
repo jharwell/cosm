@@ -27,11 +27,13 @@
 #include <list>
 #include <string>
 #include <memory>
+#include <boost/variant.hpp>
 
 #include "cosm/cosm.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
-#include "cosm/ds/entity_list.hpp"
+#include "cosm/ds/entity_vector.hpp"
 #include "cosm/ds/block2D_vector.hpp"
+#include "cosm/ds/block3D_vector.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/er/client.hpp"
@@ -49,6 +51,7 @@ class arena_grid;
 } // namespace ds
 
 NS_START(cosm, foraging, block_dist);
+template<typename T>
 class base_distributor;
 
 /*******************************************************************************
@@ -64,8 +67,13 @@ class base_distributor;
  * - Single and dual source distribution assumes left-right rectangular arena.
  * - Power law, quad source, random distribution assume square arena.
  */
+template<typename TBlockType>
 class dispatcher {
  public:
+  using block_vectorno_type = typename std::conditional<std::is_same<TBlockType,
+                                                                     crepr::base_block2D>::value,
+                                                        cds::block2D_vectorno,
+                                                        cds::block3D_vectorno>::type;
   static constexpr const char kDistSingleSrc[] = "single_source";
   static constexpr const char kDistRandom[] = "random";
   static constexpr const char kDistDualSrc[] = "dual_source";
@@ -99,34 +107,35 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(crepr::base_block2D* block,
-                        cds::const_entity_list& entities);
+  bool distribute_block(TBlockType* block, cds::const_entity_vector& entities);
 
   /**
    * \brief Distribute all blocks in the arena.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_blocks(cds::block2D_vectorno& blocks,
-                         cds::const_entity_list& entities);
+  bool distribute_blocks(block_vectorno_type& blocks,
+                         cds::const_entity_vector& entities);
 
-  const base_distributor* distributor(void) const { return m_dist.get(); }
+  const base_distributor<TBlockType>* distributor(void) const {
+    return m_dist.get();
+  }
 
   const rmath::ranged& distributable_areax(void) const { return mc_arena_xrange; }
   const rmath::ranged& distributable_areay(void) const { return mc_arena_yrange; }
 
  private:
   /* clang-format off */
-  const double                           mc_grid_padding;
-  const rtypes::discretize_ratio         mc_resolution;
-  const config::block_dist_config        mc_config;
-  const std::string                      mc_dist_type;
+  const double                                  mc_grid_padding;
+  const rtypes::discretize_ratio                mc_resolution;
+  const config::block_dist_config               mc_config;
+  const std::string                             mc_dist_type;
 
-  rmath::ranged                          mc_arena_xrange;
-  rmath::ranged                          mc_arena_yrange;
+  rmath::ranged                                 mc_arena_xrange;
+  rmath::ranged                                 mc_arena_yrange;
 
-  cds::arena_grid*                       m_grid{nullptr};
-  std::unique_ptr<base_distributor>      m_dist;
+  cds::arena_grid*                              m_grid{nullptr};
+  std::unique_ptr<base_distributor<TBlockType>> m_dist;
   /* clang-format on */
 };
 

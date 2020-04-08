@@ -28,6 +28,7 @@
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/math/vector2.hpp"
 
 #include "cosm/tv/switchable_tv_generator.hpp"
 #include "cosm/tv/population_dynamics.hpp"
@@ -37,10 +38,6 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::arena {
-class base_arena_map;
-} /* namespace arena */
-
 namespace cosm::controller {
 class block_carrying_controller;
 } /* namespace cosm::controller */
@@ -87,8 +84,8 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
 
   argos_pd_adaptor(const ctv::config::population_dynamics_config* config,
                    cpal::argos_sm_adaptor* sm,
-                   carena::base_arena_map * map,
                    env_dynamics_type *envd,
+                   const rmath::vector2d& arena_dim,
                    rmath::rng* rng);
 
   argos_pd_adaptor(const argos_pd_adaptor&) = delete;
@@ -110,9 +107,6 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
    */
   virtual void pre_kill_cleanup(TControllerType*) {}
 
- protected:
-  carena::base_arena_map* arena_map(void) const { return m_map; }
-
  private:
   TControllerType* malfunction_victim_locate(size_t total_pop) const;
   TControllerType* kill_victim_locate(size_t total_pop) const;
@@ -121,7 +115,16 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
   /* clang-format off */
   const cpal::argos_sm_adaptor* mc_sm;
 
-  carena::base_arena_map*       m_map;
+  /**
+   * \brief The arena dimensions. We already have access to the arena via the
+   * \ref cpal::argos_sm_adaptor reference, BUT we don't know what type of arena
+   * it is managing, and there is not a clean way that I can see to allow the
+   * caller to communicate that information, and doing a series of if/else to
+   * figure it out smells bad. So, just pass in the arena dimensions, which is
+   * all we need in this class anyway.
+   */
+  const rmath::vector2d         mc_arena_dim;
+
   env_dynamics_type*            m_envd;
   rmath::rng*                   m_rng;
   cpal::argos_sm_adaptor*       m_sm;

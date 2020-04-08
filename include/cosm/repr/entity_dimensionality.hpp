@@ -1,5 +1,5 @@
 /**
- * \file block3D_variant.hpp
+ * \file entity_dimensionality.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,14 +18,12 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_
-#define INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_
+#ifndef INCLUDE_COSM_REPR_ENTITY_DIMENSIONALITY_HPP_
+#define INCLUDE_COSM_REPR_ENTITY_DIMENSIONALITY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
-
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -33,14 +31,17 @@
  ******************************************************************************/
 NS_START(cosm, repr);
 
-class cube_block3D;
-class ramp_block3D;
-
 /*******************************************************************************
- * Class Definitions
+ * Class Definitionsn
  ******************************************************************************/
-using block3D_variant = boost::variant<cube_block3D*, ramp_block3D*>;
+/**
+ * \brief The different dimensionalitys of entities available in simulation.
+ */
+enum class entity_dimensionality {
+  ek2D,
+  ek3D,
+};
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_BLOCK3D_VARIANT_HPP_ */
+#endif /* INCLUDE_COSM_REPR_ENTITY_DIMENSIONALITY_HPP_ */

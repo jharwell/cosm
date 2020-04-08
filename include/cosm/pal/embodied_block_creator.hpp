@@ -28,6 +28,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/embodied_block.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -51,13 +52,48 @@ class argos_sm_adaptor;
  * \brief Action class for taking a 3D block of a given type and creating an
  * embodied representation within ARGoS for it.
  */
-struct embodied_block_creator {
+class embodied_block_creator {
+ public:
   crepr::embodied_block_variant operator()(const crepr::cube_block3D* block,
                                            cpal::argos_sm_adaptor* sm,
                                            const rmath::radians& z_rotation) const;
   crepr::embodied_block_variant operator()(const crepr::ramp_block3D* block,
                                            cpal::argos_sm_adaptor* sm,
                                            const rmath::radians& z_rotation) const;
+
+ private:
+  /**
+   * \brief How thick to make each of the boxes used to approximate the
+   * embodiment of a ramp block.
+   */
+  static constexpr const double kRAMP_BOX_THICKNESS = 0.0001;
+
+  /**
+   * \brief Generate the ARGoS box for the bottom of the ramp.
+   *
+   * \note The returned pointer is OWNING, despite being raw, because that's the
+   * ARGoS API.
+   */
+  argos::CBoxEntity* ramp_bottom(const crepr::ramp_block3D* block,
+                                 const rmath::radians& z_rotation) const;
+
+  /**
+   * \brief Generate the ARGoS box for the back of the ramp.
+   *
+   * \note The returned pointer is OWNING, despite being raw, because that's the
+   * ARGoS API.
+   */
+  argos::CBoxEntity* ramp_back(const crepr::ramp_block3D* block,
+                               const rmath::radians& z_rotation) const;
+
+  /**
+   * \brief Generate the ARGoS box for the top (slope part) of the ramp.
+   *
+   * \note The returned pointer is OWNING, despite being raw, because that's the
+   * ARGoS API.
+   */
+  argos::CBoxEntity* ramp_top(const crepr::ramp_block3D* block,
+                               const rmath::radians& z_rotation) const;
 };
 
 NS_END(pal, cosm);

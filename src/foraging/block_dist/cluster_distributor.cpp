@@ -36,21 +36,23 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cluster_distributor::cluster_distributor(
+template<typename TBlockType>
+cluster_distributor<TBlockType>::cluster_distributor(
     const cds::arena_grid::view& view,
     const rtypes::discretize_ratio& resolution,
     uint capacity,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.cluster"),
-      base_distributor(rng),
+      base_distributor<TBlockType>(rng),
       m_clust(view, resolution, capacity),
       m_impl(view, resolution, rng) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool cluster_distributor::distribute_block(crepr::base_block2D* block,
-                                           cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool cluster_distributor<TBlockType>::distribute_block(TBlockType* block,
+                                                       cds::const_entity_vector& entities) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%u) reached",
              block->id().v(),
@@ -60,8 +62,9 @@ bool cluster_distributor::distribute_block(crepr::base_block2D* block,
   return m_impl.distribute_block(block, entities);
 } /* distribute_block() */
 
-bool cluster_distributor::distribute_blocks(cds::block2D_vectorno& blocks,
-                                            cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool cluster_distributor<TBlockType>::distribute_blocks(block_vectorno_type& blocks,
+                                                        cds::const_entity_vector& entities) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG(
         "Could not distribute any of %zu blocks: Cluster capacity (%u) reached",
@@ -72,8 +75,15 @@ bool cluster_distributor::distribute_blocks(cds::block2D_vectorno& blocks,
   return m_impl.distribute_blocks(blocks, entities);
 } /* distribute_blocks() */
 
-cfds::block_cluster_vector cluster_distributor::block_clusters(void) const {
-  return cfds::block_cluster_vector{&m_clust};
+template<typename TBlockType>
+cfds::block_cluster_vector<TBlockType> cluster_distributor<TBlockType>::block_clusters(void) const {
+  return cfds::block_cluster_vector<TBlockType>{&m_clust};
 } /* block_clusters() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class cluster_distributor<crepr::base_block2D>;
+template class cluster_distributor<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

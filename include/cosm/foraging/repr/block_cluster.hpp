@@ -28,6 +28,7 @@
 
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/block2D_vector.hpp"
+#include "cosm/ds/block3D_vector.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/repr/grid_view_entity.hpp"
 
@@ -52,9 +53,15 @@ NS_START(cosm, foraging, repr);
  * - The blocks distributed in that area.
  * - The maximum capacity of the cluster.
  */
-class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::const_view>,
-                            public rer::client<block_cluster> {
+template<typename TBlockType>
+class block_cluster : public crepr::grid_view_entity<cds::arena_grid::const_view>,
+                            public rer::client<block_cluster<TBlockType>> {
  public:
+  using block_vectorro_type = typename std::conditional<std::is_same<TBlockType,
+                                                                     crepr::base_block2D>::value,
+                                                        cds::block2D_vectorro,
+                                                        cds::block3D_vectorro>::type;
+
   block_cluster(const cds::arena_grid::const_view& view,
                 const rtypes::discretize_ratio& resolution,
                 uint capacity)
@@ -64,7 +71,7 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
 
   uint capacity(void) const { return m_capacity; }
   size_t block_count(void) const { return blocks().size(); }
-  cds::block2D_vectorro blocks(void) const RCSW_PURE;
+  block_vectorro_type blocks(void) const RCSW_PURE;
 
  private:
   /* clang-format off */

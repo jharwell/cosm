@@ -34,17 +34,27 @@ NS_START(cosm, foraging, utils);
 /*******************************************************************************
  * Functions
  ******************************************************************************/
-placement_status_t placement_conflict(const rmath::vector2d& ent1_loc,
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
                                       const rmath::vector2d& ent1_dims,
                                       const crepr::entity2D* const entity) {
   auto loc_xspan = crepr::entity2D::xspan(ent1_loc, ent1_dims.x());
   auto loc_yspan = crepr::entity2D::yspan(ent1_loc, ent1_dims.y());
   return placement_status_t{entity->xspan().overlaps_with(loc_xspan),
                             entity->yspan().overlaps_with(loc_yspan)};
-} /* placement_conflict() */
+} /* placement_conflict2D() */
 
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+                                        const rmath::vector2d& ent1_dims,
+                                        const crepr::entity3D* const entity) {
+  auto loc_xspan = crepr::entity3D::xspan(ent1_loc, ent1_dims.x());
+  auto loc_yspan = crepr::entity3D::yspan(ent1_loc, ent1_dims.y());
+  return placement_status_t{entity->xspan().overlaps_with(loc_xspan),
+                            entity->yspan().overlaps_with(loc_yspan)};
+} /* placement_conflict2D() */
+
+template<typename TBlockType>
 std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
-    const carena::base_arena_map& map,
+    const carena::base_arena_map<TBlockType>& map,
     uint los_grid_size,
     const rmath::vector2d& pos) {
   rmath::vector2u position = rmath::dvec2uvec(pos, map.grid_resolution().v());

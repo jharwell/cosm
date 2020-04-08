@@ -61,21 +61,29 @@ class unicell_entity3D : public entity3D {
   /**
    * \brief Get the real location (center) of the object.
    */
-  const rmath::vector3d& rloc(void) const { return m_rloc; }
+  rmath::vector3d rloc(void) const { return m_rloc; }
+  rmath::vector3d rloc3D(void) const override final { return m_rloc; }
+  rmath::vector2d rloc2D(void) const override final {
+    return m_rloc.project_on_xy();
+  }
 
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  const rmath::vector3u& dloc(void) const { return m_dloc; }
+  rmath::vector3u dloc(void) const { return m_dloc; }
+  rmath::vector3u dloc3D(void) const override final { return m_dloc; }
+  rmath::vector2u dloc2D(void) const override final {
+    return m_dloc.project_on_xy();
+  }
 
   rmath::ranged xspan(void) const override final {
-    return entity3D::xspan(rloc(), xdimr());
+    return entity3D::xspan(rloc2D(), xdimr());
   }
   rmath::ranged yspan(void) const override final {
-    return entity3D::yspan(rloc(), ydimr());
+    return entity3D::yspan(rloc2D(), ydimr());
   }
   rmath::ranged zspan(void) const override final {
-    return entity3D::zspan(rloc(), zdimr());
+    return entity3D::zspan(rloc3D(), zdimr());
   }
   double xdimr(void) const override final { return m_dim.x(); }
   double ydimr(void) const override final { return m_dim.y(); }
@@ -92,7 +100,7 @@ class unicell_entity3D : public entity3D {
    *
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
-  bool contains_point2D(const rmath::vector3d& point) const {
+  bool contains_point2D(const rmath::vector2d& point) const {
     return xspan().contains(point.x()) && yspan().contains(point.y());
   }
   bool contains_point3D(const rmath::vector3d& point) const {
@@ -100,7 +108,8 @@ class unicell_entity3D : public entity3D {
            zspan().contains(point.z());
   }
 
-  const rmath::vector3d& dims(void) const { return m_dim; }
+  const rmath::vector3d& dims3D(void) const { return m_dim; }
+  rmath::vector2d dims2D(void) const { return m_dim.project_on_xy(); }
 
  protected:
   unicell_entity3D(const rmath::vector3d& dim,

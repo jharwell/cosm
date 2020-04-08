@@ -46,25 +46,30 @@ NS_START(cosm, foraging, block_dist);
  * clusters bounds randomly, using \ref cluster_distributor within
  * each cluster to do the actual distribution.
  */
-class multi_cluster_distributor final : public rer::client<multi_cluster_distributor>,
-                                        public base_distributor {
+template<typename TBlockType>
+class multi_cluster_distributor final : public rer::client<multi_cluster_distributor<TBlockType>>,
+                                        public base_distributor<TBlockType> {
  public:
+  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
+  using base_distributor<TBlockType>::kMAX_DIST_TRIES;
+  using base_distributor<TBlockType>::rng;
+
   multi_cluster_distributor(std::vector<cds::arena_grid::view>& grids,
                             rtypes::discretize_ratio resolution,
                             uint maxsize,
-                            rmath::rng* rng);
+                            rmath::rng* rng_in);
 
   /* not copy constructible or copy assignable by default */
   multi_cluster_distributor& operator=(const multi_cluster_distributor&) = delete;
   multi_cluster_distributor(const multi_cluster_distributor&) = delete;
 
-  bool distribute_block(crepr::base_block2D* block,
-                        cds::const_entity_list& entities) override;
-  cfds::block_cluster_vector block_clusters(void) const override;
+  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override;
+  bool distribute_block(TBlockType* block,
+                        cds::const_entity_vector& entities) override;
 
  private:
   /* clang-format off */
-  std::vector<cluster_distributor> m_dists{};
+  std::vector<cluster_distributor<TBlockType>> m_dists{};
   /* clang-format on */
 };
 

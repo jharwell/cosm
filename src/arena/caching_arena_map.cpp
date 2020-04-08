@@ -92,13 +92,13 @@ rtypes::type_uuid caching_arena_map::robot_on_cache(
    */
   if (ent_id != rtypes::constants::kNoUUID &&
       static_cast<size_t>(ent_id.v()) < m_cacheso.size() &&
-      m_cacheso[ent_id.v()]->contains_point(pos)) {
+      m_cacheso[ent_id.v()]->contains_point2D(pos)) {
     return ent_id;
   }
 
   /* General case: linear scan */
   for (auto& c : m_cacheso) {
-    if (c->contains_point(pos)) {
+    if (c->contains_point2D(pos)) {
       return c->id();
     }
   } /* for(&c..) */
@@ -168,7 +168,7 @@ caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc
    *
    * - All existing caches
    */
-  cds::const_entity_list entities;
+  cds::const_entity_vector entities;
   for (auto& cache : m_cacheso) {
     ret.avoid_ents.push_back(cache.get());
   } /* for(&cache..) */

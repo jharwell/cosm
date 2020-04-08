@@ -35,6 +35,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
+template<typename T>
 class base_arena_map;
 } /* namespace cosm::arena */
 
@@ -78,9 +79,10 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
    *               it has acquired.
    * \param map The \ref carena::base_arena_map.
    */
+  template<typename TBlockType>
   rtypes::type_uuid from_free_pickup(const rmath::vector2d& loc,
                                      const rtypes::type_uuid& acq_id,
-                                     const carena::base_arena_map* map) const RCSW_PURE;
+                                     const carena::base_arena_map<TBlockType>* map) const RCSW_PURE;
 };
 
 NS_END(tv, foraging, cosm);

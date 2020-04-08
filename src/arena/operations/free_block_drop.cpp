@@ -38,11 +38,14 @@ using cds::arena_grid;
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-free_block_drop free_block_drop::for_block(
+template<typename TBlockType>
+free_block_drop<TBlockType> free_block_drop<TBlockType>::for_block(
     const rmath::vector2u& coord,
     const rtypes::discretize_ratio& resolution) {
-  return free_block_drop(
-      nullptr, coord, resolution, arena_map_locking::ekNONE_HELD);
+  return free_block_drop({}, /* empty variant */
+                         coord,
+                         resolution,
+                         arena_map_locking::ekNONE_HELD);
 } /* for_block() */
 
 static bool block_drop_overlap_with_cache(const crepr::base_block2D* block,
@@ -52,9 +55,13 @@ static bool block_drop_overlap_with_cache(const crepr::base_block2D* block,
 static bool block_drop_overlap_with_nest(const crepr::base_block2D* block,
                                          const crepr::nest& nest,
                                          const rmath::vector2d& drop_loc);
+static bool block_drop_overlap_with_nest(const crepr::base_block3D* block,
+                                         const crepr::nest& nest,
+                                         const rmath::vector2d& drop_loc);
 
-static bool block_drop_loc_conflict(const base_arena_map& map,
-                                    const crepr::base_block2D* block,
+template<typename TBlockType>
+static bool block_drop_loc_conflict(const base_arena_map<TBlockType>& map,
+                                    const TBlockType* block,
                                     const rmath::vector2d& loc);
 
 static bool block_drop_loc_conflict(const caching_arena_map& map,
@@ -64,8 +71,9 @@ static bool block_drop_loc_conflict(const caching_arena_map& map,
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_drop::free_block_drop(
-    crepr::base_block2D* block,
+template<typename TBlockType>
+free_block_drop<TBlockType>::free_block_drop(
+    const crepr::base_block_variant& block,
     const rmath::vector2u& coord,
     const rtypes::discretize_ratio& resolution,
     const arena_map_locking& locking)
@@ -73,29 +81,43 @@ free_block_drop::free_block_drop(
       cell2D_op(coord),
       mc_resolution(resolution),
       mc_locking(locking),
-      m_block(block) {}
+      mc_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_drop::visit(cds::cell2D& cell) {
-  visit(*m_block);
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(cds::cell2D& cell) {
+  visit(*boost::get<TBlockType*>(mc_block));
   visit(cell.fsm());
-  cell.entity(m_block);
+  cell.entity(boost::get<TBlockType*>(mc_block));
 } /* visit() */
 
-void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_block_drop();
 } /* visit() */
 
-void free_block_drop::visit(crepr::base_block2D& block) {
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(crepr::base_block2D& block) {
   block.md()->robot_id_reset();
 
   block.rloc(rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v()));
   block.dloc(cell2D_op::coord());
 } /* visit() */
 
-void free_block_drop::visit(base_arena_map& map) {
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(crepr::base_block3D& block) {
+  block.md()->robot_id_reset();
+
+  auto rloc = rmath::vector3d(rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+
+  block.rloc(rloc);
+  block.dloc(rmath::vector3u(cell2D_op::coord()));
+} /* visit() */
+
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(base_arena_map<TBlockType>& map) {
   map.maybe_lock(map.block_mtx(),
                  !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
@@ -107,9 +129,11 @@ void free_block_drop::visit(base_arena_map& map) {
                  !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
+  bool conflict = block_drop_loc_conflict(map,
+                                          boost::get<TBlockType*>(mc_block),
+                                          rloc);
 
-  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
+  cds::cell2D& cell = map.template access<arena_grid::kCell>(cell2D_op::coord());
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
@@ -118,7 +142,8 @@ void free_block_drop::visit(base_arena_map& map) {
    * cache.
    */
   if (cell.state_has_block() || conflict) {
-    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
+    map.distribute_single_block(boost::get<TBlockType*>(mc_block),
+                                arena_map_locking::ekALL_HELD);
   } else {
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
@@ -135,7 +160,8 @@ void free_block_drop::visit(base_arena_map& map) {
                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 
-void free_block_drop::visit(caching_arena_map& map) {
+template<typename TBlockType>
+void free_block_drop<TBlockType>::visit(caching_arena_map& map) {
   /* needed for atomic check for cache overlap+do drop operation */
   map.maybe_lock(map.cache_mtx(),
                  !(mc_locking & arena_map_locking::ekCACHES_HELD));
@@ -151,7 +177,9 @@ void free_block_drop::visit(caching_arena_map& map) {
                  !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
+  bool conflict = block_drop_loc_conflict(map,
+                                          boost::get<crepr::base_block2D*>(mc_block),
+                                          rloc);
 
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
@@ -166,7 +194,7 @@ void free_block_drop::visit(caching_arena_map& map) {
    * need to drop the block in the host cell for the cache.
    */
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
-    cache_block_drop_visitor op(m_block,
+    cache_block_drop_visitor op(boost::get<crepr::base_block2D*>(mc_block),
                                       static_cast<carepr::arena_cache*>(
                                           cell.cache()),
                                       mc_resolution,
@@ -175,7 +203,8 @@ void free_block_drop::visit(caching_arena_map& map) {
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || conflict) {
-    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
+    map.distribute_single_block(boost::get<crepr::base_block2D*>(mc_block),
+                                arena_map_locking::ekALL_HELD);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else {
@@ -199,8 +228,9 @@ void free_block_drop::visit(caching_arena_map& map) {
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-bool block_drop_loc_conflict(const base_arena_map& map,
-                             const crepr::base_block2D* const block,
+template<typename TBlockType>
+bool block_drop_loc_conflict(const base_arena_map<TBlockType>& map,
+                             const TBlockType* const block,
                              const rmath::vector2d& loc) {
   /*
    * If the robot is currently right on the edge of the nest, we can't just
@@ -225,7 +255,7 @@ bool block_drop_loc_conflict(const base_arena_map& map,
 bool block_drop_loc_conflict(const caching_arena_map& map,
                              const crepr::base_block2D* const block,
                              const rmath::vector2d& loc) {
-  bool conflict = block_drop_loc_conflict(static_cast<const base_arena_map&>(map),
+  bool conflict = block_drop_loc_conflict(static_cast<const base_arena_map<crepr::base_block2D>&>(map),
                                           block,
                                           loc);
 
@@ -244,8 +274,18 @@ bool block_drop_loc_conflict(const caching_arena_map& map,
 bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
                                   const crepr::nest& nest,
                                   const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims().x());
-  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
+  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims2D().x());
+  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims2D().y());
+
+  return nest.xspan().overlaps_with(drop_xspan) &&
+         nest.yspan().overlaps_with(drop_yspan);
+} /* block_drop_overlap_with_nest() */
+
+bool block_drop_overlap_with_nest(const crepr::base_block3D* const block,
+                                  const crepr::nest& nest,
+                                  const rmath::vector2d& drop_loc) {
+  auto drop_xspan = crepr::entity3D::xspan(drop_loc, block->dims2D().x());
+  auto drop_yspan = crepr::entity3D::yspan(drop_loc, block->dims2D().y());
 
   return nest.xspan().overlaps_with(drop_xspan) &&
          nest.yspan().overlaps_with(drop_yspan);
@@ -254,10 +294,16 @@ bool block_drop_overlap_with_nest(const crepr::base_block2D* const block,
 bool block_drop_overlap_with_cache(const crepr::base_block2D* const block,
                                    const carepr::arena_cache* const cache,
                                    const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims().x());
-  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims().y());
+  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims2D().x());
+  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims2D().y());
   return cache->xspan().overlaps_with(drop_xspan) &&
          cache->yspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_cache() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class free_block_drop<crepr::base_block2D>;
+template class free_block_drop<crepr::base_block3D>;
 
 NS_END(detail, operations, arena, cosm);

@@ -44,32 +44,32 @@ void ___sighandler(int signum);
  * Constructors/Destructor
  ******************************************************************************/
 argos_sm_adaptor::argos_sm_adaptor(void)
-    : ER_CLIENT_INIT("cosm.pal.argos_sm_adaptor"),
-      m_arena_map(nullptr) {}
+    : ER_CLIENT_INIT("cosm.pal.argos_sm_adaptor") {}
 
 argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template <typename TArenaMapType>
+template<typename TArenaMapType>
 void argos_sm_adaptor::arena_map_init(
     const caconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
   m_arena_map = std::make_unique<TArenaMapType>(aconfig);
 
-  if (!m_arena_map->initialize(this, rng())) {
+  auto map = boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
+  if (!map->initialize(this, rng())) {
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }
 
-  m_arena_map->distribute_all_blocks();
+  map->distribute_all_blocks();
 
   /*
    * If null, visualization has been disabled.
    */
   if (nullptr != vconfig) {
-    for (auto& block : m_arena_map->blocks()) {
+    for (auto& block : map->blocks()) {
       block->vis_id(vconfig->block_id);
     } /* for(&block..) */
   }
@@ -88,8 +88,12 @@ crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template void argos_sm_adaptor::arena_map_init<carena::base_arena_map>(const caconfig::arena_map_config*,
-                                                                       const cvconfig::visualization_config*);
-template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(const caconfig::arena_map_config*,
-                                                                          const cvconfig::visualization_config*);
+template void argos_sm_adaptor::arena_map_init<carena::base_arena_map<crepr::base_block2D>>(const caconfig::arena_map_config* aconfig,
+                                                                                            const cvconfig::visualization_config* vconfig);
+template void argos_sm_adaptor::arena_map_init<carena::base_arena_map<crepr::base_block3D>>(const caconfig::arena_map_config* aconfig,
+                                                                                            const cvconfig::visualization_config* vconfig);
+template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(const caconfig::arena_map_config* aconfig,
+                                                                          const cvconfig::visualization_config* vconfig);
+
+
 NS_END(pal, cosm);

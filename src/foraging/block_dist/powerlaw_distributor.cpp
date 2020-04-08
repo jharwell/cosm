@@ -39,12 +39,13 @@ using cosm::ds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-powerlaw_distributor::powerlaw_distributor(
+template<typename TBlockType>
+powerlaw_distributor<TBlockType>::powerlaw_distributor(
     const config::powerlaw_dist_config* const config,
     const rtypes::discretize_ratio& resolution,
-    rmath::rng* rng)
+    rmath::rng* rng_in)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw"),
-      base_distributor(rng),
+      base_distributor<TBlockType>(rng_in),
       mc_resolution(resolution),
       m_n_clusters(config->n_clusters),
       m_pwrdist(config->pwr_min, config->pwr_max, 2) {}
@@ -52,8 +53,9 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool powerlaw_distributor::distribute_block(crepr::base_block2D* block,
-                                            cds::const_entity_list& entities) {
+template<typename TBlockType>
+bool powerlaw_distributor<TBlockType>::distribute_block(TBlockType* block,
+                                               cds::const_entity_vector& entities) {
   /*
    * If we get here than either all clusters of the specified capacity are
    * full and/or one or more are not full but have additional entities
@@ -79,7 +81,8 @@ bool powerlaw_distributor::distribute_block(crepr::base_block2D* block,
   return false;
 } /* distribute_block() */
 
-powerlaw_distributor::cluster_paramvec powerlaw_distributor::guess_cluster_placements(
+template<typename TBlockType>
+typename powerlaw_distributor<TBlockType>::cluster_paramvec powerlaw_distributor<TBlockType>::guess_cluster_placements(
     cds::arena_grid* const grid,
     const std::vector<uint>& clust_sizes) {
   cluster_paramvec config;
@@ -111,7 +114,8 @@ powerlaw_distributor::cluster_paramvec powerlaw_distributor::guess_cluster_place
   return config;
 } /* guess_cluster_placements() */
 
-bool powerlaw_distributor::check_cluster_placements(const cluster_paramvec& pvec) {
+template<typename TBlockType>
+bool powerlaw_distributor<TBlockType>::check_cluster_placements(const cluster_paramvec& pvec) {
   for (const cluster_config& p : pvec) {
     bool overlap = std::any_of(pvec.begin(), pvec.end(), [&](const auto& other) {
       /*
@@ -148,7 +152,8 @@ bool powerlaw_distributor::check_cluster_placements(const cluster_paramvec& pvec
   return true;
 } /* check_cluster_placements() */
 
-powerlaw_distributor::cluster_paramvec powerlaw_distributor::
+template<typename TBlockType>
+typename powerlaw_distributor<TBlockType>::cluster_paramvec powerlaw_distributor<TBlockType>::
     compute_cluster_placements(cds::arena_grid* const grid, uint n_clusters) {
   ER_INFO("Computing cluster placements for %u clusters", n_clusters);
 
@@ -171,7 +176,8 @@ powerlaw_distributor::cluster_paramvec powerlaw_distributor::
   return cluster_paramvec{};
 } /* compute_cluster_placements() */
 
-bool powerlaw_distributor::map_clusters(cds::arena_grid* const grid) {
+template<typename TBlockType>
+bool powerlaw_distributor<TBlockType>::map_clusters(cds::arena_grid* const grid) {
   cluster_paramvec config = compute_cluster_placements(grid, m_n_clusters);
   if (config.empty()) {
     ER_WARN("Unable to compute all cluster placements");
@@ -186,16 +192,17 @@ bool powerlaw_distributor::map_clusters(cds::arena_grid* const grid) {
     ER_INFO("Mapped %zu clusters of capacity %u", dist_list.size(), clust_size);
     for (RCSW_UNUSED auto& dist : dist_list) {
       ER_INFO("Cluster with origin@%s/%s: capacity=%u",
-              dist.block_clusters().front()->ranchor().to_str().c_str(),
-              dist.block_clusters().front()->danchor().to_str().c_str(),
+              dist.block_clusters().front()->rloc2D().to_str().c_str(),
+              dist.block_clusters().front()->dloc2D().to_str().c_str(),
               dist.block_clusters().front()->capacity());
     } /* for(dist..) */
   }   /* for(&l..) */
   return true;
 } /* map_clusters() */
 
-ds::block_cluster_vector powerlaw_distributor::block_clusters(void) const {
-  ds::block_cluster_vector ret;
+template<typename TBlockType>
+ds::block_cluster_vector<TBlockType> powerlaw_distributor<TBlockType>::block_clusters(void) const {
+  ds::block_cluster_vector<TBlockType> ret;
 
   for (auto& l : m_dist_map) {
     for (auto& dist : l.second) {
@@ -206,5 +213,11 @@ ds::block_cluster_vector powerlaw_distributor::block_clusters(void) const {
 
   return ret;
 } /* block_clusters() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template class powerlaw_distributor<crepr::base_block2D>;
+template class powerlaw_distributor<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

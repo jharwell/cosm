@@ -32,8 +32,8 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
 
-#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/arena/ds/cache_vector.hpp"
+#include "cosm/ds/entity_vector.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -76,7 +76,17 @@ class foraging_los final : public rer::client<foraging_los> {
         mc_center(center),
         mc_view(c_view) {}
 
-  cds::block2D_vectorno blocks(void) const;
+  /**
+   * \brief Get the list of blocks currently in the LOS.
+   *
+   * This has to return a \ref cds::entity_vector, because we cannot generically
+   * know if there are only 2D blocks, only 3D blocks, or a mix, currently in
+   * the arena, so we have to do the generic thing. As long as a derived project
+   * uses exclusively 2D or 3D blocks, and doesn't mix them, then this is a zero
+   * cost abstraction, because it can be casted away with static_cast at compile
+   * time.
+   */
+  cds::entity_vector blocks(void) const;
   cads::bcache_vectorno caches(void) const;
 
   /**

@@ -59,7 +59,8 @@ NS_START(cosm, operations);
  * fit in either.
  */
 template <class TBaseControllerType,
-          template <class TDerivedControllerType> class TInteractorType>
+          template <class TDerivedControllerType, class...> class TInteractorType,
+  class... Args>
 class robot_arena_interaction_applicator {
  public:
   robot_arena_interaction_applicator(TBaseControllerType* const controller,
@@ -67,7 +68,7 @@ class robot_arena_interaction_applicator {
       : mc_timestep(t), m_controller(controller) {}
 
   template <typename TDerivedControllerType>
-  auto operator()(TInteractorType<TDerivedControllerType>& interactor) const -> decltype(interactor(std::declval<TDerivedControllerType&>(),
+  auto operator()(TInteractorType<TDerivedControllerType, Args...>& interactor) const -> decltype(interactor(std::declval<TDerivedControllerType&>(),
                                                                                                     std::declval<const rtypes::timestep&>())) {
     return interactor(*static_cast<TDerivedControllerType*>(m_controller),
                       mc_timestep);
