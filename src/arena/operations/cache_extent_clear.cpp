@@ -36,7 +36,7 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cache_extent_clear::cache_extent_clear(const rmath::vector2u& coord,
+cache_extent_clear::cache_extent_clear(const rmath::vector2z& coord,
                                        carepr::arena_cache* victim)
     : ER_CLIENT_INIT("cosm.arena.operations.cache_extent_clear"),
       cell2D_op(coord),
@@ -66,10 +66,10 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
 
   for (uint i = xmin; i < xmax; ++i) {
     for (uint j = ymin; j < ymax; ++j) {
-      rmath::vector2u c = rmath::vector2u(i, j);
+      rmath::vector2z c = rmath::vector2z(i, j);
       if (c != m_victim->dloc()) {
         ER_ASSERT(m_victim->contains_point2D(
-            rmath::uvec2dvec(c, grid.resolution().v())),
+            rmath::zvec2dvec(c, grid.resolution().v())),
                   "Cache%d does not contain point (%u, %u) within its extent",
                   m_victim->id().v(),
                   i,

@@ -100,8 +100,9 @@ typename powerlaw_distributor<TBlockType>::cluster_paramvec powerlaw_distributor
      * DO need to be able to modify their grid view. Here we do not need it, so
      * we have to cast.
      */
-    auto view = grid->layer<arena_grid::kCell>()->subgrid(x, y, x_max, y_max);
-    RCSW_UNUSED rmath::vector2u loc = (*view.origin()).loc();
+    auto view = grid->layer<arena_grid::kCell>()->subgrid(rmath::vector2z(x, x_max),
+                                                          rmath::vector2z(y, y_max));
+    RCSW_UNUSED rmath::vector2z loc = (*view.origin()).loc();
     ER_TRACE("Guess cluster%zu placement x=[%lu-%lu], y=[%lu-%lu], size=%u",
              i,
              loc.x() + view.index_bases()[0],
@@ -127,8 +128,8 @@ bool powerlaw_distributor<TBlockType>::check_cluster_placements(const cluster_pa
       if (&other == &p) { /* self */
         return false;
       }
-      rmath::vector2u v_loc = (*p.view.origin()).loc();
-      rmath::vector2u other_loc = (*other.view.origin()).loc();
+      rmath::vector2z v_loc = (*p.view.origin()).loc();
+      rmath::vector2z other_loc = (*other.view.origin()).loc();
       rmath::rangeu v_xrange(v_loc.x() + p.view.index_bases()[0],
                              v_loc.x() + p.view.index_bases()[0] +
                                  p.view.shape()[0]);

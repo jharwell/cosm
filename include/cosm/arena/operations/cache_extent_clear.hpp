@@ -68,7 +68,7 @@ class cache_extent_clear : public rer::client<cache_extent_clear>,
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  cache_extent_clear(const rmath::vector2u& coord, carepr::arena_cache* victim);
+  cache_extent_clear(const rmath::vector2z& coord, carepr::arena_cache* victim);
   cache_extent_clear& operator=(const cache_extent_clear&) = delete;
   cache_extent_clear(const cache_extent_clear&) = delete;
 

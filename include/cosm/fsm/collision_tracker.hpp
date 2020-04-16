@@ -60,7 +60,7 @@ class collision_tracker : public metrics::collision_metrics {
   bool entered_collision_avoidance(void) const override final RCSW_PURE;
   bool exited_collision_avoidance(void) const override final RCSW_PURE;
   rtypes::timestep collision_avoidance_duration(void) const override final;
-  rmath::vector2u avoidance_loc(void) const override final RCSW_PURE;
+  rmath::vector2z avoidance_loc(void) const override final RCSW_PURE;
 
   /**
    * \brief Handle all logic for entering collision avoidance; classes should

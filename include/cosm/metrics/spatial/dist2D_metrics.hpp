@@ -58,7 +58,7 @@ class dist2D_metrics : public virtual rmetrics::base_metrics {
   /**
    * \brief Return a single robot's discretized position in 2D space.
    */
-  virtual rmath::vector2u dpos2D(void) const = 0;
+  virtual rmath::vector2z dpos2D(void) const = 0;
 
   /**
    * \brief Return a single robot's current heading in 2D space.

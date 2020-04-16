@@ -70,7 +70,7 @@ class cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
  public:
   using visit_typelist = cell2D_op::visit_typelist;
 
-  explicit cell2D_unknown(const rmath::vector2u& coord)
+  explicit cell2D_unknown(const rmath::vector2z& coord)
       : cell2D_op(coord), ER_CLIENT_INIT("cosm.operations.cell2D_unknown") {}
 
   void visit(cds::cell2D& cell);

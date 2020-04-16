@@ -78,7 +78,7 @@ class base_controller2D : public base_controller,
 
   /* swarm spatial distribution 2D metrics */
   rmath::vector2d pos2D(void) const override final RCSW_PURE;
-  rmath::vector2u dpos2D(void) const override final RCSW_PURE;
+  rmath::vector2z dpos2D(void) const override final RCSW_PURE;
   rmath::radians heading2D(void) const override final RCSW_PURE;
 
   void sensing_update(const rtypes::timestep& tick,

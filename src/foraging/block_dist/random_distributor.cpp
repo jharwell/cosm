@@ -180,8 +180,8 @@ template<typename TBlockType>
 boost::optional<typename random_distributor<TBlockType>::coord_search_res_t> random_distributor<TBlockType>::
     avail_coord_search(const cds::const_entity_vector& entities,
                        const rmath::vector2d& block_dim) {
-  rmath::vector2u rel;
-  rmath::vector2u abs;
+  rmath::vector2z rel;
+  rmath::vector2z abs;
   rcppsw::math::rangeu area_xrange(m_grid.index_bases()[0], m_grid.shape()[0]);
   rcppsw::math::rangeu area_yrange(m_grid.index_bases()[1], m_grid.shape()[1]);
 
@@ -207,7 +207,7 @@ boost::optional<typename random_distributor<TBlockType>::coord_search_res_t> ran
     rel = {x, y};
     abs = {rel.x() + mc_origin.x(), rel.y() + mc_origin.y()};
   } while (std::any_of(entities.begin(), entities.end(), [&](const auto* ent) {
-    rmath::vector2d abs_r = rmath::uvec2dvec(abs, mc_resolution.v());
+    rmath::vector2d abs_r = rmath::zvec2dvec(abs, mc_resolution.v());
     utils::placement_status_t status;
     if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
       status = utils::placement_conflict2D(abs_r,

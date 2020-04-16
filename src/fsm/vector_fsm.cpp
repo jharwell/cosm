@@ -217,7 +217,7 @@ bool vector_fsm::exited_collision_avoidance(void) const {
   return ekST_COLLISION_AVOIDANCE == last_state() && !in_collision_avoidance();
 } /* exited_collision_avoidance() */
 
-rmath::vector2u vector_fsm::avoidance_loc(void) const {
+rmath::vector2z vector_fsm::avoidance_loc(void) const {
   return saa()->sensing()->discrete_position();
 } /* avoidance_loc() */
 

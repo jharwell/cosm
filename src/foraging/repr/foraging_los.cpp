@@ -85,7 +85,7 @@ cads::bcache_vectorno foraging_los::caches(void) const {
   return caches;
 } /* caches() */
 
-bool foraging_los::contains_loc(const rmath::vector2u& loc) const {
+bool foraging_los::contains_loc(const rmath::vector2z& loc) const {
   for (size_t i = 0; i < xsize(); ++i) {
     for (size_t j = 0; j < ysize(); ++j) {
       if (cell(i, j).loc() == loc) {
@@ -108,19 +108,19 @@ const cds::cell2D& foraging_los::cell(uint i, uint j) const {
   return mc_view[i][j];
 }
 
-rmath::vector2u foraging_los::abs_ll(void) const {
+rmath::vector2z foraging_los::abs_ll(void) const {
   return cell(0, 0).loc();
 } /* abs_ll() */
 
-rmath::vector2u foraging_los::abs_ul(void) const {
+rmath::vector2z foraging_los::abs_ul(void) const {
   return cell(0, ysize() - 1).loc();
 } /* abs_ul() */
 
-rmath::vector2u foraging_los::abs_lr(void) const {
+rmath::vector2z foraging_los::abs_lr(void) const {
   return cell(xsize() - 1, 0).loc();
 } /* abs_lr() */
 
-rmath::vector2u foraging_los::abs_ur(void) const {
+rmath::vector2z foraging_los::abs_ur(void) const {
   return cell(xsize() - 1, ysize() - 1).loc();
 } /* abs_ur() */
 

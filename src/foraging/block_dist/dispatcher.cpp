@@ -74,10 +74,10 @@ template<typename TBlockType>
 bool dispatcher<TBlockType>::initialize(rmath::rng* rng) {
   /* clang-format off */
     cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
-      static_cast<size_t>(mc_arena_xrange.lb()),
-      static_cast<size_t>(mc_arena_yrange.lb()),
-      static_cast<size_t>(mc_arena_xrange.ub()),
-      static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
 
   if (kDistRandom == mc_dist_type) {
     m_dist = std::make_unique<random_distributor<TBlockType>>(arena,
@@ -85,10 +85,10 @@ bool dispatcher<TBlockType>::initialize(rmath::rng* rng) {
                                                              rng);
   } else if (kDistSingleSrc == mc_dist_type) {
     cds::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub()),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
+                        static_cast<size_t>(mc_arena_xrange.ub())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_yrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     m_dist = std::make_unique<cluster_distributor<TBlockType>>(
         area,
         mc_resolution,
@@ -96,15 +96,15 @@ bool dispatcher<TBlockType>::initialize(rmath::rng* rng) {
         rng);
   } else if (kDistDualSrc == mc_dist_type) {
     cds::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb()),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub() * 0.25 / 0.85),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub() * 0.25 / 0.85),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     cds::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub()),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     std::vector<cds::arena_grid::view> grids{area_l, area_r};
     m_dist = std::make_unique<multi_cluster_distributor<TBlockType>>(
         grids,
@@ -119,25 +119,25 @@ bool dispatcher<TBlockType>::initialize(rmath::rng* rng) {
      * cache/cluster overlap. See FORDYCA#581, COSM#34.
      */
     cds::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb()),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub() * 0.25 / 0.85),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub() * 0.25 / 0.85),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     cds::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub()),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb() * 0.75 / 0.15),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     cds::arena_grid::view area_b = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb()),
-        static_cast<size_t>(mc_arena_yrange.lb()),
-        static_cast<size_t>(mc_arena_xrange.ub()),
-        static_cast<size_t>(mc_arena_yrange.ub() * 0.25 / 0.85));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.lb())),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
+                        static_cast<size_t>(mc_arena_yrange.ub() * 0.25 / 0.85)));
     cds::arena_grid::view area_u = m_grid->layer<arena_grid::kCell>()->subgrid(
-        static_cast<size_t>(mc_arena_xrange.lb()),
-        static_cast<size_t>(mc_arena_yrange.lb() * 0.75 / 0.15),
-        static_cast<size_t>(mc_arena_xrange.ub()),
-        static_cast<size_t>(mc_arena_yrange.ub()));
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
+                        static_cast<size_t>(mc_arena_yrange.lb() * 0.75 / 0.15)),
+        rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
+                        static_cast<size_t>(mc_arena_yrange.ub())));
     std::vector<cds::arena_grid::view> grids{area_l, area_r, area_b, area_u};
     m_dist = std::make_unique<multi_cluster_distributor<TBlockType>>(
         grids,

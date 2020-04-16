@@ -59,7 +59,7 @@ NS_START(cosm, ds, operations);
  */
 class cell3D_op {
  protected:
-  explicit cell3D_op(const rmath::vector3u& coord) : m_coord(coord) {}
+  explicit cell3D_op(const rmath::vector3z& coord) : m_coord(coord) {}
 
  public:
   using visit_typelist = rmpl::typelist<ds::cell3D, fsm::cell3D_fsm>;
@@ -70,11 +70,11 @@ class cell3D_op {
   uint y(void) const { return m_coord.y(); }
   uint z(void) const { return m_coord.y(); }
 
-  const rmath::vector3u& coord(void) const { return m_coord; }
+  const rmath::vector3z& coord(void) const { return m_coord; }
 
  private:
   /* clang-format on */
-  rmath::vector3u m_coord;
+  rmath::vector3z m_coord;
   /* clang-format off */
 };
 

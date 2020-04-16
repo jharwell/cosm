@@ -84,7 +84,7 @@ class base_controllerQ3D : public base_controller,
 
   /* swarm spatial distribution 3D metrics */
   rmath::vector3d pos3D(void) const override final RCSW_PURE;
-  rmath::vector3u dpos3D(void) const override final RCSW_PURE;
+  rmath::vector3z dpos3D(void) const override final RCSW_PURE;
   rmath::radians azimuth(void) const override final RCSW_PURE;
   rmath::radians inclination(void) const override final RCSW_PURE;
 

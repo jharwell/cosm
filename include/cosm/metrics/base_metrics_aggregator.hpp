@@ -41,10 +41,6 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::ds::config {
-struct grid_config;
-} // namespace cosm::ds::config
-
 namespace cosm::controller {
 class base_controller2D;
 class base_controllerQ3D;
@@ -66,7 +62,6 @@ namespace fs = std::filesystem;
 class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
  public:
   base_metrics_aggregator(const cmconfig::metrics_config* mconfig,
-                          const cdconfig::grid_config* const gconfig,
                           const std::string& output_root);
   ~base_metrics_aggregator(void) override = default;
 
@@ -214,12 +209,33 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
     m_create.finalize_all();
   }
 
+ protected:
+  /**
+   * \brief Register metrics collectors that require the arena dimensions to
+   * construct for robots in a structure 2D environment.
+   */
+  void register_with_arena_dims2D(const cmconfig::metrics_config* mconfig,
+                                  const rmath::vector2z& dims);
+
+  /**
+   * \brief Register metrics collectors that require the arena dimensions AND
+   * the maximum height robots can access within the arena.
+   */
+  void register_with_arena_dims3D(
+      const cmconfig::metrics_config* mconfig,
+      const rmath::vector3z& dims);
+
  private:
   /**
    * \brief Maps the scoped name of the collector to the \ref collector_group it
    * belongs in.
    */
   using collector_map_type = std::map<std::string, rmetrics::collector_group*>;
+
+  /**
+   * \brief Register metrics collectors that do not require extra arguments.
+   */
+  void register_standard(const cmconfig::metrics_config* mconfig);
 
   /* clang-format off */
   fs::path                  m_metrics_path;

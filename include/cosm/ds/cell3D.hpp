@@ -86,8 +86,8 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   void entity(crepr::entity3D* entity) { m_entity = entity; }
   const crepr::entity3D* entity(void) const { return m_entity; }
 
-  void loc(const rmath::vector3u& loc) { m_loc = loc; }
-  const rmath::vector3u& loc(void) const { return m_loc; }
+  void loc(const rmath::vector3z& loc) { m_loc = loc; }
+  const rmath::vector3z& loc(void) const { return m_loc; }
 
   /**
    * \brief Get the cube block entity associated with this cell.
@@ -110,7 +110,7 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
  private:
   /* clang-format off */
   crepr::entity3D* m_entity{nullptr};
-  rmath::vector3u  m_loc{};
+  rmath::vector3z  m_loc{};
   /* clang-format on */
 };
 

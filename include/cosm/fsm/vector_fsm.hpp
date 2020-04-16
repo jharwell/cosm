@@ -83,7 +83,7 @@ class vector_fsm final : public util_hfsm,
   bool in_collision_avoidance(void) const override RCSW_PURE;
   bool entered_collision_avoidance(void) const override RCSW_PURE;
   bool exited_collision_avoidance(void) const override RCSW_PURE;
-  rmath::vector2u avoidance_loc(void) const override;
+  rmath::vector2z avoidance_loc(void) const override;
 
  private:
   enum state {

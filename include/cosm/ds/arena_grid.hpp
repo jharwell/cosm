@@ -67,11 +67,12 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
    *
    * The origin of the grid is in the lower left corner at (0,0).
    */
-  arena_grid(rtypes::discretize_ratio resolution, size_t x_max, size_t y_max)
-      : stacked_grid2D(resolution, x_max, y_max) {
+  arena_grid(const rmath::vector2d& dims,
+             const rtypes::discretize_ratio& resolution)
+      : stacked_grid2D(dims, resolution) {
     for (size_t i = 0; i < xdsize(); ++i) {
       for (size_t j = 0; j < ydsize(); ++j) {
-        access<kCell>(i, j).loc(rmath::vector2u(i, j));
+        access<kCell>(i, j).loc(rmath::vector2z(i, j));
       } /* for(j..) */
     }   /* for(i..) */
   }

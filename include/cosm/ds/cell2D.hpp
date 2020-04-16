@@ -90,8 +90,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   repr::entity_base* entity(void) const { return m_entity; }
   repr::entity_base* entity(void) { return m_entity; }
 
-  void loc(const rmath::vector2u& loc) { m_loc = loc; }
-  const rmath::vector2u& loc(void) const { return m_loc; }
+  void loc(const rmath::vector2z& loc) { m_loc = loc; }
+  const rmath::vector2z& loc(void) const { return m_loc; }
 
   /**
    * \brief Get the block entity associated with this cell.
@@ -117,7 +117,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
  private:
   /* clang-format off */
   repr::entity_base* m_entity{nullptr};
-  rmath::vector2u    m_loc{};
+  rmath::vector2z    m_loc{};
   /* clang-format on */
 };
 

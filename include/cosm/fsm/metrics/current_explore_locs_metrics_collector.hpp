@@ -59,9 +59,9 @@ class current_explore_locs_metrics_collector final : public rmetrics::spatial::g
    */
   current_explore_locs_metrics_collector(const std::string& ofname,
                                          const rtypes::timestep& interval,
-                                         const rmath::vector2u& dims,
-                                         const rmetrics::output_mode& mode) :
-      grid2D_metrics_collector(ofname, interval, dims, mode) {}
+                                         const rmetrics::output_mode& mode,
+                                         const rmath::vector2z& dims) :
+      grid2D_metrics_collector(ofname, interval, mode, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };

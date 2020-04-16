@@ -57,7 +57,7 @@ class dist3D_metrics : public virtual rmetrics::base_metrics {
   /**
    * \brief Return a single robot's discretized position in 3D space.
    */
-  virtual rmath::vector3u dpos3D(void) const = 0;
+  virtual rmath::vector3z dpos3D(void) const = 0;
 
   /**
    * \brief Return a single robot's azimuth angle in 3D space.

@@ -57,7 +57,7 @@ class unicell_movable_entity3D : public unicell_entity3D {
   void rloc(const rmath::vector3d& loc) {
     unicell_entity3D::rloc<unicell_movable_entity3D>(loc);
   }
-  void dloc(const rmath::vector3u& loc) {
+  void dloc(const rmath::vector3z& loc) {
     unicell_entity3D::dloc<unicell_movable_entity3D>(loc);
   }
 };

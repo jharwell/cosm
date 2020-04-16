@@ -109,12 +109,12 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
 
   template <uint Index>
   typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2u& d) {
+      const rmath::vector2z& d) {
     return decoratee().template access<Index>(d);
   }
   template <uint Index>
   const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2u& d) const {
+      const rmath::vector2z& d) const {
     return decoratee().template access<Index>(d);
   }
   template <uint Index>
@@ -185,12 +185,13 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
    *
    * \return The subgrid.
    */
-  grid_view subgrid(size_t x, size_t y, size_t radius) {
-    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(x, y, radius);
+  template<typename ...Args>
+  grid_view subgrid(Args&& ...args) {
+    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(std::forward<Args>(args)...);
   }
-
-  const_grid_view subgrid(size_t x, size_t y, size_t radius) const {
-    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(x, y, radius);
+  template<typename ...Args>
+  const_grid_view subgrid(Args&& ...args) const {
+    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(std::forward<Args>(args)...);
   }
 
   rtypes::discretize_ratio grid_resolution(void) const {

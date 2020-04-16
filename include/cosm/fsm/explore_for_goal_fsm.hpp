@@ -91,7 +91,7 @@ class explore_for_goal_fsm final : public util_hfsm,
   RCPPSW_WRAP_OVERRIDE_DECL(rtypes::timestep,
                             collision_avoidance_duration,
                             const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector2u, avoidance_loc, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector2z, avoidance_loc, const);
 
   /* taskable overrides */
   bool task_finished(void) const override {

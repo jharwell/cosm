@@ -57,7 +57,7 @@ std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
     const carena::base_arena_map<TBlockType>& map,
     uint los_grid_size,
     const rmath::vector2d& pos) {
-  rmath::vector2u position = rmath::dvec2uvec(pos, map.grid_resolution().v());
+  rmath::vector2z position = rmath::dvec2uvec(pos, map.grid_resolution().v());
   return std::make_unique<cfrepr::foraging_los>(
       map.subgrid(position.x(), position.y(), los_grid_size), position);
 } /* compute_robot_los */

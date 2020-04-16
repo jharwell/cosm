@@ -57,7 +57,7 @@ class unicell_movable_entity2D : public unicell_entity2D {
   void rloc(const rmath::vector2d& loc) {
     unicell_entity2D::rloc<unicell_movable_entity2D>(loc);
   }
-  void dloc(const rmath::vector2u& loc) {
+  void dloc(const rmath::vector2z& loc) {
     unicell_entity2D::dloc<unicell_movable_entity2D>(loc);
   }
 };

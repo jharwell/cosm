@@ -63,7 +63,7 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
    * \brief Get the robot's current location.
    */
   const rmath::vector3d& position(void) const { return m_position; }
-  const rmath::vector3u& discrete_position(void) const { return m_dposition; }
+  const rmath::vector3z& discrete_position(void) const { return m_dposition; }
 
   /**
    * \brief Get the robot's current azimuth heading; this effectively is the
@@ -87,7 +87,7 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
     auto reading = pos_sensor()->reading();
     m_prev_position = m_position;
     m_position = reading.position;
-    m_dposition = rmath::dvec2uvec(m_position, ratio.v());
+    m_dposition = rmath::dvec2zvec(m_position, ratio.v());
     auto sphere = m_position.to_spherical();
     m_azimuth = sphere.azimuth();
     m_inclination = sphere.inclination();
@@ -107,7 +107,7 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
   rmath::vector3d               m_prev_position{};
   rmath::radians                m_azimuth{};
   rmath::radians                m_inclination{};
-  rmath::vector3u               m_dposition{};
+  rmath::vector3z               m_dposition{};
   /* clang-format off */
 };
 

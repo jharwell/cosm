@@ -60,7 +60,7 @@ NS_START(cosm, ds, operations);
  */
 class cell2D_op {
  protected:
-  explicit cell2D_op(const rmath::vector2u& coord) : m_coord(coord) {}
+  explicit cell2D_op(const rmath::vector2z& coord) : m_coord(coord) {}
 
  public:
   using visit_typelist = rmpl::typelist<ds::cell2D, fsm::cell2D_fsm>;
@@ -70,11 +70,11 @@ class cell2D_op {
   uint x(void) const { return m_coord.x(); }
   uint y(void) const { return m_coord.y(); }
 
-  const rmath::vector2u& coord(void) const { return m_coord; }
+  const rmath::vector2z& coord(void) const { return m_coord; }
 
  private:
   /* clang-format on */
-  rmath::vector2u m_coord;
+  rmath::vector2z m_coord;
   /* clang-format off */
 };
 

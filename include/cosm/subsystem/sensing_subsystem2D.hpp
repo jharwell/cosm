@@ -62,7 +62,7 @@ class sensing_subsystem2D : public base_sensing_subsystem {
    * \brief Get the robot's current location.
    */
   const rmath::vector2d& position(void) const { return m_position; }
-  const rmath::vector2u& discrete_position(void) const { return m_dposition; }
+  const rmath::vector2z& discrete_position(void) const { return m_dposition; }
 
   /**
    * \brief Get the angle of the current robot's heading. A shortcut to help
@@ -76,7 +76,7 @@ class sensing_subsystem2D : public base_sensing_subsystem {
     auto reading = pos_sensor()->reading();
     m_prev_position = m_position;
     m_position = reading.position.project_on_xy();
-    m_dposition = rmath::dvec2uvec(m_position, ratio.v());
+    m_dposition = rmath::dvec2zvec(m_position, ratio.v());
     m_heading = reading.z_ang;
   }
 
@@ -93,7 +93,7 @@ class sensing_subsystem2D : public base_sensing_subsystem {
   rmath::vector2d               m_position{};
   rmath::vector2d               m_prev_position{};
   rmath::radians                m_heading{};
-  rmath::vector2u               m_dposition{};
+  rmath::vector2z               m_dposition{};
   /* clang-format off */
 };
 

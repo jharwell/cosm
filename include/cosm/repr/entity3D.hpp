@@ -129,9 +129,9 @@ class entity3D : public entity_base {
   virtual double zdimr(void) const = 0;
 
   virtual rmath::vector2d rloc2D(void) const = 0;
-  virtual rmath::vector2u dloc2D(void) const = 0;
+  virtual rmath::vector2z dloc2D(void) const = 0;
   virtual rmath::vector3d rloc3D(void) const = 0;
-  virtual rmath::vector3u dloc3D(void) const = 0;
+  virtual rmath::vector3z dloc3D(void) const = 0;
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek3D;

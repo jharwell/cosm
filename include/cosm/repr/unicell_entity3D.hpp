@@ -70,9 +70,9 @@ class unicell_entity3D : public entity3D {
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  rmath::vector3u dloc(void) const { return m_dloc; }
-  rmath::vector3u dloc3D(void) const override final { return m_dloc; }
-  rmath::vector2u dloc2D(void) const override final {
+  rmath::vector3z dloc(void) const { return m_dloc; }
+  rmath::vector3z dloc3D(void) const override final { return m_dloc; }
+  rmath::vector2z dloc2D(void) const override final {
     return m_dloc.project_on_xy();
   }
 
@@ -124,7 +124,7 @@ class unicell_entity3D : public entity3D {
       : entity3D(id),
         m_dim(dim),
         m_rloc(loc),
-        m_dloc(rmath::dvec2uvec(loc, resolution.v())) {}
+        m_dloc(rmath::dvec2zvec(loc, resolution.v())) {}
 
   explicit unicell_entity3D(const rmath::vector3d& dim)
       : unicell_entity3D{dim, rtypes::constants::kNoUUID} {}
@@ -146,7 +146,7 @@ class unicell_entity3D : public entity3D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dloc(const rmath::vector3u& loc) {
+  void dloc(const rmath::vector3z& loc) {
     m_dloc = loc;
   }
 
@@ -154,7 +154,7 @@ class unicell_entity3D : public entity3D {
   /* clang-format off */
   rmath::vector3d m_dim;
   rmath::vector3d m_rloc;
-  rmath::vector3u m_dloc;
+  rmath::vector3z m_dloc;
   /* clang-format on */
 };
 

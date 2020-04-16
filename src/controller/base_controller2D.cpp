@@ -101,7 +101,7 @@ rmath::vector2d base_controller2D::pos2D(void) const {
   return m_saa->sensing()->position();
 }
 
-rmath::vector2u base_controller2D::dpos2D(void) const {
+rmath::vector2z base_controller2D::dpos2D(void) const {
   return m_saa->sensing()->discrete_position();
 }
 

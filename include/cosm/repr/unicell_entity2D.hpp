@@ -67,8 +67,8 @@ class unicell_entity2D : public entity2D {
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  rmath::vector2u dloc(void) const { return m_dloc; }
-  rmath::vector2u dloc2D(void) const override final { return m_dloc; }
+  rmath::vector2z dloc(void) const { return m_dloc; }
+  rmath::vector2z dloc2D(void) const override final { return m_dloc; }
 
   rmath::ranged xspan(void) const override final {
     return entity2D::xspan(rloc2D(), xdimr());
@@ -109,7 +109,7 @@ class unicell_entity2D : public entity2D {
       : entity2D(id),
         m_dim(dim),
         m_rloc(loc),
-        m_dloc(rmath::dvec2uvec(loc, resolution.v())) {}
+        m_dloc(rmath::dvec2zvec(loc, resolution.v())) {}
 
   explicit unicell_entity2D(const rmath::vector2d& dim)
       : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
@@ -131,7 +131,7 @@ class unicell_entity2D : public entity2D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dloc(const rmath::vector2u& loc) {
+  void dloc(const rmath::vector2z& loc) {
     m_dloc = loc;
   }
 
@@ -139,7 +139,7 @@ class unicell_entity2D : public entity2D {
   /* clang-format off */
   rmath::vector2d m_dim;
   rmath::vector2d m_rloc;
-  rmath::vector2u m_dloc;
+  rmath::vector2z m_dloc;
   /* clang-format on */
 };
 

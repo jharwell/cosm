@@ -52,7 +52,7 @@ class location_metrics : public virtual rmetrics::base_metrics {
   /**
    * \brief Should return the discrete location of the cache.
    */
-  virtual rcppsw::math::vector2u location(void) const = 0;
+  virtual rcppsw::math::vector2z location(void) const = 0;
 };
 
 NS_END(caches, metrics, arena, cosm);

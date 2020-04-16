@@ -129,7 +129,7 @@ class base_sensing_subsystem {
  private:
   /* clang-format off */
   rtypes::timestep              m_tick{0};
-  rmath::vector2u               m_dposition{};
+  rmath::vector2z               m_dposition{};
   hal::sensors::position_sensor m_pos_sensor;
   sensor_map                    m_sensors;
   /* clang-format off */

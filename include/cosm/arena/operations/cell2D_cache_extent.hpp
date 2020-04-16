@@ -65,7 +65,7 @@ class cell2D_cache_extent : public cdops::cell2D_op {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  cell2D_cache_extent(const rmath::vector2u& coord, carepr::base_cache* cache);
+  cell2D_cache_extent(const rmath::vector2z& coord, carepr::base_cache* cache);
   cell2D_cache_extent& operator=(const cell2D_cache_extent&) = delete;
   cell2D_cache_extent(const cell2D_cache_extent&) = delete;
 

@@ -66,9 +66,9 @@ class grid_view_entity : public crepr::entity2D {
 
   ~grid_view_entity(void) override = default;
 
-  rmath::vector2u dloc2D(void) const override final { return m_view.origin()->loc(); }
+  rmath::vector2z dloc2D(void) const override final { return m_view.origin()->loc(); }
   rmath::vector2d rloc2D(void) const override final {
-    return rmath::uvec2dvec(m_view.origin()->loc(), mc_resolution.v());
+    return rmath::zvec2dvec(m_view.origin()->loc(), mc_resolution.v());
   }
 
   const rtypes::discretize_ratio& resolution(void) const {

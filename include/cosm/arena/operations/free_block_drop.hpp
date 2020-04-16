@@ -92,7 +92,7 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
    * visit blocks; segfaults and/or undefined behavior will occur otherwise.
    */
 
-  static free_block_drop for_block(const rmath::vector2u& coord,
+  static free_block_drop for_block(const rmath::vector2z& coord,
                                    const rtypes::discretize_ratio& resolution);
 
   ~free_block_drop(void) override = default;
@@ -127,7 +127,7 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
    * \param locking What locks are currently held by the caller?
    */
   free_block_drop(const crepr::base_block_variant& block,
-                  const rmath::vector2u& coord,
+                  const rmath::vector2z& coord,
                   const rtypes::discretize_ratio& resolution,
                   const arena_map_locking& locking);
 

@@ -95,8 +95,8 @@ class random_distributor : public rer::client<random_distributor<TBlockType>>,
 
  private:
   struct coord_search_res_t {
-    rmath::vector2u rel{};
-    rmath::vector2u abs{};
+    rmath::vector2z rel{};
+    rmath::vector2z abs{};
   };
 
   /**
@@ -123,7 +123,7 @@ class random_distributor : public rer::client<random_distributor<TBlockType>>,
 
   /* clang-format off */
   const rtypes::discretize_ratio mc_resolution;
-  const rmath::vector2u          mc_origin;
+  const rmath::vector2z          mc_origin;
   const rmath::rangeu            mc_xspan;
   const rmath::rangeu            mc_yspan;
   cds::arena_grid::view          m_grid;

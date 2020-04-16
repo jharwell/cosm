@@ -28,9 +28,11 @@
 #include <set>
 #include <string>
 #include <tuple>
+#include <utility>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/utils/maskable_enum.hpp"
 #include "rcppsw/mpl/identity.hpp"
@@ -43,22 +45,34 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics);
+NS_START(cosm, metrics, detail);
 namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
+template<typename>
+class collector_registerer_impl;
+
 /**
- * \class collector_registerer
- * \ingroup metrics
+ * \class collector_registerer_impl
+ * \ingroup metrics detail
  *
  * \brief After enabled collectors have been parsed from an XML input file,
  * register the enabled collectors with a \ref base_metrics_aggregator or a
  * class derived from it.
+ *
+ * This class is a partial specialization which specializes the generic
+ * collector_registerer_impl, which can take an arbitrary # of types, to take a
+ * std::tuple which in turn takes an arbitrary # of types. This is a better
+ * design than simply having a class that takes an arbitrary # of types, because
+ * it makes it clearer that the template parameters are considered a single
+ * unit, and are NOT part of the constructor arguments for the class.
  */
-class collector_registerer : public rer::client<collector_registerer> {
+template<typename... Ts>
+class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collector_registerer_impl<std::tuple<Ts...>>> {
  public:
+
   /**
    * \brief Each entry in the set of collectors that CAN be created (if they are
    * actually created dependent on configuration) has:
@@ -66,15 +80,17 @@ class collector_registerer : public rer::client<collector_registerer> {
    * - The typeid of the collector, so that functions templated on collector
    *   type can figure out the correct item in the set to read from.
    *
-   * - The name of the collector in the input src (e.g. the XML attribute name)
+   * - The name of the collector in the input src (e.g. the XML attribute name).
    *
    * - The scoped name of the collector that will be used to refer to the
    *   created collector during simulation.
    *
    * - The set of output modes that are valid for the collector.
    */
-  using set_value_type =
-      std::tuple<std::type_index, std::string, std::string, rmetrics::output_mode>;
+  using set_value_type = std::tuple<std::type_index,
+                                    std::string,
+                                    std::string,
+                                    rmetrics::output_mode>;
 
   /**
    * \brief Comparator for \ref set_value_type objects within the \ref
@@ -114,26 +130,28 @@ class collector_registerer : public rer::client<collector_registerer> {
       std::is_constructible<T, const std::string&>;
 
   /**
-   * \brief Some metrics collectors (e.g. \ref collision_locs_metrics_collector)
-   * require the arena dimensions+output mode as arguments to their constructor.
+   * \brief Some metrics collectors (e.g. \ref bi_tdgraph_metrics_collector)
+   * require an additional integer as an argument to their constructor. This
+   * requirement for additional specialized arguments required by some
+   * collectors is satisfied in a general way by forwarding the \p
+   * TExtraArgsTuple to the constructor for the type.
+   *
+   * These collectors must always use \ref rmetrics::output_mode::ekAPPEND.
    */
-  template <typename T>
-  using constructible_as_spatial_collector =
-      std::is_constructible<T,
+  template <typename TCollectorType>
+  using constructible_with_extra_args =
+      std::is_constructible<TCollectorType,
                             const std::string&,
                             const rtypes::timestep&,
-                            const rmath::vector2u&,
-                            const rmetrics::output_mode&>;
+                            Ts...>;
 
-  /**
-   * \brief Some metrics collectors (e.g. \ref bi_tdgraph_metrics_collector)
-   * require an additional integer as an argument to their constructor. These
-   * collectors always use \ref rmetrics::output_mode::ekAPPEND.
-   */
-  template <typename T>
-  using constructible_with_uint =
-      std::is_constructible<T, const std::string&, const rtypes::timestep&, uint>;
-
+  template <typename TCollectorType>
+  using constructible_with_mode_and_extra_args =
+      std::is_constructible<TCollectorType,
+                            const std::string&,
+                            const rtypes::timestep&,
+                            rmetrics::output_mode,
+                            Ts...>;
   /**
    * \brief Initialize the registerer.
    *
@@ -150,20 +168,18 @@ class collector_registerer : public rer::client<collector_registerer> {
    * mapping collectors to run-time categories, so that this class is general
    * purpose and not tied to a specific input format.
    */
-  collector_registerer(const cmconfig::metrics_config* const config,
-                       const cdconfig::grid_config* const grid_config,
+  template<typename... Args>
+  collector_registerer_impl(const cmconfig::metrics_config* const config,
                        const creatable_set& create_set,
                        base_metrics_aggregator* const agg,
-                       int decomposition_depth = -1)
+                       const std::tuple<Args...>& extra_args = std::tuple<Args...>())
       : ER_CLIENT_INIT("cosm.metrics.collector_registerer"),
-        mc_decomp_depth(decomposition_depth),
-        mc_arena_dim(
-            rmath::dvec2uvec(grid_config->upper, grid_config->resolution.v())),
+        mc_extra_args(extra_args),
         mc_config(config),
         mc_create_set(create_set),
         m_agg(agg) {}
-  collector_registerer(const collector_registerer&) = default;
-  collector_registerer operator=(const collector_registerer&) = delete;
+  collector_registerer_impl(const collector_registerer_impl&) = default;
+  collector_registerer_impl operator=(const collector_registerer_impl&) = delete;
 
   template <typename TCollectorWrap>
   void operator()(const TCollectorWrap&) const {
@@ -211,18 +227,6 @@ class collector_registerer : public rer::client<collector_registerer> {
   };
 
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(constructible_as_spatial_collector<
-                               typename TCollectorWrap::type>::value)>
-  bool do_register(const std::string& scoped_name,
-                   const std::string& fpath,
-                   const rtypes::timestep& interval,
-                   rmetrics::output_mode mode) const {
-    m_agg->collector_preregister(scoped_name, mode);
-    return m_agg->collector_register<typename TCollectorWrap::type>(
-        scoped_name, fpath, interval, mc_arena_dim, mode);
-  }
-
-  template <typename TCollectorWrap,
             RCPPSW_SFINAE_FUNC(
                 expected_constructible<typename TCollectorWrap::type>::value)>
   bool do_register(const std::string& scoped_name,
@@ -246,17 +250,57 @@ class collector_registerer : public rer::client<collector_registerer> {
     return m_agg->collector_register<typename TCollectorWrap::type>(scoped_name,
                                                                     fpath);
   }
-
   template <typename TCollectorWrap,
             RCPPSW_SFINAE_FUNC(
-                constructible_with_uint<typename TCollectorWrap::type>::value)>
+                constructible_with_extra_args<typename TCollectorWrap::type>::value &&
+                (sizeof...(Ts) > 0))>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,
                    const rtypes::timestep& interval,
                    rmetrics::output_mode mode) const {
     m_agg->collector_preregister(scoped_name, mode);
-    return m_agg->collector_register<typename TCollectorWrap::type>(
-        scoped_name, fpath, interval, mc_decomp_depth);
+    auto targs = std::tuple_cat(std::make_tuple(scoped_name, fpath, interval),
+                               mc_extra_args);
+    auto lambda = [&](auto&&... args) {
+      return m_agg->collector_register<typename TCollectorWrap::type,
+      const rtypes::timestep&,
+      Ts...>(std::forward<decltype(args)>(args)...);
+    };
+    /*
+     * The std::move() is 100% necessary here, because (I think) types in the
+     * extra arguments tuple are rvalues, but the values are (probably) lvalues,
+     * and if you don't do this you get an error regarding rvalue->lvalue
+     * binding.
+     */
+    return std::apply(lambda, std::move(targs));
+  }
+
+  template <typename TCollectorWrap,
+            RCPPSW_SFINAE_FUNC(
+                constructible_with_mode_and_extra_args<typename TCollectorWrap::type>::value)>
+  bool do_register(const std::string& scoped_name,
+                   const std::string& fpath,
+                   const rtypes::timestep& interval,
+                   rmetrics::output_mode mode) const {
+    m_agg->collector_preregister(scoped_name, mode);
+    auto targs = std::tuple_cat(std::make_tuple(scoped_name,
+                                               fpath,
+                                               interval,
+                                               mode),
+                               mc_extra_args);
+    auto lambda = [&](auto&&... args) {
+      return m_agg->collector_register<typename TCollectorWrap::type,
+      const rtypes::timestep&,
+      rmetrics::output_mode,
+      Ts...>(std::forward<decltype(args)>(args)...);
+    };
+    /*
+     * The std::move() is 100% necessary here, because (I think) types in the
+     * extra arguments tuple are rvalues, but the values are (probably) lvalues,
+     * and if you don't do this you get an error regarding rvalue->lvalue
+     * binding.
+     */
+    return std::apply(lambda, std::move(targs));
   }
 
   /**
@@ -319,14 +363,35 @@ class collector_registerer : public rer::client<collector_registerer> {
   }
 
   /* clang-format off */
-  const int                             mc_decomp_depth;
-  const rmath::vector2u                 mc_arena_dim;
+  const std::tuple<Ts...>               mc_extra_args;
   const cmconfig::metrics_config* const mc_config;
   const creatable_set                   mc_create_set;
 
   base_metrics_aggregator* const        m_agg;
   /* clang-format on */
 };
+
+NS_END(detail);
+
+/**
+ * \class collector_registerer
+ * \ingroup metrics
+ *
+ * \brief After enabled collectors have been parsed from an XML input file,
+ * register the enabled collectors with a \ref base_metrics_aggregator or a
+ * class derived from it.
+ *
+ * This is a separate class from \ref collector_registerer_impl so you don't
+ * ALWAYS have to pass it a list of extra arguments for building some finicky
+ * metrics collectors.
+ */
+template<typename TExtraArgsTuple = std::tuple<>>
+class collector_registerer  : public detail::collector_registerer_impl<TExtraArgsTuple> {
+ public:
+  using detail::collector_registerer_impl<TExtraArgsTuple>::collector_registerer_impl;
+  using detail::collector_registerer_impl<TExtraArgsTuple>::operator();
+};
+
 
 NS_END(metrics, cosm);
 

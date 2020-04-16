@@ -40,7 +40,7 @@ using cds::arena_grid;
  ******************************************************************************/
 template<typename TBlockType>
 free_block_drop<TBlockType> free_block_drop<TBlockType>::for_block(
-    const rmath::vector2u& coord,
+    const rmath::vector2z& coord,
     const rtypes::discretize_ratio& resolution) {
   return free_block_drop({}, /* empty variant */
                          coord,
@@ -74,7 +74,7 @@ static bool block_drop_loc_conflict(const caching_arena_map& map,
 template<typename TBlockType>
 free_block_drop<TBlockType>::free_block_drop(
     const crepr::base_block_variant& block,
-    const rmath::vector2u& coord,
+    const rmath::vector2z& coord,
     const rtypes::discretize_ratio& resolution,
     const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_drop"),
@@ -102,7 +102,7 @@ template<typename TBlockType>
 void free_block_drop<TBlockType>::visit(crepr::base_block2D& block) {
   block.md()->robot_id_reset();
 
-  block.rloc(rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+  block.rloc(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
   block.dloc(cell2D_op::coord());
 } /* visit() */
 
@@ -110,10 +110,10 @@ template<typename TBlockType>
 void free_block_drop<TBlockType>::visit(crepr::base_block3D& block) {
   block.md()->robot_id_reset();
 
-  auto rloc = rmath::vector3d(rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
 
   block.rloc(rloc);
-  block.dloc(rmath::vector3u(cell2D_op::coord()));
+  block.dloc(rmath::vector3z(cell2D_op::coord()));
 } /* visit() */
 
 template<typename TBlockType>
@@ -128,7 +128,7 @@ void free_block_drop<TBlockType>::visit(base_arena_map<TBlockType>& map) {
   map.maybe_lock(map.grid_mtx(),
                  !(mc_locking & arena_map_locking::ekGRID_HELD));
 
-  auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
+  auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map,
                                           boost::get<TBlockType*>(mc_block),
                                           rloc);
@@ -176,7 +176,7 @@ void free_block_drop<TBlockType>::visit(caching_arena_map& map) {
   map.maybe_lock(map.grid_mtx(),
                  !(mc_locking & arena_map_locking::ekGRID_HELD));
 
-  auto rloc = rmath::uvec2dvec(cell2D_op::coord(), mc_resolution.v());
+  auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map,
                                           boost::get<crepr::base_block2D*>(mc_block),
                                           rloc);

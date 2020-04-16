@@ -144,19 +144,19 @@ metrics::goal_acq_metrics::goal_type acquire_goal_fsm::acquisition_goal(
   return metrics::goal_acq_metrics::goal_type(-1);
 } /* acquisition_goal() */
 
-rmath::vector2u acquire_goal_fsm::acquisition_loc(void) const {
+rmath::vector2z acquire_goal_fsm::acquisition_loc(void) const {
   return sensing()->discrete_position();
 } /* acquisition_loc() */
 
-rmath::vector2u acquire_goal_fsm::current_explore_loc(void) const {
+rmath::vector2z acquire_goal_fsm::current_explore_loc(void) const {
   return sensing()->discrete_position();
 } /* current_explore_loc() */
 
-rmath::vector2u acquire_goal_fsm::current_vector_loc(void) const {
+rmath::vector2z acquire_goal_fsm::current_vector_loc(void) const {
   return sensing()->discrete_position();
 } /* current_vector_loc() */
 
-rmath::vector2u acquire_goal_fsm::avoidance_loc(void) const {
+rmath::vector2z acquire_goal_fsm::avoidance_loc(void) const {
   return sensing()->discrete_position();
 } /* avoidance_loc() */
 

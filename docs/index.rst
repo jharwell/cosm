@@ -10,7 +10,8 @@ Welcome to COSM's documentation!
 Other Projects (in descending probability of interest)
 ------------------------------------------------------
 
-- `FORDYCA <https://fordyca.readthedocs.io>`_
-- `SIERRA <https://fordyca.readthedocs.io>`_
-- `RCPPSW <https://rcppsw.readthedocs.io>`_
-- `RCSW <https://rcsw.readthedocs.io>`_
+- `SILICON <https://swarm-robotics-silicon.readthedocs.io>`_
+- `FORDYCA <https://swarm-robotics-fordyca.readthedocs.io>`_
+- `SIERRA <https://swarm-robotics-sierra.readthedocs.io>`_
+- `RCPPSW <https://swarm-robotics-rcppsw.readthedocs.io>`_
+- `RCSW <https://swarm-robotics-rcsw.readthedocs.io>`_

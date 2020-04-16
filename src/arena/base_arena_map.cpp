@@ -52,9 +52,9 @@ using manifest_processor_type = typename std::conditional<std::is_same<T,
 template<class TBlockType>
 base_arena_map<TBlockType>::base_arena_map(const caconfig::arena_map_config* config)
     : ER_CLIENT_INIT("cosm.arena.base_arena_map"),
-      decorator(config->grid.resolution,
-                static_cast<uint>(config->grid.upper.x() + arena_padding()),
-                static_cast<uint>(config->grid.upper.y() + arena_padding())),
+      decorator(rmath::vector2d(config->grid.upper.x() + arena_padding(),
+                                config->grid.upper.y() + arena_padding()),
+                config->grid.resolution),
       m_blockso(manifest_processor_type<TBlockType>(&config->blocks.dist.manifest)()),
       m_nest(config->nest.dims,
              config->nest.center,

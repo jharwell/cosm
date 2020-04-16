@@ -71,7 +71,7 @@ class foraging_los final : public rer::client<foraging_los> {
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
 
-  foraging_los(const const_grid_view& c_view, const rmath::vector2u& center)
+  foraging_los(const const_grid_view& c_view, const rmath::vector2z& center)
       : ER_CLIENT_INIT("cosm.foraging.repr.foraging_los"),
         mc_center(center),
         mc_view(c_view) {}
@@ -96,10 +96,10 @@ class foraging_los final : public rer::client<foraging_los> {
    */
   size_t xsize(void) const { return mc_view.shape()[0]; }
 
-  rmath::vector2u abs_ll(void) const RCSW_PURE;
-  rmath::vector2u abs_lr(void) const RCSW_PURE;
-  rmath::vector2u abs_ul(void) const RCSW_PURE;
-  rmath::vector2u abs_ur(void) const RCSW_PURE;
+  rmath::vector2z abs_ll(void) const RCSW_PURE;
+  rmath::vector2z abs_lr(void) const RCSW_PURE;
+  rmath::vector2z abs_ul(void) const RCSW_PURE;
+  rmath::vector2z abs_ur(void) const RCSW_PURE;
 
   /**
    * \brief Get the size of the Y dimension for a LOS.
@@ -111,7 +111,7 @@ class foraging_los final : public rer::client<foraging_los> {
   /**
    * \brief Determine if the *ABSOLUTE* arena location is contained in the LOS.
    */
-  bool contains_loc(const rmath::vector2u& loc) const RCSW_PURE;
+  bool contains_loc(const rmath::vector2z& loc) const RCSW_PURE;
 
   /**
    * \brief Get the # elements in a LOS.
@@ -137,11 +137,11 @@ class foraging_los final : public rer::client<foraging_los> {
    *
    * \return The center coordinates (discrete version).
    */
-  const rmath::vector2u& center(void) const { return mc_center; }
+  const rmath::vector2z& center(void) const { return mc_center; }
 
  private:
   /* clang-format off */
-  const rmath::vector2u mc_center;
+  const rmath::vector2z mc_center;
   const const_grid_view mc_view;
   /* clang-format on */
 };

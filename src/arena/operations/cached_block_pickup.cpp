@@ -91,7 +91,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != cache_id,
             "Cache ID undefined on block pickup");
 
-  rmath::vector2u cache_coord = m_real_cache->dloc();
+  rmath::vector2z cache_coord = m_real_cache->dloc();
   ER_ASSERT(cache_coord == cell2D_op::coord(),
             "Coordinates for cache%d%s/cell@%s do not agree",
             cache_id.v(),

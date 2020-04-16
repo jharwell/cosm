@@ -49,7 +49,7 @@ free_block_pickup::free_block_pickup(crepr::base_block2D* block,
  ******************************************************************************/
 template<typename TBlockType>
 void free_block_pickup::visit(base_arena_map<TBlockType>& map) {
-  ER_ASSERT(m_block->dloc() == rmath::vector2u(cell2D_op::x(), cell2D_op::y()),
+  ER_ASSERT(m_block->dloc() == rmath::vector2z(cell2D_op::x(), cell2D_op::y()),
             "Coordinates for block/cell do not agree");
   RCSW_UNUSED rmath::vector2d old_r = m_block->rloc();
 

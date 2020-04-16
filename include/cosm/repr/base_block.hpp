@@ -63,8 +63,8 @@ class base_block : public TEntityType,
                                               rmath::vector2d,
                                               rmath::vector3d>::type;
   using dloc_type = typename std::conditional<is2D<TEntityType>::value,
-                                              rmath::vector2u,
-                                              rmath::vector3u>::type;
+                                              rmath::vector2z,
+                                              rmath::vector3z>::type;
 
   /**
    * \param dim 2 element vector of the dimensions of the block.

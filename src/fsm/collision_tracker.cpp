@@ -52,7 +52,7 @@ rtypes::timestep collision_tracker::collision_avoidance_duration(void) const {
   return rtypes::timestep(0);
 } /* collision_avoidance_duration() */
 
-rmath::vector2u collision_tracker::avoidance_loc(void) const {
+rmath::vector2z collision_tracker::avoidance_loc(void) const {
   return mc_sensing->discrete_position();
 } /* avoidance_loc() */
 
