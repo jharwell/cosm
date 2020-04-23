@@ -77,11 +77,13 @@ void argos_sm_adaptor::arena_map_init(
 
 crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
     const crepr::block3D_variant& block,
-    const rmath::radians& z_rotation) {
+    const rmath::radians& z_rotation,
+    const rtypes::type_uuid& parent_id) {
   auto visitor = std::bind(embodied_block_creator(),
                            std::placeholders::_1,
-                           this,
-                           z_rotation);
+                           z_rotation,
+                           parent_id,
+                           this);
   return boost::apply_visitor(visitor, block);
 } /* make_embodied() */
 

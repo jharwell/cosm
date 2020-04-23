@@ -55,11 +55,13 @@ class argos_sm_adaptor;
 class embodied_block_creator {
  public:
   crepr::embodied_block_variant operator()(const crepr::cube_block3D* block,
-                                           cpal::argos_sm_adaptor* sm,
-                                           const rmath::radians& z_rotation) const;
+                                           const rmath::radians& z_rotation,
+                                           const rtypes::type_uuid& parent_id,
+                                           cpal::argos_sm_adaptor* sm) const;
   crepr::embodied_block_variant operator()(const crepr::ramp_block3D* block,
-                                           cpal::argos_sm_adaptor* sm,
-                                           const rmath::radians& z_rotation) const;
+                                           const rmath::radians& z_rotation,
+                                           const rtypes::type_uuid& parent_id,
+                                           cpal::argos_sm_adaptor* sm) const;
 
  private:
   /**
@@ -75,7 +77,8 @@ class embodied_block_creator {
    * ARGoS API.
    */
   argos::CBoxEntity* ramp_bottom(const crepr::ramp_block3D* block,
-                                 const rmath::radians& z_rotation) const;
+                                 const rmath::radians& z_rotation,
+                                 const rtypes::type_uuid& parent_id) const;
 
   /**
    * \brief Generate the ARGoS box for the back of the ramp.
@@ -84,7 +87,8 @@ class embodied_block_creator {
    * ARGoS API.
    */
   argos::CBoxEntity* ramp_back(const crepr::ramp_block3D* block,
-                               const rmath::radians& z_rotation) const;
+                               const rmath::radians& z_rotation,
+                               const rtypes::type_uuid& parent_id) const;
 
   /**
    * \brief Generate the ARGoS box for the top (slope part) of the ramp.
@@ -93,7 +97,8 @@ class embodied_block_creator {
    * ARGoS API.
    */
   argos::CBoxEntity* ramp_top(const crepr::ramp_block3D* block,
-                               const rmath::radians& z_rotation) const;
+                              const rmath::radians& z_rotation,
+                              const rtypes::type_uuid& parent_id) const;
 };
 
 NS_END(pal, cosm);

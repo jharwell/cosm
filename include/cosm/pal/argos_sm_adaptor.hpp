@@ -101,12 +101,14 @@ class argos_sm_adaptor : public swarm_manager,
   /**
    * \brief Create a 3D embodied representation of the block and add it to
    * ARGoS, returning a handle to the created representation.
+   *
+   * The \p parent_id is provided as an argument so that multiple otherwise
+   * identical embodiments can be uniquely identified, as required by ARGoS.
    */
   crepr::embodied_block_variant make_embodied(
       const crepr::block3D_variant& block,
-      const rmath::radians& z_rotation);
-
-  argos::CFloorEntity* floor(void) const { return m_floor; }
+      const rmath::radians& z_rotation,
+      const rtypes::type_uuid& parent_id);
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
@@ -120,6 +122,7 @@ class argos_sm_adaptor : public swarm_manager,
   void ndc_pop(void) const {}
 #endif
 
+  argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
   template<typename TArenaMapType>
   TArenaMapType* arena_map(void) {

@@ -45,12 +45,15 @@ class ramp_block3D;
  ******************************************************************************/
 using block2D_variant = boost::variant<cube_block2D*,
                                        ramp_block2D*>;
+
 using block3D_variant = boost::variant<cube_block3D*,
                                        ramp_block3D*>;
+
 using block_variant = boost::variant<cube_block2D*,
                                      ramp_block2D*,
                                      cube_block3D*,
                                      ramp_block3D*>;
+
 using base_block_variant = boost::variant<boost::blank,
                                           base_block2D*,
                                           base_block3D*>;
