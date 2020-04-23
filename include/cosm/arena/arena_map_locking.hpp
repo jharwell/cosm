@@ -35,7 +35,12 @@ NS_START(cosm, arena);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-enum class arena_map_locking {
+/**
+ * \brief Bitwise masking for expressing which arena map locks are already held
+ * when an operation is performed, so the correct locks will be taken
+ * internally.
+ */
+enum class arena_map_locking : uint {
   ekNONE_HELD = 1 << 0,
   ekBLOCKS_HELD = 1 << 1,
   ekCACHES_HELD = 1 << 2,

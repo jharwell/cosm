@@ -161,7 +161,7 @@ typename powerlaw_distributor<TBlockType>::cluster_paramvec powerlaw_distributor
   std::vector<uint> clust_sizes;
   for (uint i = 0; i < n_clusters; ++i) {
     /* can't have a cluster of size 0 */
-    uint index = static_cast<uint>(std::max(1.0, m_pwrdist(rng())));
+    auto index = static_cast<uint>(std::max(1.0, m_pwrdist(rng())));
     ER_DEBUG("Cluster%u size=%u", i, index);
     clust_sizes.push_back(index);
   } /* for(i..) */

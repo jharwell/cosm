@@ -24,7 +24,6 @@
 #include "cosm/controller/base_controller2D.hpp"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <filesystem>
 #include <fstream>
 
 #include "rcppsw/math/config/rng_config.hpp"
@@ -39,7 +38,6 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, controller);
-namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Constructors/Destructor

@@ -672,10 +672,10 @@ original paper :xref:`Arkin1989` and the tutorial in :xref:`SteeringTutorial`.
 
 - Required by: All controllers.
 - Required child attributes if present: none.
-- Required child tags if present: [ ``avoidance_force``, ``arrival_force``,
-  ``wander_force``, ``phototaxis_force`` ].
+- Required child tags: none.
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags if present: [ ``avoidance_force``, ``arrival_force``,
+  ``wander_force``, ``phototaxis_force``, ``path_following_force`` ].
 
 XML configuration:
 
@@ -696,6 +696,9 @@ XML configuration:
           <phototaxis_force>
             ...
           </phototaxis_force>
+          <path_following_force>
+            ...
+          </path_following_force>
         </force_calculator>
         ...
     </actuation_subsystem2D>
@@ -707,7 +710,7 @@ XML configuration:
 The force which repels robots from other nearby robots and obstacles (robots do
 not distinguish between these two cases).
 
-- Required by: All controllers.
+- Required by: none.
 - Required child attributes if present: all.
 - Required child tags if present: none.
 - Optional child attributes: none.
@@ -732,7 +735,7 @@ not distinguish between these two cases).
 
 The force which attracts robots towards a goal and gets them to it.
 
-- Required by: All controllers.
+- Required by: none.
 - Required child attributes if present: all.
 - Required child tags if present: none.
 - Optional child attributes: none.
@@ -762,7 +765,7 @@ The force which attracts robots towards a goal and gets them to it.
 The force which causes robots to wander randomly in the environment in a
 correlated random walk.
 
-- Required by: All controllers.
+- Required by: none.
 - Required child attributes if present: all.
 - Required child tags if present: none.
 - Optional child attributes: none.
@@ -801,7 +804,7 @@ correlated random walk.
 
 The force which attracts/repels robots towards/away from light sources.
 
-- Required by: All controllers.
+- Required by: none.
 - Required child attributes if present: all.
 - Required child tags if present: none.
 - Optional child attributes: none.
@@ -816,6 +819,34 @@ The force which attracts/repels robots towards/away from light sources.
     </force_calculator>
 
 - ``max`` - Max value for the force.
+
+``actuation_subsystem2D/force_calculator/path_following_force``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+The force which guides robots along a specified path.
+
+- Required by: none.
+- Required child attributes if present: all.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+.. code-block:: XML
+
+    <force_calculator>
+      ...
+      <arrival_force slowing_radius="FLOAT"
+                     slowing_speed_min="FLOAT"
+                     max="FLOAT"/>
+      ...
+    </force_calculator>
+
+- ``max`` - Max value for the force.
+
+- ``radius`` - Radius around each point along the path to consider at part of
+  the point; i.e., reaching any point inside the radius is equivalent to
+  reaching the exact location of the point.
+
 
 ``actuation_subsystem2D/diff_drive``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

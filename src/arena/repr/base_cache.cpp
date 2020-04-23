@@ -32,7 +32,6 @@ NS_START(cosm, arena, repr);
  * Static Members
  ******************************************************************************/
 int base_cache::m_next_id = 0;
-constexpr size_t base_cache::kMinBlocks;
 
 /*******************************************************************************
  * Constructors/Destructor

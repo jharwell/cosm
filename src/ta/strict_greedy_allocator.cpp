@@ -52,12 +52,12 @@ polled_task* strict_greedy_allocator::operator()(
                std::back_inserter(equiv_min_tasks),
                is_equiv_min);
 
-  ER_ASSERT(equiv_min_tasks.size() >= 1, "No minimum cost task found?");
+  ER_ASSERT(!equiv_min_tasks.empty(), "No minimum cost task found?");
 
   /*
-     * If there is more than one task with the same cost estimate, any of them
-     * are OK to allocate, so pick randomly.
-     */
+   * If there is more than one task with the same cost estimate, any of them
+   * are OK to allocate, so pick randomly.
+   */
   return equiv_min_tasks[m_rng->uniform(
       rmath::rangeu(0, equiv_min_tasks.size() - 1))];
 } /* alloc_strict_greedy() */

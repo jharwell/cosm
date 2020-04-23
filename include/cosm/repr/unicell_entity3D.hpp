@@ -130,7 +130,7 @@ class unicell_entity3D : public entity3D {
       : unicell_entity3D{dim, rtypes::constants::kNoUUID} {}
 
   unicell_entity3D(const rmath::vector3d& dim, const rtypes::type_uuid& id)
-      : entity3D(id), m_dim(dim), m_rloc(), m_dloc() {}
+      : entity3D(id), m_dim(dim) {}
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
@@ -153,8 +153,8 @@ class unicell_entity3D : public entity3D {
  private:
   /* clang-format off */
   rmath::vector3d m_dim;
-  rmath::vector3d m_rloc;
-  rmath::vector3z m_dloc;
+  rmath::vector3d m_rloc{};
+  rmath::vector3z m_dloc{};
   /* clang-format on */
 };
 

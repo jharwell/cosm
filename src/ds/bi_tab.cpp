@@ -253,6 +253,9 @@ polled_task* bi_tab::subtask_allocate(rmath::rng* rng) {
     } else {
       ret = m_child2;
     }
+  } else {
+    ER_FATAL_SENTINEL("Last subtask '%s' not in TAB?",
+                      m_last_subtask->name().c_str());
   }
   ER_INFO("Selected subtask '%s'", ret->name().c_str());
   m_active_task = ret;

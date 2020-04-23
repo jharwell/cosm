@@ -50,7 +50,8 @@ typename block_cluster<TBlockType>::block_vectorro_type block_cluster<TBlockType
                       cell.loc().to_str().c_str());
             ret.push_back(cell.block2D());
           }
-        } else if constexpr (std::is_same<TBlockType, crepr::base_block2D>::value) {
+        } else if constexpr (std::is_same<TBlockType,
+                             crepr::base_block2D>::value) {
           if (cell.state_has_block()) {
             ER_ASSERT(nullptr != cell.block3D(),
                       "Cell@%s null block3D",

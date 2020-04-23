@@ -41,7 +41,8 @@ force_calculator::force_calculator(boid& entity,
       m_arrival(&config->arrival),
       m_wander(&config->wander),
       m_polar(&config->polar),
-      m_phototaxis(&config->phototaxis) {}
+      m_phototaxis(&config->phototaxis),
+      m_path_following(&config->path_following) {}
 
 /*******************************************************************************
  * Member Functions
@@ -59,16 +60,6 @@ kin::twist force_calculator::to_twist(const rmath::vector2d& force) const {
   }
   return twist;
 } /* to_twist() */
-
-rmath::vector2d force_calculator::seek_through(const rmath::vector2d& target) {
-  rmath::vector2d force = m_seek(m_entity, target);
-  ER_DEBUG("Seek force: (%f, %f)@%f [%f]",
-           force.x(),
-           force.y(),
-           force.angle().value(),
-           force.length());
-  return force;
-} /* seek_through() */
 
 rmath::vector2d force_calculator::seek_to(const rmath::vector2d& target) {
   rmath::vector2d force = m_arrival(m_entity, target);
@@ -91,7 +82,7 @@ rmath::vector2d force_calculator::wander(rmath::rng* rng) {
 } /* wander() */
 
 rmath::vector2d force_calculator::avoidance(
-    const rmath::vector2d& closest_obstacle) {
+    const rmath::vector2d& closest_obstacle) const {
   rmath::vector2d force = m_avoidance(m_entity, closest_obstacle);
   ER_DEBUG("Avoidance force: (%f, %f)@%f [%f]",
            force.x(),
@@ -102,7 +93,7 @@ rmath::vector2d force_calculator::avoidance(
 } /* avoidance() */
 
 rmath::vector2d force_calculator::phototaxis(
-    const phototaxis_force::light_sensor_readings& readings) {
+    const phototaxis_force::light_sensor_readings& readings) const {
   rmath::vector2d force = m_phototaxis(readings);
   ER_DEBUG("Phototaxis force: (%f, %f)@%f [%f]",
            force.x(),
@@ -114,7 +105,7 @@ rmath::vector2d force_calculator::phototaxis(
 
 rmath::vector2d force_calculator::phototaxis(
     const phototaxis_force::camera_sensor_readings& readings,
-    const rutils::color& color) {
+    const rutils::color& color) const {
   rmath::vector2d force = m_phototaxis(readings, color);
   ER_DEBUG("Phototaxis force: (%f, %f)@%f [%f]",
            force.x(),
@@ -125,7 +116,7 @@ rmath::vector2d force_calculator::phototaxis(
 } /* phototaxis() */
 
 rmath::vector2d force_calculator::anti_phototaxis(
-    const phototaxis_force::light_sensor_readings& readings) {
+    const phototaxis_force::light_sensor_readings& readings) const {
   rmath::vector2d force = -m_phototaxis(readings);
   ER_DEBUG("Anti-phototaxis force: (%f, %f)@%f [%f]",
            force.x(),
@@ -137,7 +128,7 @@ rmath::vector2d force_calculator::anti_phototaxis(
 
 rmath::vector2d force_calculator::anti_phototaxis(
     const phototaxis_force::camera_sensor_readings& readings,
-    const rutils::color& color) {
+    const rutils::color& color) const {
   rmath::vector2d force = -m_phototaxis(readings, color);
   ER_DEBUG("Anti-phototaxis force: (%f, %f)@%f [%f]",
            force.x(),
@@ -146,5 +137,15 @@ rmath::vector2d force_calculator::anti_phototaxis(
            force.length());
   return force;
 } /* anti_phototaxis() */
+
+rmath::vector2d force_calculator::path_following(ds::path_state* state) const {
+  rmath::vector2d force = m_path_following(m_entity, state);
+  ER_DEBUG("Path following force: (%f, %f)@%f [%f]",
+           force.x(),
+           force.y(),
+           force.angle().value(),
+           force.length());
+  return force;
+} /* path_following() */
 
 NS_END(steer2D, cosm);

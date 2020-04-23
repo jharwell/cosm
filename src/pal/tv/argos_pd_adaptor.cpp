@@ -271,9 +271,7 @@ bool argos_pd_adaptor<TControllerType>::robot_attempt_add(const rtypes::type_uui
 
     return true;
   } catch (argos::CARGoSException& e) {
-    if (nullptr != fb) {
-      delete fb; /* ick raw pointers--thanks ARGoS... */
-    }
+    delete fb; /* ick raw pointers--thanks ARGoS... */
     ER_TRACE("Failed to place new robot %s at %s",
              fb->GetId().c_str(),
              rmath::vector2d(x, y).to_str().c_str());

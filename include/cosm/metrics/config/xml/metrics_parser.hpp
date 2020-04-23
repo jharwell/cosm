@@ -75,7 +75,7 @@ class metrics_parser : public rconfig::xml::xml_config_parser {
    */
   bool is_collector_name(const ticpp::Attribute& attr) const RCSW_COLD;
 
-  void output_mode_parse(ticpp::Element element,
+  void output_mode_parse(const ticpp::Element& element,
                          metrics_output_mode_config* config);
 
   /* clang-format off */

@@ -79,8 +79,8 @@ class colored_blob_camera_sensor_impl {
    * \brief A camera sensor reading (color, distance, angle) tuple.
    */
   struct reading {
-    rmath::vector2d vec;
-    rutils::color color;
+    rmath::vector2d vec{};
+    rutils::color color{};
   };
 
   explicit colored_blob_camera_sensor_impl(TSensor * const sensor)

@@ -53,7 +53,7 @@ void metrics_parser::parse(const ticpp::Element& node) {
   }
 } /* parse() */
 
-void metrics_parser::output_mode_parse(ticpp::Element element,
+void metrics_parser::output_mode_parse(const ticpp::Element& element,
                                        metrics_output_mode_config* config) {
   XML_PARSE_ATTR(element, config, output_interval);
   ticpp::Iterator<ticpp::Attribute> it;

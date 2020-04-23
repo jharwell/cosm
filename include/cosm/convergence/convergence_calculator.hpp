@@ -103,7 +103,7 @@ class convergence_calculator final
    */
   using tasks_calc_cb_type = std::function<std::vector<int>(uint)>;
 
-  convergence_calculator(const config::convergence_config* config)
+  explicit convergence_calculator(const config::convergence_config* config)
       : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
         mc_config(*config) {}
 

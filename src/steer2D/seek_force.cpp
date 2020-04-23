@@ -33,7 +33,7 @@ NS_START(cosm, steer2D);
  ******************************************************************************/
 rmath::vector2d seek_force::operator()(const boid& entity,
                                        const rmath::vector2d& target) const {
-  return (target - entity.position()).normalize() * entity.max_speed();
+  return (target - entity.position()).normalize() * mc_max;
 } /* operator()() */
 
 NS_END(steer2D, cosm);

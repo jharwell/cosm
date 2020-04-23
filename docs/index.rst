@@ -6,6 +6,7 @@ Welcome to COSM's documentation!
    :caption: Contents:
 
    config/index.rst
+   build.rst
 
 Other Projects (in descending probability of interest)
 ------------------------------------------------------

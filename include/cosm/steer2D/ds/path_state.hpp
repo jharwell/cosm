@@ -1,5 +1,5 @@
 /**
- * \file base_saa_subsystem2DQ3D.hpp
+ * \file path_state.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,53 +18,40 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_
+#ifndef INCLUDE_COSM_STEER2D_DS_PATH_STATE_HPP_
+#define INCLUDE_COSM_STEER2D_DS_PATH_STATE_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/steer2D/force_calculator.hpp"
+#include <vector>
+
+#include "rcppsw/math/vector2.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, subsystem);
+NS_START(cosm, steer2D, ds);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
 /**
- * \class base_saa_subsystem2DQ3D
- * \ingroup subsystem
+ * \class path_state
+ * \ingroup steer2D ds
  *
- * \brief Base Sensing and Actuation (SAA) subsystem for 2D and quasi-3D (Q3D)
- * SAA subsystems to provide a common interface/some degree of reuse between
- * them.
+ * \brief Holds the overall path for \ref path_following_force, as well as the
+ * robot's current progress along it.
  */
-class base_saa_subsystem2DQ3D : public steer2D::boid {
- public:
-  explicit base_saa_subsystem2DQ3D(
-      const steer2D::config::force_calculator_config* const steer_config)
-      : m_steer2D_calc(*this, steer_config) {}
-
-  /**
-   * \brief Apply the summed steering forces; change wheel speeds. Resets the
-   * summed forces.
-   */
-  virtual void steer_force2D_apply(void) = 0;
-
-  const steer2D::force_calculator& steer_force2D(void) const {
-    return m_steer2D_calc;
-  }
-  steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
-
- private:
-  /* clang-format off */
-  steer2D::force_calculator m_steer2D_calc;
+struct path_state {
+    /* clang-format off */
+  std::vector<rmath::vector2d> path{};
+  size_t                       current_node{0};
   /* clang-format on */
 };
 
-NS_END(subsystem, cosm);
+NS_END(ds, steer2D, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_ */
+#endif /* INCLUDE_STEER2D_DS_COSM_PATH_STATE_HPP_ */

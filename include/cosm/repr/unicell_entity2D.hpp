@@ -115,7 +115,7 @@ class unicell_entity2D : public entity2D {
       : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
 
   unicell_entity2D(const rmath::vector2d& dim, const rtypes::type_uuid& id)
-      : entity2D(id), m_dim(dim), m_rloc(), m_dloc() {}
+      : entity2D(id), m_dim(dim) {}
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
@@ -138,8 +138,8 @@ class unicell_entity2D : public entity2D {
  private:
   /* clang-format off */
   rmath::vector2d m_dim;
-  rmath::vector2d m_rloc;
-  rmath::vector2z m_dloc;
+  rmath::vector2d m_rloc{};
+  rmath::vector2z m_dloc{};
   /* clang-format on */
 };
 

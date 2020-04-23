@@ -47,7 +47,7 @@ double abort_probability::operator()(const rtypes::timestep& exec_time,
   if (!(whole_task.v() > 0)) {
     return eval(kMIN_ABORT_PROB);
   }
-  double ratio = exec_time.v() / whole_task.v();
+  double ratio = exec_time.v() / static_cast<double>(whole_task.v());
   double theta = 0.0;
   if (ratio <= offset()) {
     theta = reactivity() * (offset() - ratio);

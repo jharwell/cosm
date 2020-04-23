@@ -59,12 +59,12 @@ class diff_drive : public rer::client<diff_drive> {
     /**
      * \brief Controls like those of a tank
      */
-    kTankDrive,
+    ekTANK_DRIVE,
 
     /**
      * \brief Control via soft/hard turn FSM
      */
-    kFSMDrive
+    ekFSM_DRIVE
   };
 
   /**

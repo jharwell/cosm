@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <utility>
 
 #include "cosm/repr/base_block.hpp"
 #include "cosm/repr/unicell_movable_entity3D.hpp"
@@ -74,11 +75,11 @@ class ramp_block3D final : public base_block<unicell_movable_entity3D> {
   } /* clone() */
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-  boost::optional<embodied_ramp_block> set_embodiment(void) const {
+  const boost::optional<embodied_ramp_block>& set_embodiment(void) const {
     return m_embodiment;
   }
-  void embodiment(boost::optional<embodied_ramp_block> b) {
-    m_embodiment = b;
+  void embodiment(boost::optional<embodied_ramp_block>&& b) {
+    m_embodiment = std::move(b);
   }
 #endif
 

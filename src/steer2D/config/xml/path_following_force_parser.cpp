@@ -1,7 +1,7 @@
 /**
- * \file seek_force.hpp
+ * \file path_following_force_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,46 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
-
-#include "cosm/cosm.hpp"
-#include "cosm/steer2D/boid.hpp"
+#include "cosm/steer2D/config/xml/path_following_force_parser.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, steer2D);
+NS_START(cosm, steer2D, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
+void path_following_force_parser::parse(const ticpp::Element& node) {
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element anode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-/**
- * \class seek_force
- * \ingroup steer2D
- *
- * \brief A force pulling the robot to a target and then through the target
- * (i.e. the robot does not slow down to "arrive").
- */
-class seek_force {
- public:
-  explicit seek_force(double max) : mc_max(max) {}
+    XML_PARSE_ATTR(anode, m_config, max);
+    XML_PARSE_ATTR(anode, m_config, radius);
+  }
+} /* parse() */
 
-  rmath::vector2d operator()(const boid& entity,
-                             const rmath::vector2d& target) const;
+bool path_following_force_parser::validate(void) const {
+  if (is_parsed()) {
+    RCSW_CHECK(m_config->max > 0.0);
+    RCSW_CHECK(m_config->radius > 0.0);
+  }
+  return true;
 
- private:
-  /* clang-format off */
-  const double mc_max;
-  /* clang-format on */
-};
+error:
+  return false;
+} /* validate() */
 
-NS_END(steer2D, cosm);
-
-#endif /* INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_ */
+NS_END(xml, config, steer2D, cosm);

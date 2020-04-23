@@ -48,7 +48,7 @@ diff_drive::diff_drive(const config::diff_drive_config* const config,
 status_t diff_drive::fsm_drive(double desired_speed,
                                const rmath::radians& angle_delta) {
   std::pair<double, double> speeds;
-  ER_CHECK(drive_type::kFSMDrive == m_drive_type,
+  ER_CHECK(drive_type::ekFSM_DRIVE == m_drive_type,
            "Cannot actuate: not in FSM drive mode");
   m_fsm.change_velocity(desired_speed, angle_delta);
   speeds = m_fsm.wheel_speeds();
@@ -64,7 +64,7 @@ error:
 status_t diff_drive::tank_drive(double left_speed,
                                 double right_speed,
                                 bool square_inputs) {
-  ER_CHECK(drive_type::kTankDrive == m_drive_type,
+  ER_CHECK(drive_type::ekTANK_DRIVE == m_drive_type,
            "Cannot actuate: not in tank drive mode");
 
   if (square_inputs) {

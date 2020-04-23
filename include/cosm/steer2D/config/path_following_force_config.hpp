@@ -1,5 +1,5 @@
 /**
- * \file base_saa_subsystem2DQ3D.hpp
+ * \file path_following_force_config.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,53 +18,45 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_
+#ifndef INCLUDE_COSM_STEER2D_CONFIG_PATH_FOLLOWING_FORCE_CONFIG_HPP_
+#define INCLUDE_COSM_STEER2D_CONFIG_PATH_FOLLOWING_FORCE_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/steer2D/force_calculator.hpp"
+#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, subsystem);
+NS_START(cosm, steer2D, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Struct Definitions
  ******************************************************************************/
 /**
- * \class base_saa_subsystem2DQ3D
- * \ingroup subsystem
+ * \struct path_following_force_config
+ * \ingroup steer2D config
  *
- * \brief Base Sensing and Actuation (SAA) subsystem for 2D and quasi-3D (Q3D)
- * SAA subsystems to provide a common interface/some degree of reuse between
- * them.
+ * \brief Configuration for the virtual path following force, as described in
+ * \todo ref.
  */
-class base_saa_subsystem2DQ3D : public steer2D::boid {
- public:
-  explicit base_saa_subsystem2DQ3D(
-      const steer2D::config::force_calculator_config* const steer_config)
-      : m_steer2D_calc(*this, steer_config) {}
+struct path_following_force_config final : public rconfig::base_config {
+  /**
+   * The upper limit for path_following force magnitude.
+   */
+  double max{0};
 
   /**
-   * \brief Apply the summed steering forces; change wheel speeds. Resets the
-   * summed forces.
+   * The radius around each point along the path to consider as part of the
+   * point; i.e., reaching any point in the radius is the same as reaching the
+   * exact location of the point.
    */
-  virtual void steer_force2D_apply(void) = 0;
-
-  const steer2D::force_calculator& steer_force2D(void) const {
-    return m_steer2D_calc;
-  }
-  steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
-
- private:
-  /* clang-format off */
-  steer2D::force_calculator m_steer2D_calc;
-  /* clang-format on */
+  double radius{0};
 };
 
-NS_END(subsystem, cosm);
+NS_END(config, steer2D, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_BASE_SAA_SUBSYSTEM2DQ3D_HPP_ */
+#endif /* INCLUDE_COSM_STEER2D_CONFIG_PATH_FOLLOWING_FORCE_CONFIG_HPP_ */

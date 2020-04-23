@@ -165,7 +165,7 @@ class base_executive : public rer::client<base_executive> {
    * - Call the task start callbacks for the new task.
    * - Call \ref do_task_start() for the new task.
    */
-  virtual void task_start_handle(polled_task* task);
+  virtual void task_start_handle(polled_task* new_task);
 
   /**
    * \brief Handler called when a task has been finished (not aborted).
@@ -191,18 +191,18 @@ class base_executive : public rer::client<base_executive> {
    * - Actually start the task.
    * - Set the current task for the executive to the started task.
    */
-  void do_task_start(polled_task* const task);
+  void do_task_start(polled_task* task);
 
   /**
    * \brief Update execution and interface time estimates (if configured to do
    * so) for the specified task.
    */
-  void task_ests_update(polled_task* new_task);
+  void task_ests_update(polled_task* task);
 
   /**
    * \brief Update execution and interface times for the specified task.
    */
-  void task_times_update(polled_task* new_task);
+  void task_times_update(polled_task* task);
 
   void current_task(polled_task* current_task) {
     m_current_task = current_task;

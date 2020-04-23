@@ -32,8 +32,8 @@
 #include "cosm/steer2D/avoidance_force.hpp"
 #include "cosm/steer2D/phototaxis_force.hpp"
 #include "cosm/steer2D/polar_force.hpp"
-#include "cosm/steer2D/seek_force.hpp"
 #include "cosm/steer2D/wander_force.hpp"
+#include "cosm/steer2D/path_following_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -82,18 +82,8 @@ class force_calculator : public rer::client<force_calculator> {
    *
    * \param target The target to seek to.
    */
-  rmath::vector2d seek_through(const rmath::vector2d& target);
-
-  /**
-   * \brief Calculate the \ref seek_force for this timestep.
-   *
-   * \param target The target to seek to.
-   */
   rmath::vector2d seek_to(const rmath::vector2d& target);
 
-  bool within_slowing_radius(void) const {
-    return m_arrival.within_slowing_radius();
-  }
   /**
    * \brief Calculate the \ref wander_force for this timestep.
    */
@@ -107,7 +97,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param closest_obstacle Where is the closest obstacle, relative to robot's
    * current position AND heading.
    */
-  rmath::vector2d avoidance(const rmath::vector2d& closest_obstacle);
+  rmath::vector2d avoidance(const rmath::vector2d& closest_obstacle) const;
 
   /**
    * \brief Calculate the \ref phototaxis_force for this timestep.
@@ -115,7 +105,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param readings The current light sensor readings.
    */
   rmath::vector2d phototaxis(
-      const phototaxis_force::light_sensor_readings& readings);
+      const phototaxis_force::light_sensor_readings& readings) const;
 
   /**
    * \brief Calculate the \ref phototaxis_force for this timestep.
@@ -127,7 +117,14 @@ class force_calculator : public rer::client<force_calculator> {
    */
   rmath::vector2d phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color);
+      const rutils::color& color) const;
+
+  /**
+   * \brief Calculate the \ref path_following force for this timestep.
+   *
+   * \param state The current path state.
+   */
+  rmath::vector2d path_following(ds::path_state* state) const;
 
   /**
    * \brief Calculate the negative of the \ref phototaxis_force for this
@@ -136,7 +133,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param readings The current light sensor readings.
    */
   rmath::vector2d anti_phototaxis(
-      const phototaxis_force::light_sensor_readings& readings);
+      const phototaxis_force::light_sensor_readings& readings) const;
 
   /**
    * \brief Calculate the negative of the \ref phototaxis_force for this
@@ -149,7 +146,7 @@ class force_calculator : public rer::client<force_calculator> {
    */
   rmath::vector2d anti_phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color);
+      const rutils::color& color) const;
 
   void accum(const rmath::vector2d& force) { m_force_accum += force; }
 
@@ -157,15 +154,18 @@ class force_calculator : public rer::client<force_calculator> {
   const boid& entity(void) const { return m_entity; }
 
   /* clang-format off */
-  boid&            m_entity;
-  rmath::vector2d   m_force_accum{};
-  avoidance_force  m_avoidance;
-  arrival_force    m_arrival;
-  seek_force       m_seek{};
-  wander_force     m_wander;
-  polar_force      m_polar;
-  phototaxis_force m_phototaxis;
+  boid&                m_entity;
+  rmath::vector2d      m_force_accum{};
+  avoidance_force      m_avoidance;
+  arrival_force        m_arrival;
+  wander_force         m_wander;
+  polar_force          m_polar;
+  phototaxis_force     m_phototaxis;
+  path_following_force m_path_following;
   /* clang-format on */
+
+ public:
+  RCPPSW_DECLDEF_WRAP(within_slowing_radius, m_arrival);
 };
 
 NS_END(steer2D, cosm);

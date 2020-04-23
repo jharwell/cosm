@@ -319,9 +319,9 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
     auto append_it = mc_config->append.enabled.find(xml_name);
     auto truncate_it = mc_config->truncate.enabled.find(xml_name);
     auto create_it = mc_config->create.enabled.find(xml_name);
-    uint sum = (append_it != mc_config->append.enabled.end()) +
-               (truncate_it != mc_config->truncate.enabled.end()) +
-               (create_it != mc_config->create.enabled.end());
+    uint sum = static_cast<uint>(append_it != mc_config->append.enabled.end()) +
+               static_cast<uint>(truncate_it != mc_config->truncate.enabled.end()) +
+               static_cast<uint>(create_it != mc_config->create.enabled.end());
     ER_ASSERT(
         sum <= 1,
         "Collector '%s' present in more than 1 collector group in XML file",

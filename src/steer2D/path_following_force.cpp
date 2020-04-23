@@ -1,7 +1,7 @@
 /**
- * \file seek_force.hpp
+ * \file path_following_force.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,16 +18,13 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include "cosm/steer2D/path_following_force.hpp"
 
-#include "cosm/cosm.hpp"
-#include "cosm/steer2D/boid.hpp"
+#include "cosm/steer2D/config/path_following_force_config.hpp"
+#include "cosm/steer2D/ds/path_state.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -35,29 +32,28 @@
 NS_START(cosm, steer2D);
 
 /*******************************************************************************
- * Class Definitions
+ * Constructors/Destructor
  ******************************************************************************/
+path_following_force::path_following_force(
+    const config::path_following_force_config* config)
+    : mc_max(config->max),
+      mc_radius(config->radius),
+      m_seek(mc_max) {}
 
-/**
- * \class seek_force
- * \ingroup steer2D
- *
- * \brief A force pulling the robot to a target and then through the target
- * (i.e. the robot does not slow down to "arrive").
- */
-class seek_force {
- public:
-  explicit seek_force(double max) : mc_max(max) {}
-
-  rmath::vector2d operator()(const boid& entity,
-                             const rmath::vector2d& target) const;
-
- private:
-  /* clang-format off */
-  const double mc_max;
-  /* clang-format on */
-};
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+rmath::vector2d path_following_force::operator()(const boid& entity,
+                                                 ds::path_state* state) const {
+  auto next_point = state->path[state->current_node];
+  if ((entity.position() - next_point).length() <= mc_radius) {
+    ++state->current_node;
+  }
+  if (state->current_node >= state->path.size()) {
+    return {0.0, 0.0}; /* reached the end of the path */
+  } else {
+    return m_seek(entity, state->path[state->current_node]);
+  }
+} /* operator()() */
 
 NS_END(steer2D, cosm);
-
-#endif /* INCLUDE_COSM_STEER2D_SEEK_FORCE_HPP_ */

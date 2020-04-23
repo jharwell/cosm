@@ -59,11 +59,16 @@ void force_calculator_parser::parse(const ticpp::Element& node) {
     m_config->phototaxis =
         *m_phototaxis.config_get<phototaxis_force_parser::config_type>();
   }
+  if (m_path_following.is_parsed()) {
+    m_config->path_following =
+        *m_path_following.config_get<path_following_force_parser::config_type>();
+  }
 } /* parse() */
 
 bool force_calculator_parser::validate(void) const {
   return m_avoidance.validate() && m_arrival.validate() &&
-         m_wander.validate() && m_polar.validate() && m_phototaxis.validate();
+         m_wander.validate() && m_polar.validate() &&
+      m_phototaxis.validate() && m_path_following.validate();
 } /* validate() */
 
 NS_END(xml, config, steer2D, cosm);
