@@ -24,7 +24,6 @@
 #include "cosm/foraging/utils/utils.hpp"
 #include "cosm/repr/entity2D.hpp"
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/foraging/repr/foraging_los.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,15 +50,5 @@ placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
   return placement_status_t{entity->xspan().overlaps_with(loc_xspan),
                             entity->yspan().overlaps_with(loc_yspan)};
 } /* placement_conflict2D() */
-
-template<typename TBlockType>
-std::unique_ptr<cfrepr::foraging_los> compute_robot_los(
-    const carena::base_arena_map<TBlockType>& map,
-    uint los_grid_size,
-    const rmath::vector2d& pos) {
-  rmath::vector2z position = rmath::dvec2uvec(pos, map.grid_resolution().v());
-  return std::make_unique<cfrepr::foraging_los>(
-      map.subgrid(position.x(), position.y(), los_grid_size), position);
-} /* compute_robot_los */
 
 NS_END(utils, foraging, cosm);

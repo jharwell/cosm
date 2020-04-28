@@ -1,7 +1,7 @@
 /**
- * \file arena_map_parser.cpp
+ * \file los2D.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -20,35 +20,29 @@
 
 /*******************************************************************************
  * Includes
- ******************************************************************************/
-#include "cosm/arena/config/xml/arena_map_parser.hpp"
+ *****************************************************************************/
+#include "cosm/repr/los2D.hpp"
 
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+NS_START(cosm, repr);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void arena_map_parser::parse(const ticpp::Element& node) {
-  ticpp::Element anode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+const cds::cell2D& los2D::access(size_t i, size_t j) const {
+  ER_ASSERT(i < xsize(),
+            "Out of bounds X access: %zu >= %lu",
+            i,
+            xsize());
+  ER_ASSERT(j < ysize(),
+            "Out of bounds Y access: %zu >= %lu",
+            j,
+            ysize());
+  return view()[i][j];
+} /* access() */
 
-  m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::xml::grid2D_parser::config_type>();
-
-  m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
-
-  m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
-} /* parse() */
-
-bool arena_map_parser::validate(void) const {
-  return m_grid.validate() && m_blocks.validate() && m_nest.validate();
-} /* validate() */
-
-NS_END(xml, config, arena, cosm);
+NS_END(repr, cosm);

@@ -57,7 +57,7 @@ template<class TControllerType>
 class argos_convergence_calculator : public rer::client<argos_convergence_calculator<TControllerType>>,
   public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
-  argos_convergence_calculator(const ccconfig::convergence_config* config,
+  argos_convergence_calculator(const cconvconfig::convergence_config* config,
                                cpal::argos_sm_adaptor* sm) RCSW_COLD;
   ~argos_convergence_calculator(void) override RCSW_COLD = default;
 

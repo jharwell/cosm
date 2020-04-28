@@ -1,7 +1,7 @@
 /**
- * \file arena_map_parser.cpp
+ * \file losQ3D.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -20,35 +20,38 @@
 
 /*******************************************************************************
  * Includes
- ******************************************************************************/
-#include "cosm/arena/config/xml/arena_map_parser.hpp"
+ *****************************************************************************/
+#include "cosm/repr/losQ3D.hpp"
 
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/ds/cell3D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+NS_START(cosm, repr);
+
+/*******************************************************************************
+ * Constructors/Destructor
+ ******************************************************************************/
+losQ3D::losQ3D(const const_grid_view& c_view)
+    : base_los(c_view),
+      ER_CLIENT_INIT("cosm.repr.losQ3D") {
+  ER_ASSERT(1 == view().shape()[2], "Q3D view does not have zsize=1");
+}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void arena_map_parser::parse(const ticpp::Element& node) {
-  ticpp::Element anode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+const cds::cell3D& losQ3D::access(size_t i, size_t j) const {
+  ER_ASSERT(i < xsize(),
+            "Out of bounds X access: %zu >= %lu",
+            i,
+            xsize());
+  ER_ASSERT(j < ysize(),
+            "Out of bounds Y access: %zu >= %lu",
+            j,
+            ysize());
+  return view()[i][j][0];
+} /* access() */
 
-  m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::xml::grid2D_parser::config_type>();
-
-  m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
-
-  m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
-} /* parse() */
-
-bool arena_map_parser::validate(void) const {
-  return m_grid.validate() && m_blocks.validate() && m_nest.validate();
-} /* validate() */
-
-NS_END(xml, config, arena, cosm);
+NS_END(repr, cosm);

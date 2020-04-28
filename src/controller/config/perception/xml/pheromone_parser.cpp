@@ -1,5 +1,5 @@
 /**
- * \file grid_parser.cpp
+ * \file pheromone_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,45 +21,26 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/config/xml/grid_parser.hpp"
-
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/controller/config/perception/xml/pheromone_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config, xml);
+NS_START(cosm, controller, config, perception, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void grid_parser::parse(const ticpp::Element& node) {
-  /*
-   * May not exist if we are parsing part of an XML tree for perception that
-   * does not use grids.
-   */
-  if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ticpp::Element gnode = node_get(node, kXMLRoot);
-    m_config = std::make_unique<config_type>();
+void pheromone_parser::parse(const ticpp::Element& node) {
+  ticpp::Element pnode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-    std::vector<std::string> res;
-    rcppsw::utils::line_parser parser(' ');
-    res = parser.parse(gnode.GetAttribute("size"));
-
-    XML_PARSE_ATTR(gnode, m_config, resolution);
-    m_config->lower.set(0, 0);
-    m_config->upper.set(std::atoi(res[0].c_str()), std::atoi(res[1].c_str()));
-  }
+  XML_PARSE_ATTR(pnode, m_config, rho);
+  XML_PARSE_ATTR_DFLT(pnode, m_config, repeat_deposit, false);
 } /* parse() */
 
-bool grid_parser::validate(void) const {
-  RCSW_CHECK(m_config->resolution.v() > 0.0);
-  RCSW_CHECK(m_config->upper.x() > 0.0);
-  RCSW_CHECK(m_config->upper.y() > 0.0);
-  return true;
-
-error:
-  return false;
+bool pheromone_parser::validate(void) const {
+  return m_config->rho > 0.0;
 } /* validate() */
 
-NS_END(xml, config, ds, cosm);
+NS_END(xml, perception, config, controller, cosm);

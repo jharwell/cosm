@@ -96,6 +96,7 @@ class base_controllerQ3D : public base_controller,
    * (logically) a 2D object.
    */
   rmath::vector2d pos2D(void) const RCSW_PURE;
+  rmath::vector2z dpos2D(void) const RCSW_PURE;
 
   /**
    * \brief Provided for compatibility with 2D metric gathering without having

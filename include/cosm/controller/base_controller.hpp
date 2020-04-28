@@ -34,6 +34,7 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/mpl/reflectable.hpp"
 
 #include "cosm/fsm/metrics/goal_acq_metrics.hpp"
 
@@ -63,6 +64,7 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controller : public cfsm::metrics::goal_acq_metrics,
+                        public rmpl::reflectable,
                         public rer::client<base_controller> {
  public:
   base_controller(void) RCSW_COLD;
@@ -88,14 +90,6 @@ class base_controller : public cfsm::metrics::goal_acq_metrics,
    * \brief Run the main controller loop.
    */
   virtual void control_step(void) = 0;
-
-  /**
-   * \brief Return the \ref std::type_index of the derived class. This is useful
-   * in conjunction with \ref boost::variant and \ref boost::apply_visitor, as
-   * it allows for run-time reflection based on the actual type of the
-   * controller.
-   */
-  virtual std::type_index type_index(void) const = 0;
 
   /**
    * \brief Get the ID of the entity, which is unique among all entities of the

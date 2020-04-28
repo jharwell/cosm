@@ -119,6 +119,8 @@ namespace repr {}
 namespace controller {
 namespace operations {}
 namespace metrics {}
+namespace config {}
+namespace perception {}
 } /* namespace controller */
 
 namespace robots {
@@ -179,48 +181,60 @@ namespace operations {}
 namespace csubsystem = cosm::subsystem;
 namespace cops = cosm::operations;
 namespace ccontroller = cosm::controller;
+namespace ccontconfig = ccontroller::config;
 namespace ccops = ccontroller::operations;
 namespace ccmetrics = ccontroller::metrics;
-namespace cfsm = cosm::fsm;
-namespace chal = cosm::hal;
-namespace ckin2D = cosm::kin2D;
-namespace csteer2D = cosm::steer2D;
-namespace crobots = cosm::robots;
-namespace crfootbot = crobots::footbot;
-namespace ctv = cosm::tv;
-namespace cds = cosm::ds;
-namespace cdconfig = cds::config;
-namespace cdops = cds::operations;
-namespace cconvergence = cosm::convergence;
-namespace ccconfig = cconvergence::config;
-namespace cmetrics = cosm::metrics;
-namespace cmconfig = cmetrics::config;
-namespace ctv = cosm::tv;
+namespace ccperception = ccontroller::perception;
+
 namespace cforaging = cosm::foraging;
 namespace cfrepr = cforaging::repr;
 namespace cforacle = cforaging::oracle;
 namespace cfutils = cforaging::utils;
 namespace cfds = cforaging::ds;
 namespace cfops = cforaging::operations;
+namespace cfconfig = cforaging::config;
+namespace cfbd = cforaging::block_dist;
+
 namespace carena = cosm::arena;
 namespace cads = carena::ds;
 namespace caconfig = carena::config;
 namespace cametrics = carena::metrics;
 namespace carepr = carena::repr;
 namespace caops = carena::operations;
-namespace cfconfig = cforaging::config;
-namespace cfbd = cforaging::block_dist;
+
+namespace cconvergence = cosm::convergence;
+namespace cconvconfig = cconvergence::config;
+
+namespace cta = cosm::ta;
+namespace ctametrics = cta::metrics;
+
+namespace ctv = cosm::tv;
 namespace ctvmetrics = ctv::metrics;
-namespace crepr = cosm::repr;
+
+namespace cmetrics = cosm::metrics;
+namespace cmconfig = cmetrics::config;
+
 namespace cvis = cosm::vis;
 namespace cvconfig = cvis::config;
+
+namespace cds = cosm::ds;
+namespace cdconfig = cds::config;
+namespace cdops = cds::operations;
+
 namespace cpal = cosm::pal;
 namespace cpops = cpal::operations;
 namespace cpconfig = cpal::config;
 namespace cptv = cpal::tv;
+
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
-namespace cta = cosm::ta;
-namespace ctametrics = cta::metrics;
+
+namespace cfsm = cosm::fsm;
+namespace chal = cosm::hal;
+namespace ckin2D = cosm::kin2D;
+namespace csteer2D = cosm::steer2D;
+namespace crobots = cosm::robots;
+namespace crfootbot = crobots::footbot;
+namespace crepr = cosm::repr;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

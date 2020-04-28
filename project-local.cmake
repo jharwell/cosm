@@ -88,6 +88,7 @@ endif()
 set(${target}_INCLUDE_DIRS
   ${${target}_INC_PATH}
   ${rcppsw_INCLUDE_DIRS})
+
 set(${target}_SYS_INCLUDE_DIRS
   ${rcppsw_SYS_INCLUDE_DIRS}
   ${COSM_PROJECT_DEPS_PREFIX}/include

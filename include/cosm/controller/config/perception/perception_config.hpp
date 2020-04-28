@@ -1,5 +1,5 @@
 /**
- * \file arena_map_parser.cpp
+ * \file perception_config.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,37 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PERCEPTION_CONFIG_HPP_
+#define INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PERCEPTION_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/config/xml/arena_map_parser.hpp"
+#include "rcppsw/config/base_config.hpp"
 
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/ds/config/grid2D_config.hpp"
+#include "cosm/controller/config/perception/pheromone_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+NS_START(cosm, controller, config, perception);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void arena_map_parser::parse(const ticpp::Element& node) {
-  ticpp::Element anode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \struct perception_config
+ * \ingroup controller config perception
+ *
+ * \brief Configuration for robot perception.
+ */
+struct perception_config final : public rconfig::base_config {
+  double los_dim{-1};
+  cds::config::grid2D_config occupancy_grid {};
+  struct pheromone_config pheromone {};
+};
 
-  m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::xml::grid2D_parser::config_type>();
+NS_END(perception, config, controller, cosm);
 
-  m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
-
-  m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
-} /* parse() */
-
-bool arena_map_parser::validate(void) const {
-  return m_grid.validate() && m_blocks.validate() && m_nest.validate();
-} /* validate() */
-
-NS_END(xml, config, arena, cosm);
+#endif /* INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PERCEPTION_CONFIG_HPP_ */

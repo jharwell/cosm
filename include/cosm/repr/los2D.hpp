@@ -1,7 +1,7 @@
 /**
- * \file arena_map_parser.cpp
+ * \file los2d.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,37 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_REPR_LOS2D_HPP_
+#define INCLUDE_COSM_REPR_LOS2D_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/config/xml/arena_map_parser.hpp"
-
-#include "rcppsw/utils/line_parser.hpp"
+#include "cosm/repr/base_los.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+NS_START(cosm, repr);
 
 /*******************************************************************************
- * Member Functions
+ * Class Definitions
  ******************************************************************************/
-void arena_map_parser::parse(const ticpp::Element& node) {
-  ticpp::Element anode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \class los2D
+ * \ingroup repr
+ *
+ * \brief A repr of the robot's current line-of-sight in 2D.
+ */
+class los2D : public crepr::base_los<cds::cell2D>,
+              public rer::client<los2D> {
+ public:
+  explicit los2D(const const_grid_view& c_view)
+      : base_los(c_view),
+        ER_CLIENT_INIT("cosm.repr.los2D") {}
 
-  m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::xml::grid2D_parser::config_type>();
+  const cds::cell2D& access(size_t i, size_t j) const override;
+};
 
-  m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
+NS_END(repr, cosm);
 
-  m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
-} /* parse() */
-
-bool arena_map_parser::validate(void) const {
-  return m_grid.validate() && m_blocks.validate() && m_nest.validate();
-} /* validate() */
-
-NS_END(xml, config, arena, cosm);
+#endif /* INCLUDE_COSM_REPR_LOS2D_HPP_ */

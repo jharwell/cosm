@@ -176,24 +176,6 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
   virtual rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
                                            const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
-  /**
-   * \brief Get the subgrid for use in calculating a robot's LOS.
-   *
-   * \param x X coord of the center of the subgrid.
-   * \param y Y coord of the center of the subgrid.
-   * \param radius The radius of the subgrid.
-   *
-   * \return The subgrid.
-   */
-  template<typename ...Args>
-  grid_view subgrid(Args&& ...args) {
-    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(std::forward<Args>(args)...);
-  }
-  template<typename ...Args>
-  const_grid_view subgrid(Args&& ...args) const {
-    return decoratee().template layer<cds::arena_grid::kCell>()->subcircle(std::forward<Args>(args)...);
-  }
-
   rtypes::discretize_ratio grid_resolution(void) const {
     return decoratee().resolution();
   }

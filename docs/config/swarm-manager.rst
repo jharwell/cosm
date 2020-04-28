@@ -431,7 +431,7 @@ XML configuration:
        ...
        <grid
            resolution="FLOAT"
-           size="X, Y, Z"/>
+           size="X, Y"/>
        ...
    </arena_map>
 

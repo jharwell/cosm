@@ -37,8 +37,6 @@
 #include "rcppsw/utils/maskable_enum.hpp"
 #include "rcppsw/mpl/identity.hpp"
 
-#include "cosm/ds/config/grid_config.hpp"
-
 #include "cosm/cosm.hpp"
 #include "cosm/metrics/base_metrics_aggregator.hpp"
 

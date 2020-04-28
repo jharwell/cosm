@@ -1,7 +1,7 @@
 /**
- * \file arena_map_parser.cpp
+ * \file grid3D_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,34 +21,39 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/config/xml/arena_map_parser.hpp"
+#include "cosm/ds/config/xml/grid3D_parser.hpp"
 
 #include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+NS_START(cosm, ds, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void arena_map_parser::parse(const ticpp::Element& node) {
-  ticpp::Element anode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+void grid3D_parser::parse(const ticpp::Element& node) {
+  /*
+   * May not exist if we are parsing part of an XML tree for perception that
+   * does not use grids.
+   */
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element gnode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-  m_grid.parse(anode);
-  m_config->grid = *m_grid.config_get<cds::config::xml::grid2D_parser::config_type>();
-
-  m_blocks.parse(anode);
-  m_config->blocks = *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
-
-  m_nest.parse(anode);
-  m_config->nest = *m_nest.config_get<crepr::config::xml::nest_parser::config_type>();
+    XML_PARSE_ATTR(gnode, m_config, resolution);
+    XML_PARSE_ATTR(gnode, m_config, dims);
+  }
 } /* parse() */
 
-bool arena_map_parser::validate(void) const {
-  return m_grid.validate() && m_blocks.validate() && m_nest.validate();
+bool grid3D_parser::validate(void) const {
+  RCSW_CHECK(m_config->resolution.v() > 0.0);
+  RCSW_CHECK(m_config->dims.is_pd());
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
-NS_END(xml, config, arena, cosm);
+NS_END(xml, config, ds, cosm);

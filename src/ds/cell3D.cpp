@@ -23,9 +23,6 @@
  ******************************************************************************/
 #include "cosm/ds/cell3D.hpp"
 
-#include "cosm/repr/cube_block3D.hpp"
-#include "cosm/repr/ramp_block3D.hpp"
-
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -39,20 +36,12 @@ cell3D::cell3D(void) { decoratee().init(); }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::cube_block3D* cell3D::cube_block(void) const {
-  return dynamic_cast<crepr::cube_block3D*>(m_entity);
-} /* cube_block() */
+crepr::base_block3D* cell3D::block(void) const {
+  return dynamic_cast<crepr::base_block3D*>(m_entity);
+} /* block3D() */
 
-crepr::cube_block3D* cell3D::cube_block(void) {
-  return dynamic_cast<crepr::cube_block3D*>(m_entity);
-} /* cube_block() */
-
-crepr::ramp_block3D* cell3D::ramp_block(void) const {
-  return dynamic_cast<crepr::ramp_block3D*>(m_entity);
-} /* ramp_block() */
-
-crepr::ramp_block3D* cell3D::ramp_block(void) {
-  return dynamic_cast<crepr::ramp_block3D*>(m_entity);
-} /* ramp_block() */
+crepr::base_block3D* cell3D::block(void) {
+  return dynamic_cast<crepr::base_block3D*>(m_entity);
+} /* block3D() */
 
 NS_END(ds, cosm);

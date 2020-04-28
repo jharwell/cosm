@@ -1,5 +1,5 @@
 /**
- * \file grid_config.hpp
+ * \file perception_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,39 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CONFIG_GRID_CONFIG_HPP_
-#define INCLUDE_COSM_DS_CONFIG_GRID_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/types/discretize_ratio.hpp"
-
-#include "cosm/cosm.hpp"
+#include "cosm/controller/config/perception/xml/perception_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config);
+NS_START(cosm, controller, config, perception, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct grid_config
- * \ingroup config ds
- *
- * \brief Configuration for the \ref arena_grid used to represent the arena by
- * both loop functions and robots.
- */
-struct grid_config final : public rconfig::base_config {
-  rtypes::discretize_ratio resolution{0.0};
-  rmath::vector2d upper{};
-  rmath::vector2d lower{};
-};
+void perception_parser::parse(const ticpp::Element& node) {
+  /*
+   * Not all controllers use a perception subsystem
+   */
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ticpp::Element onode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-NS_END(config, ds, cosm);
+    XML_PARSE_ATTR(onode, m_config, los_dim);
 
-#endif /* INCLUDE_COSM_DS_CONFIG_GRID_CONFIG_HPP_ */
+    m_occupancy.parse(onode);
+    m_pheromone.parse(onode);
+    m_config->occupancy_grid =
+        *m_occupancy.config_get<cdconfig::xml::grid2D_parser::config_type>();
+    m_config->pheromone =
+        *m_pheromone.config_get<pheromone_parser::config_type>();
+  }
+} /* parse() */
+
+bool perception_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+  return m_occupancy.validate() && m_pheromone.validate();
+} /* validate() */
+
+NS_END(xml, perception, config, controller, cosm);

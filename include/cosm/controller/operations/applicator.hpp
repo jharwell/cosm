@@ -57,7 +57,7 @@ class applicator {
   explicit applicator(TBaseControllerType* const c) : m_controller(c) {}
 
   template <typename TDerivedControllerType>
-  auto operator()(TOperation<TDerivedControllerType, Args...>& op) const -> decltype(op(std::declval<TDerivedControllerType*>())) {
+  auto operator()(const TOperation<TDerivedControllerType, Args...>& op) const -> decltype(op(std::declval<TDerivedControllerType*>())) {
     return op(static_cast<TDerivedControllerType*>(m_controller));
   }
 

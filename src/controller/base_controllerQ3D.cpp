@@ -108,6 +108,11 @@ rmath::vector3z base_controllerQ3D::dpos3D(void) const {
   return m_saa->sensing()->discrete_position();
 }
 
+rmath::vector2z base_controllerQ3D::dpos2D(void) const {
+  auto pos = dpos3D();
+  return rmath::vector2z(pos.x(), pos.y());
+}
+
 rmath::radians base_controllerQ3D::azimuth(void) const {
   return m_saa->sensing()->azimuth();
 }

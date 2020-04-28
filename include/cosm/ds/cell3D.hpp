@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STRUCTURE_CELL3D_HPP_
-#define INCLUDE_COSM_STRUCTURE_CELL3D_HPP_
+#ifndef INCLUDE_COSM_DS_CELL3D_HPP_
+#define INCLUDE_COSM_DS_CELL3D_HPP_
 
 /*******************************************************************************
  * Includes
@@ -32,6 +32,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/cell3D_fsm.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -56,7 +57,6 @@ NS_START(cosm, ds);
  */
 class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
  public:
-  /* must have no parameters to be used with \ref structure3D */
   cell3D(void);
 
   cell3D(const cell3D&) = default;
@@ -89,23 +89,8 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   void loc(const rmath::vector3z& loc) { m_loc = loc; }
   const rmath::vector3z& loc(void) const { return m_loc; }
 
-  /**
-   * \brief Get the cube block entity associated with this cell.
-   *
-   * Will be NULL unless it contains a cube block, so check the cell's state
-   * before calling this function.
-   */
-  crepr::cube_block3D* cube_block(void) const RCSW_PURE;
-  crepr::cube_block3D* cube_block(void) RCSW_PURE;
-
-  /**
-   * \brief Get the ramp block entity associated with this cell.
-   *
-   * Will be NULL unless it contains a ramp block, so check the cell's state
-   * before calling this function.
-   */
-  crepr::ramp_block3D* ramp_block(void) const RCSW_PURE;
-  crepr::ramp_block3D* ramp_block(void) RCSW_PURE;
+  crepr::base_block3D* block(void) const RCSW_PURE;
+  crepr::base_block3D* block(void) RCSW_PURE;
 
  private:
   /* clang-format off */
@@ -116,4 +101,4 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_STRUCTURE_CELL3D_HPP_ */
+#endif /* INCLUDE_COSM_DS_CELL3D_HPP_ */
