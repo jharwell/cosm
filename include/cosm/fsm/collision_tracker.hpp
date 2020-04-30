@@ -30,12 +30,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm);
-namespace subsystem {
-class sensing_subsystem2D;
-} // namespace subsystem
+namespace cosm::subsystem {
+class sensing_subsystemQ3D;
+}
 
-NS_START(fsm);
+NS_START(cosm, fsm);
 
 /*******************************************************************************
  * Class Definitions
@@ -45,11 +44,12 @@ NS_START(fsm);
  * \ingroup fsm
  *
  * \brief Utility class for tracking when a robot enters/exits a collision
- * avoidance state, and the time spent in that state.
+ * avoidance state, and the time spent in that state, as it moves in 2D or 3D.
  */
 class collision_tracker : public metrics::collision_metrics {
  public:
-  explicit collision_tracker(const subsystem::sensing_subsystem2D* const sensing)
+  explicit collision_tracker(
+      const subsystem::sensing_subsystemQ3D* const sensing)
       : mc_sensing(sensing) {}
 
   collision_tracker(const collision_tracker&) = delete;
@@ -60,7 +60,8 @@ class collision_tracker : public metrics::collision_metrics {
   bool entered_collision_avoidance(void) const override final RCSW_PURE;
   bool exited_collision_avoidance(void) const override final RCSW_PURE;
   rtypes::timestep collision_avoidance_duration(void) const override final;
-  rmath::vector2z avoidance_loc(void) const override final RCSW_PURE;
+  rmath::vector2z avoidance_loc2D(void) const override final RCSW_PURE;
+  rmath::vector3z avoidance_loc3D(void) const override final RCSW_PURE;
 
   /**
    * \brief Handle all logic for entering collision avoidance; classes should
@@ -77,11 +78,12 @@ class collision_tracker : public metrics::collision_metrics {
 
  private:
   /* clang-format off */
-  bool                                        m_entered_avoidance{false};
-  bool                                        m_exited_avoidance{false};
-  bool                                        m_in_avoidance{false};
-  rtypes::timestep                            m_avoidance_start{0};
-  const subsystem::sensing_subsystem2D* const mc_sensing;
+  const subsystem::sensing_subsystemQ3D* const mc_sensing;
+
+  bool                                      m_entered_avoidance{false};
+  bool                                      m_exited_avoidance{false};
+  bool                                      m_in_avoidance{false};
+  rtypes::timestep                          m_avoidance_start{0};
   /* clang-format on */
 };
 

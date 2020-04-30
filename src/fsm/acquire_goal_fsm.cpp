@@ -26,7 +26,7 @@
 #include "cosm/fsm/point_argument.hpp"
 #include "cosm/fsm/util_signal.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,7 +37,7 @@ NS_START(cosm, fsm);
  * Constructors/Destructors
  ******************************************************************************/
 acquire_goal_fsm::acquire_goal_fsm(
-    subsystem::saa_subsystem2D* const saa,
+    subsystem::saa_subsystemQ3D* const saa,
     std::unique_ptr<expstrat::base_expstrat> behavior,
     rmath::rng* rng,
     const struct hook_list& hooks)
@@ -145,20 +145,24 @@ metrics::goal_acq_metrics::goal_type acquire_goal_fsm::acquisition_goal(
 } /* acquisition_goal() */
 
 rmath::vector2z acquire_goal_fsm::acquisition_loc(void) const {
-  return sensing()->discrete_position();
+  return sensing()->dpos2D();
 } /* acquisition_loc() */
 
 rmath::vector2z acquire_goal_fsm::current_explore_loc(void) const {
-  return sensing()->discrete_position();
+  return sensing()->dpos2D();
 } /* current_explore_loc() */
 
 rmath::vector2z acquire_goal_fsm::current_vector_loc(void) const {
-  return sensing()->discrete_position();
+  return sensing()->dpos2D();
 } /* current_vector_loc() */
 
-rmath::vector2z acquire_goal_fsm::avoidance_loc(void) const {
-  return sensing()->discrete_position();
-} /* avoidance_loc() */
+rmath::vector2z acquire_goal_fsm::avoidance_loc2D(void) const {
+  return sensing()->dpos2D();
+} /* avoidance_loc2D() */
+
+rmath::vector3z acquire_goal_fsm::avoidance_loc3D(void) const {
+  return sensing()->dpos3D();
+} /* avoidance_loc3D() */
 
 /*******************************************************************************
  * General Member Functions

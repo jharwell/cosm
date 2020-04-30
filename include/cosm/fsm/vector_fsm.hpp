@@ -29,6 +29,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/util_hfsm.hpp"
 #include "cosm/ta/taskable.hpp"
+#include "cosm/fsm/point_argument.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -54,7 +55,7 @@ class vector_fsm final : public util_hfsm,
                          public rer::client<vector_fsm>,
                          public ta::taskable {
  public:
-  vector_fsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng);
+  vector_fsm(subsystem::saa_subsystemQ3D* saa, rmath::rng* rng);
 
   vector_fsm& operator=(const vector_fsm&) = delete;
   vector_fsm(const vector_fsm&) = delete;
@@ -70,10 +71,11 @@ class vector_fsm final : public util_hfsm,
     return current_state() == ekST_ARRIVED;
   }
 
-  const rmath::vector2d& target(void) const { return m_goal_data.loc; }
+  const rmath::vector2d& target(void) const { return m_goal.point(); }
 
+  /* HFSM overrides */
   /**
-   * \brief Initialize/re-initialize the vector_fsm fsm. After arriving at a
+   * \brief Initialize/re-initialize the FSM. After arriving at a
    * goal, this function must be called before vectoring to a new goal will
    * work.
    */
@@ -83,7 +85,8 @@ class vector_fsm final : public util_hfsm,
   bool in_collision_avoidance(void) const override RCSW_PURE;
   bool entered_collision_avoidance(void) const override RCSW_PURE;
   bool exited_collision_avoidance(void) const override RCSW_PURE;
-  rmath::vector2z avoidance_loc(void) const override;
+  rmath::vector2z avoidance_loc2D(void) const override;
+  rmath::vector3z avoidance_loc3D(void) const override;
 
  private:
   enum state {
@@ -114,27 +117,14 @@ class vector_fsm final : public util_hfsm,
     ekST_MAX_STATES
   };
 
-  /**
-   * \brief A structure containing all the information needed for the controller
-   * to tell the FSM where to travel to next.
-   */
-  struct goal_data final : public rpfsm::event_data {
-    goal_data(const rmath::vector2d& loc_in, double tol)
-        : tolerance(tol), loc(loc_in) {}
-    goal_data(void) = default;
-
-    double tolerance{0.0};
-    rmath::vector2d loc{};
-  };
-
   struct fsm_state {
     uint m_collision_rec_count{0};
   };
 
   /**
    * \brief The # of timesteps according to collision recovery. This is mainly
-   * to ensure that you do not repeatedly get 2 controller butting heads as they try
-   * to travel to opposite goals.
+   * to ensure that you do not repeatedly get 2 controller butting heads as they
+   * try to travel to opposite goals.
    */
   static constexpr const uint kCOLLISION_RECOVERY_TIME = 10;
 
@@ -150,10 +140,10 @@ class vector_fsm final : public util_hfsm,
 
   /* vector states */
   HFSM_STATE_DECLARE_ND(vector_fsm, start);
-  HFSM_STATE_DECLARE(vector_fsm, vector, rpfsm::event_data);
+  HFSM_STATE_DECLARE(vector_fsm, vector, point_argument);
   HFSM_STATE_DECLARE_ND(vector_fsm, collision_avoidance);
   HFSM_STATE_DECLARE_ND(vector_fsm, collision_recovery);
-  HFSM_STATE_DECLARE(vector_fsm, arrived, struct goal_data);
+  HFSM_STATE_DECLARE(vector_fsm, arrived, point_argument);
 
   HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
   HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_avoidance);
@@ -168,8 +158,8 @@ class vector_fsm final : public util_hfsm,
   HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /* clang-format off */
-  struct fsm_state m_state{};
-  struct goal_data m_goal_data{};
+  fsm_state      m_state{};
+  point_argument m_goal{};
   /* clang-format on */
 };
 

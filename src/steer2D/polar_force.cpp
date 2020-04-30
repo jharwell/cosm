@@ -41,7 +41,7 @@ polar_force::polar_force(const config::polar_force_config* const config)
  ******************************************************************************/
 rmath::vector2d polar_force::operator()(const boid& entity,
                                         const rmath::vector2d& source) const {
-  return (entity.position() - source).normalize() * mc_max;
+  return (entity.pos2D() - source).normalize() * mc_max;
 } /* operator()() */
 
 NS_END(steer2D, cosm);

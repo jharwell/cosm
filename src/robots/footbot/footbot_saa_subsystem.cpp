@@ -1,5 +1,5 @@
 /**
- * \file footbot_saa_subsystem2D.cpp
+ * \file footbot_saa_subsystem.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,10 +21,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/robots/footbot/footbot_saa_subsystem2D.hpp"
+#include "cosm/robots/footbot/footbot_saa_subsystem.hpp"
 
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -34,21 +34,22 @@ NS_START(cosm, robots, footbot);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-footbot_saa_subsystem2D::footbot_saa_subsystem2D(
+footbot_saa_subsystem::footbot_saa_subsystem(
     const hal::sensors::position_sensor& pos,
-    const subsystem::sensing_subsystem2D::sensor_map& sensors,
+    const subsystem::sensing_subsystemQ3D::sensor_map& sensors,
     const subsystem::actuation_subsystem2D::actuator_map& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
-    : saa_subsystem2D(pos, sensors, actuators, steer_config),
+    : saa_subsystemQ3D(pos, sensors, actuators, steer_config),
       ER_CLIENT_INIT("cosm.robots.footbot.saa") {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void footbot_saa_subsystem2D::steer_force2D_apply(void) {
-  ER_DEBUG("position=%s heading=%s",
-           sensing()->position().to_str().c_str(),
-           sensing()->heading().to_str().c_str());
+void footbot_saa_subsystem::steer_force2D_apply(void) {
+  ER_DEBUG("position=%s azimuth=%s inclination=%s",
+           sensing()->rpos2D().to_str().c_str(),
+           sensing()->azimuth().to_str().c_str(),
+           sensing()->inclination().to_str().c_str());
   ER_DEBUG("linear_vel=%s@%s [%f] angular_vel=%f",
            linear_velocity().to_str().c_str(),
            linear_velocity().angle().to_str().c_str(),
@@ -67,7 +68,7 @@ void footbot_saa_subsystem2D::steer_force2D_apply(void) {
   steer_force2D().reset();
 } /* steer_force2D_apply() */
 
-rmath::vector2d footbot_saa_subsystem2D::linear_velocity(void) const {
+rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {
   auto speed = sensing()->diff_drive()->current_speed();
   /*
    * If speed comes back as 0.0, then we are executing a hard turn, probably as
@@ -79,24 +80,24 @@ rmath::vector2d footbot_saa_subsystem2D::linear_velocity(void) const {
    * There probably is a better way to do this, but I don't know what it is.
    */
   if (speed <= std::numeric_limits<double>::epsilon()) {
-    return {0.1, sensing()->heading()};
+    return {0.1, sensing()->azimuth()};
   } else {
-    return {sensing()->diff_drive()->current_speed(), sensing()->heading()};
+    return {sensing()->diff_drive()->current_speed(), sensing()->azimuth()};
   }
 } /* linear_velocity() */
 
-double footbot_saa_subsystem2D::angular_velocity(void) const {
+double footbot_saa_subsystem::angular_velocity(void) const {
   auto reading = sensing()->diff_drive()->reading();
 
   return (reading.vel_right - reading.vel_left) / reading.axle_length;
 } /* angular_velocity() */
 
-double footbot_saa_subsystem2D::max_speed(void) const {
+double footbot_saa_subsystem::max_speed(void) const {
   return actuation()->governed_diff_drive()->max_speed();
 } /* max_speed() */
 
-rmath::vector2d footbot_saa_subsystem2D::position(void) const {
-  return sensing()->position();
-} /* position() */
+rmath::vector2d footbot_saa_subsystem::pos2D(void) const {
+  return sensing()->rpos2D();
+} /* pos2D() */
 
 NS_END(footbot, robots, cosm);

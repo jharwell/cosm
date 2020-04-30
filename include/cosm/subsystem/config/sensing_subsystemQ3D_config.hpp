@@ -1,5 +1,5 @@
 /**
- * \file sensing_subsystem2D_parser.cpp
+ * \file sensing_subsystemQ3D_config.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,38 +18,35 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEM_CONFIG_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEM_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/subsystem/config/xml/sensing_subsystem2D_parser.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
+#include "cosm/hal/sensors/config/ground_sensor_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, config, xml);
+NS_START(cosm, subsystem, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void sensing_subsystem2D_parser::parse(const ticpp::Element& node) {
-  ticpp::Element snode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \struct sensing_subsystemQ3D_config
+ * \ingroup subsystem config
+ *
+ * \brief Sensing subsystem configuration.
+ */
+struct sensing_subsystemQ3D_config final : public rconfig::base_config {
+  hal::sensors::config::proximity_sensor_config proximity {};
+  hal::sensors::config::ground_sensor_config ground {};
+};
 
-  m_proximity.parse(snode);
-  m_config->proximity = *m_proximity.config_get<
-      hal::sensors::config::xml::proximity_sensor_parser::config_type>();
-  m_ground.parse(snode);
-  m_config->ground = *m_ground.config_get<
-      hal::sensors::config::xml::ground_sensor_parser::config_type>();
-} /* parse() */
+NS_END(config, subsystem, cosm);
 
-bool sensing_subsystem2D_parser::validate(void) const {
-  RCSW_CHECK(m_proximity.validate());
-  RCSW_CHECK(m_ground.validate());
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(xml, config, subsystem, cosm);
+#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEM_CONFIG_HPP_ */

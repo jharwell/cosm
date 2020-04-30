@@ -136,7 +136,7 @@ std::vector<rmath::vector2d> argos_convergence_calculator<TControllerType>::calc
     uint) const {
   std::vector<rmath::vector2d> v;
 
-  auto cb = [&](const auto* controller) { v.push_back(controller->pos2D()); };
+  auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
   cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
                                           TControllerType,
                                           cpal::iteration_order::ekSTATIC>(

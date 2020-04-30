@@ -31,8 +31,8 @@
 
 #include "cosm/steer2D/config/force_calculator_config.hpp"
 #include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
-#include "cosm/subsystem/config/sensing_subsystem2D_config.hpp"
-#include "cosm/subsystem/saa_subsystem2D.hpp"
+#include "cosm/subsystem/config/sensing_subsystemQ3D_config.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -54,7 +54,7 @@ void base_controller2D::sensing_update(const rtypes::timestep& tick,
   m_saa->sensing()->update(tick, ratio);
 } /* sensing_update() */
 
-void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystem2D> saa) {
+void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
 
@@ -75,7 +75,7 @@ rtypes::spatial_dist base_controller2D::distance(void) const {
    * because of the prev/current location not being set up properly yet.
    */
   if (saa()->sensing()->tick() > 1U) {
-    return rtypes::spatial_dist(saa()->sensing()->tick_travel().length());
+    return rtypes::spatial_dist(saa()->sensing()->tick_travel2D().length());
   }
   return rtypes::spatial_dist(0.0);
 } /* distance() */
@@ -95,12 +95,12 @@ rmath::vector3d base_controller2D::velocity(void) const {
 /*******************************************************************************
  * Swarm Spatial Metrics
  ******************************************************************************/
-rmath::vector2d base_controller2D::pos2D(void) const {
-  return m_saa->sensing()->position();
+rmath::vector2d base_controller2D::rpos2D(void) const {
+  return m_saa->sensing()->rpos2D();
 }
 
 rmath::vector2z base_controller2D::dpos2D(void) const {
-  return m_saa->sensing()->discrete_position();
+  return m_saa->sensing()->dpos2D();
 }
 
 rmath::radians base_controller2D::heading2D(void) const {

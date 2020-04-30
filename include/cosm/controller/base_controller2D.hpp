@@ -40,7 +40,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::subsystem {
-class saa_subsystem2D;
+class saa_subsystemQ3D;
 } /* namespace cosm::subsystem */
 
 namespace cosm::tv {
@@ -77,7 +77,7 @@ class base_controller2D : public base_controller,
   rmath::vector3d velocity(void) const override;
 
   /* swarm spatial distribution 2D metrics */
-  rmath::vector2d pos2D(void) const override final RCSW_PURE;
+  rmath::vector2d rpos2D(void) const override final RCSW_PURE;
   rmath::vector2z dpos2D(void) const override final RCSW_PURE;
   rmath::radians heading2D(void) const override final RCSW_PURE;
 
@@ -95,17 +95,17 @@ class base_controller2D : public base_controller,
 #endif
 
  protected:
-  class subsystem::saa_subsystem2D* saa(void) {
+  class subsystem::saa_subsystemQ3D* saa(void) {
     return m_saa.get();
   }
-  const class subsystem::saa_subsystem2D* saa(void) const {
+  const class subsystem::saa_subsystemQ3D* saa(void) const {
     return m_saa.get();
   }
-  void saa(std::unique_ptr<subsystem::saa_subsystem2D> saa);
+  void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
 
  private:
   /* clang-format off */
-  std::unique_ptr<subsystem::saa_subsystem2D> m_saa;
+  std::unique_ptr<subsystem::saa_subsystemQ3D> m_saa;
   /* clang-format on */
 };
 

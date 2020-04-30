@@ -54,7 +54,7 @@ NS_START(cosm, fsm);
  * falls back on this FSM when no known candidates of the goal type are
  * currently known.
  */
-class explore_for_goal_fsm final : public util_hfsm,
+class explore_for_goal_fsm final : public cfsm::util_hfsm,
                                    public ta::taskable,
                                    public rer::client<explore_for_goal_fsm> {
  public:
@@ -76,8 +76,8 @@ class explore_for_goal_fsm final : public util_hfsm,
     ekST_MAX_STATES
   };
 
-  explore_for_goal_fsm(subsystem::saa_subsystem2D* saa,
-                       std::unique_ptr<expstrat::base_expstrat> behavior,
+  explore_for_goal_fsm(subsystem::saa_subsystemQ3D* saa,
+                       std::unique_ptr<cfsm::expstrat::base_expstrat> behavior,
                        rmath::rng* rng,
                        const std::function<bool(void)>& goal_detect);
   ~explore_for_goal_fsm(void) override = default;
@@ -91,7 +91,8 @@ class explore_for_goal_fsm final : public util_hfsm,
   RCPPSW_WRAP_OVERRIDE_DECL(rtypes::timestep,
                             collision_avoidance_duration,
                             const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector2z, avoidance_loc, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector2z, avoidance_loc2D, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector3z, avoidance_loc3D, const);
 
   /* taskable overrides */
   bool task_finished(void) const override {

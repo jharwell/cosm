@@ -38,7 +38,7 @@ struct path_following_force_config;
 } /* namespace cosm::steer2D::config */
 
 namespace cosm::steer2D::ds {
-struct path_state;
+class path_state;
 } /* namespace cosm::steer2D::ds */
 
 NS_START(cosm, steer2D);
@@ -66,7 +66,8 @@ class path_following_force {
    * \param entity The robot to calculate the force for.
    * \param state The current path state.
    */
-  rmath::vector2d operator()(const boid& entity, ds::path_state* state) const;
+  rmath::vector2d operator()(const boid& entity,
+                             csteer2D::ds::path_state* state) const;
 
  private:
   /* clang-format off */

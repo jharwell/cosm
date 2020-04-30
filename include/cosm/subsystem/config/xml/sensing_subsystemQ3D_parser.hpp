@@ -1,5 +1,5 @@
 /**
- * \file sensing_subsystem2D_parser.hpp
+ * \file sensing_subsystemQ3D_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM2D_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM2D_PARSER_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM_PARSER_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -29,7 +29,7 @@
 
 #include "cosm/hal/sensors/config/xml/proximity_sensor_parser.hpp"
 #include "cosm/hal/sensors/config/xml/ground_sensor_parser.hpp"
-#include "cosm/subsystem/config/sensing_subsystem2D_config.hpp"
+#include "cosm/subsystem/config/sensing_subsystemQ3D_config.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
 /*******************************************************************************
@@ -41,23 +41,23 @@ NS_START(cosm, subsystem, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class sensing_subsystem2D_parser
+ * \class sensing_subsystemQ3D_parser
  * \ingroup subsystem config xml
  *
  * \brief Parses XML parameters relating to sensings into \ref
- * sensing_subsystem2D_config.
+ * sensing_subsystemQ3D_config.
  */
-class sensing_subsystem2D_parser final : public rconfig::xml::xml_config_parser {
+class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = sensing_subsystem2D_config;
+  using config_type = sensing_subsystemQ3D_config;
 
-  ~sensing_subsystem2D_parser(void) override = default;
+  ~sensing_subsystemQ3D_parser(void) override = default;
 
   /**
-   * \brief The root tag that all robot 2D sensing subsystem parameters should
+   * \brief The root tag that all robot sensing subsystem parameters should
    * lie under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "sensing_subsystem2D";
+  static constexpr const char kXMLRoot[] = "sensing_subsystemQ3D";
 
   bool validate(void) const override RCSW_PURE;
   void parse(const ticpp::Element& node) override;
@@ -82,4 +82,4 @@ class sensing_subsystem2D_parser final : public rconfig::xml::xml_config_parser 
 
 NS_END(xml, config, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM2D_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEM_PARSER_HPP_ */

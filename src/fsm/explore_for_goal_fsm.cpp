@@ -25,7 +25,7 @@
 
 #include "cosm/fsm/util_signal.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -36,7 +36,7 @@ NS_START(cosm, fsm);
  * Constructors/Destructors
  ******************************************************************************/
 explore_for_goal_fsm::explore_for_goal_fsm(
-    subsystem::saa_subsystem2D* const saa,
+    subsystem::saa_subsystemQ3D* const saa,
     std::unique_ptr<expstrat::base_expstrat> behavior,
     rmath::rng* rng,
     const std::function<bool(void)>& goal_detect)
@@ -105,7 +105,12 @@ RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
                          const);
 
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         avoidance_loc,
+                         avoidance_loc2D,
+                         *m_explore_behavior,
+                         const);
+
+RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
+                         avoidance_loc3D,
                          *m_explore_behavior,
                          const);
 

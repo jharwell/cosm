@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/fsm/collision_tracker.hpp"
 
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -52,9 +52,13 @@ rtypes::timestep collision_tracker::collision_avoidance_duration(void) const {
   return rtypes::timestep(0);
 } /* collision_avoidance_duration() */
 
-rmath::vector2z collision_tracker::avoidance_loc(void) const {
-  return mc_sensing->discrete_position();
-} /* avoidance_loc() */
+rmath::vector2z collision_tracker::avoidance_loc2D(void) const {
+  return mc_sensing->dpos2D();
+} /* avoidance_loc2D() */
+
+rmath::vector3z collision_tracker::avoidance_loc3D(void) const {
+  return mc_sensing->dpos3D();
+} /* avoidance_loc2D() */
 
 /*******************************************************************************
  * Member Functions

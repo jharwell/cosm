@@ -70,7 +70,7 @@ class boid {
    * \brief Return the current position of the entity. Hopefully, this DOES vary
    * with time otherwise your entity is very uninteresting.
    */
-  virtual rmath::vector2d position(void) const = 0;
+  virtual rmath::vector2d pos2D(void) const = 0;
 };
 
 NS_END(steer2D, cosm);

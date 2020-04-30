@@ -43,7 +43,7 @@ arrival_force::arrival_force(const config::arrival_force_config* const config)
  ******************************************************************************/
 rmath::vector2d arrival_force::operator()(const boid& entity,
                                           const rmath::vector2d& target) {
-  rmath::vector2d desired = target - entity.position();
+  rmath::vector2d desired = target - entity.pos2D();
   double distance = desired.length();
 
   desired.normalize();

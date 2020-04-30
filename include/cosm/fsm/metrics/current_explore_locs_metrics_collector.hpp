@@ -46,8 +46,9 @@ NS_START(cosm, fsm, metrics);
  * 2D array, and needs its own collector separate from the \ref
  * goal_acq_metrics_collector (1 .csv per collector).
  *
- * Metrics MUST be collected serially; concurrent updates to the gathered stats
- * are not supported.
+ * Metrics CAN be collected concurrently if the calling context guarantees that
+ * no two robots will have the same discrete location. Otherwise, serial
+ * collection is required.
  */
 class current_explore_locs_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:

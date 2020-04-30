@@ -165,7 +165,7 @@ class force_calculator : public rer::client<force_calculator> {
   /* clang-format on */
 
  public:
-  RCPPSW_DECLDEF_WRAP(within_slowing_radius, m_arrival);
+  RCPPSW_WRAP_DECLDEF(within_slowing_radius, m_arrival);
 };
 
 NS_END(steer2D, cosm);

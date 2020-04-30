@@ -42,7 +42,7 @@ NS_START(cosm, robots, footbot);
  */
 class footbot_actuation_subsystem : public subsystem::actuation_subsystem2D {
  public:
-  explicit footbot_actuation_subsystem(actuator_map& actuators)
+  explicit footbot_actuation_subsystem(const actuator_map& actuators)
       : actuation_subsystem2D(actuators) {}
 
   kin2D::governed_diff_drive* governed_diff_drive(void) {

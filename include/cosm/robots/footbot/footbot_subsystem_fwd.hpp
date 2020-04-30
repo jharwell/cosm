@@ -31,11 +31,8 @@
  ******************************************************************************/
 NS_START(cosm, robots, footbot);
 
-class footbot_saa_subsystem2D;
-class footbot_saa_subsystemQ3D;
+class footbot_saa_subsystem;
 class footbot_actuation_subsystem;
-
-template <typename TSensingSubsystem>
 class footbot_sensing_subsystem;
 
 NS_END(footbot, robots, cosm);

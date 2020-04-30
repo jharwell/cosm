@@ -74,7 +74,7 @@ class base_los : public rer::client<base_los<TCellType>> {
     typename rds::base_grid3D<TCellType>::const_grid_view
     >::type;
 
-  using abs_coord_type =
+  using coord_type =
       typename std::conditional<std::is_same<cds::cell2D, TCellType>::value,
                                 rmath::vector2z,
                                 rmath::vector3z>::type;
@@ -82,18 +82,26 @@ class base_los : public rer::client<base_los<TCellType>> {
   explicit base_los(const const_grid_view& c_view)
       : ER_CLIENT_INIT("cosm.repr.base_los"), mc_view(c_view) {}
 
-
   /**
    * \brief Get the cell associated with a particular grid location within the
    * LOS. Asserts that both coordinates are within the bounds of the grid
    * underlying the LOS.
    *
-   * \param i The RELATIVE X coord within the LOS.
-   * \param j The RELATIVE Y coord within the LOS.
+   * \param c The RELATIVE coord within the LOS.
    *
    * \return A reference to the cell.
    */
-  virtual const TCellType& access(size_t i, size_t j) const = 0;
+  virtual const TCellType& access(const coord_type& c) const = 0;
+
+  virtual coord_type abs_ll(void) const = 0;
+  virtual coord_type abs_ul(void) const = 0;
+  virtual coord_type abs_lr(void) const = 0;
+  virtual coord_type abs_ur(void) const = 0;
+
+  /**
+   * \brief Determine if the *ABSOLUTE* arena location is contained in the LOS.
+   */
+  virtual bool contains_loc(const coord_type& loc) const = 0;
 
   /**
    * \brief Get the size of the X dimension for a LOS.
@@ -108,16 +116,6 @@ class base_los : public rer::client<base_los<TCellType>> {
    * \return The Y dimension.
    */
   typename grid_view::size_type ysize(void) const { return mc_view.shape()[1]; }
-
-  abs_coord_type abs_ll(void) const RCSW_PURE;
-  abs_coord_type abs_ul(void) const RCSW_PURE;
-  abs_coord_type abs_lr(void) const RCSW_PURE;
-  abs_coord_type abs_ur(void) const RCSW_PURE;
-
-  /**
-   * \brief Determine if the *ABSOLUTE* arena location is contained in the LOS.
-   */
-  bool contains_loc(const abs_coord_type& loc) const RCSW_PURE;
 
  protected:
   const const_grid_view& view(void) const { return mc_view; }

@@ -38,17 +38,13 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm);
-
-namespace subsystem {
-class saa_subsystem2D;
-class sensing_subsystem2D;
+namespace cosm::subsystem {
+class saa_subsystemQ3D;
+class sensing_subsystemQ3D;
 class actuation_subsystem2D;
-} // namespace subsystem
+} /* namespace cosm::subsystem */
 
-NS_START(fsm);
-
-struct new_direction_data;
+NS_START(cosm, fsm);
 
 /*******************************************************************************
  * Class Definitions
@@ -57,8 +53,8 @@ struct new_direction_data;
  * \class util_hfsm
  * \ingroup fsm
  *
- * \brief A collection of base states/common functionality that robot FSMs can
- * use if they choose.
+ * \brief A collection of base states/common functionality that robot FSMs which
+ * operate in strict 2D or quasi-3D can use if they choose (NOT full 3D robots).
  *
  * This class cannot be instantiated on its own, as does not define an FSM
  * per-se.
@@ -67,18 +63,20 @@ class util_hfsm : public rpfsm::hfsm,
                   public rer::client<util_hfsm>,
                   public metrics::collision_metrics {
  public:
-  util_hfsm(subsystem::saa_subsystem2D* saa, rmath::rng* rng, uint8_t max_states);
+  util_hfsm(csubsystem::saa_subsystemQ3D* saa,
+            rmath::rng* rng,
+            uint8_t max_states);
 
   ~util_hfsm(void) override = default;
 
-  util_hfsm(const util_hfsm& fsm) = delete;
-  util_hfsm& operator=(const util_hfsm& fsm) = delete;
+  util_hfsm(const util_hfsm&) = delete;
+  util_hfsm& operator=(const util_hfsm&) = delete;
 
-  subsystem::sensing_subsystem2D* sensing(void);
-  const subsystem::sensing_subsystem2D* sensing(void) const;
+  csubsystem::sensing_subsystemQ3D* sensing(void);
+  const csubsystem::sensing_subsystemQ3D* sensing(void) const;
 
-  subsystem::actuation_subsystem2D* actuation(void);
-  const subsystem::actuation_subsystem2D* actuation(void) const;
+  typename csubsystem::actuation_subsystem2D* actuation(void);
+  typename csubsystem::actuation_subsystem2D* actuation(void) const;
 
   const collision_tracker* ca_tracker(void) const { return &m_tracker; }
 
@@ -91,8 +89,8 @@ class util_hfsm : public rpfsm::hfsm,
   rmath::rng* rng(void) { return m_rng; }
   const rmath::rng* rng(void) const { return m_rng; }
 
-  const subsystem::saa_subsystem2D* saa(void) const { return m_saa; }
-  subsystem::saa_subsystem2D* saa(void) { return m_saa; }
+  const csubsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
+  csubsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
   collision_tracker* ca_tracker(void) { return &m_tracker; }
 
   /**
@@ -113,21 +111,13 @@ class util_hfsm : public rpfsm::hfsm,
   HFSM_STATE_DECLARE(util_hfsm, leaving_nest, rpfsm::event_data);
 
   /**
-   * \brief Robots entering this state will randomly change their exploration
-   * direction to the specified direction. All signals are ignored in this
-   * state. Once the direction change has been accomplished, the robot will
-   * transition back to its previous state.
-   */
-  HFSM_STATE_DECLARE(util_hfsm, new_direction, rpfsm::event_data);
-
-  /**
    * \brief Entry state for returning to nest.
    *
    * Used to:
    *
    * - Set LED colors for visualization purposes.
    * - Enable light sensor (disabled otherwise for computational
-   * - efficiency).
+   *   efficiency).
    */
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_transport_to_nest);
 
@@ -136,12 +126,6 @@ class util_hfsm : public rpfsm::hfsm,
    * visualization purposes.
    */
   HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_leaving_nest);
-
-  /**
-   * \brief Simple state for entry into the new direction state, used to change
-   * LED color for visualization purposes.
-   */
-  HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_new_direction);
 
   /**
    * \brief Simple state for entry into the "wait for signal" state, used to
@@ -157,32 +141,11 @@ class util_hfsm : public rpfsm::hfsm,
    *
    * - Set LED colors for visualization purposes.
    * - Disable light sensor (disabled unless a robot is activiely returning to
-   * - the nest for computational efficiency).
+   *   the nest for computational efficiency).
    */
   HFSM_EXIT_DECLARE(util_hfsm, exit_transport_to_nest);
 
  private:
-  /**
-   * \brief When changing direction, a robot is spinning at such a speed that it
-   * may overshoot its desired new direction, but as long as it does not
-   * overshoot by more than this tolerance, the direction change will still be
-   * considered to have occurred successfully.
-   */
-  static constexpr const double kDIR_CHANGE_TOL = 0.25;
-
-  /**
-   * \brief When changing direction, it may not be enough to have an arrival
-   * tolerance for the new heading; it is possible that given the new direction,
-   * the robot's initial heading, and the spinning speed, and it is impossible
-   * for the robot to arrive within tolerance of the desired new direction. So,
-   * I also define a max number of steps that the robot will spin as a secondary
-   * safeguard.
-   *
-   * Not doing this leads to controller that will spin more or less indefinitely
-   * when changing direction on occasion.
-   */
-  static constexpr const uint kDIR_CHANGE_MAX_STEPS = 10;
-
   /**
    * \brief When entering the nest, you want to continue to wander a bit before
    * signaling upper FSMs that you are in the nest, so that there is (slightly)
@@ -192,21 +155,20 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr const uint kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
-  uint                              m_nest_count{0};
-  uint                              m_new_dir_count{0};
-  rmath::radians                    m_new_dir{};
-  subsystem::saa_subsystem2D* const m_saa;
-  collision_tracker                 m_tracker;
-  rmath::rng*                       m_rng;
+  uint                                m_nest_count{0};
+  csubsystem::saa_subsystemQ3D* const m_saa;
+  collision_tracker                   m_tracker;
+  rmath::rng*                         m_rng;
   /* clang-format on */
 
  public:
   /* collision metrics */
-  RCPPSW_DECLDEF_OVERRIDE_WRAP(in_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_OVERRIDE_WRAP(entered_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_OVERRIDE_WRAP(exited_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_OVERRIDE_WRAP(collision_avoidance_duration, m_tracker, const)
-  RCPPSW_DECLDEF_OVERRIDE_WRAP(avoidance_loc, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(in_collision_avoidance, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_collision_avoidance, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_collision_avoidance, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(collision_avoidance_duration, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc2D, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc3D, m_tracker, const)
 };
 
 NS_END(fsm, cosm);

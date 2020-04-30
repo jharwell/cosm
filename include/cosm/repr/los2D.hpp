@@ -47,7 +47,28 @@ class los2D : public crepr::base_los<cds::cell2D>,
       : base_los(c_view),
         ER_CLIENT_INIT("cosm.repr.los2D") {}
 
-  const cds::cell2D& access(size_t i, size_t j) const override;
+  const cds::cell2D& access(const rmath::vector2z& c) const override {
+    return access(c.x(), c.y());
+  }
+
+  rmath::vector2z abs_ll(void) const override;
+  rmath::vector2z abs_ul(void) const override;
+  rmath::vector2z abs_lr(void) const override;
+  rmath::vector2z abs_ur(void) const override;
+  bool contains_loc(const rmath::vector2z& loc) const override;
+
+  /**
+   * \brief Get the cell associated with a particular grid location within the
+   * LOS. Asserts that both coordinates are within the bounds of the grid
+   * underlying the LOS.
+   *
+   * \param i The RELATIVE X coord within the LOS.
+   * \param j The RELATIVE Y coord within the LOS.
+   *
+   * \return A reference to the cell.
+   */
+  const cds::cell2D& access(size_t i, size_t j) const;
+
 };
 
 NS_END(repr, cosm);

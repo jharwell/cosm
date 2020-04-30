@@ -45,4 +45,31 @@ const cds::cell2D& los2D::access(size_t i, size_t j) const {
   return view()[i][j];
 } /* access() */
 
+bool los2D::contains_loc(const rmath::vector2z& loc) const {
+  for (size_t i = 0; i < xsize(); ++i) {
+    for (size_t j = 0; j < ysize(); ++j) {
+      if (access(i, j).loc() == loc) {
+        return true;
+      }
+    } /* for(j..) */
+  }   /* for(i..) */
+  return false;
+} /* contains_loc() */
+
+rmath::vector2z los2D::abs_ll(void) const {
+  return access(0, 0).loc();
+} /* abs_ll() */
+
+rmath::vector2z los2D::abs_ul(void) const {
+  return access(0, ysize() - 1).loc();
+} /* abs_ul() */
+
+rmath::vector2z los2D::abs_lr(void) const {
+  return access(xsize() - 1, 0).loc();
+} /* abs_lr() */
+
+rmath::vector2z los2D::abs_ur(void) const {
+  return access(xsize() - 1, ysize() - 1).loc();
+} /* abs_ur() */
+
 NS_END(repr, cosm);

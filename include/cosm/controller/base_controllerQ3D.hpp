@@ -83,7 +83,7 @@ class base_controllerQ3D : public base_controller,
   rmath::vector3d velocity(void) const override;
 
   /* swarm spatial distribution 3D metrics */
-  rmath::vector3d pos3D(void) const override final RCSW_PURE;
+  rmath::vector3d rpos3D(void) const override final RCSW_PURE;
   rmath::vector3z dpos3D(void) const override final RCSW_PURE;
   rmath::radians azimuth(void) const override final RCSW_PURE;
   rmath::radians inclination(void) const override final RCSW_PURE;
@@ -95,7 +95,7 @@ class base_controllerQ3D : public base_controller,
    * \brief For less typing when doing operations with the arena map, which is
    * (logically) a 2D object.
    */
-  rmath::vector2d pos2D(void) const RCSW_PURE;
+  rmath::vector2d rpos2D(void) const RCSW_PURE;
   rmath::vector2z dpos2D(void) const RCSW_PURE;
 
   /**

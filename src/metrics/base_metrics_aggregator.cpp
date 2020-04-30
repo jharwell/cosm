@@ -30,7 +30,7 @@
 #include "cosm/convergence/convergence_calculator.hpp"
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
-#include "cosm/fsm/metrics/collision_locs_metrics_collector.hpp"
+#include "cosm/fsm/metrics/collision_locs2D_metrics_collector.hpp"
 #include "cosm/fsm/metrics/collision_metrics.hpp"
 #include "cosm/fsm/metrics/collision_metrics_collector.hpp"
 #include "cosm/fsm/metrics/current_explore_locs_metrics_collector.hpp"
@@ -141,7 +141,7 @@ void base_metrics_aggregator::register_with_arena_dims2D(
     const cmconfig::metrics_config* mconfig,
     const rmath::vector2z& dims) {
   using collector_typelist = rmpl::typelist<
-    rmpl::identity<cfsm::metrics::collision_locs_metrics_collector>,
+    rmpl::identity<cfsm::metrics::collision_locs2D_metrics_collector>,
     rmpl::identity<cfsm::metrics::goal_acq_locs_metrics_collector>,
     rmpl::identity<cfsm::metrics::current_explore_locs_metrics_collector>,
     rmpl::identity<cfsm::metrics::current_vector_locs_metrics_collector>,
@@ -149,9 +149,9 @@ void base_metrics_aggregator::register_with_arena_dims2D(
     >;
   using extra_args_type = std::tuple<rmath::vector2z>;
   collector_registerer<extra_args_type>::creatable_set creatable_set = {
-      {typeid(cfsm::metrics::collision_locs_metrics_collector),
-       "fsm_collision_locs",
-       "fsm::collision_locs",
+      {typeid(cfsm::metrics::collision_locs2D_metrics_collector),
+       "fsm_collision_locs2D",
+       "fsm::collision_locs2D",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
       {typeid(cfsm::metrics::goal_acq_locs_metrics_collector),
        "block_acq_locs",

@@ -52,7 +52,7 @@ class dist3D_metrics : public virtual rmetrics::base_metrics {
    * \brief Return a single robot's current position in 3D space in real
    * coordinates.
    */
-  virtual rmath::vector3d pos3D(void) const = 0;
+  virtual rmath::vector3d rpos3D(void) const = 0;
 
   /**
    * \brief Return a single robot's discretized position in 3D space.

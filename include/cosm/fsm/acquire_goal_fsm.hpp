@@ -58,10 +58,10 @@ NS_START(cosm, fsm);
  * known instance or via random exploration). Once the instance has been
  * acquired, it signals that it has completed its task.
  */
-class acquire_goal_fsm : public util_hfsm,
+class acquire_goal_fsm : public cfsm::util_hfsm,
                          public rer::client<acquire_goal_fsm>,
-                         public ta::taskable,
-                         public metrics::goal_acq_metrics {
+                         public cta::taskable,
+                         public cfsm::metrics::goal_acq_metrics {
  public:
   /**
    * \brief Tuple representing a goal to be acquired: A location, the utility
@@ -163,7 +163,7 @@ class acquire_goal_fsm : public util_hfsm,
    *              ordr to make use of the general purpose machinery in this
    *              class.
    */
-  acquire_goal_fsm(subsystem::saa_subsystem2D* saa,
+  acquire_goal_fsm(subsystem::saa_subsystemQ3D* saa,
                    std::unique_ptr<expstrat::base_expstrat> behavior,
                    rmath::rng* rng,
                    const struct hook_list& hooks);
@@ -189,7 +189,8 @@ class acquire_goal_fsm : public util_hfsm,
   bool exited_collision_avoidance(void) const override final RCSW_PURE;
   rtypes::timestep collision_avoidance_duration(
       void) const override final RCSW_PURE;
-  rmath::vector2z avoidance_loc(void) const override final RCSW_PURE;
+  rmath::vector2z avoidance_loc2D(void) const override final RCSW_PURE;
+  rmath::vector3z avoidance_loc3D(void) const override final RCSW_PURE;
 
   /* goal acquisition metrics */
   exp_status is_exploring_for_goal(void) const override final RCSW_PURE;

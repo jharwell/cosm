@@ -24,6 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/mpl/reflectable.hpp"
+
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/pal/argos_controller_adaptor.hpp"
 
@@ -43,7 +45,8 @@ NS_START(cosm, pal);
  * for creating controllers within ARGoS.
  */
 class argos_controller2D_adaptor : public controller::base_controller2D,
-                                   public argos_controller_adaptor {
+                                   public argos_controller_adaptor,
+                                   public rmpl::reflectable {
  public:
   /* ARGoS hook overrides */
   void Init(ticpp::Element& node) override RCSW_COLD { init(node); }

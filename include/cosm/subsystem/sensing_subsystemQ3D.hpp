@@ -1,7 +1,7 @@
 /**
  * \file sensing_subsystemQ3D.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM_HPP_
 
 /*******************************************************************************
  * Includes
@@ -30,8 +30,16 @@
 
 #include "rcppsw/types/timestep.hpp"
 
-#include "cosm/subsystem/base_sensing_subsystem.hpp"
-
+#include "cosm/hal/sensors/battery_sensor.hpp"
+#include "cosm/hal/sensors/diff_drive_sensor.hpp"
+#include "cosm/hal/sensors/ground_sensor.hpp"
+#include "cosm/hal/sensors/light_sensor.hpp"
+#include "cosm/hal/sensors/position_sensor.hpp"
+#include "cosm/hal/sensors/proximity_sensor.hpp"
+#include "cosm/hal/sensors/wifi_sensor.hpp"
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#include "cosm/hal/sensors/colored_blob_camera_sensor.hpp"
+#endif
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -44,26 +52,72 @@ NS_START(cosm, subsystem);
  * \class sensing_subsystemQ3D
  * \ingroup subsystem
  *
- * \brief The sensing subsystem for all sensors used by robot controllers that
- * actuate in 2D, but can sense in 3D, and as such are "quasi" 3D. Think wheeled
- * robots moving up hills/ramps.
+ * \brief Base sensing subsystem for all sensors used by all robot
+ * controllers. It uses a \ref hal::sensors::position_sensor for positioning
+ * information, and manages any number of additional sensors:
+ *
+ * - \ref hal::sensors::proximity_sensor
+ * - \ref hal::sensors::colored_blob_camera_sensor
+ * - \ref hal::sensors::light_sensor
+ * - \ref hal::sensors::ground_sensor
+ * - \ref hal::sensors::battery_sensor
+ * - \ref hal::sensors::diff_drive_sensor
+ * - \ref hal::sensors::wifi_sensor
  */
-class sensing_subsystemQ3D : public base_sensing_subsystem {
+class sensing_subsystemQ3D {
  public:
+  using variant_type = boost::variant<
+   hal::sensors::proximity_sensor,
+   hal::sensors::wifi_sensor,
+   hal::sensors::light_sensor,
+   hal::sensors::ground_sensor,
+   hal::sensors::battery_sensor,
+   hal::sensors::diff_drive_sensor,
+#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+   hal::sensors::colored_blob_camera_sensor
+#endif
+   >;
+  using sensor_map = std::map<std::type_index, variant_type>;
+
   /**
+   * \brief Convenience function to create a sensor map create for the
+   * specified sensor to make client code cleaner.
+   */
+  template <typename TSensor>
+  static sensor_map::value_type map_entry_create(const TSensor& sensor) {
+    return {typeid(TSensor), variant_type(sensor)};
+  }
+
+  /**
+   * \param pos Position sensor.
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
   sensing_subsystemQ3D(const hal::sensors::position_sensor& pos,
-                       const sensor_map& sensors)
-      : base_sensing_subsystem(pos, sensors) {}
+                         const sensor_map& sensors)
+      : m_pos_sensor(pos), m_sensors(sensors) {}
 
-  ~sensing_subsystemQ3D(void) override = default;
+  virtual ~sensing_subsystemQ3D(void) = default;
 
-  /**
-   * \brief Get the robot's current location.
-   */
-  const rmath::vector3d& position(void) const { return m_position; }
-  const rmath::vector3z& discrete_position(void) const { return m_dposition; }
+  const rtypes::timestep& tick(void) const { return m_tick; }
+
+  template <typename TSensor>
+  bool replace(const TSensor& sensor) {
+    if (m_sensors.end() != m_sensors.find(typeid(sensor))) {
+      m_sensors.erase(m_sensors.find(typeid(sensor)));
+      return m_sensors.insert(map_entry_create(sensor)).second;
+    }
+    return false;
+  }
+
+  template <typename T>
+  const T* sensor(void) const {
+    return &boost::get<T>(m_sensors.find(typeid(T))->second);
+  }
+
+  template <typename T>
+  T* sensor(void) {
+    return &boost::get<T>(m_sensors.find(typeid(T))->second);
+  }
 
   /**
    * \brief Get the robot's current azimuth heading; this effectively is the
@@ -79,38 +133,89 @@ class sensing_subsystemQ3D : public base_sensing_subsystem {
   const rmath::radians& inclination(void) const { return m_inclination; }
 
   /**
+   * \brief Get the angle of the current robot's heading in 2D (same as azimuth
+   * in 3D).
+   */
+  const rmath::radians& heading(void) const { return azimuth(); }
+
+  /**
+   * \brief Get the robot's current location in 2D real coordinates.
+   */
+  const rmath::vector2d& rpos2D(void) const { return m_rpos2D; }
+
+  /**
+   * \brief Get the robot's current location in 2D discrete coordinates.
+   */
+  const rmath::vector2z& dpos2D(void) const { return m_dpos2D; }
+
+  /**
+   * \brief Get the robot's current location in 3D real coordinates.
+   */
+  const rmath::vector3d& rpos3D(void) const { return m_rpos3D; }
+
+  /**
+   * \brief Get the robot's current location in 3D discrete coordinates.
+   */
+  const rmath::vector3z& dpos3D(void) const { return m_dpos3D; }
+
+  /**
    * \brief Update the current time and position information for the robot.
    */
   void update(const rtypes::timestep& t,
-              const rtypes::discretize_ratio& ratio) override {
-    tick(t);
-    auto reading = pos_sensor()->reading();
-    m_prev_position = m_position;
-    m_position = reading.position;
-    m_dposition = rmath::dvec2zvec(m_position, ratio.v());
-    auto sphere = m_position.to_spherical();
+              const rtypes::discretize_ratio& ratio) {
+    m_tick = t;
+    auto reading = m_pos_sensor.reading();
+
+    /* update 2D position info */
+    m_prev_rpos2D = m_rpos2D;
+    m_rpos2D = reading.position.project_on_xy();
+    m_dpos2D = rmath::dvec2zvec(m_rpos2D, ratio.v());
+
+    /* update 3D position info */
+    m_prev_rpos3D = m_rpos3D;
+    m_rpos3D = reading.position;
+    m_dpos3D = rmath::dvec2zvec(m_rpos3D, ratio.v());
+    auto sphere = m_rpos3D.to_spherical();
     m_azimuth = sphere.azimuth();
     m_inclination = sphere.inclination();
   }
 
   /**
-   * \brief Get how far the robot has traveled in the last timestep, as well as
-   * the direction/magnitude.
+   * \brief Get how far the robot has traveled in the last timestep in 2D, as
+   * well as the direction/magnitude.
    */
-  rmath::vector3d tick_travel(void) const {
-    return m_position - m_prev_position;
+  rmath::vector2d tick_travel2D(void) const {
+    return m_rpos2D - m_prev_rpos2D;
   }
+
+  /**
+   * \brief Get how far the robot has traveled in the last timestep in 3D, as
+   * well as the direction/magnitude.
+   */
+  rmath::vector3d tick_travel3D(void) const {
+    return m_rpos3D - m_prev_rpos3D;
+  }
+
 
  private:
   /* clang-format off */
-  rmath::vector3d               m_position{};
-  rmath::vector3d               m_prev_position{};
+  rtypes::timestep              m_tick{0};
+  rmath::vector3d               m_rpos3D{};
+  rmath::vector3d               m_prev_rpos3D{};
+  rmath::vector3z               m_dpos3D{};
+
+  rmath::vector2d               m_rpos2D{};
+  rmath::vector2d               m_prev_rpos2D{};
+  rmath::vector2z               m_dpos2D{};
+
   rmath::radians                m_azimuth{};
   rmath::radians                m_inclination{};
-  rmath::vector3z               m_dposition{};
+
+  hal::sensors::position_sensor m_pos_sensor;
+  sensor_map                    m_sensors;
   /* clang-format off */
 };
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEMQ3D _HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_SENSING_SUBSYSTEM _HPP_ */

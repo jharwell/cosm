@@ -24,21 +24,22 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/utils/color.hpp"
+#include "rcppsw/math/rng.hpp"
+#include "rcppsw/patterns/prototype/clonable.hpp"
+
 #include "cosm/fsm/metrics/collision_metrics.hpp"
 #include "cosm/ta/taskable.hpp"
-#include "rcppsw/utils/color.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm);
-
-namespace subsystem {
-class saa_subsystem2D;
+namespace cosm::subsystem {
+class saa_subsystemQ3D;
 } /* namespace subsystem */
 
-NS_START(fsm, expstrat);
+NS_START(cosm, fsm, expstrat);
 
 /*******************************************************************************
  * Class Definitions
@@ -51,20 +52,23 @@ NS_START(fsm, expstrat);
  * exhibit when looking for stuff.
  */
 class base_expstrat : public fsm::metrics::collision_metrics,
-                      public ta::taskable {
+                      public ta::taskable,
+                      public rpprototype::clonable<base_expstrat> {
  public:
   struct params {
-    explicit params(subsystem::saa_subsystem2D* const saa_in)
-        : saa(saa_in) {}
+    params(subsystem::saa_subsystemQ3D* const saa_in, rmath::rng* rng_in)
+        : saa(saa_in), rng(rng_in) {}
 
-    subsystem::saa_subsystem2D* const saa;
+    subsystem::saa_subsystemQ3D* const saa;
+    rmath::rng* rng;
   };
 
   explicit base_expstrat(params* const p)
-      : base_expstrat{p->saa} {}
+      : base_expstrat{p->saa, p->rng} {}
 
-  explicit base_expstrat(subsystem::saa_subsystem2D* const saa)
-      : m_saa(saa) {}
+  explicit base_expstrat(subsystem::saa_subsystemQ3D* const saa,
+                         rmath::rng* rng)
+      : m_saa(saa), m_rng(rng)  {}
 
   ~base_expstrat(void) override = default;
 
@@ -72,12 +76,15 @@ class base_expstrat : public fsm::metrics::collision_metrics,
   base_expstrat& operator=(const base_expstrat&) = delete;
 
  protected:
-  subsystem::saa_subsystem2D* saa(void) const { return m_saa; }
-  subsystem::saa_subsystem2D* saa(void) { return m_saa; }
+  subsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
+  subsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
+  rmath::rng* rng(void) { return m_rng; }
+  rmath::rng* rng(void) const { return m_rng; }
 
  private:
   /* clang-format off */
-  subsystem::saa_subsystem2D* m_saa;
+  subsystem::saa_subsystemQ3D* m_saa;
+  rmath::rng*                  m_rng;
   /* clang-format on */
 };
 

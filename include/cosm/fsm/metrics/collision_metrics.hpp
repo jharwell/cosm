@@ -26,7 +26,9 @@
  ******************************************************************************/
 #include "rcppsw/metrics/base_metrics.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/timestep.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -76,9 +78,17 @@ class collision_metrics : public virtual rmetrics::base_metrics {
 
   /**
    * \brief When \ref in_collision_avoidance() returns \c TRUE, then this should
-   * return the robot's current position as is in collision avoidance.
+   * return the robot's current discrete position in 2D as it is in collision
+   * avoidance.
    */
-  virtual rmath::vector2z avoidance_loc(void) const = 0;
+  virtual rmath::vector2z avoidance_loc2D(void) const = 0;
+
+  /**
+   * \brief When \ref in_collision_avoidance() returns \c TRUE, then this should
+   * return the robot's current discrete position in 3D as it is in collision
+   * avoidance.
+   */
+  virtual rmath::vector3z avoidance_loc3D(void) const = 0;
 };
 
 NS_END(metrics, fsm, cosm);

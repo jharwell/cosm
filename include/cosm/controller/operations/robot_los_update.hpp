@@ -74,8 +74,18 @@ std::unique_ptr<TLOSType> robot_los3D_compute(
     const rmath::vector3d& pos,
     size_t los_grid_size) {
   auto position = rmath::dvec2zvec(pos, grid->resolution().v());
-  return std::make_unique<TLOSType>(grid->subcircle(position,
-                                                    los_grid_size));
+
+  /* LOS can take a reference to the grid it was created from, if desired */
+  if constexpr (std::is_constructible<TLOSType,
+                const rds::grid3D_overlay<cds::cell3D>::const_grid_view&,
+                const rds::grid3D_overlay<cds::cell3D>*>::value) {
+      return std::make_unique<TLOSType>(grid->subcircle(position,
+                                                        los_grid_size),
+                                                        grid);
+    } else {
+    return std::make_unique<TLOSType>(grid->subcircle(position,
+                                                      los_grid_size));
+    }
 } /* robot_los_compute */
 
 /**
@@ -89,7 +99,7 @@ void robot_los_set(TControllerType* const controller,
                      const rds::grid2D_overlay<cds::cell2D>* const grid,
                      size_t los_grid_size) {
   auto los = robot_los2D_compute<TLOSType>(grid,
-                                           controller->pos2D(),
+                                           controller->rpos2D(),
                                            los_grid_size);
   controller->perception()->los(std::move(los));
 }
@@ -105,7 +115,7 @@ void robot_los_set(TControllerType* const controller,
                    const rds::grid3D_overlay<cds::cell3D>* const grid,
                    size_t los_grid_size) {
   auto los = robot_los3D_compute<TLOSType>(grid,
-                                           controller->pos3D(),
+                                           controller->rpos3D(),
                                            los_grid_size);
   controller->perception()->los(std::move(los));
 }

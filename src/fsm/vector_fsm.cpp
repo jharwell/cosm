@@ -23,11 +23,10 @@
  ******************************************************************************/
 #include "cosm/fsm/vector_fsm.hpp"
 
-#include "cosm/fsm/point_argument.hpp"
 #include "cosm/fsm/util_signal.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/saa_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,7 +36,7 @@ NS_START(cosm, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-vector_fsm::vector_fsm(subsystem::saa_subsystem2D* const saa, rmath::rng* rng)
+vector_fsm::vector_fsm(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.fsm.vector"),
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
@@ -128,23 +127,22 @@ FSM_STATE_DEFINE_ND(vector_fsm, collision_recovery) {
   return util_signal::ekHANDLED;
 }
 
-FSM_STATE_DEFINE(vector_fsm, vector, rpfsm::event_data* data) {
+FSM_STATE_DEFINE(vector_fsm, vector, point_argument* data) {
   if (ekST_VECTOR != last_state()) {
     ER_DEBUG("Executing ekST_VECTOR");
   }
 
-  auto* goal = dynamic_cast<const struct goal_data*>(data);
-  if (nullptr != goal) {
-    m_goal_data = *goal;
+  if (nullptr != data) {
+    m_goal = std::move(*data);
     ER_INFO("Target=%s, robot=%s",
-            m_goal_data.loc.to_str().c_str(),
-            saa()->sensing()->position().to_str().c_str());
+            m_goal.point().to_str().c_str(),
+            saa()->sensing()->rpos2D().to_str().c_str());
   }
 
-  if ((m_goal_data.loc - sensing()->position()).length() <=
-      m_goal_data.tolerance) {
+  if ((m_goal.point() - sensing()->rpos2D()).length() <=
+      m_goal.tolerance()) {
     internal_event(ekST_ARRIVED,
-                   std::make_unique<struct goal_data>(m_goal_data));
+                   std::make_unique<point_argument>(m_goal));
   }
 
   /*
@@ -160,7 +158,7 @@ FSM_STATE_DEFINE(vector_fsm, vector, rpfsm::event_data* data) {
     internal_event(ekST_COLLISION_AVOIDANCE);
   } else {
     saa()->steer_force2D().accum(
-        saa()->steer_force2D().seek_to(m_goal_data.loc));
+        saa()->steer_force2D().seek_to(m_goal.point()));
     saa()->actuation()->actuator<hal::actuators::led_actuator>()->set_color(
         -1, rutils::color::kBLUE);
   }
@@ -169,11 +167,11 @@ FSM_STATE_DEFINE(vector_fsm, vector, rpfsm::event_data* data) {
 
 RCSW_CONST FSM_STATE_DEFINE(vector_fsm,
                             arrived,
-                            RCSW_UNUSED struct goal_data* data) {
+                            RCSW_UNUSED point_argument* data) {
   if (ekST_ARRIVED != last_state()) {
     ER_DEBUG("Executing ekST_ARRIVED: target=%s, tol=%f",
-             data->loc.to_str().c_str(),
-             data->tolerance);
+             data->point().to_str().c_str(),
+             data->tolerance());
   }
   return util_signal::ekHANDLED;
 }
@@ -217,14 +215,18 @@ bool vector_fsm::exited_collision_avoidance(void) const {
   return ekST_COLLISION_AVOIDANCE == last_state() && !in_collision_avoidance();
 } /* exited_collision_avoidance() */
 
-rmath::vector2z vector_fsm::avoidance_loc(void) const {
-  return saa()->sensing()->discrete_position();
-} /* avoidance_loc() */
+rmath::vector2z vector_fsm::avoidance_loc2D(void) const {
+  return saa()->sensing()->dpos2D();
+} /* avoidance_loc2D() */
+
+rmath::vector3z vector_fsm::avoidance_loc3D(void) const {
+  return saa()->sensing()->dpos3D();
+} /* avoidance_loc3D() */
 
 /*******************************************************************************
  * General Member Functions
  ******************************************************************************/
-void vector_fsm::task_start(const ta::taskable_argument* const c_arg) {
+void vector_fsm::task_start(const ta::taskable_argument* c_arg) {
   static const uint8_t kTRANSITIONS[] = {
       ekST_VECTOR,            /* start */
       ekST_VECTOR,            /* vector */
@@ -236,7 +238,8 @@ void vector_fsm::task_start(const ta::taskable_argument* const c_arg) {
   ER_ASSERT(nullptr != a, "Bad point argument passed to %s", __FUNCTION__);
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
-                 std::make_unique<struct goal_data>(a->point(), a->tolerance()));
+                 std::make_unique<point_argument>(a->tolerance(),
+                                                  a->point()));
 } /* task_start() */
 
 void vector_fsm::task_execute(void) {
@@ -249,7 +252,7 @@ void vector_fsm::init(void) {
 } /* init() */
 
 rmath::vector2d vector_fsm::calc_vector_to_goal(const rmath::vector2d& goal) {
-  return goal - sensing()->position();
+  return goal - sensing()->rpos2D();
 } /* calc_vector_to_goal() */
 
 NS_END(fsm, cosm);

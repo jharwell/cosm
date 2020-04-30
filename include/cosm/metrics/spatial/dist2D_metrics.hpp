@@ -53,7 +53,7 @@ class dist2D_metrics : public virtual rmetrics::base_metrics {
    * \brief Return a single robot's current position in 2D space in real
    * coordinates.
    */
-  virtual rmath::vector2d pos2D(void) const = 0;
+  virtual rmath::vector2d rpos2D(void) const = 0;
 
   /**
    * \brief Return a single robot's discretized position in 2D space.

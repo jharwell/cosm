@@ -185,7 +185,7 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``fsm_collision_counts``                       |  # robots entering, are in, and exiting the collision avoidance state.  | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_collision_locs``                         | Spatial distribution of collision avoidance locations in the arena.     | create,truncate        |                        |
+| ``fsm_collision_locs2D``                       | Spatial distribution of collision avoidance locations in the arena.     | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``fsm_movement``                               | Swarm average distance traveled/velocity.                               | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+

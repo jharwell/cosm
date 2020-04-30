@@ -1,7 +1,7 @@
 /**
- * \file new_direction_data.hpp
+ * \file collision_locs2D_metrics_collector.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,38 +18,26 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_NEW_DIRECTION_DATA_HPP_
-#define INCLUDE_COSM_FSM_NEW_DIRECTION_DATA_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/patterns/fsm/event.hpp"
+#include "cosm/fsm/metrics/collision_locs2D_metrics_collector.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/fsm/metrics/collision_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+NS_START(cosm, fsm, metrics);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct new_direction_data
- * \ingroup fsm
- *
- * \brief An argument that can be passed to an FSM state, containing randomness
- * to inject into robot motion by having them change their direction.
- */
-struct new_direction_data : public rpfsm::event_data {
-  explicit new_direction_data(const rmath::radians& dir_in) : dir(dir_in) {}
+void collision_locs2D_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
+  auto& m = dynamic_cast<const collision_metrics&>(metrics);
+  inc_total_count();
+  inc_cell_count(m.avoidance_loc2D());
+} /* collect() */
 
-  rmath::radians dir;
-};
-
-NS_END(fsm, cosm);
-
-#endif /* INCLUDE_COSM_FSM_NEW_DIRECTION_DATA_HPP_ */
+NS_END(metrics, fsm, cosm);

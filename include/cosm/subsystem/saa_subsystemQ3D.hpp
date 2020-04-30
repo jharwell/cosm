@@ -1,7 +1,7 @@
 /**
  * \file saa_subsystemQ3D.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -25,15 +25,18 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <utility>
 
+#include "cosm/steer2D/force_calculator.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
-#include "cosm/subsystem/base_saa_subsystem2DQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, subsystem);
+class actuation_subsystem2D;
+class sensing_subsystemQ3D;
 
 /*******************************************************************************
  * Class Definitions
@@ -42,46 +45,56 @@ NS_START(cosm, subsystem);
  * \class saa_subsystemQ3D
  * \ingroup subsystem
  *
- * \brief Sensing and Actuation (SAA) subsystem for robot's operating in 2D but
- * sensing in 3D. Implements the BOID interface, which requires both sensors and
- * actuators.
+ * \brief Sensing and Actuation (SAA) subsystem for 2D and quasi-3D (Q3D) robots
  */
-class saa_subsystemQ3D :  rer::client<saa_subsystemQ3D>,
-                          public base_saa_subsystem2DQ3D {
+class saa_subsystemQ3D : public steer2D::boid {
  public:
-  saa_subsystemQ3D(
+  using sensing_type = sensing_subsystemQ3D;
+  using actuation_type = actuation_subsystem2D;
+
+  explicit saa_subsystemQ3D(
       const hal::sensors::position_sensor& pos_sensor,
       const sensing_subsystemQ3D::sensor_map& sensors,
       const actuation_subsystem2D::actuator_map& actuators,
       const steer2D::config::force_calculator_config* const steer_config)
-      : ER_CLIENT_INIT("cosm.subsystem.saa"),
-        base_saa_subsystem2DQ3D(steer_config),
-        m_actuation(std::make_unique<actuation_subsystem2D>(actuators)),
-        m_sensing(std::make_unique<sensing_subsystemQ3D>(pos_sensor, sensors)) {}
+      : m_steer2D_calc(*this, steer_config),
+        m_actuation(std::make_unique<actuation_type>(actuators)),
+        m_sensing(std::make_unique<sensing_type>(pos_sensor, sensors)) {}
 
-  virtual sensing_subsystemQ3D* sensing(void) = 0;
-  virtual const sensing_subsystemQ3D* sensing(void) const = 0;
-  virtual actuation_subsystem2D* actuation(void) = 0;
-  virtual const actuation_subsystem2D* actuation(void) const = 0;
+  /*
+   * These functions are overridable in order to allow derived classes to return
+   * pointers to sensing/actuation subsystems covariant with the types passed to
+   * this class as template arguments.
+   */
+  virtual sensing_type* sensing(void) { return m_sensing.get(); }
+  virtual const sensing_type* sensing(void) const { return m_sensing.get(); }
+  virtual actuation_type* actuation(void) { return m_actuation.get(); }
+  virtual const actuation_type* actuation(void) const { return m_actuation.get(); }
+
+  /**
+   * \brief Apply the summed steering forces; change wheel speeds. Should reset
+   * the summed forces.
+   */
+  virtual void steer_force2D_apply(void) = 0;
+
+  const steer2D::force_calculator& steer_force2D(void) const {
+    return m_steer2D_calc;
+  }
+  steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
 
  protected:
-  virtual sensing_subsystemQ3D* sensing_impl(void) { return m_sensing.get(); }
-
-  virtual const sensing_subsystemQ3D* sensing_impl(void) const {
-    return m_sensing.get();
+  void actuation(std::unique_ptr<actuation_type> actuation) {
+    m_actuation = std::move(actuation);
   }
-
-  virtual actuation_subsystem2D* actuation_impl(void) {
-    return m_actuation.get();
-  }
-  virtual const actuation_subsystem2D* actuation_impl(void) const {
-    return m_actuation.get();
+  void sensing(std::unique_ptr<sensing_type> sensing) {
+    m_sensing = std::move(sensing);
   }
 
  private:
   /* clang-format off */
-  std::unique_ptr<actuation_subsystem2D>  m_actuation;
-  std::unique_ptr<sensing_subsystemQ3D>   m_sensing;
+  steer2D::force_calculator       m_steer2D_calc;
+  std::unique_ptr<actuation_type> m_actuation;
+  std::unique_ptr<sensing_type>   m_sensing;
   /* clang-format on */
 };
 

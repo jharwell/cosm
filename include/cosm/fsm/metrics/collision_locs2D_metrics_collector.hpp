@@ -1,5 +1,5 @@
 /**
- * \file collision_locs_metrics_collector.hpp
+ * \file collision_locs2D_metrics_collector.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -39,16 +39,17 @@ NS_START(cosm, fsm, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class collision_locs_metrics_collector
+ * \class collision_locs2D_metrics_collector
  * \ingroup fsm metrics
  *
  * \brief Collector for \ref collision_metrics as a 2D grid of where robots
  * most frequently encounter other robots.
  *
- * Metrics MUST be collected serially; concurrent updates to the gathered stats
- * are not supported.
+ * Metrics CAN be collected concurrently if the calling context guarantees that
+ * no two robots will have the same discrete location. Otherwise, serial
+ * collection is required.
  */
-class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class collision_locs2D_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
@@ -56,7 +57,7 @@ class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_
    * \param dims Dimensions of the arena.
    * \param mode The selected output mode.
    */
-  collision_locs_metrics_collector(const std::string& ofname,
+  collision_locs2D_metrics_collector(const std::string& ofname,
                                    const rtypes::timestep& interval,
                                    const rmetrics::output_mode& mode,
                                    const rmath::vector2z& dims) :
@@ -67,4 +68,4 @@ class collision_locs_metrics_collector final : public rmetrics::spatial::grid2D_
 
 NS_END(metrics, fsm, cosm);
 
-#endif /* INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_FSM_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_ */

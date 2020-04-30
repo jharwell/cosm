@@ -24,7 +24,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/subsystem/sensing_subsystem2D.hpp"
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
@@ -41,59 +40,58 @@ NS_START(cosm, robots, footbot);
  *
  * \brief The sensing subsystem for the foot-bot robot.
  */
-template <typename TSensingSubsystem>
-class footbot_sensing_subsystem : public TSensingSubsystem {
+class footbot_sensing_subsystem : public csubsystem::sensing_subsystemQ3D {
  public:
   footbot_sensing_subsystem(const hal::sensors::position_sensor& pos,
-                            const typename TSensingSubsystem::sensor_map& sensors)
-      : TSensingSubsystem(pos, sensors) {}
+                            const typename csubsystem::sensing_subsystemQ3D::sensor_map& sensors)
+      : csubsystem::sensing_subsystemQ3D(pos, sensors) {}
 
   const hal::sensors::proximity_sensor* proximity(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::proximity_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::proximity_sensor>();
   }
 
   hal::sensors::proximity_sensor* proximity(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::proximity_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::proximity_sensor>();
   }
 
   const hal::sensors::colored_blob_camera_sensor* blobs(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::colored_blob_camera_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::colored_blob_camera_sensor>();
   }
 
   hal::sensors::colored_blob_camera_sensor* blobs(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::colored_blob_camera_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::colored_blob_camera_sensor>();
   }
 
   const hal::sensors::light_sensor* light(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::light_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::light_sensor>();
   }
 
   hal::sensors::light_sensor* light(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::light_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::light_sensor>();
   }
 
   const hal::sensors::ground_sensor* ground(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::ground_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::ground_sensor>();
   }
 
   hal::sensors::ground_sensor* ground(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::ground_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::ground_sensor>();
   }
 
   const hal::sensors::battery_sensor* battery(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::battery_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::battery_sensor>();
   }
 
   hal::sensors::battery_sensor* battery(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::battery_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::battery_sensor>();
   }
 
   const hal::sensors::diff_drive_sensor* diff_drive(void) const {
-    return TSensingSubsystem::template sensor<hal::sensors::diff_drive_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::diff_drive_sensor>();
   }
 
   hal::sensors::diff_drive_sensor* diff_drive(void) {
-    return TSensingSubsystem::template sensor<hal::sensors::diff_drive_sensor>();
+    return csubsystem::sensing_subsystemQ3D::template sensor<hal::sensors::diff_drive_sensor>();
   }
 };
 

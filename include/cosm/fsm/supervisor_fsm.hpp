@@ -38,7 +38,6 @@
 NS_START(cosm);
 
 namespace subsystem {
-class saa_subsystem2D;
 class saa_subsystemQ3D;
 } /* namespace subsystem */
 
@@ -65,11 +64,9 @@ NS_START(fsm);
 class supervisor_fsm final : public rpfsm::simple_fsm,
                              public rer::client<supervisor_fsm> {
   using supervisee_variant_type = boost::variant<ta::taskable*,
-                                      ta::base_executive*>;
-  using saa_variant_type = boost::variant<subsystem::saa_subsystem2D*,
-                                          subsystem::saa_subsystemQ3D*>;
+                                                 ta::base_executive*>;
  public:
-  explicit supervisor_fsm(const saa_variant_type& saa);
+  explicit supervisor_fsm(subsystem::saa_subsystemQ3D* saa);
 
   supervisor_fsm& operator=(const supervisor_fsm&) = delete;
   supervisor_fsm(const supervisor_fsm&) = delete;
@@ -123,8 +120,8 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
   FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
 
   /* clang-format off */
-  supervisee_variant_type m_supervisee{};
-  saa_variant_type        m_saa;
+  subsystem::saa_subsystemQ3D* m_saa;
+  supervisee_variant_type      m_supervisee{};
   /* clang-format on */
 };
 

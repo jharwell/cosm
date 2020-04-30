@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/patterns/fsm/event.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/ta/taskable_argument.hpp"
@@ -45,8 +46,10 @@ NS_START(cosm, fsm);
  * which contains a 2D point and a tolerance, for use in specifying a location
  * in 2D space which should be acquired.
  */
-class point_argument : public ta::taskable_argument {
+class point_argument final : public ta::taskable_argument,
+                             public rpfsm::event_data {
  public:
+  point_argument(void) = default;
   point_argument(double tolerance, const rmath::vector2d& v)
       : m_tolerance(tolerance), m_point(v) {}
 
@@ -57,8 +60,8 @@ class point_argument : public ta::taskable_argument {
 
  private:
   /* clang-format off */
-  double          m_tolerance;
-  rmath::vector2d m_point;
+  double          m_tolerance{-1};
+  rmath::vector2d m_point{};
   /* clang-format on */
 };
 

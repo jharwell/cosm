@@ -34,7 +34,6 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/mpl/reflectable.hpp"
 
 #include "cosm/fsm/metrics/goal_acq_metrics.hpp"
 
@@ -64,7 +63,6 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controller : public cfsm::metrics::goal_acq_metrics,
-                        public rmpl::reflectable,
                         public rer::client<base_controller> {
  public:
   base_controller(void) RCSW_COLD;

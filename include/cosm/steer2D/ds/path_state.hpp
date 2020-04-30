@@ -25,8 +25,10 @@
  * Includes
  ******************************************************************************/
 #include <vector>
+#include <algorithm>
 
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/patterns/fsm/event.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -36,7 +38,7 @@
 NS_START(cosm, steer2D, ds);
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
 /**
  * \class path_state
@@ -45,11 +47,28 @@ NS_START(cosm, steer2D, ds);
  * \brief Holds the overall path for \ref path_following_force, as well as the
  * robot's current progress along it.
  */
-struct path_state {
-    /* clang-format off */
-  std::vector<rmath::vector2d> path{};
-  size_t                       current_node{0};
-  /* clang-format on */
+class path_state : public rpfsm::event_data {
+ public:
+  explicit path_state(const std::vector<rmath::vector2d>& points)
+      : mc_path(points) {}
+
+  const std::vector<rmath::vector2d>& path(void) const { return mc_path; }
+  rmath::vector2d next_point(void) const { return mc_path[m_point_index]; }
+  size_t node_index(const rmath::vector2d& point) const {
+    auto it = std::find(mc_path.begin(),
+                        mc_path.end(),
+                        point);
+    return std::distance(mc_path.begin(), it);
+  }
+
+  void update_point(size_t amount) { m_point_index += amount; }
+
+ private:
+  /* clang-format off */
+  const std::vector<rmath::vector2d> mc_path{};
+
+  size_t                             m_point_index{0};
+    /* clang-format on */
 };
 
 NS_END(ds, steer2D, cosm);

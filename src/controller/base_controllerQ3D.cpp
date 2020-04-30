@@ -31,7 +31,7 @@
 
 #include "cosm/steer2D/config/force_calculator_config.hpp"
 #include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
-#include "cosm/subsystem/config/sensing_subsystem2D_config.hpp"
+#include "cosm/subsystem/config/sensing_subsystemQ3D_config.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
@@ -75,7 +75,7 @@ rtypes::spatial_dist base_controllerQ3D::distance(void) const {
    * because of the prev/current location not being set up properly yet.
    */
   if (saa()->sensing()->tick() > 1U) {
-    return rtypes::spatial_dist(saa()->sensing()->tick_travel().length());
+    return rtypes::spatial_dist(saa()->sensing()->tick_travel3D().length());
   }
   return rtypes::spatial_dist(0.0);
 } /* distance() */
@@ -95,22 +95,20 @@ rmath::vector3d base_controllerQ3D::velocity(void) const {
 /*******************************************************************************
  * Swarm Spatial Metrics
  ******************************************************************************/
-rmath::vector3d base_controllerQ3D::pos3D(void) const {
-  return m_saa->sensing()->position();
+rmath::vector3d base_controllerQ3D::rpos3D(void) const {
+  return m_saa->sensing()->rpos3D();
 }
 
-rmath::vector2d base_controllerQ3D::pos2D(void) const {
-  auto pos = pos3D();
-  return rmath::vector2d(pos.x(), pos.y());
+rmath::vector2d base_controllerQ3D::rpos2D(void) const {
+  return m_saa->sensing()->rpos2D();
 }
 
 rmath::vector3z base_controllerQ3D::dpos3D(void) const {
-  return m_saa->sensing()->discrete_position();
+  return m_saa->sensing()->dpos3D();
 }
 
 rmath::vector2z base_controllerQ3D::dpos2D(void) const {
-  auto pos = dpos3D();
-  return rmath::vector2z(pos.x(), pos.y());
+  return m_saa->sensing()->dpos2D();
 }
 
 rmath::radians base_controllerQ3D::azimuth(void) const {
