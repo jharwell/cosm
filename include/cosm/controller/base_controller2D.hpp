@@ -33,8 +33,10 @@
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/controller/base_controller.hpp"
-#include "cosm/fsm/metrics/movement_metrics.hpp"
-#include "cosm/metrics/spatial/dist2D_metrics.hpp"
+#include "cosm/spatial/metrics/movement_metrics.hpp"
+#include "cosm/spatial/metrics/dist2D_metrics.hpp"
+#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
+
 
 /*******************************************************************************
  * Namespaces
@@ -63,8 +65,9 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controller2D : public base_controller,
-                          public cfsm::metrics::movement_metrics,
-                          public cmetrics::spatial::dist2D_metrics {
+                          public csmetrics::movement_metrics,
+                          public csmetrics::goal_acq_metrics,
+                          public csmetrics::dist2D_metrics {
  public:
   base_controller2D(void) RCSW_COLD;
   ~base_controller2D(void) override RCSW_COLD;

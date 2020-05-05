@@ -33,8 +33,9 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/controller/base_controller.hpp"
-#include "cosm/fsm/metrics/movement_metrics.hpp"
-#include "cosm/metrics/spatial/dist3D_metrics.hpp"
+#include "cosm/spatial/metrics/movement_metrics.hpp"
+#include "cosm/spatial/metrics/dist3D_metrics.hpp"
+#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -69,8 +70,9 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controllerQ3D : public base_controller,
-                           public cfsm::metrics::movement_metrics,
-                           public cmetrics::spatial::dist3D_metrics {
+                           public csmetrics::movement_metrics,
+                           public csmetrics::goal_acq_metrics,
+                           public csmetrics::dist3D_metrics {
  public:
   base_controllerQ3D(void) RCSW_COLD;
   ~base_controllerQ3D(void) override RCSW_COLD;

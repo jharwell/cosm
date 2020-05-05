@@ -23,7 +23,8 @@
  ******************************************************************************/
 #include "cosm/fsm/supervisor_fsm.hpp"
 
-#include "cosm/fsm/util_signal.hpp"
+#include "rcppsw/patterns/fsm/event.hpp"
+
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
@@ -63,18 +64,18 @@ supervisor_fsm::supervisor_fsm(subsystem::saa_subsystemQ3D* saa)
  ******************************************************************************/
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
   internal_event(ekST_NORMAL);
-  return cfsm::util_signal::ekHANDLED;
+  return rpfsm::event_signal::ekHANDLED;
 }
 
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
   boost::apply_visitor(normal_op_visitor(), m_supervisee);
   m_saa->steer_force2D_apply();
-  return fsm::util_signal::ekHANDLED;
+  return rpfsm::event_signal::ekHANDLED;
 }
 
 RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
   m_saa->actuation()->template actuator<ckin2D::governed_diff_drive>()->reset();
-  return fsm::util_signal::ekHANDLED;
+  return rpfsm::event_signal::ekHANDLED;
 }
 
 /*******************************************************************************
@@ -85,7 +86,7 @@ void supervisor_fsm::event_malfunction(void) {
     /* Possible to have a malfunction event on first timestep  */
       states::ekST_MALFUNCTION,  /* start */
       states::ekST_MALFUNCTION,  /* normal */
-      fsm::util_signal::ekFATAL, /* malfunction */
+      rpfsm::event_signal::ekFATAL, /* malfunction */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -95,7 +96,7 @@ void supervisor_fsm::event_repair(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
     /* Possible to have repair malfunction event on first timestep  */
       states::ekST_NORMAL,       /* start */
-      fsm::util_signal::ekFATAL, /* normal */
+      rpfsm::event_signal::ekFATAL, /* normal */
       states::ekST_NORMAL,       /* malfunction */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);

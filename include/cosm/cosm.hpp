@@ -127,9 +127,7 @@ namespace robots {
 namespace footbot {}
 } /* namespace robots */
 
-namespace fsm {
-namespace metrics {}
-} /* namespace fsm */
+namespace fsm {}
 
 namespace vis {
 namespace config {}
@@ -149,6 +147,12 @@ namespace tv {}
 namespace ta {
 namespace metrics {}
 } /* namespace ta */
+
+namespace spatial {
+namespace fsm {}
+namespace metrics {}
+namespace expstrat {}
+} /* namespace spatial */
 
 namespace foraging {
 namespace config {}
@@ -194,6 +198,11 @@ namespace cfds = cforaging::ds;
 namespace cfops = cforaging::operations;
 namespace cfconfig = cforaging::config;
 namespace cfbd = cforaging::block_dist;
+
+namespace cspatial = cosm::spatial;
+namespace csfsm = cspatial::fsm;
+namespace csmetrics = cspatial::metrics;
+namespace csexpstrat = cspatial::expstrat;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;

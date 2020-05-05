@@ -34,8 +34,9 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/types/discretize_ratio.hpp"
 
-#include "cosm/fsm/metrics/goal_acq_metrics.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -62,8 +63,7 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class base_controller : public cfsm::metrics::goal_acq_metrics,
-                        public rer::client<base_controller> {
+class base_controller : public rer::client<base_controller> {
  public:
   base_controller(void) RCSW_COLD;
   ~base_controller(void) override RCSW_COLD;

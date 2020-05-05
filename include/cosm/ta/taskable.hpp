@@ -82,7 +82,7 @@ class taskable : public virtual rmetrics::base_metrics {
    * \brief Start the task with the specified argument. The argument is consumed
    * by the called function.
    */
-  virtual void task_start(RCSW_UNUSED const taskable_argument* c_arg) = 0;
+  virtual void task_start(RCSW_UNUSED taskable_argument* c_arg) = 0;
 };
 
 NS_END(ta, cosm);
