@@ -47,7 +47,7 @@ NS_START(cosm, arena);
  * \brief Decorates \ref base_arena_map to add the ability to manage caches.
  */
 class caching_arena_map final : public rer::client<caching_arena_map>,
-                                public base_arena_map<crepr::base_block2D> {
+                                public base_arena_map {
  public:
   explicit caching_arena_map(const caconfig::arena_map_config* config);
 
@@ -123,7 +123,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
  private:
   void pre_block_dist_lock(const arena_map_locking& locking) override;
   void post_block_dist_unlock(const arena_map_locking& locking) override;
-  block_dist_precalc_type block_dist_precalc(const crepr::base_block2D* block) override;
+  block_dist_precalc_type block_dist_precalc(const crepr::base_block3D* block) override;
 
   /* clang-format off */
   mutable std::mutex                     m_cache_mtx{};

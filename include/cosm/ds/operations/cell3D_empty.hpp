@@ -1,7 +1,7 @@
 /**
- * \file cell2D_unknown.hpp
+ * \file cell3D_empty.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL2D_UNKNOWN_HPP_
-#define INCLUDE_COSM_DS_OPERATIONS_CELL2D_UNKNOWN_HPP_
+#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL3D_EMPTY_HPP_
+#define INCLUDE_COSM_DS_OPERATIONS_CELL3D_EMPTY_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,54 +27,44 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
 
-#include "cosm/ds/operations/cell2D_op.hpp"
+#include "cosm/ds/operations/cell3D_op.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::ds {
-class cell2D;
-} // namespace cosm::ds
-
-namespace cosm::fsm {
-class cell2D_fsm;
-}
-
 NS_START(cosm, ds, operations);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cell2D_unknown
+ * \class cell3D_empty
  * \ingroup ds operations detail
  *
- * \brief Created whenever a cell within an occupancy grid needs to go into an
- * unknown state.
+ * \brief Created whenever a cell needs to go from some other state to being
+ * empty.
  *
- * This happens in two cases:
- *
- * 1. After its relevance expires.
- * 2. Before the robot sees it for the first time (ala Fog of War).
+ * The most common example of this is when a free block is picked up, and the
+ * square that the block was on is now (probably) empty. It might not be if in
+ * the same timestep a new cache is created on that same cell.
  *
  * This class should never be instantiated, only derived from. To visit \ref
- * cell2D objects, use \ref cell2D_unknown_visitor.
+ * cell3D objects, use \ref cell3D_empty_visitor.
  */
-class cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
+class cell3D_empty : public cell3D_op, public rer::client<cell3D_empty> {
  private:
   struct visit_typelist_impl {
-    using inherited = cell2D_op::visit_typelist;
-    using value = boost::mpl::joint_view<inherited::type>;
+    using value = cell3D_op::visit_typelist;
   };
 
  public:
-  using visit_typelist = cell2D_op::visit_typelist;
+  using visit_typelist = visit_typelist_impl::value;
 
-  explicit cell2D_unknown(const rmath::vector2z& coord)
-      : cell2D_op(coord), ER_CLIENT_INIT("cosm.ds.operations.cell2D_unknown") {}
+  explicit cell3D_empty(const rmath::vector3z& coord)
+      : cell3D_op(coord), ER_CLIENT_INIT("cosm.ds.operations.cell3D_empty") {}
 
-  void visit(cds::cell2D& cell);
-  void visit(fsm::cell2D_fsm& fsm);
+  void visit(ds::cell3D& cell);
+  void visit(fsm::cell3D_fsm& fsm);
 };
 
 /**
@@ -83,13 +73,13 @@ class cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell2D_unknown_visitor_impl =
-    rpvisitor::precise_visitor<cell2D_unknown, cell2D_unknown::visit_typelist>;
+using cell3D_empty_visitor_impl =
+    rpvisitor::precise_visitor<cell3D_empty, cell3D_empty::visit_typelist>;
 
-class cell2D_unknown_visitor : public cell2D_unknown_visitor_impl {
-  using cell2D_unknown_visitor_impl::cell2D_unknown_visitor_impl;
+class cell3D_empty_visitor : public cell3D_empty_visitor_impl {
+  using cell3D_empty_visitor_impl::cell3D_empty_visitor_impl;
 };
 
 NS_END(operations, ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_UNKNOWN_HPP_ */
+#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL3D_EMPTY_HPP_ */

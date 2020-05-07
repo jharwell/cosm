@@ -56,14 +56,9 @@ NS_START(cosm, foraging, block_dist);
  * - Blocks are assumed to be the same size as arena resolution (this is not
  *   checked).
  */
-template<typename TBlockType>
-class powerlaw_distributor final : public rer::client<powerlaw_distributor<TBlockType>>,
-                                   public base_distributor<TBlockType> {
+class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
+                                   public base_distributor {
  public:
-  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
-  using base_distributor<TBlockType>::rng;
-  using base_distributor<TBlockType>::kMAX_DIST_TRIES;
-
   powerlaw_distributor(const config::powerlaw_dist_config* config,
                        const rtypes::discretize_ratio& resolution,
                        rmath::rng* rng_in);
@@ -72,8 +67,8 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor<TBloc
   powerlaw_distributor(const powerlaw_distributor& ) = delete;
   powerlaw_distributor& operator=(const powerlaw_distributor&) = delete;
 
-  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override;
-  bool distribute_block(TBlockType* block,
+  cfds::block3D_cluster_vector block_clusters(void) const override;
+  bool distribute_block(crepr::base_block3D* block,
                         cds::const_entity_vector& entities) override;
 
   /**
@@ -94,7 +89,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor<TBloc
   };
 
   using cluster_paramvec = std::vector<cluster_config>;
-  using dist_map_value_type = std::list<cluster_distributor<TBlockType>>;
+  using dist_map_value_type = std::list<cluster_distributor>;
 
   /**
    * \brief Assign cluster centers randomly, with the only restriction that the

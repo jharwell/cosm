@@ -41,15 +41,15 @@ crepr::embodied_block_variant embodied_block_creator::operator()(
     const rtypes::type_uuid& parent_id,
     cpal::argos_sm_adaptor* sm) const {
   crepr::embodied_cube_block ret;
-  argos::CVector3 loc(block->rloc().x(),
-                      block->rloc().y(),
-                      block->rloc().z());
+  argos::CVector3 loc(block->rpos3D().x(),
+                      block->rpos3D().y(),
+                      block->rpos3D().z());
   auto name = "parent" + rcppsw::to_string(parent_id) +
               + "_cube_block" + rcppsw::to_string(block->id());
   ret.box = new argos::CBoxEntity(name,
-                                  argos::CVector3(block->rloc().x(),
-                                                  block->rloc().y(),
-                                                  block->rloc().z()),
+                                  argos::CVector3(block->rpos3D().x(),
+                                                  block->rpos3D().y(),
+                                                  block->rpos3D().z()),
                                   argos::CQuaternion(),
                                   false,
                                   argos::CVector3(block->dims3D().x(),
@@ -96,9 +96,9 @@ argos::CBoxEntity* embodied_block_creator::ramp_bottom(
                      "_ramp_block" + rcppsw::to_string(block->id()) +
                      "_bottom";
   return new argos::CBoxEntity(name,
-                               argos::CVector3(block->rloc().x(),
-                                               block->rloc().y(),
-                                               block->rloc().z()),
+                               argos::CVector3(block->rpos3D().x(),
+                                               block->rpos3D().y(),
+                                               block->rpos3D().z()),
                                orientation,
                                false,
                                argos::CVector3(block->dims3D().x(),
@@ -123,9 +123,9 @@ argos::CBoxEntity* embodied_block_creator::ramp_back(
     y_factor = block->dims3D().x() / 2.0;
     x_rot = argos::CRadians::PI_OVER_TWO;
   }
-  argos::CVector3 loc(block->rloc().x() - x_factor,
-                      block->rloc().y() - y_factor,
-                      block->rloc().z());
+  argos::CVector3 loc(block->rpos3D().x() - x_factor,
+                      block->rpos3D().y() - y_factor,
+                      block->rpos3D().z());
   argos::CQuaternion orientation;
   orientation.FromEulerAngles(argos::CRadians(z_rotation.value()),
                               y_rot,
@@ -167,9 +167,9 @@ argos::CBoxEntity* embodied_block_creator::ramp_top(
                      "_top";
 
   return new argos::CBoxEntity(name,
-                               argos::CVector3(block->rloc().x(),
-                                               block->rloc().y(),
-                                               block->rloc().z() + halfway_height),
+                               argos::CVector3(block->rpos3D().x(),
+                                               block->rpos3D().y(),
+                                               block->rpos3D().z() + halfway_height),
                                orientation,
                                false,
                                argos::CVector3(length,

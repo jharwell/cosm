@@ -42,7 +42,7 @@ NS_START(cosm, tv);
  * \brief Interface specifying common functionality across projects for the
  * application of temporal variance in environmental conditions to the swarm.
  */
-template<typename TControllerType>
+template<typename TController>
 class env_dynamics  {
  public:
   env_dynamics(void) = default;
@@ -55,19 +55,19 @@ class env_dynamics  {
    * \brief Register a robot controller for all possible types of environmental
    * variance that could be applied to it.
    */
-  virtual void register_controller(const TControllerType& c) = 0;
+  virtual void register_controller(const TController& c) = 0;
 
   /**
    * \brief Undo \ref register_controller(), as well as flushing the controller
    * from any penalty handlers it might be serving penalties for.
    */
-  virtual void unregister_controller(const TControllerType& c) = 0;
+  virtual void unregister_controller(const TController& c) = 0;
 
   /**
    * \brief Flush the controller from serving penalties for ALL penalty
    * handlers.
    */
-  virtual bool penalties_flush(const TControllerType& c) = 0;
+  virtual bool penalties_flush(const TController& c) = 0;
 };
 
 NS_END(tv, cosm);

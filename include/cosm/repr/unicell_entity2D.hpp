@@ -61,20 +61,18 @@ class unicell_entity2D : public entity2D {
   /**
    * \brief Get the real location (center) of the object.
    */
-  rmath::vector2d rloc(void) const { return m_rloc; }
-  rmath::vector2d rloc2D(void) const override final { return m_rloc; }
+  rmath::vector2d rpos2D(void) const override final { return m_rpos; }
 
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  rmath::vector2z dloc(void) const { return m_dloc; }
-  rmath::vector2z dloc2D(void) const override final { return m_dloc; }
+  rmath::vector2z dpos2D(void) const override final { return m_dpos; }
 
   rmath::ranged xspan(void) const override final {
-    return entity2D::xspan(rloc2D(), xdimr());
+    return entity2D::xspan(rpos2D(), xdimr());
   }
   rmath::ranged yspan(void) const override final {
-    return entity2D::yspan(rloc2D(), ydimr());
+    return entity2D::yspan(rpos2D(), ydimr());
   }
   double xdimr(void) const override final { return m_dim.x(); }
   double ydimr(void) const override final { return m_dim.y(); }
@@ -98,18 +96,18 @@ class unicell_entity2D : public entity2D {
 
  protected:
   unicell_entity2D(const rmath::vector2d& dim,
-                   const rmath::vector2d& loc,
+                   const rmath::vector2d& pos,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity2D{dim, loc, resolution, rtypes::constants::kNoUUID} {}
+      : unicell_entity2D{dim, pos, resolution, rtypes::constants::kNoUUID} {}
 
   unicell_entity2D(const rmath::vector2d& dim,
-                   const rmath::vector2d& loc,
+                   const rmath::vector2d& pos,
                    const rtypes::discretize_ratio& resolution,
                    const rtypes::type_uuid& id)
       : entity2D(id),
         m_dim(dim),
-        m_rloc(loc),
-        m_dloc(rmath::dvec2zvec(loc, resolution.v())) {}
+        m_rpos(pos),
+        m_dpos(rmath::dvec2zvec(pos, resolution.v())) {}
 
   explicit unicell_entity2D(const rmath::vector2d& dim)
       : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
@@ -122,8 +120,8 @@ class unicell_entity2D : public entity2D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void rloc(const rmath::vector2d& loc) {
-    m_rloc = loc;
+  void rpos2D(const rmath::vector2d& pos) {
+    m_rpos = pos;
   }
 
   /**
@@ -131,15 +129,15 @@ class unicell_entity2D : public entity2D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dloc(const rmath::vector2z& loc) {
-    m_dloc = loc;
+  void dpos2D(const rmath::vector2z& pos) {
+    m_dpos = pos;
   }
 
  private:
   /* clang-format off */
   rmath::vector2d m_dim;
-  rmath::vector2d m_rloc{};
-  rmath::vector2z m_dloc{};
+  rmath::vector2d m_rpos{};
+  rmath::vector2z m_dpos{};
   /* clang-format on */
 };
 

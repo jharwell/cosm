@@ -53,18 +53,18 @@ class entity2D : public entity_base {
    *
    * \return The span in X of the entity.
    */
-  static rmath::ranged xspan(const rmath::vector2d& loc, double xdim) {
-    return rmath::ranged(loc.x() - 0.5 * xdim, loc.x() + 0.5 * xdim);
+  static rmath::ranged xspan(const rmath::vector2d& pos, double xdim) {
+    return rmath::ranged(pos.x() - 0.5 * xdim, pos.x() + 0.5 * xdim);
   }
 
   /**
-   * \brief Calculate the span in Y of an entity given its location and
+   * \brief Calculate the span in Y of an entity given its posation and
    * dimension in Y.
    *
    * \return The span in Y of the entity.
    */
-  static rmath::ranged yspan(const rmath::vector2d& loc, double ydim) {
-    return rmath::ranged(loc.y() - 0.5 * ydim, loc.y() + 0.5 * ydim);
+  static rmath::ranged yspan(const rmath::vector2d& pos, double ydim) {
+    return rmath::ranged(pos.y() - 0.5 * ydim, pos.y() + 0.5 * ydim);
   }
 
   entity2D(void) = default;
@@ -101,8 +101,8 @@ class entity2D : public entity_base {
    */
   virtual double ydimr(void) const = 0;
 
-  virtual rmath::vector2d rloc2D(void) const = 0;
-  virtual rmath::vector2z dloc2D(void) const = 0;
+  virtual rmath::vector2d rpos2D(void) const = 0;
+  virtual rmath::vector2z dpos2D(void) const = 0;
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek2D;

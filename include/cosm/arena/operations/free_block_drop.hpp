@@ -31,8 +31,6 @@
 
 #include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/block_variant.hpp"
 
 /*******************************************************************************
@@ -40,9 +38,12 @@
  ******************************************************************************/
 namespace cosm::arena {
 class caching_arena_map;
-template<typename T>
 class base_arena_map;
 } /* namespace cosm::arena */
+
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -67,16 +68,13 @@ NS_START(cosm, arena, operations, detail);
  * non-controller entities to handle block dropping, use \ref
  * free_block_drop_visitor.
  */
-template<typename TBlockType>
-class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
+class free_block_drop : public rer::client<free_block_drop>,
                         public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<base_arena_map<crepr::base_block2D>,
-                                  base_arena_map<crepr::base_block3D>,
+    using others = rmpl::typelist<base_arena_map,
                                   caching_arena_map,
-                                  crepr::base_block2D,
                                   crepr::base_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
@@ -104,7 +102,7 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
    * \brief Perform actual block drop in the arena, taking/releasing locks as
    * needed.
    */
-  void visit(base_arena_map<TBlockType>& map);
+  void visit(base_arena_map& map);
   void visit(caching_arena_map& map);
 
   /**
@@ -115,7 +113,6 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
   /**
    * \brief Update the dropped block. No locking is performed.
    */
-  void visit(crepr::base_block2D& block);
   void visit(crepr::base_block3D& block);
 
  protected:
@@ -126,7 +123,7 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
    * \param resolution The resolution of the arena map.
    * \param locking What locks are currently held by the caller?
    */
-  free_block_drop(const crepr::base_block_variant& block,
+  free_block_drop(crepr::base_block3D* block,
                   const rmath::vector2z& coord,
                   const rtypes::discretize_ratio& resolution,
                   const arena_map_locking& locking);
@@ -137,7 +134,7 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
   /* clang-format off */
   const rtypes::discretize_ratio mc_resolution;
   const arena_map_locking        mc_locking;
-  crepr::base_block_variant      mc_block;
+  crepr::base_block3D*           mc_block;
   /* clang-format on */
 };
 
@@ -147,17 +144,15 @@ class free_block_drop : public rer::client<free_block_drop<TBlockType>>,
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-template<typename TBlockType>
 using free_block_drop_visitor_impl =
-    rpvisitor::precise_visitor<free_block_drop<TBlockType>,
-                               typename free_block_drop<TBlockType>::visit_typelist>;
+    rpvisitor::precise_visitor<free_block_drop,
+                               free_block_drop::visit_typelist>;
 
 NS_END(detail);
 
-template<typename TBlockType>
-class free_block_drop_visitor : public detail::free_block_drop_visitor_impl<TBlockType> {
+class free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
  public:
-  using detail::free_block_drop_visitor_impl<TBlockType>::free_block_drop_visitor_impl;
+  using detail::free_block_drop_visitor_impl::free_block_drop_visitor_impl;
 };
 
 

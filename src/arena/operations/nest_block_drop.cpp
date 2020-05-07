@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/nest_block_drop.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,15 +35,15 @@ NS_START(cosm, arena, operations, detail);
  * Forward Declarations
  ******************************************************************************/
 static void do_lock(caching_arena_map& map);
-static void do_lock(base_arena_map<crepr::base_block2D>& map);
+static void do_lock(base_arena_map& map);
 static void do_unlock(caching_arena_map& map);
-static void do_unlock(base_arena_map<crepr::base_block2D>& map);
+static void do_unlock(base_arena_map& map);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
 nest_block_drop::nest_block_drop(
-    std::unique_ptr<crepr::base_block2D> robot_block,
+    std::unique_ptr<crepr::base_block3D> robot_block,
     const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.operations.nest_block_drop"),
       mc_timestep(t),
@@ -52,7 +52,7 @@ nest_block_drop::nest_block_drop(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_block_drop::visit(base_arena_map<crepr::base_block2D>& map) {
+void nest_block_drop::visit(base_arena_map& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
             "Undefined robot index");
 
@@ -70,8 +70,8 @@ void nest_block_drop::visit(caching_arena_map& map) {
   do_unlock(map);
 } /* visit() */
 
-template <typename TArenaMapType>
-void nest_block_drop::do_visit(TArenaMapType& map) {
+template <typename TArenaMap>
+void nest_block_drop::do_visit(TArenaMap& map) {
   /*
    * The robot owns a unique copy of a block originally from the arena, so we
    * need to look it up rather than implicitly converting its unique_ptr to a
@@ -89,7 +89,7 @@ void nest_block_drop::do_visit(TArenaMapType& map) {
                               arena_map_locking::ekALL_HELD);
 } /* do_visit() */
 
-void nest_block_drop::visit(crepr::base_block2D& block) {
+void nest_block_drop::visit(crepr::base_block3D& block) {
   block.md()->reset_metrics();
   block.md()->distribution_time(mc_timestep);
 } /* visit() */
@@ -115,12 +115,12 @@ void do_unlock(caching_arena_map& map) {
   map.cache_mtx()->lock();
 } /* do_unlock() */
 
-void do_lock(base_arena_map<crepr::base_block2D>& map) {
+void do_lock(base_arena_map& map) {
   map.block_mtx()->lock();
   map.grid_mtx()->lock();
 } /* do_lock() */
 
-void do_unlock(base_arena_map<crepr::base_block2D>& map) {
+void do_unlock(base_arena_map& map) {
   map.grid_mtx()->lock();
   map.block_mtx()->lock();
 } /* do_unlock() */

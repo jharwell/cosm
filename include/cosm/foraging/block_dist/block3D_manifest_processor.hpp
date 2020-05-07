@@ -30,6 +30,7 @@
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/factory/factory.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/foraging/config/block_manifest.hpp"
 #include "cosm/ds/block3D_vector.hpp"

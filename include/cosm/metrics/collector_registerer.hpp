@@ -136,16 +136,16 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
    *
    * These collectors must always use \ref rmetrics::output_mode::ekAPPEND.
    */
-  template <typename TCollectorType>
+  template <typename TCollector>
   using constructible_with_extra_args =
-      std::is_constructible<TCollectorType,
+      std::is_constructible<TCollector,
                             const std::string&,
                             const rtypes::timestep&,
                             Ts...>;
 
-  template <typename TCollectorType>
+  template <typename TCollector>
   using constructible_with_mode_and_extra_args =
-      std::is_constructible<TCollectorType,
+      std::is_constructible<TCollector,
                             const std::string&,
                             const rtypes::timestep&,
                             rmetrics::output_mode,

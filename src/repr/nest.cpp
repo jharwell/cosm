@@ -52,7 +52,7 @@ nest::light_list nest::init_lights(const rutils::color& color) const {
 } /* init_lights() */
 
 nest::light_list nest::init_square(const rutils::color& color) const {
-  argos::CVector3 loc(rloc().x(), rloc().y(), 5.0);
+  argos::CVector3 loc(rpos2D().x(), rpos2D().y(), 5.0);
   return light_list{new argos::CLightEntity(
       "nest_light0",
       loc,
@@ -65,13 +65,13 @@ nest::light_list nest::init_rect(const rutils::color& color) const {
   argos::CVector3 loc1, loc2, loc3;
 
   if (xdimr() > ydimr()) {
-    loc1.Set(rloc().x() - xdimr() * 0.25, rloc().y(), 5.0);
-    loc2.Set(rloc().x(), rloc().y(), 5.0);
-    loc3.Set(rloc().x() + xdimr() * 0.25, rloc().y(), 5.0);
+    loc1.Set(rpos2D().x() - xdimr() * 0.25, rpos2D().y(), 5.0);
+    loc2.Set(rpos2D().x(), rpos2D().y(), 5.0);
+    loc3.Set(rpos2D().x() + xdimr() * 0.25, rpos2D().y(), 5.0);
   } else {
-    loc1.Set(rloc().x(), rloc().y() - ydimr() * 0.25, 5.0);
-    loc2.Set(rloc().x(), rloc().y(), 5.0);
-    loc3.Set(rloc().x(), rloc().y() + ydimr() * 0.25, 5.0);
+    loc1.Set(rpos2D().x(), rpos2D().y() - ydimr() * 0.25, 5.0);
+    loc2.Set(rpos2D().x(), rpos2D().y(), 5.0);
+    loc3.Set(rpos2D().x(), rpos2D().y() + ydimr() * 0.25, 5.0);
   }
 
   return {new argos::CLightEntity(

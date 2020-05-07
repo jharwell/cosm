@@ -103,7 +103,7 @@ boost::optional<std::string> transport_metrics_collector::csv_line_build(void) {
 } /* csv_line_build() */
 
 void transport_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const transport_metrics&>(metrics);
+  auto& m = static_cast<const transport_metrics&>(metrics);
   ++m_interval.transported;
   m_interval.cube_transported += static_cast<uint>(repr::block_type::ekCUBE == m.type());
   m_interval.ramp_transported += static_cast<uint>(repr::block_type::ekRAMP == m.type());

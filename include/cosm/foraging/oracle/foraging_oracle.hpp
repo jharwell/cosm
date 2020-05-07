@@ -36,14 +36,12 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
-#include "cosm/repr/base_block2D.hpp"
 #include "cosm/oracle/aggregate_oracle.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena {
-template<typename T>
 class base_arena_map;
 class caching_arena_map;
 } /* namespace cosm::arena */
@@ -52,13 +50,17 @@ namespace cosm::arena::repr {
 class base_cache;
 } /* namespace cosm::arena::repr */
 
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
 namespace cosm::oracle {
 class tasking_oracle;
 } /* namespace cosm::oracle */
 
 NS_START(cosm, foraging, oracle, detail);
 
-using entity_types = rmpl::typelist<crepr::base_block2D, carepr::base_cache>;
+using entity_types = rmpl::typelist<crepr::base_block3D, carepr::base_cache>;
 using entity_oracle_types = rmpl::typelist_wrap_apply<entity_types,
                                                       coracle::entities_oracle>;
 using tasking_oracle_types = rmpl::typelist<coracle::tasking_oracle>;
@@ -88,7 +90,7 @@ NS_END(detail);
  */
 class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
  public:
-  using blocks_oracle_type = coracle::entities_oracle<crepr::base_block2D>;
+  using blocks_oracle_type = coracle::entities_oracle<crepr::base_block3D>;
   using caches_oracle_type = coracle::entities_oracle<carepr::base_cache>;
   using tasking_oracle_type = coracle::tasking_oracle;
 
@@ -122,8 +124,7 @@ class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
    * a minimum).
    */
   void update(carena::caching_arena_map* map);
-  template<typename TBlockType>
-  void update(carena::base_arena_map<TBlockType>* map);
+  void update(carena::base_arena_map* map);
 };
 
 NS_END(oracle, foraging, cosm);

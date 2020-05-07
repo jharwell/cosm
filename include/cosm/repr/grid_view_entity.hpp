@@ -66,8 +66,8 @@ class grid_view_entity : public crepr::entity2D {
 
   ~grid_view_entity(void) override = default;
 
-  rmath::vector2z dloc2D(void) const override final { return m_view.origin()->loc(); }
-  rmath::vector2d rloc2D(void) const override final {
+  rmath::vector2z dpos2D(void) const override final { return m_view.origin()->loc(); }
+  rmath::vector2d rpos2D(void) const override final {
     return rmath::zvec2dvec(m_view.origin()->loc(), mc_resolution.v());
   }
 
@@ -80,8 +80,8 @@ class grid_view_entity : public crepr::entity2D {
    * coordinates in the arena in X.
    */
   rmath::ranged xspan(void) const override final {
-    return rmath::ranged(rloc2D().x(),
-                         rloc2D().x() + m_view.shape()[0] * mc_resolution.v());
+    return rmath::ranged(rpos2D().x(),
+                         rpos2D().x() + m_view.shape()[0] * mc_resolution.v());
   }
 
   /**
@@ -89,8 +89,8 @@ class grid_view_entity : public crepr::entity2D {
    * coordinates in the arena in Y.
    */
   rmath::ranged yspan(void) const override final {
-    return rmath::ranged(rloc2D().y(),
-                         rloc2D().y() + m_view.shape()[1] * mc_resolution.v());
+    return rmath::ranged(rpos2D().y(),
+                         rpos2D().y() + m_view.shape()[1] * mc_resolution.v());
   }
 
   /**

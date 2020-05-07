@@ -40,30 +40,31 @@ NS_START(cosm, controller, operations);
  * \brief Wrapping functor to applicator an operation to a controller which is
  * derived from a common base class.
  *
- * \tparam TBaseControllerType The type of the base controller class which all
- *                             controllers processed by this class are derived
- *                             from.
+ * \tparam TBaseController The type of the base controller class which all
+ *                         controllers processed by this class are derived from.
  *
  * \tparam TOperation The operation to perform. All operations must take the
  *                    controller type to process as their first template
  *                    argument, and can take any number of additional template
  *                    arguments.
  */
-template<class TBaseControllerType,
-         template <class TDerivedControllerType, class...> class TOperation,
+template<class TBaseController,
+         template <class TDerivedController, class...> class TOperation,
          class ...Args>
 class applicator {
  public:
-  explicit applicator(TBaseControllerType* const c) : m_controller(c) {}
+  explicit applicator(TBaseController* const c) : m_controller(c) {}
 
-  template <typename TDerivedControllerType>
-  auto operator()(const TOperation<TDerivedControllerType, Args...>& op) const -> decltype(op(std::declval<TDerivedControllerType*>())) {
-    return op(static_cast<TDerivedControllerType*>(m_controller));
+  template <typename TDerivedController, typename ...OpArgs>
+  auto operator()(const TOperation<TDerivedController, Args...>& op,
+                  OpArgs&& ...args) const -> decltype(op(std::declval<TDerivedController*>(), args...)) {
+    return op(static_cast<TDerivedController*>(m_controller),
+              std::forward<OpArgs>(args)...);
   }
 
  private:
   /* clang-format off */
-  TBaseControllerType* const m_controller;
+  TBaseController* const m_controller;
   /* clang-format on */
 };
 

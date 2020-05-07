@@ -53,8 +53,8 @@ NS_START(cosm, pal);
  * cconvergence::convergence_calculator to calculate convergence in the ARGoS
  * environment.
  */
-template<class TControllerType>
-class argos_convergence_calculator : public rer::client<argos_convergence_calculator<TControllerType>>,
+template<class TController>
+class argos_convergence_calculator : public rer::client<argos_convergence_calculator<TController>>,
   public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
   argos_convergence_calculator(const cconvconfig::convergence_config* config,

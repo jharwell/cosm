@@ -1,7 +1,7 @@
 /**
- * \file block2D_vector.cpp
+ * \file block_pickup.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,43 +21,44 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ds/block2D_vector.hpp"
+#include "cosm/controller/operations/block_pickup.hpp"
 
-#include <numeric>
-
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ds);
+NS_START(cosm, controller, operations);
 
 /*******************************************************************************
- * Non-Member Functions
+ * Constructors/Destructor
  ******************************************************************************/
-template <typename TVectorType>
-std::string do_to_str(const TVectorType& vec) {
-  return std::accumulate(vec.begin(),
-                         vec.end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "b" + rcppsw::to_string(b->id()) + ",";
-                         });
-} /* do_to_str() */
+block_pickup::block_pickup(crepr::base_block3D* block,
+                                     const rtypes::type_uuid& robot_id,
+                                     const rtypes::timestep& t)
+    : ER_CLIENT_INIT("cosm.controller.operations.block_pickup"),
+      cell2D_op(block->dpos2D()),
+      mc_timestep(t),
+      mc_robot_id(robot_id),
+      m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::string block2D_vectoro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+void block_pickup::visit(controller::block_carrying_controller& c) {
+  /*
+   * Cloning resets robot ID, so we need to set it again in the clone (principle
+   * of least surprise)
+   */
+  auto block = m_block->clone();
+  block->md()->robot_id(mc_robot_id);
+  c.block(std::move(block));
+  ER_INFO("Block%d is now carried by fb%u", block->id().v(), mc_robot_id.v());
+} /* visit() */
 
-std::string block2D_vectorno::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
+void block_pickup::visit(crepr::base_block3D& block) {
+  ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
+  block.robot_pickup_event(mc_robot_id, mc_timestep);
+} /* visit() */
 
-std::string block2D_vectorro::to_str(void) const {
-  return do_to_str(*this);
-} /* to_str() */
-
-NS_END(ds, cosm);
+NS_END(operations, controller, cosm);

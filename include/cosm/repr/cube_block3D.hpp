@@ -27,8 +27,7 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity3D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 #include "cosm/hal/hal.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
@@ -51,23 +50,23 @@ NS_START(cosm, repr);
  * \brief A 3D representation of a cubical block within the arena. Bounding box
  * for cube blocks is 1x1x1 cells in 3D.
  */
-class cube_block3D final : public base_block<unicell_movable_entity3D> {
+class cube_block3D final : public base_block3D {
  public:
   explicit cube_block3D(const rmath::vector3d& dim)
-      : base_block(dim,
+      : base_block3D(dim,
                    rutils::color::kBLACK,
                    crepr::block_type::ekCUBE,
                    rtypes::constants::kNoUUID) {}
 
   cube_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {}
+      : base_block3D(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {}
 
-  std::unique_ptr<base_block> clone(void) const override {
+  std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<cube_block3D>(dims3D(), id());
 
     /* copy core definition features */
-    tmp->dloc(this->dloc());
-    tmp->rloc(this->rloc());
+    tmp->dpos3D(this->dpos3D());
+    tmp->rpos3D(this->rpos3D());
 
     /* copy metadata */
     tmp->md()->robot_id_reset();

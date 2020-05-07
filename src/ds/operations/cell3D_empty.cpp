@@ -1,5 +1,5 @@
 /**
- * \file base_block2D.hpp
+ * \file cell3D_empty.cpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,25 +18,28 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-#define INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block.hpp"
-#include "cosm/repr/unicell_movable_entity2D.hpp"
+#include "cosm/ds/operations/cell3D_empty.hpp"
+
+#include "cosm/ds/cell3D.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, ds, operations);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-using base_block2D = base_block<unicell_movable_entity2D>;
+void cell3D_empty::visit(cds::cell3D& cell) {
+  cell.entity(nullptr);
+  visit(cell.fsm());
+} /* visit() */
 
-NS_END(repr, cosm);
+void cell3D_empty::visit(fsm::cell3D_fsm& fsm) {
+  fsm.event_empty();
+} /* visit() */
 
-#endif /* INCLUDE_COSM_REPR_BASE_BLOCK2D_HPP_ */
+NS_END(operations, ds, cosm);

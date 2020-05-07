@@ -35,8 +35,8 @@ NS_START(cosm, ds);
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-template <typename TVectorType>
-std::string do_to_str(const TVectorType& vec) {
+template <typename TVector>
+std::string do_to_str(const TVector& vec) {
   return std::accumulate(vec.begin(),
                          vec.end(),
                          std::string(),

@@ -26,36 +26,27 @@
 
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/foraging/block_dist/block2D_manifest_processor.hpp"
 #include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, arena);
 
-template<typename T>
-using manifest_processor_type = typename std::conditional<std::is_same<T,
-                                                                  crepr::base_block2D>::value,
-                                                          cforaging::block_dist::block2D_manifest_processor,
-                                                          cforaging::block_dist::block3D_manifest_processor>::type;
-
-
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-template<class TBlockType>
-base_arena_map<TBlockType>::base_arena_map(const caconfig::arena_map_config* config)
+base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
     : ER_CLIENT_INIT("cosm.arena.base_arena_map"),
       decorator(rmath::vector2d(config->grid.dims.x() + arena_padding(),
                                 config->grid.dims.y() + arena_padding()),
                 config->grid.resolution),
-      m_blockso(manifest_processor_type<TBlockType>(&config->blocks.dist.manifest)()),
+      m_blockso(foraging::block_dist::block3D_manifest_processor(&config->blocks.dist.manifest)()),
       m_nest(config->nest.dims,
              config->nest.center,
              config->grid.resolution,
@@ -79,8 +70,7 @@ base_arena_map<TBlockType>::base_arena_map(const caconfig::arena_map_config* con
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<class TBlockType>
-bool base_arena_map<TBlockType>::initialize(pal::argos_sm_adaptor* sm,
+bool base_arena_map::initialize(pal::argos_sm_adaptor* sm,
                                             rmath::rng* rng) {
   for (auto& l : m_nest.lights()) {
     sm->AddEntity(*l);
@@ -89,8 +79,7 @@ bool base_arena_map<TBlockType>::initialize(pal::argos_sm_adaptor* sm,
   return m_block_dispatcher.initialize(rng);
 } /* initialize() */
 
-template<class TBlockType>
-rtypes::type_uuid base_arena_map<TBlockType>::robot_on_block(
+rtypes::type_uuid base_arena_map::robot_on_block(
     const rmath::vector2d& pos,
     const rtypes::type_uuid& ent_id) const {
   /*
@@ -114,9 +103,8 @@ rtypes::type_uuid base_arena_map<TBlockType>::robot_on_block(
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
-template<class TBlockType>
-bool base_arena_map<TBlockType>::distribute_single_block(TBlockType* block,
-                                                         const arena_map_locking& locking) {
+bool base_arena_map::distribute_single_block(crepr::base_block3D* block,
+                                             const arena_map_locking& locking) {
   /* return TRUE because the distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
     return true;
@@ -137,8 +125,7 @@ bool base_arena_map<TBlockType>::distribute_single_block(TBlockType* block,
   return ret;
 } /* disribute_single_block() */
 
-template<class TBlockType>
-void base_arena_map<TBlockType>::distribute_all_blocks(void) {
+void base_arena_map::distribute_all_blocks(void) {
   // Reset all the cells to clear old references to blocks
   decoratee().reset();
 
@@ -165,22 +152,19 @@ void base_arena_map<TBlockType>::distribute_all_blocks(void) {
   }   /* for(i..) */
 } /* distribute_all_blocks() */
 
-template<class TBlockType>
-void base_arena_map<TBlockType>::pre_block_dist_lock(const arena_map_locking& locking) {
+void base_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
   maybe_lock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
   maybe_lock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
 } /* pre_block_dist_lock() */
 
-template<class TBlockType>
-void base_arena_map<TBlockType>::post_block_dist_unlock(
+void base_arena_map::post_block_dist_unlock(
     const arena_map_locking& locking) {
   maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
   maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
 
-template<class TBlockType>
-typename base_arena_map<TBlockType>::block_dist_precalc_type base_arena_map<TBlockType>::block_dist_precalc(
-    const TBlockType* block) {
+base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
+    const crepr::base_block3D* block) {
 
   /* Entities that need to be avoided during block distribution are:
    *
@@ -218,11 +202,5 @@ typename base_arena_map<TBlockType>::block_dist_precalc_type base_arena_map<TBlo
   ret.avoid_ents.push_back(&m_nest);
   return ret;
 } /* block_dist_precalc() */
-
-/*******************************************************************************
- * Template Instantiations
- ******************************************************************************/
-template class carena::base_arena_map<crepr::base_block2D>;
-template class carena::base_arena_map<crepr::base_block3D>;
 
 NS_END(arena, cosm);

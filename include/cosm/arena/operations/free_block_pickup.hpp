@@ -25,20 +25,20 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::arena {
-template<typename T>
 class base_arena_map;
 } /* namespace cosm::arena */
+
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -56,9 +56,8 @@ class free_block_pickup : public rer::client<free_block_pickup>,
                           public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<carena::base_arena_map<crepr::base_block2D>,
-                                 carena::base_arena_map<crepr::base_block3D>,
-                                 crepr::base_block2D>;
+    using value = rmpl::typelist<carena::base_arena_map,
+                                 crepr::base_block3D>;
   };
 
  public:
@@ -72,25 +71,20 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   /**
    * \brief Perform actual block pickup in the arena.
    *
-   * Takes \ref arena_map grid mutex to protect block re-distribution and block
-   * updates. \ref arena_map block mutex assumed to be held when calling this
-   * function.
+   * Takes arena map grid mutex to protect grid updates. arena map block mutex
+   * assumed to be held when calling this function.
    */
-  template<typename TBlockType>
-  void visit(base_arena_map<TBlockType>& map);
-  void visit(crepr::base_block2D& block);
+  void visit(base_arena_map& map);
 
  protected:
-  free_block_pickup(crepr::base_block2D* block,
-                    const rtypes::type_uuid& robot_id,
-                    const rtypes::timestep& t);
+  free_block_pickup(crepr::base_block3D* block,
+                    const rtypes::type_uuid& robot_id);
 
  private:
   /* clang-format off */
-  const rtypes::timestep  mc_timestep;
   const rtypes::type_uuid mc_robot_id;
 
-  crepr::base_block2D*    m_block;
+  crepr::base_block3D*    m_block;
   /* clang-format on */
 };
 

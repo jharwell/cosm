@@ -69,7 +69,7 @@ class arena_cache final : public base_cache,
   uint total_block_pickups(void) const override { return m_block_pickups; }
   uint total_block_drops(void) const override { return m_block_drops; }
   void reset_metrics(void) override;
-  rmath::vector2z location(void) const override { return dloc(); }
+  rmath::vector2z location(void) const override { return dpos2D(); }
 
   /**
    * \brief Set a flag indicating the cache has had a block pickup this

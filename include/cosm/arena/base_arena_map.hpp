@@ -31,9 +31,7 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
-#include "cosm/repr/base_block2D.hpp"
 #include "cosm/ds/arena_grid.hpp"
-#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/repr/nest.hpp"
 #include "cosm/foraging/block_dist/dispatcher.hpp"
@@ -74,21 +72,11 @@ NS_START(cosm, arena);
  * manages. This avoids extensive use of std::shared_ptr, and greatly increases
  * efficiency with large numbers of objects.
  */
-template <class TBlockType>
-class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
+class base_arena_map : public rer::client<base_arena_map>,
                        public rpdecorator::decorator<cds::arena_grid> {
  public:
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
-
-  using block_vectoro_type = typename std::conditional<std::is_same<TBlockType,
-                                                                    crepr::base_block2D>::value,
-                                                       cds::block2D_vectoro,
-                                                       cds::block3D_vectoro>::type;
-  using block_vectorno_type = typename std::conditional<std::is_same<TBlockType,
-                                                                     crepr::base_block2D>::value,
-                                                        cds::block2D_vectorno,
-                                                        cds::block3D_vectorno>::type;
 
   explicit base_arena_map(const caconfig::arena_map_config* config);
 
@@ -98,8 +86,8 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
    * Some blocks may not be visible on the base_arena_map, as they are being
    * carried by robots.
    */
-  block_vectorno_type& blocks(void) { return m_blocksno; }
-  const block_vectorno_type& blocks(void) const { return m_blocksno; }
+  cds::block3D_vectorno& blocks(void) { return m_blocksno; }
+  const cds::block3D_vectorno& blocks(void) const { return m_blocksno; }
 
   /**
    * \brief Get the # of blocks available in the arena.
@@ -150,7 +138,7 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_single_block(TBlockType* block,
+  bool distribute_single_block(crepr::base_block3D* block,
                                const arena_map_locking& locking);
 
   RCPPSW_DECORATE_FUNC(xdsize, const);
@@ -182,7 +170,7 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
 
   const crepr::nest& nest(void) const { return m_nest; }
 
-  const cforaging::block_dist::base_distributor<TBlockType>* block_distributor(void) const {
+  const cforaging::block_dist::base_distributor* block_distributor(void) const {
     return m_block_dispatcher.distributor();
   }
 
@@ -236,7 +224,7 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
  protected:
   struct block_dist_precalc_type {
     cds::const_entity_vector avoid_ents{};
-    TBlockType* dist_ent{nullptr};
+    crepr::base_block3D* dist_ent{nullptr};
   };
   /**
    * \brief Perform necessary locking prior to (1) gathering the list of
@@ -257,26 +245,20 @@ class base_arena_map : public rer::client<base_arena_map<TBlockType>>,
    * \param block The block to distribute. If NULL, then this is the initial
    *              block distribution.
    */
-  virtual block_dist_precalc_type block_dist_precalc(const TBlockType* block);
+  virtual block_dist_precalc_type block_dist_precalc(const crepr::base_block3D* block);
 
  private:
   /* clang-format off */
-  mutable std::mutex                            m_cache_mtx{};
-  mutable std::mutex                            m_block_mtx{};
+  mutable std::mutex                     m_cache_mtx{};
+  mutable std::mutex                     m_block_mtx{};
 
-  block_vectoro_type                            m_blockso;
-  block_vectorno_type                           m_blocksno{};
-  crepr::nest                                   m_nest;
-  cforaging::block_dist::dispatcher<TBlockType> m_block_dispatcher;
-  cforaging::block_dist::redist_governor        m_redist_governor;
+  cds::block3D_vectoro                   m_blockso;
+  cds::block3D_vectorno                  m_blocksno{};
+  crepr::nest                            m_nest;
+  cforaging::block_dist::dispatcher      m_block_dispatcher;
+  cforaging::block_dist::redist_governor m_redist_governor;
   /* clang-format on */
 };
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-extern template class base_arena_map<crepr::base_block2D>;
-extern template class base_arena_map<crepr::base_block3D>;
 
 NS_END(arena, cosm);
 

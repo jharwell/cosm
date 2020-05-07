@@ -52,11 +52,11 @@ class entity3D : public entity_base {
    *
    * \return The span in X of the entity.
    */
-  static rmath::ranged xspan(const rmath::vector3d& loc, double xdim) {
-    return rmath::ranged(loc.x() - 0.5 * xdim, loc.x() + 0.5 * xdim);
+  static rmath::ranged xspan(const rmath::vector3d& pos, double xdim) {
+    return rmath::ranged(pos.x() - 0.5 * xdim, pos.x() + 0.5 * xdim);
   }
-  static rmath::ranged xspan(const rmath::vector2d& loc, double xdim) {
-    return xspan(rmath::vector3d(loc), xdim);
+  static rmath::ranged xspan(const rmath::vector2d& pos, double xdim) {
+    return xspan(rmath::vector3d(pos), xdim);
   }
 
   /**
@@ -65,11 +65,11 @@ class entity3D : public entity_base {
    *
    * \return The span in Y of the entity.
    */
-  static rmath::ranged yspan(const rmath::vector3d& loc, double ydim) {
-    return rmath::ranged(loc.y() - 0.5 * ydim, loc.y() + 0.5 * ydim);
+  static rmath::ranged yspan(const rmath::vector3d& pos, double ydim) {
+    return rmath::ranged(pos.y() - 0.5 * ydim, pos.y() + 0.5 * ydim);
   }
-  static rmath::ranged yspan(const rmath::vector2d& loc, double ydim) {
-    return yspan(rmath::vector3d(loc), ydim);
+  static rmath::ranged yspan(const rmath::vector2d& pos, double ydim) {
+    return yspan(rmath::vector3d(pos), ydim);
   }
   /**
    * \brief Calculate the span in Z of an entity given its location and
@@ -77,8 +77,8 @@ class entity3D : public entity_base {
    *
    * \return The span in Z of the entity.
    */
-  static rmath::ranged zspan(const rmath::vector3d& loc, double zdim) {
-    return rmath::ranged(loc.z() - 0.5 * zdim, loc.z() + 0.5 * zdim);
+  static rmath::ranged zspan(const rmath::vector3d& pos, double zdim) {
+    return rmath::ranged(pos.z() - 0.5 * zdim, pos.z() + 0.5 * zdim);
   }
 
   entity3D(void) = default;
@@ -128,10 +128,10 @@ class entity3D : public entity_base {
    */
   virtual double zdimr(void) const = 0;
 
-  virtual rmath::vector2d rloc2D(void) const = 0;
-  virtual rmath::vector2z dloc2D(void) const = 0;
-  virtual rmath::vector3d rloc3D(void) const = 0;
-  virtual rmath::vector3z dloc3D(void) const = 0;
+  virtual rmath::vector2d rpos2D(void) const = 0;
+  virtual rmath::vector2z dpos2D(void) const = 0;
+  virtual rmath::vector3d rpos3D(void) const = 0;
+  virtual rmath::vector3z dpos3D(void) const = 0;
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek3D;

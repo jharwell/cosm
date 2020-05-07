@@ -27,36 +27,21 @@
 #include <boost/variant.hpp>
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, repr);
 
-class cube_block2D;
-class ramp_block2D;
 class cube_block3D;
 class ramp_block3D;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using block2D_variant = boost::variant<cube_block2D*,
-                                       ramp_block2D*>;
-
 using block3D_variant = boost::variant<cube_block3D*,
                                        ramp_block3D*>;
 
-using block_variant = boost::variant<cube_block2D*,
-                                     ramp_block2D*,
-                                     cube_block3D*,
-                                     ramp_block3D*>;
-
-using base_block_variant = boost::variant<boost::blank,
-                                          base_block2D*,
-                                          base_block3D*>;
 NS_END(repr, cosm);
 
 #endif /* INCLUDE_COSM_REPR_BLOCK_VARIANT_HPP_ */

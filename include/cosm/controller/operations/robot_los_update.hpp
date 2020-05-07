@@ -54,13 +54,13 @@ NS_START(detail);
  * \brief Compute the line of sight for a given robot as it moves within a 2D
  * grid.
  */
-template<typename TLOSType>
-std::unique_ptr<TLOSType> robot_los2D_compute(
+template<typename TLOS>
+std::unique_ptr<TLOS> robot_los2D_compute(
     const rds::grid2D_overlay<cds::cell2D>* grid,
     const rmath::vector2d& pos,
     size_t los_grid_size) {
   auto position = rmath::dvec2zvec(pos, grid->resolution().v());
-  return std::make_unique<TLOSType>(grid->subcircle(position,
+  return std::make_unique<TLOS>(grid->subcircle(position,
                                                     los_grid_size));
 } /* robot_los_compute */
 
@@ -68,22 +68,22 @@ std::unique_ptr<TLOSType> robot_los2D_compute(
  * \brief Compute the line of sight for a given robot as it moves within a 3D
  * grid.
  */
-template<typename TLOSType>
-std::unique_ptr<TLOSType> robot_los3D_compute(
+template<typename TLOS>
+std::unique_ptr<TLOS> robot_los3D_compute(
     const rds::grid3D_overlay<cds::cell3D>* grid,
     const rmath::vector3d& pos,
     size_t los_grid_size) {
   auto position = rmath::dvec2zvec(pos, grid->resolution().v());
 
   /* LOS can take a reference to the grid it was created from, if desired */
-  if constexpr (std::is_constructible<TLOSType,
+  if constexpr (std::is_constructible<TLOS,
                 const rds::grid3D_overlay<cds::cell3D>::const_grid_view&,
                 const rds::grid3D_overlay<cds::cell3D>*>::value) {
-      return std::make_unique<TLOSType>(grid->subcircle(position,
+      return std::make_unique<TLOS>(grid->subcircle(position,
                                                         los_grid_size),
                                                         grid);
     } else {
-    return std::make_unique<TLOSType>(grid->subcircle(position,
+    return std::make_unique<TLOS>(grid->subcircle(position,
                                                       los_grid_size));
     }
 } /* robot_los_compute */
@@ -94,11 +94,11 @@ std::unique_ptr<TLOSType> robot_los3D_compute(
  * \todo This should eventually be replaced by a calculation of a robot's LOS by
  * the robot, probably using on-board cameras.
  */
-template <typename TControllerType, typename TLOSType>
-void robot_los_set(TControllerType* const controller,
+template <typename TController, typename TLOS>
+void robot_los_set(TController* const controller,
                      const rds::grid2D_overlay<cds::cell2D>* const grid,
                      size_t los_grid_size) {
-  auto los = robot_los2D_compute<TLOSType>(grid,
+  auto los = robot_los2D_compute<TLOS>(grid,
                                            controller->rpos2D(),
                                            los_grid_size);
   controller->perception()->los(std::move(los));
@@ -110,11 +110,11 @@ void robot_los_set(TControllerType* const controller,
  * \todo This should eventually be replaced by a calculation of a robot's LOS by
  * the robot, probably using on-board cameras.
  */
-template <typename TControllerType, typename TLOSType>
-void robot_los_set(TControllerType* const controller,
+template <typename TController, typename TLOS>
+void robot_los_set(TController* const controller,
                    const rds::grid3D_overlay<cds::cell3D>* const grid,
                    size_t los_grid_size) {
-  auto los = robot_los3D_compute<TLOSType>(grid,
+  auto los = robot_los3D_compute<TLOS>(grid,
                                            controller->rpos3D(),
                                            los_grid_size);
   controller->perception()->los(std::move(los));
@@ -131,16 +131,16 @@ NS_END(detail);
  *
  * \brief Functor to update robot LOS each timestep.
  */
-template <typename TControllerType,
-          typename TSrcGridType,
-          typename TLOSType>
+template <typename TController,
+          typename TSrcGrid,
+          typename TLOS>
 class robot_los_update final
     : public boost::static_visitor<void>,
-      public rer::client<robot_los_update<TControllerType,
-                                          TSrcGridType,
-                                          TLOSType>> {
+      public rer::client<robot_los_update<TController,
+                                          TSrcGrid,
+                                          TLOS>> {
  public:
-  explicit robot_los_update(TSrcGridType* const grid)
+  explicit robot_los_update(TSrcGrid* const grid)
       : ER_CLIENT_INIT("cosm.support.robot_los_update"), mc_grid(grid) {}
 
   /*
@@ -151,7 +151,7 @@ class robot_los_update final
   robot_los_update(const robot_los_update&) = default;
   robot_los_update& operator=(const robot_los_update&) = delete;
 
-  void operator()(TControllerType* const controller) const {
+  void operator()(TController* const controller) const {
     double mod = std::fmod(controller->los_dim(), mc_grid->resolution().v());
 
     /*
@@ -170,14 +170,14 @@ class robot_los_update final
     }
     auto los_grid_size = static_cast<size_t>(
         std::round(controller->los_dim() / mc_grid->resolution().v()));
-    detail::robot_los_set<TControllerType, TLOSType>(controller,
+    detail::robot_los_set<TController, TLOS>(controller,
                                                      mc_grid,
                                                      los_grid_size);
   }
 
  private:
   /* clang-format off */
-  TSrcGridType* const mc_grid;
+  TSrcGrid* const mc_grid;
   /* clang-format on */
 };
 

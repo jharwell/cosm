@@ -63,18 +63,18 @@ NS_START(cosm, pal, tv);
  * \tparam TControllertype Must be one of the argos 2D/Q3D controllers, BUT can
  * also be a block carrying controller.
  */
-template<typename TControllerType>
-class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
+template<typename TController>
+class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TController>>,
                          public ctv::population_dynamics {
  public:
-  using env_dynamics_type = ctv::env_dynamics<TControllerType>;
+  using env_dynamics_type = ctv::env_dynamics<TController>;
   template<typename T>
   using is2D = std::is_base_of<argos_controller2D_adaptor, T>;
 
   template<typename T>
   using isQ3D = std::is_base_of<argos_controllerQ3D_adaptor, T>;
 
-  static_assert(is2D<TControllerType>::value || isQ3D<TControllerType>::value,
+  static_assert(is2D<TController>::value || isQ3D<TController>::value,
                 "TControllerType not derived from ARGoS 2D/Q3D adaptor");
   /**
    * @brief When adding/removing a robot, try this many times to complete the
@@ -105,11 +105,11 @@ class argos_pd_adaptor : public rer::client<argos_pd_adaptor<TControllerType>>,
    * - The robot is currently carrying a block, and you don't want that block to
    *   be permanently lost after the robot is killed.
    */
-  virtual void pre_kill_cleanup(TControllerType*) {}
+  virtual void pre_kill_cleanup(TController*) {}
 
  private:
-  TControllerType* malfunction_victim_locate(size_t total_pop) const;
-  TControllerType* kill_victim_locate(size_t total_pop) const;
+  TController* malfunction_victim_locate(size_t total_pop) const;
+  TController* kill_victim_locate(size_t total_pop) const;
   bool robot_attempt_add(const rtypes::type_uuid& id);
 
   /* clang-format off */

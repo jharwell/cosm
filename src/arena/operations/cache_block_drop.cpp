@@ -27,7 +27,7 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,12 +39,12 @@ using cds::arena_grid;
  * Constructors/Destructor
  ******************************************************************************/
 cache_block_drop::cache_block_drop(
-    crepr::base_block2D* arena_block,
+    crepr::base_block3D* arena_block,
     carepr::arena_cache* cache,
     const rtypes::discretize_ratio& resolution,
     const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.cache_block_drop"),
-      cell2D_op(cache->dloc()),
+      cell2D_op(cache->dpos2D()),
       mc_locking(locking),
       mc_resolution(resolution),
       m_arena_block(arena_block),
@@ -106,8 +106,8 @@ void cache_block_drop::visit(caching_arena_map& map) {
           m_cache->n_blocks());
 } /* visit() */
 
-void cache_block_drop::visit(crepr::base_block2D& block) {
-  auto visitor = operations::free_block_drop_visitor<crepr::base_block2D>::for_block(
+void cache_block_drop::visit(crepr::base_block3D& block) {
+  auto visitor = operations::free_block_drop_visitor::for_block(
       rmath::vector2z(cell2D_op::x(), cell2D_op::y()), mc_resolution);
   visitor.visit(block);
 } /* visit() */

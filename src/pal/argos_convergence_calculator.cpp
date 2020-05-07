@@ -40,8 +40,8 @@ NS_START(cosm, pal);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-template<class TControllerType>
-argos_convergence_calculator<TControllerType>::argos_convergence_calculator(
+template<class TController>
+argos_convergence_calculator<TController>::argos_convergence_calculator(
     const cconvconfig::convergence_config* config,
     cpal::argos_sm_adaptor* sm)
     : ER_CLIENT_INIT("cosm.pal.argos_convergence_calculator"),
@@ -68,8 +68,8 @@ argos_convergence_calculator<TControllerType>::argos_convergence_calculator(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<class TControllerType>
-std::vector<double> argos_convergence_calculator<TControllerType>::calc_robot_nn(
+template<class TController>
+std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
     RCSW_UNUSED uint n_threads) const {
   std::vector<rmath::vector2d> v;
   auto cb = [&](auto* robot) {
@@ -116,8 +116,8 @@ std::vector<double> argos_convergence_calculator<TControllerType>::calc_robot_nn
   return res;
 } /* calc_robot_nn() */
 
-template<class TControllerType>
-std::vector<rmath::radians> argos_convergence_calculator<TControllerType>::calc_robot_headings2D(uint) const {
+template<class TController>
+std::vector<rmath::radians> argos_convergence_calculator<TController>::calc_robot_headings2D(uint) const {
   std::vector<rmath::radians> v;
 
 
@@ -125,20 +125,20 @@ std::vector<rmath::radians> argos_convergence_calculator<TControllerType>::calc_
     v.push_back(controller->heading2D());
   };
   cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
-                                          TControllerType,
+                                          TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
   return v;
 } /* calc_robot_headings2D() */
 
-template<class TControllerType>
-std::vector<rmath::vector2d> argos_convergence_calculator<TControllerType>::calc_robot_positions(
+template<class TController>
+std::vector<rmath::vector2d> argos_convergence_calculator<TController>::calc_robot_positions(
     uint) const {
   std::vector<rmath::vector2d> v;
 
   auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
   cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
-                                          TControllerType,
+                                          TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
   return v;

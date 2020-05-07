@@ -30,12 +30,12 @@
 
 #include "rcppsw/patterns/prototype/clonable.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/types/timestep.hpp"
 
-#include "cosm/repr/base_block.hpp"
 #include "cosm/repr/colored_entity.hpp"
 #include "cosm/repr/unicell_immovable_entity2D.hpp"
 
-#include "cosm/ds/block2D_vector.hpp"
+#include "cosm/ds/block3D_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -75,7 +75,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     rtypes::spatial_dist        dimension; /* caches are square */
     rtypes::discretize_ratio    resolution;
     rmath::vector2d             center;
-    const cds::block2D_vectorno blocks;
+    const cds::block3D_vectorno blocks;
     rtypes::type_uuid           id;
     /* clang-format on */
   };
@@ -107,35 +107,32 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    * discrete location.
    */
   bool dloccmp(const base_cache& other) const {
-    return this->dloc() == other.dloc();
+    return this->dpos2D() == other.dpos2D();
   }
 
   /**
    * \brief \c TRUE iff the cache contains the specified block.
    */
   RCSW_PURE bool contains_block(
-      const std::shared_ptr<crepr::base_block2D>& c_block) const {
+      const std::shared_ptr<crepr::base_block3D>& c_block) const {
     return contains_block(c_block.get());
   }
-  RCSW_PURE bool contains_block(const crepr::base_block2D* const c_block) const {
-    return std::find_if(m_blocks.begin(), m_blocks.end(), [&](const auto& b) {
-             return b->id() == c_block->id();
-           }) != m_blocks.end();
-  }
+
+  RCSW_PURE bool contains_block(const crepr::base_block3D* const c_block) const;
   size_t n_blocks(void) const { return blocks().size(); }
 
   /**
    * \brief Get a list of the blocks currently in the cache.
    */
-  cds::block2D_vectorno& blocks(void) { return m_blocks; }
-  const cds::block2D_vectorno& blocks(void) const { return m_blocks; }
+  cds::block3D_vectorno& blocks(void) { return m_blocks; }
+  const cds::block3D_vectorno& blocks(void) const { return m_blocks; }
 
   /**
    * \brief Add a new block to the cache's list of blocks.
    *
    * Does not update the block's location.
    */
-  void block_add(crepr::base_block2D* block) {
+  void block_add(crepr::base_block3D* block) {
     m_blocks.push_back(block);
   }
 
@@ -144,13 +141,13 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    *
    * Does not update the block's location.
    */
-  void block_remove(crepr::base_block2D* block);
+  void block_remove(crepr::base_block3D* block);
 
   /**
    * \brief Get the oldest block in the cache (the one that has been in the
    * cache the longest).
    */
-  crepr::base_block2D* oldest_block(void) {
+  crepr::base_block3D* oldest_block(void) {
     return m_blocks.front();
   }
 
@@ -166,7 +163,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   static int                     m_next_id;
 
   rtypes::timestep               m_creation{0};
-  cds::block2D_vectorno          m_blocks;
+  cds::block3D_vectorno          m_blocks;
   /* clang-format on */
 };
 

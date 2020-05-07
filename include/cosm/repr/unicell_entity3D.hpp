@@ -61,29 +61,27 @@ class unicell_entity3D : public entity3D {
   /**
    * \brief Get the real location (center) of the object.
    */
-  rmath::vector3d rloc(void) const { return m_rloc; }
-  rmath::vector3d rloc3D(void) const override final { return m_rloc; }
-  rmath::vector2d rloc2D(void) const override final {
-    return m_rloc.project_on_xy();
+  rmath::vector3d rpos3D(void) const override final { return m_rpos; }
+  rmath::vector2d rpos2D(void) const override final {
+    return m_rpos.project_on_xy();
   }
 
   /**
    * \brief Get the discretized coordinates of the center of the object.
    */
-  rmath::vector3z dloc(void) const { return m_dloc; }
-  rmath::vector3z dloc3D(void) const override final { return m_dloc; }
-  rmath::vector2z dloc2D(void) const override final {
-    return m_dloc.project_on_xy();
+  rmath::vector3z dpos3D(void) const override final { return m_dpos; }
+  rmath::vector2z dpos2D(void) const override final {
+    return m_dpos.project_on_xy();
   }
 
   rmath::ranged xspan(void) const override final {
-    return entity3D::xspan(rloc2D(), xdimr());
+    return entity3D::xspan(rpos2D(), xdimr());
   }
   rmath::ranged yspan(void) const override final {
-    return entity3D::yspan(rloc2D(), ydimr());
+    return entity3D::yspan(rpos2D(), ydimr());
   }
   rmath::ranged zspan(void) const override final {
-    return entity3D::zspan(rloc3D(), zdimr());
+    return entity3D::zspan(rpos3D(), zdimr());
   }
   double xdimr(void) const override final { return m_dim.x(); }
   double ydimr(void) const override final { return m_dim.y(); }
@@ -113,18 +111,18 @@ class unicell_entity3D : public entity3D {
 
  protected:
   unicell_entity3D(const rmath::vector3d& dim,
-                   const rmath::vector3d& loc,
+                   const rmath::vector3d& pos,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity3D{dim, loc, resolution, rtypes::constants::kNoUUID} {}
+      : unicell_entity3D{dim, pos, resolution, rtypes::constants::kNoUUID} {}
 
   unicell_entity3D(const rmath::vector3d& dim,
-                   const rmath::vector3d& loc,
+                   const rmath::vector3d& pos,
                    const rtypes::discretize_ratio& resolution,
                    const rtypes::type_uuid& id)
       : entity3D(id),
         m_dim(dim),
-        m_rloc(loc),
-        m_dloc(rmath::dvec2zvec(loc, resolution.v())) {}
+        m_rpos(pos),
+        m_dpos(rmath::dvec2zvec(pos, resolution.v())) {}
 
   explicit unicell_entity3D(const rmath::vector3d& dim)
       : unicell_entity3D{dim, rtypes::constants::kNoUUID} {}
@@ -137,8 +135,8 @@ class unicell_entity3D : public entity3D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void rloc(const rmath::vector3d& loc) {
-    m_rloc = loc;
+  void rpos3D(const rmath::vector3d& pos) {
+    m_rpos = pos;
   }
 
   /**
@@ -146,15 +144,15 @@ class unicell_entity3D : public entity3D {
    * to change the initial position of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dloc(const rmath::vector3z& loc) {
-    m_dloc = loc;
+  void dpos3D(const rmath::vector3z& pos) {
+    m_dpos = pos;
   }
 
  private:
   /* clang-format off */
   rmath::vector3d m_dim;
-  rmath::vector3d m_rloc{};
-  rmath::vector3z m_dloc{};
+  rmath::vector3d m_rpos{};
+  rmath::vector3z m_dpos{};
   /* clang-format on */
 };
 

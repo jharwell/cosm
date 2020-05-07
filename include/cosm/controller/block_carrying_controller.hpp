@@ -28,11 +28,14 @@
 #include <utility>
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
 NS_START(cosm, controller);
 
 /*******************************************************************************
@@ -64,25 +67,21 @@ class block_carrying_controller {
    * convey that the robot owns the block it picks up from a C++ point of
    * view. In actuality it gets a clone of the block in the arena map.
    */
-  void block(std::unique_ptr<crepr::base_block2D> block) {
-    m_block = std::move(block);
-  }
+  void block(std::unique_ptr<crepr::base_block3D> block);
 
   /**
    * \brief Release the held block as part of a drop operation.
    */
-  std::unique_ptr<crepr::base_block2D> block_release(void) {
-    return std::move(m_block);
-  }
+  std::unique_ptr<crepr::base_block3D> block_release(void);
 
-  void reset(void) { m_block.reset(); }
+  void reset(void);
 
   /**
    * \brief Return the block robot is carrying, or NULL if the robot is not
    * currently carrying a block.
    */
-  const crepr::base_block2D* block(void) const { return m_block.get(); }
-  crepr::base_block2D* block(void) { return m_block.get(); }
+  const crepr::base_block3D* block(void) const { return m_block.get(); }
+  crepr::base_block3D* block(void) { return m_block.get(); }
 
   /**
    * \brief If \c TRUE, then the robot thinks that it is on top of a block.
@@ -98,7 +97,7 @@ class block_carrying_controller {
 
  private:
   /* clang-format off */
-  std::unique_ptr<crepr::base_block2D>  m_block{nullptr};
+  std::unique_ptr<crepr::base_block3D>  m_block{nullptr};
   /* clang-format on */
 };
 

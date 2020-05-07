@@ -23,6 +23,7 @@
  ******************************************************************************/
 #include "cosm/foraging/utils/utils.hpp"
 #include "cosm/repr/entity2D.hpp"
+#include "cosm/repr/entity3D.hpp"
 #include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************

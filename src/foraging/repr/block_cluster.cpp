@@ -31,11 +31,10 @@ NS_START(cosm, foraging, repr);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TBlockType>
-typename block_cluster<TBlockType>::block_vectorro_type block_cluster<TBlockType>::blocks(void) const {
-  block_vectorro_type ret;
-  for (uint i = 0; i < xdimd(); ++i) {
-    for (uint j = 0; j < ydimd(); ++j) {
+cds::block3D_vectorro block_cluster::blocks(void) const {
+  cds::block3D_vectorro ret;
+  for (size_t i = 0; i < xdimd(); ++i) {
+    for (size_t j = 0; j < ydimd(); ++j) {
       auto& cell = block_cluster::cell(i, j);
       ER_ASSERT(!cell.state_has_cache(),
                 "Cell@%s in HAS_CACHE state",
@@ -43,31 +42,15 @@ typename block_cluster<TBlockType>::block_vectorro_type block_cluster<TBlockType
       ER_ASSERT(!cell.state_in_cache_extent(),
                 "Cell@%s in CACHE_EXTENT state",
                 cell.loc().to_str().c_str());
-      if constexpr (std::is_same<TBlockType, crepr::base_block2D>::value) {
-          if (cell.state_has_block()) {
-            ER_ASSERT(nullptr != cell.block2D(),
-                      "Cell@%s null block2D",
-                      cell.loc().to_str().c_str());
-            ret.push_back(cell.block2D());
-          }
-        } else if constexpr (std::is_same<TBlockType,
-                             crepr::base_block2D>::value) {
-          if (cell.state_has_block()) {
-            ER_ASSERT(nullptr != cell.block3D(),
-                      "Cell@%s null block3D",
-                      cell.loc().to_str().c_str());
-            ret.push_back(cell.block3D());
-          }
+      if (cell.state_has_block()) {
+        ER_ASSERT(nullptr != cell.block3D(),
+                  "Cell@%s null block3D",
+                  cell.loc().to_str().c_str());
+        ret.push_back(cell.block3D());
         }
     } /* for(j..) */
   }   /* for(i..) */
   return ret;
 } /* blocks() */
-
-/*******************************************************************************
- * Template Instantiations
- ******************************************************************************/
-template class block_cluster<crepr::base_block2D>;
-template class block_cluster<crepr::base_block3D>;
 
 NS_END(repr, foraging, cosm);

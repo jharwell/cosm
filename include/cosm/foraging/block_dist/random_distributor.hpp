@@ -58,21 +58,16 @@ NS_START(foraging, block_dist);
  * that no blocks overlap with each other or other entities already present in
  * the arena (nest, cache, etc.).
  */
-template<typename TBlockType>
-class random_distributor : public rer::client<random_distributor<TBlockType>>,
-                           public base_distributor<TBlockType> {
+class random_distributor : public rer::client<random_distributor>,
+                           public base_distributor {
  public:
-  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
-  using base_distributor<TBlockType>::rng;
-  using base_distributor<TBlockType>::kMAX_DIST_TRIES;
-
   random_distributor(const cds::arena_grid::view& grid,
                      const rtypes::discretize_ratio& resolution,
                      rmath::rng* rng_in);
 
   random_distributor& operator=(const random_distributor&) = delete;
 
-  bool distribute_blocks(block_vectorno_type& blocks,
+  bool distribute_blocks(cds::block3D_vectorno& blocks,
                          cds::const_entity_vector& entities) override;
 
   /**
@@ -86,12 +81,10 @@ class random_distributor : public rer::client<random_distributor<TBlockType>>,
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(TBlockType* block,
+  bool distribute_block(crepr::base_block3D* block,
                         cds::const_entity_vector& entities) override;
 
-  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override {
-    return cfds::block_cluster_vector<TBlockType>();
-  }
+  cfds::block3D_cluster_vector block_clusters(void) const override { return {}; }
 
  private:
   struct coord_search_res_t {
@@ -117,7 +110,7 @@ class random_distributor : public rer::client<random_distributor<TBlockType>>,
    * - The cell it was distributed into should refer to it.
    * - No entity should overlap with the block after distribution.
    */
-  bool verify_block_dist(const TBlockType* block,
+  bool verify_block_dist(const crepr::base_block3D* block,
                          const cds::const_entity_vector& entities,
                          const cds::cell2D* cell) RCSW_PURE;
 

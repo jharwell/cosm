@@ -62,8 +62,8 @@ struct argos_swarm_iterator {
    * \param cb Function to run on each robot in the swarm.
    * \param robot_type Name associated with the robot type within ARGoS.
    */
-  template <typename TRobotType,
-            typename TControllerType,
+  template <typename TRobot,
+            typename TController,
             iteration_order order,
             typename TFunction,
             RCPPSW_SFINAE_FUNC(iteration_order::ekSTATIC == order)>
@@ -71,8 +71,8 @@ struct argos_swarm_iterator {
                           const TFunction& cb,
                           const std::string& robot_type) {
     for (auto& [name, robotp] : sm->GetSpace().GetEntitiesByType(robot_type)) {
-      auto* robot = ::argos::any_cast<TRobotType*>(robotp);
-      auto* controller = static_cast<TControllerType*>(
+      auto* robot = ::argos::any_cast<TRobot*>(robotp);
+      auto* controller = static_cast<TController*>(
           &robot->GetControllableEntity().GetController());
       cb(controller);
     } /* for(...) */
@@ -89,14 +89,14 @@ struct argos_swarm_iterator {
    * \param sm Handle to the \ref cpal::argos_sm_adaptor.
    * \param cb Function to run on each robot in the swarm.
    */
-  template <typename TControllerType,
+  template <typename TController,
             iteration_order order,
             typename TFunction,
             RCPPSW_SFINAE_FUNC(iteration_order::ekDYNAMIC == order)>
   static void controllers(const cpal::argos_sm_adaptor* const sm,
                           const TFunction& cb) {
     auto wrapper = [&](auto* robot) {
-      cb(static_cast<TControllerType*>(&robot->GetController()));
+      cb(static_cast<TController*>(&robot->GetController()));
     };
     sm->IterateOverControllableEntities(wrapper);
   }
@@ -113,7 +113,7 @@ struct argos_swarm_iterator {
    * \param cb Function to run on each robot in the swarm.
    * \param robot_type Name associated with the robot type within ARGoS.
    */
-  template <typename TRobotType,
+  template <typename TRobot,
             iteration_order order,
             typename TFunction,
             RCPPSW_SFINAE_FUNC(iteration_order::ekSTATIC == order)>
@@ -121,7 +121,7 @@ struct argos_swarm_iterator {
                      const TFunction& cb,
                      const std::string& robot_type) {
     for (auto& [name, robotp] : sm->GetSpace().GetEntitiesByType(robot_type)) {
-      auto* robot = ::argos::any_cast<TRobotType*>(robotp);
+      auto* robot = ::argos::any_cast<TRobot*>(robotp);
       cb(robot);
     } /* for(...) */
   }

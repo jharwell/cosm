@@ -45,10 +45,10 @@ NS_START(cosm, oracle);
  * \brief Repository of perfect knowledge about entities the swarm may encounter
  * (blocks, caches, etc).
  */
-template<class TEntityType>
+template<class TEntity>
 class entities_oracle {
  public:
-  using knowledge_type = std::vector<TEntityType*>;
+  using knowledge_type = std::vector<TEntity*>;
 
   /**
    * \brief Get a string representation of the oracle's knowledge. Entities are

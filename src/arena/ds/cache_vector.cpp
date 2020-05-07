@@ -35,14 +35,14 @@ NS_START(cosm, arena, ds);
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-template <typename TVectorType>
-std::string do_to_str(const TVectorType& vec) {
+template <typename TVector>
+std::string do_to_str(const TVector& vec) {
   return std::accumulate(vec.begin(),
                          vec.end(),
                          std::string(),
                          [&](const std::string& a, const auto& c) {
                            return a + "c" + rcppsw::to_string(c->id()) + "@" +
-                                  c->dloc().to_str() + ",";
+                               c->dpos2D().to_str() + ",";
                          });
 } /* do_to_str() */
 

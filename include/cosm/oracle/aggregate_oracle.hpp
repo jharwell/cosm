@@ -63,31 +63,31 @@ class aggregate_oracle {
   explicit aggregate_oracle(const coconfig::aggregate_oracle_config* config) :
       mc_config(*config) {}
 
-  template<typename TOracleType>
+  template<typename TOracle>
   void oracle_add(const std::string& key,
-                  std::unique_ptr<TOracleType> oracle) {
+                  std::unique_ptr<TOracle> oracle) {
     m_oracles[key] = std::move(oracle);
   }
 
-  template<typename TOracleType>
-  const TOracleType* oracle_get(const std::string& key) const {
+  template<typename TOracle>
+  const TOracle* oracle_get(const std::string& key) const {
     auto it = m_oracles.find(key);
     if (m_oracles.end() == it) {
       return nullptr;
     }
-    return boost::get<std::unique_ptr<TOracleType>>(it->second).get();
+    return boost::get<std::unique_ptr<TOracle>>(it->second).get();
   }
 
   const coconfig::aggregate_oracle_config* config(void) const { return &mc_config; }
 
  protected:
-  template<typename TOracleType>
-  TOracleType* oracle_get(const std::string& key) {
+  template<typename TOracle>
+  TOracle* oracle_get(const std::string& key) {
     auto it = m_oracles.find(key);
     if (m_oracles.end() == it) {
       return nullptr;
     }
-    return boost::get<std::unique_ptr<TOracleType>>(it->second).get();
+    return boost::get<std::unique_ptr<TOracle>>(it->second).get();
   }
 
  private:

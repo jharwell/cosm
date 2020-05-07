@@ -1,7 +1,7 @@
 /**
- * \file block2D_manifest_processor.cpp
+ * \file base_block3D.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,46 +21,20 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/block_dist/block2D_manifest_processor.hpp"
-
-#include "cosm/repr/cube_block2D.hpp"
-#include "cosm/repr/ramp_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+NS_START(cosm, repr);
 
 /*******************************************************************************
- * Constructors/Destructor
+ * Class Constants
  ******************************************************************************/
-block2D_manifest_processor::block2D_manifest_processor(
-    const config::block_manifest* const m)
-    : mc_manifest(*m) {
-  register_type<crepr::cube_block2D>("cube2D");
-  register_type<crepr::ramp_block2D>("ramp2D");
-}
+const base_block3D::out_of_sight3D base_block3D::kOutOfSight{};
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-cds::block2D_vectoro block2D_manifest_processor::operator()(void) {
-  cds::block2D_vectoro v;
-  uint i;
-  for (i = 0; i < mc_manifest.n_cube; ++i) {
-    v.push_back(
-        create("cube2D",
-               rmath::vector2d(mc_manifest.unit_dim, mc_manifest.unit_dim),
-               rtypes::type_uuid(i)));
-  } /* for(i..) */
-  for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
-       ++i) {
-    v.push_back(
-        create("ramp2D",
-               rmath::vector2d(mc_manifest.unit_dim * 2, mc_manifest.unit_dim),
-               rtypes::type_uuid(i)));
-  } /* for(i..) */
-  return v;
-} /* operator()() */
 
-NS_END(block_dist, foraging, cosm);
+NS_END(repr, cosm);

@@ -46,11 +46,9 @@ NS_START(cosm, foraging, block_dist);
  * \brief Distributes a block or set of blocks within the specified cluster
  * bounds randomly, using \ref random_distributor.
  */
-template<typename TBlockType>
-class cluster_distributor final : public rer::client<cluster_distributor<TBlockType>>,
-                                  public base_distributor<TBlockType> {
+class cluster_distributor final : public rer::client<cluster_distributor>,
+                                  public base_distributor {
  public:
-  using block_vectorno_type = typename base_distributor<TBlockType>::block_vectorno_type;
   cluster_distributor(const cds::arena_grid::view& view,
                       const rtypes::discretize_ratio& resolution,
                       uint capacity,
@@ -60,16 +58,16 @@ class cluster_distributor final : public rer::client<cluster_distributor<TBlockT
   /* not copy-constructible or copy-assignable by default */
   cluster_distributor& operator=(const cluster_distributor& ) = delete;
 
-  bool distribute_block(TBlockType* block,
+  bool distribute_block(crepr::base_block3D* block,
                         cds::const_entity_vector& entities) override;
-  bool distribute_blocks(block_vectorno_type& blocks,
+  bool distribute_blocks(cds::block3D_vectorno& blocks,
                          cds::const_entity_vector& entities) override;
-  cfds::block_cluster_vector<TBlockType> block_clusters(void) const override;
+  cfds::block3D_cluster_vector block_clusters(void) const override;
 
  private:
   /* clang-format off */
-  cfrepr::block_cluster<TBlockType> m_clust;
-  random_distributor<TBlockType>    m_impl;
+  cfrepr::block_cluster m_clust;
+  random_distributor    m_impl;
   /* clang-format on */
 };
 

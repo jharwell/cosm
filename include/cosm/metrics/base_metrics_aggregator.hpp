@@ -33,14 +33,19 @@
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/metrics/collector_group.hpp"
+#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/metrics/config/metrics_config.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
 namespace cosm::controller {
 class base_controller2D;
 class base_controllerQ3D;
@@ -68,16 +73,10 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   const fs::path& metrics_path(void) const { return m_metrics_path; }
 
   /**
-   * \brief Collect metrics from a 2D block right before it is dropped in the
-   * nest.
-   */
-  void collect_from_block(const crepr::base_block3D* block);
-
-  /**
    * \brief Collect metrics from a 3D block right before it is dropped in the
    * nest.
    */
-  void collect_from_block(const crepr::base_block2D* block);
+  void collect_from_block(const crepr::base_block3D* block);
 
   /**
    * \brief Collect metrics from 2D controllers. Currently this includes:
@@ -114,11 +113,11 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   /**
    * \brief Decorator around \ref collector_group::collector_register().
    */
-  template <typename TCollectorType, typename... Args>
+  template <typename TCollector, typename... Args>
   bool collector_register(const std::string& scoped_name,
                           const std::string& fpath,
                           Args&&... args) {
-    return m_collector_map[scoped_name]->collector_register<TCollectorType>(
+    return m_collector_map[scoped_name]->collector_register<TCollector>(
         scoped_name, fpath, std::forward<Args>(args)...);
   }
 

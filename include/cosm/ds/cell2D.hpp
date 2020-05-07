@@ -31,8 +31,6 @@
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/fsm/cell2D_fsm.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,6 +38,11 @@
 namespace cosm::arena::repr {
 class base_cache;
 } /* namespace cosm::arena::repr */
+
+namespace cosm::repr {
+class base_block3D;
+class entity_base;
+} /* namespace cosm::repr */
 
 NS_START(cosm, ds);
 
@@ -99,9 +102,6 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a block, so check the cell's state before
    * calling this function.
    */
-  crepr::base_block2D* block2D(void) const RCSW_PURE;
-  crepr::base_block2D* block2D(void) RCSW_PURE;
-
   crepr::base_block3D* block3D(void) const RCSW_PURE;
   crepr::base_block3D* block3D(void) RCSW_PURE;
 

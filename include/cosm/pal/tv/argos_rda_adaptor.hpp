@@ -51,13 +51,14 @@ NS_START(cosm, pal, tv);
  * \brief Adapts \ref ctv::robot_dynamics_applicator to work within the ARGoS
  * simulator.
  */
-template<typename TControllerType>
-class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TControllerType>>,
+template<typename TController>
+class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController>>,
                                 public ctv::robot_dynamics_applicator {
  public:
-  static_assert(std::is_base_of<controller::irv_recipient_controller, TControllerType>::value,
+  static_assert(std::is_base_of<controller::irv_recipient_controller, TController>::value,
                 "TControllerType not derived from irv_recipient_controller");
-  static_assert(std::is_base_of<controller::block_carrying_controller, TControllerType>::value,
+  static_assert(std::is_base_of<controller::block_carrying_controller,
+                TController>::value,
                 "TControllerType not derived from block_carrying_controller");
 
   argos_rda_adaptor(
@@ -77,7 +78,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
     };
 
     cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
-                                            TControllerType,
+                                            TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
     return accum / mc_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
@@ -95,7 +96,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
     };
 
     cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
-                                            TControllerType,
+                                            TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
   }

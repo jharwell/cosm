@@ -44,7 +44,7 @@ NS_START(cosm, controller, perception);
  *
  * \brief Base class for robot perception common to all controllers.
  */
-template<typename TLOSType>
+template<typename TLOS>
 class base_perception_subsystem {
  public:
   explicit base_perception_subsystem(
@@ -68,19 +68,19 @@ class base_perception_subsystem {
    *
    * \param los The new los
    */
-  void los(std::unique_ptr<TLOSType> los) { m_los = std::move(los); }
+  void los(std::unique_ptr<TLOS> los) { m_los = std::move(los); }
 
   /**
    * \brief Get the robot's current line-of-sight (LOS)
    */
-  const TLOSType* los(void) const { return m_los.get(); }
+  const TLOS* los(void) const { return m_los.get(); }
   double los_dim(void) const { return mc_los_dim; }
 
  private:
   /* clang-format off */
   const double              mc_los_dim;
 
-  std::unique_ptr<TLOSType> m_los{nullptr};
+  std::unique_ptr<TLOS> m_los{nullptr};
   /* clang-format on */
 };
 

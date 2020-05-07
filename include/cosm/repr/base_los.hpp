@@ -59,23 +59,23 @@ NS_START(cosm, repr);
  * All coordinates within a LOS are relative to the LOS itself (not its location
  * within the arena). The origin is in the lower left corner of the LOS.
  */
-template<typename TCellType>
-class base_los : public rer::client<base_los<TCellType>> {
+template<typename TCell>
+class base_los : public rer::client<base_los<TCell>> {
  public:
   using grid_view = typename std::conditional<
-   std::is_same<cds::cell2D, TCellType>::value,
-   typename rds::base_grid2D<TCellType>::grid_view,
-   typename rds::base_grid3D<TCellType>::grid_view
+   std::is_same<cds::cell2D, TCell>::value,
+   typename rds::base_grid2D<TCell>::grid_view,
+   typename rds::base_grid3D<TCell>::grid_view
    >::type;
 
   using const_grid_view = typename std::conditional<
-    std::is_same<cds::cell2D, TCellType>::value,
-    typename rds::base_grid2D<TCellType>::const_grid_view,
-    typename rds::base_grid3D<TCellType>::const_grid_view
+    std::is_same<cds::cell2D, TCell>::value,
+    typename rds::base_grid2D<TCell>::const_grid_view,
+    typename rds::base_grid3D<TCell>::const_grid_view
     >::type;
 
   using coord_type =
-      typename std::conditional<std::is_same<cds::cell2D, TCellType>::value,
+      typename std::conditional<std::is_same<cds::cell2D, TCell>::value,
                                 rmath::vector2z,
                                 rmath::vector3z>::type;
 
@@ -91,7 +91,7 @@ class base_los : public rer::client<base_los<TCellType>> {
    *
    * \return A reference to the cell.
    */
-  virtual const TCellType& access(const coord_type& c) const = 0;
+  virtual const TCell& access(const coord_type& c) const = 0;
 
   virtual coord_type abs_ll(void) const = 0;
   virtual coord_type abs_ul(void) const = 0;

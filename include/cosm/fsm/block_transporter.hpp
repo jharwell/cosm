@@ -42,7 +42,7 @@ NS_START(cosm, fsm);
  * blocks need to implement in order to successfully interact with the loop
  * functions.
  */
-template<typename TGoalType>
+template<typename TGoal>
 class block_transporter {
  public:
   block_transporter(void) = default;
@@ -52,7 +52,7 @@ class block_transporter {
    * \brief All tasks must define method to determine what they are currently
    * doing with a block (if they are carrying one).
    */
-  virtual TGoalType block_transport_goal(void) const = 0;
+  virtual TGoal block_transport_goal(void) const = 0;
 };
 
 NS_END(fsm, cosm);

@@ -28,32 +28,26 @@
 #include <vector>
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging);
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
 
-namespace repr {
-template<typename T>
+namespace cosm::foraging::repr {
 class block_cluster;
 } // namespace repr
 
-NS_START(ds);
+NS_START(cosm, foraging, ds);
 
-using block2D_cluster_vector_type = const cfrepr::block_cluster<crepr::base_block2D>*;
-using block3D_cluster_vector_type = const cfrepr::block_cluster<crepr::base_block3D>*;
+using block3D_cluster_vector_type = const cfrepr::block_cluster*;
 
 /*******************************************************************************
  * Type Definitions
  ******************************************************************************/
-using block2D_cluster_vector = std::vector<block2D_cluster_vector_type>;
 using block3D_cluster_vector = std::vector<block3D_cluster_vector_type>;
-
-template<typename TBlockType>
-using block_cluster_vector = std::vector<const cfrepr::block_cluster<TBlockType>*>;
 
 NS_END(ds, foraging, cosm);
 

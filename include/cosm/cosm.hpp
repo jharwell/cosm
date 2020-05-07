@@ -177,13 +177,13 @@ namespace oracle {
 namespace config {}
 } /* namespace oracle */
 
-namespace operations {}
+namespace interactors {}
 } /* namespace cosm */
 
 /** @} */
 
 namespace csubsystem = cosm::subsystem;
-namespace cops = cosm::operations;
+namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
 namespace ccontconfig = ccontroller::config;
 namespace ccops = ccontroller::operations;

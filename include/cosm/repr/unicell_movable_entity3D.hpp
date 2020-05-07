@@ -46,19 +46,19 @@ NS_START(cosm, repr);
  */
 class unicell_movable_entity3D : public unicell_entity3D {
  public:
-  using unicell_entity3D::dloc;
-  using unicell_entity3D::rloc;
+  using unicell_entity3D::dpos3D;
+  using unicell_entity3D::rpos3D;
   using unicell_entity3D::unicell_entity3D;
 
   static constexpr bool is_movable(void) { return true; }
 
   ~unicell_movable_entity3D(void) override = default;
 
-  void rloc(const rmath::vector3d& loc) {
-    unicell_entity3D::rloc<unicell_movable_entity3D>(loc);
+  void rpos3D(const rmath::vector3d& pos) {
+    unicell_entity3D::rpos3D<unicell_movable_entity3D>(pos);
   }
-  void dloc(const rmath::vector3z& loc) {
-    unicell_entity3D::dloc<unicell_movable_entity3D>(loc);
+  void dpos3D(const rmath::vector3z& pos) {
+    unicell_entity3D::dpos3D<unicell_movable_entity3D>(pos);
   }
 };
 

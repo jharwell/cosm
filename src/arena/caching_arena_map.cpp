@@ -27,7 +27,7 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -160,7 +160,7 @@ void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking)
   maybe_unlock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
-caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(const crepr::base_block2D* block) {
+caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
   auto ret = base_arena_map::block_dist_precalc(block);
 
   /*

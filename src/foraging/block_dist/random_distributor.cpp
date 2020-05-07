@@ -28,8 +28,8 @@
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/foraging/utils/utils.hpp"
-#include "cosm/repr/base_block2D.hpp"
-#include "cosm/repr/unicell_immovable_entity2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,12 +39,11 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-template<typename TBlockType>
-random_distributor<TBlockType>::random_distributor(const cds::arena_grid::view& grid,
+random_distributor::random_distributor(const cds::arena_grid::view& grid,
                                                    const rtypes::discretize_ratio& resolution,
                                                    rmath::rng* rng_in)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.random"),
-      base_distributor<TBlockType>(rng_in),
+      base_distributor(rng_in),
       mc_resolution(resolution),
       mc_origin(grid.origin()->loc()),
       mc_xspan(mc_origin.x(), mc_origin.x() + grid.shape()[0]),
@@ -59,8 +58,7 @@ random_distributor<TBlockType>::random_distributor(const cds::arena_grid::view& 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TBlockType>
-bool random_distributor<TBlockType>::distribute_blocks(block_vectorno_type& blocks,
+bool random_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
                                            cds::const_entity_vector& entities) {
   ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
           blocks.size(),
@@ -72,9 +70,8 @@ bool random_distributor<TBlockType>::distribute_blocks(block_vectorno_type& bloc
   });
 } /* distribute_blocks() */
 
-template<typename TBlockType>
-bool random_distributor<TBlockType>::distribute_block(TBlockType* block,
-                                                      cds::const_entity_vector& entities) {
+bool random_distributor::distribute_block(crepr::base_block3D* block,
+                                          cds::const_entity_vector& entities) {
   cds::cell2D* cell = nullptr;
   auto coords = avail_coord_search(entities,
                                    block->dims2D());
@@ -106,15 +103,15 @@ bool random_distributor<TBlockType>::distribute_block(TBlockType* block,
      * This function is always called from the arena map, and it ensures that
      * all locks are held, so we don't need to do anything here.
      */
-    caops::free_block_drop_visitor<TBlockType> op(
+    caops::free_block_drop_visitor op(
         block, coords->abs, mc_resolution, carena::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block, entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
                block->id().v(),
                block,
-               block->rloc().to_str().c_str(),
-               block->dloc().to_str().c_str());
+               block->rpos2D().to_str().c_str(),
+               block->dpos2D().to_str().c_str());
       /*
        * Now that the block has been distributed, it is another entity that
        * needs to be avoided during subsequent distributions.
@@ -132,9 +129,8 @@ bool random_distributor<TBlockType>::distribute_block(TBlockType* block,
   }
 } /* distribute_block() */
 
-template<typename TBlockType>
-bool random_distributor<TBlockType>::verify_block_dist(
-    const TBlockType* const block,
+bool random_distributor::verify_block_dist(
+    const crepr::base_block3D* const block,
     const cds::const_entity_vector& entities,
     RCSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
@@ -146,7 +142,7 @@ bool random_distributor<TBlockType>::verify_block_dist(
   ER_CHECK(block == cell->entity(),
            "Block%d@%s not referenced by containing cell@%s",
            block->id().v(),
-           block->rloc().to_str().c_str(),
+           block->rpos2D().to_str().c_str(),
            cell->loc().to_str().c_str());
 
   /* no entity should overlap with the block after distribution */
@@ -156,19 +152,19 @@ bool random_distributor<TBlockType>::verify_block_dist(
     }
     utils::placement_status_t status;
     if (crepr::entity_dimensionality::ek2D == e->dimensionality()) {
-      status = utils::placement_conflict2D(block->rloc2D(),
+      status = utils::placement_conflict2D(block->rpos2D(),
                                            block->dims2D(),
                                            static_cast<const crepr::entity2D*>(e));
     } else {
-      status = utils::placement_conflict2D(block->rloc2D(),
+      status = utils::placement_conflict2D(block->rpos2D(),
                                            block->dims2D(),
                                            static_cast<const crepr::entity3D*>(e));
     }
     ER_ASSERT(!(status.x_conflict && status.y_conflict),
               "Entity contains block%d@%s/%s after distribution",
               block->id().v(),
-              block->rloc().to_str().c_str(),
-              block->rloc().to_str().c_str());
+              block->rpos2D().to_str().c_str(),
+              block->rpos2D().to_str().c_str());
   } /* for(&e..) */
   return true;
 
@@ -176,8 +172,7 @@ error:
   return false;
 } /* verify_block_dist() */
 
-template<typename TBlockType>
-boost::optional<typename random_distributor<TBlockType>::coord_search_res_t> random_distributor<TBlockType>::
+boost::optional<typename random_distributor::coord_search_res_t> random_distributor::
     avail_coord_search(const cds::const_entity_vector& entities,
                        const rmath::vector2d& block_dim) {
   rmath::vector2z rel;
@@ -225,11 +220,5 @@ boost::optional<typename random_distributor<TBlockType>::coord_search_res_t> ran
   }
   return boost::none;
 } /* avail_coord_search() */
-
-/*******************************************************************************
- * Template Instantiations
- ******************************************************************************/
-template class random_distributor<crepr::base_block2D>;
-template class random_distributor<crepr::base_block3D>;
 
 NS_END(block_dist, foraging, cosm);

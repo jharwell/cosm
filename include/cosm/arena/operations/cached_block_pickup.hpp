@@ -31,7 +31,6 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,6 +38,10 @@
 namespace cosm::arena::repr {
 class arena_cache;
 }
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
 namespace cosm::arena {
 class caching_arena_map;
 } /* namespace cosm::arena */
@@ -66,7 +69,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<caching_arena_map, crepr::base_block2D>;
+    using others = rmpl::typelist<caching_arena_map, crepr::base_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -99,7 +102,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
  private:
   void visit(cds::cell2D& cell);
   void visit(cfsm::cell2D_fsm& fsm);
-  void visit(crepr::base_block2D& block);
+  void visit(crepr::base_block3D& block);
   void visit(carepr::arena_cache& cache);
 
   /* clang-format off */
@@ -113,13 +116,13 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   /**
    * \brief The block that will be picked up by the robot.
    */
-  crepr::base_block2D*    m_pickup_block{nullptr};
+  crepr::base_block3D*    m_pickup_block{nullptr};
 
   /**
    * \brief The block that is left over when a cache devolves into a single
    * block, that needs to be sent to the cell that the cache used to live on.
    */
-  crepr::base_block2D*    m_orphan_block{nullptr};
+  crepr::base_block3D*    m_orphan_block{nullptr};
   /* clang-format on */
 };
 

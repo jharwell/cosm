@@ -25,7 +25,7 @@
 
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,34 +35,25 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_pickup::free_block_pickup(crepr::base_block2D* block,
-                                     const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
+free_block_pickup::free_block_pickup(crepr::base_block3D* block,
+                                     const rtypes::type_uuid& robot_id)
     : ER_CLIENT_INIT("cosm.operations.free_block_pickup"),
-      cell2D_op(block->dloc()),
-      mc_timestep(t),
+      cell2D_op(block->dpos2D()),
       mc_robot_id(robot_id),
       m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TBlockType>
-void free_block_pickup::visit(base_arena_map<TBlockType>& map) {
-  ER_ASSERT(m_block->dloc() == rmath::vector2z(cell2D_op::x(), cell2D_op::y()),
+void free_block_pickup::visit(base_arena_map& map) {
+  ER_ASSERT(m_block->dpos2D() == cell2D_op::coord(),
             "Coordinates for block/cell do not agree");
-  RCSW_UNUSED rmath::vector2d old_r = m_block->rloc();
+  RCSW_UNUSED auto old_r = m_block->rpos2D();
 
   cdops::cell2D_empty_visitor op(cell2D_op::coord());
   map.grid_mtx()->lock();
   op.visit(map.decoratee());
   map.grid_mtx()->unlock();
-
-  /*
-   * Already holding block mutex from \ref free_block_pickup_interactor, though
-   * it is not necessary for block visitation for this event.
-   */
-  visit(*m_block);
 
   ER_INFO("arena_map: fb%u: block%d@%s/%s",
           mc_robot_id.v(),
@@ -70,18 +61,5 @@ void free_block_pickup::visit(base_arena_map<TBlockType>& map) {
           old_r.to_str().c_str(),
           cell2D_op::coord().to_str().c_str());
 } /* visit() */
-
-void free_block_pickup::visit(crepr::base_block2D& block) {
-  ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
-  block.robot_pickup_event(mc_robot_id, mc_timestep);
-  ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
-} /* visit() */
-
-
-/*******************************************************************************
- * Template Instantiations
- ******************************************************************************/
-template void free_block_pickup::visit(carena::base_arena_map<crepr::base_block2D>&);
-template void free_block_pickup::visit(carena::base_arena_map<crepr::base_block3D>&);
 
 NS_END(detail, operations, arena, cosm);

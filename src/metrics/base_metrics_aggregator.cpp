@@ -50,6 +50,7 @@
 #include "cosm/metrics/collector_registerer.hpp"
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -77,11 +78,6 @@ base_metrics_aggregator::base_metrics_aggregator(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_metrics_aggregator::collect_from_block(
-    const crepr::base_block2D* const block) {
-  collect("blocks::transport", *block->md());
-} /* collect_from_block() */
-
 void base_metrics_aggregator::collect_from_block(
     const crepr::base_block3D* const block) {
   collect("blocks::transport", *block->md());

@@ -32,6 +32,7 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/vis/config/visualization_config.hpp"
 #include "cosm/pal/embodied_block_creator.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -51,25 +52,24 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TArenaMapType>
+template<typename TArenaMap>
 void argos_sm_adaptor::arena_map_init(
     const caconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
-  m_arena_map = std::make_unique<TArenaMapType>(aconfig);
+  m_arena_map = std::make_unique<TArenaMap>(aconfig);
 
-  auto map = boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
-  if (!map->initialize(this, rng())) {
+  if (!m_arena_map->initialize(this, rng())) {
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }
 
-  map->distribute_all_blocks();
+  m_arena_map->distribute_all_blocks();
 
   /*
    * If null, visualization has been disabled.
    */
   if (nullptr != vconfig) {
-    for (auto& block : map->blocks()) {
+    for (auto& block : m_arena_map->blocks()) {
       block->vis_id(vconfig->block_id);
     } /* for(&block..) */
   }
@@ -90,10 +90,8 @@ crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template void argos_sm_adaptor::arena_map_init<carena::base_arena_map<crepr::base_block2D>>(const caconfig::arena_map_config* aconfig,
-                                                                                            const cvconfig::visualization_config* vconfig);
-template void argos_sm_adaptor::arena_map_init<carena::base_arena_map<crepr::base_block3D>>(const caconfig::arena_map_config* aconfig,
-                                                                                            const cvconfig::visualization_config* vconfig);
+template void argos_sm_adaptor::arena_map_init<carena::base_arena_map>(const caconfig::arena_map_config* aconfig,
+                                                                       const cvconfig::visualization_config* vconfig);
 template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(const caconfig::arena_map_config* aconfig,
                                                                           const cvconfig::visualization_config* vconfig);
 

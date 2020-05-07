@@ -29,17 +29,21 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/visitor/visitor.hpp"
 #include "rcppsw/types/timestep.hpp"
+#include "rcppsw/mpl/typelist.hpp"
 
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::arena {
-template <typename T>
 class base_arena_map;
 class caching_arena_map;
 } /* namespace cosm::arena */
+
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -55,9 +59,9 @@ NS_START(cosm, arena, operations, detail);
 class nest_block_drop : public rer::client<nest_block_drop> {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<base_arena_map<crepr::base_block2D>,
+    using value = rmpl::typelist<base_arena_map,
                                  caching_arena_map,
-                                 crepr::base_block2D>;
+                                 crepr::base_block3D>;
   };
 
  public:
@@ -71,7 +75,7 @@ class nest_block_drop : public rer::client<nest_block_drop> {
    *                    given up ownership of for the drop.
    * \param t Current timestep.
    */
-  nest_block_drop(std::unique_ptr<crepr::base_block2D> robot_block,
+  nest_block_drop(std::unique_ptr<crepr::base_block3D> robot_block,
                   const rtypes::timestep& t);
 
   ~nest_block_drop(void) override = default;
@@ -87,19 +91,19 @@ class nest_block_drop : public rer::client<nest_block_drop> {
    * COSM#594.
    */
   void visit(caching_arena_map& map);
-  void visit(base_arena_map<crepr::base_block2D>& map);
+  void visit(base_arena_map& map);
 
  private:
-  void visit(crepr::base_block2D& block);
+  void visit(crepr::base_block3D& block);
 
-  template <typename TArenaMapType>
-  void do_visit(TArenaMapType& map);
+  template <typename TArenaMap>
+  void do_visit(TArenaMap& map);
 
   /* clang-format off */
   const rtypes::timestep               mc_timestep;
 
-  std::unique_ptr<crepr::base_block2D> m_robot_block;
-  crepr::base_block2D*                 m_arena_block{nullptr};
+  std::unique_ptr<crepr::base_block3D> m_robot_block;
+  crepr::base_block3D*                 m_arena_block{nullptr};
   /* clang-format on */
 };
 

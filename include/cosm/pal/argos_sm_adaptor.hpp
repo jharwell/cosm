@@ -32,11 +32,11 @@
 #include <argos3/plugins/simulator/entities/box_entity.h>
 
 #include "rcppsw/math/radians.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/swarm_manager.hpp"
 #include "cosm/repr/embodied_block.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/block_variant.hpp"
 
 /*******************************************************************************
@@ -47,7 +47,6 @@ struct arena_map_config;
 } // namespace cosm::foraging::config
 
 namespace cosm::arena {
-template<class T>
 class base_arena_map;
 class caching_arena_map;
 } /* namespace cosm */
@@ -72,10 +71,6 @@ class argos_sm_adaptor : public swarm_manager,
                          public argos::CLoopFunctions,
                          public rer::client<argos_sm_adaptor> {
  public:
-  using arena_map_variant_type = boost::variant<std::unique_ptr<carena::base_arena_map<crepr::base_block2D>>,
-                                                std::unique_ptr<carena::base_arena_map<crepr::base_block3D>>,
-                                                std::unique_ptr<carena::caching_arena_map>>;
-
   argos_sm_adaptor(void);
   ~argos_sm_adaptor(void) override;
 
@@ -94,10 +89,8 @@ class argos_sm_adaptor : public swarm_manager,
   void Destroy(void) override { destroy(); }
 
   const std::string& led_medium(void) const { return m_led_medium; }
-  template<typename TArenaMapType>
-  const TArenaMapType* arena_map(void) const {
-    return boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
-  }
+  const carena::base_arena_map* arena_map(void) const { return m_arena_map.get(); }
+
   /**
    * \brief Create a 3D embodied representation of the block and add it to
    * ARGoS, returning a handle to the created representation.
@@ -124,17 +117,14 @@ class argos_sm_adaptor : public swarm_manager,
 
   argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
-  template<typename TArenaMapType>
-  TArenaMapType* arena_map(void) {
-    return boost::get<std::unique_ptr<TArenaMapType>>(m_arena_map).get();
-  }
+  carena::base_arena_map* arena_map(void) { return m_arena_map.get(); }
 
   /**
    * \brief Initialize the arena contents.
    *
    * \param repo Repository of parsed parameters.
    */
-  template<typename TArenaMapType>
+  template<typename TArenaMap>
   void arena_map_init(const caconfig::arena_map_config* aconfig,
                       const cvconfig::visualization_config* vconfig) RCSW_COLD;
 
@@ -143,9 +133,9 @@ class argos_sm_adaptor : public swarm_manager,
   /**
    * \brief The name of the LED medium in ARGoS, for use in destroying caches.
    */
-  std::string            m_led_medium{};
-  argos::CFloorEntity*   m_floor{nullptr};
-  arena_map_variant_type m_arena_map{};
+  std::string                             m_led_medium{};
+  argos::CFloorEntity*                    m_floor{nullptr};
+  std::unique_ptr<carena::base_arena_map> m_arena_map{};
   /* clang-format on */
 };
 

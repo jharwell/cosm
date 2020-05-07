@@ -29,11 +29,14 @@
 #include <memory>
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
 NS_START(cosm, ds);
 
 using block3D_vectoro_type = std::shared_ptr<crepr::base_block3D>;

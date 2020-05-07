@@ -27,7 +27,7 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
-#include "cosm/repr/base_block2D.hpp"
+#include "cosm/repr/base_block3D.hpp"
 #include "cosm/arena/operations/cache_extent_clear.hpp"
 
 /*******************************************************************************
@@ -46,7 +46,7 @@ cached_block_pickup::cached_block_pickup(
     const rtypes::type_uuid& robot_id,
     const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.operations.cached_block_pickup"),
-      cell2D_op(cache->dloc()),
+      cell2D_op(cache->dpos2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
       m_real_cache(cache),
@@ -91,7 +91,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != cache_id,
             "Cache ID undefined on block pickup");
 
-  rmath::vector2z cache_coord = m_real_cache->dloc();
+  rmath::vector2z cache_coord = m_real_cache->dpos2D();
   ER_ASSERT(cache_coord == cell2D_op::coord(),
             "Coordinates for cache%d%s/cell@%s do not agree",
             cache_id.v(),
@@ -174,7 +174,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
   visit(*m_pickup_block);
 } /* visit() */
 
-void cached_block_pickup::visit(crepr::base_block2D& block) {
+void cached_block_pickup::visit(crepr::base_block3D& block) {
   ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
   block.robot_pickup_event(mc_robot_id, mc_timestep);
 

@@ -32,7 +32,6 @@
 #include "cosm/cosm.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
 #include "cosm/ds/entity_vector.hpp"
-#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
@@ -51,7 +50,6 @@ class arena_grid;
 } // namespace ds
 
 NS_START(cosm, foraging, block_dist);
-template<typename T>
 class base_distributor;
 
 /*******************************************************************************
@@ -67,13 +65,8 @@ class base_distributor;
  * - Single and dual source distribution assumes left-right rectangular arena.
  * - Power law, quad source, random distribution assume square arena.
  */
-template<typename TBlockType>
 class dispatcher {
  public:
-  using block_vectorno_type = typename std::conditional<std::is_same<TBlockType,
-                                                                     crepr::base_block2D>::value,
-                                                        cds::block2D_vectorno,
-                                                        cds::block3D_vectorno>::type;
   static constexpr const char kDistSingleSrc[] = "single_source";
   static constexpr const char kDistRandom[] = "random";
   static constexpr const char kDistDualSrc[] = "dual_source";
@@ -86,8 +79,8 @@ class dispatcher {
              double grid_padding);
   ~dispatcher(void);
 
-  dispatcher(const dispatcher& s) = delete;
-  dispatcher& operator=(const dispatcher& s) = delete;
+  dispatcher(const dispatcher&) = delete;
+  dispatcher& operator=(const dispatcher&) = delete;
 
   /**
    * \brief Initialize the selected block distributor. This is a separate
@@ -107,17 +100,17 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(TBlockType* block, cds::const_entity_vector& entities);
+  bool distribute_block(crepr::base_block3D* block, cds::const_entity_vector& entities);
 
   /**
    * \brief Distribute all blocks in the arena.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_blocks(block_vectorno_type& blocks,
+  bool distribute_blocks(cds::block3D_vectorno& blocks,
                          cds::const_entity_vector& entities);
 
-  const base_distributor<TBlockType>* distributor(void) const {
+  const base_distributor* distributor(void) const {
     return m_dist.get();
   }
 
@@ -135,7 +128,7 @@ class dispatcher {
   rmath::ranged                                 mc_arena_yrange;
 
   cds::arena_grid*                              m_grid{nullptr};
-  std::unique_ptr<base_distributor<TBlockType>> m_dist;
+  std::unique_ptr<base_distributor> m_dist;
   /* clang-format on */
 };
 

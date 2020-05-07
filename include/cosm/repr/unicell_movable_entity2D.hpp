@@ -46,19 +46,19 @@ NS_START(cosm, repr);
  */
 class unicell_movable_entity2D : public unicell_entity2D {
  public:
-  using unicell_entity2D::dloc;
-  using unicell_entity2D::rloc;
+  using unicell_entity2D::dpos2D;
+  using unicell_entity2D::rpos2D;
   using unicell_entity2D::unicell_entity2D;
 
   static constexpr bool is_movable(void) { return true; }
 
   ~unicell_movable_entity2D(void) override = default;
 
-  void rloc(const rmath::vector2d& loc) {
-    unicell_entity2D::rloc<unicell_movable_entity2D>(loc);
+  void rpos2D(const rmath::vector2d& pos) {
+    unicell_entity2D::rpos2D<unicell_movable_entity2D>(pos);
   }
-  void dloc(const rmath::vector2z& loc) {
-    unicell_entity2D::dloc<unicell_movable_entity2D>(loc);
+  void dpos2D(const rmath::vector2z& pos) {
+    unicell_entity2D::dpos2D<unicell_movable_entity2D>(pos);
   }
 };
 

@@ -67,7 +67,7 @@ class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
   using visit_typelist = visit_typelist_impl::value;
 
   explicit cell2D_empty(const rmath::vector2z& coord)
-      : cell2D_op(coord), ER_CLIENT_INIT("cosm.operations.cell2D_empty") {}
+      : cell2D_op(coord), ER_CLIENT_INIT("cosm.ds.operations.cell2D_empty") {}
 
   void visit(ds::cell2D& cell);
   void visit(fsm::cell2D_fsm& fsm);

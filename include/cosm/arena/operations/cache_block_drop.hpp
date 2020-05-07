@@ -34,7 +34,6 @@
 #include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
-#include "cosm/repr/base_block2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -46,6 +45,10 @@ class arena_cache;
 namespace cosm::arena {
 class caching_arena_map;
 } /* namespace cosm::arena */
+
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -66,7 +69,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<caching_arena_map, crepr::base_block2D>;
+    using others = rmpl::typelist<caching_arena_map, crepr::base_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -94,22 +97,22 @@ class cache_block_drop : public rer::client<cache_block_drop>,
    * \param resolution Arena resolution.
    * \param locking Is locking needed around block accesses?
    */
-  cache_block_drop(crepr::base_block2D* arena_block,
-                         carepr::arena_cache* cache,
-                         const rtypes::discretize_ratio& resolution,
-                         const arena_map_locking& locking);
+  cache_block_drop(crepr::base_block3D* arena_block,
+                   carepr::arena_cache* cache,
+                   const rtypes::discretize_ratio& resolution,
+                   const arena_map_locking& locking);
 
  private:
   void visit(cds::cell2D& cell);
   void visit(fsm::cell2D_fsm& fsm);
-  void visit(crepr::base_block2D& block);
+  void visit(crepr::base_block3D& block);
   void visit(carepr::arena_cache& cache);
 
   /* clang-format off */
   const arena_map_locking        mc_locking;
   const rtypes::discretize_ratio mc_resolution;
 
-  crepr::base_block2D*           m_arena_block;
+  crepr::base_block3D*           m_arena_block;
   carepr::arena_cache*           m_cache;
   /* clang-format on */
 };

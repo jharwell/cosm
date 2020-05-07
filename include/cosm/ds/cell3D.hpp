@@ -32,12 +32,12 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/fsm/cell3D_fsm.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
+class base_block3D;
 class cube_block3D;
 class ramp_block3D;
 class entity3D;

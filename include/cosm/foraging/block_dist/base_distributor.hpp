@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "rcppsw/er/client.hpp"
-#include "cosm/ds/block2D_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
@@ -48,13 +47,8 @@ NS_START(cosm, foraging, block_dist);
  *
  * \brief Base class for block distributors to enable use of strategy pattern.
  */
-template<typename TBlockType>
 class base_distributor {
  public:
-  using block_vectorno_type = typename std::conditional<std::is_same<TBlockType,
-                                                                     crepr::base_block2D>::value,
-                                                        cds::block2D_vectorno,
-                                                        cds::block3D_vectorno>::type;
   /**
    * \brief How many times to attempt to distribute all blocks before giving up,
    * causing an assertion failure on distribution.
@@ -80,14 +74,14 @@ class base_distributor {
    * \return \c TRUE if the block distribution was successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_block(TBlockType* block,
+  virtual bool distribute_block(crepr::base_block3D* block,
                                 cds::const_entity_vector& entities) = 0;
 
   /**
    * \brief Return a read-only list of \ref block_clusters for capacity checking
    * by external classes.
    */
-  virtual cfds::block_cluster_vector<TBlockType> block_clusters(void) const = 0;
+  virtual cfds::block3D_cluster_vector block_clusters(void) const = 0;
 
   /**
    * \brief Calls \ref distribute_block on each block.
@@ -95,7 +89,7 @@ class base_distributor {
    * \return \c TRUE iff all block distributions were successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_blocks(block_vectorno_type& blocks,
+  virtual bool distribute_blocks(cds::block3D_vectorno& blocks,
                                  cds::const_entity_vector& entities) {
     return std::all_of(blocks.begin(),
                        blocks.end(),

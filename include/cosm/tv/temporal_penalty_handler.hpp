@@ -29,6 +29,7 @@
 #include <memory>
 #include <mutex>
 #include <algorithm>
+#include <utility>
 
 #include "rcppsw/control/periodic_waveform.hpp"
 #include "rcppsw/control/waveform_generator.hpp"
@@ -74,10 +75,10 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
         m_waveform(rct::waveform_generator()(config->type, config)) {}
 
   ~temporal_penalty_handler(void) override = default;
-  temporal_penalty_handler& operator=(const temporal_penalty_handler& other) =
-                                     delete;
-  temporal_penalty_handler(const temporal_penalty_handler& other) =
-                                     delete;
+
+  /* Not copy assignable/copy constructible by default */
+  temporal_penalty_handler& operator=(const temporal_penalty_handler&) = delete;
+  temporal_penalty_handler(const temporal_penalty_handler&) = delete;
 
 
 #if(LIBRA_ER == LIBRA_ER_ALL)
@@ -206,8 +207,8 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
   }
 
  protected:
-  template<typename TControllerType>
-  rtypes::timestep penalty_add(const TControllerType* controller,
+  template<typename TController>
+  rtypes::timestep penalty_add(const TController* controller,
                                const rtypes::type_uuid& id,
                                const rtypes::timestep& orig_duration,
                                const rtypes::timestep& start) {

@@ -25,10 +25,10 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/radians.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/embodied_block.hpp"
-#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
