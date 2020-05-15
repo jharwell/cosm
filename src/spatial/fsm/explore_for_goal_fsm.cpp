@@ -54,11 +54,17 @@ explore_for_goal_fsm::explore_for_goal_fsm(
       m_goal_detect(goal_detect) {}
 
 HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, start) {
+  if (ekST_START != last_state()) {
+    ER_DEBUG("Executing ekST_START");
+  }
   internal_event(ekST_EXPLORE);
   return util_signal::ekHANDLED;
 }
 
 RCSW_CONST HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, finished) {
+  if (ekST_FINISHED != last_state()) {
+    ER_DEBUG("Executing ekST_FINISHED");
+  }
   return util_signal::ekHANDLED;
 }
 

@@ -102,7 +102,12 @@ namespace tv {
 namespace metrics {}
 } /* namespace tv */
 
-namespace subsystem {}
+namespace subsystem {
+namespace perception {
+namespace config {}
+} /* namespace perception */
+} /* namespace subsystem */
+
 namespace hal {}
 namespace kin2D {}
 namespace steer2D {}
@@ -115,12 +120,14 @@ namespace metrics {
 namespace config {}
 } /* namespace metrics */
 
-namespace repr {}
+namespace repr {
+namespace config {}
+} /* namespace repr */
+
 namespace controller {
 namespace operations {}
 namespace metrics {}
 namespace config {}
-namespace perception {}
 } /* namespace controller */
 
 namespace robots {
@@ -183,12 +190,14 @@ namespace interactors {}
 /** @} */
 
 namespace csubsystem = cosm::subsystem;
+namespace csperception = csubsystem::perception;
+namespace cspconfig = csperception::config;
+
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
 namespace ccontconfig = ccontroller::config;
 namespace ccops = ccontroller::operations;
 namespace ccmetrics = ccontroller::metrics;
-namespace ccperception = ccontroller::perception;
 
 namespace cforaging = cosm::foraging;
 namespace cfrepr = cforaging::repr;
@@ -238,12 +247,14 @@ namespace cptv = cpal::tv;
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
 
+namespace crepr = cosm::repr;
+namespace crconfig = crepr::config;
+
 namespace cfsm = cosm::fsm;
 namespace chal = cosm::hal;
 namespace ckin2D = cosm::kin2D;
 namespace csteer2D = cosm::steer2D;
 namespace crobots = cosm::robots;
 namespace crfootbot = crobots::footbot;
-namespace crepr = cosm::repr;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

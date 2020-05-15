@@ -23,6 +23,7 @@
 #include "cosm/arena/base_arena_map.hpp"
 
 #include <argos3/plugins/simulator/media/led_medium.h>
+#include <algorithm>
 
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
@@ -47,10 +48,6 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
                                 config->grid.dims.y() + arena_padding()),
                 config->grid.resolution),
       m_blockso(foraging::block_dist::block3D_manifest_processor(&config->blocks.dist.manifest)()),
-      m_nest(config->nest.dims,
-             config->nest.center,
-             config->grid.resolution,
-             carepr::light_type_index()[carepr::light_type_index::kNest]),
       m_block_dispatcher(&decoratee(),
                          config->grid.resolution,
                          &config->blocks.dist,
@@ -62,19 +59,32 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
           xdsize(),
           ydsize(),
           grid_resolution().v());
+
+  /* initialize non-owning block vector exposed to outside classes */
   for (auto& b : m_blockso) {
     m_blocksno.push_back(b.get());
   } /* for(&b..) */
+
+  /* initialize nest(s) */
+  ER_INFO("Initialize %zu nests", config->nests.nests.size());
+  for (auto &nest : config->nests.nests) {
+    crepr::nest inst(nest.dims,
+                     nest.center,
+                     config->grid.resolution,
+                     carepr::light_type_index()[carepr::light_type_index::kNest]);
+    m_nests.emplace(inst.id(), inst);
+  } /* for(&nest..) */
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool base_arena_map::initialize(pal::argos_sm_adaptor* sm,
-                                            rmath::rng* rng) {
-  for (auto& l : m_nest.lights()) {
-    sm->AddEntity(*l);
-  } /* for(&l..) */
+bool base_arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
+  for (auto& pair : m_nests) {
+    for (auto &l : pair.second.lights()) {
+      sm->AddEntity(*l);
+    } /* for(&l..) */
+  } /* for(&pair..) */
 
   return m_block_dispatcher.initialize(rng);
 } /* initialize() */
@@ -199,8 +209,20 @@ base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
         ret.dist_ent->id().v());
   }
 
-  ret.avoid_ents.push_back(&m_nest);
+  for (auto &pair : m_nests) {
+    ret.avoid_ents.push_back(&pair.second);
+  } /* for(&pair..) */
+
   return ret;
 } /* block_dist_precalc() */
+
+ds::nest_vectorro base_arena_map::nests(void) const {
+  ds::nest_vectorro ret;
+  std::transform(m_nests.begin(),
+                 m_nests.end(),
+                 std::back_inserter(ret),
+                 [&](const auto& pair) { return &pair.second; });
+  return ret;
+}
 
 NS_END(arena, cosm);

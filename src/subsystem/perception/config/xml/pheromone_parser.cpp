@@ -21,12 +21,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/config/perception/xml/pheromone_parser.hpp"
+#include "cosm/subsystem/perception/config/xml/pheromone_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, config, perception, xml);
+NS_START(cosm, subsystem, perception, config, xml);
 
 /*******************************************************************************
  * Member Functions
@@ -40,7 +40,14 @@ void pheromone_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool pheromone_parser::validate(void) const {
-  return m_config->rho > 0.0;
+  if (!is_parsed()) {
+    return true;
+  }
+  RCSW_CHECK(m_config->rho > 0.0);
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
-NS_END(xml, perception, config, controller, cosm);
+NS_END(xml, config, perception, subsystem, cosm);

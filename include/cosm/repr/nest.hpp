@@ -68,13 +68,13 @@ class nest : public repr::unicell_immovable_entity2D,
    * \param dim Dimensions of the nest. Square nests get 1 light above the
    *            center while rectangular nests get 3 lights evenly spaced along
    *            the longer dimension.
-   * \param loc The location of the center of the nest.
+   * \param center The location of the center of the nest.
    * \param resolution The arena resolution used to map from continous sizes to
    *                   a discrete grid.
    * \param light_color The color to make the lights above the nest.
    */
   nest(const rmath::vector2d& dim,
-       const rmath::vector2d& loc,
+       const rmath::vector2d& center,
        const rtypes::discretize_ratio& resolution,
        const rutils::color& light_color);
 
@@ -96,6 +96,11 @@ class nest : public repr::unicell_immovable_entity2D,
   light_list& lights(void) { return m_lights; }
 
  private:
+  /**
+   * \brief The ID that will be assigned to the next nest created.
+   */
+  static int kNEXT_ID;
+
   /**
    * \brief Initialize lights above the nest for robots to use for localization,
    * dependent on the geometry of the nest.

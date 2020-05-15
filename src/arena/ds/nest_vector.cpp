@@ -1,7 +1,7 @@
 /**
- * \file block_pickup.cpp
+ * \file nest_vector.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,44 +21,40 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/operations/block_pickup.hpp"
+#include "cosm/arena/ds/nest_vector.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
+#include <numeric>
 
-/*******************************************************************************
- * Namespaces/Decls
- ******************************************************************************/
-NS_START(cosm, controller, operations);
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
- * Constructors/Destructor
+ * Namespaces
  ******************************************************************************/
-block_pickup::block_pickup(crepr::base_block3D* block,
-                                     const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.controller.operations.block_pickup"),
-      cell2D_op(block->dpos2D()),
-      mc_timestep(t),
-      mc_robot_id(robot_id),
-      m_block(block) {}
+NS_START(cosm, arena, ds);
+
+/*******************************************************************************
+ * Non-Member Functions
+ ******************************************************************************/
+template <typename TVector>
+std::string do_to_str(const TVector& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& c) {
+                           return a + "nest" + rcppsw::to_string(c->id()) + "@" +
+                               c->dpos2D().to_str() + ",";
+                         });
+} /* do_to_str() */
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_pickup::visit(controller::block_carrying_controller& c) {
-  /*
-   * Cloning resets robot ID, so we need to set it again in the clone (principle
-   * of least surprise)
-   */
-  auto block = m_block->clone();
-  block->md()->robot_id(mc_robot_id);
-  c.block(std::move(block));
-  ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
-} /* visit() */
+std::string nest_vectorno::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-void block_pickup::visit(crepr::base_block3D& block) {
-  ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
-  block.robot_pickup_event(mc_robot_id, mc_timestep);
-} /* visit() */
+std::string nest_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
-NS_END(operations, controller, cosm);
+NS_END(ds, arena, cosm);

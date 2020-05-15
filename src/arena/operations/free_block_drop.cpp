@@ -208,13 +208,15 @@ bool block_drop_loc_conflict(const base_arena_map& map,
                              const crepr::base_block3D* const block,
                              const rmath::vector2d& loc) {
   /*
-   * If the robot is currently right on the edge of the nest, we can't just
-   * drop the block in the nest, as it will not be processed as a normal
-   * \ref nest_block_drop, and will be discoverable by a robot via LOS but
-   * not able to be acquired, as its color is hidden by that of the nest.
-   *
+   * If the robot is currently right on the edge of a nest, we can't just drop
+   * the block in it, as it will not be processed as a normal \ref
+   * nest_block_drop, and will be discoverable by a robot via LOS but not able
+   * to be acquired, as its color is hidden by that of the nest.
    */
-  bool conflict = block_drop_overlap_with_nest(block, map.nest(), loc);
+  bool conflict = false;
+  for (auto *nest : map.nests()) {
+    conflict |= block_drop_overlap_with_nest(block, *nest, loc);
+  } /* for(&nest..) */
 
   /*
    * If the robot is really close to a wall, then dropping a block may make it

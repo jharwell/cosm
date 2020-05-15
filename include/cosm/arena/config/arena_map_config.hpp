@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include "cosm/foraging/config/blocks_config.hpp"
 #include "cosm/ds/config/grid2D_config.hpp"
-#include "cosm/repr/config/nest_config.hpp"
+#include "cosm/repr/config/nests_config.hpp"
 #include "rcppsw/config/base_config.hpp"
 
 /*******************************************************************************
@@ -44,7 +44,7 @@ NS_START(cosm, arena, config);
 struct arena_map_config final : public rconfig::base_config {
   struct cds::config::grid2D_config grid {};
   struct cfconfig::blocks_config blocks {};
-  struct crepr::config::nest_config nest {};
+  struct crepr::config::nests_config nests {};
 };
 
 NS_END(config, arena, cosm);

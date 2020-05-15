@@ -1,5 +1,5 @@
 /**
- * \file perception_parser.hpp
+ * \file pheromone_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PERCEPTION_PARSER_HPP_
-#define INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PERCEPTION_PARSER_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,54 +27,50 @@
 #include <string>
 #include <memory>
 
+#include "cosm/subsystem/perception/config/pheromone_config.hpp"
+#include "cosm/cosm.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
-
-#include "cosm/ds/config/xml/grid2D_parser.hpp"
-#include "cosm/controller/config/perception/perception_config.hpp"
-#include "cosm/controller/config/perception/xml/pheromone_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, config, perception, xml);
+NS_START(cosm, subsystem, perception, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class perception_parser
- * \ingroup controller config perception xml
+ * \class pheromone_parser
+ * \ingroup subsystem perception config xml
  *
- * \brief Parses XML parameters for various perception subsystems into
- * \ref perception_config.
+ * \brief Parses XML parameters relating to pheromones into
+ * \ref pheromone_config.
  */
-class perception_parser final : public rconfig::xml::xml_config_parser {
+class pheromone_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = perception_config;
+  using config_type = pheromone_config;
 
   /**
-   * \brief The root tag that all perception  parameters should lie under in
-   * the XML tree.
+   * \brief The root tag that all pheromone parameters should lie under in the
+   * XML tree.
    */
-  static constexpr char kXMLRoot[] = "perception";
+  static constexpr char kXMLRoot[] = "pheromone";
 
-  bool validate(void) const override RCSW_ATTR(pure, cold);
-  void parse(const ticpp::Element& node) override RCSW_COLD;
-
-  RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
+  bool validate(void) const override RCSW_PURE;
+  void parse(const ticpp::Element& node) override;
+  std::string xml_root(void) const override { return kXMLRoot; }
 
  private:
-  RCSW_COLD const rconfig::base_config* config_get_impl(void) const override {
+  const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 
+ private:
   /* clang-format off */
-  std::unique_ptr<config_type> m_config{nullptr};
-  cdconfig::xml::grid2D_parser m_occupancy{};
-  pheromone_parser             m_pheromone{};
+  std::shared_ptr<config_type> m_config{nullptr};
   /* clang-format on */
 };
 
-NS_END(xml, perception, config, controller, cosm);
+NS_END(xml, config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_XML_PERCEPTION_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_ */

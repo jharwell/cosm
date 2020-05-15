@@ -1,7 +1,7 @@
 /**
- * \file nest_parser.cpp
+ * \file perception_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,38 +21,48 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/config/xml/nest_parser.hpp"
+#include "cosm/subsystem/perception/config/xml/perception_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config, xml);
+NS_START(cosm, subsystem, perception, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_parser::parse(const ticpp::Element& node) {
-  /* we do NOT do a node_get() for this parser--rare exception */
+void perception_parser::parse(const ticpp::Element& node) {
+  /* Not all robots use a perception subsystem */
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
+
+  ticpp::Element onode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(node, m_config, center);
-  XML_PARSE_ATTR(node, m_config, dims);
+  XML_PARSE_ATTR(onode, m_config, los_dim);
+
+  /* grid optional */
+  if (nullptr != onode.FirstChild(cds::config::xml::grid2D_parser::kXMLRoot,
+                                  false)) {
+    m_grid.parse(onode);
+    m_config->occupancy_grid =
+        *m_grid.config_get<cdconfig::xml::grid2D_parser::config_type>();
+  }
+
+  /* pheromones optional */
+  if (nullptr != onode.FirstChild(pheromone_parser::kXMLRoot, false)) {
+    m_pheromone.parse(onode);
+    m_config->pheromone =
+        *m_pheromone.config_get<pheromone_parser::config_type>();
+  }
 } /* parse() */
 
-bool nest_parser::validate(void) const {
-  return validate(m_config.get());
+bool perception_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+  return m_grid.validate() && m_pheromone.validate();
 } /* validate() */
 
-/*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-bool nest_parser::validate(const nest_config *config) {
-  RCSW_CHECK(config->center.is_pd());
-  RCSW_CHECK(config->dims.is_pd());
-  return true;
-
-error:
-  return false;
-} /* validate(const nest_config *config)() */
-
-NS_END(xml, config, repr, cosm);
+NS_END(xml, config, perception, subsystem, cosm);

@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
-#define INCLUDE_COSM_CONTROLLER_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
 
 /*******************************************************************************
  * Includes
@@ -27,28 +27,28 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/controller/config/perception/perception_config.hpp"
+#include "cosm/subsystem/perception/config/perception_config.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, perception);
+NS_START(cosm, subsystem, perception);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class base_perception_subsystem
- * \ingroup controller perception
+ * \ingroup subsystem perception
  *
- * \brief Base class for robot perception common to all controllers.
+ * \brief Base class for robot perception common to all subsystems.
  */
 template<typename TLOS>
 class base_perception_subsystem {
  public:
   explicit base_perception_subsystem(
-      const ccontconfig::perception::perception_config* const pconfig)
+      const cspconfig::perception_config* const pconfig)
       : mc_los_dim(pconfig->los_dim) {}
 
   virtual ~base_perception_subsystem(void) = default;
@@ -84,6 +84,6 @@ class base_perception_subsystem {
   /* clang-format on */
 };
 
-NS_END(perception, controller, cosm);
+NS_END(perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_ */

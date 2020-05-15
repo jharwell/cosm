@@ -51,10 +51,12 @@ class nest_parser : public rconfig::xml::xml_config_parser {
   using config_type = nest_config;
 
   /**
-   * \brief The root tag that all nest parameters should lie under in the
-   * XML tree.
+   * \brief The root tag that all \ref crepr::nest parameters should lie under
+   * in the XML tree.
    */
   static constexpr const char kXMLRoot[] = "nest";
+
+  static bool validate(const nest_config* config);
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
   bool validate(void) const override RCSW_ATTR(pure, cold);

@@ -29,13 +29,21 @@
 NS_START(cosm, repr);
 
 /*******************************************************************************
+ * Class Constants
+ ******************************************************************************/
+int nest::kNEXT_ID = 0;
+
+/*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
 nest::nest(const rmath::vector2d& dim,
-           const rmath::vector2d& loc,
+           const rmath::vector2d& center,
            const rtypes::discretize_ratio& resolution,
            const rutils::color& light_color)
-    : unicell_immovable_entity2D(dim, loc, resolution),
+    : unicell_immovable_entity2D(dim,
+                                 center,
+                                 resolution,
+                                 rtypes::type_uuid(kNEXT_ID++)),
       colored_entity(rutils::color::kGRAY70),
       m_lights(init_lights(light_color)) {}
 

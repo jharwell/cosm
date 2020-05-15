@@ -23,7 +23,7 @@ The following root XML tags are defined for all controller types:
 | ``task_alloc``            | Parameters for task allocation.                                |
 |                           |                                                                |
 +---------------------------+----------------------------------------------------------------+
-| ``sensing_subsystem2D``   | Parameters for robot sensing subsystem.                        |
+| ``sensing_subsystemQ3D``  | Parameters for robot sensing subsystem.                        |
 |                           |                                                                |
 +---------------------------+----------------------------------------------------------------+
 | ``actuation_subsystem2D`` | Parameters for robot actuation subsystem.                      |
@@ -59,8 +59,8 @@ XML configuration:
 --------------
 
 - Required child attributes if present: all.
-- Required child tags if present: ``pheromone``.
-- Optional child tags: ``grid``.
+- Required child tags if present: none.
+- Optional child tags: [ ``grid``, ``pheromone`` ]
 - Optional child attributes: none.
 
 XML configuration:
@@ -70,10 +70,10 @@ XML configuration:
    <perception
        los_dim="INTEGER">
        <pheromone>
-       ...
+           ...
        <pheromone/>
        <grid>
-       ...
+           ...
        <grid/>
    </perception>
 
@@ -552,7 +552,7 @@ XML configuration:
 
 ``method`` tag that can be one of [ ``harwell2019`` ].
 
-``sensing_subsystem2D``
+``sensing_subsystemQ3D``
 -----------------------
 
 - Required by: All controllers.
@@ -565,17 +565,17 @@ XML configuration:
 
 .. code-block:: XML
 
-   <sensing_subsystem2D>
+   <sensing_subsystemQ3D>
        <proximity_sensor>
        ...
        </proximity_sensor>
        <ground_sensor>
        ...
        </ground_sensor>
-   </sensing_subsystem2D>
+   </sensing_subsystemQ3D>
 
 
-``sensing_subsystem2D/proximity_sensor``
+``sensing_subsystemQ3D/proximity_sensor``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for proximity sensor configuration.
@@ -588,13 +588,13 @@ Parameters for proximity sensor configuration.
 
 .. code-block:: XML
 
-    <sensing_subsystem2D>
+    <sensing_subsystemQ3D>
         ...
         <proximity_sensor
             fov="FLOAT:FLOAT"
             delta="FLOAT"/>
         ...
-    </sensing_subsystem2D>
+    </sensing_subsystemQ3D>
 
 - ``fov`` - The angle range to the left/right of center (90 degrees on a unit
   circle) in which obstacles are not ignored (outside of this range they are
@@ -604,7 +604,7 @@ Parameters for proximity sensor configuration.
 - ``delta`` - Tripping threshold for exponential distance calculations for
   obstacle detection.
 
-``sensing_subsystem2D/ground_sensor``
+``sensing_subsystemQ3D/ground_sensor``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for ground sensor configuration.
@@ -619,7 +619,7 @@ XML configuration:
 
 .. code-block:: XML
 
-    <sensing_subsystem2D>
+    <sensing_subsystemQ3D>
         ...
         <ground_sensor>
           <nest range="FLOAT:FLOAT"
@@ -630,7 +630,7 @@ XML configuration:
                 consensus="INTEGER"/>
         </ground_sensor>
         ...
-    </sensing_subsystem2D>
+    </sensing_subsystemQ3D>
 
 For each of [``nest``, ``block``, ``cache``], the following child attributes are
 required:

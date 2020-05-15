@@ -210,7 +210,7 @@ metric collector in more than one category is undefined.
 | ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``oracle_manager``                             | Enable swarms to make decisions based on perfect information.           | append                 |                        |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------+------------------------+
++------------------------------------------------+--------------------------------------------------------------------------------------------------+------------------------+
 
 ``convergence``
 ---------------
@@ -394,7 +394,7 @@ XML configuration:
 
 - Required by: all.
 - Required child attributes if present: none.
-- Required child tags if present: [ ``grid``, ``blocks``, ``nest`` ].
+- Required child tags if present: [ ``grid``, ``blocks``, ``nests`` ].
 - Optional child attributes: none.
 - Optional child tags: none.
 
@@ -409,9 +409,9 @@ XML configuration:
        <blocks>
        ...
        </blocks>
-       <nest>
+       <nests>
        ...
-       </nest>
+       </nests>
    </arena_map>
 
 ``arena_map/grid``
@@ -491,7 +491,7 @@ XML configuration:
 
 - ``dist_type`` - The distribution model for the blocks. When blocks are
   distributed to a new location in the arena and made available for robots to
-  pickup (either initially or after a block is deposited in the nest), they are
+  pickup (either initially or after a block is deposited in a nest), they are
   placed in the arena in one of the following ways:
 
   - ``random``: Placed in a random location in the arena.
@@ -499,14 +499,14 @@ XML configuration:
   - ``powerlaw``: Distributed according to a powerlaw.
 
   - ``single_source`` - Placed within an arena opposite about 90% of the way
-    from the nest to the other side of the arena (assumes horizontal,
-    rectangular arena).
+    from the nest to the other side of the arena Assumes horizontal, rectangular
+    arena with a single nest.
 
   - ``dual_source`` - Placed in two sources on either side of a central nest
-    (assumes a horizontal, rectangular arena).
+    Assumes a horizontal, rectangular arena, with a single nest.
 
   - ``quad_source`` - Placed in 4 sources at each cardinal direction in the
-    arena. Assumes a square arena.
+    arena. Assumes a square arena with a single nest.
 
 ``arena_map/blocks/distribution/redist_governor``
 #################################################
@@ -622,11 +622,11 @@ XML configuration:
 
 - ``n_clusters`` - Max # of clusters the arena.
 
-``arena_map/nest``
+``arena_map/nests``
 ^^^^^^^^^^^^^^^^^^
 
 - Required by: all.
-- Required child attributes if present: [ ``size``, ``center`` ].
+- Required child attributes if present: [ ``nest`` ].
 - Required child tags if present: none.
 - Optional child attributes: none.
 - Optional child tags: none.
@@ -637,18 +637,41 @@ XML configuration:
 
    <arena_map>
        ...
-       <nest
-       size="X, Y"
-       center="X, Y"/>
+       <nests>
+           <nest .../>
+           <nest .../>
+           ...
+       </nests>
        ...
    </arena_map>
 
-- ``size`` - The size of the nest. Must be specified in a tuple like so:
-  ``0.5, 0.5``. Note the space--parsing does not work if it is omitted.
+``arena_map/nests/nest``
+########################
+
+- Required by: all.
+- Required child attributes if present: [ ``dims``, ``center`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <nests>
+       <nest dims="X, Y"
+             center="X, Y"/>
+       <nest dims="X, Y"
+             center="X, Y"/>
+       ...
+   </nests>
+
+- ``dims`` - The dimensions of the nest. Must be specified in a tuple like so:
+  ``0.5, 0.5``.
 
 - ``center`` - Location for center of the nest (nest is a square).  Must be
-  specified in a tuple like so: ``1.5, 1.5``. Note the space--parsing does not
-  work if it is omitted.
+  specified in a tuple like so: ``1.5, 1.5``.
+
 
 
 ``temporal_variance``

@@ -1,5 +1,5 @@
 /**
- * \file nest_config.hpp
+ * \file nests_parser.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,37 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CONFIG_NEST_CONFIG_HPP_
-#define INCLUDE_COSM_REPR_CONFIG_NEST_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
+#include "cosm/repr/config/xml/nests_parser.hpp"
 
-#include "rcppsw/config/base_config.hpp"
-#include "rcppsw/math/vector2.hpp"
-#include "cosm/cosm.hpp"
+#include "rcppsw/utils/line_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config);
+NS_START(cosm, repr, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct nest_config
- * \ingroup repr config
- *
- * \brief Configuration for a single \ref nest within the arena.
- */
-struct nest_config : public rconfig::base_config {
-  rmath::vector2d center{};
-  rmath::vector2d dims{};
-};
+void nests_parser::parse(const ticpp::Element& node) {
+  ticpp::Element nnode = node_get(node, kXMLRoot);
+  ticpp::Iterator<ticpp::Element> node_it;
 
-NS_END(config, repr, cosm);
+  m_config = std::make_unique<config_type>();
 
-#endif /* INCLUDE_COSM_REPR_CONFIG_NEST_CONFIG_HPP_ */
+  for (node_it = nnode.FirstChildElement(); node_it != node_it.end();
+       ++node_it) {
+    m_nest.parse(*node_it);
+    m_config->nests.push_back(*m_nest.config_get<nest_parser::config_type>());
+  } /* for(node_it..) */
+} /* parse() */
+
+bool nests_parser::validate(void) const {
+  for (auto &nest : m_config->nests) {
+    RCSW_CHECK(nest_parser::validate(&nest));
+  } /* for(&nest..) */
+
+  return true;
+
+error:
+  return false;
+} /* validate() */
+
+NS_END(xml, config, repr, cosm);

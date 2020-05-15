@@ -27,6 +27,7 @@
 #include <mutex>
 #include <vector>
 #include <string>
+#include <map>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
@@ -37,6 +38,7 @@
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
+#include "cosm/arena/ds/nest_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -168,7 +170,15 @@ class base_arena_map : public rer::client<base_arena_map>,
     return decoratee().resolution();
   }
 
-  const crepr::nest& nest(void) const { return m_nest; }
+  ds::nest_vectorro nests(void) const;
+
+  const crepr::nest* nest(const rtypes::type_uuid& id) const {
+    auto it = m_nests.find(id);
+    if (m_nests.end() != it) {
+      return &(it->second);
+    }
+    return nullptr;
+  }
 
   const cforaging::block_dist::base_distributor* block_distributor(void) const {
     return m_block_dispatcher.distributor();
@@ -248,13 +258,14 @@ class base_arena_map : public rer::client<base_arena_map>,
   virtual block_dist_precalc_type block_dist_precalc(const crepr::base_block3D* block);
 
  private:
+  using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
+
   /* clang-format off */
-  mutable std::mutex                     m_cache_mtx{};
   mutable std::mutex                     m_block_mtx{};
 
   cds::block3D_vectoro                   m_blockso;
   cds::block3D_vectorno                  m_blocksno{};
-  crepr::nest                            m_nest;
+  nest_map_type                          m_nests{};
   cforaging::block_dist::dispatcher      m_block_dispatcher;
   cforaging::block_dist::redist_governor m_redist_governor;
   /* clang-format on */

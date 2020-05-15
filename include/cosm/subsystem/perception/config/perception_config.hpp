@@ -1,7 +1,7 @@
 /**
- * \file pheromone_config.hpp
+ * \file perception_config.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,34 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PHEROMONE_CONFIG_HPP_
-#define INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PHEROMONE_CONFIG_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_PERCEPTION_PERCEPTION_CONFIG_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_CONFIG_PERCEPTION_PERCEPTION_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
-#include "cosm/cosm.hpp"
+
+#include "cosm/ds/config/grid2D_config.hpp"
+#include "cosm/subsystem/perception/config/pheromone_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, config, perception);
+NS_START(cosm, subsystem, perception, config);
 
 /*******************************************************************************
  * Structure Definitions
  ******************************************************************************/
 /**
- * \struct pheromone_config
- * \ingroup controller config perception
+ * \struct perception_config
+ * \ingroup subsystem perception config
  *
- * \brief Configuration for robot virtual pheromones.
+ * \brief Configuration for robot perception.
  */
-struct pheromone_config final : public rconfig::base_config {
-  double rho{0.0};
-  bool repeat_deposit{false};
+struct perception_config final : public rconfig::base_config {
+  double los_dim{-1};
+  cds::config::grid2D_config occupancy_grid {};
+  struct pheromone_config pheromone {};
 };
 
-NS_END(perception, config, controller, cosm);
+NS_END(config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_CONFIG_PERCEPTION_PHEROMONE_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_ */
