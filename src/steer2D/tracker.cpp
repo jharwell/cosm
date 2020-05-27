@@ -1,7 +1,7 @@
 /**
- * \file visualization_config.hpp
+ * \file tracker.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,38 +18,35 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
-#define INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-
-#include "cosm/cosm.hpp"
+#include "cosm/steer2D/tracker.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, vis, config);
+NS_START(cosm, steer2D);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct visualization_config
- * \ingroup vis config
- *
- * \brief Configuration for extended ARGoS visualizations.
- */
-struct visualization_config final : public rconfig::base_config {
-  bool robot_id{false};
-  bool robot_los{false};
-  bool robot_task{false};
-  bool robot_steer2D{false};
-  bool block_id{false};
-};
+bool tracker::path_add(const ds::path_state& path) {
+  m_path = boost::make_optional(path);
+  return true;
+} /* path_add() */
 
-NS_END(config, vis, cosm);
+bool tracker::force_add(const std::string& name, const rmath::vector2d& force) {
+  m_forces[name] += force;
+  return true;
+} /* force_add() */
 
-#endif /* INCLUDE_COSM_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_ */
+rmath::vector2d tracker::force_accum(const std::string& name) const {
+  auto it = m_forces.find(name);
+  if (m_forces.end() == it) {
+    return {};
+  }
+  return it->second;
+} /* force_accum() */
+
+NS_END(steer2D, cosm);

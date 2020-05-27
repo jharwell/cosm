@@ -54,6 +54,9 @@ void block_pickup::visit(controller::block_carrying_controller& c) {
   block->md()->robot_id(mc_robot_id);
   c.block(std::move(block));
   ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
+
+  /* move the original block out of sight */
+  visit(*m_block);
 } /* visit() */
 
 void block_pickup::visit(crepr::base_block3D& block) {

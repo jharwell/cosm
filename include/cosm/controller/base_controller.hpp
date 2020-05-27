@@ -108,6 +108,11 @@ class base_controller : public rer::client<base_controller> {
    */
   bool display_id(void) const { return m_display_id; }
 
+  void display_steer2D(bool b) {
+    m_display_steer2D = b;
+  }
+  bool display_steer2D(void) const { return m_display_steer2D; }
+
   /**
    * \brief Update the sensing for the robot.
    *
@@ -188,6 +193,7 @@ class base_controller : public rer::client<base_controller> {
  private:
   /* clang-format off */
   bool                                  m_display_id{false};
+  bool                                  m_display_steer2D{false};
   rmath::rng*                           m_rng{nullptr};
   std::unique_ptr<cfsm::supervisor_fsm> m_supervisor;
   /* clang-format on */

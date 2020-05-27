@@ -70,6 +70,7 @@ class task_visualizer : public rer::client<task_visualizer> {
    */
   void draw(const ta::logical_task* current_task);
 
+ private:
   /* clang-format off */
   double                               m_text_vis_offset{0.0};
   argos::CQTOpenGLUserFunctions* const m_qt{nullptr};

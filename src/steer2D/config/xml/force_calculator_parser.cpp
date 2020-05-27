@@ -40,6 +40,7 @@ void force_calculator_parser::parse(const ticpp::Element& node) {
   m_wander.parse(knode);
   m_polar.parse(knode);
   m_phototaxis.parse(knode);
+  m_path_following.parse(knode);
 
   if (m_avoidance.is_parsed()) {
     m_config->avoidance =

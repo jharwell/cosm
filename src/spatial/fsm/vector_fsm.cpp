@@ -132,7 +132,8 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
     ER_DEBUG("Executing ekST_VECTOR");
     ER_INFO("Target=%s, robot=%s",
             m_goal.point().to_str().c_str(),
-            saa()->sensing()->rpos2D().to_str().c_str());  }
+            saa()->sensing()->rpos2D().to_str().c_str());
+  }
 
   if ((m_goal.point() - sensing()->rpos2D()).length() <= m_goal.tolerance()) {
     internal_event(ekST_ARRIVED,
@@ -160,8 +161,8 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
 }
 
 RCSW_CONST HFSM_STATE_DEFINE(vector_fsm,
-                            arrived,
-                            RCSW_UNUSED point_argument* data) {
+                             arrived,
+                             RCSW_UNUSED point_argument* data) {
   if (ekST_ARRIVED != last_state()) {
     ER_DEBUG("Executing ekST_ARRIVED: target=%s, tol=%f",
              data->point().to_str().c_str(),

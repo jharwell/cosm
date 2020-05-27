@@ -46,10 +46,10 @@ footbot_saa_subsystem::footbot_saa_subsystem(
  * Member Functions
  ******************************************************************************/
 void footbot_saa_subsystem::steer_force2D_apply(void) {
-  ER_DEBUG("position=%s azimuth=%s inclination=%s",
-           sensing()->rpos2D().to_str().c_str(),
+  ER_DEBUG("position=%s azimuth=%s zenith=%s",
+           sensing()->rpos3D().to_str().c_str(),
            sensing()->azimuth().to_str().c_str(),
-           sensing()->inclination().to_str().c_str());
+           sensing()->zenith().to_str().c_str());
   ER_DEBUG("linear_vel=%s@%s [%f] angular_vel=%f",
            linear_velocity().to_str().c_str(),
            linear_velocity().angle().to_str().c_str(),
@@ -65,7 +65,7 @@ void footbot_saa_subsystem::steer_force2D_apply(void) {
   actuation()->governed_diff_drive()->fsm_drive(desired_speed,
                                                 steer_force2D().value().angle());
 
-  steer_force2D().reset();
+  steer_force2D().forces_reset();
 } /* steer_force2D_apply() */
 
 rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {

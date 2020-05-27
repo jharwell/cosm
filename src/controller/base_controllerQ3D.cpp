@@ -119,8 +119,8 @@ rmath::radians base_controllerQ3D::heading2D(void) const {
   return azimuth();
 }
 
-rmath::radians base_controllerQ3D::inclination(void) const {
-  return m_saa->sensing()->inclination();
+rmath::radians base_controllerQ3D::zenith(void) const {
+  return m_saa->sensing()->zenith();
 }
 
 NS_END(controller, cosm);

@@ -64,9 +64,9 @@ class dist3D_metrics : public virtual rmetrics::base_metrics {
   virtual rmath::radians azimuth(void) const = 0;
 
   /**
-   * \brief Return a single robot's inclination angle in 3D space.
+   * \brief Return a single robot's zenith angle in 3D space.
    */
-  virtual rmath::radians inclination(void) const = 0;
+  virtual rmath::radians zenith(void) const = 0;
 };
 
 NS_END(metrics, spatial, cosm);

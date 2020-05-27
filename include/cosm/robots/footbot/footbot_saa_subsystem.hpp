@@ -57,7 +57,7 @@ class footbot_saa_subsystem final : public subsystem::saa_subsystemQ3D,
   /*
    * 2D BOID interface. We report velocities, speeds, and positions that respect
    * the robot's current Z vector; that is, within the plane defined by the
-   * robot's current inclination angle.
+   * robot's current zenith angle.
    */
   rmath::vector2d linear_velocity(void) const override;
   double angular_velocity(void) const override RCSW_PURE;

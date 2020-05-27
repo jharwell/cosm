@@ -50,24 +50,33 @@ NS_START(cosm, steer2D, ds);
 class path_state : public rpfsm::event_data {
  public:
   explicit path_state(const std::vector<rmath::vector2d>& points)
-      : mc_path(points) {}
+      : m_path(points) {}
 
-  const std::vector<rmath::vector2d>& path(void) const { return mc_path; }
-  rmath::vector2d next_point(void) const { return mc_path[m_point_index]; }
+
+  const std::vector<rmath::vector2d>& path(void) const { return m_path; }
+  rmath::vector2d next_point(void) const { return m_path[m_point_index]; }
   size_t node_index(const rmath::vector2d& point) const {
-    auto it = std::find(mc_path.begin(),
-                        mc_path.end(),
+    auto it = std::find(m_path.begin(),
+                        m_path.end(),
                         point);
-    return std::distance(mc_path.begin(), it);
+    return std::distance(m_path.begin(), it);
   }
 
   void update_point(size_t amount) { m_point_index += amount; }
 
+  bool is_complete(void) const {
+    return node_index(next_point()) >= m_path.size();
+  }
+
+  bool operator==(const path_state& other) {
+    return m_path == other.m_path;
+  }
+
  private:
   /* clang-format off */
-  const std::vector<rmath::vector2d> mc_path{};
+  std::vector<rmath::vector2d> m_path{};
 
-  size_t                             m_point_index{0};
+  size_t                       m_point_index{0};
     /* clang-format on */
 };
 

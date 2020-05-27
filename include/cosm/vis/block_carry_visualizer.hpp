@@ -76,6 +76,7 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
    */
   void draw(const crepr::base_block3D* block, uint id_len);
 
+ private:
   /* clang-format off */
   double                               m_block_vis_offset{0.0};
   double                               m_text_vis_offset{0.0};

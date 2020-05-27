@@ -104,7 +104,8 @@ if (${COSM_WITH_VIS})
   set(${target}_LIBRARIES ${${target}_LIBRARIES}
     Qt5::Widgets
     Qt5::Core
-    Qt5::Gui)
+    Qt5::Gui
+    GL)
 endif()
 
 set(${target}_LIBRARY_DIRS ${rcppsw_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})

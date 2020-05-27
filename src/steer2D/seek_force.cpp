@@ -33,7 +33,20 @@ NS_START(cosm, steer2D);
  ******************************************************************************/
 rmath::vector2d seek_force::operator()(const boid& entity,
                                        const rmath::vector2d& target) const {
-  return (target - entity.pos2D()).normalize() * mc_max;
+  rmath::vector2d desired = (target - entity.pos2D()).normalize();
+  /*
+   * atan2() is discontinuous at angles ~pi! So we wrap the angle to target
+   * into [-pi,pi].
+   *
+   * This used to take the absolute value in order to get something [0, pi],
+   * which worked pretty well until COSM#13 (or something else around the time
+   * that was merged), after which time robots could not turn left. Removing the
+   * abs() around the angle, and using angle instead of -angle in the return
+   * vector seems to have done the trick, for now. See COSM#39,RCPPSW#232.
+   */
+  auto angle =
+      (desired.angle() - entity.linear_velocity().angle()).signed_normalize();
+  return rmath::vector2d(desired.length(), angle).scale(mc_max);
 } /* operator()() */
 
 NS_END(steer2D, cosm);

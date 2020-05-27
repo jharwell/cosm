@@ -34,6 +34,7 @@
 #include "cosm/steer2D/polar_force.hpp"
 #include "cosm/steer2D/wander_force.hpp"
 #include "cosm/steer2D/path_following_force.hpp"
+#include "cosm/steer2D/tracker.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -56,13 +57,17 @@ struct force_calculator_config;
  */
 class force_calculator : public rer::client<force_calculator> {
  public:
-  force_calculator(boid& entity, const config::force_calculator_config* config);
+  force_calculator(boid& entity,
+                   const config::force_calculator_config* config);
 
   /**
    * \brief Return the current steering force as a velocity vector.
    */
   const rmath::vector2d& value(void) const { return m_force_accum; }
   void value(const rmath::vector2d& val) { m_force_accum = val; }
+
+  const class tracker* tracker(void) const { return &m_tracker; }
+  class tracker* tracker(void)  { return &m_tracker; }
 
   /**
    * \brief Return the current steering force as twist acting on the managed
@@ -75,7 +80,12 @@ class force_calculator : public rer::client<force_calculator> {
   /**
    * \brief Reset the sum of forces acting on the entity.
    */
-  void reset(void) { m_force_accum.set(0, 0); }
+  void forces_reset(void);
+
+  /**
+   * \brief Reset the force/path tracking.
+   */
+  void tracking_reset(void);
 
   /**
    * \brief Calculate the \ref arrival_force for this timestep.
@@ -97,7 +107,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param closest_obstacle Where is the closest obstacle, relative to robot's
    * current position AND heading.
    */
-  rmath::vector2d avoidance(const rmath::vector2d& closest_obstacle) const;
+  rmath::vector2d avoidance(const rmath::vector2d& closest_obstacle);
 
   /**
    * \brief Calculate the \ref phototaxis_force for this timestep.
@@ -105,7 +115,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param readings The current light sensor readings.
    */
   rmath::vector2d phototaxis(
-      const phototaxis_force::light_sensor_readings& readings) const;
+      const phototaxis_force::light_sensor_readings& readings);
 
   /**
    * \brief Calculate the \ref phototaxis_force for this timestep.
@@ -117,14 +127,19 @@ class force_calculator : public rer::client<force_calculator> {
    */
   rmath::vector2d phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color) const;
+      const rutils::color& color);
 
   /**
-   * \brief Calculate the \ref path_following force for this timestep.
+   * \brief Calculate the \ref path_following_force for this timestep.
    *
    * \param state The current path state.
    */
-  rmath::vector2d path_following(ds::path_state* state) const;
+  rmath::vector2d path_following(ds::path_state* state);
+
+  /**
+   * \brief Calculate the \ref polar_force for this timestep.
+   */
+  rmath::vector2d polar(const rmath::vector2d& center);
 
   /**
    * \brief Calculate the negative of the \ref phototaxis_force for this
@@ -133,7 +148,7 @@ class force_calculator : public rer::client<force_calculator> {
    * \param readings The current light sensor readings.
    */
   rmath::vector2d anti_phototaxis(
-      const phototaxis_force::light_sensor_readings& readings) const;
+      const phototaxis_force::light_sensor_readings& readings);
 
   /**
    * \brief Calculate the negative of the \ref phototaxis_force for this
@@ -146,7 +161,7 @@ class force_calculator : public rer::client<force_calculator> {
    */
   rmath::vector2d anti_phototaxis(
       const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color) const;
+      const rutils::color& color);
 
   void accum(const rmath::vector2d& force) { m_force_accum += force; }
 
@@ -162,6 +177,7 @@ class force_calculator : public rer::client<force_calculator> {
   polar_force          m_polar;
   phototaxis_force     m_phototaxis;
   path_following_force m_path_following;
+  class tracker        m_tracker{};
   /* clang-format on */
 
  public:

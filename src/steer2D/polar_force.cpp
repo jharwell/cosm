@@ -41,7 +41,21 @@ polar_force::polar_force(const config::polar_force_config* const config)
  ******************************************************************************/
 rmath::vector2d polar_force::operator()(const boid& entity,
                                         const rmath::vector2d& source) const {
-  return (entity.pos2D() - source).normalize() * mc_max;
+  auto to_src = (entity.pos2D() - source).normalize();
+  rmath::vector2d orthogonal(-to_src.y(), to_src.x());
+  /*
+   * atan2() is discontinuous at angles ~pi! So we wrap the angle to target
+   * into [-pi,pi].
+   *
+   * This used to take the absolute value in order to get something [0, pi],
+   * which worked pretty well until COSM#13 (or something else around the time
+   * that was merged), after which time robots could not turn left. Removing the
+   * abs() around the angle, and using angle instead of -angle in the return
+   * vector seems to have done the trick, for now. See COSM#39,RCPPSW#232.
+   */
+  auto angle =
+      (orthogonal.angle() - entity.linear_velocity().angle()).signed_normalize();
+  return rmath::vector2d(orthogonal.length(), angle).scale(mc_max);
 } /* operator()() */
 
 NS_END(steer2D, cosm);

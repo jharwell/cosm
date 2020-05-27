@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONFIG_VISUALIZATION_PARSER_HPP_
-#define INCLUDE_COSM_CONFIG_VISUALIZATION_PARSER_HPP_
+#ifndef INCLUDE_COSM_VIS_CONFIG_XML_VISUALIZATION_PARSER_HPP_
+#define INCLUDE_COSM_VIS_CONFIG_XML_VISUALIZATION_PARSER_HPP_
 
 /*******************************************************************************
  * Includes

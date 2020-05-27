@@ -127,10 +127,10 @@ class sensing_subsystemQ3D {
   const rmath::radians& azimuth(void) const { return m_azimuth; }
 
   /**
-   * \brief Get the robot's current inclination heading; this effectively is the
+   * \brief Get the robot's current zenith heading; this effectively is the
    * angle the robots current position vector makes with the XY plane.
    */
-  const rmath::radians& inclination(void) const { return m_inclination; }
+  const rmath::radians& zenith(void) const { return m_zenith; }
 
   /**
    * \brief Get the angle of the current robot's heading in 2D (same as azimuth
@@ -175,9 +175,8 @@ class sensing_subsystemQ3D {
     m_prev_rpos3D = m_rpos3D;
     m_rpos3D = reading.position;
     m_dpos3D = rmath::dvec2zvec(m_rpos3D, ratio.v());
-    auto sphere = m_rpos3D.to_spherical();
-    m_azimuth = sphere.azimuth();
-    m_inclination = sphere.inclination();
+    m_azimuth = reading.z_ang;
+    m_zenith = reading.y_ang;
   }
 
   /**
@@ -209,7 +208,7 @@ class sensing_subsystemQ3D {
   rmath::vector2z               m_dpos2D{};
 
   rmath::radians                m_azimuth{};
-  rmath::radians                m_inclination{};
+  rmath::radians                m_zenith{};
 
   hal::sensors::position_sensor m_pos_sensor;
   sensor_map                    m_sensors;
