@@ -100,7 +100,7 @@ class base_controller : public rer::client<base_controller> {
    * \brief Set whether or not a robot is supposed to display it's ID above its
    * head during simulation.
    */
-  void display_id(bool display_id) { m_display_id = display_id; }
+  void display_id(bool b) { m_display_id = b; }
 
   /**
    * \brief If \c TRUE, then the robot should display its ID above its head
@@ -108,9 +108,19 @@ class base_controller : public rer::client<base_controller> {
    */
   bool display_id(void) const { return m_display_id; }
 
-  void display_steer2D(bool b) {
-    m_display_steer2D = b;
-  }
+  /**
+   * \brief If \c TRUE, then the robot should display its current LOS during
+   * simulation, if it has one.
+   */
+  bool display_los(void) const { return m_display_los; }
+
+  /**
+   * \brief Set whether or not a robot is supposed to display it's LOS during
+   * simulation.
+   */
+  void display_los(bool b) { m_display_los = b; }
+
+  void display_steer2D(bool b) { m_display_steer2D = b; }
   bool display_steer2D(void) const { return m_display_steer2D; }
 
   /**
@@ -194,6 +204,7 @@ class base_controller : public rer::client<base_controller> {
   /* clang-format off */
   bool                                  m_display_id{false};
   bool                                  m_display_steer2D{false};
+  bool                                  m_display_los{false};
   rmath::rng*                           m_rng{nullptr};
   std::unique_ptr<cfsm::supervisor_fsm> m_supervisor;
   /* clang-format on */

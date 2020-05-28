@@ -80,11 +80,11 @@ std::unique_ptr<TLOS> robot_los3D_compute(
                 const rds::grid3D_overlay<cds::cell3D>::const_grid_view&,
                 const rds::grid3D_overlay<cds::cell3D>*>::value) {
       return std::make_unique<TLOS>(grid->subcircle(position,
-                                                        los_grid_size),
-                                                        grid);
+                                                    los_grid_size),
+                                    grid);
     } else {
     return std::make_unique<TLOS>(grid->subcircle(position,
-                                                      los_grid_size));
+                                                  los_grid_size));
     }
 } /* robot_los_compute */
 
@@ -99,8 +99,8 @@ void robot_los_set(TController* const controller,
                      const rds::grid2D_overlay<cds::cell2D>* const grid,
                      size_t los_grid_size) {
   auto los = robot_los2D_compute<TLOS>(grid,
-                                           controller->rpos2D(),
-                                           los_grid_size);
+                                       grid->originr() - controller->rpos2D(),
+                                       los_grid_size);
   controller->perception()->los(std::move(los));
 }
 
@@ -115,8 +115,8 @@ void robot_los_set(TController* const controller,
                    const rds::grid3D_overlay<cds::cell3D>* const grid,
                    size_t los_grid_size) {
   auto los = robot_los3D_compute<TLOS>(grid,
-                                           controller->rpos3D(),
-                                           los_grid_size);
+                                       controller->rpos3D() - grid->originr(),
+                                       los_grid_size);
   controller->perception()->los(std::move(los));
 }
 

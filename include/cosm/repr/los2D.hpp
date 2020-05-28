@@ -68,7 +68,6 @@ class los2D : public crepr::base_los<cds::cell2D>,
    * \return A reference to the cell.
    */
   const cds::cell2D& access(size_t i, size_t j) const;
-
 };
 
 NS_END(repr, cosm);

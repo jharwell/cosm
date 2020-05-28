@@ -80,7 +80,7 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
                         argos::CColor::GREEN,
                         5.0);
 
-      /* fourth, draw path endpoints */
+      /* fourth, draw path endpoints in the global coordinate frame */
       m_qt->DrawPoint(start, argos::CColor::CYAN, 20.0);
       m_qt->DrawPoint(end, argos::CColor::CYAN, 20.0);
       glPopMatrix();
