@@ -67,10 +67,10 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
    */
   auto *prox = m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
   if (auto obs = prox->avg_prox_obj()) {
-    m_tracker.ca_enter();
+    m_tracker.inta_enter();
     m_saa->steer_force2D().accum(m_saa->steer_force2D().avoidance(*obs));
   } else {
-    m_tracker.ca_exit();
+    m_tracker.inta_exit();
   }
   m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
 
@@ -116,10 +116,10 @@ HFSM_STATE_DEFINE(util_hfsm,
 
   auto * prox = m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
   if (auto obs = prox->avg_prox_obj()) {
-    m_tracker.ca_enter();
+    m_tracker.inta_enter();
     m_saa->steer_force2D().accum(m_saa->steer_force2D().avoidance(*obs));
   } else {
-    m_tracker.ca_exit();
+    m_tracker.inta_exit();
   }
 
   return rpfsm::event_signal::ekHANDLED;

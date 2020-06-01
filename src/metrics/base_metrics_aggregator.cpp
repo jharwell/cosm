@@ -30,12 +30,13 @@
 #include "cosm/convergence/convergence_calculator.hpp"
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
-#include "cosm/spatial/metrics/collision_locs2D_metrics_collector.hpp"
-#include "cosm/spatial/metrics/collision_metrics.hpp"
-#include "cosm/spatial/metrics/collision_metrics_collector.hpp"
-#include "cosm/spatial/metrics/current_explore_locs_metrics_collector.hpp"
-#include "cosm/spatial/metrics/current_vector_locs_metrics_collector.hpp"
-#include "cosm/spatial/metrics/goal_acq_locs_metrics_collector.hpp"
+#include "cosm/spatial/metrics/interference_locs2D_metrics_collector.hpp"
+#include "cosm/spatial/metrics/interference_locs3D_metrics_collector.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/spatial/metrics/interference_metrics_collector.hpp"
+#include "cosm/spatial/metrics/explore_locs2D_metrics_collector.hpp"
+#include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
+#include "cosm/spatial/metrics/goal_acq_locs2D_metrics_collector.hpp"
 #include "cosm/spatial/metrics/goal_acq_metrics.hpp"
 #include "cosm/spatial/metrics/goal_acq_metrics_collector.hpp"
 #include "cosm/spatial/metrics/movement_metrics.hpp"
@@ -97,7 +98,7 @@ void base_metrics_aggregator::register_standard(
     const cmconfig::metrics_config* mconfig) {
   using collector_typelist = rmpl::typelist<
     rmpl::identity<csmetrics::movement_metrics_collector>,
-    rmpl::identity<csmetrics::collision_metrics_collector>,
+    rmpl::identity<csmetrics::interference_metrics_collector>,
     rmpl::identity<csmetrics::goal_acq_metrics_collector>,
     rmpl::identity<cmetrics::blocks::transport_metrics_collector>,
     rmpl::identity<cconvergence::metrics::convergence_metrics_collector>,
@@ -108,9 +109,9 @@ void base_metrics_aggregator::register_standard(
        "fsm_movement",
        "fsm::movement",
        rmetrics::output_mode::ekAPPEND},
-      {typeid(csmetrics::collision_metrics_collector),
-       "fsm_collision_counts",
-       "fsm::collision_counts",
+      {typeid(csmetrics::interference_metrics_collector),
+       "fsm_interference_counts",
+       "fsm::interference_counts",
        rmetrics::output_mode::ekAPPEND},
       {typeid(csmetrics::goal_acq_metrics_collector),
        "block_acq_counts",
@@ -137,37 +138,33 @@ void base_metrics_aggregator::register_with_arena_dims2D(
     const cmconfig::metrics_config* mconfig,
     const rmath::vector2z& dims) {
   using collector_typelist = rmpl::typelist<
-    rmpl::identity<csmetrics::collision_locs2D_metrics_collector>,
-    rmpl::identity<csmetrics::goal_acq_locs_metrics_collector>,
-    rmpl::identity<csmetrics::current_explore_locs_metrics_collector>,
-    rmpl::identity<csmetrics::current_vector_locs_metrics_collector>,
+    rmpl::identity<csmetrics::interference_locs2D_metrics_collector>,
+    rmpl::identity<csmetrics::goal_acq_locs2D_metrics_collector>,
+    rmpl::identity<csmetrics::explore_locs2D_metrics_collector>,
+    rmpl::identity<csmetrics::vector_locs2D_metrics_collector>,
     rmpl::identity<csmetrics::dist2D_pos_metrics_collector>
     >;
   using extra_args_type = std::tuple<rmath::vector2z>;
   collector_registerer<extra_args_type>::creatable_set creatable_set = {
-      {typeid(csmetrics::collision_locs2D_metrics_collector),
-       "fsm_collision_locs2D",
-       "fsm::collision_locs2D",
+      {typeid(csmetrics::interference_locs2D_metrics_collector),
+       "fsm_interference_locs2D",
+       "fsm::interference_locs2D",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
-      {typeid(csmetrics::goal_acq_locs_metrics_collector),
-       "block_acq_locs",
-       "blocks::acq_locs",
+      {typeid(csmetrics::goal_acq_locs2D_metrics_collector),
+       "block_acq_locs2D",
+       "blocks::acq_locs2D",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
-      {typeid(csmetrics::current_explore_locs_metrics_collector),
-       "block_acq_explore_locs",
-       "blocks::acq_explore_locs",
+      {typeid(csmetrics::explore_locs2D_metrics_collector),
+       "block_acq_explore_locs2D",
+       "blocks::acq_explore_locs2D",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
-      {typeid(csmetrics::current_vector_locs_metrics_collector),
-       "block_acq_vector_locs",
-       "blocks::acq_vector_locs",
+      {typeid(csmetrics::vector_locs2D_metrics_collector),
+       "block_acq_vector_locs2D",
+       "blocks::vector_locs2D",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
       {typeid(csmetrics::dist2D_pos_metrics_collector),
        "swarm_dist2D_pos",
        "swarm::spatial_dist2D::pos",
-       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
-      {typeid(csmetrics::dist3D_pos_metrics_collector),
-       "swarm_dist3D_pos",
-       "swarm::spatial_dist3D::pos",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE}
   };
   collector_registerer<extra_args_type> registerer(mconfig,
@@ -185,10 +182,14 @@ using collector_typelist = rmpl::typelist<
     >;
   using extra_args_type = std::tuple<rmath::vector3z>;
 collector_registerer<extra_args_type>::creatable_set creatable_set = {
-      {typeid(csmetrics::dist3D_pos_metrics_collector),
-       "swarm_dist3D_pos",
-       "swarm::spatial_dist3D::pos",
-       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE}
+  {typeid(csmetrics::interference_locs3D_metrics_collector),
+       "fsm_interference_locs3D",
+       "fsm::interference_locs3D",
+       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE},
+  {typeid(csmetrics::dist3D_pos_metrics_collector),
+   "swarm_dist3D_pos",
+   "swarm::spatial_dist3D::pos",
+   rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE}
   };
 
   collector_registerer<extra_args_type> registerer(mconfig,

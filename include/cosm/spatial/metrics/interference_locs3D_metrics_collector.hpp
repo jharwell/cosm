@@ -1,7 +1,7 @@
 /**
- * \file current_explore_locs_metrics_collector.hpp
+ * \file interference_locs3D_metrics_collector.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,16 +18,15 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_CURRENT_EXPLORE_LOCS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_CURRENT_EXPLORE_LOCS_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS3D_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS3D_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <string>
-#include <list>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/metrics/spatial/grid3D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -39,18 +38,17 @@ NS_START(cosm, spatial, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class current_explore_locs_metrics_collector
+ * \class interference_locs3D_metrics_collector
  * \ingroup spatial metrics
  *
- * \brief Collector for robot exploration trajectories, which is collected as a
- * 2D array, and needs its own collector separate from the \ref
- * goal_acq_metrics_collector (1 .csv per collector).
+ * \brief Collector for \ref interference_metrics as a 3D grid of where robots
+ * most frequently encounter other robots.
  *
  * Metrics CAN be collected concurrently if the calling context guarantees that
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class current_explore_locs_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class interference_locs3D_metrics_collector final : public rmetrics::spatial::grid3D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
@@ -58,15 +56,15 @@ class current_explore_locs_metrics_collector final : public rmetrics::spatial::g
    * \param dims Dimensions of the arena.
    * \param mode The selected output mode.
    */
-  current_explore_locs_metrics_collector(const std::string& ofname,
-                                         const rtypes::timestep& interval,
-                                         const rmetrics::output_mode& mode,
-                                         const rmath::vector2z& dims) :
-      grid2D_metrics_collector(ofname, interval, mode, dims) {}
+  interference_locs3D_metrics_collector(const std::string& ofname,
+                                     const rtypes::timestep& interval,
+                                     const rmetrics::output_mode& mode,
+                                     const rmath::vector3z& dims) :
+      grid3D_metrics_collector(ofname, interval, mode, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_CURRENT_EXPLORE_LOCS_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS3D_METRICS_COLLECTOR_HPP_ */

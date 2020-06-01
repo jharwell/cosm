@@ -93,43 +93,44 @@ RCSW_CONST HFSM_STATE_DEFINE_ND(acquire_goal_fsm, finished) {
 /*******************************************************************************
  * FSM Metrics
  ******************************************************************************/
-bool acquire_goal_fsm::in_collision_avoidance(void) const {
+bool acquire_goal_fsm::exp_interference(void) const {
   return (m_explore_fsm.task_running() &&
-          m_explore_fsm.in_collision_avoidance()) ||
-         (m_vector_fsm.task_running() && m_vector_fsm.in_collision_avoidance());
-} /* in_collision_avoidance() */
+          m_explore_fsm.exp_interference()) ||
+         (m_vector_fsm.task_running() && m_vector_fsm.exp_interference());
+} /* exp_interference() */
 
-bool acquire_goal_fsm::entered_collision_avoidance(void) const {
+bool acquire_goal_fsm::entered_interference(void) const {
   return (m_explore_fsm.task_running() &&
-          m_explore_fsm.entered_collision_avoidance()) ||
+          m_explore_fsm.entered_interference()) ||
          (m_vector_fsm.task_running() &&
-          m_vector_fsm.entered_collision_avoidance());
-} /* entered_collision_avoidance() */
+          m_vector_fsm.entered_interference());
+} /* entered_interference() */
 
-bool acquire_goal_fsm::exited_collision_avoidance(void) const {
+bool acquire_goal_fsm::exited_interference(void) const {
   return (m_explore_fsm.task_running() &&
-          m_explore_fsm.exited_collision_avoidance()) ||
+          m_explore_fsm.exited_interference()) ||
          (m_vector_fsm.task_running() &&
-          m_vector_fsm.exited_collision_avoidance());
-} /* exited_collision_avoidance() */
+          m_vector_fsm.exited_interference());
+} /* exited_interference() */
 
-rtypes::timestep acquire_goal_fsm::collision_avoidance_duration(void) const {
+rtypes::timestep acquire_goal_fsm::interference_duration(void) const {
   if (m_explore_fsm.task_running()) {
-    return m_explore_fsm.collision_avoidance_duration();
+    return m_explore_fsm.interference_duration();
   } else if (m_vector_fsm.task_running()) {
-    return m_vector_fsm.collision_avoidance_duration();
+    return m_vector_fsm.interference_duration();
   }
   return rtypes::timestep(0);
-} /* collision_avoidance_duration() */
+} /* interference_duration() */
 
 bool acquire_goal_fsm::goal_acquired(void) const {
   return current_state() == ekST_FINISHED;
 } /* cache_acquired() */
 
 acquire_goal_fsm::exp_status acquire_goal_fsm::is_exploring_for_goal(void) const {
-  return std::make_pair(current_state() == ekST_ACQUIRE_GOAL &&
-                            m_explore_fsm.task_running(),
-                        !m_hooks.candidates_exist());
+  return exp_status{
+    current_state() == ekST_ACQUIRE_GOAL && m_explore_fsm.task_running(),
+        !m_hooks.candidates_exist()
+        };
 } /* is_exploring_for_goal() */
 
 bool acquire_goal_fsm::is_vectoring_to_goal(void) const {
@@ -144,25 +145,21 @@ metrics::goal_acq_metrics::goal_type acquire_goal_fsm::acquisition_goal(
   return metrics::goal_acq_metrics::goal_type(-1);
 } /* acquisition_goal() */
 
-rmath::vector2z acquire_goal_fsm::acquisition_loc(void) const {
-  return sensing()->dpos2D();
-} /* acquisition_loc() */
-
-rmath::vector2z acquire_goal_fsm::current_explore_loc(void) const {
-  return sensing()->dpos2D();
-} /* current_explore_loc() */
-
-rmath::vector2z acquire_goal_fsm::current_vector_loc(void) const {
-  return sensing()->dpos2D();
-} /* current_vector_loc() */
-
-rmath::vector2z acquire_goal_fsm::avoidance_loc2D(void) const {
-  return sensing()->dpos2D();
-} /* avoidance_loc2D() */
-
-rmath::vector3z acquire_goal_fsm::avoidance_loc3D(void) const {
+rmath::vector3z acquire_goal_fsm::acquisition_loc3D(void) const {
   return sensing()->dpos3D();
-} /* avoidance_loc3D() */
+} /* acquisition_loc3D() */
+
+rmath::vector3z acquire_goal_fsm::explore_loc3D(void) const {
+  return sensing()->dpos3D();
+} /* explore_loc3D() */
+
+rmath::vector3z acquire_goal_fsm::vector_loc3D(void) const {
+  return sensing()->dpos3D();
+} /* vector_loc3D() */
+
+rmath::vector3z acquire_goal_fsm::interference_loc3D(void) const {
+  return sensing()->dpos3D();
+} /* interference_loc3D() */
 
 /*******************************************************************************
  * General Member Functions

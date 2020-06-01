@@ -81,12 +81,11 @@ class vector_fsm final : public csfsm::util_hfsm,
    */
   void init(void) override;
 
-  /* collision metrics */
-  bool in_collision_avoidance(void) const override RCSW_PURE;
-  bool entered_collision_avoidance(void) const override RCSW_PURE;
-  bool exited_collision_avoidance(void) const override RCSW_PURE;
-  rmath::vector2z avoidance_loc2D(void) const override;
-  rmath::vector3z avoidance_loc3D(void) const override;
+  /* interference metrics */
+  bool exp_interference(void) const override RCSW_PURE;
+  bool entered_interference(void) const override RCSW_PURE;
+  bool exited_interference(void) const override RCSW_PURE;
+  rmath::vector3z interference_loc3D(void) const override;
 
  private:
   enum state {
@@ -99,16 +98,16 @@ class vector_fsm final : public csfsm::util_hfsm,
     /**
      * Avoiding an obstacle nearby to the robot's current location.
      */
-    ekST_COLLISION_AVOIDANCE,
+    ekST_INTERFERENCE_AVOIDANCE,
 
     /**
-     * Recovering from frequent collision avoidance by driving AWAY from the
-     * site of the most recent collision in a random direction for a set number
+     * Recovering from frequent interference avoidance by driving AWAY from the
+     * site of the most recent interference in a random direction for a set number
      * of timesteps. This is intended to help prevent robot's from wasting lots
      * of time butting heads when they are traveling in opposite/spatially
      * conflicting directions.
      */
-    ekST_COLLISION_RECOVERY,
+    ekST_INTERFERENCE_RECOVERY,
 
     /**
      * We have arrived at the specified location within tolerance.
@@ -118,15 +117,15 @@ class vector_fsm final : public csfsm::util_hfsm,
   };
 
   struct fsm_state {
-    uint m_collision_rec_count{0};
+    uint m_interference_rec_count{0};
   };
 
   /**
-   * \brief The # of timesteps according to collision recovery. This is mainly
+   * \brief The # of timesteps according to interference recovery. This is mainly
    * to ensure that you do not repeatedly get 2 controller butting heads as they
    * try to travel to opposite goals.
    */
-  static constexpr const uint kCOLLISION_RECOVERY_TIME = 10;
+  static constexpr const uint kINTERFERENCE_RECOVERY_TIME = 10;
 
   /**
    * \brief Calculates the relative vector from the robot to the current goal.
@@ -141,15 +140,15 @@ class vector_fsm final : public csfsm::util_hfsm,
   /* vector states */
   HFSM_STATE_DECLARE_ND(vector_fsm, start);
   HFSM_STATE_DECLARE_ND(vector_fsm, vector);
-  HFSM_STATE_DECLARE_ND(vector_fsm, collision_avoidance);
-  HFSM_STATE_DECLARE_ND(vector_fsm, collision_recovery);
+  HFSM_STATE_DECLARE_ND(vector_fsm, interference_avoidance);
+  HFSM_STATE_DECLARE_ND(vector_fsm, interference_recovery);
   HFSM_STATE_DECLARE(vector_fsm, arrived, point_argument);
 
   HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
-  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_avoidance);
-  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_collision_recovery);
+  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_avoidance);
+  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_recovery);
 
-  HFSM_EXIT_DECLARE(vector_fsm, exit_collision_avoidance);
+  HFSM_EXIT_DECLARE(vector_fsm, exit_interference_avoidance);
 
   HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];

@@ -32,8 +32,8 @@
 #include "rcppsw/patterns/fsm/hfsm.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/collision_tracker.hpp"
-#include "cosm/spatial/metrics/collision_metrics.hpp"
+#include "cosm/spatial/interference_tracker.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -61,7 +61,7 @@ NS_START(cosm, spatial, fsm);
  */
 class util_hfsm : public rpfsm::hfsm,
                   public rer::client<util_hfsm>,
-                  public metrics::collision_metrics {
+                  public metrics::interference_metrics {
  public:
   util_hfsm(csubsystem::saa_subsystemQ3D* saa,
             rmath::rng* rng,
@@ -78,7 +78,12 @@ class util_hfsm : public rpfsm::hfsm,
   typename csubsystem::actuation_subsystem2D* actuation(void);
   typename csubsystem::actuation_subsystem2D* actuation(void) const;
 
-  const collision_tracker* ca_tracker(void) const { return &m_tracker; }
+  /**
+   * \brief Handle to internal interference tracker; provided as a common
+   * utility to derived classes that do not utilize/wrap a \ref
+   * spatial::expstrat::base_expstrat which has its own tracker.
+   */
+  const interference_tracker* inta_tracker(void) const { return &m_tracker; }
 
  protected:
   /**
@@ -91,7 +96,7 @@ class util_hfsm : public rpfsm::hfsm,
 
   const csubsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
   csubsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
-  collision_tracker* ca_tracker(void) { return &m_tracker; }
+  interference_tracker* inta_tracker(void) { return &m_tracker; }
 
   /**
    * \brief Robots entering this state will return to the nest.
@@ -157,18 +162,17 @@ class util_hfsm : public rpfsm::hfsm,
   /* clang-format off */
   uint                                m_nest_count{0};
   csubsystem::saa_subsystemQ3D* const m_saa;
-  collision_tracker                   m_tracker;
+  interference_tracker                   m_tracker;
   rmath::rng*                         m_rng;
   /* clang-format on */
 
  public:
-  /* collision metrics */
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(in_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(collision_avoidance_duration, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc2D, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc3D, m_tracker, const)
+  /* interference metrics */
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(exp_interference, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_interference, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_interference, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_duration, m_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_loc3D, m_tracker, const)
 };
 
 NS_END(fsm, spatial, cosm);

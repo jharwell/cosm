@@ -1,5 +1,5 @@
 /**
- * \file collision_tracker.hpp
+ * \file interference_tracker.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,14 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_COLLISION_TRACKER_HPP_
-#define INCLUDE_COSM_SPATIAL_COLLISION_TRACKER_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
+#define INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/metrics/collision_metrics.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -40,53 +40,52 @@ NS_START(cosm, spatial);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class collision_tracker
+ * \class interference_tracker
  * \ingroup spatial
  *
- * \brief Utility class for tracking when a robot enters/exits a collision
+ * \brief Utility class for tracking when a robot enters/exits a interference
  * avoidance state, and the time spent in that state, as it moves in 2D or 3D.
  */
-class collision_tracker : public csmetrics::collision_metrics {
+class interference_tracker : public csmetrics::interference_metrics {
  public:
-  explicit collision_tracker(
+  explicit interference_tracker(
       const subsystem::sensing_subsystemQ3D* const sensing)
       : mc_sensing(sensing) {}
 
-  collision_tracker(const collision_tracker&) = delete;
-  collision_tracker& operator=(const collision_tracker&) = delete;
+  interference_tracker(const interference_tracker&) = delete;
+  interference_tracker& operator=(const interference_tracker&) = delete;
 
-  /* collision metrics */
-  bool in_collision_avoidance(void) const override final RCSW_PURE;
-  bool entered_collision_avoidance(void) const override final RCSW_PURE;
-  bool exited_collision_avoidance(void) const override final RCSW_PURE;
-  rtypes::timestep collision_avoidance_duration(void) const override final;
-  rmath::vector2z avoidance_loc2D(void) const override final RCSW_PURE;
-  rmath::vector3z avoidance_loc3D(void) const override final RCSW_PURE;
+  /* interference metrics */
+  bool exp_interference(void) const override final RCSW_PURE;
+  bool entered_interference(void) const override final RCSW_PURE;
+  bool exited_interference(void) const override final RCSW_PURE;
+  rtypes::timestep interference_duration(void) const override final;
+  rmath::vector3z interference_loc3D(void) const override final RCSW_PURE;
 
   /**
-   * \brief Handle all logic for entering collision avoidance; classes should
+   * \brief Handle all logic for entering interference avoidance; classes should
    * only have to call this function whenever they detect an obstacle.
    */
-  void ca_enter(void);
+  void inta_enter(void);
 
   /**
-   * \brief Handle all logic for exiting collision avoidance; classes should
+   * \brief Handle all logic for exiting interference avoidance; classes should
    * only have to call this function whenever they no longer detect any
    * obstacles.
    */
-  void ca_exit(void);
+  void inta_exit(void);
 
  private:
   /* clang-format off */
   const subsystem::sensing_subsystemQ3D* const mc_sensing;
 
-  bool                                      m_entered_avoidance{false};
-  bool                                      m_exited_avoidance{false};
-  bool                                      m_in_avoidance{false};
-  rtypes::timestep                          m_avoidance_start{0};
+  bool                                      m_entered_interference{false};
+  bool                                      m_exited_interference{false};
+  bool                                      m_exp_interference{false};
+  rtypes::timestep                          m_interference_start{0};
   /* clang-format on */
 };
 
 NS_END(spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_COLLISION_TRACKER_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_ */

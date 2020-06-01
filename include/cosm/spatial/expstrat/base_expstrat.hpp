@@ -28,7 +28,9 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/patterns/prototype/clonable.hpp"
 
-#include "cosm/spatial/metrics/collision_metrics.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/spatial/interference_tracker.hpp"
+
 #include "cosm/ta/taskable.hpp"
 #include "cosm/cosm.hpp"
 
@@ -51,7 +53,7 @@ NS_START(cosm, spatial, expstrat);
  * \brief Base class for different exploration behaviors that controller can
  * exhibit when looking for stuff.
  */
-class base_expstrat : public csmetrics::collision_metrics,
+class base_expstrat : public csmetrics::interference_metrics,
                       public cta::taskable,
                       public rpprototype::clonable<base_expstrat> {
  public:
@@ -63,12 +65,8 @@ class base_expstrat : public csmetrics::collision_metrics,
     rmath::rng* rng;
   };
 
-  explicit base_expstrat(params* const p)
-      : base_expstrat{p->saa, p->rng} {}
-
-  explicit base_expstrat(subsystem::saa_subsystemQ3D* const saa,
-                         rmath::rng* rng)
-      : m_saa(saa), m_rng(rng)  {}
+  explicit base_expstrat(params* const p);
+  base_expstrat(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng);
 
   ~base_expstrat(void) override = default;
 
@@ -80,12 +78,27 @@ class base_expstrat : public csmetrics::collision_metrics,
   subsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
   rmath::rng* rng(void) { return m_rng; }
   rmath::rng* rng(void) const { return m_rng; }
+  const cspatial::interference_tracker* inta_tracker(void) const {
+    return &m_inta_tracker;
+  }
+  cspatial::interference_tracker* inta_tracker(void) {
+    return &m_inta_tracker;
+  }
 
  private:
   /* clang-format off */
-  subsystem::saa_subsystemQ3D* m_saa;
-  rmath::rng*                  m_rng;
+  subsystem::saa_subsystemQ3D*   m_saa;
+  rmath::rng*                    m_rng;
+  cspatial::interference_tracker m_inta_tracker;
   /* clang-format on */
+
+ public:
+  /* collision metrics */
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(exp_interference, m_inta_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_interference, m_inta_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_interference, m_inta_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_duration, m_inta_tracker, const)
+  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_loc3D, m_inta_tracker, const)
 };
 
 NS_END(expstrat, spatial, cosm);

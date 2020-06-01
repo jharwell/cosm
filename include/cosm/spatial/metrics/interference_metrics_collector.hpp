@@ -1,5 +1,5 @@
 /**
- * \file collision_metrics_collector.hpp
+ * \file interference_metrics_collector.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_COLLISION_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_COLLISION_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -40,22 +40,22 @@ NS_START(cosm, spatial, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class collision_metrics_collector
+ * \class interference_metrics_collector
  * \ingroup spatial metrics
  *
- * \brief Collector for \ref collision_metrics.
+ * \brief Collector for \ref interference_metrics.
  *
  * Metrics CAN be collected in parallel from robots; concurrent updates to the
  * gathered stats are supported. Metrics are written out after the specified
  * interval.
  */
-class collision_metrics_collector final : public rmetrics::base_metrics_collector {
+class interference_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
    * \param ofname_stem Output file name stem.
    * \param interval Collection interval.
    */
-  collision_metrics_collector(const std::string& ofname_stem,
+  interference_metrics_collector(const std::string& ofname_stem,
                               const rtypes::timestep& interval);
 
   void reset(void) override;
@@ -70,10 +70,10 @@ class collision_metrics_collector final : public rmetrics::base_metrics_collecto
    * std::atomic requirements.
    */
   struct stats {
-    std::atomic_uint n_in_avoidance{0};
-    std::atomic_uint n_entered_avoidance{0};
-    std::atomic_uint n_exited_avoidance{0};
-    std::atomic_uint avoidance_duration{0};
+    std::atomic_uint n_exp_interference{0};
+    std::atomic_uint n_entered_interference{0};
+    std::atomic_uint n_exited_interference{0};
+    std::atomic_uint interference_duration{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;
@@ -87,4 +87,4 @@ class collision_metrics_collector final : public rmetrics::base_metrics_collecto
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_COLLISION_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_ */

@@ -186,7 +186,7 @@ void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
    * get correct behavior.
    */
   if (m_repair.dequeue_check(t)) {
-    if (m_repair.size() > 0 ) {
+    if (m_repair.size() > 0) {
       auto id = m_repair.dequeue(t, false);
       auto res = robot_repair(*id);
       ER_ASSERT(res.total_pop == m_total_pop,

@@ -33,7 +33,7 @@ XML configuration:
 .. code-block:: XML
 
    <output
-       output_root="output"
+       output_root="output"                                                                                                                           ``fsm_interference_coun
        output_dir="__current_date__">
        <metrics>
            ...
@@ -183,19 +183,24 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_collision_counts``                       |  # robots entering, are in, and exiting the collision avoidance state.  | append                 |                        |
+| ``fsm_interference_counts``                    | # robots entering, currently encountering, and exiting the inter-robot  | append                 |                        |
+|                                                | interference avoidance state.                                           |                        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_collision_locs2D``                       | Spatial distribution of collision avoidance locations in the arena.     | create,truncate        |                        |
+| ``fsm_interference_locs2D``                    | Spatial distribution of inter-robot interference locations in 2D in the | create,truncate        |                        |
+|                                                | arena.                                                                  |                        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``fsm_interference_locs3D``                    | Spatial distribution of inter-robot interference locations in a 3D      | create,truncate        |                        |
+|                                                | volumetric space in the arena.                                          |                        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``fsm_movement``                               | Swarm average distance traveled/velocity.                               | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_locs``                             | Spatial distribution of where robots acquire blocks.                    | create,truncate        |                        |
+| ``block_acq_locs2D``                           | 2D spatial distribution of where robots acquire goals.                  | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_explore_locs``                     | Spatial distribution of robots exploring for blocks.                    | create,truncate        |                        |
+| ``block_acq_explore_locs2D``                   | 2D spatial distribution of where robots exploring for blocks.           | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_vector_locs``                      | Spatial distribution of robots vectoring to blocks.                     | create,truncate        |                        |
+| ``block_acq_vector_locs2D``                    | 2D spatial distribution of where robots vector to known blocks.         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_transport``                            | # blocks collected/ # transporters.                                     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -207,7 +212,7 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``swarm_convergence``                          | Results of swarm convergence calculations.                              | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
+| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |    
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``oracle_manager``                             | Enable swarms to make decisions based on perfect information.           | append                 |                        |
 +------------------------------------------------+--------------------------------------------------------------------------------------------------+------------------------+

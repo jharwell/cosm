@@ -1,5 +1,5 @@
 /**
- * \file collision_tracker.cpp
+ * \file interference_tracker.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/collision_tracker.hpp"
+#include "cosm/spatial/interference_tracker.hpp"
 
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
@@ -31,60 +31,56 @@
 NS_START(cosm, spatial);
 
 /*******************************************************************************
- * Collision Metrics
+ * Interference Metrics
  ******************************************************************************/
-bool collision_tracker::in_collision_avoidance(void) const {
-  return m_in_avoidance;
-} /* in_collision_avoidance() */
+bool interference_tracker::exp_interference(void) const {
+  return m_exp_interference;
+} /* exp_interference() */
 
-bool collision_tracker::entered_collision_avoidance(void) const {
-  return m_entered_avoidance;
-} /* entered_collision_avoidance() */
+bool interference_tracker::entered_interference(void) const {
+  return m_entered_interference;
+} /* entered_interference() */
 
-bool collision_tracker::exited_collision_avoidance(void) const {
-  return m_exited_avoidance;
-} /* exited_collision_avoidance() */
+bool interference_tracker::exited_interference(void) const {
+  return m_exited_interference;
+} /* exited_interference() */
 
-rtypes::timestep collision_tracker::collision_avoidance_duration(void) const {
-  if (m_exited_avoidance) {
-    return mc_sensing->tick() - m_avoidance_start;
+rtypes::timestep interference_tracker::interference_duration(void) const {
+  if (m_exited_interference) {
+    return mc_sensing->tick() - m_interference_start;
   }
   return rtypes::timestep(0);
-} /* collision_avoidance_duration() */
+} /* interference_duration() */
 
-rmath::vector2z collision_tracker::avoidance_loc2D(void) const {
-  return mc_sensing->dpos2D();
-} /* avoidance_loc2D() */
-
-rmath::vector3z collision_tracker::avoidance_loc3D(void) const {
+rmath::vector3z interference_tracker::interference_loc3D(void) const {
   return mc_sensing->dpos3D();
-} /* avoidance_loc2D() */
+} /* interference_loc2D() */
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void collision_tracker::ca_enter(void) {
-  if (!m_in_avoidance) {
-    if (!m_entered_avoidance) {
-      m_entered_avoidance = true;
-      m_avoidance_start = mc_sensing->tick();
+void interference_tracker::inta_enter(void) {
+  if (!m_exp_interference) {
+    if (!m_entered_interference) {
+      m_entered_interference = true;
+      m_interference_start = mc_sensing->tick();
     }
   } else {
-    m_entered_avoidance = false;
+    m_entered_interference = false;
   }
-  m_in_avoidance = true;
-} /* ca_enter() */
+  m_exp_interference = true;
+} /* inta_enter() */
 
-void collision_tracker::ca_exit(void) {
-  if (!m_exited_avoidance) {
-    if (m_in_avoidance) {
-      m_exited_avoidance = true;
+void interference_tracker::inta_exit(void) {
+  if (!m_exited_interference) {
+    if (m_exp_interference) {
+      m_exited_interference = true;
     }
   } else {
-    m_exited_avoidance = false;
+    m_exited_interference = false;
   }
-  m_in_avoidance = false;
-  m_entered_avoidance = false; /* catches 1 timestep avoidances correctly */
-} /* ca_exit() */
+  m_exp_interference = false;
+  m_entered_interference = false; /* catches 1 timestep interferences correctly */
+} /* inta_exit() */
 
 NS_END(spatial, cosm);

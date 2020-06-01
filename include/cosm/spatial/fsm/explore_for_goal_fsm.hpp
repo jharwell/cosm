@@ -29,7 +29,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/expstrat/base_expstrat.hpp"
-#include "cosm/spatial/metrics/collision_metrics.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 
 /*******************************************************************************
@@ -84,15 +84,12 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   explore_for_goal_fsm& operator=(const explore_for_goal_fsm&) = delete;
   explore_for_goal_fsm(const explore_for_goal_fsm&) = delete;
 
-  /* collision metrics */
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, in_collision_avoidance, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, entered_collision_avoidance, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, exited_collision_avoidance, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rtypes::timestep,
-                            collision_avoidance_duration,
-                            const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector2z, avoidance_loc2D, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector3z, avoidance_loc3D, const);
+  /* interference metrics */
+  RCPPSW_WRAP_OVERRIDE_DECL(bool, exp_interference, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(bool, entered_interference, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(bool, exited_interference, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(rtypes::timestep, interference_duration, const);
+  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector3z, interference_loc3D, const);
 
   /* taskable overrides */
   bool task_finished(void) const override {

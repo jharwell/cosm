@@ -1,5 +1,5 @@
 /**
- * \file collision_locs2D_metrics_collector.cpp
+ * \file vector_locs2D_metrics_collector.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,9 +21,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/metrics/collision_locs2D_metrics_collector.hpp"
+#include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
 
-#include "cosm/spatial/metrics/collision_metrics.hpp"
+#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -33,11 +33,11 @@ NS_START(cosm, spatial, metrics);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void collision_locs2D_metrics_collector::collect(
+void vector_locs2D_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const collision_metrics&>(metrics);
+  auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
   inc_total_count();
-  inc_cell_count(m.avoidance_loc2D());
+  inc_cell_count(m.vector_loc3D().to_2D());
 } /* collect() */
 
 NS_END(metrics, spatial, cosm);

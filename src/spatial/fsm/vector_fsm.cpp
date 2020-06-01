@@ -41,20 +41,20 @@ vector_fsm::vector_fsm(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng)
       ER_CLIENT_INIT("cosm.spatial.fsm.vector"),
       HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(collision_avoidance, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(collision_recovery, hfsm::top_state()),
+      HFSM_CONSTRUCT_STATE(interference_avoidance, hfsm::top_state()),
+      HFSM_CONSTRUCT_STATE(interference_recovery, hfsm::top_state()),
       HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()),
       HFSM_DEFINE_STATE_MAP(
           mc_state_map,
           FSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
           FSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&collision_avoidance,
+          FSM_STATE_MAP_ENTRY_EX_ALL(&interference_avoidance,
                                      nullptr,
-                                     &entry_collision_avoidance,
-                                     &exit_collision_avoidance),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&collision_recovery,
+                                     &entry_interference_avoidance,
+                                     &exit_interference_avoidance),
+          FSM_STATE_MAP_ENTRY_EX_ALL(&interference_recovery,
                                      nullptr,
-                                     &entry_collision_recovery,
+                                     &entry_interference_recovery,
                                      nullptr),
           FSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
 
@@ -65,8 +65,8 @@ RCSW_CONST HFSM_STATE_DEFINE_ND(vector_fsm, start) {
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(vector_fsm, collision_avoidance) {
-  if (ekST_COLLISION_AVOIDANCE != last_state()) {
+HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
+  if (ekST_INTERFERENCE_AVOIDANCE != last_state()) {
     ER_DEBUG("Executing ekST_COLLIISION_AVOIDANCE");
   }
 
@@ -86,18 +86,18 @@ HFSM_STATE_DEFINE_ND(vector_fsm, collision_avoidance) {
       saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
     }
   } else {
-    internal_event(ekST_COLLISION_RECOVERY);
+    internal_event(ekST_INTERFERENCE_RECOVERY);
   }
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(vector_fsm, collision_recovery) {
-  if (ekST_COLLISION_RECOVERY != last_state()) {
-    ER_DEBUG("Executing ekST_COLLISION_RECOVERY");
+HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
+  if (ekST_INTERFERENCE_RECOVERY != last_state()) {
+    ER_DEBUG("Executing ekST_INTERFERENCE_RECOVERY");
   }
 
   /*
-   * Even though we are recovering from our last collision, and there are
+   * Even though we are recovering from our last interference, and there are
    * hopefully no obstacles nearby, we still need to check if another obstacle
    * threatens. Failure to do this can lead to situations where a robot is
    * "recovering" and moving directly towards a wall, and if the wall is
@@ -109,14 +109,14 @@ HFSM_STATE_DEFINE_ND(vector_fsm, collision_recovery) {
    */
   if (auto obs =
           sensing()->sensor<hal::sensors::proximity_sensor>()->avg_prox_obj()) {
-    m_state.m_collision_rec_count = 0;
-    internal_event(ekST_COLLISION_AVOIDANCE);
-  } else if (++m_state.m_collision_rec_count >= kCOLLISION_RECOVERY_TIME) {
-    m_state.m_collision_rec_count = 0;
+    m_state.m_interference_rec_count = 0;
+    internal_event(ekST_INTERFERENCE_AVOIDANCE);
+  } else if (++m_state.m_interference_rec_count >= kINTERFERENCE_RECOVERY_TIME) {
+    m_state.m_interference_rec_count = 0;
     internal_event(ekST_VECTOR);
   }
   /*
-   * Go in whatever direction you are currently facing for collision
+   * Go in whatever direction you are currently facing for interference
    * recovery. You have to do this each timestep because the accumulated force
    * is reset at the end of the robot's control loop.
    */
@@ -141,7 +141,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
   }
 
   /*
-   * Only go into collision avoidance if we are not really close to our
+   * Only go into interference avoidance if we are not really close to our
    * target. If we are close, then ignore obstacles (the other guy will
    * move!). 'MURICA.
    *
@@ -150,7 +150,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
    */
   if (saa()->sensing()->sensor<hal::sensors::proximity_sensor>()->avg_prox_obj() &&
       !saa()->steer_force2D().within_slowing_radius()) {
-    internal_event(ekST_COLLISION_AVOIDANCE);
+    internal_event(ekST_INTERFERENCE_AVOIDANCE);
   } else {
     saa()->steer_force2D().accum(
         saa()->steer_force2D().seek_to(m_goal.point()));
@@ -177,46 +177,42 @@ HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_vector) {
       -1, rutils::color::kBLUE);
 }
 
-HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_collision_avoidance) {
-  ER_DEBUG("Entering ekST_COLLISION_AVOIDANCE");
-  ca_tracker()->ca_enter();
+HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_avoidance) {
+  ER_DEBUG("Entering ekST_INTERFERENCE_AVOIDANCE");
+  inta_tracker()->inta_enter();
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kRED);
 }
 
-HFSM_EXIT_DEFINE(vector_fsm, exit_collision_avoidance) {
-  ER_DEBUG("Exiting ekST_COLLISION_AVOIDANCE");
-  ca_tracker()->ca_exit();
+HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
+  ER_DEBUG("Exiting ekST_INTERFERENCE_AVOIDANCE");
+  inta_tracker()->inta_exit();
 }
 
-HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_collision_recovery) {
-  ER_DEBUG("Entering ekST_COLLISION_RECOVERY");
+HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_recovery) {
+  ER_DEBUG("Entering ekST_INTERFERENCE_RECOVERY");
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kYELLOW);
 }
 
 /*******************************************************************************
- * Collision Metrics
+ * Interference Metrics
  ******************************************************************************/
-bool vector_fsm::in_collision_avoidance(void) const {
-  return ekST_COLLISION_AVOIDANCE == current_state();
-} /* in_collision_avoidance() */
+bool vector_fsm::exp_interference(void) const {
+  return ekST_INTERFERENCE_AVOIDANCE == current_state();
+} /* exp_interference() */
 
-bool vector_fsm::entered_collision_avoidance(void) const {
-  return ekST_COLLISION_AVOIDANCE != last_state() && in_collision_avoidance();
-} /* entered_collision_avoidance() */
+bool vector_fsm::entered_interference(void) const {
+  return ekST_INTERFERENCE_AVOIDANCE != last_state() && exp_interference();
+} /* entered_interference() */
 
-bool vector_fsm::exited_collision_avoidance(void) const {
-  return ekST_COLLISION_AVOIDANCE == last_state() && !in_collision_avoidance();
-} /* exited_collision_avoidance() */
+bool vector_fsm::exited_interference(void) const {
+  return ekST_INTERFERENCE_AVOIDANCE == last_state() && !exp_interference();
+} /* exited_interference() */
 
-rmath::vector2z vector_fsm::avoidance_loc2D(void) const {
-  return saa()->sensing()->dpos2D();
-} /* avoidance_loc2D() */
-
-rmath::vector3z vector_fsm::avoidance_loc3D(void) const {
+rmath::vector3z vector_fsm::interference_loc3D(void) const {
   return saa()->sensing()->dpos3D();
-} /* avoidance_loc3D() */
+} /* interference_loc3D() */
 
 /*******************************************************************************
  * Taskable Interface
@@ -225,8 +221,8 @@ void vector_fsm::task_start(ta::taskable_argument* c_arg) {
   static const uint8_t kTRANSITIONS[] = {
       ekST_VECTOR,            /* start */
       ekST_VECTOR,            /* vector */
-      util_signal::ekIGNORED, /* collision avoidance */
-      util_signal::ekIGNORED, /* collision recovery */
+      util_signal::ekIGNORED, /* interference avoidance */
+      util_signal::ekIGNORED, /* interference recovery */
       util_signal::ekIGNORED, /* arrived */
   };
   auto* const a = dynamic_cast<const point_argument*>(c_arg);

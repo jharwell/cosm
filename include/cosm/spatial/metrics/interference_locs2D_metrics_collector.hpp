@@ -1,5 +1,5 @@
 /**
- * \file collision_locs2D_metrics_collector.hpp
+ * \file interference_locs2D_metrics_collector.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,14 +18,13 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS2D_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS2D_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <string>
-#include <list>
 
 #include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
@@ -39,17 +38,17 @@ NS_START(cosm, spatial, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class collision_locs2D_metrics_collector
+ * \class interference_locs2D_metrics_collector
  * \ingroup spatial metrics
  *
- * \brief Collector for \ref collision_metrics as a 2D grid of where robots
+ * \brief Collector for \ref interference_metrics as a 2D grid of where robots
  * most frequently encounter other robots.
  *
  * Metrics CAN be collected concurrently if the calling context guarantees that
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class collision_locs2D_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class interference_locs2D_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
@@ -57,10 +56,10 @@ class collision_locs2D_metrics_collector final : public rmetrics::spatial::grid2
    * \param dims Dimensions of the arena.
    * \param mode The selected output mode.
    */
-  collision_locs2D_metrics_collector(const std::string& ofname,
-                                   const rtypes::timestep& interval,
-                                   const rmetrics::output_mode& mode,
-                                   const rmath::vector2z& dims) :
+  interference_locs2D_metrics_collector(const std::string& ofname,
+                                     const rtypes::timestep& interval,
+                                     const rmetrics::output_mode& mode,
+                                     const rmath::vector2z& dims) :
       grid2D_metrics_collector(ofname, interval, mode, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
@@ -68,4 +67,4 @@ class collision_locs2D_metrics_collector final : public rmetrics::spatial::grid2
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_COLLISION_LOCS2D_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_LOCS2D_METRICS_COLLECTOR_HPP_ */

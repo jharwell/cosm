@@ -1,5 +1,5 @@
 /**
- * \file current_vector_locs_metrics_collector.hpp
+ * \file explore_locs3D_metrics_collector.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,16 +18,15 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_CURRENT_VECTOR_LOCS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_CURRENT_VECTOR_LOCS_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_EXPLORE_LOCS3D_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_EXPLORE_LOCS3D_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <string>
-#include <list>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/metrics/spatial/grid3D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -39,18 +38,18 @@ NS_START(cosm, spatial, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class current_vector_locs_metrics_collector
+ * \class explore_locs3D_metrics_collector
  * \ingroup spatial metrics
  *
- * \brief Collector for robot exploration trajectories, which is collected as a
- * 2D array, and needs its own collector separate from the \ref
- * goal_acq_metrics_collector (1 .csv per collector).
+ * \brief Collector for robot exploration trajectories for goal acquisition,
+ * which is collected as a 3D array, and needs its own collector separate from
+ * the \ref goal_acq_metrics_collector (1 .csv per collector).
  *
  * Metrics CAN be collected concurrently if the calling context guarantees that
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class current_vector_locs_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class explore_locs3D_metrics_collector final : public rmetrics::spatial::grid3D_metrics_collector<rmetrics::spatial::cell_avg> {
  public:
   /**
    * \param ofname The output file name.
@@ -58,15 +57,15 @@ class current_vector_locs_metrics_collector final : public rmetrics::spatial::gr
    * \param dims Dimensions of the arena.
    * \param mode The selected output mode.
    */
-  current_vector_locs_metrics_collector(const std::string& ofname,
-                                        const rtypes::timestep& interval,
-                                        const rmetrics::output_mode& mode,
-                                        const rmath::vector2z& dims) :
-      grid2D_metrics_collector(ofname, interval, mode, dims) {}
+  explore_locs3D_metrics_collector(const std::string& ofname,
+                                   const rtypes::timestep& interval,
+                                   const rmetrics::output_mode& mode,
+                                   const rmath::vector3z& dims) :
+      grid3D_metrics_collector(ofname, interval, mode, dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_CURRENT_VECTOR_LOCS_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_EXPLORE_LOCS3D_METRICS_COLLECTOR_HPP_ */

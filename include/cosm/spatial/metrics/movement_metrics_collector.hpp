@@ -25,7 +25,6 @@
  * Includes
  ******************************************************************************/
 #include <string>
-#include <list>
 #include <atomic>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"

@@ -28,7 +28,6 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
 
-#include "cosm/spatial/collision_tracker.hpp"
 #include "cosm/spatial/expstrat/base_expstrat.hpp"
 
 #include "cosm/cosm.hpp"
@@ -78,18 +77,8 @@ class crw : public csexpstrat::base_expstrat,
 
  private:
   /* clang-format off */
-  bool                        m_task_running{false};
-  cspatial::collision_tracker m_tracker;
+  bool m_task_running{false};
   /* clang-format on */
-
- public:
-  /* collision metrics */
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(in_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_collision_avoidance, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(collision_avoidance_duration, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc2D, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(avoidance_loc3D, m_tracker, const)
 };
 
 NS_END(expstrat, spatial, cosm);

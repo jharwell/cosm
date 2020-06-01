@@ -34,8 +34,8 @@ NS_START(cosm, controller, operations);
  * Constructors/Destructor
  ******************************************************************************/
 block_pickup::block_pickup(crepr::base_block3D* block,
-                                     const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
+                           const rtypes::type_uuid& robot_id,
+                           const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.controller.operations.block_pickup"),
       cell2D_op(block->dpos2D()),
       mc_timestep(t),

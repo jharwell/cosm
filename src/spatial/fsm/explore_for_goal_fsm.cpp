@@ -94,29 +94,24 @@ HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
  * Collision Metrics
  ******************************************************************************/
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         in_collision_avoidance,
+                         exp_interference,
                          *m_explore_behavior,
                          const);
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         entered_collision_avoidance,
+                         entered_interference,
                          *m_explore_behavior,
                          const);
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         exited_collision_avoidance,
+                         exited_interference,
                          *m_explore_behavior,
                          const);
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         collision_avoidance_duration,
-                         *m_explore_behavior,
-                         const);
-
-RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         avoidance_loc2D,
+                         interference_duration,
                          *m_explore_behavior,
                          const);
 
 RCPPSW_WRAP_OVERRIDE_DEF(explore_for_goal_fsm,
-                         avoidance_loc3D,
+                         interference_loc3D,
                          *m_explore_behavior,
                          const);
 

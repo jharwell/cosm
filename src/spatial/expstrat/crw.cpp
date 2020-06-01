@@ -35,8 +35,7 @@ NS_START(cosm, spatial, expstrat);
  ******************************************************************************/
 crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
     : base_expstrat(saa, rng),
-      ER_CLIENT_INIT("cosm.spatial.expstrat.crw"),
-      m_tracker(saa->sensing()) {}
+      ER_CLIENT_INIT("cosm.spatial.expstrat.crw") {}
 
 /*******************************************************************************
  * General Member Functions
@@ -47,7 +46,7 @@ void crw::task_execute(void) {
   auto* leds = saa()->actuation()->actuator<chal::actuators::led_actuator>();
 
   if (auto obs = prox->avg_prox_obj()) {
-    m_tracker.ca_enter();
+    inta_tracker()->inta_enter();
     saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
 
     ER_DEBUG("Found threatening obstacle: %s@%f [%f]",
@@ -56,7 +55,7 @@ void crw::task_execute(void) {
              obs->length());
     leds->set_color(-1, rutils::color::kRED);
   } else {
-    m_tracker.ca_exit();
+    inta_tracker()->inta_exit();
 
     ER_DEBUG("No threatening obstacle found");
     leds->set_color(-1, rutils::color::kMAGENTA);

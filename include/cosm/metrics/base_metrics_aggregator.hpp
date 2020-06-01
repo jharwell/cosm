@@ -82,6 +82,8 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
    * \brief Collect metrics from 2D controllers. Currently this includes:
    *
    * - \ref spatial::dist2D_metrics
+   * - \ref spatial::movement_metrics
+   * - \ref spatial::collision_metrics
    */
   void collect_from_controller(const controller::base_controller2D* controller);
 
@@ -89,6 +91,8 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
    * \brief Collect metrics from Q3D controllers. Currently this includes:
    *
    * - \ref spatial::dist3D_metrics
+   * - \ref spatial::movement_metrics
+   * - \ref spatial::collision_metrics
    */
   void collect_from_controller(const controller::base_controllerQ3D* controller);
 
@@ -210,19 +214,27 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
 
  protected:
   /**
-   * \brief Register metrics collectors that require the arena dimensions to
-   * construct for robots in a structure 2D environment.
+   * \brief Register metrics collectors that require the 2D arena dimensions to
+   * construct.
+   *
+   * - fsm::interference_locs2D
+   * - blocks::acq_locs2D
+   * - blocks::acq_explore_locs2D
+   * - blocks::acq_vector_locs2D
+   * - swarm::spatial_dist2D::pos
    */
   void register_with_arena_dims2D(const cmconfig::metrics_config* mconfig,
                                   const rmath::vector2z& dims);
 
   /**
-   * \brief Register metrics collectors that require the arena dimensions AND
-   * the maximum height robots can access within the arena.
+   * \brief Register metrics collectors that require the 3D arena dimensions to
+   * construct.
+   *
+   * - fsm::interference_locs3D
+   * - swarm::spatial_dist3D::pos
    */
-  void register_with_arena_dims3D(
-      const cmconfig::metrics_config* mconfig,
-      const rmath::vector3z& dims);
+  void register_with_arena_dims3D(const cmconfig::metrics_config* mconfig,
+                                  const rmath::vector3z& dims);
 
  private:
   /**
@@ -233,6 +245,12 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
 
   /**
    * \brief Register metrics collectors that do not require extra arguments.
+   *
+   * - fsm::movement
+   * - fsm::interference_counts
+   * - blocks::transport
+   * - swarm::convergence
+   * - tv::population
    */
   void register_standard(const cmconfig::metrics_config* mconfig);
 

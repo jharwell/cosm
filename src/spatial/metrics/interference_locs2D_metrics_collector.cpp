@@ -1,5 +1,5 @@
 /**
- * \file current_vector_locs_metrics_collector.cpp
+ * \file interference_locs2D_metrics_collector.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -21,9 +21,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/metrics/current_vector_locs_metrics_collector.hpp"
+#include "cosm/spatial/metrics/interference_locs2D_metrics_collector.hpp"
 
-#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -33,11 +33,11 @@ NS_START(cosm, spatial, metrics);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void current_vector_locs_metrics_collector::collect(
+void interference_locs2D_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
+  auto& m = dynamic_cast<const interference_metrics&>(metrics);
   inc_total_count();
-  inc_cell_count(m.current_vector_loc());
+  inc_cell_count(m.interference_loc3D().to_2D());
 } /* collect() */
 
 NS_END(metrics, spatial, cosm);

@@ -27,11 +27,11 @@
 #include <utility>
 
 #include "rcppsw/metrics/base_metrics.hpp"
-#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/named_type.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/unicell_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,6 +52,19 @@ NS_START(cosm, spatial, metrics);
 class goal_acq_metrics : public virtual rmetrics::base_metrics {
  public:
   /**
+   * \brief A pair of booleans, with the first one indicating that the robot is
+   * exploring for its goal, and the second one (only valid if the first is \c
+   * TRUE) indicating if it is a "true" exploration (i.e. the robot truly does
+   * not know of any instances of its target goal type), as opposed to exploring
+   * because all of the known instances of its goal type are deemed unsuitable
+   * for whatever reason.
+   */
+  struct exp_status {
+    bool is_exploring;
+    bool is_false;
+  };
+
+  /**
    * \brief A strong named type representing the goal the robot is currently
    * trying to acquire. A -1 value is used to indicate that no goal is currently
    * being acquired.
@@ -62,15 +75,6 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
   goal_acq_metrics(void) = default;
   ~goal_acq_metrics(void) override = default;
 
-  /**
-   * \brief A pair of booleans, with the first one indicating that the robot is
-   * exploring for its goal, and the second one (only valid if the first is \c
-   * TRUE) indicating if it is a "true" exploration (i.e. the robot truly does
-   * not know of any instances of its target goal type), as opposed to exploring
-   * because all of the known instances of its goal type are deemed unsuitable
-   * for whatever reason.
-   */
-  using exp_status = std::pair<bool, bool>;
 
   /**
    * \brief Return the type of acq that is currently being
@@ -106,7 +110,8 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    * returns \c TRUE.
    *
    * If the acquisition was not for an entity, but a location within the arena
-   * (or something else), then this function should return kNOUUID.
+   * (or something else), then this function should return \ref
+   * rtypes::constants::kNoUUID.
    */
   virtual rtypes::type_uuid entity_acquired_id(void) const = 0;
 
@@ -114,19 +119,22 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    * \brief When \ref goal_acquired() returns \c TRUE, then this should return
    * the location of the goal that was acquired.
    */
-  virtual rmath::vector2z acquisition_loc(void) const = 0;
+  virtual rmath::vector3z acquisition_loc3D(void) const = 0;
 
   /**
    * \brief When \ref is_exploring_for_goal() returns \c TRUE, then this should
-   * return the robot's current position as it explores for its goal.
+   * return the robot's current position as it explores for its goal. If the
+   * robot is only moving in 2D, then the Z component should always be 0.
    */
-  virtual rmath::vector2z current_explore_loc(void) const = 0;
+  virtual rmath::vector3z explore_loc3D(void) const = 0;
 
   /**
    * \brief When \ref is_vectoring_to_goal() returns \c TRUE, then this should
-   * return the robot's current position as it vectors to its goal.
+   * return the robot's current discrete position as it vectors to its
+   * goal. If the robot is only moving in 2D, then the Z component should always
+   * be 0.
    */
-  virtual rmath::vector2z current_vector_loc(void) const = 0;
+  virtual rmath::vector3z vector_loc3D(void) const = 0;
 };
 
 /*******************************************************************************

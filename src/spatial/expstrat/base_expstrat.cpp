@@ -1,7 +1,7 @@
 /**
- * \file current_explore_locs_metrics_collector.cpp
+ * \file base_expstrat.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,23 +21,23 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/metrics/current_explore_locs_metrics_collector.hpp"
+#include "cosm/spatial/expstrat/base_expstrat.hpp"
 
-#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
-
-/*******************************************************************************
- * Namespaces
- ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
- * Member Functions
+ * Namespaces/Decls
  ******************************************************************************/
-void current_explore_locs_metrics_collector::collect(
-    const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
-  inc_total_count();
-  inc_cell_count(m.current_explore_loc());
-} /* collect() */
+NS_START(cosm, spatial, expstrat);
 
-NS_END(metrics, spatial, cosm);
+/*******************************************************************************
+ * Constructors/Destructors
+ ******************************************************************************/
+base_expstrat::base_expstrat(params* const p)
+    : base_expstrat{p->saa, p->rng} {}
+
+base_expstrat::base_expstrat(subsystem::saa_subsystemQ3D* const saa,
+                             rmath::rng* rng)
+    : m_saa(saa), m_rng(rng), m_inta_tracker(m_saa->sensing())  {}
+
+NS_END(expstrat, spatial, cosm);

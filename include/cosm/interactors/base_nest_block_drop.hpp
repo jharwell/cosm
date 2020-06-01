@@ -166,7 +166,7 @@ class base_nest_block_drop
 
     /*
      * Safe to index directly even in multi-threaded contexts because the
-     * location of blocks within their arena map vector never changes.
+     * location of blocks within the arena map vector never changes.
      */
     robot_nest_block_drop_visitor_type rdrop_op(m_map->blocks()[id.v()], t);
 
