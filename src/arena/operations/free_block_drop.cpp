@@ -23,10 +23,10 @@
  ******************************************************************************/
 #include "cosm/arena/operations/free_block_drop.hpp"
 
-#include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/cache_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
@@ -66,11 +66,10 @@ static bool block_drop_loc_conflict(const caching_arena_map& map,
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_drop::free_block_drop(
-    crepr::base_block3D* block,
-    const rmath::vector2z& coord,
-    const rtypes::discretize_ratio& resolution,
-    const arena_map_locking& locking)
+free_block_drop::free_block_drop(crepr::base_block3D* block,
+                                 const rmath::vector2z& coord,
+                                 const rtypes::discretize_ratio& resolution,
+                                 const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
@@ -93,7 +92,8 @@ void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
 void free_block_drop::visit(crepr::base_block3D& block) {
   block.md()->robot_id_reset();
 
-  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+  auto rloc =
+      rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
 
   block.rpos3D(rloc);
   block.dpos3D(rmath::vector3z(cell2D_op::coord()));
@@ -107,8 +107,7 @@ void free_block_drop::visit(base_arena_map& map) {
    * We might be modifying this cell--don't want block distribution in ANOTHER
    * thread to pick this cell for distribution.
    */
-  map.maybe_lock(map.grid_mtx(),
-                 !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map, mc_block, rloc);
@@ -151,8 +150,7 @@ void free_block_drop::visit(caching_arena_map& map) {
    * We might be modifying this cell--don't want block distribution in ANOTHER
    * thread to pick this cell for distribution.
    */
-  map.maybe_lock(map.grid_mtx(),
-                 !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map, mc_block, rloc);
@@ -171,16 +169,14 @@ void free_block_drop::visit(caching_arena_map& map) {
    */
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
     cache_block_drop_visitor op(mc_block,
-                                static_cast<carepr::arena_cache*>(
-                                    cell.cache()),
+                                static_cast<carepr::arena_cache*>(cell.cache()),
                                 mc_resolution,
                                 arena_map_locking::ekALL_HELD);
     op.visit(map);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || conflict) {
-    map.distribute_single_block(mc_block,
-                                arena_map_locking::ekALL_HELD);
+    map.distribute_single_block(mc_block, arena_map_locking::ekALL_HELD);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else {
@@ -214,7 +210,7 @@ bool block_drop_loc_conflict(const base_arena_map& map,
    * to be acquired, as its color is hidden by that of the nest.
    */
   bool conflict = false;
-  for (auto *nest : map.nests()) {
+  for (auto* nest : map.nests()) {
     conflict |= block_drop_overlap_with_nest(block, *nest, loc);
   } /* for(&nest..) */
 
@@ -232,9 +228,8 @@ bool block_drop_loc_conflict(const base_arena_map& map,
 bool block_drop_loc_conflict(const caching_arena_map& map,
                              const crepr::base_block3D* const block,
                              const rmath::vector2d& loc) {
-  bool conflict = block_drop_loc_conflict(static_cast<const carena::base_arena_map&>(map),
-                                          block,
-                                          loc);
+  bool conflict = block_drop_loc_conflict(
+      static_cast<const carena::base_arena_map&>(map), block, loc);
 
   /*
    * If the robot is currently right on the edge of a cache, we can't just drop

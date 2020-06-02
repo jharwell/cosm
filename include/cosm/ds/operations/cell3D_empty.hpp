@@ -68,17 +68,12 @@ class cell3D_empty : public cell3D_op, public rer::client<cell3D_empty> {
 };
 
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell3D_empty_visitor_impl =
-    rpvisitor::precise_visitor<cell3D_empty, cell3D_empty::visit_typelist>;
-
-class cell3D_empty_visitor : public cell3D_empty_visitor_impl {
-  using cell3D_empty_visitor_impl::cell3D_empty_visitor_impl;
-};
+using cell3D_empty_visitor = rpvisitor::filtered_visitor<cell3D_empty>;
 
 NS_END(operations, ds, cosm);
 

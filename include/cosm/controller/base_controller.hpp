@@ -32,9 +32,9 @@
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/types/discretize_ratio.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -163,7 +163,9 @@ class base_controller : public rer::client<base_controller> {
   rmath::rng* rng(void) { return m_rng; }
 
   cfsm::supervisor_fsm* supervisor(void) { return m_supervisor.get(); }
-  const cfsm::supervisor_fsm* supervisor(void) const { return m_supervisor.get(); }
+  const cfsm::supervisor_fsm* supervisor(void) const {
+    return m_supervisor.get();
+  }
 
  protected:
   /**

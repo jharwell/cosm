@@ -1,5 +1,5 @@
 /**
- * \file base_nest_block_drop.hpp
+ * \file base_nest_block_process.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_DROP_HPP_
-#define INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_DROP_HPP_
+#ifndef INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_PROCESS_HPP_
+#define INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_PROCESS_HPP_
 
 /*******************************************************************************
  * Includes
@@ -28,7 +28,7 @@
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 
-#include "cosm/arena/operations/nest_block_drop.hpp"
+#include "cosm/arena/operations/nest_block_process.hpp"
 #include "cosm/tv/temporal_penalty.hpp"
 
 /*******************************************************************************
@@ -41,43 +41,43 @@ NS_START(cosm, interactors);
  ******************************************************************************/
 
 /**
- * \class base_nest_block_drop
+ * \class base_nest_block_process
  * \ingroup interactors
  *
- * \brief Handle's a robot's (possible) nest block drop event on a given
+ * \brief Handle's a robot's (possible) nest block process event on a given
  * timestep, updating the robot and the arena map state as needed if the
- * conditions for the drop are met.
+ * conditions for the block process are met.
  */
 template <typename TController, typename TControllerSpecMap>
-class base_nest_block_drop
-    : public rer::client<base_nest_block_drop<TController, TControllerSpecMap>> {
+class base_nest_block_process
+    : public rer::client<base_nest_block_process<TController, TControllerSpecMap>> {
  public:
-  using controller_spec = typename boost::mpl::at<TControllerSpecMap,
-                                                  TController>::type;
+  using controller_spec =
+      typename boost::mpl::at<TControllerSpecMap, TController>::type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
   using metrics_agg_type = typename controller_spec::metrics_agg_type;
-  using interactor_status_type = typename controller_spec::interactor_status_type;
-  using robot_nest_block_drop_visitor_type = typename controller_spec::robot_nest_block_drop_visitor_type;
+  using interactor_status_type =
+      typename controller_spec::interactor_status_type;
+  using robot_nest_block_process_visitor_type =
+      typename controller_spec::robot_nest_block_process_visitor_type;
 
-  base_nest_block_drop(arena_map_type* const map,
-                       metrics_agg_type* const metrics_agg,
-                       argos::CFloorEntity* const floor,
-                       penalty_handler_type* handler)
-      : ER_CLIENT_INIT("cosm.interactors.base_nest_block_drop"),
+  base_nest_block_process(arena_map_type* const map,
+                          metrics_agg_type* const metrics_agg,
+                          argos::CFloorEntity* const floor,
+                          penalty_handler_type* handler)
+      : ER_CLIENT_INIT("cosm.interactors.base_nest_block_process"),
         m_floor(floor),
         m_metrics_agg(metrics_agg),
         m_map(map),
-        m_penalty_handler(handler) {
-  }
-  ~base_nest_block_drop(void) override = default;
+        m_penalty_handler(handler) {}
+  ~base_nest_block_process(void) override = default;
 
-  base_nest_block_drop(base_nest_block_drop&&) = default;
+  base_nest_block_process(base_nest_block_process&&) = default;
 
   /* Not copy-constructible/assignable by default. */
-  base_nest_block_drop(const base_nest_block_drop&) = delete;
-  base_nest_block_drop& operator=(const base_nest_block_drop&) =
-      delete;
+  base_nest_block_process(const base_nest_block_process&) = delete;
+  base_nest_block_process& operator=(const base_nest_block_process&) = delete;
 
   /**
    * \brief If the robot is not currently serving a penalty, then this callback
@@ -117,7 +117,7 @@ class base_nest_block_drop
     if (m_penalty_handler->is_serving_penalty(controller)) {
       if (m_penalty_handler->is_penalty_satisfied(controller, t)) {
         process_drop(controller, t);
-        return interactor_status_type::ekNEST_BLOCK_DROP;
+        return interactor_status_type::ekNEST_BLOCK_PROCESS;
       }
     } else {
       robot_penalty_init(controller, t, m_penalty_handler);
@@ -162,13 +162,13 @@ class base_nest_block_drop
     m_metrics_agg->collect_from_block(controller.block());
 
     rtypes::type_uuid id = controller.block()->id();
-    caops::nest_block_drop_visitor adrop_op(controller.block_release(), t);
+    caops::nest_block_process_visitor aproc_op(controller.block_release(), t);
 
     /*
      * Safe to index directly even in multi-threaded contexts because the
      * location of blocks within the arena map vector never changes.
      */
-    robot_nest_block_drop_visitor_type rdrop_op(m_map->blocks()[id.v()], t);
+    robot_nest_block_process_visitor_type rdrop_op(m_map->blocks()[id.v()], t);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);
@@ -182,7 +182,7 @@ class base_nest_block_drop
      * In order for the event to process properly.
      */
     /* Update arena map state due to a block nest drop */
-    adrop_op.visit(*m_map);
+    aproc_op.visit(*m_map);
 
     /* Actually drop the block */
     rdrop_op.visit(controller);
@@ -201,4 +201,4 @@ class base_nest_block_drop
 
 NS_END(interactors, cosm);
 
-#endif /* INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_DROP_HPP_ */
+#endif /* INCLUDE_COSM_INTERACTORS_BASE_NEST_BLOCK_PROCESS_HPP_ */

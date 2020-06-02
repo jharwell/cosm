@@ -1,5 +1,5 @@
 /**
- * \file nest_block_drop.cpp
+ * \file nest_block_process.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/operations/nest_block_drop.hpp"
+#include "cosm/arena/operations/nest_block_process.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/repr/base_block3D.hpp"
@@ -42,54 +42,58 @@ static void do_unlock(base_arena_map& map);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_block_drop::nest_block_drop(
+nest_block_process::nest_block_process(
     std::unique_ptr<crepr::base_block3D> robot_block,
     const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.operations.nest_block_drop"),
+    : ER_CLIENT_INIT("cosm.operations.nest_block_process"),
       mc_timestep(t),
-      m_robot_block(std::move(robot_block)) {}
+      mc_robot_block_id(robot_block->id()) {}
+
+nest_block_process::nest_block_process(const rtypes::type_uuid& robot_block_id,
+                                       const rtypes::timestep& t)
+    : ER_CLIENT_INIT("cosm.operations.nest_block_process"),
+      mc_timestep(t),
+      mc_robot_block_id(robot_block_id) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_block_drop::visit(base_arena_map& map) {
-  ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
-            "Undefined robot index");
-
+void nest_block_process::visit(base_arena_map& map) {
   do_lock(map);
   do_visit(map);
   do_unlock(map);
 } /* visit() */
 
-void nest_block_drop::visit(caching_arena_map& map) {
-  ER_ASSERT(rtypes::constants::kNoUUID != m_robot_block->md()->robot_id(),
-            "Undefined robot index");
-
+void nest_block_process::visit(caching_arena_map& map) {
   do_lock(map);
   do_visit(map);
   do_unlock(map);
 } /* visit() */
 
 template <typename TArenaMap>
-void nest_block_drop::do_visit(TArenaMap& map) {
+void nest_block_process::do_visit(TArenaMap& map) {
   /*
    * The robot owns a unique copy of a block originally from the arena, so we
    * need to look it up rather than implicitly converting its unique_ptr to a
    * shared_ptr and distributing it--this will cause lots of problems later.
    */
   auto it =
-      std::find_if(map.blocks().begin(), map.blocks().end(), [&](const auto& b) {
-          return m_robot_block->id() == b->id();
-        });
+      std::find_if(map.blocks().begin(),
+                   map.blocks().end(),
+                   [&](const auto& b) { return mc_robot_block_id == b->id(); });
   ER_ASSERT(map.blocks().end() != it,
-            "Robot block%d not found in arena map blocks",
-            m_robot_block->id().v());
+            "Robot block%s not found in arena map blocks",
+            rcppsw::to_string(mc_robot_block_id).c_str());
   m_arena_block = *it;
-  map.distribute_single_block(m_arena_block,
-                              arena_map_locking::ekALL_HELD);
+
+  /* update block after processing */
+  visit(*m_arena_block);
+
+  /* release block back into the wild */
+  map.distribute_single_block(m_arena_block, arena_map_locking::ekALL_HELD);
 } /* do_visit() */
 
-void nest_block_drop::visit(crepr::base_block3D& block) {
+void nest_block_process::visit(crepr::base_block3D& block) {
   block.md()->reset_metrics();
   block.md()->distribution_time(mc_timestep);
 } /* visit() */
@@ -110,9 +114,9 @@ void do_lock(caching_arena_map& map) {
 } /* do_lock() */
 
 void do_unlock(caching_arena_map& map) {
-  map.grid_mtx()->lock();
-  map.block_mtx()->lock();
-  map.cache_mtx()->lock();
+  map.grid_mtx()->unlock();
+  map.block_mtx()->unlock();
+  map.cache_mtx()->unlock();
 } /* do_unlock() */
 
 void do_lock(base_arena_map& map) {
@@ -121,8 +125,8 @@ void do_lock(base_arena_map& map) {
 } /* do_lock() */
 
 void do_unlock(base_arena_map& map) {
-  map.grid_mtx()->lock();
-  map.block_mtx()->lock();
+  map.grid_mtx()->unlock();
+  map.block_mtx()->unlock();
 } /* do_unlock() */
 
 NS_END(detail, operations, arena, cosm);

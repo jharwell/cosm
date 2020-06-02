@@ -33,9 +33,9 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/controller/base_controller.hpp"
-#include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/dist3D_metrics.hpp"
 #include "cosm/spatial/metrics/goal_acq_metrics.hpp"
+#include "cosm/spatial/metrics/movement_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces

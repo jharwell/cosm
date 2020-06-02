@@ -40,9 +40,9 @@ using cds::arena_grid;
  * Constructors/Destructor
  ******************************************************************************/
 dispatcher::dispatcher(cds::arena_grid* const grid,
-                                   const rtypes::discretize_ratio& resolution,
-                                   const config::block_dist_config* const config,
-                                   double grid_padding)
+                       const rtypes::discretize_ratio& resolution,
+                       const config::block_dist_config* const config,
+                       double grid_padding)
     : mc_grid_padding(grid_padding),
       mc_resolution(resolution),
       mc_config(*config),

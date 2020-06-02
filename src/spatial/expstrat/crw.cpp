@@ -34,8 +34,7 @@ NS_START(cosm, spatial, expstrat);
  * Constructors/Destructor
  ******************************************************************************/
 crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-    : base_expstrat(saa, rng),
-      ER_CLIENT_INIT("cosm.spatial.expstrat.crw") {}
+    : base_expstrat(saa, rng), ER_CLIENT_INIT("cosm.spatial.expstrat.crw") {}
 
 /*******************************************************************************
  * General Member Functions

@@ -24,20 +24,20 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <filesystem>
 #include <list>
 #include <map>
 #include <string>
 #include <typeindex>
 #include <utility>
-#include <filesystem>
 
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/metrics/collector_group.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/math/vector3.hpp"
+#include "rcppsw/metrics/collector_group.hpp"
 
-#include "cosm/metrics/config/metrics_config.hpp"
 #include "cosm/cosm.hpp"
+#include "cosm/metrics/config/metrics_config.hpp"
 
 /*******************************************************************************
  * Namespaces

@@ -25,8 +25,8 @@
 
 #include <algorithm>
 
-#include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/foraging/utils/utils.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
@@ -40,8 +40,8 @@ NS_START(cosm, foraging, block_dist);
  * Constructors/Destructor
  ******************************************************************************/
 random_distributor::random_distributor(const cds::arena_grid::view& grid,
-                                                   const rtypes::discretize_ratio& resolution,
-                                                   rmath::rng* rng_in)
+                                       const rtypes::discretize_ratio& resolution,
+                                       rmath::rng* rng_in)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.random"),
       base_distributor(rng_in),
       mc_resolution(resolution),
@@ -73,8 +73,7 @@ bool random_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
 bool random_distributor::distribute_block(crepr::base_block3D* block,
                                           cds::const_entity_vector& entities) {
   cds::cell2D* cell = nullptr;
-  auto coords = avail_coord_search(entities,
-                                   block->dims2D());
+  auto coords = avail_coord_search(entities, block->dims2D());
   if (coords) {
     ER_INFO("Found coordinates for distributing block%d: rel=%s, abs=%s",
             block->id().v(),
@@ -103,8 +102,10 @@ bool random_distributor::distribute_block(crepr::base_block3D* block,
      * This function is always called from the arena map, and it ensures that
      * all locks are held, so we don't need to do anything here.
      */
-    caops::free_block_drop_visitor op(
-        block, coords->abs, mc_resolution, carena::arena_map_locking::ekALL_HELD);
+    caops::free_block_drop_visitor op(block,
+                                      coords->abs,
+                                      mc_resolution,
+                                      carena::arena_map_locking::ekALL_HELD);
     op.visit(*cell);
     if (verify_block_dist(block, entities, cell)) {
       ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
@@ -152,13 +153,15 @@ bool random_distributor::verify_block_dist(
     }
     utils::placement_status_t status;
     if (crepr::entity_dimensionality::ek2D == e->dimensionality()) {
-      status = utils::placement_conflict2D(block->rpos2D(),
-                                           block->dims2D(),
-                                           static_cast<const crepr::entity2D*>(e));
+      status =
+          utils::placement_conflict2D(block->rpos2D(),
+                                      block->dims2D(),
+                                      static_cast<const crepr::entity2D*>(e));
     } else {
-      status = utils::placement_conflict2D(block->rpos2D(),
-                                           block->dims2D(),
-                                           static_cast<const crepr::entity3D*>(e));
+      status =
+          utils::placement_conflict2D(block->rpos2D(),
+                                      block->dims2D(),
+                                      static_cast<const crepr::entity3D*>(e));
     }
     ER_ASSERT(!(status.x_conflict && status.y_conflict),
               "Entity contains block%d@%s/%s after distribution",
@@ -205,13 +208,11 @@ boost::optional<typename random_distributor::coord_search_res_t> random_distribu
     rmath::vector2d abs_r = rmath::zvec2dvec(abs, mc_resolution.v());
     utils::placement_status_t status;
     if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
-      status = utils::placement_conflict2D(abs_r,
-                                           block_dim,
-                                           static_cast<const crepr::entity2D*>(ent));
+      status = utils::placement_conflict2D(
+          abs_r, block_dim, static_cast<const crepr::entity2D*>(ent));
     } else {
-      status = utils::placement_conflict2D(abs_r,
-                                           block_dim,
-                                           static_cast<const crepr::entity3D*>(ent));
+      status = utils::placement_conflict2D(
+          abs_r, block_dim, static_cast<const crepr::entity3D*>(ent));
     }
     return status.x_conflict && status.y_conflict && count++ <= kMAX_DIST_TRIES;
   }));

@@ -121,9 +121,7 @@ void population_dynamics::death_dynamics(const rtypes::timestep& t) {
                 "Unexpected active population change: %zu != %zu",
                 res.active_pop,
                 m_active_pop);
-      ER_INFO("Killed robot with ID=%d,pop_size=%zu",
-              res.id.v(),
-              res.total_pop);
+      ER_INFO("Killed robot with ID=%d,pop_size=%zu", res.id.v(), res.total_pop);
       m_death.enqueue(res.id, t);
       m_total_pop = res.total_pop;
     }
@@ -197,10 +195,11 @@ void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
                 "Unexpected active population change: %zu != %zu",
                 res.active_pop,
                 m_active_pop + 1);
-      ER_ASSERT(res.id == id,
-                "Repaired robot uuid (%d) != robot at front of repair queue (%d)",
-                res.id.v(),
-                id->v());
+      ER_ASSERT(
+          res.id == id,
+          "Repaired robot uuid (%d) != robot at front of repair queue (%d)",
+          res.id.v(),
+          id->v());
       ER_INFO("Removed robot with ID=%d from repair queue", res.id.v());
       m_active_pop = res.active_pop;
     } else {

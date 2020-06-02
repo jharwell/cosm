@@ -53,9 +53,10 @@ NS_START(cosm, pal);
  * cconvergence::convergence_calculator to calculate convergence in the ARGoS
  * environment.
  */
-template<class TController>
-class argos_convergence_calculator : public rer::client<argos_convergence_calculator<TController>>,
-  public rpdecorator::decorator<cconvergence::convergence_calculator> {
+template <class TController>
+class argos_convergence_calculator
+    : public rer::client<argos_convergence_calculator<TController>>,
+      public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
   argos_convergence_calculator(const cconvconfig::convergence_config* config,
                                cpal::argos_sm_adaptor* sm) RCSW_COLD;
@@ -63,7 +64,8 @@ class argos_convergence_calculator : public rer::client<argos_convergence_calcul
 
   /* Not copy constructible/assignable by default */
   argos_convergence_calculator(const argos_convergence_calculator&) = delete;
-  argos_convergence_calculator& operator=(const argos_convergence_calculator&) = delete;
+  argos_convergence_calculator& operator=(const argos_convergence_calculator&) =
+      delete;
 
   RCPPSW_DECORATE_FUNC(update);
   RCPPSW_DECORATE_FUNC(converged);

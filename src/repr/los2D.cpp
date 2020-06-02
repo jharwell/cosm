@@ -34,14 +34,8 @@ NS_START(cosm, repr);
  * Member Functions
  ******************************************************************************/
 const cds::cell2D& los2D::access(size_t i, size_t j) const {
-  ER_ASSERT(i < xsize(),
-            "Out of bounds X access: %zu >= %lu",
-            i,
-            xsize());
-  ER_ASSERT(j < ysize(),
-            "Out of bounds Y access: %zu >= %lu",
-            j,
-            ysize());
+  ER_ASSERT(i < xsize(), "Out of bounds X access: %zu >= %lu", i, xsize());
+  ER_ASSERT(j < ysize(), "Out of bounds Y access: %zu >= %lu", j, ysize());
   return view()[i][j];
 } /* access() */
 

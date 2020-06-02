@@ -22,9 +22,10 @@
  * Includes
  ******************************************************************************/
 #include "cosm/foraging/utils/utils.hpp"
+
+#include "cosm/arena/base_arena_map.hpp"
 #include "cosm/repr/entity2D.hpp"
 #include "cosm/repr/entity3D.hpp"
-#include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,8 +36,8 @@ NS_START(cosm, foraging, utils);
  * Functions
  ******************************************************************************/
 placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
-                                      const rmath::vector2d& ent1_dims,
-                                      const crepr::entity2D* const entity) {
+                                        const rmath::vector2d& ent1_dims,
+                                        const crepr::entity2D* const entity) {
   auto loc_xspan = crepr::entity2D::xspan(ent1_loc, ent1_dims.x());
   auto loc_yspan = crepr::entity2D::yspan(ent1_loc, ent1_dims.y());
   return placement_status_t{entity->xspan().overlaps_with(loc_xspan),

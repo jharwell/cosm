@@ -55,7 +55,7 @@ swarm_manager::swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
    * configuration.
    */
   signal(SIGSEGV, ___sighandler);
-  struct rlimit r{};
+  struct rlimit r {};
   getrlimit(RLIMIT_CORE, &r);
   r.rlim_cur = RLIM_INFINITY;
   setrlimit(RLIMIT_CORE, &r);

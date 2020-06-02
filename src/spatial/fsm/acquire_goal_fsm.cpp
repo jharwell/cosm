@@ -94,23 +94,18 @@ RCSW_CONST HFSM_STATE_DEFINE_ND(acquire_goal_fsm, finished) {
  * FSM Metrics
  ******************************************************************************/
 bool acquire_goal_fsm::exp_interference(void) const {
-  return (m_explore_fsm.task_running() &&
-          m_explore_fsm.exp_interference()) ||
+  return (m_explore_fsm.task_running() && m_explore_fsm.exp_interference()) ||
          (m_vector_fsm.task_running() && m_vector_fsm.exp_interference());
 } /* exp_interference() */
 
 bool acquire_goal_fsm::entered_interference(void) const {
-  return (m_explore_fsm.task_running() &&
-          m_explore_fsm.entered_interference()) ||
-         (m_vector_fsm.task_running() &&
-          m_vector_fsm.entered_interference());
+  return (m_explore_fsm.task_running() && m_explore_fsm.entered_interference()) ||
+         (m_vector_fsm.task_running() && m_vector_fsm.entered_interference());
 } /* entered_interference() */
 
 bool acquire_goal_fsm::exited_interference(void) const {
-  return (m_explore_fsm.task_running() &&
-          m_explore_fsm.exited_interference()) ||
-         (m_vector_fsm.task_running() &&
-          m_vector_fsm.exited_interference());
+  return (m_explore_fsm.task_running() && m_explore_fsm.exited_interference()) ||
+         (m_vector_fsm.task_running() && m_vector_fsm.exited_interference());
 } /* exited_interference() */
 
 rtypes::timestep acquire_goal_fsm::interference_duration(void) const {
@@ -127,10 +122,9 @@ bool acquire_goal_fsm::goal_acquired(void) const {
 } /* cache_acquired() */
 
 acquire_goal_fsm::exp_status acquire_goal_fsm::is_exploring_for_goal(void) const {
-  return exp_status{
-    current_state() == ekST_ACQUIRE_GOAL && m_explore_fsm.task_running(),
-        !m_hooks.candidates_exist()
-        };
+  return exp_status{current_state() == ekST_ACQUIRE_GOAL &&
+                        m_explore_fsm.task_running(),
+                    !m_hooks.candidates_exist()};
 } /* is_exploring_for_goal() */
 
 bool acquire_goal_fsm::is_vectoring_to_goal(void) const {

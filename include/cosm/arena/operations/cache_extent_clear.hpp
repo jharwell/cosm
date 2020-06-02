@@ -35,8 +35,7 @@ class caching_arena_map;
 
 namespace repr {
 class arena_cache;
-}
-}
+}}
 
 namespace cosm::ds {
 class arena_grid;
@@ -82,22 +81,16 @@ class cache_extent_clear : public rer::client<cache_extent_clear>,
   /* clang-format on */
 };
 
+NS_END(detail);
+
+
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cache_extent_clear_visitor_impl =
-    rpvisitor::precise_visitor<detail::cache_extent_clear,
-                               detail::cache_extent_clear::visit_typelist>;
-
-NS_END(detail);
-
-class cache_extent_clear_visitor : public detail::cache_extent_clear_visitor_impl {
- public:
-  using detail::cache_extent_clear_visitor_impl::cache_extent_clear_visitor_impl;
-};
+using cache_extent_clear_visitor = rpvisitor::filtered_visitor<detail::cache_extent_clear>;
 
 NS_END(operations, arena, cosm);
 

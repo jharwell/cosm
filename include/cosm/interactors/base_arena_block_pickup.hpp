@@ -63,23 +63,24 @@ NS_START(cosm, interactors);
  *            process the block pickup on the robot side (arena map side is
  *            already generic).
  */
-template <typename TController,
-          typename TControllerSpecMap>
+template <typename TController, typename TControllerSpecMap>
 class base_arena_block_pickup
-    : public rer::client<base_arena_block_pickup<TController,
-                                                TControllerSpecMap>> {
+    : public rer::client<base_arena_block_pickup<TController, TControllerSpecMap>> {
  public:
-  using controller_spec = typename boost::mpl::at<TControllerSpecMap,
-                                                 TController>::type;
+  using controller_spec =
+      typename boost::mpl::at<TControllerSpecMap, TController>::type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
-  using interactor_status_type = typename controller_spec::interactor_status_type;
-  using robot_block_vanished_visitor_type = typename controller_spec::robot_block_vanished_visitor_type;
-  using robot_block_pickup_visitor_type = typename controller_spec::robot_block_pickup_visitor_type;
+  using interactor_status_type =
+      typename controller_spec::interactor_status_type;
+  using robot_block_vanished_visitor_type =
+      typename controller_spec::robot_block_vanished_visitor_type;
+  using robot_block_pickup_visitor_type =
+      typename controller_spec::robot_block_pickup_visitor_type;
 
-    base_arena_block_pickup(arena_map_type* const map,
-                           argos::CFloorEntity* const floor,
-                           penalty_handler_type* const penalty_handler)
+  base_arena_block_pickup(arena_map_type* const map,
+                          argos::CFloorEntity* const floor,
+                          penalty_handler_type* const penalty_handler)
       : ER_CLIENT_INIT("cosm.interactors.base_arena_block_pickup"),
         m_floor(floor),
         m_map(map),
@@ -90,8 +91,7 @@ class base_arena_block_pickup
 
   /* Not copy-constructible/assignable by default. */
   base_arena_block_pickup(const base_arena_block_pickup&) = delete;
-  base_arena_block_pickup& operator=(const base_arena_block_pickup&) =
-      delete;
+  base_arena_block_pickup& operator=(const base_arena_block_pickup&) = delete;
 
   /**
    * \brief If the robot is not currently serving a penalty, then this callback

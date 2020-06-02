@@ -23,10 +23,10 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cache_block_drop.hpp"
 
-#include "cosm/ds/cell2D.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
@@ -38,11 +38,10 @@ using cds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cache_block_drop::cache_block_drop(
-    crepr::base_block3D* arena_block,
-    carepr::arena_cache* cache,
-    const rtypes::discretize_ratio& resolution,
-    const arena_map_locking& locking)
+cache_block_drop::cache_block_drop(crepr::base_block3D* arena_block,
+                                   carepr::arena_cache* cache,
+                                   const rtypes::discretize_ratio& resolution,
+                                   const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.cache_block_drop"),
       cell2D_op(cache->dpos2D()),
       mc_locking(locking),

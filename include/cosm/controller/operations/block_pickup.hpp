@@ -49,7 +49,7 @@ NS_START(cosm, controller, operations);
  * for it to be reused as-is, hence it is therefore a base class.
  */
 class block_pickup : public rer::client<block_pickup>,
-                          public cdops::cell2D_op {
+                     public cdops::cell2D_op {
  public:
   virtual ~block_pickup(void) = default;
 

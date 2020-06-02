@@ -36,8 +36,7 @@ NS_START(cosm, foraging, tv);
  ******************************************************************************/
 rtypes::type_uuid penalty_id_calculator::from_nest_drop(
     const crepr::base_block3D* block) const {
-  ER_ASSERT(nullptr != block &&
-            rtypes::constants::kNoUUID != block->id(),
+  ER_ASSERT(nullptr != block && rtypes::constants::kNoUUID != block->id(),
             "Robot not carrying block?");
   return block->id();
 } /* from_nest_drop() */
@@ -50,6 +49,5 @@ rtypes::type_uuid penalty_id_calculator::from_free_pickup(
   ER_ASSERT(rtypes::constants::kNoUUID != id, "Robot not on block?");
   return id;
 } /* from_free_pickup() */
-
 
 NS_END(tv, foraging, cosm);

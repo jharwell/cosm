@@ -24,9 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <numeric>
 #include <string>
 #include <vector>
-#include <numeric>
 
 #include "cosm/cosm.hpp"
 
@@ -45,7 +45,7 @@ NS_START(cosm, oracle);
  * \brief Repository of perfect knowledge about entities the swarm may encounter
  * (blocks, caches, etc).
  */
-template<class TEntity>
+template <class TEntity>
 class entities_oracle {
  public:
   using knowledge_type = std::vector<TEntity*>;
@@ -57,8 +57,7 @@ class entities_oracle {
   static std::string knowledge_to_string(const std::string& prefix,
                                          const knowledge_type& v) {
     auto lambda = [&](const std::string& a, const auto& ent) {
-      return a + prefix +
-      rcppsw::to_string(ent->id()) + ",";
+      return a + prefix + rcppsw::to_string(ent->id()) + ",";
     };
     return std::accumulate(v.begin(), v.end(), std::string(), lambda);
   }

@@ -38,8 +38,7 @@ NS_START(cosm, arena);
  * Constructors/Destructor
  ******************************************************************************/
 caching_arena_map::caching_arena_map(const caconfig::arena_map_config* config)
-    : ER_CLIENT_INIT("cosm.arena.caching_arena_map"),
-      base_arena_map(config) {}
+    : ER_CLIENT_INIT("cosm.arena.caching_arena_map"), base_arena_map(config) {}
 
 /*******************************************************************************
  * Member Functions
@@ -160,7 +159,8 @@ void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking)
   maybe_unlock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
-caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
+caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(
+    const crepr::base_block3D* block) {
   auto ret = base_arena_map::block_dist_precalc(block);
 
   /*

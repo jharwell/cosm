@@ -149,7 +149,7 @@ rmath::vector2d force_calculator::anti_phototaxis(
 
 rmath::vector2d force_calculator::path_following(ds::path_state* state) {
   rmath::vector2d force = m_path_following(m_entity, state);
-  m_tracker.path_add(*state); /* idempotent */
+  m_tracker.path_add(*state);                   /* idempotent */
   m_tracker.force_add("path_following", force); /* accum */
 
   ER_DEBUG("Path following force: %s@%s [%f]",

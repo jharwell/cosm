@@ -75,8 +75,8 @@ void cell3D_fsm::event_empty(void) {
 
 void cell3D_fsm::event_block_place(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_HAS_BLOCK,       /* unknown */
-      state::ekST_HAS_BLOCK,       /* empty */
+      state::ekST_HAS_BLOCK,        /* unknown */
+      state::ekST_HAS_BLOCK,        /* empty */
       rpfsm::event_signal::ekFATAL, /* has block */
       rpfsm::event_signal::ekFATAL, /* block extent */
   };
@@ -86,8 +86,8 @@ void cell3D_fsm::event_block_place(void) {
 
 void cell3D_fsm::event_block_extent(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_BLOCK_EXTENT,    /* unknown */
-      state::ekST_BLOCK_EXTENT,    /* empty */
+      state::ekST_BLOCK_EXTENT,     /* unknown */
+      state::ekST_BLOCK_EXTENT,     /* empty */
       rpfsm::event_signal::ekFATAL, /* has block */
       rpfsm::event_signal::ekFATAL, /* block extent */
   };

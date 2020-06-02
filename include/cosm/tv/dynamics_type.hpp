@@ -38,10 +38,7 @@ NS_START(cosm, tv);
  * \brief The different types of swarm dynamics that the \ref tv_manager
  * manages.
  */
-enum class dynamics_type {
-  ekPOPULATION,
-  ekENVIRONMENT
-};
+enum class dynamics_type { ekPOPULATION, ekENVIRONMENT };
 
 NS_END(tv, cosm);
 

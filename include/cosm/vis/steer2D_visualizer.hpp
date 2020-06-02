@@ -24,6 +24,7 @@
  * Includes
  ******************************************************************************/
 #include <string>
+
 #include <argos3/core/utility/math/quaternion.h>
 
 #include "rcppsw/er/client.hpp"

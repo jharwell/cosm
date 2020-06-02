@@ -61,9 +61,10 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * from 0.
    */
   base_block3D(const rmath::vector3d& dim,
-             const rutils::color& color,
-             const crepr::block_type& type)
-      : unicell_movable_entity3D(dim, rtypes::constants::kNoUUID), m_md(color, type) {}
+               const rutils::color& color,
+               const crepr::block_type& type)
+      : unicell_movable_entity3D(dim, rtypes::constants::kNoUUID),
+        m_md(color, type) {}
 
   /**
    * \param dim 3 element vector of the dimensions of the block.
@@ -72,9 +73,9 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * \param id The id of the block.
    */
   base_block3D(const rmath::vector3d& dim,
-             const rutils::color& color,
-             const crepr::block_type& type,
-             const rtypes::type_uuid& id)
+               const rutils::color& color,
+               const crepr::block_type& type,
+               const rtypes::type_uuid& id)
       : unicell_movable_entity3D(dim, id), m_md(color, type) {}
 
   ~base_block3D(void) override = default;
@@ -92,7 +93,9 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * \brief Compare two \ref base_block3D objects for equality based on their
    * ID.
    */
-  bool idcmp(const base_block3D& other) const { return this->id() == other.id(); }
+  bool idcmp(const base_block3D& other) const {
+    return this->id() == other.id();
+  }
 
   /**
    * \brief Compare two \ref base_block3D objects for equality based on their
@@ -126,7 +129,7 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    */
   bool is_out_of_sight(void) const {
     return kOutOfSight.dpos == unicell_movable_entity3D::dpos3D() ||
-        kOutOfSight.rpos == unicell_movable_entity3D::rpos3D();
+           kOutOfSight.rpos == unicell_movable_entity3D::rpos3D();
   }
 
  private:

@@ -53,7 +53,7 @@ powerlaw_distributor::powerlaw_distributor(
  * Member Functions
  ******************************************************************************/
 bool powerlaw_distributor::distribute_block(crepr::base_block3D* block,
-                                               cds::const_entity_vector& entities) {
+                                            cds::const_entity_vector& entities) {
   /*
    * If we get here than either all clusters of the specified capacity are
    * full and/or one or more are not full but have additional entities
@@ -79,9 +79,9 @@ bool powerlaw_distributor::distribute_block(crepr::base_block3D* block,
   return false;
 } /* distribute_block() */
 
-typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::guess_cluster_placements(
-    cds::arena_grid* const grid,
-    const std::vector<uint>& clust_sizes) {
+typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::
+    guess_cluster_placements(cds::arena_grid* const grid,
+                             const std::vector<uint>& clust_sizes) {
   cluster_paramvec config;
 
   for (size_t i = 0; i < clust_sizes.size(); ++i) {
@@ -97,8 +97,9 @@ typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::guess_clus
      * DO need to be able to modify their grid view. Here we do not need it, so
      * we have to cast.
      */
-    auto view = grid->layer<arena_grid::kCell>()->subgrid(rmath::vector2z(x, x_max),
-                                                          rmath::vector2z(y, y_max));
+    auto view =
+        grid->layer<arena_grid::kCell>()->subgrid(rmath::vector2z(x, x_max),
+                                                  rmath::vector2z(y, y_max));
     RCSW_UNUSED rmath::vector2z loc = (*view.origin()).loc();
     ER_TRACE("Guess cluster%zu placement x=[%lu-%lu], y=[%lu-%lu], size=%u",
              i,

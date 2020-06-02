@@ -23,9 +23,9 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cell2D_cache_extent.hpp"
 
+#include "cosm/arena/repr/base_cache.hpp"
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/arena/repr/base_cache.hpp"
 
 /*******************************************************************************
  * Namespaces

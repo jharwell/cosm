@@ -67,9 +67,10 @@ std::unique_ptr<base_cache> base_cache::clone(void) const {
       rtypes::spatial_dist(xdimr()), mc_resolution, rpos2D(), m_blocks, id()});
 } /* clone() */
 
-RCSW_PURE bool base_cache::contains_block(const crepr::base_block3D* const c_block) const {
+RCSW_PURE bool base_cache::contains_block(
+    const crepr::base_block3D* const c_block) const {
   return std::find_if(m_blocks.begin(), m_blocks.end(), [&](const auto& b) {
-      return b->id() == c_block->id();
-    }) != m_blocks.end();
+           return b->id() == c_block->id();
+         }) != m_blocks.end();
 }
 NS_END(repr, arena, cosm);

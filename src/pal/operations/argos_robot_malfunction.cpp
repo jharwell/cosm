@@ -22,6 +22,7 @@
  * Includes
  ******************************************************************************/
 #include "cosm/pal/operations/argos_robot_malfunction.hpp"
+
 #include "cosm/fsm/supervisor_fsm.hpp"
 #include "cosm/pal/argos_controller2D_adaptor.hpp"
 #include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
@@ -43,7 +44,8 @@ void argos_robot_malfunction::visit(cpal::argos_controller2D_adaptor& controller
   controller.ndc_pop();
 } /* visit() */
 
-void argos_robot_malfunction::visit(cpal::argos_controllerQ3D_adaptor& controller) {
+void argos_robot_malfunction::visit(
+    cpal::argos_controllerQ3D_adaptor& controller) {
   controller.ndc_pusht();
 
   visit(*controller.supervisor());

@@ -79,13 +79,13 @@ class cell2D_op {
 };
 
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell2D_op_visitor = rpvisitor::precise_visitor<cell2D_op,
-                                                     cell2D_op::visit_typelist>;
+using cell2D_op_visitor = rpvisitor::filtered_visitor<cell2D_op>;
+
 NS_END(operations, ds, cosm);
 
 #endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_ */

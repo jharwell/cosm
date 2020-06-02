@@ -39,8 +39,7 @@ class ramp_block3D;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using block3D_variant = boost::variant<cube_block3D*,
-                                       ramp_block3D*>;
+using block3D_variant = boost::variant<cube_block3D*, ramp_block3D*>;
 
 NS_END(repr, cosm);
 

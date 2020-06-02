@@ -65,7 +65,8 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
    * nest. Instead, wander about within the nest until you find the edge (either
    * on your own or being pushed out via collision avoidance).
    */
-  auto *prox = m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
+  auto* prox =
+      m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
   if (auto obs = prox->avg_prox_obj()) {
     m_tracker.inta_enter();
     m_saa->steer_force2D().accum(m_saa->steer_force2D().avoidance(*obs));
@@ -74,17 +75,15 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   }
   m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
 
-  auto* ground = m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground =
+      m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
   if (!ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     return util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* leaving_nest() */
 
-
-HFSM_STATE_DEFINE(util_hfsm,
-                  transport_to_nest,
-                  rpfsm::event_data* data) {
+HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_TRANSPORT_TO_NEST cannot handle child events");
   if (current_state() != last_state()) {
@@ -95,11 +94,12 @@ HFSM_STATE_DEFINE(util_hfsm,
    * We have arrived at the nest so send this signal to the parent FSM that is
    * listing for it.
    */
-  auto* ground = m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground =
+      m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
   if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     if (m_nest_count++ < kNEST_COUNT_MAX_STEPS) {
       m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
-        return util_signal::ekHANDLED;
+      return util_signal::ekHANDLED;
     } else {
       m_nest_count = 0;
       return util_signal::ekENTERED_NEST;
@@ -110,11 +110,13 @@ HFSM_STATE_DEFINE(util_hfsm,
    * Add a bit of wander force when returning to the nest so that we do not
    * beeline for its center directly to decrease congestion.
    */
-  auto *light = m_saa->sensing()->template sensor<hal::sensors::light_sensor>();
+  auto* light = m_saa->sensing()->template sensor<hal::sensors::light_sensor>();
   m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
-  m_saa->steer_force2D().accum(m_saa->steer_force2D().phototaxis(light->readings()));
+  m_saa->steer_force2D().accum(
+      m_saa->steer_force2D().phototaxis(light->readings()));
 
-  auto * prox = m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
+  auto* prox =
+      m_saa->sensing()->template sensor<hal::sensors::proximity_sensor>();
   if (auto obs = prox->avg_prox_obj()) {
     m_tracker.inta_enter();
     m_saa->steer_force2D().accum(m_saa->steer_force2D().avoidance(*obs));
@@ -136,7 +138,6 @@ HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_transport_to_nest) {
       -1, rutils::color::kGREEN);
 }
 
-
 HFSM_EXIT_DEFINE(util_hfsm, exit_transport_to_nest) {
   sensing()->template sensor<hal::sensors::light_sensor>()->disable();
 }
@@ -153,7 +154,6 @@ HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
 rmath::radians util_hfsm::random_angle(void) {
   return rmath::radians(m_rng->uniform(0.0, rmath::radians::kPI.value()));
 } /* randomize_vector_angle() */
-
 
 csubsystem::sensing_subsystemQ3D* util_hfsm::sensing(void) {
   return m_saa->sensing();

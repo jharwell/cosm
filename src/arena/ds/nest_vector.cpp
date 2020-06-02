@@ -41,8 +41,8 @@ std::string do_to_str(const TVector& vec) {
                          vec.end(),
                          std::string(),
                          [&](const std::string& a, const auto& c) {
-                           return a + "nest" + rcppsw::to_string(c->id()) + "@" +
-                               c->dpos2D().to_str() + ",";
+                           return a + "nest" + rcppsw::to_string(c->id()) +
+                                  "@" + c->dpos2D().to_str() + ",";
                          });
 } /* do_to_str() */
 

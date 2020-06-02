@@ -83,9 +83,9 @@ RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
  ******************************************************************************/
 void supervisor_fsm::event_malfunction(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-    /* Possible to have a malfunction event on first timestep  */
-      states::ekST_MALFUNCTION,  /* start */
-      states::ekST_MALFUNCTION,  /* normal */
+      /* Possible to have a malfunction event on first timestep  */
+      states::ekST_MALFUNCTION,     /* start */
+      states::ekST_MALFUNCTION,     /* normal */
       rpfsm::event_signal::ekFATAL, /* malfunction */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
@@ -94,10 +94,10 @@ void supervisor_fsm::event_malfunction(void) {
 
 void supervisor_fsm::event_repair(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-    /* Possible to have repair malfunction event on first timestep  */
-      states::ekST_NORMAL,       /* start */
+      /* Possible to have repair malfunction event on first timestep  */
+      states::ekST_NORMAL,          /* start */
       rpfsm::event_signal::ekFATAL, /* normal */
-      states::ekST_NORMAL,       /* malfunction */
+      states::ekST_NORMAL,          /* malfunction */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);

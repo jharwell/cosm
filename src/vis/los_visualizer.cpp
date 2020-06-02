@@ -37,12 +37,10 @@ NS_START(cosm, vis);
  * Member Functions
  ******************************************************************************/
 void los_visualizer::operator()(const std::vector<rmath::vector2d>& points) {
-  std::vector<argos::CVector2> points2 = {
-    {points[0].x(), points[0].y()},
-    {points[1].x(), points[1].y()},
-    {points[2].x(), points[2].y()},
-    {points[3].x(), points[3].y()}
-  };
+  std::vector<argos::CVector2> points2 = {{points[0].x(), points[0].y()},
+                                          {points[1].x(), points[1].y()},
+                                          {points[2].x(), points[2].y()},
+                                          {points[3].x(), points[3].y()}};
 
   /*
    * Draw LOS slightly above the the specified Z (which is probably a horizontal

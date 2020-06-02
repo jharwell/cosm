@@ -79,22 +79,15 @@ class cell2D_cache_extent : public cdops::cell2D_op {
   /* clang-format on */
 };
 
+NS_END(detail);
+
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cell2D_cache_extent_visitor_impl =
-    rpvisitor::precise_visitor<detail::cell2D_cache_extent,
-                               detail::cell2D_cache_extent::visit_typelist>;
-
-NS_END(detail);
-
-class cell2D_cache_extent_visitor : public detail::cell2D_cache_extent_visitor_impl {
- public:
-  using detail::cell2D_cache_extent_visitor_impl::cell2D_cache_extent_visitor_impl;
-};
+using cell2D_cache_extent_visitor = rpvisitor::filtered_visitor<detail::cell2D_cache_extent>;
 
 NS_END(operations, arena, cosm);
 

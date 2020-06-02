@@ -40,12 +40,10 @@ NS_START(cosm, repr);
  *
  * \brief A repr of the robot's current line-of-sight in 2D.
  */
-class los2D : public crepr::base_los<cds::cell2D>,
-              public rer::client<los2D> {
+class los2D : public crepr::base_los<cds::cell2D>, public rer::client<los2D> {
  public:
   explicit los2D(const const_grid_view& c_view)
-      : base_los(c_view),
-        ER_CLIENT_INIT("cosm.repr.los2D") {}
+      : base_los(c_view), ER_CLIENT_INIT("cosm.repr.los2D") {}
 
   const cds::cell2D& access(const rmath::vector2z& c) const override {
     return access(c.x(), c.y());

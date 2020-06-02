@@ -53,7 +53,6 @@ void argos_robot_repair::visit(cpal::argos_controllerQ3D_adaptor& controller) {
   controller.ndc_pop();
 } /* visit() */
 
-
 void argos_robot_repair::visit(cfsm::supervisor_fsm& fsm) {
   fsm.event_repair();
 } /* visit() */

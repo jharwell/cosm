@@ -24,16 +24,16 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <algorithm>
 #include <list>
-#include <string>
 #include <memory>
 #include <mutex>
-#include <algorithm>
+#include <string>
 #include <utility>
 
+#include "rcppsw/control/config/waveform_config.hpp"
 #include "rcppsw/control/periodic_waveform.hpp"
 #include "rcppsw/control/waveform_generator.hpp"
-#include "rcppsw/control/config/waveform_config.hpp"
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/tv/temporal_penalty.hpp"
@@ -59,7 +59,8 @@ NS_START(cosm, tv);
  */
 class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
  public:
-  using const_iterator_type = typename std::list<temporal_penalty>::const_iterator;
+  using const_iterator_type =
+      typename std::list<temporal_penalty>::const_iterator;
 
   /**
    * \brief Initialize the penalty handler.
@@ -80,8 +81,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
   temporal_penalty_handler& operator=(const temporal_penalty_handler&) = delete;
   temporal_penalty_handler(const temporal_penalty_handler&) = delete;
 
-
-#if(LIBRA_ER == LIBRA_ER_ALL)
+#if (LIBRA_ER == LIBRA_ER_ALL)
   /**
    * \brief Get the name of the penalty handler (for debugging)
    */
@@ -156,7 +156,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
                                     bool lock = true) const {
     maybe_lock(lock);
     auto it = penalty_find(controller, false);
-    bool ret =  m_penalty_list.end() != it;
+    bool ret = m_penalty_list.end() != it;
     maybe_unlock(lock);
     return ret;
   }
@@ -173,8 +173,9 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
    * \return \c TRUE If the robot is currently waiting AND it has satisfied its
    * penalty.
    */
-  RCSW_PURE bool is_penalty_satisfied(const controller::base_controller& controller,
-                                      const rtypes::timestep& t) const {
+  RCSW_PURE bool is_penalty_satisfied(
+      const controller::base_controller& controller,
+      const rtypes::timestep& t) const {
     std::scoped_lock lock(m_list_mtx);
     auto it = penalty_find(controller, false);
     if (it != m_penalty_list.end()) {
@@ -207,7 +208,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
   }
 
  protected:
-  template<typename TController>
+  template <typename TController>
   rtypes::timestep penalty_add(const TController* controller,
                                const rtypes::type_uuid& id,
                                const rtypes::timestep& orig_duration,
@@ -222,7 +223,6 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
     m_penalty_list.push_back(temporal_penalty(controller, id, duration, start));
     return duration;
   }
-
 
  private:
   /*

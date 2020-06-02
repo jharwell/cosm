@@ -36,20 +36,20 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/swarm_manager.hpp"
-#include "cosm/repr/embodied_block.hpp"
 #include "cosm/repr/block_variant.hpp"
+#include "cosm/repr/embodied_block.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena::config {
 struct arena_map_config;
-} // namespace cosm::foraging::config
+} // namespace cosm::arena::config
 
 namespace cosm::arena {
 class base_arena_map;
 class caching_arena_map;
-} /* namespace cosm */
+} // namespace cosm::arena
 
 namespace cosm::vis::config {
 struct visualization_config;
@@ -89,7 +89,9 @@ class argos_sm_adaptor : public swarm_manager,
   void Destroy(void) override { destroy(); }
 
   const std::string& led_medium(void) const { return m_led_medium; }
-  const carena::base_arena_map* arena_map(void) const { return m_arena_map.get(); }
+  const carena::base_arena_map* arena_map(void) const {
+    return m_arena_map.get();
+  }
 
   /**
    * \brief Create a 3D embodied representation of the block and add it to
@@ -124,10 +126,9 @@ class argos_sm_adaptor : public swarm_manager,
    *
    * \param repo Repository of parsed parameters.
    */
-  template<typename TArenaMap>
+  template <typename TArenaMap>
   void arena_map_init(const caconfig::arena_map_config* aconfig,
                       const cvconfig::visualization_config* vconfig) RCSW_COLD;
-
 
   /* clang-format off */
   /**

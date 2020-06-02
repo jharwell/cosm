@@ -25,8 +25,8 @@
 
 #include "rcppsw/control/config/xml/waveform_parser.hpp"
 
-#include "cosm/convergence/config/xml/convergence_parser.hpp"
 #include "cosm/arena/config/xml/arena_map_parser.hpp"
+#include "cosm/convergence/config/xml/convergence_parser.hpp"
 #include "cosm/metrics/config/xml/output_parser.hpp"
 #include "cosm/oracle/config/xml/aggregate_oracle_parser.hpp"
 #include "cosm/tv/config/xml/population_dynamics_parser.hpp"

@@ -42,7 +42,7 @@ NS_START(cosm, fsm);
  * blocks need to implement in order to successfully interact with the loop
  * functions.
  */
-template<typename TGoal>
+template <typename TGoal>
 class block_transporter {
  public:
   block_transporter(void) = default;

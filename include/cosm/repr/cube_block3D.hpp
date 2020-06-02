@@ -27,11 +27,12 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <boost/optional.hpp>
+
 #include "cosm/repr/embodied_block.hpp"
 #endif
 
@@ -54,12 +55,13 @@ class cube_block3D final : public base_block3D {
  public:
   explicit cube_block3D(const rmath::vector3d& dim)
       : base_block3D(dim,
-                   rutils::color::kBLACK,
-                   crepr::block_type::ekCUBE,
-                   rtypes::constants::kNoUUID) {}
+                     rutils::color::kBLACK,
+                     crepr::block_type::ekCUBE,
+                     rtypes::constants::kNoUUID) {}
 
   cube_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block3D(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {}
+      : base_block3D(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {
+  }
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<cube_block3D>(dims3D(), id());

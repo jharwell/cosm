@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/free_block_pickup.hpp"
 
-#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/arena/base_arena_map.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************

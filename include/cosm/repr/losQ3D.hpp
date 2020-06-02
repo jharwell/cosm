@@ -43,8 +43,7 @@ NS_START(cosm, repr);
  * slice of 3D cells. This is in keeping with making the robot controllers as
  * simple as possible.
  */
-class losQ3D : public crepr::base_los<cds::cell3D>,
-               public rer::client<losQ3D> {
+class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
  public:
   explicit losQ3D(const const_grid_view& c_view);
 

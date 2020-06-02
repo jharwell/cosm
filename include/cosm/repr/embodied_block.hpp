@@ -75,8 +75,8 @@ struct embodied_ramp_block {
   argos::CBoxEntity* back{nullptr};
 };
 
-using embodied_block_variant = boost::variant<embodied_cube_block,
-                                              embodied_ramp_block>;
+using embodied_block_variant =
+    boost::variant<embodied_cube_block, embodied_ramp_block>;
 
 NS_END(repr, cosm);
 

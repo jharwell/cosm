@@ -33,9 +33,9 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/math/vector3.hpp"
+#include "rcppsw/mpl/identity.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/utils/maskable_enum.hpp"
-#include "rcppsw/mpl/identity.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/metrics/base_metrics_aggregator.hpp"
@@ -49,7 +49,7 @@ namespace fs = std::filesystem;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-template<typename>
+template <typename>
 class collector_registerer_impl;
 
 /**
@@ -67,10 +67,10 @@ class collector_registerer_impl;
  * it makes it clearer that the template parameters are considered a single
  * unit, and are NOT part of the constructor arguments for the class.
  */
-template<typename... Ts>
-class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collector_registerer_impl<std::tuple<Ts...>>> {
+template <typename... Ts>
+class collector_registerer_impl<std::tuple<Ts...>>
+    : public rer::client<collector_registerer_impl<std::tuple<Ts...>>> {
  public:
-
   /**
    * \brief Each entry in the set of collectors that CAN be created (if they are
    * actually created dependent on configuration) has:
@@ -85,10 +85,8 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
    *
    * - The set of output modes that are valid for the collector.
    */
-  using set_value_type = std::tuple<std::type_index,
-                                    std::string,
-                                    std::string,
-                                    rmetrics::output_mode>;
+  using set_value_type =
+      std::tuple<std::type_index, std::string, std::string, rmetrics::output_mode>;
 
   /**
    * \brief Comparator for \ref set_value_type objects within the \ref
@@ -166,11 +164,12 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
    * mapping collectors to run-time categories, so that this class is general
    * purpose and not tied to a specific input format.
    */
-  template<typename... Args>
-  collector_registerer_impl(const cmconfig::metrics_config* const config,
-                       const creatable_set& create_set,
-                       base_metrics_aggregator* const agg,
-                       const std::tuple<Args...>& extra_args = std::tuple<Args...>())
+  template <typename... Args>
+  collector_registerer_impl(
+      const cmconfig::metrics_config* const config,
+      const creatable_set& create_set,
+      base_metrics_aggregator* const agg,
+      const std::tuple<Args...>& extra_args = std::tuple<Args...>())
       : ER_CLIENT_INIT("cosm.metrics.collector_registerer"),
         mc_extra_args(extra_args),
         mc_config(config),
@@ -249,20 +248,21 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
                                                                     fpath);
   }
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(
-                constructible_with_extra_args<typename TCollectorWrap::type>::value &&
-                (sizeof...(Ts) > 0))>
+            RCPPSW_SFINAE_FUNC(constructible_with_extra_args<
+                                   typename TCollectorWrap::type>::value &&
+                               (sizeof...(Ts) > 0))>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,
                    const rtypes::timestep& interval,
                    rmetrics::output_mode mode) const {
     m_agg->collector_preregister(scoped_name, mode);
     auto targs = std::tuple_cat(std::make_tuple(scoped_name, fpath, interval),
-                               mc_extra_args);
+                                mc_extra_args);
     auto lambda = [&](auto&&... args) {
       return m_agg->collector_register<typename TCollectorWrap::type,
-      const rtypes::timestep&,
-      Ts...>(std::forward<decltype(args)>(args)...);
+                                       const rtypes::timestep&,
+                                       Ts...>(
+          std::forward<decltype(args)>(args)...);
     };
     /*
      * The std::move() is 100% necessary here, because (I think) types in the
@@ -274,23 +274,22 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
   }
 
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(
-                constructible_with_mode_and_extra_args<typename TCollectorWrap::type>::value)>
+            RCPPSW_SFINAE_FUNC(constructible_with_mode_and_extra_args<
+                               typename TCollectorWrap::type>::value)>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,
                    const rtypes::timestep& interval,
                    rmetrics::output_mode mode) const {
     m_agg->collector_preregister(scoped_name, mode);
-    auto targs = std::tuple_cat(std::make_tuple(scoped_name,
-                                               fpath,
-                                               interval,
-                                               mode),
-                               mc_extra_args);
+    auto targs =
+        std::tuple_cat(std::make_tuple(scoped_name, fpath, interval, mode),
+                       mc_extra_args);
     auto lambda = [&](auto&&... args) {
       return m_agg->collector_register<typename TCollectorWrap::type,
-      const rtypes::timestep&,
-      rmetrics::output_mode,
-      Ts...>(std::forward<decltype(args)>(args)...);
+                                       const rtypes::timestep&,
+                                       rmetrics::output_mode,
+                                       Ts...>(
+          std::forward<decltype(args)>(args)...);
     };
     /*
      * The std::move() is 100% necessary here, because (I think) types in the
@@ -317,9 +316,10 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
     auto append_it = mc_config->append.enabled.find(xml_name);
     auto truncate_it = mc_config->truncate.enabled.find(xml_name);
     auto create_it = mc_config->create.enabled.find(xml_name);
-    uint sum = static_cast<uint>(append_it != mc_config->append.enabled.end()) +
-               static_cast<uint>(truncate_it != mc_config->truncate.enabled.end()) +
-               static_cast<uint>(create_it != mc_config->create.enabled.end());
+    uint sum =
+        static_cast<uint>(append_it != mc_config->append.enabled.end()) +
+        static_cast<uint>(truncate_it != mc_config->truncate.enabled.end()) +
+        static_cast<uint>(create_it != mc_config->create.enabled.end());
     ER_ASSERT(
         sum <= 1,
         "Collector '%s' present in more than 1 collector group in XML file",
@@ -329,20 +329,18 @@ class collector_registerer_impl<std::tuple<Ts...>> : public rer::client<collecto
                 "Output mode %d for collector '%s' does not contain ekAPPEND",
                 rcppsw::as_underlying(allowed),
                 xml_name.c_str());
-      auto ret =
-          pre_init_ret_type{m_agg->metrics_path() / append_it->second,
-                            mc_config->append.output_interval,
-                            rmetrics::output_mode::ekAPPEND};
+      auto ret = pre_init_ret_type{m_agg->metrics_path() / append_it->second,
+                                   mc_config->append.output_interval,
+                                   rmetrics::output_mode::ekAPPEND};
       return boost::make_optional(ret);
     } else if (truncate_it != mc_config->truncate.enabled.end()) {
       ER_ASSERT(allowed & rmetrics::output_mode::ekTRUNCATE,
                 "Output mode %d for collector '%s' does not contain ekTRUNCATE",
                 rcppsw::as_underlying(allowed),
                 xml_name.c_str());
-      auto ret =
-          pre_init_ret_type{m_agg->metrics_path() / truncate_it->second,
-                            mc_config->truncate.output_interval,
-                            rmetrics::output_mode::ekTRUNCATE};
+      auto ret = pre_init_ret_type{m_agg->metrics_path() / truncate_it->second,
+                                   mc_config->truncate.output_interval,
+                                   rmetrics::output_mode::ekTRUNCATE};
       return boost::make_optional(ret);
     } else if (create_it != mc_config->create.enabled.end()) {
       ER_ASSERT(allowed & rmetrics::output_mode::ekCREATE,
@@ -383,13 +381,13 @@ NS_END(detail);
  * ALWAYS have to pass it a list of extra arguments for building some finicky
  * metrics collectors.
  */
-template<typename TExtraArgsTuple = std::tuple<>>
-class collector_registerer  : public detail::collector_registerer_impl<TExtraArgsTuple> {
+template <typename TExtraArgsTuple = std::tuple<>>
+class collector_registerer
+    : public detail::collector_registerer_impl<TExtraArgsTuple> {
  public:
   using detail::collector_registerer_impl<TExtraArgsTuple>::collector_registerer_impl;
   using detail::collector_registerer_impl<TExtraArgsTuple>::operator();
 };
-
 
 NS_END(metrics, cosm);
 

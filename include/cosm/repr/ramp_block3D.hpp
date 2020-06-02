@@ -27,11 +27,12 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
 #include <boost/optional.hpp>
+
 #include "cosm/repr/embodied_block.hpp"
 #endif
 
@@ -53,12 +54,13 @@ class ramp_block3D final : public base_block3D {
  public:
   explicit ramp_block3D(const rmath::vector3d& dim)
       : base_block3D(dim,
-                   rutils::color::kBLUE,
-                   crepr::block_type::ekRAMP,
-                   rtypes::constants::kNoUUID) {}
+                     rutils::color::kBLUE,
+                     crepr::block_type::ekRAMP,
+                     rtypes::constants::kNoUUID) {}
 
   ramp_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block3D(dim, rutils::color::kBLUE, crepr::block_type::ekRAMP, id) {}
+      : base_block3D(dim, rutils::color::kBLUE, crepr::block_type::ekRAMP, id) {
+  }
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<ramp_block3D>(dims3D(), id());

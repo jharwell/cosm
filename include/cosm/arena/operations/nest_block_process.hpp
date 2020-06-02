@@ -1,5 +1,5 @@
  /**
- * \file nest_block_drop.hpp
+ * \file nest_block_process.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_DROP_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_DROP_HPP_
+#ifndef INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_
+#define INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_
 
 /*******************************************************************************
  * Includes
@@ -30,6 +30,7 @@
 #include "rcppsw/patterns/visitor/visitor.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/mpl/typelist.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -51,12 +52,16 @@ NS_START(cosm, arena, operations, detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class nest_block_drop
+ * \class nest_block_process
  * \ingroup arena operations detail
  *
- * \brief Fired whenever a robot drops a block in the nest.
+ * \brief Fired whenever a robot brings a block to the \ref crepr::nest, and
+ * meets the conditions for processing, "processing" having an application
+ * dependent meaning, hence the generic name of this class.
+ *
+ * -
  */
-class nest_block_drop : public rer::client<nest_block_drop> {
+class nest_block_process : public rer::client<nest_block_process> {
  private:
   struct visit_typelist_impl {
     using value = rmpl::typelist<base_arena_map,
@@ -68,23 +73,35 @@ class nest_block_drop : public rer::client<nest_block_drop> {
   using visit_typelist = visit_typelist_impl::value;
 
   /**
-   * \brief Initialize a nest block drop event.
+   * \brief Initialize a nest block process event.
    *
    * \param robot_block Handle to the block the robot is currently carrying
    *                    (originally a clone of an arena block), which it has
-   *                    given up ownership of for the drop.
+   *                    given up ownership of for processing. Not used for
+   *                    anything other than extracting the ID of the block which
+   *                    the robot was carrying.
    * \param t Current timestep.
    */
-  nest_block_drop(std::unique_ptr<crepr::base_block3D> robot_block,
-                  const rtypes::timestep& t);
-
-  ~nest_block_drop(void) override = default;
-
-  nest_block_drop(const nest_block_drop&) = delete;
-  nest_block_drop& operator=(const nest_block_drop&) = delete;
+  nest_block_process(const std::unique_ptr<crepr::base_block3D> robot_block,
+                     const rtypes::timestep& t);
 
   /**
-   * \brief Perform actual nest block drop in the arena.
+   * \brief Initialize a nest block process event.
+   *
+   * \param robot_block_id ID of the block the robot ALREADY gave up to prior to this
+   *                        processing event.
+   * \param t Current timestep.
+   */
+  nest_block_process(const rtypes::type_uuid& robot_block_id,
+                     const rtypes::timestep& t);
+
+  ~nest_block_process(void) override = default;
+
+  nest_block_process(const nest_block_process&) = delete;
+  nest_block_process& operator=(const nest_block_process&) = delete;
+
+  /**
+   * \brief Perform actual nest block process in the arena.
    *
    * Takes \ref caching_arena_map block and grid mutexes to protect block
    * re-distribution and block updates, and releases afterwards. See
@@ -101,29 +118,21 @@ class nest_block_drop : public rer::client<nest_block_drop> {
 
   /* clang-format off */
   const rtypes::timestep               mc_timestep;
-
-  std::unique_ptr<crepr::base_block3D> m_robot_block;
+  const rtypes::type_uuid              mc_robot_block_id;
   crepr::base_block3D*                 m_arena_block{nullptr};
   /* clang-format on */
 };
 
+NS_END(detail);
+
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using nest_block_drop_visitor_impl =
-    rpvisitor::precise_visitor<detail::nest_block_drop,
-                               detail::nest_block_drop::visit_typelist>;
-
-NS_END(detail);
-
-class nest_block_drop_visitor : public detail::nest_block_drop_visitor_impl {
- public:
-  using detail::nest_block_drop_visitor_impl::nest_block_drop_visitor_impl;
-};
+using nest_block_process_visitor = rpvisitor::filtered_visitor<detail::nest_block_process>;
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_DROP_HPP_ */
+#endif /* INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_ */

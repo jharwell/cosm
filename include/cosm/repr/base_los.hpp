@@ -59,20 +59,18 @@ NS_START(cosm, repr);
  * All coordinates within a LOS are relative to the LOS itself (not its location
  * within the arena). The origin is in the lower left corner of the LOS.
  */
-template<typename TCell>
+template <typename TCell>
 class base_los : public rer::client<base_los<TCell>> {
  public:
-  using grid_view = typename std::conditional<
-   std::is_same<cds::cell2D, TCell>::value,
-   typename rds::base_grid2D<TCell>::grid_view,
-   typename rds::base_grid3D<TCell>::grid_view
-   >::type;
+  using grid_view =
+      typename std::conditional<std::is_same<cds::cell2D, TCell>::value,
+                                typename rds::base_grid2D<TCell>::grid_view,
+                                typename rds::base_grid3D<TCell>::grid_view>::type;
 
   using const_grid_view = typename std::conditional<
-    std::is_same<cds::cell2D, TCell>::value,
-    typename rds::base_grid2D<TCell>::const_grid_view,
-    typename rds::base_grid3D<TCell>::const_grid_view
-    >::type;
+      std::is_same<cds::cell2D, TCell>::value,
+      typename rds::base_grid2D<TCell>::const_grid_view,
+      typename rds::base_grid3D<TCell>::const_grid_view>::type;
 
   using coord_type =
       typename std::conditional<std::is_same<cds::cell2D, TCell>::value,

@@ -68,8 +68,8 @@ void force_calculator_parser::parse(const ticpp::Element& node) {
 
 bool force_calculator_parser::validate(void) const {
   return m_avoidance.validate() && m_arrival.validate() &&
-         m_wander.validate() && m_polar.validate() &&
-      m_phototaxis.validate() && m_path_following.validate();
+         m_wander.validate() && m_polar.validate() && m_phototaxis.validate() &&
+         m_path_following.validate();
 } /* validate() */
 
 NS_END(xml, config, steer2D, cosm);

@@ -63,6 +63,9 @@ class free_block_pickup : public rer::client<free_block_pickup>,
  public:
   using visit_typelist = visit_typelist_impl::value;
 
+  free_block_pickup(crepr::base_block3D* block,
+                    const rtypes::type_uuid& robot_id);
+
   ~free_block_pickup(void) override = default;
 
   free_block_pickup(const free_block_pickup&) = delete;
@@ -76,10 +79,6 @@ class free_block_pickup : public rer::client<free_block_pickup>,
    */
   void visit(base_arena_map& map);
 
- protected:
-  free_block_pickup(crepr::base_block3D* block,
-                    const rtypes::type_uuid& robot_id);
-
  private:
   /* clang-format off */
   const rtypes::type_uuid mc_robot_id;
@@ -88,22 +87,15 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   /* clang-format on */
 };
 
+NS_END(detail);
+
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using free_block_pickup_visitor_impl =
-    rpvisitor::precise_visitor<detail::free_block_pickup,
-                               detail::free_block_pickup::visit_typelist>;
-
-NS_END(detail);
-
-class free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl {
- public:
-  using detail::free_block_pickup_visitor_impl::free_block_pickup_visitor_impl;
-};
+using free_block_pickup_visitor = rpvisitor::filtered_visitor<detail::free_block_pickup>;
 
 NS_END(operations, arena, cosm);
 

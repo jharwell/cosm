@@ -27,12 +27,12 @@
 
 #include "rcppsw/math/rngm.hpp"
 
-#include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/vis/config/visualization_config.hpp"
+#include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/pal/embodied_block_creator.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/vis/config/visualization_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -52,7 +52,7 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TArenaMap>
+template <typename TArenaMap>
 void argos_sm_adaptor::arena_map_init(
     const caconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
@@ -90,10 +90,11 @@ crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template void argos_sm_adaptor::arena_map_init<carena::base_arena_map>(const caconfig::arena_map_config* aconfig,
-                                                                       const cvconfig::visualization_config* vconfig);
-template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(const caconfig::arena_map_config* aconfig,
-                                                                          const cvconfig::visualization_config* vconfig);
-
+template void argos_sm_adaptor::arena_map_init<carena::base_arena_map>(
+    const caconfig::arena_map_config* aconfig,
+    const cvconfig::visualization_config* vconfig);
+template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(
+    const caconfig::arena_map_config* aconfig,
+    const cvconfig::visualization_config* vconfig);
 
 NS_END(pal, cosm);

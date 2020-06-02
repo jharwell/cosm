@@ -58,15 +58,16 @@ NS_START(cosm, interactors);
  */
 template <class TBaseController,
           template <class TDerivedController, class...> class TInteractor,
-  class... Args>
+          class... Args>
 class applicator {
  public:
   applicator(TBaseController* const controller, const rtypes::timestep& t)
       : mc_timestep(t), m_controller(controller) {}
 
   template <typename TDerivedController>
-  auto operator()(TInteractor<TDerivedController, Args...>& interactor) const -> decltype(interactor(std::declval<TDerivedController&>(),
-                                                                                                    std::declval<const rtypes::timestep&>())) {
+  auto operator()(TInteractor<TDerivedController, Args...>& interactor) const
+      -> decltype(interactor(std::declval<TDerivedController&>(),
+                             std::declval<const rtypes::timestep&>())) {
     return interactor(*static_cast<TDerivedController*>(m_controller),
                       mc_timestep);
   }

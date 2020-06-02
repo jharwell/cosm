@@ -136,8 +136,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
   }
 
   if ((m_goal.point() - sensing()->rpos2D()).length() <= m_goal.tolerance()) {
-    internal_event(ekST_ARRIVED,
-                   std::make_unique<point_argument>(m_goal));
+    internal_event(ekST_ARRIVED, std::make_unique<point_argument>(m_goal));
   }
 
   /*
@@ -152,8 +151,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
       !saa()->steer_force2D().within_slowing_radius()) {
     internal_event(ekST_INTERFERENCE_AVOIDANCE);
   } else {
-    saa()->steer_force2D().accum(
-        saa()->steer_force2D().seek_to(m_goal.point()));
+    saa()->steer_force2D().accum(saa()->steer_force2D().seek_to(m_goal.point()));
     saa()->actuation()->actuator<hal::actuators::led_actuator>()->set_color(
         -1, rutils::color::kBLUE);
   }
@@ -231,8 +229,7 @@ void vector_fsm::task_start(ta::taskable_argument* c_arg) {
   ER_ASSERT(nullptr != a, "Bad point argument passed to %s", __FUNCTION__);
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
-                 std::make_unique<point_argument>(a->tolerance(),
-                                                  a->point()));
+                 std::make_unique<point_argument>(a->tolerance(), a->point()));
 } /* task_start() */
 
 void vector_fsm::task_execute(void) {

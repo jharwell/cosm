@@ -43,7 +43,8 @@ interference_metrics_collector::interference_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> interference_metrics_collector::csv_header_cols(void) const {
+std::list<std::string> interference_metrics_collector::csv_header_cols(
+    void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
       /* clang-format off */
@@ -66,18 +67,17 @@ void interference_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-void interference_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+void interference_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const interference_metrics&>(metrics);
   m_interval.n_exp_interference += static_cast<uint>(m.exp_interference());
   m_cum.n_exp_interference += static_cast<uint>(m.exp_interference());
 
   m_interval.n_entered_interference +=
       static_cast<uint>(m.entered_interference());
-  m_cum.n_entered_interference +=
-      static_cast<uint>(m.entered_interference());
+  m_cum.n_entered_interference += static_cast<uint>(m.entered_interference());
 
-  m_interval.n_exited_interference +=
-      static_cast<uint>(m.exited_interference());
+  m_interval.n_exited_interference += static_cast<uint>(m.exited_interference());
   m_cum.n_exited_interference += static_cast<uint>(m.exited_interference());
 
   if (m.exited_interference()) {

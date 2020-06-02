@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/foraging/oracle/foraging_oracle.hpp"
 
-#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/base_arena_map.hpp"
+#include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/oracle/config/aggregate_oracle_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
@@ -68,8 +68,10 @@ void foraging_oracle::update(carena::base_arena_map* const map) {
                  std::back_inserter(v),
                  [&](const auto& b) {
                    /* don't include blocks robot's are carrying */
-                   return rtypes::constants::kNoUUID == b->md()->robot_id(); });
-    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)->set_knowledge(v);
+                   return rtypes::constants::kNoUUID == b->md()->robot_id();
+                 });
+    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)
+        ->set_knowledge(v);
   }
 } /* update() */
 
@@ -89,7 +91,7 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
                  [&](const auto& b) {
                    /* don't include blocks robot's are carrying */
                    return rtypes::constants::kNoUUID == b->md()->robot_id() &&
-                       /*
+                          /*
                         * Don't include blocks that are currently in a cache
                         * (harmless, but causes repeated "removed block hidden
                         * behind cache" warnings)
@@ -100,7 +102,8 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
                                          return c->contains_block(b);
                                        });
                  });
-    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)->set_knowledge(v);
+    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)
+        ->set_knowledge(v);
   }
 
   auto caches_it = config()->entities.types.find("caches");
@@ -110,7 +113,8 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
     for (auto& c : map->caches()) {
       v.push_back(c);
     } /* for(&b..) */
-    oracle_get<coracle::entities_oracle<carepr::base_cache>>(kCaches)->set_knowledge(v);
+    oracle_get<coracle::entities_oracle<carepr::base_cache>>(kCaches)
+        ->set_knowledge(v);
   }
 } /* update() */
 

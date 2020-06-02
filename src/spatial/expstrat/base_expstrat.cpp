@@ -33,11 +33,10 @@ NS_START(cosm, spatial, expstrat);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_expstrat::base_expstrat(params* const p)
-    : base_expstrat{p->saa, p->rng} {}
+base_expstrat::base_expstrat(params* const p) : base_expstrat{p->saa, p->rng} {}
 
 base_expstrat::base_expstrat(subsystem::saa_subsystemQ3D* const saa,
                              rmath::rng* rng)
-    : m_saa(saa), m_rng(rng), m_inta_tracker(m_saa->sensing())  {}
+    : m_saa(saa), m_rng(rng), m_inta_tracker(m_saa->sensing()) {}
 
 NS_END(expstrat, spatial, cosm);

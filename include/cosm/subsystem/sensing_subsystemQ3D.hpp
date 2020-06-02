@@ -66,17 +66,16 @@ NS_START(cosm, subsystem);
  */
 class sensing_subsystemQ3D {
  public:
-  using variant_type = boost::variant<
-   hal::sensors::proximity_sensor,
-   hal::sensors::wifi_sensor,
-   hal::sensors::light_sensor,
-   hal::sensors::ground_sensor,
-   hal::sensors::battery_sensor,
-   hal::sensors::diff_drive_sensor,
+  using variant_type = boost::variant<hal::sensors::proximity_sensor,
+                                      hal::sensors::wifi_sensor,
+                                      hal::sensors::light_sensor,
+                                      hal::sensors::ground_sensor,
+                                      hal::sensors::battery_sensor,
+                                      hal::sensors::diff_drive_sensor,
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-   hal::sensors::colored_blob_camera_sensor
+                                      hal::sensors::colored_blob_camera_sensor
 #endif
-   >;
+                                      >;
   using sensor_map = std::map<std::type_index, variant_type>;
 
   /**
@@ -93,7 +92,7 @@ class sensing_subsystemQ3D {
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
   sensing_subsystemQ3D(const hal::sensors::position_sensor& pos,
-                         const sensor_map& sensors)
+                       const sensor_map& sensors)
       : m_pos_sensor(pos), m_sensors(sensors) {}
 
   virtual ~sensing_subsystemQ3D(void) = default;
@@ -161,8 +160,7 @@ class sensing_subsystemQ3D {
   /**
    * \brief Update the current time and position information for the robot.
    */
-  void update(const rtypes::timestep& t,
-              const rtypes::discretize_ratio& ratio) {
+  void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
     m_tick = t;
     auto reading = m_pos_sensor.reading();
 
@@ -183,18 +181,13 @@ class sensing_subsystemQ3D {
    * \brief Get how far the robot has traveled in the last timestep in 2D, as
    * well as the direction/magnitude.
    */
-  rmath::vector2d tick_travel2D(void) const {
-    return m_rpos2D - m_prev_rpos2D;
-  }
+  rmath::vector2d tick_travel2D(void) const { return m_rpos2D - m_prev_rpos2D; }
 
   /**
    * \brief Get how far the robot has traveled in the last timestep in 3D, as
    * well as the direction/magnitude.
    */
-  rmath::vector3d tick_travel3D(void) const {
-    return m_rpos3D - m_prev_rpos3D;
-  }
-
+  rmath::vector3d tick_travel3D(void) const { return m_rpos3D - m_prev_rpos3D; }
 
  private:
   /* clang-format off */

@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <utility>
 #include <memory>
+#include <utility>
 
 #include "rcppsw/types/timestep.hpp"
 
@@ -55,46 +55,55 @@ class population_dynamics;
  * \tparam TPopulationDynamics Class which will orchestrate population dynamics
  *         within the swarm. Must be derived from \ref population_dynamics.
  */
-template<typename TEnvDynamics, typename TPopulationDynamics>
+template <typename TEnvDynamics, typename TPopulationDynamics>
 class tv_manager {
  private:
   /**
    * \brief Predicate for detecting if the template types for the class define a
    * method update(const rtypes::timestep&).
    */
-  template<typename T>
-  using defines_update_type = decltype(std::declval<T>().update(std::declval<const rtypes::timestep&>()));
+  template <typename T>
+  using defines_update_type = decltype(
+      std::declval<T>().update(std::declval<const rtypes::timestep&>()));
 
-  static_assert(std::is_base_of<population_dynamics, TPopulationDynamics>::value,
-                "FATAL: TPopulationDynamics is not derived from population_dynamics");
+  static_assert(
+      std::is_base_of<population_dynamics, TPopulationDynamics>::value,
+      "FATAL: TPopulationDynamics is not derived from population_dynamics");
   static_assert(rcppsw::is_detected<defines_update_type, TEnvDynamics>::value,
                 "TEnvDynamics does not define update()");
-  static_assert(rcppsw::is_detected<defines_update_type, TPopulationDynamics>::value,
-                "TPopulationDynamics does not define update()");
+  static_assert(
+      rcppsw::is_detected<defines_update_type, TPopulationDynamics>::value,
+      "TPopulationDynamics does not define update()");
 
  public:
   tv_manager(std::unique_ptr<TEnvDynamics> envd,
-             std::unique_ptr<TPopulationDynamics> popd) :
-      m_envd(std::move(envd)),
-      m_popd(std::move(popd)) {}
+             std::unique_ptr<TPopulationDynamics> popd)
+      : m_envd(std::move(envd)), m_popd(std::move(popd)) {}
 
   tv_manager(const tv_manager&) = delete;
   const tv_manager& operator=(const tv_manager&) = delete;
 
-  template<dynamics_type type,
-           RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
-  const TPopulationDynamics* dynamics(void) const { return m_popd.get(); }
-  template<dynamics_type type,
-           RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
-  const TEnvDynamics* dynamics(void) const { return m_envd.get(); }
+  template <dynamics_type type,
+            RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
+  const TPopulationDynamics* dynamics(void) const {
+    return m_popd.get();
+  }
+  template <dynamics_type type,
+            RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
+  const TEnvDynamics* dynamics(void) const {
+    return m_envd.get();
+  }
 
-
-  template<dynamics_type type,
-           RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
-  TPopulationDynamics* dynamics(void) { return m_popd.get(); }
-  template<dynamics_type type,
-           RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
-  TEnvDynamics* dynamics(void) { return m_envd.get(); }
+  template <dynamics_type type,
+            RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
+  TPopulationDynamics* dynamics(void) {
+    return m_popd.get();
+  }
+  template <dynamics_type type,
+            RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
+  TEnvDynamics* dynamics(void) {
+    return m_envd.get();
+  }
 
   /**
    * \brief Update the state of all applied variances. Should be called once per

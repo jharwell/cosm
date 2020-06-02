@@ -49,14 +49,15 @@ NS_START(cosm, interactors);
  * timestep.
  */
 template <typename TController, typename TControllerSpecMap>
-class base_task_abort : public rer::client<base_task_abort<TController,
-                                                           TControllerSpecMap>> {
+class base_task_abort
+    : public rer::client<base_task_abort<TController, TControllerSpecMap>> {
  public:
-  using controller_spec = typename boost::mpl::at<TControllerSpecMap,
-                                                  TController>::type;
+  using controller_spec =
+      typename boost::mpl::at<TControllerSpecMap, TController>::type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using envd_type = typename controller_spec::env_dynamics_type;
-  using robot_free_block_drop_visitor_type = typename controller_spec::robot_free_block_drop_visitor_type;
+  using robot_free_block_drop_visitor_type =
+      typename controller_spec::robot_free_block_drop_visitor_type;
 
   base_task_abort(arena_map_type* const map,
                   envd_type* const envd,
@@ -128,10 +129,11 @@ class base_task_abort : public rer::client<base_task_abort<TController,
                                                 loc,
                                                 m_map->grid_resolution());
 
-    caops::free_block_drop_visitor adrop_op(m_map->blocks()[block_id.v()],
-                                            loc,
-                                            m_map->grid_resolution(),
-                                            carena::arena_map_locking::ekNONE_HELD);
+    caops::free_block_drop_visitor adrop_op(
+        m_map->blocks()[block_id.v()],
+        loc,
+        m_map->grid_resolution(),
+        carena::arena_map_locking::ekNONE_HELD);
 
     adrop_op.visit(*m_map);
     rdrop_op.visit(controller);

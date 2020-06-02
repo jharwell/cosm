@@ -24,21 +24,21 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <mutex>
-#include <vector>
-#include <string>
 #include <map>
+#include <mutex>
+#include <string>
+#include <vector>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
-#include "cosm/ds/block3D_vector.hpp"
-#include "cosm/repr/nest.hpp"
-#include "cosm/foraging/block_dist/dispatcher.hpp"
-#include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/arena/arena_map_locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
+#include "cosm/ds/arena_grid.hpp"
+#include "cosm/ds/block3D_vector.hpp"
+#include "cosm/foraging/block_dist/dispatcher.hpp"
+#include "cosm/foraging/block_dist/redist_governor.hpp"
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -55,7 +55,6 @@ class cell2D;
 } /* namespace cosm::ds */
 
 NS_START(cosm, arena);
-
 
 /*******************************************************************************
  * Class Definitions
@@ -96,7 +95,6 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   size_t n_blocks(void) const { return m_blockso.size(); }
 
-
   template <uint Index>
   typename cds::arena_grid::layer_value_type<Index>::value_type& access(
       const rmath::vector2z& d) {
@@ -109,7 +107,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   }
   template <uint Index>
   typename cds::arena_grid::layer_value_type<Index>::value_type& access(size_t i,
-                                                                   size_t j) {
+                                                                        size_t j) {
     return decoratee().template access<Index>(i, j);
   }
   template <uint Index>
@@ -163,8 +161,9 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \return The ID of the block that the robot is on, or -1 if the robot is not
    * actually on a block.
    */
-  virtual rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
-                                           const rtypes::type_uuid& ent_id) const RCSW_PURE;
+  virtual rtypes::type_uuid robot_on_block(
+      const rmath::vector2d& pos,
+      const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
   rtypes::discretize_ratio grid_resolution(void) const {
     return decoratee().resolution();
@@ -255,7 +254,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \param block The block to distribute. If NULL, then this is the initial
    *              block distribution.
    */
-  virtual block_dist_precalc_type block_dist_precalc(const crepr::base_block3D* block);
+  virtual block_dist_precalc_type block_dist_precalc(
+      const crepr::base_block3D* block);
 
  private:
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;

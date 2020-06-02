@@ -25,8 +25,8 @@
  * Includes
  ******************************************************************************/
 #include <mutex>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/ds/cache_vector.hpp"
@@ -70,8 +70,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \param caches The caches to add.
    * \param sm The \ref argos_sm_adaptor.
    */
-  void caches_add(const cads::acache_vectoro& caches,
-                  pal::argos_sm_adaptor* sm);
+  void caches_add(const cads::acache_vectoro& caches, pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -79,8 +78,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
    */
-  void cache_remove(repr::arena_cache* victim,
-                    pal::argos_sm_adaptor* sm);
+  void cache_remove(repr::arena_cache* victim, pal::argos_sm_adaptor* sm);
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the
@@ -98,11 +96,13 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \return The ID of the cache that the robot is on, or -1 if the robot is not
    * actually on a cache.
    */
-  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos,
-                                   const rtypes::type_uuid& ent_id) const RCSW_PURE;
+  rtypes::type_uuid robot_on_cache(
+      const rmath::vector2d& pos,
+      const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
-  rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
-                                   const rtypes::type_uuid& ent_id) const override RCSW_PURE;
+  rtypes::type_uuid robot_on_block(
+      const rmath::vector2d& pos,
+      const rtypes::type_uuid& ent_id) const override RCSW_PURE;
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */
@@ -118,12 +118,15 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * caches.
    */
   void zombie_caches_clear(void) { m_zombie_caches.clear(); }
-  const cads::acache_vectoro& zombie_caches(void) const { return m_zombie_caches; }
+  const cads::acache_vectoro& zombie_caches(void) const {
+    return m_zombie_caches;
+  }
 
  private:
   void pre_block_dist_lock(const arena_map_locking& locking) override;
   void post_block_dist_unlock(const arena_map_locking& locking) override;
-  block_dist_precalc_type block_dist_precalc(const crepr::base_block3D* block) override;
+  block_dist_precalc_type block_dist_precalc(
+      const crepr::base_block3D* block) override;
 
   /* clang-format off */
   mutable std::mutex                     m_cache_mtx{};

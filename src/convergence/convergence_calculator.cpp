@@ -28,9 +28,9 @@
  * crash with an exception.
  */
 #define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
-#include <boost/variant.hpp>
-
 #include "cosm/convergence/convergence_calculator.hpp"
+
+#include <boost/variant.hpp>
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -58,7 +58,8 @@ class convergence_measure_updater : public boost::static_visitor<void> {
  public:
   convergence_measure_updater(
       uint n,
-      const boost::optional<convergence_calculator::headings_calc_cb_type>& headings_calc,
+      const boost::optional<convergence_calculator::headings_calc_cb_type>&
+          headings_calc,
       const boost::optional<convergence_calculator::nn_calc_cb_type>& nn_calc,
       const boost::optional<convergence_calculator::pos_calc_cb_type>& pos_calc,
       const boost::optional<convergence_calculator::tasks_calc_cb_type>& tasks_calc)
@@ -69,8 +70,9 @@ class convergence_measure_updater : public boost::static_visitor<void> {
         m_tasks_calc(tasks_calc) {}
   void operator()(interactivity& i) {
     if (m_nn_calc) {
-      i((*m_nn_calc)(m_n_threads)); }
+      i((*m_nn_calc)(m_n_threads));
     }
+  }
 
   void operator()(angular_order& ang) {
     if (m_headings_calc) {
@@ -87,7 +89,6 @@ class convergence_measure_updater : public boost::static_visitor<void> {
   void operator()(velocity& vel) {
     if (m_pos_calc) {
       vel((*m_pos_calc)(m_n_threads));
-
     }
   }
 
@@ -134,24 +135,24 @@ void convergence_calculator::interactivity_init(const nn_calc_cb_type& cb) {
   m_measures.emplace(typeid(interactivity), interactivity(mc_config.epsilon));
 } /* interactivity_init() */
 
-void convergence_calculator::task_dist_entropy_init(const tasks_calc_cb_type &cb) {
+void convergence_calculator::task_dist_entropy_init(const tasks_calc_cb_type& cb) {
   m_tasks_calc = boost::make_optional(cb);
-    m_measures.emplace(typeid(task_dist_entropy),
-                       task_dist_entropy(mc_config.epsilon));
+  m_measures.emplace(typeid(task_dist_entropy),
+                     task_dist_entropy(mc_config.epsilon));
 } /* task_dist_init() */
 
-void convergence_calculator::positional_entropy_init(const pos_calc_cb_type &cb) {
+void convergence_calculator::positional_entropy_init(const pos_calc_cb_type& cb) {
   /* velocity and positional entropy use the same callback */
   if (!m_pos_calc) {
     m_pos_calc = boost::make_optional(cb);
   }
-    m_measures.emplace(
-        typeid(positional_entropy),
-        positional_entropy(
-            mc_config.epsilon,
-            std::make_unique<raclustering::detail::entropy_impl<rmath::vector2d>>(
-                mc_config.n_threads),
-            &mc_config.pos_entropy));
+  m_measures.emplace(
+      typeid(positional_entropy),
+      positional_entropy(
+          mc_config.epsilon,
+          std::make_unique<raclustering::detail::entropy_impl<rmath::vector2d>>(
+              mc_config.n_threads),
+          &mc_config.pos_entropy));
 } /* positional_entropy_init() */
 
 void convergence_calculator::velocity_init(const pos_calc_cb_type& cb) {
@@ -163,11 +164,8 @@ void convergence_calculator::velocity_init(const pos_calc_cb_type& cb) {
 } /* velocity_init() */
 
 void convergence_calculator::update(void) {
-  convergence_measure_updater u{mc_config.n_threads,
-                                m_headings_calc,
-                                m_nn_calc,
-                                m_pos_calc,
-                                m_tasks_calc};
+  convergence_measure_updater u{
+      mc_config.n_threads, m_headings_calc, m_nn_calc, m_pos_calc, m_tasks_calc};
   for (auto& m : m_measures) {
     boost::apply_visitor(u, m.second);
   } /* for(&m..) */

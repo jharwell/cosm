@@ -48,21 +48,19 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
   cds::block3D_vectoro v;
   uint i;
   for (i = 0; i < mc_manifest.n_cube; ++i) {
-    v.push_back(
-        create("cube3D",
-               rmath::vector3d(mc_manifest.unit_dim,
-                               mc_manifest.unit_dim,
-                               mc_manifest.unit_dim),
-               rtypes::type_uuid(i)));
+    v.push_back(create("cube3D",
+                       rmath::vector3d(mc_manifest.unit_dim,
+                                       mc_manifest.unit_dim,
+                                       mc_manifest.unit_dim),
+                       rtypes::type_uuid(i)));
   } /* for(i..) */
   for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
        ++i) {
-    v.push_back(
-        create("ramp3D",
-               rmath::vector3d(mc_manifest.unit_dim * 2,
-                               mc_manifest.unit_dim,
-                               mc_manifest.unit_dim),
-               rtypes::type_uuid(i)));
+    v.push_back(create("ramp3D",
+                       rmath::vector3d(mc_manifest.unit_dim * 2,
+                                       mc_manifest.unit_dim,
+                                       mc_manifest.unit_dim),
+                       rtypes::type_uuid(i)));
   } /* for(i..) */
   return v;
 } /* operator()() */

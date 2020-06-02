@@ -63,8 +63,9 @@ NS_START(fsm);
  */
 class supervisor_fsm final : public rpfsm::simple_fsm,
                              public rer::client<supervisor_fsm> {
-  using supervisee_variant_type = boost::variant<ta::taskable*,
-                                                 ta::base_executive*>;
+  using supervisee_variant_type =
+      boost::variant<ta::taskable*, ta::base_executive*>;
+
  public:
   explicit supervisor_fsm(subsystem::saa_subsystemQ3D* saa);
 

@@ -50,7 +50,7 @@ cluster_distributor::cluster_distributor(
  * Member Functions
  ******************************************************************************/
 bool cluster_distributor::distribute_block(crepr::base_block3D* block,
-                                                       cds::const_entity_vector& entities) {
+                                           cds::const_entity_vector& entities) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%u) reached",
              block->id().v(),

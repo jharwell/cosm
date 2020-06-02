@@ -49,8 +49,9 @@ multi_cluster_distributor::multi_cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool multi_cluster_distributor::distribute_block(crepr::base_block3D* block,
-                                                 cds::const_entity_vector& entities) {
+bool multi_cluster_distributor::distribute_block(
+    crepr::base_block3D* block,
+    cds::const_entity_vector& entities) {
   for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
     /* -1 because we are working with array indices */
     uint idx = rng()->uniform(0, m_dists.size() - 1);
@@ -75,7 +76,8 @@ bool multi_cluster_distributor::distribute_block(crepr::base_block3D* block,
   return false;
 } /* distribute_block() */
 
-cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(void) const {
+cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(
+    void) const {
   cfds::block3D_cluster_vector ret;
 
   for (auto& dist : m_dists) {

@@ -24,10 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
+#include <boost/optional.hpp>
 #include <map>
 #include <string>
-#include <boost/optional.hpp>
+#include <vector>
 
 #include "cosm/steer2D/ds/path_state.hpp"
 

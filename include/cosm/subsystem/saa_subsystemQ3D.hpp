@@ -69,7 +69,9 @@ class saa_subsystemQ3D : public steer2D::boid {
   virtual sensing_type* sensing(void) { return m_sensing.get(); }
   virtual const sensing_type* sensing(void) const { return m_sensing.get(); }
   virtual actuation_type* actuation(void) { return m_actuation.get(); }
-  virtual const actuation_type* actuation(void) const { return m_actuation.get(); }
+  virtual const actuation_type* actuation(void) const {
+    return m_actuation.get();
+  }
 
   /**
    * \brief Apply the summed steering forces; change wheel speeds. Should reset

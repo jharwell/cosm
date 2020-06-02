@@ -26,7 +26,6 @@
  ******************************************************************************/
 #include "cosm/cosm.hpp"
 
-
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
@@ -42,8 +41,8 @@ NS_START(cosm, tv);
  * \brief Interface specifying common functionality across projects for the
  * application of temporal variance in environmental conditions to the swarm.
  */
-template<typename TController>
-class env_dynamics  {
+template <typename TController>
+class env_dynamics {
  public:
   env_dynamics(void) = default;
   virtual ~env_dynamics(void) = default;
@@ -51,7 +50,7 @@ class env_dynamics  {
   env_dynamics(const env_dynamics&) = delete;
   const env_dynamics& operator=(const env_dynamics&) = delete;
 
-    /**
+  /**
    * \brief Register a robot controller for all possible types of environmental
    * variance that could be applied to it.
    */

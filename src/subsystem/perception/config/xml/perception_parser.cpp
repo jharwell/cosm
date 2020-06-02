@@ -43,8 +43,8 @@ void perception_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR(onode, m_config, los_dim);
 
   /* grid optional */
-  if (nullptr != onode.FirstChild(cds::config::xml::grid2D_parser::kXMLRoot,
-                                  false)) {
+  if (nullptr !=
+      onode.FirstChild(cds::config::xml::grid2D_parser::kXMLRoot, false)) {
     m_grid.parse(onode);
     m_config->occupancy_grid =
         *m_grid.config_get<cdconfig::xml::grid2D_parser::config_type>();

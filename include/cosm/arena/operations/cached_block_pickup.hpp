@@ -126,23 +126,15 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   /* clang-format on */
 };
 
+NS_END(detail);
+
 /**
- * \brief We use the picky visitor in order to force compile errors if a call to
+ * \brief We use the precise visitor in order to force compile errors if a call to
  * a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cached_block_pickup_visitor_impl =
-    rpvisitor::precise_visitor<detail::cached_block_pickup,
-                               detail::cached_block_pickup::visit_typelist>;
-
-NS_END(detail);
-
-class cached_block_pickup_visitor
-    : public detail::cached_block_pickup_visitor_impl {
- public:
-  using detail::cached_block_pickup_visitor_impl::cached_block_pickup_visitor_impl;
-};
+using cached_block_pickup_visitor = rpvisitor::filtered_visitor<detail::cached_block_pickup>;
 
 NS_END(operations, arena, cosm);
 

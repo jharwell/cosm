@@ -23,9 +23,9 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cache_extent_clear.hpp"
 
-#include "cosm/ds/cell2D.hpp"
-#include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
+#include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 
 /*******************************************************************************
@@ -69,7 +69,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
       rmath::vector2z c = rmath::vector2z(i, j);
       if (c != m_victim->dpos2D()) {
         ER_ASSERT(m_victim->contains_point2D(
-            rmath::zvec2dvec(c, grid.resolution().v())),
+                      rmath::zvec2dvec(c, grid.resolution().v())),
                   "Cache%d does not contain point (%u, %u) within its extent",
                   m_victim->id().v(),
                   i,

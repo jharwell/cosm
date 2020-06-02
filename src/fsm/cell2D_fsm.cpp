@@ -80,10 +80,10 @@ void cell2D_fsm::event_empty(void) {
 
 void cell2D_fsm::event_block_drop(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_HAS_BLOCK,       /* unknown */
-      state::ekST_HAS_BLOCK,       /* empty */
-      state::ekST_HAS_CACHE,       /* has block */
-      state::ekST_HAS_CACHE,       /* has cache */
+      state::ekST_HAS_BLOCK,        /* unknown */
+      state::ekST_HAS_BLOCK,        /* empty */
+      state::ekST_HAS_CACHE,        /* has block */
+      state::ekST_HAS_CACHE,        /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
@@ -95,8 +95,8 @@ void cell2D_fsm::event_block_pickup(void) {
   FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
       rpfsm::event_signal::ekFATAL, /* unknown */
       rpfsm::event_signal::ekFATAL, /* empty */
-      state::ekST_EMPTY,           /* has block */
-      state::ekST_HAS_CACHE,       /* has cache */
+      state::ekST_EMPTY,            /* has block */
+      state::ekST_HAS_CACHE,        /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
@@ -112,7 +112,7 @@ void cell2D_fsm::event_cache_extent(void) {
        * This is technically bad, but the arena map fixes it right after
        * creating a new cache, so we can let it slide here.
        */
-      state::ekST_CACHE_EXTENT,    /* has block */
+      state::ekST_CACHE_EXTENT,     /* has block */
       rpfsm::event_signal::ekFATAL, /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
   };

@@ -22,15 +22,16 @@
  ******************************************************************************/
 #include "cosm/arena/base_arena_map.hpp"
 
-#include <argos3/plugins/simulator/media/led_medium.h>
 #include <algorithm>
 
-#include "cosm/ds/cell2D.hpp"
-#include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
+#include <argos3/plugins/simulator/media/led_medium.h>
+
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
+#include "cosm/ds/cell2D.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
+#include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
@@ -47,7 +48,8 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
       decorator(rmath::vector2d(config->grid.dims.x() + arena_padding(),
                                 config->grid.dims.y() + arena_padding()),
                 config->grid.resolution),
-      m_blockso(foraging::block_dist::block3D_manifest_processor(&config->blocks.dist.manifest)()),
+      m_blockso(foraging::block_dist::block3D_manifest_processor(
+          &config->blocks.dist.manifest)()),
       m_block_dispatcher(&decoratee(),
                          config->grid.resolution,
                          &config->blocks.dist,
@@ -67,7 +69,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
 
   /* initialize nest(s) */
   ER_INFO("Initialize %zu nests", config->nests.nests.size());
-  for (auto &nest : config->nests.nests) {
+  for (auto& nest : config->nests.nests) {
     crepr::nest inst(nest.dims,
                      nest.center,
                      config->grid.resolution,
@@ -81,10 +83,10 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
  ******************************************************************************/
 bool base_arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
   for (auto& pair : m_nests) {
-    for (auto &l : pair.second.lights()) {
+    for (auto& l : pair.second.lights()) {
       sm->AddEntity(*l);
     } /* for(&l..) */
-  } /* for(&pair..) */
+  }   /* for(&pair..) */
 
   return m_block_dispatcher.initialize(rng);
 } /* initialize() */
@@ -127,8 +129,8 @@ bool base_arena_map::distribute_single_block(crepr::base_block3D* block,
   auto precalc = block_dist_precalc(block);
 
   /* do the distribution */
-  bool ret = m_block_dispatcher.distribute_block(precalc.dist_ent,
-                                                 precalc.avoid_ents);
+  bool ret =
+      m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
 
   /* unlock the arena map */
   post_block_dist_unlock(locking);
@@ -152,7 +154,8 @@ void base_arena_map::distribute_all_blocks(void) {
    */
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
-      cds::cell2D& cell = decoratee().template access<cds::arena_grid::kCell>(i, j);
+      cds::cell2D& cell =
+          decoratee().template access<cds::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
           !cell.state_in_cache_extent()) {
         cdops::cell2D_empty_visitor op(cell.loc());
@@ -167,15 +170,13 @@ void base_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
   maybe_lock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
 } /* pre_block_dist_lock() */
 
-void base_arena_map::post_block_dist_unlock(
-    const arena_map_locking& locking) {
+void base_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
   maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
   maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
 
 base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
     const crepr::base_block3D* block) {
-
   /* Entities that need to be avoided during block distribution are:
    *
    * - All existing blocks
@@ -209,7 +210,7 @@ base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
         ret.dist_ent->id().v());
   }
 
-  for (auto &pair : m_nests) {
+  for (auto& pair : m_nests) {
     ret.avoid_ents.push_back(&pair.second);
   } /* for(&pair..) */
 

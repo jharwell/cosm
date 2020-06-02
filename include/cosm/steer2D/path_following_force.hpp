@@ -55,7 +55,8 @@ NS_START(cosm, steer2D);
  */
 class path_following_force {
  public:
-  explicit path_following_force(const config::path_following_force_config* config);
+  explicit path_following_force(
+      const config::path_following_force_config* config);
 
   /**
    * \brief Calculate the path following force that should be applied to the

@@ -23,28 +23,27 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cached_block_pickup.hpp"
 
-#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
+#include "cosm/arena/operations/cache_extent_clear.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
 #include "cosm/repr/base_block3D.hpp"
-#include "cosm/arena/operations/cache_extent_clear.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, arena, operations, detail);
-using cds::arena_grid;
 using carepr::base_cache;
+using cds::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cached_block_pickup::cached_block_pickup(
-    carepr::arena_cache* cache,
-    cpal::argos_sm_adaptor* sm,
-    const rtypes::type_uuid& robot_id,
-    const rtypes::timestep& t)
+cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
+                                         cpal::argos_sm_adaptor* sm,
+                                         const rtypes::type_uuid& robot_id,
+                                         const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.operations.cached_block_pickup"),
       cell2D_op(cache->dpos2D()),
       mc_robot_id(robot_id),

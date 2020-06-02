@@ -47,7 +47,7 @@ void nests_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool nests_parser::validate(void) const {
-  for (auto &nest : m_config->nests) {
+  for (auto& nest : m_config->nests) {
     RCSW_CHECK(nest_parser::validate(&nest));
   } /* for(&nest..) */
 

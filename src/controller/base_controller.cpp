@@ -42,8 +42,7 @@ namespace fs = std::filesystem;
  * Constructors/Destructor
  ******************************************************************************/
 base_controller::base_controller(void)
-    : ER_CLIENT_INIT("cosm.controller.base"),
-      m_supervisor(nullptr) {}
+    : ER_CLIENT_INIT("cosm.controller.base"), m_supervisor(nullptr) {}
 
 base_controller::~base_controller(void) = default;
 

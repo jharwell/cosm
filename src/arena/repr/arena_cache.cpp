@@ -34,13 +34,13 @@ NS_START(cosm, arena, repr);
 arena_cache::arena_cache(const base_cache::params& p,
                          const rutils::color& light_color)
     : base_cache(p),
-      m_light(
-          new argos::CLightEntity("cache_light" + rcppsw::to_string(id()),
-                                  argos::CVector3(rpos2D().x(), rpos2D().y(), 0.0),
-                                  argos::CColor(light_color.red(),
-                                                light_color.green(),
-                                                light_color.blue()),
-                                  1.0)) {}
+      m_light(new argos::CLightEntity(
+          "cache_light" + rcppsw::to_string(id()),
+          argos::CVector3(rpos2D().x(), rpos2D().y(), 0.0),
+          argos::CColor(light_color.red(),
+                        light_color.green(),
+                        light_color.blue()),
+          1.0)) {}
 
 /*******************************************************************************
  * Member Functions

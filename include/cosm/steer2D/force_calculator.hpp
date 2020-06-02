@@ -30,11 +30,11 @@
 #include "cosm/kin/twist.hpp"
 #include "cosm/steer2D/arrival_force.hpp"
 #include "cosm/steer2D/avoidance_force.hpp"
+#include "cosm/steer2D/path_following_force.hpp"
 #include "cosm/steer2D/phototaxis_force.hpp"
 #include "cosm/steer2D/polar_force.hpp"
-#include "cosm/steer2D/wander_force.hpp"
-#include "cosm/steer2D/path_following_force.hpp"
 #include "cosm/steer2D/tracker.hpp"
+#include "cosm/steer2D/wander_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,8 +57,7 @@ struct force_calculator_config;
  */
 class force_calculator : public rer::client<force_calculator> {
  public:
-  force_calculator(boid& entity,
-                   const config::force_calculator_config* config);
+  force_calculator(boid& entity, const config::force_calculator_config* config);
 
   /**
    * \brief Return the current steering force as a velocity vector.
@@ -67,7 +66,9 @@ class force_calculator : public rer::client<force_calculator> {
   void value(const rmath::vector2d& val) { m_force_accum = val; }
 
   const class tracker* tracker(void) const { return &m_tracker; }
-  class tracker* tracker(void)  { return &m_tracker; }
+  class tracker* tracker(void) {
+    return &m_tracker;
+  }
 
   /**
    * \brief Return the current steering force as twist acting on the managed

@@ -25,13 +25,13 @@
 
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 
-#include "cosm/tv/config/population_dynamics_config.hpp"
-#include "cosm/pal/operations/argos_robot_malfunction.hpp"
-#include "cosm/pal/operations/argos_robot_repair.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 #include "cosm/pal/argos_controller2D_adaptor.hpp"
 #include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
-#include "cosm/arena/base_arena_map.hpp"
+#include "cosm/pal/operations/argos_robot_malfunction.hpp"
+#include "cosm/pal/operations/argos_robot_repair.hpp"
+#include "cosm/tv/config/population_dynamics_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,7 +43,7 @@ using op_result = ctv::population_dynamics::op_result;
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-template<typename TController>
+template <typename TController>
 argos_pd_adaptor<TController>::argos_pd_adaptor(
     const ctv::config::population_dynamics_config* config,
     cpal::argos_sm_adaptor* const sm,
@@ -51,10 +51,11 @@ argos_pd_adaptor<TController>::argos_pd_adaptor(
     const rmath::vector2d& arena_dim,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.pal.tv.argos_pd_adaptor"),
-      population_dynamics(config,
-                          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-                          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-                          rng),
+      population_dynamics(
+          config,
+          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+          rng),
       mc_sm(sm),
       mc_arena_dim(arena_dim),
       m_envd(envd),
@@ -64,7 +65,7 @@ argos_pd_adaptor<TController>::argos_pd_adaptor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TController>
+template <typename TController>
 op_result argos_pd_adaptor<TController>::robot_kill(void) {
   size_t active_pop = swarm_active_population();
   size_t total_pop = swarm_total_population();
@@ -102,13 +103,13 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
 
   /* killing a robot reduces both the active and total populations */
   return {id,
-        m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-        m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
+          m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+          m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
 } /* robot_kill() */
 
-template<typename TController>
+template <typename TController>
 op_result argos_pd_adaptor<TController>::robot_add(int max_pop,
-                                                       const rtypes::type_uuid& id) {
+                                                   const rtypes::type_uuid& id) {
   size_t total_pop = swarm_total_population();
   size_t active_pop = swarm_active_population();
 
@@ -124,22 +125,23 @@ op_result argos_pd_adaptor<TController>::robot_add(int max_pop,
     if (robot_attempt_add(id)) {
       /* adding a new robot increases both the total and active populations */
       return {id,
-            m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-            m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
+              m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+              m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
     }
   } /* for(i..) */
   ER_FATAL_SENTINEL("Unable to add new robot to simulation");
   return {rtypes::constants::kNoUUID, total_pop, active_pop};
 } /* robot_add() */
 
-template<typename TController>
+template <typename TController>
 op_result argos_pd_adaptor<TController>::robot_malfunction(void) {
   size_t total_pop = swarm_total_population();
   size_t active_pop = swarm_active_population();
 
   if (0 == total_pop || 0 == active_pop) {
     ER_WARN("Cannot force robot malfunction: total_pop=%zu, active_pop=%zu",
-            total_pop, active_pop);
+            total_pop,
+            active_pop);
     return {rtypes::constants::kNoUUID, total_pop, active_pop};
   }
 
@@ -165,16 +167,16 @@ op_result argos_pd_adaptor<TController>::robot_malfunction(void) {
   return {controller->entity_id(), total_pop, active_pop - 1};
 } /* robot_malfunction() */
 
-template<typename TController>
-op_result argos_pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
-
+template <typename TController>
+op_result argos_pd_adaptor<TController>::robot_repair(
+    const rtypes::type_uuid& id) {
   ER_INFO("Robot with ID=%d repaired, n_repairing=%zu",
           id.v(),
           repair_queue_status().size);
   std::string name = kARGoSRobotNamePrefix + rcppsw::to_string(id);
   cpops::argos_robot_repair visitor;
-  auto* entity = dynamic_cast<argos::CFootBotEntity*>(
-      &m_sm->GetSpace().GetEntity(name));
+  auto* entity =
+      dynamic_cast<argos::CFootBotEntity*>(&m_sm->GetSpace().GetEntity(name));
   auto* controller = static_cast<TController*>(
       &entity->GetControllableEntity().GetController());
   visitor.visit(*controller);
@@ -189,8 +191,9 @@ op_result argos_pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& i
   return {controller->entity_id(), total_pop, active_pop + 1};
 } /* robot_repair() */
 
-template<typename TController>
-TController* argos_pd_adaptor<TController>::malfunction_victim_locate(size_t total_pop) const {
+template <typename TController>
+TController* argos_pd_adaptor<TController>::malfunction_victim_locate(
+    size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
 
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
@@ -206,9 +209,10 @@ TController* argos_pd_adaptor<TController>::malfunction_victim_locate(size_t tot
   return nullptr;
 } /* malfunction_victim_locate() */
 
-template<typename TController>
-TController* argos_pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
-    auto range = rmath::rangei(0, total_pop - 1);
+template <typename TController>
+TController* argos_pd_adaptor<TController>::kill_victim_locate(
+    size_t total_pop) const {
+  auto range = rmath::rangei(0, total_pop - 1);
   argos::CFootBotEntity* entity;
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
     auto it = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).begin();
@@ -224,8 +228,9 @@ TController* argos_pd_adaptor<TController>::kill_victim_locate(size_t total_pop)
   return nullptr;
 } /* kill_victim_locate() */
 
-template<typename TController>
-bool argos_pd_adaptor<TController>::robot_attempt_add(const rtypes::type_uuid& id) {
+template <typename TController>
+bool argos_pd_adaptor<TController>::robot_attempt_add(
+    const rtypes::type_uuid& id) {
   /*
    * Give 2.0 buffer around the edges of the arena so that robots are not too
    * close to the boundaries of physics engines, which can cause "no engine can
@@ -264,8 +269,8 @@ bool argos_pd_adaptor<TController>::robot_attempt_add(const rtypes::type_uuid& i
         rmath::vector2d(x, y).to_str().c_str());
 
     /* Register controller for environmental variances */
-    auto* controller = static_cast<TController*>(
-        &fb->GetControllableEntity().GetController());
+    auto* controller =
+        static_cast<TController*>(&fb->GetControllableEntity().GetController());
 
     m_envd->register_controller(*controller);
 
