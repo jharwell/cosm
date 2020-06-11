@@ -118,7 +118,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * caches.
    */
   void zombie_caches_clear(void) { m_zombie_caches.clear(); }
-  const cads::acache_vectoro& zombie_caches(void) const {
+  const cads::acache_vectorno& zombie_caches(void) const {
     return m_zombie_caches;
   }
 
@@ -133,7 +133,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
   cads::acache_vectoro                   m_cacheso{};
   cads::acache_vectorno                  m_cachesno{};
-  cads::acache_vectoro                   m_zombie_caches{};
+  cads::acache_vectorno                  m_zombie_caches{};
   /* clang-format on */
 };
 

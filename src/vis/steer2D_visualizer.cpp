@@ -52,6 +52,22 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
                                    const argos::CQuaternion& orientation,
                                    const steer2D::tracker* tracker) {
   if (auto path = tracker->path()) {
+    glPushMatrix();
+
+    /* first, rotate out of the robot's reference frame */
+    argos::CRadians x_angle;
+    argos::CRadians y_angle;
+    argos::CRadians z_angle;
+
+    orientation.ToEulerAngles(z_angle, y_angle, x_angle);
+    glRotated(-argos::ToDegrees(z_angle).GetValue(), 0.0, 0.0, 1.0);
+    glRotated(-argos::ToDegrees(y_angle).GetValue(), 0.0, 1.0, 0.0);
+    glRotated(-argos::ToDegrees(x_angle).GetValue(), 1.0, 0.0, 0.0);
+
+    /* second, translate out of the robot's reference frame */
+    glTranslated(-pos.x(), -pos.y(), -pos.z());
+
+    /* Now draw the path segments and end points */
     for (size_t i = 0; i < path->path().size() - 1; ++i) {
       auto start = argos::CVector3(path->path()[i].x(),
                                    path->path()[i].y(),
@@ -60,29 +76,14 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
                                  path->path()[i + 1].y(),
                                  pos.z() + kDRAW_OFFSET);
 
-      glPushMatrix();
-
-      /* first, rotate out of the robot's reference frame */
-      argos::CRadians x_angle;
-      argos::CRadians y_angle;
-      argos::CRadians z_angle;
-
-      orientation.ToEulerAngles(z_angle, y_angle, x_angle);
-      glRotated(-argos::ToDegrees(z_angle).GetValue(), 0.0, 0.0, 1.0);
-      glRotated(-argos::ToDegrees(y_angle).GetValue(), 0.0, 1.0, 0.0);
-      glRotated(-argos::ToDegrees(x_angle).GetValue(), 1.0, 0.0, 0.0);
-
-      /* second, translate out of the robot's reference frame */
-      glTranslated(-pos.x(), -pos.y(), -pos.z());
-
-      /* third, draw the path segment in the global coordinate frame */
       m_qt->DrawRay(argos::CRay3(start, end), argos::CColor::GREEN, 5.0);
 
-      /* fourth, draw path endpoints in the global coordinate frame */
       m_qt->DrawPoint(start, argos::CColor::CYAN, 20.0);
       m_qt->DrawPoint(end, argos::CColor::CYAN, 20.0);
-      glPopMatrix();
     } /* for(i..) */
+
+    /* restore previous OpenGL context */
+    glPopMatrix();
   }
 } /* path_draw() */
 
@@ -92,7 +93,7 @@ void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker) {
     auto start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
     auto end = start +
                argos::CVector3(force.second.x(), force.second.y(), kDRAW_OFFSET);
-    m_qt->DrawRay(argos::CRay3(start, end), argos::CColor::BLUE, 5.0);
+    m_qt->DrawRay(argos::CRay3(start, end), argos::CColor::MAGENTA, 5.0);
     m_qt->DrawText(argos::CVector3(start.GetX() + end.GetX() / 2.0,
                                    start.GetY() + end.GetY() / 2.0,
                                    start.GetZ() + m_text_vis_offset),
@@ -111,7 +112,9 @@ void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker) {
   auto accum_start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
   auto accum_end =
       accum_start + argos::CVector3(accum.x(), accum.y(), kDRAW_OFFSET);
-  m_qt->DrawRay(argos::CRay3(accum_start, accum_end), argos::CColor::RED, 5.0);
+  m_qt->DrawRay(argos::CRay3(accum_start, accum_end),
+                argos::CColor::PURPLE,
+                5.0);
   m_qt->DrawText(argos::CVector3(accum_start.GetX() + accum_end.GetX() / 2.0,
                                  accum_start.GetY() + accum_end.GetY() / 2.0,
                                  accum_start.GetZ() + m_text_vis_offset),

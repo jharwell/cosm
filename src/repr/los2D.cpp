@@ -39,7 +39,7 @@ const cds::cell2D& los2D::access(size_t i, size_t j) const {
   return view()[i][j];
 } /* access() */
 
-bool los2D::contains_loc(const rmath::vector2z& loc) const {
+bool los2D::contains_abs(const rmath::vector2z& loc) const {
   for (size_t i = 0; i < xsize(); ++i) {
     for (size_t j = 0; j < ysize(); ++j) {
       if (access(i, j).loc() == loc) {
@@ -48,7 +48,11 @@ bool los2D::contains_loc(const rmath::vector2z& loc) const {
     } /* for(j..) */
   }   /* for(i..) */
   return false;
-} /* contains_loc() */
+} /* contains_abs() */
+
+bool los2D::contains_rel(const rmath::vector2z& loc) const {
+  return (loc.x() < xsize()) && (loc.y() < ysize());
+} /* contains_rel() */
 
 rmath::vector2z los2D::abs_ll(void) const {
   return access(0, 0).loc();

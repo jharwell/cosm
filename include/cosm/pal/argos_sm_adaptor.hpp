@@ -92,6 +92,7 @@ class argos_sm_adaptor : public swarm_manager,
   const carena::base_arena_map* arena_map(void) const {
     return m_arena_map.get();
   }
+  argos::CFloorEntity* floor(void) const { return m_floor; }
 
   /**
    * \brief Create a 3D embodied representation of the block and add it to
@@ -117,7 +118,6 @@ class argos_sm_adaptor : public swarm_manager,
   void ndc_pop(void) const {}
 #endif
 
-  argos::CFloorEntity* floor(void) const { return m_floor; }
   void led_medium(const std::string& s) { m_led_medium = s; }
   carena::base_arena_map* arena_map(void) { return m_arena_map.get(); }
 

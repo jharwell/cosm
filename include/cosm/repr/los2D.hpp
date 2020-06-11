@@ -53,7 +53,8 @@ class los2D : public crepr::base_los<cds::cell2D>, public rer::client<los2D> {
   rmath::vector2z abs_ul(void) const override;
   rmath::vector2z abs_lr(void) const override;
   rmath::vector2z abs_ur(void) const override;
-  bool contains_loc(const rmath::vector2z& loc) const override;
+  bool contains_abs(const rmath::vector2z& loc) const override;
+  bool contains_rel(const rmath::vector2z& loc) const override;
 
   /**
    * \brief Get the cell associated with a particular grid location within the

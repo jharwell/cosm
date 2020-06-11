@@ -71,7 +71,7 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
    */
   arena_grid(const rmath::vector2d& dims,
              const rtypes::discretize_ratio& resolution)
-      : stacked_grid2D(rmath::vector2d(0.0, 0.0), dims, resolution) {
+      : stacked_grid2D(rmath::vector2d(0.0, 0.0), dims, resolution, resolution) {
     for (size_t i = 0; i < xdsize(); ++i) {
       for (size_t j = 0; j < ydsize(); ++j) {
         access<kCell>(i, j).loc(rmath::vector2z(i, j));

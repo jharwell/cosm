@@ -52,9 +52,9 @@ NS_START(cosm, repr);
  * to update its internal state based on the information present in the
  * per-timestep updates to this object.
  *
- * The LOS for a robot is always square UNLESS the robot is near the edge of
- * the arena, and a square grid would result in out-of-bounds array accesses. In
- * that case, a truncated LOS is created.
+ * The LOS for a robot is always square UNLESS the robot is near the edge of the
+ * source field, and a square grid would result in out-of-bounds array
+ * accesses. In that case, a truncated LOS is created.
  *
  * All coordinates within a LOS are relative to the LOS itself (not its location
  * within the arena). The origin is in the lower left corner of the LOS.
@@ -72,10 +72,11 @@ class base_los : public rer::client<base_los<TCell>> {
       typename rds::base_grid2D<TCell>::const_grid_view,
       typename rds::base_grid3D<TCell>::const_grid_view>::type;
 
-  using coord_type =
+  using field_coord_type =
       typename std::conditional<std::is_same<cds::cell2D, TCell>::value,
                                 rmath::vector2z,
                                 rmath::vector3z>::type;
+  using los_coord_type = rmath::vector2z;
 
   explicit base_los(const const_grid_view& c_view)
       : ER_CLIENT_INIT("cosm.repr.base_los"), mc_view(c_view) {}
@@ -89,17 +90,23 @@ class base_los : public rer::client<base_los<TCell>> {
    *
    * \return A reference to the cell.
    */
-  virtual const TCell& access(const coord_type& c) const = 0;
+  virtual const TCell& access(const los_coord_type& c) const = 0;
 
-  virtual coord_type abs_ll(void) const = 0;
-  virtual coord_type abs_ul(void) const = 0;
-  virtual coord_type abs_lr(void) const = 0;
-  virtual coord_type abs_ur(void) const = 0;
+  virtual field_coord_type abs_ll(void) const = 0;
+  virtual field_coord_type abs_ul(void) const = 0;
+  virtual field_coord_type abs_lr(void) const = 0;
+  virtual field_coord_type abs_ur(void) const = 0;
 
   /**
-   * \brief Determine if the *ABSOLUTE* arena location is contained in the LOS.
+   * \brief Determine if the coordinates from the parent field are contained in
+   * the LOS.
    */
-  virtual bool contains_loc(const coord_type& loc) const = 0;
+  virtual bool contains_abs(const field_coord_type& coord) const = 0;
+
+  /**
+   * \brief Determine if the LOS RELATIVE coordinates are contained in the LOS.
+   */
+  virtual bool contains_rel(const los_coord_type& coord) const = 0;
 
   /**
    * \brief Get the size of the X dimension for a LOS.

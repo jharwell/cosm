@@ -131,7 +131,7 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
    * Add cache to zombie vector to ensure accurate metric collection THIS
    * timestep about caches.
    */
-  m_zombie_caches.push_back(*victim_it);
+  m_zombie_caches.push_back(victim_it->get());
 
   /*
    * Update owned and access cache vectors, verifying that the removal worked as

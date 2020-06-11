@@ -41,6 +41,10 @@ class base_cache;
 
 NS_START(cosm, arena, ds);
 
+/*
+ * Must be shared_ptr because the # of caches in the arena can change
+ * dynamically, resulting in dynamic vector resizing, which requires copying.
+ */
 using acache_vectoro_type = std::shared_ptr<carepr::arena_cache>;
 using acache_vectorno_type = carepr::arena_cache*;
 

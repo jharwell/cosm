@@ -47,7 +47,7 @@ class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
  public:
   explicit losQ3D(const const_grid_view& c_view);
 
-  const cds::cell3D& access(const rmath::vector3z& c) const override {
+  const cds::cell3D& access(const rmath::vector2z& c) const override {
     return access(c.x(), c.y());
   }
 
@@ -55,7 +55,8 @@ class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
   rmath::vector3z abs_ul(void) const override;
   rmath::vector3z abs_lr(void) const override;
   rmath::vector3z abs_ur(void) const override;
-  bool contains_loc(const rmath::vector3z& loc) const override;
+  bool contains_abs(const rmath::vector3z& loc) const override;
+  bool contains_rel(const rmath::vector2z& loc) const override;
 
   /**
    * \brief Get the cell associated with a particular grid location within the

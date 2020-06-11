@@ -47,16 +47,20 @@ const cds::cell3D& losQ3D::access(size_t i, size_t j) const {
   return view()[i][j][0];
 } /* access() */
 
-bool losQ3D::contains_loc(const rmath::vector3z& loc) const {
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      if (access(i, j).loc() == loc) {
-        return true;
-      }
-    } /* for(j..) */
-  }   /* for(i..) */
+bool losQ3D::contains_abs(const rmath::vector3z& loc) const {
+    for (size_t i = 0; i < xsize(); ++i) {
+      for (size_t j = 0; j < ysize(); ++j) {
+        if (access(i, j).loc() == loc) {
+          return true;
+        }
+      } /* for(j..) */
+    }   /* for(i..) */
   return false;
-} /* contains_loc() */
+} /* contains_abs() */
+
+bool losQ3D::contains_rel(const rmath::vector2z& loc) const {
+  return (loc.x() < xsize()) && (loc.y() < ysize());
+} /* contains_rel() */
 
 rmath::vector3z losQ3D::abs_ll(void) const {
   return access(0, 0).loc();
