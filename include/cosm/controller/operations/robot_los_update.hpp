@@ -59,9 +59,10 @@ std::unique_ptr<TLOS> robot_los2D_compute(
     const rds::grid2D_overlay<cds::cell2D>* grid,
     const rmath::vector2d& pos,
     size_t los_grid_size) {
+
   auto position = rmath::dvec2zvec(pos, grid->resolution().v());
   return std::make_unique<TLOS>(grid->subcircle(position,
-                                                    los_grid_size));
+                                                los_grid_size));
 } /* robot_los_compute */
 
 /**
@@ -99,7 +100,7 @@ void robot_los_set(TController* const controller,
                      const rds::grid2D_overlay<cds::cell2D>* const grid,
                      size_t los_grid_size) {
   auto los = robot_los2D_compute<TLOS>(grid,
-                                       grid->originr() - controller->rpos2D(),
+                                       controller->rpos2D() - grid->originr(),
                                        los_grid_size);
   controller->perception()->los(std::move(los));
 }
