@@ -117,13 +117,14 @@ void population_dynamics::death_dynamics(const rtypes::timestep& t) {
                 "Unexpected total population change: %zu != %zu",
                 res.total_pop,
                 m_total_pop - 1);
-      ER_ASSERT(res.active_pop == m_active_pop,
+      ER_ASSERT(res.active_pop == m_active_pop - 1,
                 "Unexpected active population change: %zu != %zu",
                 res.active_pop,
-                m_active_pop);
+                m_active_pop - 1);
       ER_INFO("Killed robot with ID=%d,pop_size=%zu", res.id.v(), res.total_pop);
       m_death.enqueue(res.id, t);
       m_total_pop = res.total_pop;
+      m_active_pop = res.active_pop;
     }
   }
 } /* death_dynamics() */
@@ -142,10 +143,10 @@ void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
                 "Unexpected total population change: %zu != %zu",
                 res.total_pop,
                 m_total_pop + 1);
-      ER_ASSERT(res.active_pop == m_active_pop,
+      ER_ASSERT(res.active_pop == m_active_pop + 1,
                 "Unexpected active population change: %zu != %zu",
                 res.active_pop,
-                m_active_pop);
+                m_active_pop + 1);
       ER_INFO("Added new robot with ID=%d,pop_size=%zu,max_size=%d",
               res.id.v(),
               res.total_pop,
@@ -153,6 +154,7 @@ void population_dynamics::birth_dynamics(const rtypes::timestep& t) {
 
       m_birth.dequeue(t, true);
       m_total_pop = res.total_pop;
+      m_active_pop = res.active_pop;
     }
   }
 } /* birth_dynamics() */

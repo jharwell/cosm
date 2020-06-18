@@ -62,10 +62,9 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
   static constexpr const size_t kCell = 0;
 
   /**
+   * \param dims The dimensions of the arena.
    * \param resolution The arena resolution (i.e. what is the size of 1 cell in
    *                   the 2D grid).
-   * \param x_max      Size in X of 2D grid.
-   * \param y_max      Size in Y of 2D grid.
    *
    * The origin of the grid is in the lower left corner at (0,0).
    */

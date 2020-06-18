@@ -153,8 +153,7 @@ void base_arena_map::distribute_all_blocks(void) {
    */
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
-      cds::cell2D& cell =
-          decoratee().template access<cds::arena_grid::kCell>(i, j);
+      cds::cell2D& cell = access<cds::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
           !cell.state_in_cache_extent()) {
         cdops::cell2D_empty_visitor op(cell.loc());
