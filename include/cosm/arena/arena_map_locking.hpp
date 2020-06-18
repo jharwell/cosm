@@ -25,7 +25,6 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/common/common.hpp"
-#include "rcppsw/utils/maskable_enum.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

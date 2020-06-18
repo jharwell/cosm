@@ -41,25 +41,17 @@ using cds::arena_grid;
  ******************************************************************************/
 dispatcher::dispatcher(cds::arena_grid* const grid,
                        const rtypes::discretize_ratio& resolution,
-                       const config::block_dist_config* const config,
-                       double grid_padding)
-    : mc_grid_padding(grid_padding),
-      mc_resolution(resolution),
+                       const config::block_dist_config* const config)
+    : mc_resolution(resolution),
       mc_config(*config),
       mc_dist_type(config->dist_type),
       /*
        * All sourced distributions can't occupy more than 70% of either the X or
        * Y dimension in order to avoid physics engine errors in ARGoS near arena
-       * walls. See COSM#34. Also, the arena map has a padded grid to help with
-       * LOS computation near arena boundaries, so we need to subtract padding
-       * twice to get a grid that will be smaller than the arena walls so that
-       * no blocks will be destributed ANYWHERE near physics engine/arena map
-       * boundaries.
+       * walls. See COSM#34.
        */
-      mc_arena_xrange(grid->xdsize() * 0.15,
-                      (grid->xdsize() - mc_grid_padding * 2) * 0.85),
-      mc_arena_yrange(grid->ydsize() * 0.15,
-                      (grid->ydsize() - mc_grid_padding * 2) * 0.85),
+      mc_arena_xrange(grid->xdsize() * 0.15, grid->xdsize() * 0.85),
+      mc_arena_yrange(grid->ydsize() * 0.15, grid->ydsize() * 0.85),
       m_grid(grid),
       m_dist(nullptr) {}
 

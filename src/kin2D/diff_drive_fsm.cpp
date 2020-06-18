@@ -69,6 +69,7 @@ void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) 
 
 FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
   rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
+
   rmath::radians angle = data->angle;
   /* too large of a direction change for soft turn--go to hard turn */
   if (!range.contains(angle.signed_normalize())) {

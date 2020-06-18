@@ -47,23 +47,32 @@ argos_convergence_calculator<TController>::argos_convergence_calculator(
     : ER_CLIENT_INIT("cosm.pal.argos_convergence_calculator"),
       decorator(config),
       m_sm(sm) {
-  decoratee().angular_order_init(
-      std::bind(&argos_convergence_calculator::calc_robot_headings2D,
-                this,
-                std::placeholders::_1));
-  decoratee().interactivity_init(
-      std::bind(&argos_convergence_calculator::calc_robot_nn,
-                this,
-                std::placeholders::_1));
-  decoratee().positional_entropy_init(
-      std::bind(&argos_convergence_calculator::calc_robot_positions,
-                this,
-                std::placeholders::_1));
-  decoratee().velocity_init(
-      std::bind(&argos_convergence_calculator::calc_robot_positions,
-                this,
-                std::placeholders::_1));
-}
+  if (config->ang_order.enable) {
+    decoratee().angular_order_init(
+        std::bind(&argos_convergence_calculator::calc_robot_headings2D,
+                  this,
+                  std::placeholders::_1));
+  }
+  if (config->interactivity.enable) {
+    decoratee().interactivity_init(
+        std::bind(&argos_convergence_calculator::calc_robot_nn,
+                  this,
+                  std::placeholders::_1));
+  }
+  if (config->pos_entropy.enable) {
+    decoratee().positional_entropy_init(
+        std::bind(&argos_convergence_calculator::calc_robot_positions,
+                  this,
+                  std::placeholders::_1));
+  }
+  if (config->velocity.enable) {
+    decoratee().velocity_init(
+        std::bind(&argos_convergence_calculator::calc_robot_positions,
+                  this,
+                  std::placeholders::_1));
+  }
+      }
+
 
 /*******************************************************************************
  * Member Functions

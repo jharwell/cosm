@@ -26,6 +26,8 @@
 
 #include <argos3/plugins/simulator/media/led_medium.h>
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
@@ -45,15 +47,12 @@ NS_START(cosm, arena);
  ******************************************************************************/
 base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
     : ER_CLIENT_INIT("cosm.arena.base_arena_map"),
-      decorator(rmath::vector2d(config->grid.dims.x() + arena_padding(),
-                                config->grid.dims.y() + arena_padding()),
-                config->grid.resolution),
+      decorator(config->grid.dims, config->grid.resolution),
       m_blockso(foraging::block_dist::block3D_manifest_processor(
           &config->blocks.dist.manifest)()),
       m_block_dispatcher(&decoratee(),
                          config->grid.resolution,
-                         &config->blocks.dist,
-                         arena_padding()),
+                         &config->blocks.dist),
       m_redist_governor(&config->blocks.dist.redist_governor) {
   ER_INFO("real=(%fx%f), discrete=(%zux%zu), resolution=%f",
           xrsize(),

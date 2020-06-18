@@ -35,7 +35,6 @@
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/mpl/identity.hpp"
 #include "rcppsw/types/timestep.hpp"
-#include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/metrics/base_metrics_aggregator.hpp"

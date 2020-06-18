@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/free_block_drop.hpp"
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/cache_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"

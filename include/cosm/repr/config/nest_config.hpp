@@ -44,7 +44,7 @@ NS_START(cosm, repr, config);
  *
  * \brief Configuration for a single \ref nest within the arena.
  */
-struct nest_config : public rconfig::base_config {
+struct nest_config final : public rconfig::base_config {
   rmath::vector2d center{};
   rmath::vector2d dims{};
 };

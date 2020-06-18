@@ -196,14 +196,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   }
 
   /**
-   * \brief The amount of padding to add to the arena map so that LOS
-   * calculations when a robot is VERY close to the upper edge of the arena in x
-   * or y, and the conversion to discrete coordinates/rounding would cause an
-   * off-by-one out-of-bounds access are avoided.
-   */
-  double arena_padding(void) const { return 1.0; }
-
-  /**
    * \brief Perform deferred initialization. This is not part the constructor so
    * that it can be verified via return code. Currently it initializes:
    *

@@ -54,7 +54,7 @@ NS_START(cosm, pal);
  * environment.
  */
 template <class TController>
-class argos_convergence_calculator
+class argos_convergence_calculator final
     : public rer::client<argos_convergence_calculator<TController>>,
       public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:

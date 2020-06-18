@@ -111,6 +111,14 @@ class proximity_sensor_impl {
     }
   }
 
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+  void enable(void) const { m_sensor->Enable(); }
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+  void disable(void) const { m_sensor->Disable(); }
+
  private:
   /**
    * \brief Get the current proximity sensor readings for the footbot robot.

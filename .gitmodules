@@ -2,10 +2,6 @@
 	path = libra
 	url = https://github.com/swarm-robotics/libra.git
 	branch = devel
-[submodule "ext/rcppsw"]
-	path = ext/rcppsw
-	url = https://github.com/swarm-robotics/rcppsw.git
-        branch = devel
 [submodule "ext/ticpp"]
 	path = ext/ticpp
 	url = https://github.com/wxFormBuilder/ticpp.git

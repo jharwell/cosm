@@ -24,6 +24,8 @@
 
 #include <argos3/plugins/simulator/media/led_medium.h>
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"

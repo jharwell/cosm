@@ -47,12 +47,11 @@ bi_tdgraph_executive::bi_tdgraph_executive(
  * Member Functions
  ******************************************************************************/
 ds::bi_tdgraph* bi_tdgraph_executive::graph(void) {
-  return static_cast<ds::bi_tdgraph*>(boost::get<ds::bi_tdgraph>(ds()));
+  return boost::get<ds::bi_tdgraph>(ds());
 } /* graph() */
 
 const ds::bi_tdgraph* bi_tdgraph_executive::graph(void) const {
-  return static_cast<const ds::bi_tdgraph*>(
-      boost::get<const ds::bi_tdgraph>(ds()));
+  return boost::get<const ds::bi_tdgraph>(ds());
 } /* graph() */
 
 const ds::bi_tab* bi_tdgraph_executive::active_tab(void) const {

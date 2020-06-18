@@ -75,8 +75,7 @@ class dispatcher {
 
   dispatcher(cds::arena_grid* grid,
              const rtypes::discretize_ratio& resolution,
-             const config::block_dist_config* config,
-             double grid_padding);
+             const config::block_dist_config* config);
   ~dispatcher(void);
 
   dispatcher(const dispatcher&) = delete;
@@ -119,7 +118,6 @@ class dispatcher {
 
  private:
   /* clang-format off */
-  const double                                  mc_grid_padding;
   const rtypes::discretize_ratio                mc_resolution;
   const config::block_dist_config               mc_config;
   const std::string                             mc_dist_type;

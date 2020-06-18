@@ -27,6 +27,8 @@
 
 #include "rcppsw/mpl/typelist.hpp"
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
 #include "cosm/convergence/convergence_calculator.hpp"
