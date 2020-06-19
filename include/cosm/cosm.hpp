@@ -122,6 +122,7 @@ namespace config {}
 
 namespace repr {
 namespace config {}
+namespace operations {}
 } /* namespace repr */
 
 namespace controller {
@@ -248,6 +249,8 @@ namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
 
 namespace crepr = cosm::repr;
+namespace crops = crepr::operations;
+
 namespace crconfig = crepr::config;
 
 namespace cfsm = cosm::fsm;

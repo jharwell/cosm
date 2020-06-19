@@ -74,7 +74,7 @@ rtypes::type_uuid caching_arena_map::robot_on_block(
    * Caches hide blocks, add even though a robot may technically be standing on
    * a block, if it is also standing in a cache, that takes priority.
    */
-  auto cache_id = robot_on_cache(pos, ent_id);
+  auto cache_id = robot_on_cache(pos);
   if (rtypes::constants::kNoUUID != cache_id) {
     ER_TRACE("Block hidden by cache%d", cache_id.v());
     return rtypes::constants::kNoUUID;
@@ -83,21 +83,13 @@ rtypes::type_uuid caching_arena_map::robot_on_block(
 } /* robot_on_block() */
 
 rtypes::type_uuid caching_arena_map::robot_on_cache(
-    const rmath::vector2d& pos,
-    const rtypes::type_uuid& ent_id) const {
+    const rmath::vector2d& pos) const {
   /*
-   * If the robot actually is on the cache they think they are, we can short
-   * circuit what may be an expensive linear search. ent_id MIGHT be for a block
-   * we have acquired, which may cause out of bounds indexing into the caches
-   * vector, so we have to check for that.
+   * We can't use the ID of the cache to index into the caches vector like we
+   * can for blocks, because the ID is not guaranteed to be equal to the
+   * index. So we do a linear scan, which shouldn't be that expensive because
+   * there aren't ever that many caches in the arena.
    */
-  if (ent_id != rtypes::constants::kNoUUID &&
-      static_cast<size_t>(ent_id.v()) < m_cacheso.size() &&
-      m_cacheso[ent_id.v()]->contains_point2D(pos)) {
-    return ent_id;
-  }
-
-  /* General case: linear scan */
   for (auto& c : m_cacheso) {
     if (c->contains_point2D(pos)) {
       return c->id();

@@ -1,7 +1,7 @@
 /**
- * \file free_block_pickup.cpp
+ * \file block_pickup.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,52 +21,31 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/operations/free_block_pickup.hpp"
-
-#include "cosm/arena/base_arena_map.hpp"
-#include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
 
+#include "cosm/repr/base_block3D.hpp"
+
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+NS_START(cosm, repr, operations);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_pickup::free_block_pickup(crepr::base_block3D* block,
-                                     const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
-      cell2D_op(block->dpos2D()),
-      mc_robot_id(robot_id),
+block_pickup::block_pickup(const rtypes::type_uuid& robot_id,
+                           const rtypes::timestep& t)
+    : ER_CLIENT_INIT("cosm.repr.operations.block_pickup"),
       mc_timestep(t),
-      m_block(block) {}
+      mc_robot_id(robot_id) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(base_arena_map& map) {
-  ER_ASSERT(!m_block->is_out_of_sight(),
-            "Block%d out of sight on pickup",
-            m_block->id().v());
-
-  /* mark host cell as empty  */
-  cdops::cell2D_empty_visitor cell_op(cell2D_op::coord());
-  map.grid_mtx()->lock();
-  cell_op.visit(map.decoratee());
-  map.grid_mtx()->unlock();
-
-  /* Update block state--already holding block mutex */
-  crops::block_pickup block_op(mc_robot_id, mc_timestep);
-  block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
-
-  ER_INFO("Robot%u: block%d@%s",
-          mc_robot_id.v(),
-          m_block->id().v(),
-          rcppsw::to_string(coord()).c_str());
+void block_pickup::visit(crepr::base_block3D& block,
+                         const block_pickup_owner& owner) {
+  ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
+  block.update_on_pickup(mc_robot_id, mc_timestep, owner);
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+NS_END(operations, repr, cosm);

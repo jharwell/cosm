@@ -56,10 +56,10 @@ base_cache::base_cache(const params& p)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_cache::block_remove(crepr::base_block3D* const block) {
+void base_cache::block_remove(const crepr::base_block3D* const victim) {
   m_blocks.erase(std::find_if(m_blocks.begin(),
                               m_blocks.end(),
-                              [&](const auto& b) { return b->idcmp(*block); }));
+                              [&](const auto& b) { return b->idcmp(*victim); }));
 } /* block_remove() */
 
 std::unique_ptr<base_cache> base_cache::clone(void) const {

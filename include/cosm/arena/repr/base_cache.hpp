@@ -129,11 +129,10 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   }
 
   /**
-   * \brief Remove a block from the cache's list of blocks.
-   *
-   * Does not update the block's location.
+   * \brief Remove a block from the cache's list of blocks, without modifying
+   * it.
    */
-  void block_remove(crepr::base_block3D* block);
+  void block_remove(const crepr::base_block3D* victim);
 
   /**
    * \brief Get the oldest block in the cache (the one that has been in the

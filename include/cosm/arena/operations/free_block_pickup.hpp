@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
 
@@ -64,7 +65,8 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   using visit_typelist = visit_typelist_impl::value;
 
   free_block_pickup(crepr::base_block3D* block,
-                    const rtypes::type_uuid& robot_id);
+                    const rtypes::type_uuid& robot_id,
+                    const rtypes::timestep& t);
 
   ~free_block_pickup(void) override = default;
 
@@ -82,6 +84,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
  private:
   /* clang-format off */
   const rtypes::type_uuid mc_robot_id;
+  const rtypes::timestep  mc_timestep;
 
   crepr::base_block3D*    m_block;
   /* clang-format on */

@@ -122,6 +122,14 @@ class base_los : public rer::client<base_los<TCell>> {
    */
   typename grid_view::size_type ysize(void) const { return mc_view.shape()[1]; }
 
+  rmath::ranged yspan(void) const {
+    return rmath::ranged(abs_ll().y(), abs_ul().y());
+  }
+
+  rmath::ranged xspan(void) const {
+    return rmath::ranged(abs_ll().x(), abs_lr().x());
+  }
+
  protected:
   const const_grid_view& view(void) const { return mc_view; }
 

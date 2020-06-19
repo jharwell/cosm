@@ -224,7 +224,7 @@ class base_arena_block_pickup
               (*it)->id().v());
 
     robot_block_pickup_visitor_type rpickup_op(*it, controller.entity_id(), t);
-    caops::free_block_pickup_visitor apickup_op(*it, controller.entity_id());
+    caops::free_block_pickup_visitor apickup_op(*it, controller.entity_id(), t);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);

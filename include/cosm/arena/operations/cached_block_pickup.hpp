@@ -78,11 +78,13 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
 
   /**
    * \param cache The cache to pickup from in the arena.
+   * \param pickup_block Handle to the block to be picked up from the cache.
    * \param sm Handle to the swarm manager.
    * \param robot_id The ID of the robot picking up the block.
    * \param t The current timestep.
    */
   cached_block_pickup(carepr::arena_cache* cache,
+                      crepr::base_block3D* pickup_block,
                       cpal::argos_sm_adaptor* sm,
                       const rtypes::type_uuid& robot_id,
                       const rtypes::timestep& t);
@@ -95,34 +97,34 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
    * \brief Perform actual cache block pickup in the arena.
    *
    * Assumes caller is holding \ref caching_arena_map cache mutex. Takes \ref
-   * caching_arena_map block mutex, and then releases it after cache updates.
+   * caching_arena_map block mutex, and then releases it after cache
+   * updates. Takes \ref carena::base_arena_map block mutex for updating block
+   * state, and releases it after.
    */
   void visit(caching_arena_map& map);
 
  private:
   void visit(cds::cell2D& cell);
   void visit(cfsm::cell2D_fsm& fsm);
-  void visit(crepr::base_block3D& block);
   void visit(carepr::arena_cache& cache);
+  void visit(crepr::base_block3D& block,
+             caching_arena_map* map);
+
 
   /* clang-format off */
-  const rtypes::type_uuid mc_robot_id;
-  const rtypes::timestep  mc_timestep;
+  const rtypes::type_uuid    mc_robot_id;
+  const rtypes::timestep     mc_timestep;
 
-  carepr::arena_cache*    m_real_cache;
+  carepr::arena_cache*       m_real_cache;
+  cpal::argos_sm_adaptor*    m_sm;
 
-  cpal::argos_sm_adaptor* m_sm;
-
-  /**
-   * \brief The block that will be picked up by the robot.
-   */
-  crepr::base_block3D*    m_pickup_block{nullptr};
+  crepr::base_block3D*       m_pickup_block;
 
   /**
    * \brief The block that is left over when a cache devolves into a single
    * block, that needs to be sent to the cell that the cache used to live on.
    */
-  crepr::base_block3D*    m_orphan_block{nullptr};
+  crepr::base_block3D*       m_orphan_block{nullptr};
   /* clang-format on */
 };
 

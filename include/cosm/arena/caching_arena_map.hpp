@@ -91,14 +91,11 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * event for a particular robot.
    *
    * \param pos The position of a robot.
-   * \param ent_id The ID of the cache the robot THINKS it is on.
    *
    * \return The ID of the cache that the robot is on, or -1 if the robot is not
    * actually on a cache.
    */
-  rtypes::type_uuid robot_on_cache(
-      const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const RCSW_PURE;
+  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCSW_PURE;
 
   rtypes::type_uuid robot_on_block(
       const rmath::vector2d& pos,

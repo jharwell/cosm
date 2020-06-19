@@ -32,6 +32,7 @@
 
 #include "cosm/repr/block_metadata.hpp"
 #include "cosm/repr/unicell_movable_entity3D.hpp"
+#include "cosm/repr/operations/block_pickup_owner.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,11 +53,6 @@ NS_START(cosm, repr);
 class base_block3D : public crepr::unicell_movable_entity3D,
                      public rpprototype::clonable<base_block3D> {
  public:
-  enum pickup_owner {
-    ekARENA_MAP,
-    ekROBOT
-  };
-
   /**
    * \param dim 2 element vector of the dimensions of the block.
    * \param color The color of the block.
@@ -118,15 +114,15 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    *
    * This function does NOT move the block out of sight.
    */
-  void robot_pickup_update(const rtypes::type_uuid& robot_id,
-                           const rtypes::timestep& t,
-                           const pickup_owner& owner) {
+  void update_on_pickup(const rtypes::type_uuid& robot_id,
+                        const rtypes::timestep& t,
+                        const crops::block_pickup_owner& owner) {
     switch (owner) {
-      case ekARENA_MAP:
+      case crops::block_pickup_owner::ekARENA_MAP:
         move_out_of_sight();
         md()->robot_id(robot_id); /* needed to mark block as "in-use" */
         break;
-      case ekROBOT:
+      case crops::block_pickup_owner::ekROBOT:
         m_md.robot_pickup_event(robot_id);
         m_md.first_pickup_time(t);
         break;
