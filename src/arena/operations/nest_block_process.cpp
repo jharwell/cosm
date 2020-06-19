@@ -45,13 +45,13 @@ static void do_unlock(base_arena_map& map);
 nest_block_process::nest_block_process(
     std::unique_ptr<crepr::base_block3D> robot_block,
     const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.operations.nest_block_process"),
+    : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
       mc_timestep(t),
       mc_robot_block_id(robot_block->id()) {}
 
 nest_block_process::nest_block_process(const rtypes::type_uuid& robot_block_id,
                                        const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.operations.nest_block_process"),
+    : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
       mc_timestep(t),
       mc_robot_block_id(robot_block_id) {}
 

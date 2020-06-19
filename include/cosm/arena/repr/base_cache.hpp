@@ -110,14 +110,6 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     return this->dpos2D() == other.dpos2D();
   }
 
-  /**
-   * \brief \c TRUE iff the cache contains the specified block.
-   */
-  RCSW_PURE bool contains_block(
-      const std::shared_ptr<crepr::base_block3D>& c_block) const {
-    return contains_block(c_block.get());
-  }
-
   RCSW_PURE bool contains_block(const crepr::base_block3D* const c_block) const;
   size_t n_blocks(void) const { return blocks().size(); }
 

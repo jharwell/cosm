@@ -127,13 +127,14 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
    */
   auto victim_it =
       std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
-        return c.get() == victim;
+          return victim->dloccmp(*c);
       });
   /*
-   * Add cache to zombie vector to ensure accurate metric collection THIS
-   * timestep about caches.
+   * Copy depleted cache to zombie vector to ensure accurate proper (1) robot
+   * event processing of the cache pickp this timestep (2) metric collection
+   * THIS timestep about caches.
    */
-  m_zombie_caches.push_back(victim_it->get());
+  m_zombie_caches.push_back(*victim_it);
 
   /*
    * Update owned and access cache vectors, verifying that the removal worked as

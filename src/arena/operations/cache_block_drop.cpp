@@ -71,8 +71,6 @@ void cache_block_drop::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void cache_block_drop::visit(caching_arena_map& map) {
-  RCSW_UNUSED rtypes::type_uuid robot_id = m_arena_block->md()->robot_id();
-
   /*
    * We might be modifying a cell--don't want block distribution in ANOTHER
    * thread to pick our chosen cell for distribution.
@@ -99,8 +97,7 @@ void cache_block_drop::visit(caching_arena_map& map) {
    */
   visit(map.access<arena_grid::kCell>(cell2D_op::coord()));
 
-  ER_INFO("arena_map: fb%d dropped block%d in cache%d,total=[%s] (%zu)",
-          robot_id.v(),
+  ER_INFO("arena_map: Block%d dropped in cache%d,total=[%s] (%zu)",
           m_arena_block->id().v(),
           m_cache->id().v(),
           rcppsw::to_string(m_cache->blocks()).c_str(),

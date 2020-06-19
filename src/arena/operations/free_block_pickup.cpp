@@ -37,7 +37,7 @@ NS_START(cosm, arena, operations, detail);
  ******************************************************************************/
 free_block_pickup::free_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id)
-    : ER_CLIENT_INIT("cosm.operations.free_block_pickup"),
+    : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
       cell2D_op(block->dpos2D()),
       mc_robot_id(robot_id),
       m_block(block) {}

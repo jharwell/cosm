@@ -52,6 +52,11 @@ NS_START(cosm, repr);
 class base_block3D : public crepr::unicell_movable_entity3D,
                      public rpprototype::clonable<base_block3D> {
  public:
+  enum pickup_owner {
+    ekARENA_MAP,
+    ekROBOT
+  };
+
   /**
    * \param dim 2 element vector of the dimensions of the block.
    * \param color The color of the block.
@@ -109,17 +114,25 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   block_metadata* md(void) { return &m_md; }
 
   /**
-   * \brief Update a block's state given that it has been picked up by a robot.
+   * \brief Update block state given that it has been picked up.
    *
-   * - Update its metadata
-   * - Move the block's position out of sight so that it is not discoverable by
-   *   other robots.
+   * This function does NOT move the block out of sight.
    */
-  void robot_pickup_event(const rtypes::type_uuid& robot_id,
-                          const rtypes::timestep& t) {
-    m_md.robot_pickup_event(robot_id);
-    m_md.first_pickup_time(t);
-    move_out_of_sight();
+  void robot_pickup_update(const rtypes::type_uuid& robot_id,
+                           const rtypes::timestep& t,
+                           const pickup_owner& owner) {
+    switch (owner) {
+      case ekARENA_MAP:
+        move_out_of_sight();
+        md()->robot_id(robot_id); /* needed to mark block as "in-use" */
+        break;
+      case ekROBOT:
+        m_md.robot_pickup_event(robot_id);
+        m_md.first_pickup_time(t);
+        break;
+      default:
+        break;
+    } /* switch() */
   }
 
   /**
@@ -130,6 +143,14 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   bool is_out_of_sight(void) const {
     return kOutOfSight.dpos == unicell_movable_entity3D::dpos3D() ||
            kOutOfSight.rpos == unicell_movable_entity3D::rpos3D();
+  }
+  /**
+   * \brief Change the block's location to something outside the visitable space
+   * in the arena when it is being carried by robot.
+   */
+  void move_out_of_sight(void) {
+    unicell_movable_entity3D::rpos3D(kOutOfSight.rpos);
+    unicell_movable_entity3D::dpos3D(kOutOfSight.dpos);
   }
 
  private:
@@ -144,14 +165,6 @@ class base_block3D : public crepr::unicell_movable_entity3D,
 
   static const out_of_sight3D kOutOfSight;
 
-  /**
-   * \brief Change the block's location to something outside the visitable space
-   * in the arena when it is being carried by robot.
-   */
-  void move_out_of_sight(void) {
-    unicell_movable_entity3D::rpos3D(kOutOfSight.rpos);
-    unicell_movable_entity3D::dpos3D(kOutOfSight.dpos);
-  }
 
   /* clang-format off */
   block_metadata m_md;

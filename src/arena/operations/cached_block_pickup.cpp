@@ -44,7 +44,7 @@ cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
                                          cpal::argos_sm_adaptor* sm,
                                          const rtypes::type_uuid& robot_id,
                                          const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.operations.cached_block_pickup"),
+    : ER_CLIENT_INIT("cosm.arena.operations.cached_block_pickup"),
       cell2D_op(cache->dpos2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
@@ -175,8 +175,9 @@ void cached_block_pickup::visit(caching_arena_map& map) {
 
 void cached_block_pickup::visit(crepr::base_block3D& block) {
   ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
-  block.robot_pickup_event(mc_robot_id, mc_timestep);
-
+  block.robot_pickup_update(mc_robot_id,
+                            mc_timestep,
+                            crepr::base_block3D::pickup_owner::ekARENA_MAP);
   ER_INFO("Block%d is now carried by fb%u", block.id().v(), mc_robot_id.v());
 } /* visit() */
 

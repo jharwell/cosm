@@ -48,20 +48,32 @@ block_pickup::block_pickup(crepr::base_block3D* block,
 void block_pickup::visit(controller::block_carrying_controller& c) {
   /*
    * Cloning resets robot ID, so we need to set it again in the clone (principle
-   * of least surprise)
+   * of least surprise).
    */
   auto block = m_block->clone();
   block->md()->robot_id(mc_robot_id);
   c.block(std::move(block));
   ER_INFO("Block%d is now carried by fb%u", m_block->id().v(), mc_robot_id.v());
 
-  /* move the original block out of sight */
-  visit(*m_block);
+
+  /*
+   * We need to visit the cloned controller block rather than the one we are
+   * passed in the constructor, because THAT one is owned by the arena map, and
+   * metrics are collected on the block the robot is carrying upon drop.
+   */
+  visit(*c.block());
+
+  /* move the arena map block out of sight */
+  m_block->robot_pickup_update(mc_robot_id,
+                               mc_timestep,
+                               crepr::base_block3D::pickup_owner::ekARENA_MAP);
 } /* visit() */
 
 void block_pickup::visit(crepr::base_block3D& block) {
   ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
-  block.robot_pickup_event(mc_robot_id, mc_timestep);
+  block.robot_pickup_update(mc_robot_id,
+                            mc_timestep,
+                            crepr::base_block3D::pickup_owner::ekROBOT);
 } /* visit() */
 
 NS_END(operations, controller, cosm);
