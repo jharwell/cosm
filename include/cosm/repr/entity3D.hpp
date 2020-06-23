@@ -27,7 +27,7 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/entity_base.hpp"
+#include "cosm/repr/spatial_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -41,69 +41,42 @@ NS_START(cosm, repr);
  * \class entity3D
  * \ingroup cosm repr
  *
- * \brief Base class from which all arena entities which can be represented in
- * 3D derive.
+ * \brief Base class from which all arena spatial entities which can be
+ * represented in 3D derive.
  */
-class entity3D : public entity_base {
+class entity3D : public spatial_entity {
  public:
   /**
-   * \brief Calculate the span in X of an entity given its location and
-   * dimension in X.
-   *
-   * \return The span in X of the entity.
-   */
-  static rmath::ranged xspan(const rmath::vector3d& pos, double xdim) {
-    return rmath::ranged(pos.x() - 0.5 * xdim, pos.x() + 0.5 * xdim);
-  }
-  static rmath::ranged xspan(const rmath::vector2d& pos, double xdim) {
-    return xspan(rmath::vector3d(pos), xdim);
-  }
-
-  /**
-   * \brief Calculate the span in Y of an entity given its location and
-   * dimension in Y.
-   *
-   * \return The span in Y of the entity.
-   */
-  static rmath::ranged yspan(const rmath::vector3d& pos, double ydim) {
-    return rmath::ranged(pos.y() - 0.5 * ydim, pos.y() + 0.5 * ydim);
-  }
-  static rmath::ranged yspan(const rmath::vector2d& pos, double ydim) {
-    return yspan(rmath::vector3d(pos), ydim);
-  }
-  /**
-   * \brief Calculate the span in Z of an entity given its location and
-   * dimension in Z.
+   * \brief Calculate the span in Z in real coordinates of an entity given the
+   * position of its 3D center and dimension in Z.
    *
    * \return The span in Z of the entity.
    */
-  static rmath::ranged zspan(const rmath::vector3d& pos, double zdim) {
-    return rmath::ranged(pos.z() - 0.5 * zdim, pos.z() + 0.5 * zdim);
+  static rmath::ranged zrspan(const rmath::vector3d& anchor,
+                              const rtypes::spatial_dist& zdim) {
+    return {anchor.z(), (anchor.z() + zdim).v()};
   }
 
-  entity3D(void) = default;
-  explicit entity3D(const rtypes::type_uuid& id) : entity_base(id) {}
+  /**
+   * \brief Calculate the span in Z in discrete coordinates of an entity given
+   * its discrete anchor and Z dimension.
+   *
+   * This function can only be called for entities which have a defined discrete
+   * anchor.
+   *
+   * \return The span in Z of the entity (closed interval).
+   */
+  static rmath::rangez zdspan(const rmath::vector3z& anchor, size_t zdim) {
+    /* rely on truncation of the 0.5 remainder to 0 */
+    return {anchor.z(), anchor.z() + zdim - 1};
+  }
+
+  using spatial_entity::spatial_entity;
 
   entity3D(const entity3D&) = default;
   entity3D& operator=(const entity3D&) = default;
 
-  virtual ~entity3D(void) = default;
-
-  /**
-   * \brief Calculate the span in X of a 2D entity given its location and
-   * dimension in X (objects track their own location and dimension).
-   *
-   * \return The span in X of the entity.
-   */
-  virtual rmath::ranged xspan(void) const = 0;
-
-  /**
-   * \brief Calculate the span in Y of a 2D entity given its location and
-   * dimension in Y.
-   *
-   * \return The span in Y of the entity.
-   */
-  virtual rmath::ranged yspan(void) const = 0;
+  ~entity3D(void) override = default;
 
   /**
    * \brief Calculate the span in Z of a 3D entity given its location and
@@ -111,27 +84,34 @@ class entity3D : public entity_base {
    *
    * \return The span in Z of the entity.
    */
-  virtual rmath::ranged zspan(void) const = 0;
+  virtual rmath::ranged zrspan(void) const = 0;
 
   /**
-   * \brief Get the size of the 2D entity in the X direction in real coordinates.
+   * \brief Get the size of the 3D entity in the Z direction in real
+   * coordinates.
    */
-  virtual double xdimr(void) const = 0;
+  virtual rtypes::spatial_dist zrsize(void) const = 0;
 
   /**
-   * \brief Get the size of the 2D entity in the Y direction in real coordinates.
+   * \brief Calculate the span in Z of the entity in discrete coordinates.
    */
-  virtual double ydimr(void) const = 0;
+  virtual rmath::rangez zdspan(void) const = 0;
 
   /**
-   * \brief Get the size of the 3D entity in the Z direction in real coordinates.
+   * \brief Get the size of the 3D entity in the Z direction in discrete
+   * coordinates.
    */
-  virtual double zdimr(void) const = 0;
+  virtual size_t zdsize(void) const = 0;
 
-  virtual rmath::vector2d rpos2D(void) const = 0;
-  virtual rmath::vector2z dpos2D(void) const = 0;
-  virtual rmath::vector3d rpos3D(void) const = 0;
-  virtual rmath::vector3z dpos3D(void) const = 0;
+  virtual rmath::vector2d rcenter2D(void) const = 0;
+  virtual rmath::vector2z dcenter2D(void) const = 0;
+  virtual rmath::vector3d rcenter3D(void) const = 0;
+  virtual rmath::vector3z dcenter3D(void) const = 0;
+
+  virtual rmath::vector2d ranchor2D(void) const = 0;
+  virtual rmath::vector2z danchor2D(void) const = 0;
+  virtual rmath::vector3d ranchor3D(void) const = 0;
+  virtual rmath::vector3z danchor3D(void) const = 0;
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek3D;

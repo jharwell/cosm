@@ -45,7 +45,7 @@ cache_block_drop::cache_block_drop(crepr::base_block3D* arena_block,
                                    const rtypes::discretize_ratio& resolution,
                                    const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.cache_block_drop"),
-      cell2D_op(cache->dpos2D()),
+      cell2D_op(cache->dcenter2D()),
       mc_locking(locking),
       mc_resolution(resolution),
       m_arena_block(arena_block),

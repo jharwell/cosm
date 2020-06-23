@@ -34,7 +34,8 @@
 namespace cosm::repr {
 class unicell_entity2D;
 class unicell_entity3D;
-class entity_base;
+class base_entity;
+class spatial_entity;
 } // namespace cosm::repr
 
 NS_START(cosm, ds);
@@ -45,8 +46,11 @@ using const_entity2D_vector_type = const crepr::unicell_entity2D*;
 using entity3D_vector_type = crepr::unicell_entity3D*;
 using const_entity3D_vector_type = const crepr::unicell_entity3D*;
 
-using entity_vector_type = crepr::entity_base*;
-using const_entity_vector_type = const crepr::entity_base*;
+using entity_vector_type = crepr::base_entity*;
+using const_entity_vector_type = const crepr::base_entity*;
+
+using spatial_entity_vector_type = crepr::spatial_entity*;
+using const_spatial_entity_vector_type = const crepr::spatial_entity*;
 
 /*******************************************************************************
  * Type Definitions
@@ -59,6 +63,9 @@ using const_entity3D_vector = std::vector<const_entity3D_vector_type>;
 
 using entity_vector = std::vector<entity_vector_type>;
 using const_entity_vector = std::vector<const_entity_vector_type>;
+
+using spatial_entity_vector = std::vector<spatial_entity_vector_type>;
+using const_spatial_entity_vector = std::vector<const_spatial_entity_vector_type>;
 
 NS_END(ds, cosm);
 

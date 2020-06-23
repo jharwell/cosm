@@ -41,7 +41,7 @@ class base_cache;
 
 namespace cosm::repr {
 class base_block3D;
-class entity_base;
+class spatial_entity;
 } /* namespace cosm::repr */
 
 NS_START(cosm, ds);
@@ -89,9 +89,9 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /**
    * \brief Set the entity associated with this cell.
    */
-  void entity(repr::entity_base* entity) { m_entity = entity; }
-  repr::entity_base* entity(void) const { return m_entity; }
-  repr::entity_base* entity(void) { return m_entity; }
+  void entity(repr::spatial_entity* entity) { m_entity = entity; }
+  repr::spatial_entity* entity(void) const { return m_entity; }
+  repr::spatial_entity* entity(void) { return m_entity; }
 
   void loc(const rmath::vector2z& loc) { m_loc = loc; }
   const rmath::vector2z& loc(void) const { return m_loc; }
@@ -116,8 +116,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
 
  private:
   /* clang-format off */
-  repr::entity_base* m_entity{nullptr};
-  rmath::vector2z    m_loc{};
+  repr::spatial_entity* m_entity{nullptr};
+  rmath::vector2z       m_loc{};
   /* clang-format on */
 };
 

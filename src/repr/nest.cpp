@@ -31,7 +31,7 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Class Constants
  ******************************************************************************/
-int nest::kNEXT_ID = 0;
+int nest::m_nest_id = 0;
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -40,10 +40,10 @@ nest::nest(const rmath::vector2d& dim,
            const rmath::vector2d& center,
            const rtypes::discretize_ratio& resolution,
            const rutils::color& light_color)
-    : unicell_immovable_entity2D(dim,
-                                 center,
+    : unicell_immovable_entity2D(rtypes::type_uuid(m_nest_id++),
+                                 dim,
                                  resolution,
-                                 rtypes::type_uuid(kNEXT_ID++)),
+                                 center),
       colored_entity(rutils::color::kGRAY70),
       m_lights(init_lights(light_color)) {}
 
@@ -51,7 +51,7 @@ nest::nest(const rmath::vector2d& dim,
  * Member Functions
  ******************************************************************************/
 nest::light_list nest::init_lights(const rutils::color& color) const {
-  if (std::fabs(dims2D().x() - dims2D().y()) <=
+  if (std::fabs(rdim2D().x() - rdim2D().y()) <=
       std::numeric_limits<double>::epsilon()) {
     return init_square(color);
   } else {
@@ -60,7 +60,7 @@ nest::light_list nest::init_lights(const rutils::color& color) const {
 } /* init_lights() */
 
 nest::light_list nest::init_square(const rutils::color& color) const {
-  argos::CVector3 loc(rpos2D().x(), rpos2D().y(), 5.0);
+  argos::CVector3 loc(rcenter2D().x(), rcenter2D().y(), 5.0);
   return light_list{new argos::CLightEntity(
       "nest_light0",
       loc,
@@ -72,14 +72,14 @@ nest::light_list nest::init_rect(const rutils::color& color) const {
   light_list ret;
   argos::CVector3 loc1, loc2, loc3;
 
-  if (xdimr() > ydimr()) {
-    loc1.Set(rpos2D().x() - xdimr() * 0.25, rpos2D().y(), 5.0);
-    loc2.Set(rpos2D().x(), rpos2D().y(), 5.0);
-    loc3.Set(rpos2D().x() + xdimr() * 0.25, rpos2D().y(), 5.0);
+  if (xrsize() > yrsize()) {
+    loc1.Set((ranchor2D().x() + xrsize() * 0.25).v(), rcenter2D().y(), 5.0);
+    loc2.Set((ranchor2D().x() + xrsize() * 0.5).v(), rcenter2D().y(), 5.0);
+    loc3.Set((ranchor2D().x() + xrsize() * 0.75).v(), rcenter2D().y(), 5.0);
   } else {
-    loc1.Set(rpos2D().x(), rpos2D().y() - ydimr() * 0.25, 5.0);
-    loc2.Set(rpos2D().x(), rpos2D().y(), 5.0);
-    loc3.Set(rpos2D().x(), rpos2D().y() + ydimr() * 0.25, 5.0);
+    loc1.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.25).v(), 5.0);
+    loc2.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.5).v(), 5.0);
+    loc3.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.75).v(), 5.0);
   }
 
   return {new argos::CLightEntity(

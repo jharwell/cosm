@@ -66,47 +66,44 @@ class grid_view_entity : public crepr::entity2D {
 
   ~grid_view_entity(void) override = default;
 
-  rmath::vector2z dpos2D(void) const override final {
-    return m_view.origin()->loc();
+  rmath::vector2d ranchor2D(void) const override final {
+    return rmath::zvec2dvec(danchor2D(), mc_resolution.v());
   }
-  rmath::vector2d rpos2D(void) const override final {
-    return rmath::zvec2dvec(m_view.origin()->loc(), mc_resolution.v());
+  rmath::vector2d rcenter2D(void) const override final {
+    return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
   }
 
   const rtypes::discretize_ratio& resolution(void) const {
     return mc_resolution;
   }
 
-  /**
-   * \brief Get the 2D space spanned by the entity in absolute
-   * coordinates in the arena in X.
-   */
-  rmath::ranged xspan(void) const override final {
-    return rmath::ranged(rpos2D().x(),
-                         rpos2D().x() + m_view.shape()[0] * mc_resolution.v());
+  rmath::ranged xrspan(void) const override final {
+    return entity2D::xrspan(ranchor2D(), xrsize());
+  }
+  rmath::ranged yrspan(void) const override final {
+    return entity2D::yrspan(ranchor2D(), yrsize());
   }
 
-  /**
-   * \brief Get the 2D space spanned by the grid_cell entity in absolute
-   * coordinates in the arena in Y.
-   */
-  rmath::ranged yspan(void) const override final {
-    return rmath::ranged(rpos2D().y(),
-                         rpos2D().y() + m_view.shape()[1] * mc_resolution.v());
+  rmath::vector2z danchor2D(void) const override final {
+    return m_view.origin()->loc();
+  }
+  rmath::vector2z dcenter2D(void) const override final {
+    return danchor2D() + rmath::vector2z(xdsize(), ydsize()) / 2;
   }
 
-  /**
-   * \brief Determine if a real-valued point lies within the extent of the
-   * entity.
-   *
-   * \return \c TRUE if the condition is met, and \c FALSE otherwise.
-   */
-  bool contains_point(const rmath::vector2d& point) const {
-    return xspan().contains(point.x()) && yspan().contains(point.y());
+  rmath::rangez xdspan(void) const override final {
+    return entity2D::xdspan(danchor2D(), xdsize());
+  }
+  rmath::rangez ydspan(void) const override final {
+    return entity2D::ydspan(danchor2D(), ydsize());
   }
 
-  double xdimr(void) const override { return xspan().span(); }
-  double ydimr(void) const override { return yspan().span(); }
+  rtypes::spatial_dist xrsize(void) const override {
+    return rtypes::spatial_dist(m_view.shape()[0] * mc_resolution.v());
+  }
+  rtypes::spatial_dist yrsize(void) const override {
+    return rtypes::spatial_dist(m_view.shape()[1] * mc_resolution.v());
+  }
 
   /**
    * \brief Get the cell associated with a particular grid location within the
@@ -118,15 +115,15 @@ class grid_view_entity : public crepr::entity2D {
    *
    * \return A reference to the cell.
    */
-  const ds::cell2D& cell(uint i, uint j) const { return m_view[i][j]; }
+  const ds::cell2D& cell(size_t i, size_t j) const { return m_view[i][j]; }
 
  protected:
   /**
    * \brief Return the size of the entity in discrete coordinates. Only suitable
    * for indexing within the entity itself.
    */
-  size_t xdimd(void) const { return m_view.shape()[0]; }
-  size_t ydimd(void) const { return m_view.shape()[1]; }
+  size_t xdsize(void) const override { return m_view.shape()[0]; }
+  size_t ydsize(void) const override  { return m_view.shape()[1]; }
 
  private:
   /* clang-format off */

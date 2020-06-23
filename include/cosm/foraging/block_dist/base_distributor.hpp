@@ -75,7 +75,7 @@ class base_distributor {
    * otherwise.
    */
   virtual bool distribute_block(crepr::base_block3D* block,
-                                cds::const_entity_vector& entities) = 0;
+                                cds::const_spatial_entity_vector& entities) = 0;
 
   /**
    * \brief Return a read-only list of \ref block_clusters for capacity checking
@@ -90,7 +90,7 @@ class base_distributor {
    * otherwise.
    */
   virtual bool distribute_blocks(cds::block3D_vectorno& blocks,
-                                 cds::const_entity_vector& entities) {
+                                 cds::const_spatial_entity_vector& entities) {
     return std::all_of(blocks.begin(),
                        blocks.end(),
                        [&](auto& b) {

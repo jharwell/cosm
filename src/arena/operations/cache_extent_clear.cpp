@@ -50,8 +50,8 @@ void cache_extent_clear::visit(caching_arena_map& map) {
 } /* visit() */
 
 void cache_extent_clear::visit(cds::arena_grid& grid) {
-  auto xspan = m_victim->xspan();
-  auto yspan = m_victim->yspan();
+  auto xspan = m_victim->xdspan();
+  auto yspan = m_victim->ydspan();
 
   /*
    * To reset all cells covered by the cache's extent, we simply send them a
@@ -59,27 +59,20 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
    * it is currently in the HAS_BLOCK state as part of a \ref cached_block_pickup,
    * and clearing it here will trigger an assert later.
    */
-  auto xmin = static_cast<uint>(std::ceil(xspan.lb() / grid.resolution().v()));
-  auto xmax = static_cast<uint>(std::ceil(xspan.ub() / grid.resolution().v()));
-  auto ymin = static_cast<uint>(std::ceil(yspan.lb() / grid.resolution().v()));
-  auto ymax = static_cast<uint>(std::ceil(yspan.ub() / grid.resolution().v()));
-
-  for (uint i = xmin; i < xmax; ++i) {
-    for (uint j = ymin; j < ymax; ++j) {
+  for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
+    for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       rmath::vector2z c = rmath::vector2z(i, j);
-      if (c != m_victim->dpos2D()) {
+      if (c != m_victim->dcenter2D()) {
         ER_ASSERT(m_victim->contains_point2D(
-                      rmath::zvec2dvec(c, grid.resolution().v())),
-                  "Cache%d does not contain point (%u, %u) within its extent",
+            rmath::zvec2dvec(c, grid.resolution().v())),
+                  "Cache%d does not contain point %s within its extent",
                   m_victim->id().v(),
-                  i,
-                  j);
+                  rcppsw::to_string(c).c_str());
 
         auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
         ER_ASSERT(cell.state_in_cache_extent(),
-                  "cell(%u, %u) not in CACHE_EXTENT [state=%d]",
-                  i,
-                  j,
+                  "cell@%s not in CACHE_EXTENT [state=%d]",
+                  rcppsw::to_string(c).c_str(),
                   cell.fsm().current_state());
         cdops::cell2D_empty_visitor e(c);
         e.visit(cell);

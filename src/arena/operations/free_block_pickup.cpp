@@ -40,7 +40,7 @@ free_block_pickup::free_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id,
                                      const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
-      cell2D_op(block->dpos2D()),
+      cell2D_op(block->danchor2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
       m_block(block) {}

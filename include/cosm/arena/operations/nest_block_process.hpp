@@ -75,24 +75,11 @@ class nest_block_process : public rer::client<nest_block_process> {
   /**
    * \brief Initialize a nest block process event.
    *
-   * \param robot_block Handle to the block the robot is currently carrying
-   *                    (originally a clone of an arena block), which it has
-   *                    given up ownership of for processing. Not used for
-   *                    anything other than extracting the ID of the block which
-   *                    the robot was carrying.
+   * \param arena_block The arena map owned block with the same ID as the block
+   *                    the robot released for this processing event.
    * \param t Current timestep.
    */
-  nest_block_process(const std::unique_ptr<crepr::base_block3D> robot_block,
-                     const rtypes::timestep& t);
-
-  /**
-   * \brief Initialize a nest block process event.
-   *
-   * \param robot_block_id ID of the block the robot ALREADY gave up to prior to this
-   *                        processing event.
-   * \param t Current timestep.
-   */
-  nest_block_process(const rtypes::type_uuid& robot_block_id,
+  nest_block_process(crepr::base_block3D* arena_block,
                      const rtypes::timestep& t);
 
   ~nest_block_process(void) override = default;
@@ -118,16 +105,15 @@ class nest_block_process : public rer::client<nest_block_process> {
 
   /* clang-format off */
   const rtypes::timestep               mc_timestep;
-  const rtypes::type_uuid              mc_robot_block_id;
-  crepr::base_block3D*                 m_arena_block{nullptr};
+  crepr::base_block3D*                 m_arena_block;
   /* clang-format on */
 };
 
 NS_END(detail);
 
 /**
- * \brief We use the precise visitor in order to force compile errors if a call to
- * a visitor is made that involves a visitee that is not in our visit set
+ * \brief We use the precise visitor in order to force compile errors if a call
+ * to a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */

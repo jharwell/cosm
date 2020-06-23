@@ -161,14 +161,16 @@ class base_nest_block_process
     controller.block()->md()->dest_drop_time(t);
     m_metrics_agg->collect_from_block(controller.block());
 
-    rtypes::type_uuid id = controller.block()->id();
-    caops::nest_block_process_visitor aproc_op(controller.block_release(), t);
+    auto to_drop = controller.block_release();
 
     /*
      * Safe to index directly even in multi-threaded contexts because the
      * location of blocks within the arena map vector never changes.
      */
-    robot_nest_block_process_visitor_type rdrop_op(m_map->blocks()[id.v()], t);
+    caops::nest_block_process_visitor aproc_op(m_map->blocks()[to_drop->id().v()],
+                                               t);
+    robot_nest_block_process_visitor_type rdrop_op(m_map->blocks()[to_drop->id().v()],
+                                                   t);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);

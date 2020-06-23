@@ -142,12 +142,12 @@ bool dispatcher::initialize(rmath::rng* rng) {
 } /* initialize() */
 
 bool dispatcher::distribute_block(crepr::base_block3D* block,
-                                  cds::const_entity_vector& entities) {
+                                  cds::const_spatial_entity_vector& entities) {
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */
 
 bool dispatcher::distribute_blocks(cds::block3D_vectorno& blocks,
-                                   cds::const_entity_vector& entities) {
+                                   cds::const_spatial_entity_vector& entities) {
   return m_dist->distribute_blocks(blocks, entities);
 } /* distribute_block() */
 

@@ -68,7 +68,7 @@ class random_distributor : public rer::client<random_distributor>,
   random_distributor& operator=(const random_distributor&) = delete;
 
   bool distribute_blocks(cds::block3D_vectorno& blocks,
-                         cds::const_entity_vector& entities) override;
+                         cds::const_spatial_entity_vector& entities) override;
 
   /**
    * \brief Distribution a single block in the arena.
@@ -82,7 +82,7 @@ class random_distributor : public rer::client<random_distributor>,
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
   bool distribute_block(crepr::base_block3D* block,
-                        cds::const_entity_vector& entities) override;
+                        cds::const_spatial_entity_vector& entities) override;
 
   cfds::block3D_cluster_vector block_clusters(void) const override { return {}; }
 
@@ -99,7 +99,7 @@ class random_distributor : public rer::client<random_distributor>,
    * \param entities The entities to avoid.
    */
   boost::optional<coord_search_res_t> avail_coord_search(
-      const cds::const_entity_vector& entities,
+      const cds::const_spatial_entity_vector& entities,
       const rmath::vector2d& block_dim);
 
   /**
@@ -111,7 +111,7 @@ class random_distributor : public rer::client<random_distributor>,
    * - No entity should overlap with the block after distribution.
    */
   bool verify_block_dist(const crepr::base_block3D* block,
-                         const cds::const_entity_vector& entities,
+                         const cds::const_spatial_entity_vector& entities,
                          const cds::cell2D* cell) RCSW_PURE;
 
   /* clang-format off */

@@ -84,7 +84,14 @@ free_block_drop::free_block_drop(crepr::base_block3D* block,
 void free_block_drop::visit(cds::cell2D& cell) {
   visit(*mc_block);
   visit(cell.fsm());
-  cell.entity(mc_block);
+
+  /*
+   * We can't set the entity undconditionally, because this event is also
+   * triggered on block drops into caches.
+   */
+  if (cell.state_has_block()) {
+    cell.entity(mc_block);
+  }
 } /* visit() */
 
 void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
@@ -94,11 +101,11 @@ void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
 void free_block_drop::visit(crepr::base_block3D& block) {
   block.md()->robot_id_reset();
 
-  auto rloc =
-      rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(),
+                                               mc_resolution.v()));
 
-  block.rpos3D(rloc);
-  block.dpos3D(rmath::vector3z(cell2D_op::coord()));
+  block.ranchor3D(rloc);
+  block.danchor3D(rmath::vector3z(cell2D_op::coord()));
 } /* visit() */
 
 void free_block_drop::visit(base_arena_map& map) {
@@ -248,20 +255,20 @@ bool block_drop_loc_conflict(const caching_arena_map& map,
 bool block_drop_overlap_with_nest(const crepr::base_block3D* const block,
                                   const crepr::nest& nest,
                                   const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity3D::xspan(drop_loc, block->dims2D().x());
-  auto drop_yspan = crepr::entity3D::yspan(drop_loc, block->dims2D().y());
+  auto drop_xspan = crepr::entity3D::xrspan(drop_loc, block->xrsize());
+  auto drop_yspan = crepr::entity3D::yrspan(drop_loc, block->yrsize());
 
-  return nest.xspan().overlaps_with(drop_xspan) &&
-         nest.yspan().overlaps_with(drop_yspan);
+  return nest.xrspan().overlaps_with(drop_xspan) &&
+         nest.yrspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_nest() */
 
 bool block_drop_overlap_with_cache(const crepr::base_block3D* const block,
                                    const carepr::arena_cache* const cache,
                                    const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xspan(drop_loc, block->dims2D().x());
-  auto drop_yspan = crepr::entity2D::yspan(drop_loc, block->dims2D().y());
-  return cache->xspan().overlaps_with(drop_xspan) &&
-         cache->yspan().overlaps_with(drop_yspan);
+  auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block->xrsize());
+  auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block->yrsize());
+  return cache->xrspan().overlaps_with(drop_xspan) &&
+         cache->yrspan().overlaps_with(drop_yspan);
 } /* block_drop_overlap_with_cache() */
 
 NS_END(detail, operations, arena, cosm);

@@ -48,7 +48,7 @@ NS_START(cosm, hal, sensors, config);
  */
 struct ground_sensor_detection_config final : public rconfig::base_config {
   /* clang-format off */
-  rmath::ranged range{-1, -1};
+  rmath::ranged range{};
   uint         consensus{0};
   /* clang-format on */
 };

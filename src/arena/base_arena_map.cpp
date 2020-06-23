@@ -49,7 +49,8 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
     : ER_CLIENT_INIT("cosm.arena.base_arena_map"),
       decorator(config->grid.dims, config->grid.resolution),
       m_blockso(foraging::block_dist::block3D_manifest_processor(
-          &config->blocks.dist.manifest)()),
+          &config->blocks.dist.manifest,
+          config->grid.resolution)()),
       m_block_dispatcher(&decoratee(),
                          config->grid.resolution,
                          &config->blocks.dist),

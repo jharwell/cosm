@@ -78,29 +78,9 @@ class nest : public repr::unicell_immovable_entity2D,
        const rtypes::discretize_ratio& resolution,
        const rutils::color& light_color);
 
-  /**
-   * \brief Determine if a real-valued point lies within the extent of the
-   * nest for:
-   *
-   * 1. Visualization purposes.
-   * 2. Determining if a robot has entered the nest.
-   *
-   * \param point The point to check.
-   *
-   * \return \c TRUE if the condition is met, and \c FALSE otherwise.
-   */
-  bool contains_point(const rmath::vector2d& point) const {
-    return xspan().contains(point.x()) && yspan().contains(point.y());
-  }
-
   light_list& lights(void) { return m_lights; }
 
  private:
-  /**
-   * \brief The ID that will be assigned to the next nest created.
-   */
-  static int kNEXT_ID;
-
   /**
    * \brief Initialize lights above the nest for robots to use for localization,
    * dependent on the geometry of the nest.
@@ -110,6 +90,10 @@ class nest : public repr::unicell_immovable_entity2D,
   light_list init_rect(const rutils::color& color) const;
 
   /* clang-format off */
+  /**
+   * The ID that will be assigned to the next nest created.
+   */
+  static int m_nest_id;
   light_list m_lights;
   /* clang-format on */
 };

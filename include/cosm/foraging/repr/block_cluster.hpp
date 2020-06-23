@@ -48,12 +48,12 @@ NS_START(cosm, foraging, repr);
  *
  * A cluster is defined as:
  *
- * - The 2D area in which the blocks reside
+ * - The 2D area in which the blocks reside.
  * - The blocks distributed in that area.
  * - The maximum capacity of the cluster.
  */
-class block_cluster : public crepr::grid_view_entity<cds::arena_grid::const_view>,
-                      public rer::client<block_cluster> {
+class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::const_view>,
+                            public rer::client<block_cluster> {
  public:
   block_cluster(const cds::arena_grid::const_view& view,
                 const rtypes::discretize_ratio& resolution,

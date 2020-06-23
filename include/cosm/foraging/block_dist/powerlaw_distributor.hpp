@@ -69,7 +69,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
 
   cfds::block3D_cluster_vector block_clusters(void) const override;
   bool distribute_block(crepr::base_block3D* block,
-                        cds::const_entity_vector& entities) override;
+                        cds::const_spatial_entity_vector& entities) override;
 
   /**
    * \brief Computer cluster locations such that no two clusters overlap, and

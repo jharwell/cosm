@@ -39,19 +39,16 @@ int base_cache::m_next_id = 0;
  * Constructors/Destructor
  ******************************************************************************/
 base_cache::base_cache(const params& p)
-    : unicell_immovable_entity2D(rmath::vector2d(p.dimension.v(),
+    : unicell_immovable_entity2D(rtypes::constants::kNoUUID == p.id ?
+                                 rtypes::type_uuid(m_next_id++) :
+                                 p.id,
+                                 rmath::vector2d(p.dimension.v(),
                                                  p.dimension.v()),
-                                 p.center,
-                                 p.resolution),
+                                 p.resolution,
+                                 p.center),
       colored_entity(rutils::color::kGRAY40),
       mc_resolution(p.resolution),
-      m_blocks(p.blocks) {
-  if (rtypes::constants::kNoUUID == p.id) {
-    entity2D::id(rtypes::type_uuid(m_next_id++));
-  } else {
-    entity2D::id(rtypes::type_uuid(p.id));
-  }
-}
+      m_blocks(p.blocks) {}
 
 /*******************************************************************************
  * Member Functions
@@ -64,7 +61,7 @@ void base_cache::block_remove(const crepr::base_block3D* const victim) {
 
 std::unique_ptr<base_cache> base_cache::clone(void) const {
   return std::make_unique<base_cache>(params{
-      rtypes::spatial_dist(xdimr()), mc_resolution, rpos2D(), m_blocks, id()});
+      rtypes::spatial_dist(xrsize()), mc_resolution, rcenter2D(), m_blocks, id()});
 } /* clone() */
 
 RCSW_PURE bool base_cache::contains_block(

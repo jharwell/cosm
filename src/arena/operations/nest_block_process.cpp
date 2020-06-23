@@ -43,17 +43,11 @@ static void do_unlock(base_arena_map& map);
  * Constructors/Destructor
  ******************************************************************************/
 nest_block_process::nest_block_process(
-    std::unique_ptr<crepr::base_block3D> robot_block,
+    crepr::base_block3D* arena_block,
     const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
       mc_timestep(t),
-      mc_robot_block_id(robot_block->id()) {}
-
-nest_block_process::nest_block_process(const rtypes::type_uuid& robot_block_id,
-                                       const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
-      mc_timestep(t),
-      mc_robot_block_id(robot_block_id) {}
+      m_arena_block(arena_block) {}
 
 /*******************************************************************************
  * Member Functions
@@ -72,20 +66,6 @@ void nest_block_process::visit(caching_arena_map& map) {
 
 template <typename TArenaMap>
 void nest_block_process::do_visit(TArenaMap& map) {
-  /*
-   * The robot owns a unique copy of a block originally from the arena, so we
-   * need to look it up rather than implicitly converting its unique_ptr to a
-   * shared_ptr and distributing it--this will cause lots of problems later.
-   */
-  auto it =
-      std::find_if(map.blocks().begin(),
-                   map.blocks().end(),
-                   [&](const auto& b) { return mc_robot_block_id == b->id(); });
-  ER_ASSERT(map.blocks().end() != it,
-            "Robot block%s not found in arena map blocks",
-            rcppsw::to_string(mc_robot_block_id).c_str());
-  m_arena_block = *it;
-
   /* update block after processing */
   visit(*m_arena_block);
 

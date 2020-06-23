@@ -46,19 +46,19 @@ NS_START(cosm, repr);
  */
 class unicell_movable_entity3D : public unicell_entity3D {
  public:
-  using unicell_entity3D::dpos3D;
-  using unicell_entity3D::rpos3D;
+  using unicell_entity3D::danchor3D;
+  using unicell_entity3D::ranchor3D;
   using unicell_entity3D::unicell_entity3D;
 
   static constexpr bool is_movable(void) { return true; }
 
   ~unicell_movable_entity3D(void) override = default;
 
-  void rpos3D(const rmath::vector3d& pos) {
-    unicell_entity3D::rpos3D<unicell_movable_entity3D>(pos);
+  void ranchor3D(const rmath::vector3d& anchor) {
+    unicell_entity3D::ranchor3D<unicell_movable_entity3D>(anchor);
   }
-  void dpos3D(const rmath::vector3z& pos) {
-    unicell_entity3D::dpos3D<unicell_movable_entity3D>(pos);
+  void danchor3D(const rmath::vector3z& anchor) {
+    unicell_entity3D::danchor3D<unicell_movable_entity3D>(anchor);
   }
 };
 

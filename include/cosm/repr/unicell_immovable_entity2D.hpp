@@ -48,16 +48,11 @@ class unicell_immovable_entity2D : public unicell_entity2D {
  public:
   static constexpr bool is_movable(void) { return false; }
 
-  unicell_immovable_entity2D(const rmath::vector2d& dim,
-                             const rmath::vector2d& loc,
-                             const rtypes::discretize_ratio& resolution)
-      : unicell_entity2D(dim, loc, resolution, rtypes::constants::kNoUUID) {}
-
-  unicell_immovable_entity2D(const rmath::vector2d& dim,
-                             const rmath::vector2d& loc,
+  unicell_immovable_entity2D(const rtypes::type_uuid& id,
+                             const rmath::vector2d& rdim,
                              const rtypes::discretize_ratio& resolution,
-                             const rtypes::type_uuid& id)
-      : unicell_entity2D(dim, loc, resolution, id) {}
+                             const rmath::vector2d& rcenter)
+      : unicell_entity2D(id, rdim, resolution, rcenter) {}
 
   ~unicell_immovable_entity2D(void) override = default;
 };

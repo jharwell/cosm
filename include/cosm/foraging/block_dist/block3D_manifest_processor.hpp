@@ -54,16 +54,19 @@ NS_START(cosm, foraging, block_dist);
 class block3D_manifest_processor
     : public rpfactory::sharing_factory<crepr::base_block3D,
                                         std::string, /* key type */
+                                        const rtypes::type_uuid&,
                                         const rmath::vector3d&,
-                                        const rtypes::type_uuid&> {
+                                        const rtypes::discretize_ratio&> {
  public:
-  explicit block3D_manifest_processor(const config::block_manifest* m);
+  explicit block3D_manifest_processor(const config::block_manifest* m,
+                                      const rtypes::discretize_ratio& arena_res);
 
   cds::block3D_vectoro operator()(void);
 
  private:
   /* clang-format off */
-  const config::block_manifest mc_manifest;
+  const rtypes::discretize_ratio mc_arena_res;
+  const config::block_manifest   mc_manifest;
   /* clang-format on */
 };
 

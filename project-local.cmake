@@ -8,11 +8,22 @@ endif()
 if("${COSM_BUILD_FOR}" MATCHES "MSI" )
   message(STATUS "Building for MSI")
   set(COSM_PROJECT_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSICLUSTER})
-  set(COSM_HAL_TARGET "argos-footbot")
+
+  if(NOT COSM_PROJECT_DEPS_PREFIX)
+    set(COSM_HAL_TARGET "argos-footbot")
+  endif()
+  
 elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   message(STATUS "Building for ARGoS")
-  set(COSM_PROJECT_DEPS_PREFIX /opt/data/local)
-  set(COSM_HAL_TARGET "argos-footbot")
+  if(NOT COSM_PROJECT_DEPS_PREFIX)
+    set(COSM_HAL_TARGET "argos-footbot")
+  endif()
+
+
+  if(NOT COSM_PROJECT_DEPS_PREFIX)
+    set(COSM_PROJECT_DEPS_PREFIX /opt/data/local)
+  endif()
+
 elseif("${COSM_BUILD_FOR}" MATCHES "EV3")
   message(STATUS "Building for EV3")
   set(COSM_HAL_TARGET "ev3")

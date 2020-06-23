@@ -54,30 +54,18 @@ class base_block3D : public crepr::unicell_movable_entity3D,
                      public rpprototype::clonable<base_block3D> {
  public:
   /**
-   * \param dim 2 element vector of the dimensions of the block.
-   * \param color The color of the block.
-   * \param type The type of the block.
-   *
-   * Using this constructor, blocks are assigned the next available id, starting
-   * from 0.
-   */
-  base_block3D(const rmath::vector3d& dim,
-               const rutils::color& color,
-               const crepr::block_type& type)
-      : unicell_movable_entity3D(dim, rtypes::constants::kNoUUID),
-        m_md(color, type) {}
-
-  /**
    * \param dim 3 element vector of the dimensions of the block.
    * \param color The color of the block.
    * \param type The type of the block.
    * \param id The id of the block.
    */
-  base_block3D(const rmath::vector3d& dim,
+  base_block3D(const rtypes::type_uuid& id,
+               const rmath::vector3d& dim,
+               const rtypes::discretize_ratio& arena_res,
                const rutils::color& color,
-               const crepr::block_type& type,
-               const rtypes::type_uuid& id)
-      : unicell_movable_entity3D(dim, id), m_md(color, type) {}
+               const crepr::block_type& type)
+      : unicell_movable_entity3D(id, dim, arena_res),
+        m_md(color, type) {}
 
   ~base_block3D(void) override = default;
 
@@ -100,10 +88,10 @@ class base_block3D : public crepr::unicell_movable_entity3D,
 
   /**
    * \brief Compare two \ref base_block3D objects for equality based on their
-   * discrete location.
+   * discrete location by comparing their anchors.
    */
   bool dloccmp(const base_block3D& other) const {
-    return this->dpos3D() == other.dpos3D();
+    return this->danchor3D() == other.danchor3D();
   }
 
   const block_metadata* md(void) const { return &m_md; }
@@ -137,16 +125,16 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * This should only happen if the block is being carried by a robot.
    */
   bool is_out_of_sight(void) const {
-    return kOutOfSight.dpos == unicell_movable_entity3D::dpos3D() ||
-           kOutOfSight.rpos == unicell_movable_entity3D::rpos3D();
+    return kOutOfSight.dpos == unicell_movable_entity3D::danchor3D() ||
+           kOutOfSight.rpos == unicell_movable_entity3D::ranchor3D();
   }
   /**
    * \brief Change the block's location to something outside the visitable space
    * in the arena when it is being carried by robot.
    */
   void move_out_of_sight(void) {
-    unicell_movable_entity3D::rpos3D(kOutOfSight.rpos);
-    unicell_movable_entity3D::dpos3D(kOutOfSight.dpos);
+    unicell_movable_entity3D::ranchor3D(kOutOfSight.rpos);
+    unicell_movable_entity3D::danchor3D(kOutOfSight.dpos);
   }
 
  private:
@@ -160,7 +148,6 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   };
 
   static const out_of_sight3D kOutOfSight;
-
 
   /* clang-format off */
   block_metadata m_md;

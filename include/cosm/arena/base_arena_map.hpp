@@ -224,8 +224,8 @@ class base_arena_map : public rer::client<base_arena_map>,
 
  protected:
   struct block_dist_precalc_type {
-    cds::const_entity_vector avoid_ents{};
-    crepr::base_block3D* dist_ent{nullptr};
+    cds::const_spatial_entity_vector avoid_ents{};
+    crepr::base_block3D*             dist_ent{nullptr};
   };
   /**
    * \brief Perform necessary locking prior to (1) gathering the list of

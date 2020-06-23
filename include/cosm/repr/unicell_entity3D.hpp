@@ -29,6 +29,7 @@
 #include "rcppsw/math/range.hpp"
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
+#include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/entity3D.hpp"
@@ -54,38 +55,70 @@ NS_START(cosm, repr);
  *   with the kinds of entities that robots interact with because the
  *   handshaking logic is much simpler.
  */
-class unicell_entity3D : public entity3D {
+class unicell_entity3D : public entity3D,
+                         public rer::client<unicell_entity3D> {
  public:
   ~unicell_entity3D(void) override = default;
 
-  /**
-   * \brief Get the real location (center) of the object.
-   */
-  rmath::vector3d rpos3D(void) const override final { return m_rpos; }
-  rmath::vector2d rpos2D(void) const override final {
-    return m_rpos.project_on_xy();
+  rmath::vector3d rcenter3D(void) const override final {
+    return m_rcenter;
+  }
+  rmath::vector3d ranchor3D(void) const override final {
+    return m_ranchor;
+  }
+  rmath::vector2d rcenter2D(void) const override final {
+    return rcenter3D().to_2D();
+  }
+  rmath::vector2d ranchor2D(void) const override final {
+    return ranchor3D().to_2D();
+  }
+  rmath::ranged xrspan(void) const override final {
+    return spatial_entity::xrspan(ranchor3D(), xrsize());
+  }
+  rmath::ranged yrspan(void) const override final {
+    return spatial_entity::yrspan(ranchor3D(), yrsize());
+  }
+  rmath::ranged zrspan(void) const override final {
+    return entity3D::zrspan(ranchor3D(), yrsize());
+  }
+  rtypes::spatial_dist xrsize(void) const override final {
+    return rtypes::spatial_dist(m_rdim.x()); }
+  rtypes::spatial_dist yrsize(void) const override final {
+    return rtypes::spatial_dist(m_rdim.y());
+  }
+  rtypes::spatial_dist zrsize(void) const override final {
+    return rtypes::spatial_dist(m_rdim.z());
   }
 
-  /**
-   * \brief Get the discretized coordinates of the center of the object.
-   */
-  rmath::vector3z dpos3D(void) const override final { return m_dpos; }
-  rmath::vector2z dpos2D(void) const override final {
-    return m_dpos.project_on_xy();
+  rmath::vector3z dcenter3D(void) const override final {
+    ER_ASSERT(RCSW_IS_ODD(m_ddim.x()) &&
+              RCSW_IS_ODD(m_ddim.y()) &&
+              RCSW_IS_ODD(m_ddim.z()),
+              "dcenter3D() called on entity without defined center");
+    return m_dcenter;
   }
 
-  rmath::ranged xspan(void) const override final {
-    return entity3D::xspan(rpos2D(), xdimr());
+  rmath::vector2z dcenter2D(void) const override final {
+    return dcenter3D().to_2D();
   }
-  rmath::ranged yspan(void) const override final {
-    return entity3D::yspan(rpos2D(), ydimr());
+  rmath::vector3z danchor3D(void) const override final {
+    return m_danchor;
   }
-  rmath::ranged zspan(void) const override final {
-    return entity3D::zspan(rpos3D(), zdimr());
+  rmath::vector2z danchor2D(void) const override final {
+    return danchor3D().to_2D();
   }
-  double xdimr(void) const override final { return m_dim.x(); }
-  double ydimr(void) const override final { return m_dim.y(); }
-  double zdimr(void) const override final { return m_dim.z(); }
+  rmath::rangez xdspan(void) const override final {
+    return spatial_entity::xdspan(danchor2D(), xdsize());
+  }
+  rmath::rangez ydspan(void) const override final {
+    return spatial_entity::ydspan(danchor2D(), ydsize());
+  }
+  rmath::rangez zdspan(void) const override final {
+    return entity3D::ydspan(danchor2D(), zdsize());
+  }
+  size_t xdsize(void) const override final { return m_ddim.x(); }
+  size_t ydsize(void) const override final { return m_ddim.y(); }
+  size_t zdsize(void) const override final { return m_ddim.z(); }
 
   /**
    * \brief Return if a real-valued point lies within the extent of the 3D
@@ -99,60 +132,75 @@ class unicell_entity3D : public entity3D {
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
   bool contains_point2D(const rmath::vector2d& point) const {
-    return xspan().contains(point.x()) && yspan().contains(point.y());
+    return xrspan().contains(point.x()) && yrspan().contains(point.y());
   }
   bool contains_point3D(const rmath::vector3d& point) const {
-    return xspan().contains(point.x()) && yspan().contains(point.y()) &&
-           zspan().contains(point.z());
+    return xrspan().contains(point.x()) && yrspan().contains(point.y()) &&
+           zrspan().contains(point.z());
   }
 
-  const rmath::vector3d& dims3D(void) const { return m_dim; }
-  rmath::vector2d dims2D(void) const { return m_dim.project_on_xy(); }
+  const rmath::vector3d& rdim3D(void) const { return m_rdim; }
+  rmath::vector2d rdim2D(void) const { return rdim3D().to_2D(); }
 
  protected:
-  unicell_entity3D(const rmath::vector3d& dim,
-                   const rmath::vector3d& pos,
+  unicell_entity3D(const rtypes::type_uuid& id,
+                   const rmath::vector3d& rdim,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity3D{dim, pos, resolution, rtypes::constants::kNoUUID} {}
+      : unicell_entity3D{id, rdim, resolution, rmath::vector3d()} {}
 
-  unicell_entity3D(const rmath::vector3d& dim,
-                   const rmath::vector3d& pos,
+  unicell_entity3D(const rtypes::type_uuid& id,
+                   const rmath::vector3d& rdim,
                    const rtypes::discretize_ratio& resolution,
-                   const rtypes::type_uuid& id)
+                   const rmath::vector3d& rcenter)
       : entity3D(id),
-        m_dim(dim),
-        m_rpos(pos),
-        m_dpos(rmath::dvec2zvec(pos, resolution.v())) {}
+        ER_CLIENT_INIT("cosm.repr.unicell_entity3D"),
+        mc_arena_res(resolution),
+        m_rdim(rdim),
+        m_rcenter(rcenter),
+        m_ranchor(m_rcenter - m_rdim / 2.0),
+        m_ddim(rmath::dvec2zvec(m_rdim, mc_arena_res.v())),
+        m_dcenter(rmath::dvec2zvec(m_rcenter, mc_arena_res.v())),
+        m_danchor(m_dcenter - m_ddim / 2) {}
 
-  explicit unicell_entity3D(const rmath::vector3d& dim)
-      : unicell_entity3D{dim, rtypes::constants::kNoUUID} {}
-
-  unicell_entity3D(const rmath::vector3d& dim, const rtypes::type_uuid& id)
-      : entity3D(id), m_dim(dim) {}
+  const rtypes::discretize_ratio& arena_res(void) const { return mc_arena_res; }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
    * to change the initial position of the entity.
+   *
+   * Updates the real anchor,center. Does not change the discrete anchor,center
+   * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void rpos3D(const rmath::vector3d& pos) {
-    m_rpos = pos;
+  void ranchor3D(const rmath::vector3d& ranchor) {
+    m_ranchor = ranchor;
+    m_rcenter = m_ranchor + m_rdim / 2.0;
   }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
    * to change the initial position of the entity.
+   *
+   * Updates the discrete anchor,center. Does not change the real anchor,center
+   * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dpos3D(const rmath::vector3z& pos) {
-    m_dpos = pos;
+  void danchor3D(const rmath::vector3z& danchor) {
+    m_danchor = danchor;
+    m_dcenter = m_danchor + m_ddim / 2.0;
   }
 
  private:
   /* clang-format off */
-  rmath::vector3d m_dim;
-  rmath::vector3d m_rpos{};
-  rmath::vector3z m_dpos{};
+  const rtypes::discretize_ratio mc_arena_res;
+
+  rmath::vector3d                m_rdim;
+  rmath::vector3d                m_rcenter{};
+  rmath::vector3d                m_ranchor{};
+
+  rmath::vector3z                m_ddim;
+  rmath::vector3z                m_dcenter{};
+  rmath::vector3z                m_danchor{};
   /* clang-format on */
 };
 

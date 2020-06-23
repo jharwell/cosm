@@ -33,8 +33,8 @@ NS_START(cosm, foraging, repr);
  ******************************************************************************/
 cds::block3D_vectorro block_cluster::blocks(void) const {
   cds::block3D_vectorro ret;
-  for (size_t i = 0; i < xdimd(); ++i) {
-    for (size_t j = 0; j < ydimd(); ++j) {
+  for (size_t i = 0; i < xdsize(); ++i) {
+    for (size_t j = 0; j < ydsize(); ++j) {
       auto& cell = block_cluster::cell(i, j);
       ER_ASSERT(!cell.state_has_cache(),
                 "Cell@%s in HAS_CACHE state",

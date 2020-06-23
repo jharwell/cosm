@@ -53,22 +53,21 @@ NS_START(cosm, repr);
  */
 class cube_block3D final : public base_block3D {
  public:
-  explicit cube_block3D(const rmath::vector3d& dim)
-      : base_block3D(dim,
+  cube_block3D(const rtypes::type_uuid& id,
+               const rmath::vector3d& dim,
+               const rtypes::discretize_ratio& arena_res) noexcept
+      : base_block3D(id,
+                     dim,
+                     arena_res,
                      rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE,
-                     rtypes::constants::kNoUUID) {}
-
-  cube_block3D(const rmath::vector3d& dim, const rtypes::type_uuid& id) noexcept
-      : base_block3D(dim, rutils::color::kBLACK, crepr::block_type::ekCUBE, id) {
-  }
+                     crepr::block_type::ekCUBE) {}
 
   std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(dims3D(), id());
+    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
 
     /* copy core definition features */
-    tmp->dpos3D(this->dpos3D());
-    tmp->rpos3D(this->rpos3D());
+    tmp->ranchor3D(this->ranchor3D());
+    tmp->danchor3D(this->danchor3D());
 
     /* copy metadata */
     tmp->md()->robot_id_reset();

@@ -53,7 +53,7 @@ powerlaw_distributor::powerlaw_distributor(
  * Member Functions
  ******************************************************************************/
 bool powerlaw_distributor::distribute_block(crepr::base_block3D* block,
-                                            cds::const_entity_vector& entities) {
+                                            cds::const_spatial_entity_vector& entities) {
   /*
    * If we get here than either all clusters of the specified capacity are
    * full and/or one or more are not full but have additional entities
@@ -188,8 +188,8 @@ bool powerlaw_distributor::map_clusters(cds::arena_grid* const grid) {
     ER_INFO("Mapped %zu clusters of capacity %u", dist_list.size(), clust_size);
     for (RCSW_UNUSED auto& dist : dist_list) {
       ER_INFO("Cluster with origin@%s/%s: capacity=%u",
-              dist.block_clusters().front()->rpos2D().to_str().c_str(),
-              dist.block_clusters().front()->dpos2D().to_str().c_str(),
+              rcppsw::to_string(dist.block_clusters().front()->ranchor2D()).c_str(),
+              rcppsw::to_string(dist.block_clusters().front()->danchor2D()).c_str(),
               dist.block_clusters().front()->capacity());
     } /* for(dist..) */
   }   /* for(&l..) */

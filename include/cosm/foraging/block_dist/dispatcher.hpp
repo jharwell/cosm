@@ -99,7 +99,8 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(crepr::base_block3D* block, cds::const_entity_vector& entities);
+  bool distribute_block(crepr::base_block3D* block,
+                        cds::const_spatial_entity_vector& entities);
 
   /**
    * \brief Distribute all blocks in the arena.
@@ -107,7 +108,7 @@ class dispatcher {
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
   bool distribute_blocks(cds::block3D_vectorno& blocks,
-                         cds::const_entity_vector& entities);
+                         cds::const_spatial_entity_vector& entities);
 
   const base_distributor* distributor(void) const {
     return m_dist.get();

@@ -35,8 +35,10 @@ NS_START(cosm, foraging, block_dist);
  * Constructors/Destructor
  ******************************************************************************/
 block3D_manifest_processor::block3D_manifest_processor(
-    const config::block_manifest* const m)
-    : mc_manifest(*m) {
+    const config::block_manifest* const m,
+    const rtypes::discretize_ratio& arena_res)
+    : mc_arena_res(arena_res),
+      mc_manifest(*m) {
   register_type<crepr::cube_block3D>("cube3D");
   register_type<crepr::ramp_block3D>("ramp3D");
 }
@@ -49,18 +51,20 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
   uint i;
   for (i = 0; i < mc_manifest.n_cube; ++i) {
     v.push_back(create("cube3D",
+                       rtypes::type_uuid(i),
                        rmath::vector3d(mc_manifest.unit_dim,
                                        mc_manifest.unit_dim,
                                        mc_manifest.unit_dim),
-                       rtypes::type_uuid(i)));
+                       mc_arena_res));
   } /* for(i..) */
   for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
        ++i) {
     v.push_back(create("ramp3D",
+                       rtypes::type_uuid(i),
                        rmath::vector3d(mc_manifest.unit_dim * 2,
                                        mc_manifest.unit_dim,
                                        mc_manifest.unit_dim),
-                       rtypes::type_uuid(i)));
+                       mc_arena_res));
   } /* for(i..) */
   return v;
 } /* operator()() */

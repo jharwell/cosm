@@ -59,9 +59,9 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   cluster_distributor& operator=(const cluster_distributor& ) = delete;
 
   bool distribute_block(crepr::base_block3D* block,
-                        cds::const_entity_vector& entities) override;
+                        cds::const_spatial_entity_vector& entities) override;
   bool distribute_blocks(cds::block3D_vectorno& blocks,
-                         cds::const_entity_vector& entities) override;
+                         cds::const_spatial_entity_vector& entities) override;
   cfds::block3D_cluster_vector block_clusters(void) const override;
 
  private:

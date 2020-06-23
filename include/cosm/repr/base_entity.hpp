@@ -1,5 +1,5 @@
 /**
- * \file entity_base.hpp
+ * \file base_entity.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_ENTITY_BASE_HPP_
-#define INCLUDE_COSM_REPR_ENTITY_BASE_HPP_
+#ifndef INCLUDE_COSM_REPR_BASE_ENTITY_HPP_
+#define INCLUDE_COSM_REPR_BASE_ENTITY_HPP_
 
 /*******************************************************************************
  * Includes
@@ -38,26 +38,21 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class entity_base
+ * \class base_entity
  * \ingroup cosm repr
  *
  * \brief A base class from which all entities that can be represented in the
  * arena derive.
  */
-class entity_base {
+class base_entity {
  public:
-  entity_base(void) : entity_base{rtypes::constants::kNoUUID} {}
-  explicit entity_base(const rtypes::type_uuid& id) : m_id(id) {}
+  base_entity(void) : base_entity{rtypes::constants::kNoUUID} {}
+  explicit base_entity(const rtypes::type_uuid& id) : m_id(id) {}
 
-  entity_base(const entity_base&) = default;
-  entity_base& operator=(const entity_base&) = default;
+  base_entity(const base_entity&) = default;
+  base_entity& operator=(const base_entity&) = default;
 
-  virtual ~entity_base(void) = default;
-
-  /**
-   * \brief Return whether the entity is 2D or 3D.
-   */
-  virtual entity_dimensionality dimensionality(void) const = 0;
+  virtual ~base_entity(void) = default;
 
   /**
    * \brief Set the ID of the object.
@@ -89,4 +84,4 @@ class entity_base {
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_ENTITY_BASE_HPP_ */
+#endif /* INCLUDE_COSM_REPR_BASE_ENTITY_HPP_ */

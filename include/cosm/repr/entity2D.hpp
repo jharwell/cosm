@@ -24,11 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/range.hpp"
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/entity_base.hpp"
+#include "cosm/repr/spatial_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,33 +41,12 @@ NS_START(cosm, repr);
  * \class entity2D
  * \ingroup cosm repr
  *
- * \brief A base class from which all entities which can be represented in 2D
- * derive.
+ * \brief A base class from which all spatial entities which can be represented
+ * in 2D derive.
  */
-class entity2D : public entity_base {
+class entity2D : public spatial_entity {
  public:
-  /**
-   * \brief Calculate the span in X of an entity given its location and
-   * dimension in X.
-   *
-   * \return The span in X of the entity.
-   */
-  static rmath::ranged xspan(const rmath::vector2d& pos, double xdim) {
-    return rmath::ranged(pos.x() - 0.5 * xdim, pos.x() + 0.5 * xdim);
-  }
-
-  /**
-   * \brief Calculate the span in Y of an entity given its posation and
-   * dimension in Y.
-   *
-   * \return The span in Y of the entity.
-   */
-  static rmath::ranged yspan(const rmath::vector2d& pos, double ydim) {
-    return rmath::ranged(pos.y() - 0.5 * ydim, pos.y() + 0.5 * ydim);
-  }
-
-  entity2D(void) = default;
-  explicit entity2D(const rtypes::type_uuid& id) : entity_base(id) {}
+  using spatial_entity::spatial_entity;
 
   entity2D(const entity2D&) = default;
   entity2D& operator=(const entity2D&) = default;
@@ -76,33 +54,31 @@ class entity2D : public entity_base {
   virtual ~entity2D(void) = default;
 
   /**
-   * \brief Calculate the span in X of a 2D entity given its location and
-   * dimension in X (objects track their own location and dimension).
+   * \brief Return the anchor (LL corner) of the object in real coordinates.
+   */
+  virtual rmath::vector2d ranchor2D(void) const = 0;
+
+  /**
+   * \brief Return the 2D center of the object in real coordinates. This ALWAYS
+   * exists, even if the \ref dcenter2D() does not.
+   */
+  virtual rmath::vector2d rcenter2D(void) const = 0;
+
+  /**
+   * \brief Return the anchor (LL corner) of the object in discrete
+   * coordinates. This ALWAYS exists, evenif if \ref center2D() does not.
+   */
+  virtual rmath::vector2z danchor2D(void) const = 0;
+
+  /*
+   * \brief Return the center of the object in discrete coordinates,
+   * \a IF it exists. If the entity X,Y dimensions are both odd, then it exists,
+   * otherwise, it does not.
    *
-   * \return The span in X of the entity.
+   * If this function is called on an entity which has no center, an assertion
+   * should be triggered.
    */
-  virtual rmath::ranged xspan(void) const = 0;
-
-  /**
-   * \brief Calculate the span in Y of a 2D entity given its location and
-   * dimension in Y.
-   *
-   * \return The span in Y of the entity.
-   */
-  virtual rmath::ranged yspan(void) const = 0;
-
-  /**
-   * \brief Get the size of the 2D entity in the X direction in real coordinates.
-   */
-  virtual double xdimr(void) const = 0;
-
-  /**
-   * \brief Get the size of the 2D entity in the Y direction in real coordinates.
-   */
-  virtual double ydimr(void) const = 0;
-
-  virtual rmath::vector2d rpos2D(void) const = 0;
-  virtual rmath::vector2z dpos2D(void) const = 0;
+  virtual rmath::vector2z dcenter2D(void) const = 0;
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek2D;

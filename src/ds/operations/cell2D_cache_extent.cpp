@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/operations/cell2D_cache_extent.hpp"
+#include "cosm/ds/operations/cell2D_cache_extent.hpp"
 
 #include "cosm/arena/repr/base_cache.hpp"
 #include "cosm/ds/arena_grid.hpp"
@@ -30,7 +30,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+NS_START(cosm, ds, operations, detail);
 using cds::arena_grid;
 
 /*******************************************************************************
@@ -56,4 +56,4 @@ void cell2D_cache_extent::visit(cds::arena_grid& grid) {
   visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+NS_END(detail, operations, ds, cosm);

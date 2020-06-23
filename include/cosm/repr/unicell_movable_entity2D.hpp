@@ -46,19 +46,19 @@ NS_START(cosm, repr);
  */
 class unicell_movable_entity2D : public unicell_entity2D {
  public:
-  using unicell_entity2D::dpos2D;
-  using unicell_entity2D::rpos2D;
+  using unicell_entity2D::danchor2D;
+  using unicell_entity2D::ranchor2D;
   using unicell_entity2D::unicell_entity2D;
 
   static constexpr bool is_movable(void) { return true; }
 
   ~unicell_movable_entity2D(void) override = default;
 
-  void rpos2D(const rmath::vector2d& pos) {
-    unicell_entity2D::rpos2D<unicell_movable_entity2D>(pos);
+  void ranchor2D(const rmath::vector2d& anchor) {
+    unicell_entity2D::ranchor2D<unicell_movable_entity2D>(anchor);
   }
-  void dpos2D(const rmath::vector2z& pos) {
-    unicell_entity2D::dpos2D<unicell_movable_entity2D>(pos);
+  void danchor2D(const rmath::vector2z& anchor) {
+    unicell_entity2D::danchor2D<unicell_movable_entity2D>(anchor);
   }
 };
 

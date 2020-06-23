@@ -104,10 +104,10 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
   /**
    * \brief Compare two \ref base_cache objects for equality based on their
-   * discrete location.
+   * discrete center.
    */
   bool dloccmp(const base_cache& other) const {
-    return this->dpos2D() == other.dpos2D();
+    return this->dcenter2D() == other.dcenter2D();
   }
 
   RCSW_PURE bool contains_block(const crepr::base_block3D* const c_block) const;
@@ -149,9 +149,9 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
  private:
   /* clang-format off */
-  const rtypes::discretize_ratio mc_resolution;
-
   static int                     m_next_id;
+
+  const rtypes::discretize_ratio mc_resolution;
 
   rtypes::timestep               m_creation{0};
   cds::block3D_vectorno          m_blocks;

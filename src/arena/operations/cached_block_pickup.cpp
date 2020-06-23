@@ -47,7 +47,7 @@ cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
                                          const rtypes::type_uuid& robot_id,
                                          const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.arena.operations.cached_block_pickup"),
-      cell2D_op(cache->dpos2D()),
+      cell2D_op(cache->dcenter2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
       m_real_cache(cache),
@@ -91,7 +91,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
   ER_ASSERT(rtypes::constants::kNoUUID != cache_id,
             "Cache ID undefined on block pickup");
 
-  rmath::vector2z cache_coord = m_real_cache->dpos2D();
+  auto cache_coord = m_real_cache->dcenter2D();
   ER_ASSERT(cache_coord == cell2D_op::coord(),
             "Coordinates for cache%d%s/cell@%s do not agree",
             cache_id.v(),

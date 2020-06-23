@@ -54,28 +54,45 @@ NS_START(cosm, repr);
  *   with the kinds of entities that robots interact with (blocks, caches,
  *   etc.), because the handshaking logic is much simpler.
  */
-class unicell_entity2D : public entity2D {
+class unicell_entity2D : public entity2D,
+                         public rer::client<unicell_entity2D> {
  public:
   ~unicell_entity2D(void) override = default;
 
-  /**
-   * \brief Get the real location (center) of the object.
-   */
-  rmath::vector2d rpos2D(void) const override final { return m_rpos; }
-
-  /**
-   * \brief Get the discretized coordinates of the center of the object.
-   */
-  rmath::vector2z dpos2D(void) const override final { return m_dpos; }
-
-  rmath::ranged xspan(void) const override final {
-    return entity2D::xspan(rpos2D(), xdimr());
+  rmath::vector2d rcenter2D(void) const override final {
+    return m_rcenter;
   }
-  rmath::ranged yspan(void) const override final {
-    return entity2D::yspan(rpos2D(), ydimr());
+  rmath::vector2d ranchor2D(void) const override final {
+    return m_ranchor;
   }
-  double xdimr(void) const override final { return m_dim.x(); }
-  double ydimr(void) const override final { return m_dim.y(); }
+  rmath::ranged xrspan(void) const override final {
+    return spatial_entity::xrspan(ranchor2D(), xrsize());
+  }
+  rmath::ranged yrspan(void) const override final {
+    return spatial_entity::yrspan(ranchor2D(), yrsize());
+  }
+  rtypes::spatial_dist xrsize(void) const override final {
+    return rtypes::spatial_dist(m_rdim.x()); }
+  rtypes::spatial_dist yrsize(void) const override final {
+    return rtypes::spatial_dist(m_rdim.y());
+  }
+
+  rmath::vector2z dcenter2D(void) const override final {
+    ER_ASSERT(RCSW_IS_ODD(m_ddim.x()) && RCSW_IS_ODD(m_ddim.y()),
+              "dcenter2D() called on entity without defined center");
+    return m_dcenter;
+  }
+  rmath::vector2z danchor2D(void) const override final {
+    return m_danchor;
+  }
+  rmath::rangez xdspan(void) const override final {
+    return spatial_entity::xdspan(danchor2D(), xdsize());
+  }
+  rmath::rangez ydspan(void) const override final {
+    return spatial_entity::ydspan(danchor2D(), ydsize());
+  }
+  size_t xdsize(void) const override final { return m_ddim.x(); }
+  size_t ydsize(void) const override final { return m_ddim.y(); }
 
   /**
    * \brief Return if a real-valued point lies within the extent of the 2D
@@ -89,55 +106,82 @@ class unicell_entity2D : public entity2D {
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
   bool contains_point2D(const rmath::vector2d& point) const {
-    return xspan().contains(point.x()) && yspan().contains(point.y());
+    return xrspan().contains(point.x()) && yrspan().contains(point.y());
   }
 
-  const rmath::vector2d& dims2D(void) const { return m_dim; }
+  /**
+   * \brief Return if a discrete cell lies within the extent of the 2D entity.
+   *
+   * \param cell The point to check.
+   *
+   * \return \c TRUE if the condition is met, and \c FALSE otherwise.
+   */
+  bool contains_cell2D(const rmath::vector2z& cell) const {
+    return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
+  }
+
+  const rmath::vector2d& rdim2D(void) const { return m_rdim; }
+  const rmath::vector2z& ddim2D(void) const { return m_ddim; }
 
  protected:
-  unicell_entity2D(const rmath::vector2d& dim,
-                   const rmath::vector2d& pos,
+  unicell_entity2D(const rtypes::type_uuid& id,
+                   const rmath::vector2d& rdim,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity2D{dim, pos, resolution, rtypes::constants::kNoUUID} {}
+      : unicell_entity2D{id, rdim, resolution, rmath::vector2d()} {}
 
-  unicell_entity2D(const rmath::vector2d& dim,
-                   const rmath::vector2d& pos,
+  unicell_entity2D(const rtypes::type_uuid& id,
+                   const rmath::vector2d& rdim,
                    const rtypes::discretize_ratio& resolution,
-                   const rtypes::type_uuid& id)
+                   const rmath::vector2d& rcenter)
       : entity2D(id),
-        m_dim(dim),
-        m_rpos(pos),
-        m_dpos(rmath::dvec2zvec(pos, resolution.v())) {}
+        ER_CLIENT_INIT("cosm.repr.unicell_entity2D"),
+        mc_arena_res(resolution),
+        m_rdim(rdim),
+        m_rcenter(rcenter),
+        m_ranchor(m_rcenter - m_rdim / 2.0),
+        m_ddim(rmath::dvec2zvec(m_rdim, mc_arena_res.v())),
+        m_dcenter(rmath::dvec2zvec(m_rcenter, mc_arena_res.v())),
+        m_danchor(m_dcenter - m_ddim / 2) {}
 
-  explicit unicell_entity2D(const rmath::vector2d& dim)
-      : unicell_entity2D{dim, rtypes::constants::kNoUUID} {}
-
-  unicell_entity2D(const rmath::vector2d& dim, const rtypes::type_uuid& id)
-      : entity2D(id), m_dim(dim) {}
+  const rtypes::discretize_ratio& arena_res(void) const { return mc_arena_res; }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
    * to change the initial position of the entity.
+   *
+   * Updates the real anchor,center. Does not change the discrete anchor,center
+   * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void rpos2D(const rmath::vector2d& pos) {
-    m_rpos = pos;
+  void ranchor2D(const rmath::vector2d& ranchor) {
+    m_ranchor = ranchor;
+    m_rcenter = m_ranchor + m_rdim / 2.0;
   }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
    * to change the initial position of the entity.
+   *
+   * Updates the discrete anchor,center. Does not change the real anchor,center
+   * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
-  void dpos2D(const rmath::vector2z& pos) {
-    m_dpos = pos;
+  void danchor2D(const rmath::vector2z& danchor) {
+    m_danchor = danchor;
+    m_dcenter = m_danchor + m_ddim / 2;
   }
 
  private:
   /* clang-format off */
-  rmath::vector2d m_dim;
-  rmath::vector2d m_rpos{};
-  rmath::vector2z m_dpos{};
+  const rtypes::discretize_ratio mc_arena_res;
+
+  rmath::vector2d                m_rdim;
+  rmath::vector2d                m_rcenter{};
+  rmath::vector2d                m_ranchor{};
+
+  rmath::vector2z                m_ddim;
+  rmath::vector2z                m_dcenter{};
+  rmath::vector2z                m_danchor{};
   /* clang-format on */
 };
 
