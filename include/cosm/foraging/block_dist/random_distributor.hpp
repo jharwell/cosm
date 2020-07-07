@@ -67,9 +67,6 @@ class random_distributor : public rer::client<random_distributor>,
 
   random_distributor& operator=(const random_distributor&) = delete;
 
-  bool distribute_blocks(cds::block3D_vectorno& blocks,
-                         cds::const_spatial_entity_vector& entities) override;
-
   /**
    * \brief Distribution a single block in the arena.
    *
@@ -81,8 +78,8 @@ class random_distributor : public rer::client<random_distributor>,
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(crepr::base_block3D* block,
-                        cds::const_spatial_entity_vector& entities) override;
+   dist_status distribute_block(crepr::base_block3D* block,
+                                cds::const_spatial_entity_vector& entities) override;
 
   cfds::block3D_cluster_vector block_clusters(void) const override { return {}; }
 

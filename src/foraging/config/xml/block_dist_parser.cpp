@@ -36,6 +36,7 @@ void block_dist_parser::parse(const ticpp::Element& node) {
   m_config = std::make_unique<config_type>();
 
   XML_PARSE_ATTR(bnode, m_config, dist_type);
+  XML_PARSE_ATTR_DFLT(bnode, m_config, strict_success, true);
 
   if ("powerlaw" == m_config->dist_type) {
     m_powerlaw.parse(bnode);

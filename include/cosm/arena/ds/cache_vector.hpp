@@ -47,6 +47,7 @@ NS_START(cosm, arena, ds);
  */
 using acache_vectoro_type = std::shared_ptr<carepr::arena_cache>;
 using acache_vectorno_type = carepr::arena_cache*;
+using acache_vectorro_type = const carepr::arena_cache*;
 
 using bcache_vectorno_type = carepr::base_cache*;
 using bcache_vectorro_type = const carepr::base_cache*;
@@ -87,6 +88,26 @@ class acache_vectorno : public std::vector<acache_vectorno_type> {
  public:
   using std::vector<acache_vectorno_type>::vector;
   using value_type = std::vector<acache_vectorno_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the vector contents.
+   */
+  std::string to_str(void) const;
+};
+
+/**
+ * \class acache_vectorro
+ * \ingroup arena ds
+ *
+ * \brief Specialization of \ref std::vector indicating the caches are NOT owned
+ * by this class and access is also read-only.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
+ */
+class acache_vectorro : public std::vector<acache_vectorro_type> {
+ public:
+  using std::vector<acache_vectorro_type>::vector;
+  using value_type = std::vector<acache_vectorro_type>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.

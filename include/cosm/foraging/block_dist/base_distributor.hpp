@@ -28,10 +28,12 @@
 #include <vector>
 
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/math/rng.hpp"
+
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
-#include "rcppsw/math/rng.hpp"
+#include "cosm/foraging/block_dist/dist_status.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -74,8 +76,8 @@ class base_distributor {
    * \return \c TRUE if the block distribution was successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_block(crepr::base_block3D* block,
-                                cds::const_spatial_entity_vector& entities) = 0;
+  virtual dist_status distribute_block(crepr::base_block3D* block,
+                                       cds::const_spatial_entity_vector& entities) = 0;
 
   /**
    * \brief Return a read-only list of \ref block_clusters for capacity checking
@@ -84,18 +86,23 @@ class base_distributor {
   virtual cfds::block3D_cluster_vector block_clusters(void) const = 0;
 
   /**
-   * \brief Calls \ref distribute_block on each block.
+   * \brief Calls \ref distribute_block() on each block.
    *
    * \return \c TRUE iff all block distributions were successful, \c FALSE
    * otherwise.
    */
-  virtual bool distribute_blocks(cds::block3D_vectorno& blocks,
-                                 cds::const_spatial_entity_vector& entities) {
-    return std::all_of(blocks.begin(),
-                       blocks.end(),
-                       [&](auto& b) {
-                         return distribute_block(b, entities);
-                       });
+  virtual dist_status distribute_blocks(cds::block3D_vectorno& blocks,
+                                        cds::const_spatial_entity_vector& entities,
+                                        bool strict_success) {
+    auto status = std::all_of(blocks.begin(),
+                              blocks.end(),
+                              [&](auto& b) {
+                                return dist_status::ekSUCCESS == distribute_block(b, entities);
+                              });
+    if (!strict_success || status) {
+      return dist_status::ekSUCCESS;
+    }
+    return dist_status::ekFAILURE;
   }
 
   rmath::rng* rng(void) { return m_rng; }

@@ -49,7 +49,7 @@ multi_cluster_distributor::multi_cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool multi_cluster_distributor::distribute_block(
+dist_status multi_cluster_distributor::distribute_block(
     crepr::base_block3D* block,
     cds::const_spatial_entity_vector& entities) {
   for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
@@ -73,7 +73,7 @@ bool multi_cluster_distributor::distribute_block(
       return dist.distribute_block(block, entities);
     }
   } /* for(i..) */
-  return false;
+  return dist_status::ekFAILURE;
 } /* distribute_block() */
 
 cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(

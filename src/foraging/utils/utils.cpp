@@ -35,23 +35,23 @@ NS_START(cosm, foraging, utils);
 /*******************************************************************************
  * Functions
  ******************************************************************************/
-placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_anchor,
                                         const rmath::vector2d& ent1_dims,
                                         const crepr::entity2D* const entity) {
-  auto loc_xspan = crepr::entity2D::xrspan(ent1_loc,
+  auto loc_xspan = crepr::entity2D::xrspan(ent1_anchor,
                                            rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan = crepr::entity2D::yrspan(ent1_loc,
+  auto loc_yspan = crepr::entity2D::yrspan(ent1_anchor,
                                            rtypes::spatial_dist(ent1_dims.y()));
   return placement_status_t{entity->xrspan().overlaps_with(loc_xspan),
                             entity->yrspan().overlaps_with(loc_yspan)};
 } /* placement_conflict2D() */
 
-placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_anchor,
                                         const rmath::vector2d& ent1_dims,
                                         const crepr::entity3D* const entity) {
-  auto loc_xspan = crepr::entity3D::xrspan(ent1_loc,
+  auto loc_xspan = crepr::entity3D::xrspan(ent1_anchor,
                                            rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan = crepr::entity3D::yrspan(ent1_loc,
+  auto loc_yspan = crepr::entity3D::yrspan(ent1_anchor,
                                            rtypes::spatial_dist(ent1_dims.y()));
   return placement_status_t{entity->xrspan().overlaps_with(loc_xspan),
                             entity->yrspan().overlaps_with(loc_yspan)};

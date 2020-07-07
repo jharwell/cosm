@@ -58,7 +58,7 @@ class spatial_entity : public base_entity {
    */
   template<typename TCoord>
   static rmath::ranged xrspan(const TCoord& anchor,
-                             const rtypes::spatial_dist& xdim) {
+                              const rtypes::spatial_dist& xdim) {
     return {anchor.x(), (anchor.x() + xdim).v()};
   }
 

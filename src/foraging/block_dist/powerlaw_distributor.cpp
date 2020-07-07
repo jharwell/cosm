@@ -52,31 +52,23 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool powerlaw_distributor::distribute_block(crepr::base_block3D* block,
-                                            cds::const_spatial_entity_vector& entities) {
-  /*
-   * If we get here than either all clusters of the specified capacity are
-   * full and/or one or more are not full but have additional entities
-   * contained within their boundaries that are taking up space (i.e. caches).
-   *
-   * So, change cluster size and try again.
-   */
+dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
+                                                   cds::const_spatial_entity_vector& entities) {
   for (auto& l : m_dist_map) {
     for (auto& dist : l.second) {
-      ER_INFO(
-          "Attempting distribution: block%d -> cluster [capacity=%u,count=%zu]",
+      ER_DEBUG("Attempt distribution: block%d -> cluster [capacity=%u,count=%zu]",
           block->id().v(),
           l.first,
           dist.block_clusters().front()->block_count());
 
-      if (dist.distribute_block(block, entities)) {
-        return true;
+      if (dist_status::ekSUCCESS == dist.distribute_block(block, entities)) {
+        return dist_status::ekSUCCESS;
       }
     } /* for(&dist..) */
   }   /* for(l..) */
 
   ER_FATAL_SENTINEL("Unable to distribute block to any cluster");
-  return false;
+  return dist_status::ekFAILURE;
 } /* distribute_block() */
 
 typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::

@@ -227,7 +227,7 @@ class base_executive : public rer::client<base_executive> {
   std::list<finish_notify_cb>     m_task_finish_notify{};
   std::list<start_notify_cb>      m_task_start_notify{};
   std::unique_ptr<ds::ds_variant> m_ds;
-  rmath::rng*                      m_rng;
+  rmath::rng*                     m_rng;
   /* clang-format on */
 };
 

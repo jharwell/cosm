@@ -478,7 +478,7 @@ XML configuration:
 - Required by: all.
 - Required child attributes if present: ``dist_type``.
 - Required child tags if present: none.
-- Optional child attributes: none.
+- Optional child attributes: [ ``strict_success`` ].
 - Optional child tags: [ ``redist_governor``, ``powerlaw`` ].
 
 XML configuration:
@@ -488,7 +488,8 @@ XML configuration:
    <blocks>
        ...
        <distribution
-       dist_type="random|powerlaw|single_source|dual_source|quad_source">
+       dist_type="random|powerlaw|single_source|dual_source|quad_source"
+       strict_success="true">
        ...
        </distribution>
        ...
@@ -512,6 +513,11 @@ XML configuration:
 
   - ``quad_source`` - Placed in 4 sources at each cardinal direction in the
     arena. Assumes a square arena with a single nest.
+
+- ``strict_success`` - Do all blocks need to be successfully distributed when
+  distribution is attempted? Useful for scripting when you need to have the same
+  # blocks available across a range of arena sizes, and for smaller sizes
+  failure to distribute all blocks is OK.
 
 ``arena_map/blocks/distribution/redist_governor``
 #################################################

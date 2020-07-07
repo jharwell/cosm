@@ -93,13 +93,12 @@ void cached_block_pickup::visit(caching_arena_map& map) {
 
   auto cache_coord = m_real_cache->dcenter2D();
   ER_ASSERT(cache_coord == cell2D_op::coord(),
-            "Coordinates for cache%d%s/cell@%s do not agree",
+            "Coordinates for cache%d%s/host cell@%s do not agree",
             cache_id.v(),
             cache_coord.to_str().c_str(),
-            cell2D_op::coord().to_str().c_str());
+            rcppsw::to_string(coord()).c_str());
 
-  cds::cell2D& cell =
-      map.access<arena_grid::kCell>(cell2D_op::x(), cell2D_op::y());
+  cds::cell2D& cell = map.access<arena_grid::kCell>(coord());
   ER_ASSERT(m_real_cache->n_blocks() == cell.block_count(),
             "Cache%d/cell@%s disagree on # of blocks: cache=%zu/cell=%zu",
             m_real_cache->id().v(),
@@ -127,17 +126,14 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     visit(cell);
 
     ER_ASSERT(cell.state_has_cache(),
-              "Cell@(%u, %u) with >= %zu blocks does not have cache",
-              cell2D_op::x(),
-              cell2D_op::y(),
+              "Cache host cell@%s with >= %zu blocks not in HAS_CACHE",
+              rcppsw::to_string(coord()).c_str(),
               base_cache::kMinBlocks);
 
-    ER_INFO("Robot%u: block%d from cache%d@(%u, %u),remaining=[%s] (%zu)",
-            mc_robot_id.v(),
+    ER_INFO("Block%d picked up from cache%d@%s,remaining=[%s] (%zu)",
             m_pickup_block->id().v(),
             cache_id.v(),
-            cell2D_op::x(),
-            cell2D_op::y(),
+            rcppsw::to_string(coord()).c_str(),
             rcppsw::to_string(m_real_cache->blocks()).c_str(),
             m_real_cache->n_blocks());
   } else {
@@ -153,9 +149,8 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     visit(cell);
 
     ER_ASSERT(cell.state_has_block(),
-              "cell@(%u, %u) with 1 block has cache",
-              cell2D_op::x(),
-              cell2D_op::y());
+              "Depleted cache host cell@%s not in HAS_BLOCK",
+              rcppsw::to_string(coord()).c_str());
 
     /* Already holding cache mutex */
     cache_extent_clear op(coord(), m_real_cache);
@@ -164,12 +159,10 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     /* Already holding cache mutex */
     map.cache_remove(m_real_cache, m_sm);
 
-    ER_INFO("Robot%u: block%d from cache%d@(%u, %u) [depleted]",
-            mc_robot_id.v(),
+    ER_INFO("Block%d picked up from cache%d@%s [depleted]",
             m_pickup_block->id().v(),
             cache_id.v(),
-            cell2D_op::x(),
-            cell2D_op::y());
+            rcppsw::to_string(coord()).c_str());
   }
   /* finally, update state of arena map owned pickup block */
   visit(*m_pickup_block, &map);

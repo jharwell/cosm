@@ -58,76 +58,63 @@ random_distributor::random_distributor(const cds::arena_grid::view& grid,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool random_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
-                                           cds::const_spatial_entity_vector& entities) {
-  ER_INFO("Distributing %zu blocks in area: xrange=%s, yrange=%s",
-          blocks.size(),
-          mc_xspan.to_str().c_str(),
-          mc_yspan.to_str().c_str());
-
-  return std::all_of(blocks.begin(), blocks.end(), [&](auto& b) {
-    return distribute_block(b, entities);
-  });
-} /* distribute_blocks() */
-
-bool random_distributor::distribute_block(crepr::base_block3D* block,
-                                          cds::const_spatial_entity_vector& entities) {
+dist_status random_distributor::distribute_block(crepr::base_block3D* block,
+                                                 cds::const_spatial_entity_vector& entities) {
   cds::cell2D* cell = nullptr;
   auto coords = avail_coord_search(entities, block->rdim2D());
-  if (coords) {
-    ER_INFO("Found coordinates for distributing block%d: rel=%s, abs=%s",
-            block->id().v(),
-            coords->rel.to_str().c_str(),
-            coords->abs.to_str().c_str());
-
-    cell = &m_grid[coords->rel.x()][coords->rel.y()];
-
-    /*
-     * You can only distribute blocks to cells that do not currently have
-     * anything in them. If there is already something there, then our
-     * distribution algorithm has a bug.
-     */
-    ER_ASSERT(!cell->state_has_block(),
-              "Destination cell@%s already contains block%d",
-              coords->abs.to_str().c_str(),
-              cell->entity()->id().v());
-    ER_ASSERT(!cell->state_has_cache(),
-              "Destination cell@%s already contains cache%d",
-              coords->abs.to_str().c_str(),
-              cell->entity()->id().v());
-    ER_ASSERT(!cell->state_in_cache_extent(),
-              "Destination cell part of cache extent");
-
-    /*
-     * This function is always called from the arena map, and it ensures that
-     * all locks are held, so we don't need to do anything here.
-     */
-    caops::free_block_drop_visitor op(block,
-                                      coords->abs,
-                                      mc_resolution,
-                                      carena::arena_map_locking::ekALL_HELD);
-    op.visit(*cell);
-    if (verify_block_dist(block, entities, cell)) {
-      ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
-               block->id().v(),
-               block,
-               rcppsw::to_string(block->ranchor2D()).c_str(),
-               rcppsw::to_string(block->danchor2D()).c_str());
-      /*
-       * Now that the block has been distributed, it is another entity that
-       * needs to be avoided during subsequent distributions.
-       */
-      entities.push_back(block);
-      return true;
-    }
-    ER_WARN("Failed to distribute block%d after finding distribution coord",
-            block->id().v());
-    return false;
-  } else {
+  if (!coords) {
     ER_WARN("Unable to find distribution coordinates for block%d",
             block->id().v());
-    return false;
+    return dist_status::ekFAILURE;
   }
+  ER_INFO("Found coordinates for distributing block%d: rel=%s, abs=%s",
+          block->id().v(),
+          rcppsw::to_string(coords->rel).c_str(),
+          rcppsw::to_string(coords->abs).c_str());
+
+  cell = &m_grid[coords->rel.x()][coords->rel.y()];
+
+  /*
+   * You can only distribute blocks to cells that do not currently have
+   * anything in them. If there is already something there, then our
+   * distribution algorithm has a bug.
+   */
+  ER_ASSERT(!cell->state_has_block(),
+            "Destination cell@%s already contains block%d",
+            rcppsw::to_string(coords->abs).c_str(),
+            cell->entity()->id().v());
+  ER_ASSERT(!cell->state_has_cache(),
+            "Destination cell@%s already contains cache%d",
+            rcppsw::to_string(coords->abs).c_str(),
+            cell->entity()->id().v());
+  ER_ASSERT(!cell->state_in_cache_extent(),
+            "Destination cell part of cache extent");
+
+  /*
+   * This function is always called from the arena map, and it ensures that
+   * all locks are held, so we don't need to do anything here.
+   */
+  caops::free_block_drop_visitor op(block,
+                                    coords->abs,
+                                    mc_resolution,
+                                    carena::arena_map_locking::ekALL_HELD);
+  op.visit(*cell);
+  if (verify_block_dist(block, entities, cell)) {
+    ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
+             block->id().v(),
+             block,
+             rcppsw::to_string(block->ranchor2D()).c_str(),
+             rcppsw::to_string(block->danchor2D()).c_str());
+    /*
+     * Now that the block has been distributed, it is another entity that
+     * needs to be avoided during subsequent distributions.
+     */
+    entities.push_back(block);
+    return dist_status::ekSUCCESS;
+  }
+  ER_WARN("Failed to distribute block%d after finding distribution coord",
+          block->id().v());
+  return dist_status::ekFAILURE;
 } /* distribute_block() */
 
 bool random_distributor::verify_block_dist(

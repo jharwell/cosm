@@ -30,7 +30,6 @@
 
 #include "cosm/hal/sensors/config/ground_sensor_detection_config.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
-#include "cosm/hal/sensors/config/xml/ground_sensor_detection_parser.hpp"
 
 /*******************************************************************************
  * Namespaces

@@ -50,21 +50,35 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
   cds::block3D_vectoro v;
   uint i;
   for (i = 0; i < mc_manifest.n_cube; ++i) {
-    v.push_back(create("cube3D",
-                       rtypes::type_uuid(i),
-                       rmath::vector3d(mc_manifest.unit_dim,
-                                       mc_manifest.unit_dim,
-                                       mc_manifest.unit_dim),
-                       mc_arena_res));
+    auto block = create("cube3D",
+                        rtypes::type_uuid(i),
+                        rmath::vector3d(mc_manifest.unit_dim,
+                                        mc_manifest.unit_dim,
+                                        mc_manifest.unit_dim),
+                        mc_arena_res);
+    /*
+     * Move the block out of sight, so that if there are more blocks in the
+     * arena map than can be successfully distributed, we don't run into weird
+     * cases where the block has an undefined location.
+     */
+    block->move_out_of_sight();
+    v.push_back(std::move(block));
   } /* for(i..) */
   for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
        ++i) {
-    v.push_back(create("ramp3D",
-                       rtypes::type_uuid(i),
-                       rmath::vector3d(mc_manifest.unit_dim * 2,
-                                       mc_manifest.unit_dim,
-                                       mc_manifest.unit_dim),
-                       mc_arena_res));
+    auto block = create("ramp3D",
+                        rtypes::type_uuid(i),
+                        rmath::vector3d(mc_manifest.unit_dim * 2,
+                                        mc_manifest.unit_dim,
+                                        mc_manifest.unit_dim),
+                        mc_arena_res);
+    /*
+     * Move the block out of sight, so that if there are more blocks in the
+     * arena map than can be successfully distributed, we don't run into weird
+     * cases where the block has an undefined location.
+     */
+    block->move_out_of_sight();
+    v.push_back(std::move(block));
   } /* for(i..) */
   return v;
 } /* operator()() */

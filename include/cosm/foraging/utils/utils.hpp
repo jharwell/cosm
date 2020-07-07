@@ -57,20 +57,20 @@ struct placement_status_t {
  ******************************************************************************/
 /**
  * \brief Determine entity overlap with \p entity in two cases: (1) placing an
- * entity of \p ent1_dims dimensions placed at \p ent1_loc, (2) an entity of \p
- * ent1_dims that currently exists at \p ent1_loc.
+ * entity of \p ent1_dims dimensions anchored at \p ent1_anchor, (2) an entity
+ * of \p ent1_dims that currently exists at \p ent1_anchor.
  */
-placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_anchor,
                                         const rmath::vector2d& ent1_dims,
                                         const crepr::entity2D* entity);
 
 /**
  * \brief Determine entity overlap with \p entity in two cases: (1) placing an
- * entity of \p ent1_dims dimensions placed at \p ent1_loc, (2) an entity of \p
- * ent1_dims that currently exists at \p ent1_loc. Only 2D overlap is considered
- * (i.e. Z dimension is ignored).
+ * entity of \p ent1_dims dimensions anchored at \p ent1_loc, (2) an entity of
+ * \p ent1_dims that currently exists at \p ent1_loc. Only 2D overlap is
+ * considered (i.e. Z dimension is ignored).
  */
-placement_status_t placement_conflict2D(const rmath::vector2d& ent1_loc,
+placement_status_t placement_conflict2D(const rmath::vector2d& ent1_anchor,
                                         const rmath::vector2d& ent1_dims,
                                         const crepr::entity3D* entity);
 

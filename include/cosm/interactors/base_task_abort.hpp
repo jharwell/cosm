@@ -100,15 +100,13 @@ class base_task_abort
      * of the simulation, (2) update its own internal state.
      */
     if (controller.is_carrying_block()) {
-      ER_INFO("%s aborted task '%s' while carrying block%d",
-              controller.GetId().c_str(),
-              polled->name().c_str(),
+      ER_INFO("Robot%d aborted task while carrying block%d",
+              controller.entity_id().v(),
               controller.block()->id().v());
       task_abort_with_block(controller);
     } else {
-      ER_INFO("%s aborted task '%s' (no block)",
-              controller.GetId().c_str(),
-              polled->name().c_str());
+      ER_INFO("Robot%d aborted task (no block)",
+              controller.entity_id().v());
     }
 
     m_envd->penalties_flush(controller);

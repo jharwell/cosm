@@ -60,8 +60,11 @@ void base_cache::block_remove(const crepr::base_block3D* const victim) {
 } /* block_remove() */
 
 std::unique_ptr<base_cache> base_cache::clone(void) const {
-  return std::make_unique<base_cache>(params{
-      rtypes::spatial_dist(xrsize()), mc_resolution, rcenter2D(), m_blocks, id()});
+  return std::make_unique<base_cache>(params{xrsize(),
+          mc_resolution,
+          rcenter2D(),
+          m_blocks,
+          id()});
 } /* clone() */
 
 RCSW_PURE bool base_cache::contains_block(

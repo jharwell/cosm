@@ -141,14 +141,14 @@ bool dispatcher::initialize(rmath::rng* rng) {
   return true;
 } /* initialize() */
 
-bool dispatcher::distribute_block(crepr::base_block3D* block,
-                                  cds::const_spatial_entity_vector& entities) {
+dist_status dispatcher::distribute_block(crepr::base_block3D* block,
+                                         cds::const_spatial_entity_vector& entities) {
   return m_dist->distribute_block(block, entities);
 } /* distribute_block() */
 
-bool dispatcher::distribute_blocks(cds::block3D_vectorno& blocks,
-                                   cds::const_spatial_entity_vector& entities) {
-  return m_dist->distribute_blocks(blocks, entities);
+dist_status dispatcher::distribute_blocks(cds::block3D_vectorno& blocks,
+                                          cds::const_spatial_entity_vector& entities) {
+  return m_dist->distribute_blocks(blocks, entities, mc_config.strict_success);
 } /* distribute_block() */
 
 NS_END(block_dist, foraging, cosm);

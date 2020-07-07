@@ -57,6 +57,10 @@ std::string acache_vectorno::to_str(void) const {
   return do_to_str(*this);
 } /* to_str() */
 
+std::string acache_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
 std::string bcache_vectorno::to_str(void) const {
   return do_to_str(*this);
 } /* to_str() */

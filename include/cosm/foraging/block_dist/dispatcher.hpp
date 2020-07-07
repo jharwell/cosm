@@ -33,6 +33,7 @@
 #include "cosm/foraging/config/block_dist_config.hpp"
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
+#include "cosm/foraging/block_dist/dist_status.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/er/client.hpp"
@@ -99,16 +100,16 @@ class dispatcher {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_block(crepr::base_block3D* block,
-                        cds::const_spatial_entity_vector& entities);
+  dist_status distribute_block(crepr::base_block3D* block,
+                               cds::const_spatial_entity_vector& entities);
 
   /**
    * \brief Distribute all blocks in the arena.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_blocks(cds::block3D_vectorno& blocks,
-                         cds::const_spatial_entity_vector& entities);
+  dist_status distribute_blocks(cds::block3D_vectorno& blocks,
+                                cds::const_spatial_entity_vector& entities);
 
   const base_distributor* distributor(void) const {
     return m_dist.get();
@@ -119,14 +120,14 @@ class dispatcher {
 
  private:
   /* clang-format off */
-  const rtypes::discretize_ratio                mc_resolution;
-  const config::block_dist_config               mc_config;
-  const std::string                             mc_dist_type;
+  const rtypes::discretize_ratio    mc_resolution;
+  const config::block_dist_config   mc_config;
+  const std::string                 mc_dist_type;
 
-  rmath::ranged                                 mc_arena_xrange;
-  rmath::ranged                                 mc_arena_yrange;
+  rmath::ranged                     mc_arena_xrange;
+  rmath::ranged                     mc_arena_yrange;
 
-  cds::arena_grid*                              m_grid{nullptr};
+  cds::arena_grid*                  m_grid{nullptr};
   std::unique_ptr<base_distributor> m_dist;
   /* clang-format on */
 };

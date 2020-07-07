@@ -135,11 +135,9 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * \note This operation requires holding the block and grid mutexes in
    * multithreaded contexts.
-   *
-   * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  bool distribute_single_block(crepr::base_block3D* block,
-                               const arena_map_locking& locking);
+  cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
+                                            const arena_map_locking& locking);
 
   RCPPSW_DECORATE_FUNC(xdsize, const);
   RCPPSW_DECORATE_FUNC(ydsize, const);
@@ -171,7 +169,7 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   ds::nest_vectorro nests(void) const;
 
-  const crepr::nest* nest(const rtypes::type_uuid& id) const {
+  RCSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
     auto it = m_nests.find(id);
     if (m_nests.end() != it) {
       return &(it->second);

@@ -115,11 +115,11 @@ rtypes::type_uuid base_arena_map::robot_on_block(
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
-bool base_arena_map::distribute_single_block(crepr::base_block3D* block,
-                                             const arena_map_locking& locking) {
-  /* return TRUE because the distribution of nothing is ALWAYS successful */
+cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* block,
+                                                          const arena_map_locking& locking) {
+  /* The distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
-    return true;
+    return cfbd::dist_status::ekSUCCESS;
   }
 
   /* lock the arena map */
@@ -129,12 +129,14 @@ bool base_arena_map::distribute_single_block(crepr::base_block3D* block,
   auto precalc = block_dist_precalc(block);
 
   /* do the distribution */
-  bool ret =
-      m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
+  auto status = m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
+  ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
+            "Failed to distribute block%d",
+            block->id().v());
 
   /* unlock the arena map */
   post_block_dist_unlock(locking);
-  return ret;
+  return status;
 } /* disribute_single_block() */
 
 void base_arena_map::distribute_all_blocks(void) {
@@ -144,8 +146,9 @@ void base_arena_map::distribute_all_blocks(void) {
   /* calculate the entities to avoid during distribution */
   auto precalc = block_dist_precalc(nullptr);
 
-  bool b = m_block_dispatcher.distribute_blocks(m_blocksno, precalc.avoid_ents);
-  ER_ASSERT(b, "Unable to perform initial block distribution");
+  auto status = m_block_dispatcher.distribute_blocks(m_blocksno, precalc.avoid_ents);
+  ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
+            "Unable to perform initial block distribution");
 
   /*
    * Once all blocks have been distributed, and (possibly) all caches have been

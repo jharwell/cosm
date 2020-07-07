@@ -55,6 +55,13 @@ struct block_dist_config final : public rconfig::base_config {
   std::string dist_type{};
 
   /**
+   * \brief Is it OK if the block distribution fails, and only SOME of the
+   * blocks are successfully distributed, or should that be considered a fatal
+   * error?
+   */
+
+  bool strict_success{true};
+  /**
    * \brief Parameters for powerlaw block distribution (only used if powerlaw is
    * the distribution type).
    */

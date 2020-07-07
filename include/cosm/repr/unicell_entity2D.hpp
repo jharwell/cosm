@@ -77,9 +77,11 @@ class unicell_entity2D : public entity2D,
     return rtypes::spatial_dist(m_rdim.y());
   }
 
-  rmath::vector2z dcenter2D(void) const override final {
+  RCSW_PURE rmath::vector2z dcenter2D(void) const override final {
     ER_ASSERT(RCSW_IS_ODD(m_ddim.x()) && RCSW_IS_ODD(m_ddim.y()),
-              "dcenter2D() called on entity without defined center");
+              "dcenter2D() called on entity%d without defined center: dims=%s",
+              id().v(),
+              rcppsw::to_string(m_ddim).c_str());
     return m_dcenter;
   }
   rmath::vector2z danchor2D(void) const override final {

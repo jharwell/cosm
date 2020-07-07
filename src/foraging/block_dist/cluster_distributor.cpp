@@ -49,27 +49,28 @@ cluster_distributor::cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool cluster_distributor::distribute_block(crepr::base_block3D* block,
+dist_status cluster_distributor::distribute_block(crepr::base_block3D* block,
                                            cds::const_spatial_entity_vector& entities) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%u) reached",
              block->id().v(),
              m_clust.capacity());
-    return false;
+    return dist_status::ekFAILURE;
   }
   return m_impl.distribute_block(block, entities);
 } /* distribute_block() */
 
-bool cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
-                                            cds::const_spatial_entity_vector& entities) {
+dist_status cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
+                                                   cds::const_spatial_entity_vector& entities,
+                                                   bool strict_success) {
   if (m_clust.capacity() == m_clust.block_count()) {
     ER_DEBUG(
         "Could not distribute any of %zu blocks: Cluster capacity (%u) reached",
         blocks.size(),
         m_clust.capacity());
-    return false;
+    return dist_status::ekFAILURE;
   }
-  return m_impl.distribute_blocks(blocks, entities);
+  return m_impl.distribute_blocks(blocks, entities, strict_success);
 } /* distribute_blocks() */
 
 cfds::block3D_cluster_vector cluster_distributor::block_clusters(void) const {
