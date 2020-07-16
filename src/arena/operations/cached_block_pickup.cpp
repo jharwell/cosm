@@ -155,6 +155,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     /* Already holding cache mutex */
     cache_extent_clear op(coord(), m_real_cache);
     op.visit(map);
+    map.access<cds::arena_grid::kCell>(coord()).color(rutils::color::kBLACK);
 
     /* Already holding cache mutex */
     map.cache_remove(m_real_cache, m_sm);

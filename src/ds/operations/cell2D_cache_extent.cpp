@@ -46,6 +46,7 @@ cell2D_cache_extent::cell2D_cache_extent(const rmath::vector2z& coord,
 void cell2D_cache_extent::visit(cds::cell2D& cell) {
   cell.entity(m_cache);
   visit(cell.fsm());
+  cell.color(m_cache->color());
 } /* visit() */
 
 void cell2D_cache_extent::visit(fsm::cell2D_fsm& fsm) {

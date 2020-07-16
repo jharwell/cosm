@@ -36,6 +36,7 @@
 #include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/operations/nest_extent.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -74,6 +75,15 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
                      nest.center,
                      config->grid.resolution,
                      carepr::light_type_index()[carepr::light_type_index::kNest]);
+    /* configure nest extent */
+    for (size_t i = inst.xdspan().lb(); i <= inst.xdspan().ub(); ++i) {
+      for (size_t j = inst.ydspan().lb(); j <= inst.ydspan().ub(); ++j) {
+        auto coord = rmath::vector2z(i, j);
+        crops::nest_extent_visitor op(coord, &inst);
+        op.visit(access<cds::arena_grid::kCell>(coord));
+      } /* for(j..) */
+    } /* for(i..) */
+    /* update host cell */
     m_nests.emplace(inst.id(), inst);
   } /* for(&nest..) */
 }
@@ -140,26 +150,22 @@ cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* b
 } /* disribute_single_block() */
 
 void base_arena_map::distribute_all_blocks(void) {
-  // Reset all the cells to clear old references to blocks
-  decoratee().reset();
-
   /* calculate the entities to avoid during distribution */
   auto precalc = block_dist_precalc(nullptr);
 
   auto status = m_block_dispatcher.distribute_blocks(m_blocksno, precalc.avoid_ents);
   ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
             "Unable to perform initial block distribution");
-
   /*
    * Once all blocks have been distributed, and (possibly) all caches have been
-   * created via block consolidation, all cells that do not have blocks or
-   * caches should be empty.
+   * created via block consolidation, all cells that do not have anything in
+   * them should be marked as empty.
    */
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
       cds::cell2D& cell = access<cds::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
-          !cell.state_in_cache_extent()) {
+          !cell.state_in_cache_extent() && !cell.state_in_nest_extent()) {
         cdops::cell2D_empty_visitor op(cell.loc());
         op.visit(cell);
       }

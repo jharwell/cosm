@@ -1,5 +1,5 @@
 /**
- * \file block_cluster_vector.hpp
+ * \file block3D_cluster_vector.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,54 +18,40 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <vector>
+#include "cosm/foraging/ds/block_cluster_vector.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/foraging/repr/block_cluster.hpp"
+
+#include <numeric>
+
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::repr {
-class base_block3D;
-} /* namespace cosm::repr */
-
-namespace cosm::foraging::repr {
-class block_cluster;
-} // namespace repr
-
 NS_START(cosm, foraging, ds);
 
-using block3D_cluster_vector_type = const cfrepr::block_cluster*;
+/*******************************************************************************
+ * Non-Member Functions
+ ******************************************************************************/
+template <typename TVector>
+std::string do_to_str(const TVector& vec) {
+  return std::accumulate(vec.begin(),
+                         vec.end(),
+                         std::string(),
+                         [&](const std::string& a, const auto& c) {
+                           return a + "cluster" + rcppsw::to_string(c->id()) + "@" +
+                                  c->dcenter2D().to_str() + ",";
+                         });
+} /* do_to_str() */
 
 /*******************************************************************************
- * Type Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \class block3D_cluster_vector
- * \ingroup foraging ds
- *
- * \brief Specialization of \ref std::vector for block clusters.
- *
- * Has a \ref to_str() method for more convenient debugging.
- */
-class block3D_cluster_vector : public std::vector<block3D_cluster_vector_type> {
- public:
-  using std::vector<block3D_cluster_vector_type>::vector;
-  using value_type = std::vector<block3D_cluster_vector_type>::value_type;
-
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
-};
+std::string block3D_cluster_vector::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
 
 NS_END(ds, foraging, cosm);
-
-#endif /* INCLUDE_COSM_DS_BLOCK_CLUSTER_VECTOR_HPP_ */

@@ -89,6 +89,10 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   bool state_in_cache_extent(void) const {
     return current_state() == state::ekST_CACHE_EXTENT;
   }
+
+  bool state_in_nest_extent(void) const {
+    return current_state() == state::ekST_NEST_EXTENT;
+  }
   bool state_is_empty(void) const {
     return current_state() == state::ekST_EMPTY;
   }
@@ -99,6 +103,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   void event_block_pickup(void);
   void event_block_drop(void);
   void event_cache_extent(void);
+  void event_nest_extent(void);
 
   size_t block_count(void) const { return m_block_count; }
 
@@ -113,6 +118,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_block);
   FSM_STATE_DECLARE(cell2D_fsm, state_cache, struct block_data);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_cache_extent);
+  FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent);
 
   FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];

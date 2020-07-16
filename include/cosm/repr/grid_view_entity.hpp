@@ -99,10 +99,10 @@ class grid_view_entity : public crepr::entity2D {
   }
 
   rtypes::spatial_dist xrsize(void) const override {
-    return rtypes::spatial_dist(m_view.shape()[0] * mc_resolution.v());
+    return rtypes::spatial_dist(xdsize() * mc_resolution.v());
   }
   rtypes::spatial_dist yrsize(void) const override {
-    return rtypes::spatial_dist(m_view.shape()[1] * mc_resolution.v());
+    return rtypes::spatial_dist(ydsize() * mc_resolution.v());
   }
 
   /**

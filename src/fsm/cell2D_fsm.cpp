@@ -38,7 +38,8 @@ cell2D_fsm::cell2D_fsm(void)
                            FSM_STATE_MAP_ENTRY(&state_empty),
                            FSM_STATE_MAP_ENTRY(&state_block),
                            FSM_STATE_MAP_ENTRY(&state_cache),
-                           FSM_STATE_MAP_ENTRY(&state_cache_extent)) {}
+                           FSM_STATE_MAP_ENTRY(&state_cache_extent),
+                           FSM_STATE_MAP_ENTRY(&state_nest_extent)) {}
 
 cell2D_fsm::cell2D_fsm(const cell2D_fsm& other)
     : rpfsm::simple_fsm(state::ekST_MAX_STATES, state::ekST_UNKNOWN),
@@ -48,7 +49,8 @@ cell2D_fsm::cell2D_fsm(const cell2D_fsm& other)
                            FSM_STATE_MAP_ENTRY(&state_empty),
                            FSM_STATE_MAP_ENTRY(&state_block),
                            FSM_STATE_MAP_ENTRY(&state_cache),
-                           FSM_STATE_MAP_ENTRY(&state_cache_extent)),
+                           FSM_STATE_MAP_ENTRY(&state_cache_extent),
+                           FSM_STATE_MAP_ENTRY(&state_nest_extent)),
       m_block_count(other.m_block_count) {}
 
 /*******************************************************************************
@@ -61,6 +63,7 @@ void cell2D_fsm::event_unknown(void) {
       state::ekST_UNKNOWN, /* has block */
       state::ekST_UNKNOWN, /* has cache */
       state::ekST_UNKNOWN, /* cache extent */
+      state::ekST_UNKNOWN, /* nest extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -73,6 +76,7 @@ void cell2D_fsm::event_empty(void) {
       state::ekST_EMPTY, /* has block */
       state::ekST_EMPTY, /* has cache */
       state::ekST_EMPTY, /* cache extent */
+      rpfsm::event_signal::ekFATAL, /* nest extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -85,6 +89,7 @@ void cell2D_fsm::event_block_drop(void) {
       state::ekST_HAS_CACHE,        /* has block */
       state::ekST_HAS_CACHE,        /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
+      rpfsm::event_signal::ekFATAL, /* nest extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
@@ -98,6 +103,7 @@ void cell2D_fsm::event_block_pickup(void) {
       state::ekST_EMPTY,            /* has block */
       state::ekST_HAS_CACHE,        /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
+          rpfsm::event_signal::ekFATAL, /* nest extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
@@ -115,10 +121,24 @@ void cell2D_fsm::event_cache_extent(void) {
       state::ekST_CACHE_EXTENT,     /* has block */
       rpfsm::event_signal::ekFATAL, /* has cache */
       rpfsm::event_signal::ekFATAL, /* cache extent */
+      rpfsm::event_signal::ekFATAL, /* nest extent */
   };
   FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_cache_extent() */
+
+void cell2D_fsm::event_nest_extent(void) {
+  FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
+        state::ekST_NEST_EXTENT,      /* unknown */
+        state::ekST_NEST_EXTENT,      /* empty */
+        rpfsm::event_signal::ekFATAL, /* has block */
+        rpfsm::event_signal::ekFATAL, /* has cache */
+        rpfsm::event_signal::ekFATAL, /* cache extent */
+        rpfsm::event_signal::ekFATAL, /* nest extent */
+        };
+  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
+  external_event(kTRANSITIONS[current_state()], nullptr);
+} /* event_nest_exte(n) */
 
 /*******************************************************************************
  * State Functions
@@ -166,6 +186,10 @@ FSM_STATE_DEFINE_ND(cell2D_fsm, state_cache_extent) {
   if (state::ekST_CACHE_EXTENT != last_state()) {
     m_block_count = 0;
   }
+  return rpfsm::event_signal::ekHANDLED;
+}
+
+FSM_STATE_DEFINE_ND(cell2D_fsm, state_nest_extent) {
   return rpfsm::event_signal::ekHANDLED;
 }
 

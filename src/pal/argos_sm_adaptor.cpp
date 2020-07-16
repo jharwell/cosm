@@ -57,12 +57,10 @@ void argos_sm_adaptor::arena_map_init(
     const caconfig::arena_map_config* aconfig,
     const cvconfig::visualization_config* vconfig) {
   m_arena_map = std::make_unique<TArenaMap>(aconfig);
-
   if (!m_arena_map->initialize(this, rng())) {
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }
-
   m_arena_map->distribute_all_blocks();
 
   /*
@@ -86,6 +84,17 @@ crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
                            this);
   return boost::apply_visitor(visitor, block);
 } /* make_embodied() */
+
+argos::CColor argos_sm_adaptor::GetFloorColor(
+    const argos::CVector2& pos) {
+  rmath::vector2d rpos(pos.GetX(), pos.GetY());
+  rmath::vector2z dpos = rmath::dvec2zvec(rpos,
+                                          m_arena_map->grid_resolution().v());
+  auto color = m_arena_map->access<cds::arena_grid::kCell>(dpos).color();
+  return argos::CColor(color.red(),
+                       color.green(),
+                       color.blue());
+} /* GetFloorColor() */
 
 /*******************************************************************************
  * Template Instantiations

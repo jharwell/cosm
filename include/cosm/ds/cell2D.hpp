@@ -29,6 +29,7 @@
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/utils/color.hpp"
 
 #include "cosm/fsm/cell2D_fsm.hpp"
 
@@ -55,6 +56,10 @@ NS_START(cosm, ds);
  *
  * \brief Representation of a cell on a 2D grid. A combination of FSM + handle
  * to whatever \ref repr::entity2D the cell contains, if any.
+ *
+ * \note Cells can maintain a color. This is a \a huge performance boost when
+ * computing floor colors in ARGoS, as you no longer have to potentially query
+ * \a all blocks/nests/etc only to find out a given location should be empty.
  */
 class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
  public:
@@ -75,6 +80,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   RCPPSW_DECORATE_FUNC(state_has_cache, const)
   RCPPSW_DECORATE_FUNC(state_in_cache_extent, const)
   RCPPSW_DECORATE_FUNC(state_is_empty, const)
+  RCPPSW_DECORATE_FUNC(state_in_nest_extent, const)
 
   /**
    * \brief Reset the cell to its UNKNOWN state.
@@ -95,6 +101,9 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
 
   void loc(const rmath::vector2z& loc) { m_loc = loc; }
   const rmath::vector2z& loc(void) const { return m_loc; }
+
+  const rutils::color& color(void) const { return m_color; }
+  void color(const rutils::color& color) { m_color = color; }
 
   /**
    * \brief Get the block entity associated with this cell.
@@ -118,6 +127,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /* clang-format off */
   repr::spatial_entity* m_entity{nullptr};
   rmath::vector2z       m_loc{};
+  rutils::color         m_color{rutils::color::kWHITE};
   /* clang-format on */
 };
 

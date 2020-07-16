@@ -1,7 +1,7 @@
 /**
- * \file block_cluster_vector.hpp
+ * \file nest_extent.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,54 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <vector>
+#include "cosm/repr/operations/nest_extent.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/ds/arena_grid.hpp"
+#include "cosm/ds/cell2D.hpp"
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::repr {
-class base_block3D;
-} /* namespace cosm::repr */
-
-namespace cosm::foraging::repr {
-class block_cluster;
-} // namespace repr
-
-NS_START(cosm, foraging, ds);
-
-using block3D_cluster_vector_type = const cfrepr::block_cluster*;
+NS_START(cosm, repr, operations, detail);
+using cds::arena_grid;
 
 /*******************************************************************************
- * Type Definitions
+ * Constructors/Destructor
  ******************************************************************************/
-/**
- * \class block3D_cluster_vector
- * \ingroup foraging ds
- *
- * \brief Specialization of \ref std::vector for block clusters.
- *
- * Has a \ref to_str() method for more convenient debugging.
- */
-class block3D_cluster_vector : public std::vector<block3D_cluster_vector_type> {
- public:
-  using std::vector<block3D_cluster_vector_type>::vector;
-  using value_type = std::vector<block3D_cluster_vector_type>::value_type;
+nest_extent::nest_extent(const rmath::vector2z& coord,
+                         crepr::nest* nest)
+    : cell2D_op(coord), m_nest(nest) {}
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
-};
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void nest_extent::visit(cds::cell2D& cell) {
+  cell.entity(m_nest);
+  visit(cell.fsm());
+  cell.color(m_nest->color());
+} /* visit() */
 
-NS_END(ds, foraging, cosm);
+void nest_extent::visit(fsm::cell2D_fsm& fsm) {
+  fsm.event_nest_extent();
+} /* visit() */
 
-#endif /* INCLUDE_COSM_DS_BLOCK_CLUSTER_VECTOR_HPP_ */
+void nest_extent::visit(cds::arena_grid& grid) {
+  visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
+} /* visit() */
+
+NS_END(detail, operations, repr, cosm);

@@ -87,6 +87,7 @@ class argos_sm_adaptor : public swarm_manager,
   void PreStep(void) override { pre_step(); }
   void PostStep(void) override { post_step(); }
   void Destroy(void) override { destroy(); }
+  argos::CColor GetFloorColor(const argos::CVector2& pos) override;
 
   const std::string& led_medium(void) const { return m_led_medium; }
   const carena::base_arena_map* arena_map(void) const {

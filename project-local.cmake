@@ -12,14 +12,12 @@ if("${COSM_BUILD_FOR}" MATCHES "MSI" )
   if(NOT COSM_PROJECT_DEPS_PREFIX)
     set(COSM_HAL_TARGET "argos-footbot")
   endif()
-  
+
 elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   message(STATUS "Building for ARGoS")
+  set(COSM_HAL_TARGET "argos-footbot")
   if(NOT COSM_PROJECT_DEPS_PREFIX)
-    set(COSM_HAL_TARGET "argos-footbot")
   endif()
-
-
   if(NOT COSM_PROJECT_DEPS_PREFIX)
     set(COSM_PROJECT_DEPS_PREFIX /opt/data/local)
   endif()

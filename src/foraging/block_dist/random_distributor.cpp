@@ -89,6 +89,9 @@ dist_status random_distributor::distribute_block(crepr::base_block3D* block,
             cell->entity()->id().v());
   ER_ASSERT(!cell->state_in_cache_extent(),
             "Destination cell part of cache extent");
+  ER_ASSERT(cell->state_is_empty() || !cell->state_is_known(),
+            "Destination cell@%s is not empty",
+            rcppsw::to_string(coords->abs).c_str());
 
   /*
    * This function is always called from the arena map, and it ensures that
@@ -99,6 +102,7 @@ dist_status random_distributor::distribute_block(crepr::base_block3D* block,
                                     mc_resolution,
                                     carena::arena_map_locking::ekALL_HELD);
   op.visit(*cell);
+
   if (verify_block_dist(block, entities, cell)) {
     ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
              block->id().v(),
@@ -133,6 +137,12 @@ bool random_distributor::verify_block_dist(
            rcppsw::to_string(block->ranchor2D()).c_str(),
            rcppsw::to_string(cell->loc()).c_str());
 
+  /* The cell it was distributed to should be in the HAS_BLOCK state */
+  ER_ASSERT(cell->state_has_block(),
+            "Destination cell@%s not in HAS_BLOCK for block%d",
+            rcppsw::to_string(cell->loc()).c_str(),
+            cell->entity()->id().v());
+
   /* no entity should overlap with the block after distribution */
   for (auto& e : entities) {
     if (e == block) {
@@ -151,7 +161,7 @@ bool random_distributor::verify_block_dist(
                                       static_cast<const crepr::entity3D*>(e));
     }
     ER_ASSERT(!(status.x_conflict && status.y_conflict),
-              "Entity contains block%d@%s/%s after distribution",
+              "Placement conflict for block%d@%s/%s after distribution",
               block->id().v(),
               rcppsw::to_string(block->ranchor2D()).c_str(),
               rcppsw::to_string(block->ranchor2D()).c_str());

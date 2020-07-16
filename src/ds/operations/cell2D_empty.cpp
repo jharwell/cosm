@@ -38,6 +38,7 @@ using cds::arena_grid;
 void cell2D_empty::visit(cds::cell2D& cell) {
   cell.entity(nullptr);
   visit(cell.fsm());
+  cell.color(rutils::color::kWHITE);
 } /* visit() */
 
 void cell2D_empty::visit(fsm::cell2D_fsm& fsm) {

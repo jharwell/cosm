@@ -41,8 +41,7 @@ class cell2D_state {
  public:
   enum {
     /**
-     * \brief The cell's contents is unknown (only used by \ref
-     * depth0::mdpo_controller and its derived variants).
+     * \brief The cell's contents is unknown.
      */
     ekST_UNKNOWN,
 
@@ -67,6 +66,14 @@ class cell2D_state {
      * cache it is a part of.
      */
     ekST_CACHE_EXTENT,
+
+    /**
+     * \brief The cell does not contain a nest, but is part of the 2D extent
+     * occupied by a nest, in which case it contains a reference to the nest it
+     * is a part of.
+     */
+    ekST_NEST_EXTENT,
+
     ekST_MAX_STATES
   };
 };

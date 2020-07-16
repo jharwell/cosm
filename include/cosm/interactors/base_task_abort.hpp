@@ -92,8 +92,6 @@ class base_task_abort
     if (!robot_task_aborted(controller)) {
       return false;
     }
-    RCSW_UNUSED auto polled =
-        dynamic_cast<const cta::polled_task*>(controller.current_task());
     /*
      * If a robot aborted its task and was carrying a block, it needs to (1)
      * drop it so that the block is not left dangling and unusable for the rest

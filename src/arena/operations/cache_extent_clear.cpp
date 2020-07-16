@@ -62,6 +62,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
   for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       rmath::vector2z c = rmath::vector2z(i, j);
+      auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
       if (c != m_victim->dcenter2D()) {
         ER_ASSERT(m_victim->contains_point2D(
             rmath::zvec2dvec(c, grid.resolution().v())),
@@ -69,13 +70,17 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
                   m_victim->id().v(),
                   rcppsw::to_string(c).c_str());
 
-        auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
         ER_ASSERT(cell.state_in_cache_extent(),
                   "cell@%s not in CACHE_EXTENT [state=%d]",
                   rcppsw::to_string(c).c_str(),
                   cell.fsm().current_state());
         cdops::cell2D_empty_visitor e(c);
         e.visit(cell);
+      } else {
+        ER_ASSERT(cell.state_has_block(),
+                  "cell@%s not in HAS_BLOCK [state=%d]",
+                  rcppsw::to_string(c).c_str(),
+                  cell.fsm().current_state());
       }
     } /* for(j..) */
   }   /* for(i..) */

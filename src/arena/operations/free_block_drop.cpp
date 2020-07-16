@@ -86,11 +86,12 @@ void free_block_drop::visit(cds::cell2D& cell) {
   visit(cell.fsm());
 
   /*
-   * We can't set the entity undconditionally, because this event is also
-   * triggered on block drops into caches.
+   * We can't set the entity or color undconditionally, because this event is
+   * also triggered on block drops into caches.
    */
   if (cell.state_has_block()) {
     cell.entity(mc_block);
+    cell.color(rutils::color::kBLACK);
   }
 } /* visit() */
 
@@ -121,7 +122,7 @@ void free_block_drop::visit(base_arena_map& map) {
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   bool conflict = block_drop_loc_conflict(map, mc_block, rloc);
 
-  cds::cell2D& cell = map.template access<arena_grid::kCell>(cell2D_op::coord());
+  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
