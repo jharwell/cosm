@@ -30,6 +30,7 @@
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/repr/grid_view_entity.hpp"
+#include "cosm/foraging/repr/block_cluster_params.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -55,20 +56,27 @@ NS_START(cosm, foraging, repr);
 class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::const_view>,
                             public rer::client<block_cluster> {
  public:
-  block_cluster(const cds::arena_grid::const_view& view,
+  explicit block_cluster(const block_cluster_params& params)
+      : block_cluster{params.id,
+        params.view,
+        params.resolution,
+        params.capacity} {}
+
+  block_cluster(const rtypes::type_uuid& id,
+                const cds::arena_grid::const_view& view,
                 const rtypes::discretize_ratio& resolution,
-                uint capacity)
-      : grid_view_entity<cds::arena_grid::const_view>(view, resolution),
+                size_t capacity)
+      : grid_view_entity<cds::arena_grid::const_view>(id, view, resolution),
         ER_CLIENT_INIT("cosm.foraging.repr.block_cluster"),
         m_capacity(capacity) {}
 
-  uint capacity(void) const { return m_capacity; }
+  size_t capacity(void) const { return m_capacity; }
   size_t block_count(void) const { return blocks().size(); }
   cds::block3D_vectorro blocks(void) const RCSW_PURE;
 
  private:
   /* clang-format off */
-  uint m_capacity;
+  size_t m_capacity;
   /* clang-format on */
 };
 

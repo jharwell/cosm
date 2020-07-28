@@ -78,6 +78,7 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   RCPPSW_DECORATE_FUNC(state_is_known, const)
   RCPPSW_DECORATE_FUNC(state_has_block, const)
   RCPPSW_DECORATE_FUNC(state_has_cache, const)
+  RCPPSW_DECORATE_FUNC(state_in_block_extent, const)
   RCPPSW_DECORATE_FUNC(state_in_cache_extent, const)
   RCPPSW_DECORATE_FUNC(state_is_empty, const)
   RCPPSW_DECORATE_FUNC(state_in_nest_extent, const)

@@ -167,6 +167,12 @@ class base_arena_map : public rer::client<base_arena_map>,
     return decoratee().resolution();
   }
 
+  /**
+   * \brief Get the bounding box large enough to contain all blocks specified in
+   * the manifest.
+   */
+  const rmath::vector3d& block_bb(void) const { return m_block_bb; }
+
   ds::nest_vectorro nests(void) const;
 
   RCSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
@@ -199,6 +205,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * - The block distributor
    * - Nest lights
+   * - Block bounding box
    */
   bool initialize(cpal::argos_sm_adaptor* sm, rmath::rng* rng);
 
@@ -253,6 +260,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   /* clang-format off */
   mutable std::mutex                     m_block_mtx{};
 
+  rmath::vector3d                        m_block_bb{};
   cds::block3D_vectoro                   m_blockso;
   cds::block3D_vectorno                  m_blocksno{};
   nest_map_type                          m_nests{};

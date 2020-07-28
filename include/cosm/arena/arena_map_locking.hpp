@@ -44,6 +44,7 @@ enum class arena_map_locking : uint {
   ekBLOCKS_HELD = 1 << 1,
   ekCACHES_HELD = 1 << 2,
   ekGRID_HELD = 1 << 3,
+  ekCACHES_AND_GRID_HELD = ekCACHES_HELD | ekGRID_HELD,
   ekALL_HELD = ekNONE_HELD | ekBLOCKS_HELD | ekCACHES_HELD | ekGRID_HELD
 };
 NS_END(arena, cosm);

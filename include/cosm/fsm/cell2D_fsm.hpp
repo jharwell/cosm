@@ -74,9 +74,6 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
    */
   cell2D_fsm(const cell2D_fsm& other);
 
-  /* simple_fsm overrides */
-  void init(void) override;
-
   bool state_is_known(void) const {
     return current_state() != state::ekST_UNKNOWN;
   }
@@ -88,6 +85,9 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   }
   bool state_in_cache_extent(void) const {
     return current_state() == state::ekST_CACHE_EXTENT;
+  }
+  bool state_in_block_extent(void) const {
+    return current_state() == state::ekST_BLOCK_EXTENT;
   }
 
   bool state_in_nest_extent(void) const {
@@ -102,6 +102,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   void event_empty(void);
   void event_block_pickup(void);
   void event_block_drop(void);
+  void event_block_extent(void);
   void event_cache_extent(void);
   void event_nest_extent(void);
 
@@ -117,6 +118,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_empty);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_block);
   FSM_STATE_DECLARE(cell2D_fsm, state_cache, struct block_data);
+  FSM_STATE_DECLARE_ND(cell2D_fsm, state_block_extent);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_cache_extent);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent);
 

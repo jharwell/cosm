@@ -42,7 +42,8 @@ using cds::arena_grid;
 dispatcher::dispatcher(cds::arena_grid* const grid,
                        const rtypes::discretize_ratio& resolution,
                        const config::block_dist_config* const config)
-    : mc_resolution(resolution),
+    : ER_CLIENT_INIT("cosm.foraging.block_dist.dispatcher"),
+      mc_resolution(resolution),
       mc_config(*config),
       mc_dist_type(config->dist_type),
       /*
@@ -60,7 +61,9 @@ dispatcher::~dispatcher(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool dispatcher::initialize(rmath::rng* rng) {
+bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
+                            const rmath::vector3d& block_bb,
+                            rmath::rng* rng) {
   /* clang-format off */
   cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
       rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
@@ -85,26 +88,27 @@ bool dispatcher::initialize(rmath::rng* rng) {
                                 static_cast<size_t>(mc_arena_yrange.ub()));
   if (kDistRandom == mc_dist_type) {
     m_dist = std::make_unique<random_distributor>(arena,
-                                                              mc_resolution,
-                                                              rng);
+                                                  m_grid,
+                                                  rng);
   } else if (kDistSingleSrc == mc_dist_type) {
     cds::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                              right_ur);
     m_dist = std::make_unique<cluster_distributor>(
+        rtypes::type_uuid(0),
         area,
-        mc_resolution,
-        std::numeric_limits<uint>::max(),
+        m_grid,
+        std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistDualSrc == mc_dist_type) {
     cds::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(left_ll,
                                                                                left_ur);
     cds::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                                right_ur);
-    std::vector<cds::arena_grid::view> grids{area_l, area_r};
+    std::vector<cds::arena_grid::view> areas{area_l, area_r};
     m_dist = std::make_unique<multi_cluster_distributor>(
-        grids,
-        mc_resolution,
-        std::numeric_limits<uint>::max(),
+        areas,
+        m_grid,
+        std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistQuadSrc == mc_dist_type) {
     /*
@@ -121,24 +125,25 @@ bool dispatcher::initialize(rmath::rng* rng) {
                                                                                bottom_ur);
     cds::arena_grid::view area_u = m_grid->layer<arena_grid::kCell>()->subgrid(top_ll,
                                                                                top_ur);
-    std::vector<cds::arena_grid::view> grids{area_l, area_r, area_b, area_u};
+    std::vector<cds::arena_grid::view> areas{area_l, area_r, area_b, area_u};
     m_dist = std::make_unique<multi_cluster_distributor>(
-        grids,
-        mc_resolution,
-        std::numeric_limits<uint>::max(),
+        areas,
+        m_grid,
+        std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistPowerlaw == mc_dist_type) {
     auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,
-                                                                mc_resolution,
-                                                                rng);
-    if (!p->map_clusters(m_grid)) {
-      return false;
-    }
+                                                    m_grid,
+                                                    rng);
+    ER_CHECK(p->initialize(entities, block_bb),
+             "Failed to initialize powerlaw distributor");
     m_dist = std::move(p);
   }
   /* clang-format on */
-
   return true;
+
+error:
+  return false;
 } /* initialize() */
 
 dist_status dispatcher::distribute_block(crepr::base_block3D* block,

@@ -49,9 +49,10 @@ NS_START(cosm, foraging, block_dist);
 class cluster_distributor final : public rer::client<cluster_distributor>,
                                   public base_distributor {
  public:
-  cluster_distributor(const cds::arena_grid::view& view,
-                      const rtypes::discretize_ratio& resolution,
-                      uint capacity,
+  cluster_distributor(const rtypes::type_uuid& id,
+                      const cds::arena_grid::view& view,
+                      cds::arena_grid* arena_grid,
+                      size_t capacity,
                       rmath::rng* rng);
   ~cluster_distributor(void) override = default;
 
@@ -64,6 +65,10 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
                                 cds::const_spatial_entity_vector& entities,
                                 bool strict_success) override;
   cfds::block3D_cluster_vector block_clusters(void) const override;
+  size_t capacity(void) const { return m_clust.capacity(); }
+  rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }
+  rmath::vector2z danchor2D(void) const { return m_clust.danchor2D(); }
+  size_t size(void) const { return m_clust.block_count(); }
 
  private:
   /* clang-format off */

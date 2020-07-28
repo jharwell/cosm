@@ -25,10 +25,12 @@
 
 #include <algorithm>
 #include <cmath>
+#include <map>
 
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/foraging/block_dist/multi_cluster_distributor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -41,11 +43,10 @@ using cosm::ds::arena_grid;
  ******************************************************************************/
 powerlaw_distributor::powerlaw_distributor(
     const config::powerlaw_dist_config* const config,
-    const rtypes::discretize_ratio& resolution,
-    rmath::rng* rng_in)
+    cds::arena_grid* grid,
+    rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw"),
-      base_distributor(rng_in),
-      mc_resolution(resolution),
+      base_distributor(grid, rng),
       m_n_clusters(config->n_clusters),
       m_pwrdist(config->pwr_min, config->pwr_max, 2) {}
 
@@ -54,148 +55,191 @@ powerlaw_distributor::powerlaw_distributor(
  ******************************************************************************/
 dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
                                                    cds::const_spatial_entity_vector& entities) {
-  for (auto& l : m_dist_map) {
-    for (auto& dist : l.second) {
-      ER_DEBUG("Attempt distribution: block%d -> cluster [capacity=%u,count=%zu]",
-          block->id().v(),
-          l.first,
-          dist.block_clusters().front()->block_count());
+  /*
+   * Try to find a block cluster to distribute to, starting from a random
+   * cluster size.
+   */
+  size_t start = rng()->uniform(0UL, m_dists.size() - 1);
+  for (size_t i = 0; i < m_dists.size(); ++i) {
+    auto* mclust = m_dists[(start + i) % m_dists.size()].get();
 
-      if (dist_status::ekSUCCESS == dist.distribute_block(block, entities)) {
-        return dist_status::ekSUCCESS;
-      }
+    if (mclust->size() == mclust->capacity()) {
+      continue;
+    }
+    ER_DEBUG("Attempt distribution: block%d -> cluster group: capacity%zu,size=%zu]",
+             block->id().v(),
+             mclust->capacity(),
+             mclust->size());
+
+    if (dist_status::ekSUCCESS == mclust->distribute_block(block, entities)) {
+      return dist_status::ekSUCCESS;
     } /* for(&dist..) */
-  }   /* for(l..) */
+  } /* for(i..) */
 
   ER_FATAL_SENTINEL("Unable to distribute block to any cluster");
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::
-    guess_cluster_placements(cds::arena_grid* const grid,
-                             const std::vector<uint>& clust_sizes) {
-  cluster_paramvec config;
-
-  for (size_t i = 0; i < clust_sizes.size(); ++i) {
-    uint x = rng()->uniform(clust_sizes[i] / 2 + 1,
-                            grid->xdsize() - clust_sizes[i] / 2 - 1);
-    uint y = rng()->uniform(clust_sizes[i] / 2 + 1,
-                            grid->ydsize() - clust_sizes[i] / 2 - 1);
-    uint x_max = x + static_cast<uint>(std::sqrt(clust_sizes[i]));
-    uint y_max = y + clust_sizes[i] / (x_max - x);
-
-    /*
-     * Cast needed so that clusters can correctly be constructed later, and they
-     * DO need to be able to modify their grid view. Here we do not need it, so
-     * we have to cast.
-     */
-    auto view =
-        grid->layer<arena_grid::kCell>()->subgrid(rmath::vector2z(x, x_max),
-                                                  rmath::vector2z(y, y_max));
-    RCSW_UNUSED rmath::vector2z loc = (*view.origin()).loc();
-    ER_TRACE("Guess cluster%zu placement x=[%lu-%lu], y=[%lu-%lu], size=%u",
-             i,
-             loc.x() + view.index_bases()[0],
-             loc.x() + view.index_bases()[0] + view.shape()[0],
-             loc.y() + view.index_bases()[1],
-             loc.y() + view.index_bases()[1] + view.shape()[1],
-             clust_sizes[i]);
-    config.push_back({view, clust_sizes[i]});
-  } /* for(i..) */
-  return config;
-} /* guess_cluster_placements() */
-
-bool powerlaw_distributor::check_cluster_placements(const cluster_paramvec& pvec) {
-  for (const cluster_config& p : pvec) {
-    bool overlap = std::any_of(pvec.begin(), pvec.end(), [&](const auto& other) {
-      /*
-         * Can't compare directly (boost multi_array makes a COPY of each
-         * element during iteration for some reason, and because the cells
-         * have a unique_ptr, that doesn't work), so compare using addresses
-         * of elements of the vector, which WILL work.
-         */
-      if (&other == &p) { /* self */
-        return false;
-      }
-      rmath::vector2z v_loc = (*p.view.origin()).loc();
-      rmath::vector2z other_loc = (*other.view.origin()).loc();
-      rmath::rangeu v_xrange(v_loc.x() + p.view.index_bases()[0],
-                             v_loc.x() + p.view.index_bases()[0] +
-                                 p.view.shape()[0]);
-      rmath::rangeu v_yrange(v_loc.y() + p.view.index_bases()[1],
-                             v_loc.y() + p.view.index_bases()[1] +
-                                 p.view.shape()[1]);
-      rmath::rangeu other_xrange(other_loc.x() + other.view.index_bases()[0],
-                                 other_loc.x() + other.view.index_bases()[0] +
-                                     other.view.shape()[0]);
-      rmath::rangeu other_yrange(other_loc.y() + other.view.index_bases()[1],
-                                 other_loc.y() + other.view.index_bases()[1] +
-                                     other.view.shape()[1]);
-
-      return v_xrange.overlaps_with(other_xrange) &&
-             v_yrange.overlaps_with(other_yrange);
-    });
-    if (overlap) {
-      return false;
-    }
-  } /* for(&p..) */
-  return true;
-} /* check_cluster_placements() */
-
-typename powerlaw_distributor::cluster_paramvec powerlaw_distributor::
-    compute_cluster_placements(cds::arena_grid* const grid, uint n_clusters) {
-  ER_INFO("Computing cluster placements for %u clusters", n_clusters);
-
-  std::vector<uint> clust_sizes;
-  for (uint i = 0; i < n_clusters; ++i) {
-    /* can't have a cluster of size 0 */
-    auto index = static_cast<uint>(std::max(1.0, m_pwrdist(rng())));
-    ER_DEBUG("Cluster%u size=%u", i, index);
-    clust_sizes.push_back(index);
-  } /* for(i..) */
-
-  for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
-    auto views = guess_cluster_placements(grid, clust_sizes);
-    if (check_cluster_placements(views)) {
-      return views;
-    }
-  } /* for(i..) */
-  ER_FATAL_SENTINEL(
-      "Unable to place clusters in arena (impossible situation?)");
-  return cluster_paramvec{};
-} /* compute_cluster_placements() */
-
-bool powerlaw_distributor::map_clusters(cds::arena_grid* const grid) {
-  cluster_paramvec config = compute_cluster_placements(grid, m_n_clusters);
-  if (config.empty()) {
+bool powerlaw_distributor::initialize(const cds::const_spatial_entity_vector& entities,
+                                      const rmath::vector3d& block_bb) {
+  /* Compute cluster locations in arena */
+  auto placements = cluster_placements_calc(entities, block_bb, m_n_clusters);
+  if (!placements) {
     ER_WARN("Unable to compute all cluster placements");
     return false;
   }
 
-  for (auto& bclustp : config) {
-    m_dist_map[bclustp.capacity].emplace_back(
-        bclustp.view, mc_resolution, bclustp.capacity, rng());
+  std::map<size_t, std::vector<cds::arena_grid::view>> grids;
+  std::for_each(placements->begin(),
+                placements->end(),
+                [&](const auto& placement) {
+                  return grids[placement.capacity].push_back(placement.view);
+    });
+
+  for (auto& pair : grids) {
+    auto mclust = std::make_unique<multi_cluster_distributor>(pair.second,
+                                                              arena_grid(),
+                                                              pair.first,
+                                                              rng());
+    ER_INFO("Mapped multi-cluster: capacity=%zu", mclust->capacity());
+    m_dists.push_back(std::move(mclust));
   } /* for(i..) */
-  for (auto& [clust_size, dist_list] : m_dist_map) {
-    ER_INFO("Mapped %zu clusters of capacity %u", dist_list.size(), clust_size);
-    for (RCSW_UNUSED auto& dist : dist_list) {
-      ER_INFO("Cluster with origin@%s/%s: capacity=%u",
-              rcppsw::to_string(dist.block_clusters().front()->ranchor2D()).c_str(),
-              rcppsw::to_string(dist.block_clusters().front()->danchor2D()).c_str(),
-              dist.block_clusters().front()->capacity());
-    } /* for(dist..) */
-  }   /* for(&l..) */
+
   return true;
-} /* map_clusters() */
+} /* initialize() */
+
+typename powerlaw_distributor::cluster_placements powerlaw_distributor::
+cluster_placements_guess(const std::vector<size_t>& clust_sizes,
+                         const rmath::vector3d& block_bb) {
+  cluster_placements placements;
+
+  /*
+   * If there are blocks which are larger in X/Y than the arena resolution, we
+   * need to account for that so that a cluster of size k will ALWAYS be able to
+   * hold k blocks, regardless of size.
+   */
+  size_t xfactor = static_cast<size_t>(block_bb.x() / arena_grid()->resolution().v());
+  size_t yfactor = static_cast<size_t>(block_bb.y() / arena_grid()->resolution().v());
+
+  for (size_t i = 0; i < clust_sizes.size(); ++i) {
+    /*
+     * sqrt() might not be an integer, so we round up to get a smooth-ist
+     * continuum of cluster sizes.
+     */
+    auto clust_dim_base = static_cast<size_t>(std::ceil(std::sqrt(clust_sizes[i])));
+
+    size_t clust_dim_x = clust_dim_base + xfactor * 2;
+    size_t clust_dim_y = clust_dim_base + yfactor * 2;
+    rmath::rangez area_xrange(clust_dim_x, arena_grid()->xdsize() - clust_dim_x - 1);
+    rmath::rangez area_yrange(clust_dim_y, arena_grid()->ydsize() - clust_dim_y - 1);
+
+    ER_DEBUG("Cluster%zu size=%zu placement area_xrange=%s,area_yrange=%s",
+             i,
+             clust_sizes[i],
+             rcppsw::to_string(area_xrange).c_str(),
+             rcppsw::to_string(area_yrange).c_str());
+
+    size_t anchor_x = rng()->uniform(area_xrange);
+    size_t anchor_y = rng()->uniform(area_yrange);
+
+    auto ll = rmath::vector2z(anchor_x, anchor_y);
+    auto ur = rmath::vector2z(anchor_x + clust_dim_x, anchor_y + clust_dim_y);
+    auto view = arena_grid()->layer<arena_grid::kCell>()->subgrid(ll, ur);
+    rmath::rangez clust_xrange(view.origin()->loc().x(),
+                               view.origin()->loc().x() + view.shape()[0]);
+    rmath::rangez clust_yrange(view.origin()->loc().y(),
+                               view.origin()->loc().y() + view.shape()[1]);
+
+    ER_TRACE("Cluster%zu params: anchor=%s,xrange=%s,arena_yrange=%s",
+             i,
+             rcppsw::to_string(ll).c_str(),
+             rcppsw::to_string(clust_xrange).c_str(),
+             rcppsw::to_string(clust_yrange).c_str());
+
+    placements.push_back({rtypes::type_uuid(i),
+            view,
+            clust_xrange,
+            clust_yrange,
+            clust_sizes[i]});
+  } /* for(i..) */
+  return placements;
+} /* cluster_placements_guess() */
+
+bool powerlaw_distributor::cluster_placements_check(
+    const cluster_placements& placements,
+    const cds::const_spatial_entity_vector& entities) {
+  /* check for entity overlap */
+  for (const auto& placement_i : placements) {
+    for (auto *ent : entities) {
+      if (placement_i.xrange.overlaps_with(ent->xdspan()) &&
+          placement_i.yrange.overlaps_with(ent->ydspan())) {
+        ER_TRACE("One or more entities overlap cluster%d placement",
+                 placement_i.id.v());
+        return false;
+      }
+    } /* for(*ent..) */
+  } /* for(&placement_i..) */
+
+  /* check for inter-cluster placement overlap */
+  for (const auto& placement_i : placements) {
+    auto placement_overlap_check = [&](const auto& placement_j) {
+      /* no overlap possible with self */
+      if (placement_j.id == placement_i.id) {
+        return false;
+      }
+      return placement_i.xrange.overlaps_with(placement_j.xrange) &&
+      placement_i.yrange.overlaps_with(placement_j.yrange);
+    };
+
+    if (std::any_of(placements.begin(),
+                    placements.end(),
+                    placement_overlap_check)) {
+      ER_TRACE("One or more cluster placements overlap cluster%d placement",
+               placement_i.id.v());
+      return false;
+    }
+  } /* for(&placement_i..) */
+  return true;
+} /* cluster_placements_check() */
+
+boost::optional<powerlaw_distributor::cluster_placements> powerlaw_distributor::cluster_placements_calc(
+    const cds::const_spatial_entity_vector& entities,
+    const rmath::vector3d& block_bb,
+    size_t n_clusters) {
+  ER_INFO("Computing cluster placements for %zu clusters", n_clusters);
+
+  std::vector<size_t> clust_sizes;
+
+  /* First, calc cluster sizes */
+  for (size_t i = 0; i < n_clusters; ++i) {
+    /* can't have a cluster of size 0 */
+    auto index = static_cast<size_t>(std::max(1U, m_pwrdist(rng())));
+    clust_sizes.push_back(index);
+  } /* for(i..) */
+  auto sum = std::accumulate(std::begin(clust_sizes), std::end(clust_sizes),
+                             std::string(),
+                             [&](std::string accum, size_t size) {
+                               return accum + rcppsw::to_string(size) + ",";
+                             });
+  ER_DEBUG("Cluster sizes: [%s]", sum.c_str());
+
+  /* Second, place clusters in arena via guess and check */
+  for (size_t i = 0; i < kMAX_DIST_TRIES; ++i) {
+    auto placements = cluster_placements_guess(clust_sizes, block_bb);
+    if (cluster_placements_check(placements, entities)) {
+      return boost::make_optional(placements);
+    }
+  } /* for(i..) */
+  ER_FATAL_SENTINEL("Unable to place clusters in arena");
+  return boost::none;
+} /* cluster_placements_calc() */
 
 ds::block3D_cluster_vector powerlaw_distributor::block_clusters(void) const {
   ds::block3D_cluster_vector ret;
 
-  for (auto& l : m_dist_map) {
-    for (auto& dist : l.second) {
-      auto bclusts = dist.block_clusters();
+  for (auto& dist : m_dists) {
+      auto bclusts = dist->block_clusters();
       ret.insert(ret.end(), bclusts.begin(), bclusts.end());
-    } /* for(&d..) */
   }   /* for(i..) */
 
   return ret;

@@ -38,6 +38,10 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::ds {
+class arena_grid;
+} /* namespace cosm::ds */
+
 NS_START(cosm, foraging, block_dist);
 
 /*******************************************************************************
@@ -57,7 +61,11 @@ class base_distributor {
    */
   static constexpr const uint kMAX_DIST_TRIES = 1000;
 
-  explicit base_distributor(rmath::rng* const rng) : m_rng(rng) {}
+  base_distributor(cds::arena_grid* arena_grid,
+                   rmath::rng* const rng)
+      : m_rng(rng),
+        m_arena_grid(arena_grid) {}
+
   virtual ~base_distributor(void) = default;
 
   /* Needed for use in \ref multi_cluster_distributor */
@@ -105,11 +113,14 @@ class base_distributor {
     return dist_status::ekFAILURE;
   }
 
+ protected:
   rmath::rng* rng(void) { return m_rng; }
+  cds::arena_grid* arena_grid(void) const { return m_arena_grid; }
 
  private:
   /* clang-format off */
-  rmath::rng* m_rng;
+  rmath::rng*      m_rng;
+  cds::arena_grid* m_arena_grid;
   /* clang-format on */
 };
 

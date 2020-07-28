@@ -122,14 +122,13 @@ class argos_sm_adaptor : public swarm_manager,
   void led_medium(const std::string& s) { m_led_medium = s; }
   carena::base_arena_map* arena_map(void) { return m_arena_map.get(); }
 
+  template <typename TArenaMap>
+  void arena_map_create(const caconfig::arena_map_config* aconfig) RCSW_COLD;
+
   /**
    * \brief Initialize the arena contents.
-   *
-   * \param repo Repository of parsed parameters.
    */
-  template <typename TArenaMap>
-  void arena_map_init(const caconfig::arena_map_config* aconfig,
-                      const cvconfig::visualization_config* vconfig) RCSW_COLD;
+  void arena_map_init(const cvconfig::visualization_config* vconfig) RCSW_COLD;
 
   /* clang-format off */
   /**

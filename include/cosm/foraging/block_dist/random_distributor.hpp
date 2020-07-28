@@ -61,9 +61,9 @@ NS_START(foraging, block_dist);
 class random_distributor : public rer::client<random_distributor>,
                            public base_distributor {
  public:
-  random_distributor(const cds::arena_grid::view& grid,
-                     const rtypes::discretize_ratio& resolution,
-                     rmath::rng* rng_in);
+  random_distributor(const cds::arena_grid::view& arena,
+                     cds::arena_grid* arena_grid,
+                     rmath::rng* rng);
 
   random_distributor& operator=(const random_distributor&) = delete;
 
@@ -112,11 +112,10 @@ class random_distributor : public rer::client<random_distributor>,
                          const cds::cell2D* cell) RCSW_PURE;
 
   /* clang-format off */
-  const rtypes::discretize_ratio mc_resolution;
   const rmath::vector2z          mc_origin;
   const rmath::rangeu            mc_xspan;
   const rmath::rangeu            mc_yspan;
-  cds::arena_grid::view          m_grid;
+  cds::arena_grid::view          m_area;
   /* clang-format on */
 };
 

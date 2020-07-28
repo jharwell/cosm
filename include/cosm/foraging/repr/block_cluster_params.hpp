@@ -1,5 +1,5 @@
 /**
- * \file block_carrying_controller.cpp
+ * \file block_cluster_params.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,35 +18,40 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_PARAMS_HPP_
+#define INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_PARAMS_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/block_carrying_controller.hpp"
+#include "rcppsw/types/discretize_ratio.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/ds/arena_grid.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller);
+NS_START(cosm, foraging, repr);
 
 /*******************************************************************************
- * Constructors/Destructor
+ * Class Definitions
  ******************************************************************************/
-block_carrying_controller::~block_carrying_controller(void) = default;
+/**
+ * \struct block_cluster_params
+ * \ingroup foraging repr
+ *
+ * \brief Parameters for \ref block_cluster.
+ */
 
-/*******************************************************************************
- * Member Functions
- ******************************************************************************/
-void block_carrying_controller::reset(void) { m_block.reset(); }
+struct block_cluster_params {
+  rtypes::type_uuid        id;
+  size_t                   capacity;
+  rtypes::discretize_ratio resolution;
+  cds::arena_grid::view    view;
+};
 
-void block_carrying_controller::block(std::unique_ptr<crepr::base_block3D> block) {
-  m_block = std::move(block);
-}
+NS_END(repr, foraging, cosm);
 
-std::unique_ptr<crepr::base_block3D> block_carrying_controller::block_release(
-    void) {
-  return std::move(m_block);
-}
-
-NS_END(controller, cosm);
+#endif /* INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_PARAMS_HPP_ */

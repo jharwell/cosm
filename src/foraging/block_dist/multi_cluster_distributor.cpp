@@ -35,49 +35,59 @@ NS_START(cosm, foraging, block_dist);
  * Constructors/Destructor
  ******************************************************************************/
 multi_cluster_distributor::multi_cluster_distributor(
-    std::vector<cds::arena_grid::view>& grids,
-    rtypes::discretize_ratio resolution,
-    uint maxsize,
-    rmath::rng* rng_in)
+    const std::vector<cds::arena_grid::view>& grids,
+    cds::arena_grid* arena_grid,
+    size_t capacity,
+    rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.multi_cluster"),
-      base_distributor(rng_in) {
-  for (auto& g : grids) {
-    m_dists.emplace_back(g, resolution, maxsize, rng_in);
+      base_distributor(arena_grid, rng) {
+  for (size_t i = 0; i < grids.size(); ++i) {
+    m_dists.emplace_back(rtypes::type_uuid(i),
+                         grids[i],
+                         arena_grid,
+                         capacity,
+                         rng);
   } /* for(i..) */
-}
-
+      }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 dist_status multi_cluster_distributor::distribute_block(
     crepr::base_block3D* block,
     cds::const_spatial_entity_vector& entities) {
-  for (uint i = 0; i < kMAX_DIST_TRIES; ++i) {
+  ER_INFO("Distribute block%d: n_clusts=%zu,total_capacity=%zu,total_size=%zu",
+          block->id().v(),
+          m_dists.size(),
+          capacity(),
+          size());
+  for (size_t i = 0; i < kMAX_DIST_TRIES; ++i) {
     /* -1 because we are working with array indices */
-    uint idx = rng()->uniform(0, m_dists.size() - 1);
+    size_t idx = rng()->uniform(0UL, m_dists.size() - 1);
     cluster_distributor& dist = m_dists[idx];
 
     /* Always/only 1 cluster per cluster distributor, so this is safe to do */
-    auto* clust = dist.block_clusters().front();
-    if (clust->capacity() == clust->block_count()) {
-      ER_DEBUG("Block%d to cluster%u failed: capacity (%u) reached",
+    RCSW_UNUSED auto clust_id = dist.block_clusters().front()->id();
+
+    if (dist.capacity() == dist.size()) {
+      ER_TRACE("Block%d to cluster%u failed: capacity (%zu) reached",
                block->id().v(),
-               idx,
-               clust->capacity());
-    } else {
-      ER_DEBUG("Block%d to cluster%u: capacity=%u,size=%zu",
-               block->id().v(),
-               idx,
-               clust->capacity(),
-               clust->block_count());
-      return dist.distribute_block(block, entities);
+               clust_id.v(),
+               dist.capacity());
+      continue;
     }
+
+    ER_DEBUG("Block%d to cluster%u: capacity=%zu,size=%zu",
+             block->id().v(),
+             clust_id.v(),
+             dist.capacity(),
+             dist.size());
+
+    return dist.distribute_block(block, entities);
   } /* for(i..) */
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(
-    void) const {
+cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(void) const {
   cfds::block3D_cluster_vector ret;
 
   for (auto& dist : m_dists) {
@@ -86,5 +96,14 @@ cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(
   } /* for(&dist..) */
   return ret;
 } /* block_clusters() */
+
+size_t multi_cluster_distributor::size(void) const {
+  return std::accumulate(std::begin(m_dists),
+                         std::end(m_dists),
+                         0,
+                         [&](size_t sum, const auto& dist) {
+                           return sum + dist.size();
+                         });
+} /* size() */
 
 NS_END(block_dist, foraging, cosm);

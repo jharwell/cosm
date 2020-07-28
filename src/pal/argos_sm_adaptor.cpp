@@ -53,16 +53,13 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
  * Member Functions
  ******************************************************************************/
 template <typename TArenaMap>
-void argos_sm_adaptor::arena_map_init(
-    const caconfig::arena_map_config* aconfig,
-    const cvconfig::visualization_config* vconfig) {
+void argos_sm_adaptor::arena_map_create(
+    const caconfig::arena_map_config* aconfig) {
   m_arena_map = std::make_unique<TArenaMap>(aconfig);
-  if (!m_arena_map->initialize(this, rng())) {
-    ER_ERR("Could not initialize arena map");
-    std::exit(EXIT_FAILURE);
-  }
-  m_arena_map->distribute_all_blocks();
+} /* arena_map_create() */
 
+void argos_sm_adaptor::arena_map_init(
+    const cvconfig::visualization_config* vconfig) {
   /*
    * If null, visualization has been disabled.
    */
@@ -71,6 +68,12 @@ void argos_sm_adaptor::arena_map_init(
       block->vis_id(vconfig->block_id);
     } /* for(&block..) */
   }
+
+  if (!m_arena_map->initialize(this, rng())) {
+    ER_ERR("Could not initialize arena map");
+    std::exit(EXIT_FAILURE);
+  }
+  m_arena_map->distribute_all_blocks();
 } /* arena_map_init() */
 
 crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
@@ -99,11 +102,9 @@ argos::CColor argos_sm_adaptor::GetFloorColor(
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template void argos_sm_adaptor::arena_map_init<carena::base_arena_map>(
-    const caconfig::arena_map_config* aconfig,
-    const cvconfig::visualization_config* vconfig);
-template void argos_sm_adaptor::arena_map_init<carena::caching_arena_map>(
-    const caconfig::arena_map_config* aconfig,
-    const cvconfig::visualization_config* vconfig);
+template void argos_sm_adaptor::arena_map_create<carena::base_arena_map>(
+    const caconfig::arena_map_config* aconfig);
+template void argos_sm_adaptor::arena_map_create<carena::caching_arena_map>(
+    const caconfig::arena_map_config* aconfig);
 
 NS_END(pal, cosm);

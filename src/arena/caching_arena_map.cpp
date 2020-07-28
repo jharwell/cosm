@@ -56,6 +56,7 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
    * they actually are invisible.
    */
   for (auto& c : caches) {
+    sm->AddEntity(*c->light());
     medium.AddEntity(*c->light());
   } /* for(&c..) */
 
@@ -67,43 +68,13 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
   ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_cacheso.size());
 } /* caches_add() */
 
-rtypes::type_uuid caching_arena_map::robot_on_block(
-    const rmath::vector2d& pos,
-    const rtypes::type_uuid& ent_id) const {
-  /*
-   * Caches hide blocks, add even though a robot may technically be standing on
-   * a block, if it is also standing in a cache, that takes priority.
-   */
-  auto cache_id = robot_on_cache(pos);
-  if (rtypes::constants::kNoUUID != cache_id) {
-    ER_TRACE("Block hidden by cache%d", cache_id.v());
-    return rtypes::constants::kNoUUID;
-  }
-  return base_arena_map::robot_on_block(pos, ent_id);
-} /* robot_on_block() */
-
-rtypes::type_uuid caching_arena_map::robot_on_cache(
-    const rmath::vector2d& pos) const {
-  /*
-   * We can't use the ID of the cache to index into the caches vector like we
-   * can for blocks, because the ID is not guaranteed to be equal to the
-   * index. So we do a linear scan, which shouldn't be that expensive because
-   * there aren't ever that many caches in the arena.
-   */
-  for (auto& c : m_cacheso) {
-    if (c->contains_point2D(pos)) {
-      return c->id();
-    }
-  } /* for(&c..) */
-  return rtypes::constants::kNoUUID;
-} /* robot_on_cache() */
-
 void caching_arena_map::cache_remove(repr::arena_cache* victim,
                                      pal::argos_sm_adaptor* sm) {
   /* Remove light for cache from ARGoS */
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
   medium.RemoveEntity(*victim->light());
+  sm->RemoveEntity(*victim->light());
 
   ER_ASSERT(m_cachesno.size() == m_cacheso.size(),
             "Owned and access cache vectors have different sizes: %zu != %zu",
@@ -141,6 +112,37 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
             "Cache%d not removed from owned vector",
             id.v());
 } /* cache_remove() */
+
+rtypes::type_uuid caching_arena_map::robot_on_block(
+    const rmath::vector2d& pos,
+    const rtypes::type_uuid& ent_id) const {
+  /*
+   * Caches hide blocks, add even though a robot may technically be standing on
+   * a block, if it is also standing in a cache, that takes priority.
+   */
+  auto cache_id = robot_on_cache(pos);
+  if (rtypes::constants::kNoUUID != cache_id) {
+    ER_TRACE("Block hidden by cache%d", cache_id.v());
+    return rtypes::constants::kNoUUID;
+  }
+  return base_arena_map::robot_on_block(pos, ent_id);
+} /* robot_on_block() */
+
+rtypes::type_uuid caching_arena_map::robot_on_cache(
+    const rmath::vector2d& pos) const {
+  /*
+   * We can't use the ID of the cache to index into the caches vector like we
+   * can for blocks, because the ID is not guaranteed to be equal to the
+   * index. So we do a linear scan, which shouldn't be that expensive because
+   * there aren't ever that many caches in the arena.
+   */
+  for (auto& c : m_cacheso) {
+    if (c->contains_point2D(pos)) {
+      return c->id();
+    }
+  } /* for(&c..) */
+  return rtypes::constants::kNoUUID;
+} /* robot_on_cache() */
 
 void caching_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
   maybe_lock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));

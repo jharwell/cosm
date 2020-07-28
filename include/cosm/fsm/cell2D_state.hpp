@@ -61,8 +61,15 @@ class cell2D_state {
     ekST_HAS_CACHE,
 
     /**
+     * \brief The cell does not contain a block, but is part of the 2D extent
+     * occupied by a block, in which case it contains a reference to the block
+     * it is part of.
+     */
+    ekST_BLOCK_EXTENT,
+
+    /**
      * \brief The cell does not contain a cache, but is part of the 2D space
-     * occupied by a cache, in which case it also contains a reference to the
+     * occupied by a cache, in which case it contains a reference to the
      * cache it is a part of.
      */
     ekST_CACHE_EXTENT,

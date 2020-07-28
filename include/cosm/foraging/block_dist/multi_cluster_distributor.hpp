@@ -44,15 +44,16 @@ NS_START(cosm, foraging, block_dist);
  *
  * \brief Distributes a block or set of blocks within the set of specified
  * clusters bounds randomly, using \ref cluster_distributor within
- * each cluster to do the actual distribution.
+ * each cluster to do the actual distribution. All child clusters/distributors
+ * have the same maximum capacity.
  */
 class multi_cluster_distributor final : public rer::client<multi_cluster_distributor>,
                                         public base_distributor {
  public:
-  multi_cluster_distributor(std::vector<cds::arena_grid::view>& grids,
-                            rtypes::discretize_ratio resolution,
-                            uint maxsize,
-                            rmath::rng* rng_in);
+  multi_cluster_distributor(const std::vector<cds::arena_grid::view>& grids,
+                            cds::arena_grid* arena_grid,
+                            size_t capacity,
+                            rmath::rng* rng);
 
   /* not copy constructible or copy assignable by default */
   multi_cluster_distributor& operator=(const multi_cluster_distributor&) = delete;
@@ -61,6 +62,8 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   cfds::block3D_cluster_vector block_clusters(void) const override;
   dist_status distribute_block(crepr::base_block3D* block,
                                cds::const_spatial_entity_vector& entities) override;
+  size_t capacity(void) { return m_dists.size() * m_dists[0].capacity(); }
+  size_t size(void) const;
 
  private:
   /* clang-format off */

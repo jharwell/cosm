@@ -51,7 +51,7 @@ NS_START(cosm, controller);
 class block_carrying_controller {
  public:
   block_carrying_controller(void) = default;
-  virtual ~block_carrying_controller(void) = default;
+  virtual ~block_carrying_controller(void);
 
   /* Not copy constructable/assignable by default */
   block_carrying_controller(const block_carrying_controller&) = delete;

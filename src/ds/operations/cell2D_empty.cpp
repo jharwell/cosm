@@ -46,7 +46,7 @@ void cell2D_empty::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void cell2D_empty::visit(cds::arena_grid& grid) {
-  visit(grid.access<arena_grid::kCell>(x(), y()));
+  visit(grid.access<arena_grid::kCell>(coord()));
 } /* visit() */
 
 NS_END(operations, ds, cosm);

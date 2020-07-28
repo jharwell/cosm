@@ -25,11 +25,13 @@
 
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/cache_extent_clear.hpp"
+#include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
+#include "cosm/arena/operations/free_block_drop.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -66,16 +68,13 @@ void cached_block_pickup::visit(cfsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void cached_block_pickup::visit(cds::cell2D& cell) {
-  ER_ASSERT(0 != cell.loc().x() && 0 != cell.loc().y(),
-            "Cell does not have coordinates");
-  ER_ASSERT(cell.state_has_cache(), "Cell does not have cache");
-  if (nullptr != m_orphan_block) {
-    cell.entity(m_orphan_block);
-    ER_DEBUG("Cell@%s gets orphan block%d after cache depletion",
-             cell.loc().to_str().c_str(),
-             m_orphan_block->id().v());
-  }
+  ER_ASSERT(cell.state_has_cache(), "Cell@%s not in HAS_CACHE [state=%d]",
+            rcppsw::to_string(cell.loc()).c_str(),
+            cell.fsm().current_state());
   visit(cell.fsm());
+  ER_ASSERT(cell.state_has_cache(), "Cell@%s not in HAS_CACHE [state=%d]",
+            rcppsw::to_string(cell.loc()).c_str(),
+            cell.fsm().current_state());
 } /* visit() */
 
 void cached_block_pickup::visit(carepr::arena_cache& cache) {
@@ -125,11 +124,6 @@ void cached_block_pickup::visit(caching_arena_map& map) {
      */
     visit(cell);
 
-    ER_ASSERT(cell.state_has_cache(),
-              "Cache host cell@%s with >= %zu blocks not in HAS_CACHE",
-              rcppsw::to_string(coord()).c_str(),
-              base_cache::kMinBlocks);
-
     ER_INFO("Block%d picked up from cache%d@%s,remaining=[%s] (%zu)",
             m_pickup_block->id().v(),
             cache_id.v(),
@@ -139,23 +133,43 @@ void cached_block_pickup::visit(caching_arena_map& map) {
   } else {
     /* Already holding cache mutex */
     visit(*m_real_cache);
+    ER_ASSERT(1 == m_real_cache->blocks().size(),
+              "Cache%d@%s incorrect # blocks: %zu != 1",
+              m_real_cache->id().v(),
+              rcppsw::to_string(m_real_cache->dcenter2D()).c_str(),
+              m_real_cache->blocks().size());
     m_orphan_block = m_real_cache->oldest_block();
 
-    /*
-     * Do not need to hold grid mutex because all caches have a unique location,
-     * and when this one is depleted there will still be a block on the host
-     * cell, so block distribution will avoid it regardless.
-     */
-    visit(cell);
+    map.grid_mtx()->lock();
+
+    /* Clear the cache extent cells (already holding cache mutex) */
+    cache_extent_clear_visitor clear_op1(m_real_cache);
+    clear_op1.visit(map.decoratee());
+
+    /* clear cache host cell */
+    cdops::cell2D_empty_visitor clear_op2(coord());
+    clear_op2.visit(cell);
+
+    /* "Drop" orphan block on the old cache host cell */
+    caops::free_block_drop_visitor drop_op(m_orphan_block,
+                                           coord(),
+                                           map.grid_resolution(),
+                                           arena_map_locking::ekCACHES_AND_GRID_HELD);
+    drop_op.visit(cell);
+
+    /* set block extent cells for the orphan block */
+    block_extent_set_visitor set_op(m_orphan_block);
+    set_op.visit(map.decoratee());
+
+    map.grid_mtx()->unlock();
 
     ER_ASSERT(cell.state_has_block(),
               "Depleted cache host cell@%s not in HAS_BLOCK",
               rcppsw::to_string(coord()).c_str());
-
-    /* Already holding cache mutex */
-    cache_extent_clear op(coord(), m_real_cache);
-    op.visit(map);
-    map.access<cds::arena_grid::kCell>(coord()).color(rutils::color::kBLACK);
+    ER_ASSERT(cell.block3D() == m_orphan_block,
+              "Cell@%s does not refer to orphan block%d",
+              rcppsw::to_string(coord()).c_str(),
+              m_orphan_block->id().v());
 
     /* Already holding cache mutex */
     map.cache_remove(m_real_cache, m_sm);
@@ -164,6 +178,9 @@ void cached_block_pickup::visit(caching_arena_map& map) {
             m_pickup_block->id().v(),
             cache_id.v(),
             rcppsw::to_string(coord()).c_str());
+    ER_INFO("Orphan block%d@%s released to arena",
+            m_orphan_block->id().v(),
+            rcppsw::to_string(m_orphan_block->danchor2D()).c_str());
   }
   /* finally, update state of arena map owned pickup block */
   visit(*m_pickup_block, &map);

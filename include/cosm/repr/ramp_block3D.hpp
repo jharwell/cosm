@@ -58,7 +58,7 @@ class ramp_block3D final : public base_block3D {
                : base_block3D(id,
                               dim,
                               arena_res,
-                              rutils::color::kBLUE,
+                              rutils::color::kBLACK,
                               crepr::block_type::ekRAMP) {}
 
   std::unique_ptr<base_block3D> clone(void) const override {

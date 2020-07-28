@@ -61,8 +61,10 @@ NS_START(cosm, repr);
 template <class T>
 class grid_view_entity : public crepr::entity2D {
  public:
-  grid_view_entity(const T& view, const rtypes::discretize_ratio& resolution)
-      : mc_resolution(resolution), m_view(view) {}
+  grid_view_entity(const rtypes::type_uuid& id,
+                   const T& view,
+                   const rtypes::discretize_ratio& resolution)
+      : entity2D(id), mc_resolution(resolution), m_view(view) {}
 
   ~grid_view_entity(void) override = default;
 

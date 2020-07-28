@@ -49,8 +49,8 @@ NS_START(cosm, ds, operations);
  * \ingroup ds operations
  *
  * \brief Non-abstract interface specifying the minimum set of classes that all
- * operations that operate on \ref cell2D objects within an \ref ds::arena_grid need
- * to visit.
+ * operations that operate on \ref cell2D objects within an \ref ds::arena_grid
+ * need to visit.
  *
  * Also provided are the (x, y) coordinates of the cell to which the event is
  * directed. Not all derived operations may need them, but they are there.

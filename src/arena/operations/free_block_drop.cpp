@@ -30,6 +30,8 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/ds/operations/cell2D_block_extent.hpp"
+#include "cosm/arena/operations/block_extent_set.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -76,13 +78,13 @@ free_block_drop::free_block_drop(crepr::base_block3D* block,
       cell2D_op(coord),
       mc_resolution(resolution),
       mc_locking(locking),
-      mc_block(block) {}
+      m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void free_block_drop::visit(cds::cell2D& cell) {
-  visit(*mc_block);
+  visit(*m_block);
   visit(cell.fsm());
 
   /*
@@ -90,8 +92,8 @@ void free_block_drop::visit(cds::cell2D& cell) {
    * also triggered on block drops into caches.
    */
   if (cell.state_has_block()) {
-    cell.entity(mc_block);
-    cell.color(rutils::color::kBLACK);
+    cell.entity(m_block);
+    cell.color(m_block->md()->color());
   }
 } /* visit() */
 
@@ -120,9 +122,10 @@ void free_block_drop::visit(base_arena_map& map) {
   map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, mc_block, rloc);
+  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
 
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
+
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
@@ -131,7 +134,7 @@ void free_block_drop::visit(base_arena_map& map) {
    * cache.
    */
   if (cell.state_has_block() || conflict) {
-    map.distribute_single_block(mc_block, arena_map_locking::ekALL_HELD);
+    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
   } else {
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
@@ -140,6 +143,10 @@ void free_block_drop::visit(base_arena_map& map) {
      * Holding arena map grid lock, block lock if locking enabled.
      */
     visit(cell);
+
+    /* set block extent */
+    caops::block_extent_set_visitor e(m_block);
+    e.visit(map.decoratee());
   }
 
   map.maybe_unlock(map.grid_mtx(),
@@ -163,7 +170,7 @@ void free_block_drop::visit(caching_arena_map& map) {
   map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, mc_block, rloc);
+  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
 
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
@@ -178,7 +185,7 @@ void free_block_drop::visit(caching_arena_map& map) {
    * need to drop the block in the host cell for the cache.
    */
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
-    cache_block_drop_visitor op(mc_block,
+    cache_block_drop_visitor op(m_block,
                                 static_cast<carepr::arena_cache*>(cell.cache()),
                                 mc_resolution,
                                 arena_map_locking::ekALL_HELD);
@@ -186,7 +193,7 @@ void free_block_drop::visit(caching_arena_map& map) {
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || conflict) {
-    map.distribute_single_block(mc_block, arena_map_locking::ekALL_HELD);
+    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else {
@@ -199,6 +206,10 @@ void free_block_drop::visit(caching_arena_map& map) {
      * Holding arena map grid lock, block lock if locking enabled.
      */
     visit(cell);
+
+    /* set block extent */
+    caops::block_extent_set_visitor e(m_block);
+    e.visit(map.decoratee());
   }
 
   map.maybe_unlock(map.grid_mtx(),

@@ -1,7 +1,7 @@
 /**
- * \file block_carrying_controller.cpp
+ * \file cell2D_block_extent.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,32 +21,41 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/controller/block_carrying_controller.hpp"
+#include "cosm/ds/operations/cell2D_block_extent.hpp"
 
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/ds/arena_grid.hpp"
+#include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller);
+NS_START(cosm, ds, operations, detail);
+using cds::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-block_carrying_controller::~block_carrying_controller(void) = default;
+cell2D_block_extent::cell2D_block_extent(const rmath::vector2z& coord,
+                                         crepr::base_block3D* block)
+    : cell2D_op(coord), m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_carrying_controller::reset(void) { m_block.reset(); }
+void cell2D_block_extent::visit(cds::cell2D& cell) {
+  cell.entity(m_block);
+  visit(cell.fsm());
+  cell.color(m_block->md()->color());
+} /* visit() */
 
-void block_carrying_controller::block(std::unique_ptr<crepr::base_block3D> block) {
-  m_block = std::move(block);
-}
+void cell2D_block_extent::visit(fsm::cell2D_fsm& fsm) {
+  fsm.event_block_extent();
+} /* visit() */
 
-std::unique_ptr<crepr::base_block3D> block_carrying_controller::block_release(
-    void) {
-  return std::move(m_block);
-}
 
-NS_END(controller, cosm);
+void cell2D_block_extent::visit(cds::arena_grid& grid) {
+  visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
+} /* visit() */
+
+NS_END(detail, operations, ds, cosm);

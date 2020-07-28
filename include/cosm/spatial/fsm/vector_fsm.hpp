@@ -102,10 +102,10 @@ class vector_fsm final : public csfsm::util_hfsm,
 
     /**
      * Recovering from frequent interference avoidance by driving AWAY from the
-     * site of the most recent interference in a random direction for a set number
-     * of timesteps. This is intended to help prevent robot's from wasting lots
-     * of time butting heads when they are traveling in opposite/spatially
-     * conflicting directions.
+     * site of the most recent interference in a random direction for a set
+     * number of timesteps. This is intended to help prevent robot's from
+     * wasting lots of time butting heads when they are traveling in
+     * opposite/spatially conflicting directions.
      */
     ekST_INTERFERENCE_RECOVERY,
 

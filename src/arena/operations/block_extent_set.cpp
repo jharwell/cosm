@@ -1,7 +1,7 @@
 /**
- * \file free_block_pickup.cpp
+ * \file block_extent_set.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,13 +21,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/operations/free_block_pickup.hpp"
+#include "cosm/arena/operations/block_extent_set.hpp"
 
-#include "cosm/arena/base_arena_map.hpp"
-#include "cosm/ds/operations/cell2D_empty.hpp"
+#include "cosm/ds/arena_grid.hpp"
 #include "cosm/repr/base_block3D.hpp"
-#include "cosm/repr/operations/block_pickup.hpp"
-#include "cosm/arena/operations/block_extent_clear.hpp"
+#include "cosm/ds/cell2D.hpp"
+#include "cosm/ds/operations/cell2D_block_extent.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,44 +36,37 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_pickup::free_block_pickup(crepr::base_block3D* block,
-                                     const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
-    : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
-      cell2D_op(block->danchor2D()),
-      mc_robot_id(robot_id),
-      mc_timestep(t),
+block_extent_set::block_extent_set(crepr::base_block3D* block)
+    : ER_CLIENT_INIT("cosm.arena.operations.block_extent_set"),
       m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(base_arena_map& map) {
-  ER_ASSERT(!m_block->is_out_of_sight(),
-            "Block%d out of sight on pickup",
-            m_block->id().v());
+void block_extent_set::visit(cds::arena_grid& grid) {
+  auto xspan = m_block->xdspan();
+  auto yspan = m_block->ydspan();
 
-  caops::block_extent_clear_visitor ec(m_block);
-  cdops::cell2D_empty_visitor hc(coord());
+  /*
+   * To reset all cells covered by the block's extent, we simply send them a
+   * CELL_EMPTY event, EXCEPT for the cell that hosts the actual block, which is
+   * not part of the extent.
+   */
+  for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
+    for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
+      rmath::vector2z c = rmath::vector2z(i, j);
+      auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
+      if (c != m_block->danchor2D()) {
+        ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),
+                  "Cell@%s not unknown or empty [state=%d]",
+                  rcppsw::to_string(c).c_str(),
+                  cell.fsm().current_state());
 
-  map.grid_mtx()->lock();
-
-  /* mark host cell as empty (not done as part of clearing block extent)  */
-  hc.visit(map.decoratee());
-
-  /* clear block extent */
-  ec.visit(map.decoratee());
-
-  map.grid_mtx()->unlock();
-
-  /* Update block state--already holding block mutex */
-  crops::block_pickup block_op(mc_robot_id, mc_timestep);
-  block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
-
-  ER_INFO("Robot%u: block%d@%s",
-          mc_robot_id.v(),
-          m_block->id().v(),
-          rcppsw::to_string(coord()).c_str());
+        cdops::cell2D_block_extent_visitor e(c, m_block);
+        e.visit(grid);
+      }
+    } /* for(j..) */
+  }   /* for(i..) */
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

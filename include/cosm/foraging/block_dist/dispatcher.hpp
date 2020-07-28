@@ -38,6 +38,7 @@
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -66,7 +67,7 @@ class base_distributor;
  * - Single and dual source distribution assumes left-right rectangular arena.
  * - Power law, quad source, random distribution assume square arena.
  */
-class dispatcher {
+class dispatcher : public rer::client<dispatcher> {
  public:
   static constexpr const char kDistSingleSrc[] = "single_source";
   static constexpr const char kDistRandom[] = "random";
@@ -81,15 +82,22 @@ class dispatcher {
 
   dispatcher(const dispatcher&) = delete;
   dispatcher& operator=(const dispatcher&) = delete;
+  const std::string& dist_type(void) { return mc_dist_type; }
 
   /**
    * \brief Initialize the selected block distributor. This is a separate
    * function, rather than happening in the constructor, so that error handling
    * can be done without exceptions.
    *
+   * \param entities The entities that (might) need to be avoided when clusters
+   *                 are initialized.
+   * \param block_bb A bounding box large enough to hold any block in the
+   *                 arena.
    * \return \c TRUE if initialization successful, \c FALSE otherwise.
    */
-  bool initialize(rmath::rng* rng);
+  bool initialize(const cds::const_spatial_entity_vector& entities,
+                  const rmath::vector3d& block_bb,
+                  rmath::rng* rng);
 
   /**
    * \brief Distribute a block in the arena.

@@ -1,5 +1,5 @@
 /**
- * \file cache_extent_clear.hpp
+ * \file cache_extent_set.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_CLEAR_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_CLEAR_HPP_
+#ifndef INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_
+#define INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_
 
 /*******************************************************************************
  * Includes
@@ -34,9 +34,12 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::arena::repr {
+namespace cosm::arena {
+class caching_arena_map;
+
+namespace repr {
 class arena_cache;
-}
+}}
 
 namespace cosm::ds {
 class arena_grid;
@@ -48,17 +51,16 @@ NS_START(cosm, arena, operations, detail);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cache_extent_clear
+ * \class cache_extent_set
  * \ingroup arena operations
  *
- * \brief Clear the cells that a cache covers while in the arena that are in
- * CACHE_EXTENT state, resetting them to EMPTY. Called right before deleting
- * the cache from the arena.
+ * \brief Set the cells that a cache covers while in the arena from an empty or
+ * unknown state to the CACHE_EXTENT state.
  *
  * \note This operation requires holding the cache and grid mutexes in
  *       multithreaded contexts.
  */
-class cache_extent_clear : public rer::client<cache_extent_clear> {
+class cache_extent_set : public rer::client<cache_extent_set> {
  private:
   struct visit_typelist_impl {
     using value = rmpl::typelist<cds::arena_grid>;
@@ -67,15 +69,15 @@ class cache_extent_clear : public rer::client<cache_extent_clear> {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  explicit cache_extent_clear(carepr::arena_cache* victim);
-  cache_extent_clear& operator=(const cache_extent_clear&) = delete;
-  cache_extent_clear(const cache_extent_clear&) = delete;
+  explicit cache_extent_set(carepr::arena_cache* cache);
+  cache_extent_set& operator=(const cache_extent_set&) = delete;
+  cache_extent_set(const cache_extent_set&) = delete;
 
   void visit(cds::arena_grid& grid);
 
  private:
   /* clang-format off */
-  carepr::arena_cache* m_victim;
+  carepr::arena_cache* m_cache;
   /* clang-format on */
 };
 
@@ -83,13 +85,13 @@ NS_END(detail);
 
 
 /**
- * \brief We use the precise visitor in order to force compile errors if a call to
- * a visitor is made that involves a visitee that is not in our visit set
+ * \brief We use the precise visitor in order to force compile errors if a call
+ * to a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using cache_extent_clear_visitor = rpvisitor::filtered_visitor<detail::cache_extent_clear>;
+using cache_extent_set_visitor = rpvisitor::filtered_visitor<detail::cache_extent_set>;
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_CLEAR_HPP_ */
+#endif /* INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_ */

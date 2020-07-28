@@ -63,12 +63,6 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
           ydsize(),
           grid_resolution().v());
 
-  /* initialize non-owning block vector exposed to outside classes */
-  for (auto& b : m_blockso) {
-    m_blocksno.push_back(b.get());
-  } /* for(&b..) */
-
-  /* initialize nest(s) */
   ER_INFO("Initialize %zu nests", config->nests.nests.size());
   for (auto& nest : config->nests.nests) {
     crepr::nest inst(nest.dims,
@@ -86,19 +80,35 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
     /* update host cell */
     m_nests.emplace(inst.id(), inst);
   } /* for(&nest..) */
+
+  /* initialize non-owning block vector exposed to outside classes */
+  for (auto& b : m_blockso) {
+    m_blocksno.push_back(b.get());
+  } /* for(&b..) */
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 bool base_arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
+  /* compute block bounding box */
+  auto* block = *std::max_element(m_blocksno.begin(),
+                                 m_blocksno.end(),
+                                 [&](const auto* b1,
+                                     const auto* b2) {
+                                   return b1->rdim3D() < b2->rdim3D();
+                                 });
+  m_block_bb = block->rdim3D();
+
+  /* initialize nest lights */
   for (auto& pair : m_nests) {
     for (auto& l : pair.second.lights()) {
       sm->AddEntity(*l);
     } /* for(&l..) */
   }   /* for(&pair..) */
 
-  return m_block_dispatcher.initialize(rng);
+  auto precalc = block_dist_precalc(nullptr);
+  return m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, rng);
 } /* initialize() */
 
 rtypes::type_uuid base_arena_map::robot_on_block(
@@ -153,7 +163,19 @@ void base_arena_map::distribute_all_blocks(void) {
   /* calculate the entities to avoid during distribution */
   auto precalc = block_dist_precalc(nullptr);
 
-  auto status = m_block_dispatcher.distribute_blocks(m_blocksno, precalc.avoid_ents);
+  /*
+   * If we did deferred arena map initialization, some blocks might already be
+   * in use in caches, so we don't distribute them.
+   */
+  cds::block3D_vectorno dist_blocks;
+  std::copy_if(m_blocksno.begin(),
+               m_blocksno.end(),
+               std::back_inserter(dist_blocks),
+               [&](const auto* block) { return block->is_out_of_sight();
+               });
+
+  auto status = m_block_dispatcher.distribute_blocks(dist_blocks,
+                                                     precalc.avoid_ents);
   ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
             "Unable to perform initial block distribution");
   /*
@@ -165,7 +187,8 @@ void base_arena_map::distribute_all_blocks(void) {
     for (size_t j = 0; j < ydsize(); ++j) {
       cds::cell2D& cell = access<cds::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
-          !cell.state_in_cache_extent() && !cell.state_in_nest_extent()) {
+          !cell.state_in_cache_extent() && !cell.state_in_nest_extent() &&
+          !cell.state_in_block_extent()) {
         cdops::cell2D_empty_visitor op(cell.loc());
         op.visit(cell);
       }
