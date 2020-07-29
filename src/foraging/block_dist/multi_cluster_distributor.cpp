@@ -60,10 +60,13 @@ dist_status multi_cluster_distributor::distribute_block(
           m_dists.size(),
           capacity(),
           size());
-  for (size_t i = 0; i < kMAX_DIST_TRIES; ++i) {
-    /* -1 because we are working with array indices */
-    size_t idx = rng()->uniform(0UL, m_dists.size() - 1);
-    cluster_distributor& dist = m_dists[idx];
+
+
+  /* -1 because we are working with array indices */
+  size_t start = rng()->uniform(0UL, m_dists.size() - 1);
+
+  for (size_t i = 0; i < m_dists.size(); ++i) {
+    cluster_distributor& dist = m_dists[(start + i) % m_dists.size()];
 
     /* Always/only 1 cluster per cluster distributor, so this is safe to do */
     RCSW_UNUSED auto clust_id = dist.block_clusters().front()->id();
@@ -81,8 +84,17 @@ dist_status multi_cluster_distributor::distribute_block(
              clust_id.v(),
              dist.capacity(),
              dist.size());
-
-    return dist.distribute_block(block, entities);
+    double fill = static_cast<double>(dist.size()) /
+                  static_cast<double>(dist.capacity());
+    if (fill > 0.5) {
+      dist.coord_search_policy(coord_search_policy::ekFREE_CELL);
+    } else {
+      dist.coord_search_policy(coord_search_policy::ekRANDOM);
+    }
+    auto status = dist.distribute_block(block, entities);
+    if (dist_status::ekSUCCESS == status) {
+      return status;
+    }
   } /* for(i..) */
   return dist_status::ekFAILURE;
 } /* distribute_block() */

@@ -69,6 +69,9 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }
   rmath::vector2z danchor2D(void) const { return m_clust.danchor2D(); }
   size_t size(void) const { return m_clust.block_count(); }
+  void coord_search_policy(coord_search_policy policy) {
+    m_impl.coord_search_policy(policy);
+  }
 
  private:
   /* clang-format off */

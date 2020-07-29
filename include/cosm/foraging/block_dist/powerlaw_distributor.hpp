@@ -26,13 +26,12 @@
  ******************************************************************************/
 #include <vector>
 #include <memory>
-#include <boost/optional.hpp>
 
 #include "rcppsw/math/binned_powerlaw_distribution.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/foraging/block_dist/base_distributor.hpp"
-#include "cosm/foraging/repr/block_cluster_params.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -77,59 +76,14 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
    * map locations and compositional block distributors into internal data
    * structures.
    *
-   * \param entities The entities to avoid during cluster mapping.
-   * \param block_bb The bounding box large enough to hold any block which might
-   *                 be distributed in the arena.
-   *
-   * \return \c TRUE iff clusters were mapped successfully, \c FALSE otherwise.
+   * \param c_entities The entities to avoid during cluster mapping.
+   * \param c_block_bb The bounding box large enough to hold any block which might
+   *                   be distributed in the arena.
    */
-  bool initialize(const cds::const_spatial_entity_vector& entities,
-                  const rmath::vector3d& block_bb);
+  void initialize(const cds::const_spatial_entity_vector& c_entities,
+                  const rmath::vector3d& c_block_bb);
 
  private:
-  struct cluster_placement {
-    rtypes::type_uuid     id;
-    cds::arena_grid::view view;
-    rmath::rangez         xrange;
-    rmath::rangez         yrange;
-    size_t                capacity;
-  };
-
-  using cluster_placements = std::vector<cluster_placement>;
-
-  /**
-   * \brief Assign cluster centers randomly, with the only restriction that the
-   * edges of each cluster are within the boundaries of the arena.
-   *
-   * \param clust_sizes Vector of powers of 2 for the cluster sizes.
-   */
-  cluster_placements cluster_placements_guess(const std::vector<size_t>& clust_sizes,
-                                              const rmath::vector3d& block_bb);
-
-  /**
-   * \brief Verify that no cluster placements cause overlap, after guessing
-   * initial locations. No overlap with OTHER existing entities in the arena is
-   * checked.
-   *
-   * \param placements Possible list of cluster placements.
-   *
-   * \return \c TRUE if the cluster distribute is valid, \c FALSE otherwise.
-   */
-  bool cluster_placements_check(const cluster_placements& placements,
-                                const cds::const_spatial_entity_vector& entities) RCSW_PURE;
-
-  /**
-   * \brief Perform a "guess and check" cluster placement until you get a
-   * distribution without overlap, or \ref kMAX_DIST_TRIES is exceeded,
-   * whichever happens first.
-   *
-   * Cluster sizes are drawn from the internal power law distribution.
-   */
-  boost::optional<cluster_placements> cluster_placements_calc(
-      const cds::const_spatial_entity_vector& entities,
-      const rmath::vector3d& block_bb,
-      size_t n_clusters);
-
   /* clang-format off */
   size_t                                                  m_n_clusters{0};
   std::vector<std::unique_ptr<multi_cluster_distributor>> m_dists{};

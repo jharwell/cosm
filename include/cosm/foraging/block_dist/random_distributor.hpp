@@ -29,12 +29,13 @@
 #include <boost/optional.hpp>
 #include <memory>
 
+#include "rcppsw/types/discretize_ratio.hpp"
+#include "rcppsw/math/vector2.hpp"
+
 #include "cosm/cosm.hpp"
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
-#include "rcppsw/types/discretize_ratio.hpp"
-
-#include "rcppsw/math/vector2.hpp"
+#include "cosm/foraging/block_dist/coord_search_policy.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -83,6 +84,8 @@ class random_distributor : public rer::client<random_distributor>,
 
   cfds::block3D_cluster_vector block_clusters(void) const override { return {}; }
 
+  void coord_search_policy(coord_search_policy policy) { m_search_policy = policy; }
+
  private:
   struct coord_search_res_t {
     rmath::vector2z rel{};
@@ -95,9 +98,9 @@ class random_distributor : public rer::client<random_distributor>,
    *
    * \param entities The entities to avoid.
    */
-  boost::optional<coord_search_res_t> avail_coord_search(
-      const cds::const_spatial_entity_vector& entities,
-      const rmath::vector2d& block_dim);
+  boost::optional<coord_search_res_t> coord_search(
+      const cds::const_spatial_entity_vector& c_entities,
+      const rmath::vector2d& c_block_dim);
 
   /**
    * \brief Once a block has been distributed, perform distribution sanity
@@ -111,10 +114,27 @@ class random_distributor : public rer::client<random_distributor>,
                          const cds::const_spatial_entity_vector& entities,
                          const cds::cell2D* cell) RCSW_PURE;
 
+  boost::optional<coord_search_res_t> coord_search_random(
+      const rcppsw::math::rangez& c_xrange,
+      const rcppsw::math::rangez& c_yrange,
+      const cds::const_spatial_entity_vector& c_entities,
+      const rmath::vector2d& c_block_dim);
+
+  boost::optional<coord_search_res_t> coord_search_free_cell(
+      const rcppsw::math::rangez& c_xrange,
+      const rcppsw::math::rangez& c_yrange,
+      const cds::const_spatial_entity_vector& c_entities,
+      const rmath::vector2d& c_block_dim);
+
+  bool coord_conflict_check(const rmath::vector2z& c_coord,
+                            const cds::const_spatial_entity_vector& c_entities,
+                            const rmath::vector2d& c_block_dim) const;
   /* clang-format off */
   const rmath::vector2z          mc_origin;
   const rmath::rangeu            mc_xspan;
   const rmath::rangeu            mc_yspan;
+
+  enum coord_search_policy       m_search_policy{coord_search_policy::ekRANDOM};
   cds::arena_grid::view          m_area;
   /* clang-format on */
 };

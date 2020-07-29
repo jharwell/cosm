@@ -135,15 +135,11 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
     auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,
                                                     m_grid,
                                                     rng);
-    ER_CHECK(p->initialize(entities, block_bb),
-             "Failed to initialize powerlaw distributor");
+    p->initialize(entities, block_bb),
     m_dist = std::move(p);
   }
   /* clang-format on */
   return true;
-
-error:
-  return false;
 } /* initialize() */
 
 dist_status dispatcher::distribute_block(crepr::base_block3D* block,

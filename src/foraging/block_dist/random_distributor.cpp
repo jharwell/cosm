@@ -62,7 +62,7 @@ random_distributor::random_distributor(const cds::arena_grid::view& area,
 dist_status random_distributor::distribute_block(crepr::base_block3D* block,
                                                  cds::const_spatial_entity_vector& entities) {
   cds::cell2D* cell = nullptr;
-  auto coords = avail_coord_search(entities, block->rdim2D());
+  auto coords = coord_search(entities, block->rdim2D());
   if (!coords) {
     ER_WARN("Unable to find distribution coordinates for block%d",
             block->id().v());
@@ -171,7 +171,7 @@ bool random_distributor::verify_block_dist(
               "Placement conflict for block%d@%s/%s after distribution",
               block->id().v(),
               rcppsw::to_string(block->ranchor2D()).c_str(),
-              rcppsw::to_string(block->ranchor2D()).c_str());
+              rcppsw::to_string(block->danchor2D()).c_str());
   } /* for(&e..) */
   return true;
 
@@ -180,8 +180,8 @@ error:
 } /* verify_block_dist() */
 
 boost::optional<typename random_distributor::coord_search_res_t> random_distributor::
-    avail_coord_search(const cds::const_spatial_entity_vector& entities,
-                       const rmath::vector2d& block_dim) {
+coord_search(const cds::const_spatial_entity_vector& c_entities,
+                   const rmath::vector2d& c_block_dim) {
   /* -1 because we are working with array indices */
   rcppsw::math::rangez area_xrange(m_area.index_bases()[0],
                                    m_area.shape()[0] - 1);
@@ -191,9 +191,30 @@ boost::optional<typename random_distributor::coord_search_res_t> random_distribu
   ER_INFO("Coordinate search: rel_xrange=%s,rel_yrange=%s,block_dim=%s,n_entities=%zu",
           rcppsw::to_string(area_xrange).c_str(),
           rcppsw::to_string(area_yrange).c_str(),
-          rcppsw::to_string(block_dim).c_str(),
-          entities.size());
+          rcppsw::to_string(c_block_dim).c_str(),
+          c_entities.size());
 
+  if (coord_search_policy::ekFREE_CELL == m_search_policy) {
+    ER_INFO("Using FREE_CELL policy");
+    return coord_search_free_cell(area_xrange,
+                                  area_yrange,
+                                  c_entities,
+                                  c_block_dim);
+  } else if (coord_search_policy::ekRANDOM == m_search_policy) {
+    ER_INFO("Using RANDOM policy");
+    return coord_search_random(area_xrange,
+                               area_yrange,
+                               c_entities,
+                               c_block_dim);
+  }
+  return boost::none;
+} /* avail_coord_search() */
+
+boost::optional<random_distributor::coord_search_res_t> random_distributor::coord_search_random(
+    const rcppsw::math::rangez& c_xrange,
+    const rcppsw::math::rangez& c_yrange,
+    const cds::const_spatial_entity_vector& c_entities,
+    const rmath::vector2d& c_block_dim) {
   /*
    * Try to find an available set of relative+absolute coordinates such that if
    * the entity is placed there it will not overlap any other entities in the
@@ -201,33 +222,84 @@ boost::optional<typename random_distributor::coord_search_res_t> random_distribu
    */
   size_t count = 0;
   while (count++ < kMAX_DIST_TRIES) {
-    size_t x = area_xrange.span() > 0
-             ? rng()->uniform(area_xrange.lb(), area_xrange.ub())
-             : m_area.index_bases()[0];
-    size_t y = area_xrange.span() > 0
-             ? rng()->uniform(area_yrange.lb(), area_yrange.ub())
-             : m_area.index_bases()[1];
+    size_t x = c_xrange.span() > 0
+               ? rng()->uniform(c_xrange.lb(), c_xrange.ub())
+               : m_area.index_bases()[0];
+    size_t y = c_xrange.span() > 0
+               ? rng()->uniform(c_yrange.lb(), c_yrange.ub())
+               : m_area.index_bases()[1];
     rmath::vector2z rel(x, y);
     rmath::vector2z abs = mc_origin + rel;
 
-    auto check_conflict = [&](const auto* ent) {
-      rmath::vector2d abs_r = rmath::zvec2dvec(abs, arena_grid()->resolution().v());
-      utils::placement_status_t status;
-      if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
-        status = utils::placement_conflict2D(
-            abs_r, block_dim, static_cast<const crepr::entity2D*>(ent));
-      } else {
-        status = utils::placement_conflict2D(
-            abs_r, block_dim, static_cast<const crepr::entity3D*>(ent));
-      }
-      return status.x_conflict && status.y_conflict;
-    };
-
-    if (std::none_of(entities.begin(), entities.end(), check_conflict)) {
-      return boost::make_optional(coord_search_res_t{rel, abs});
+    if (coord_conflict_check(abs, c_entities, c_block_dim)) {
+      coord_search_res_t coord = {rel, abs};
+      return boost::make_optional(coord);
     }
   } /* while() */
   return boost::none;
-} /* avail_coord_search() */
+} /* coord_search_random() */
+
+boost::optional<random_distributor::coord_search_res_t> random_distributor::coord_search_free_cell(
+    const rcppsw::math::rangez& c_xrange,
+    const rcppsw::math::rangez& c_yrange,
+    const cds::const_spatial_entity_vector& c_entities,
+    const rmath::vector2d& c_block_dim) {
+  std::vector<rmath::vector2z> rel_coords;
+  for (size_t i = c_xrange.lb(); i <= c_xrange.ub(); ++i) {
+    for (size_t j = c_yrange.lb(); j <= c_yrange.ub() ; ++j) {
+      auto& cell = m_area[i][j];
+      if (!cell.state_is_known() || cell.state_is_empty()) {
+        rel_coords.push_back({i, j});
+      }
+    } /* for(j..) */
+  } /* for(i..) */
+  size_t start = rng()->uniform(0UL, rel_coords.size() - 1);
+  for (size_t i = 0; i < rel_coords.size(); ++i) {
+    auto rel = rel_coords[(start + i) % rel_coords.size()];
+    auto abs = mc_origin + rel;
+    if (coord_conflict_check(abs, c_entities, c_block_dim)) {
+      coord_search_res_t coord = {rel, abs};
+      return boost::make_optional(coord);
+    }
+  } /* for(i..) */
+  return boost::none;
+} /* coord_search_free_cell() */
+
+bool random_distributor::coord_conflict_check(
+    const rmath::vector2z& c_coord,
+    const cds::const_spatial_entity_vector& c_entities,
+    const rmath::vector2d& c_block_dim) const {
+  rmath::vector2z ddim = rmath::dvec2zvec(c_block_dim,
+                                           arena_grid()->resolution().v());
+  rmath::rangez xrange(c_coord.x(), c_coord.x() + ddim.x());
+  rmath::rangez yrange(c_coord.y(), c_coord.y() + ddim.y());
+
+  /*
+   * If this distributor is part of a powerlaw distributor, blocks will not be
+   * packed very tightly together via checking real rather than discrete
+   * overlaps as is done below, because two blocks placed adjacently to each
+   * other MIGHT say they overlap even though they don't, because of floating
+   * point representation error, depending on block size and where they are
+   * located in the arena.
+   *
+   * @todo This should probably be fixed at some point, or at least made a
+   * user-controllable switch via input parameter.
+   */
+  auto check_conflict = [&](const auto* ent) {
+    utils::placement_status_t status;
+    rmath::vector2d abs_r = rmath::zvec2dvec(c_coord,
+                                             arena_grid()->resolution().v());
+    if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
+      status = utils::placement_conflict2D(
+          abs_r, c_block_dim, static_cast<const crepr::entity2D*>(ent));
+    } else {
+      status = utils::placement_conflict2D(
+          abs_r, c_block_dim, static_cast<const crepr::entity3D*>(ent));
+    }
+    return status.x_conflict && status.y_conflict;
+  };
+
+  return std::none_of(c_entities.begin(), c_entities.end(), check_conflict);
+} /* coord_conflict_check() */
 
 NS_END(block_dist, foraging, cosm);
