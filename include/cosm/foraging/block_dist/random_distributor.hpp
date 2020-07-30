@@ -28,6 +28,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include <memory>
+#include <limits>
 
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/math/vector2.hpp"
@@ -62,11 +63,17 @@ NS_START(foraging, block_dist);
 class random_distributor : public rer::client<random_distributor>,
                            public base_distributor {
  public:
-  random_distributor(const cds::arena_grid::view& arena,
+  random_distributor(const cds::arena_grid::view& area,
                      cds::arena_grid* arena_grid,
                      rmath::rng* rng);
 
   random_distributor& operator=(const random_distributor&) = delete;
+
+  /* distributor metrics (stub) */
+  size_t n_configured_clusters(void) const override { return 0; }
+  size_t n_mapped_clusters(void) const override { return 0; }
+  size_t capacity(void) const override { return 0; }
+  size_t size(void) const override { return 0; }
 
   /**
    * \brief Distribution a single block in the arena.

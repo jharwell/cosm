@@ -54,6 +54,8 @@
 #include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
+#include "cosm/foraging/block_dist/metrics/distributor_metrics.hpp"
+#include "cosm/foraging/block_dist/metrics/distributor_metrics_collector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -104,7 +106,8 @@ void base_metrics_aggregator::register_standard(
       rmpl::identity<csmetrics::goal_acq_metrics_collector>,
       rmpl::identity<cmetrics::blocks::transport_metrics_collector>,
       rmpl::identity<cconvergence::metrics::convergence_metrics_collector>,
-      rmpl::identity<ctvmetrics::population_dynamics_metrics_collector> >;
+    rmpl::identity<ctvmetrics::population_dynamics_metrics_collector>,
+    rmpl::identity<cfbd::metrics::distributor_metrics_collector> >;
   collector_registerer<>::creatable_set creatable_set = {
       {typeid(csmetrics::movement_metrics_collector),
        "fsm_movement",
@@ -129,6 +132,10 @@ void base_metrics_aggregator::register_standard(
       {typeid(ctvmetrics::population_dynamics_metrics_collector),
        "tv_population",
        "tv::population",
+       rmetrics::output_mode::ekAPPEND},
+      {typeid(cfbd::metrics::distributor_metrics_collector),
+       "block_distributor",
+       "blocks::distributor",
        rmetrics::output_mode::ekAPPEND}};
 
   collector_registerer<> registerer(mconfig, creatable_set, this);

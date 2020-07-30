@@ -67,6 +67,14 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   powerlaw_distributor(const powerlaw_distributor& ) = delete;
   powerlaw_distributor& operator=(const powerlaw_distributor&) = delete;
 
+  /* distributor metrics */
+  size_t n_configured_clusters(void) const override { return m_config_clusters; }
+  size_t n_mapped_clusters(void) const override {
+    return block_clusters().size();
+  }
+  size_t capacity(void) const override;
+  size_t size(void) const override;
+
   cfds::block3D_cluster_vector block_clusters(void) const override;
   dist_status distribute_block(crepr::base_block3D* block,
                                cds::const_spatial_entity_vector& entities) override;
@@ -77,15 +85,15 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
    * structures.
    *
    * \param c_entities The entities to avoid during cluster mapping.
-   * \param c_block_bb The bounding box large enough to hold any block which might
-   *                   be distributed in the arena.
+   * \param c_block_bb The bounding box large enough to hold any block which
+   *                   might be distributed in the arena.
    */
   void initialize(const cds::const_spatial_entity_vector& c_entities,
-                  const rmath::vector3d& c_block_bb);
+                  const rmath::vector3d& c_block_bb) RCSW_COLD;
 
  private:
   /* clang-format off */
-  size_t                                                  m_n_clusters{0};
+  size_t                                                  m_config_clusters{0};
   std::vector<std::unique_ptr<multi_cluster_distributor>> m_dists{};
   rcppsw::math::binned_powerlaw_distribution              m_pwrdist;
   /* clang-format on */

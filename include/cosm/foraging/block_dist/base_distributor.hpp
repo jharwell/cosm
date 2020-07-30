@@ -29,11 +29,13 @@
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
 #include "cosm/foraging/block_dist/dist_status.hpp"
+#include "cosm/foraging/block_dist/metrics/distributor_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -53,7 +55,7 @@ NS_START(cosm, foraging, block_dist);
  *
  * \brief Base class for block distributors to enable use of strategy pattern.
  */
-class base_distributor {
+class base_distributor : public cfbd::metrics::distributor_metrics {
  public:
   /**
    * \brief How many times to attempt to distribute all blocks before giving up,

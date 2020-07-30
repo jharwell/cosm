@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/foraging/block_dist/powerlaw_distributor.hpp"
 
+#include <map>
+
 #include "cosm/foraging/config/block_dist_config.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/foraging/block_dist/multi_cluster_distributor.hpp"
@@ -43,7 +45,7 @@ powerlaw_distributor::powerlaw_distributor(
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw"),
       base_distributor(grid, rng),
-      m_n_clusters(config->n_clusters),
+      m_config_clusters(config->n_clusters),
       m_pwrdist(config->pwr_min, config->pwr_max, 2) {}
 
 /*******************************************************************************
@@ -76,12 +78,13 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-void powerlaw_distributor::initialize(const cds::const_spatial_entity_vector& c_entities,
-                                      const rmath::vector3d& c_block_bb) {
+void powerlaw_distributor::initialize(
+    const cds::const_spatial_entity_vector& c_entities,
+    const rmath::vector3d& c_block_bb) {
   std::vector<size_t> clust_sizes;
 
   /* First, calc cluster sizes, and sort */
-  for (size_t i = 0; i < m_n_clusters; ++i) {
+  for (size_t i = 0; i < m_config_clusters; ++i) {
     /* can't have a cluster of size 0 */
     auto index = static_cast<size_t>(std::max(1U, m_pwrdist(rng())));
     clust_sizes.push_back(index);
@@ -129,5 +132,24 @@ ds::block3D_cluster_vector powerlaw_distributor::block_clusters(void) const {
 
   return ret;
 } /* block_clusters() */
+
+size_t powerlaw_distributor::capacity(void) const {
+  return std::accumulate(std::begin(m_dists),
+                         std::end(m_dists),
+                         0,
+                         [&](size_t size, const auto& d) {
+                           return size + d->capacity();
+                         });
+} /* capacity() */
+
+size_t powerlaw_distributor::size(void) const {
+  return std::accumulate(std::begin(m_dists),
+                         std::end(m_dists),
+                         0,
+                         [&](size_t size, const auto& d) {
+                           return size + d->size();
+                         });
+} /* capacity() */
+
 
 NS_END(block_dist, foraging, cosm);

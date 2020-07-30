@@ -59,16 +59,20 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   /* not copy-constructible or copy-assignable by default */
   cluster_distributor& operator=(const cluster_distributor& ) = delete;
 
+  /* distributor metrics */
+  size_t n_configured_clusters(void) const override { return 1; }
+  size_t n_mapped_clusters(void) const override { return 1; }
+  size_t capacity(void) const override { return m_clust.capacity(); }
+  size_t size(void) const override { return m_clust.block_count(); }
+
   dist_status distribute_block(crepr::base_block3D* block,
-                        cds::const_spatial_entity_vector& entities) override;
+                               cds::const_spatial_entity_vector& entities) override;
   dist_status distribute_blocks(cds::block3D_vectorno& blocks,
                                 cds::const_spatial_entity_vector& entities,
                                 bool strict_success) override;
   cfds::block3D_cluster_vector block_clusters(void) const override;
-  size_t capacity(void) const { return m_clust.capacity(); }
   rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }
   rmath::vector2z danchor2D(void) const { return m_clust.danchor2D(); }
-  size_t size(void) const { return m_clust.block_count(); }
   void coord_search_policy(coord_search_policy policy) {
     m_impl.coord_search_policy(policy);
   }
