@@ -46,6 +46,10 @@ namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
 
+namespace cosm::arena {
+class base_arena_map;
+} /* namespace cosm::arena */
+
 namespace cosm::controller {
 class base_controller2D;
 class base_controllerQ3D;
@@ -73,6 +77,14 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   const fs::path& metrics_path(void) const { return m_metrics_path; }
 
   /**
+   * \brief Collect metrics from the arena. Currently this includes:
+   *
+   * \ref foraging::block_dist::metrics::distributor_metrics
+   * \ref foraging::metrics::block_motion_metrics
+   */
+  void collect_from_arena(const carena::base_arena_map* map);
+
+  /**
    * \brief Collect metrics from a 3D block right before it is dropped in the
    * nest.
    */
@@ -81,18 +93,18 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   /**
    * \brief Collect metrics from 2D controllers. Currently this includes:
    *
-   * - \ref spatial::dist2D_metrics
-   * - \ref spatial::movement_metrics
-   * - \ref spatial::collision_metrics
+   * - \ref spatial::metrics::dist2D_metrics
+   * - \ref spatial::metrics::movement_metrics
+   * - \ref spatial::metrics::collision_metrics
    */
   void collect_from_controller(const controller::base_controller2D* controller);
 
   /**
    * \brief Collect metrics from Q3D controllers. Currently this includes:
    *
-   * - \ref spatial::dist3D_metrics
-   * - \ref spatial::movement_metrics
-   * - \ref spatial::collision_metrics
+   * - \ref spatial::metrics::dist3D_metrics
+   * - \ref spatial::metrics::movement_metrics
+   * - \ref spatial::metrics::collision_metrics
    */
   void collect_from_controller(const controller::base_controllerQ3D* controller);
 

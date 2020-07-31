@@ -40,7 +40,7 @@ redist_governor::redist_governor(
  * Member Functions
  ******************************************************************************/
 void redist_governor::update(const rtypes::timestep& t,
-                             uint blocks_collected,
+                             size_t blocks_collected,
                              bool convergence_status) {
   /* # blocks is always infinite */
   if (kTriggerNull == mc_config.trigger) {
@@ -50,29 +50,27 @@ void redist_governor::update(const rtypes::timestep& t,
    * Can only be tripped once, so if already tripped avoid printing
    * diagnostic multiple times.
    */
-  if (kTriggerTime == mc_config.trigger && t >= mc_config.timestep &&
-      m_dist_status) {
-    ER_INFO(
-        "Redistribution disabled by trigger '%s': "
-        "t=%u,n_blocks=%u,convergence=%d",
-        kTriggerTime,
-        t.v(),
-        blocks_collected,
-        convergence_status);
-    m_dist_status = false;
-    return;
-  }
-  if (kTriggerBlockCount == mc_config.trigger &&
-      blocks_collected >= mc_config.block_count && m_dist_status) {
-    ER_INFO("Redistribution disabled by '%s': t=%u,n_blocks=%u,convergence=%d",
-            kTriggerBlockCount,
-            t.v(),
-            blocks_collected,
-            convergence_status);
-    m_dist_status = false;
-    return;
-  }
-  if (kTriggerConvergence == mc_config.trigger) {
+  else if (kTriggerTime == mc_config.trigger) {
+    if (t >= mc_config.timestep && m_dist_status) {
+      ER_INFO(
+          "Redistribution disabled by trigger '%s': "
+          "t=%u,n_blocks=%zu,convergence=%d",
+          kTriggerTime,
+          t.v(),
+          blocks_collected,
+          convergence_status);
+      m_dist_status = false;
+    }
+  } else if (kTriggerBlockCount == mc_config.trigger) {
+    if (blocks_collected >= mc_config.block_count && m_dist_status) {
+      ER_INFO("Redistribution disabled by '%s': t=%u,n_blocks=%zu,convergence=%d",
+              kTriggerBlockCount,
+              t.v(),
+              blocks_collected,
+              convergence_status);
+      m_dist_status = false;
+    }
+  } else if (kTriggerConvergence == mc_config.trigger) {
     if (kStatusSwitchPolicySingle == mc_config.recurrence_policy &&
         !m_dist_status) {
       return;
@@ -86,15 +84,16 @@ void redist_governor::update(const rtypes::timestep& t,
     }
     m_dist_status = !convergence_status;
     ER_INFO(
-        "Redistribution=%d triggered by '%s': t=%u,n_blocks=%u,convergence=%d",
+        "Redistribution=%d triggered by '%s': t=%u,n_blocks=%zu,convergence=%d",
         m_dist_status,
         kTriggerConvergence,
         t.v(),
         blocks_collected,
         convergence_status);
     return;
+  } else {
+    ER_FATAL_SENTINEL("Bad trigger type '%s'", mc_config.trigger.c_str());
   }
-  ER_FATAL_SENTINEL("Bad trigger type '%s'", mc_config.trigger.c_str());
 } /* update() */
 
 NS_END(block_dist, foraging, cosm);

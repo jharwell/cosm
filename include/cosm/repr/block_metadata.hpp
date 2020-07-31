@@ -29,9 +29,10 @@
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/metrics/blocks/transport_metrics.hpp"
+#include "cosm/foraging/metrics/block_transport_metrics.hpp"
 #include "cosm/repr/block_type.hpp"
 #include "cosm/repr/colored_entity.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,7 +51,7 @@ NS_START(cosm, repr);
  * and what color the block is. This does NOT include the ID of the block, which
  * is part of its core definition.
  */
-class block_metadata final : public metrics::blocks::transport_metrics,
+class block_metadata final : public cfmetrics::block_transport_metrics,
                              public colored_entity {
  public:
   /**
@@ -74,7 +75,7 @@ class block_metadata final : public metrics::blocks::transport_metrics,
     m_dest_drop_time = rtypes::timestep(0);
   }
 
-  uint total_transporters(void) const override { return m_transporters; }
+  size_t total_transporters(void) const override { return m_transporters; }
 
   rtypes::timestep total_transport_time(void) const override RCSW_PURE {
     return m_dest_drop_time - m_first_pickup_time;
@@ -156,7 +157,7 @@ class block_metadata final : public metrics::blocks::transport_metrics,
  private:
   /* clang-format off */
   rtypes::type_uuid m_robot_id{rtypes::constants::kNoUUID};
-  uint              m_transporters{0};
+  size_t            m_transporters{0};
   bool              m_first_pickup{false};
   rtypes::timestep  m_first_pickup_time{0};
   rtypes::timestep  m_dist_time{0};

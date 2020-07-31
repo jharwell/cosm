@@ -72,7 +72,7 @@ void base_executive::run(void) {
   ER_DEBUG("Task '%s' abort probability: %f",
            current_task()->name().c_str(),
            prob);
-  if (prob >= m_rng->uniform(0.0, 1.0)) {
+  if (m_rng->bernoulli(prob)) {
     ER_INFO("Task '%s' aborted, prob=%f", current_task()->name().c_str(), prob);
     task_abort_handle(current_task());
     return;

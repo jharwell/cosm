@@ -63,7 +63,7 @@ polled_task* epsilon_greedy_allocator::operator()(
    * multiple best tasks, then a random one will be picked which will not
    * affect our regret bound.
    */
-  if (1.0 - epsilon >= m_rng->uniform(0.0, 1.0)) {
+  if (m_rng->bernoulli(1.0 - epsilon)) {
     return strict_greedy_allocator(m_rng)(tasks);
   }
   /* otherwise, pick randomly */

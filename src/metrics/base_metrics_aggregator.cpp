@@ -34,7 +34,8 @@
 #include "cosm/convergence/convergence_calculator.hpp"
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
-#include "cosm/metrics/blocks/transport_metrics_collector.hpp"
+#include "cosm/foraging/metrics/block_transport_metrics_collector.hpp"
+#include "cosm/foraging/metrics/block_motion_metrics_collector.hpp"
 #include "cosm/metrics/collector_registerer.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/metrics/dist2D_metrics.hpp"
@@ -56,6 +57,9 @@
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
 #include "cosm/foraging/block_dist/metrics/distributor_metrics.hpp"
 #include "cosm/foraging/block_dist/metrics/distributor_metrics_collector.hpp"
+#include "cosm/arena/base_arena_map.hpp"
+#include "cosm/foraging/block_motion_handler.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -98,13 +102,20 @@ void base_metrics_aggregator::collect_from_controller(
   collect("swarm::spatial_dist3D::pos", *controller);
 } /* collect_from_controller() */
 
+void base_metrics_aggregator::collect_from_arena(
+    const carena::base_arena_map* const map) {
+  collect("blocks::motion", *map->block_motion_handler());
+  collect("blocks::distributor", *map->block_distributor());
+} /* collect_from_arena() */
+
 void base_metrics_aggregator::register_standard(
     const cmconfig::metrics_config* mconfig) {
   using collector_typelist = rmpl::typelist<
       rmpl::identity<csmetrics::movement_metrics_collector>,
       rmpl::identity<csmetrics::interference_metrics_collector>,
       rmpl::identity<csmetrics::goal_acq_metrics_collector>,
-      rmpl::identity<cmetrics::blocks::transport_metrics_collector>,
+    rmpl::identity<cfmetrics::block_transport_metrics_collector>,
+    rmpl::identity<cfmetrics::block_motion_metrics_collector>,
       rmpl::identity<cconvergence::metrics::convergence_metrics_collector>,
     rmpl::identity<ctvmetrics::population_dynamics_metrics_collector>,
     rmpl::identity<cfbd::metrics::distributor_metrics_collector> >;
@@ -121,7 +132,7 @@ void base_metrics_aggregator::register_standard(
        "block_acq_counts",
        "blocks::acq_counts",
        rmetrics::output_mode::ekAPPEND},
-      {typeid(cmetrics::blocks::transport_metrics_collector),
+      {typeid(cfmetrics::block_transport_metrics_collector),
        "block_transport",
        "blocks::transport",
        rmetrics::output_mode::ekAPPEND},
@@ -129,13 +140,17 @@ void base_metrics_aggregator::register_standard(
        "swarm_convergence",
        "swarm::convergence",
        rmetrics::output_mode::ekAPPEND},
-      {typeid(ctvmetrics::population_dynamics_metrics_collector),
-       "tv_population",
-       "tv::population",
-       rmetrics::output_mode::ekAPPEND},
       {typeid(cfbd::metrics::distributor_metrics_collector),
        "block_distributor",
        "blocks::distributor",
+       rmetrics::output_mode::ekAPPEND},
+      {typeid(cfmetrics::block_motion_metrics_collector),
+       "block_motion",
+       "blocks::motion",
+       rmetrics::output_mode::ekAPPEND},
+      {typeid(ctvmetrics::population_dynamics_metrics_collector),
+       "tv_population",
+       "tv::population",
        rmetrics::output_mode::ekAPPEND}};
 
   collector_registerer<> registerer(mconfig, creatable_set, this);
@@ -173,8 +188,10 @@ void base_metrics_aggregator::register_with_arena_dims2D(
        "swarm_dist2D_pos",
        "swarm::spatial_dist2D::pos",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE}};
-  collector_registerer<extra_args_type> registerer(
-      mconfig, creatable_set, this, std::make_tuple(dims));
+  collector_registerer<extra_args_type> registerer(mconfig,
+                                                   creatable_set,
+                                                   this,
+                                                   std::make_tuple(dims));
   boost::mpl::for_each<collector_typelist>(registerer);
 } /* register_with_arena_dims2D() */
 
@@ -194,8 +211,10 @@ void base_metrics_aggregator::register_with_arena_dims3D(
        "swarm::spatial_dist3D::pos",
        rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE}};
 
-  collector_registerer<extra_args_type> registerer(
-      mconfig, creatable_set, this, std::make_tuple(dims));
+  collector_registerer<extra_args_type> registerer(mconfig,
+                                                   creatable_set,
+                                                   this,
+                                                   std::make_tuple(dims));
   boost::mpl::for_each<collector_typelist>(registerer);
 } /* register_with_arena_dims3D() */
 

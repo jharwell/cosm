@@ -1,5 +1,5 @@
 /**
- * \file block_parser.cpp
+ * \file block_motion_metrics.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,34 +18,45 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_HPP_
+#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/xml/blocks_parser.hpp"
+#include "rcppsw/metrics/base_metrics.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+NS_START(cosm, foraging, metrics);
 
 /*******************************************************************************
- * Member Functions
+ * Class Definitions
  ******************************************************************************/
-void blocks_parser::parse(const ticpp::Element& node) {
-  ticpp::Element bnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \class block_motion_metrics
+ * \ingroup cosm foraging metrics
+ *
+ * \brief Defines the metrics to be collected from blocks about the process of
+ * block_motionation from their original location in the arena after distribution
+ * to their final destination (nest, structure, etc).
+ *
+ * Metrics should be collected upon deposition at the block's final location,
+ * rather than every timestep.
+ */
+class block_motion_metrics : public rmetrics::base_metrics {
+ public:
+  block_motion_metrics(void) = default;
 
-  m_dist.parse(bnode);
-  m_motion.parse(bnode);
-  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
+  /**
+   * \brief Return the total # of blocks which have been moved this timestep.
+   */
+  virtual size_t n_moved(void) const = 0;
+};
 
-  if (m_motion.is_parsed()) {
-    m_config->motion = *m_motion.config_get<block_motion_parser::config_type>();
-  }
-} /* parse() */
+NS_END(metrics, foraging, cosm);
 
-bool blocks_parser::validate(void) const {
-  return m_dist.validate();
-} /* validate() */
-
-NS_END(xml, config, foraging, cosm);
+#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_HPP_ */

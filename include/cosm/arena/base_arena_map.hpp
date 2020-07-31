@@ -39,6 +39,8 @@
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/repr/nest.hpp"
+#include "cosm/foraging/block_motion_handler.hpp"
+#include "cosm/arena/update_status.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -79,7 +81,92 @@ class base_arena_map : public rer::client<base_arena_map>,
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
 
-  explicit base_arena_map(const caconfig::arena_map_config* config);
+  base_arena_map(const caconfig::arena_map_config* config, rmath::rng* rng);
+
+  /* Not move/copy constructable/assignable by default */
+  base_arena_map(const base_arena_map&) = delete;
+  const base_arena_map& operator=(const base_arena_map&) = delete;
+  base_arena_map(base_arena_map&&) = delete;
+  base_arena_map& operator=(base_arena_map&&) = delete;
+
+  template <size_t Index>
+  typename cds::arena_grid::layer_value_type<Index>::value_type& access(
+      const rmath::vector2z& d) {
+    return decoratee().template access<Index>(d);
+  }
+  template <size_t Index>
+  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
+      const rmath::vector2z& d) const {
+    return decoratee().template access<Index>(d);
+  }
+  template <size_t Index>
+  typename cds::arena_grid::layer_value_type<Index>::value_type& access(size_t i,
+                                                                        size_t j) {
+    return decoratee().template access<Index>(i, j);
+  }
+  template <size_t Index>
+  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
+      size_t i,
+      size_t j) const {
+    return decoratee().template access<Index>(i, j);
+  }
+
+  RCPPSW_DECORATE_FUNC(xdsize, const);
+  RCPPSW_DECORATE_FUNC(ydsize, const);
+  RCPPSW_DECORATE_FUNC(xrsize, const);
+  RCPPSW_DECORATE_FUNC(yrsize, const);
+
+
+  rtypes::discretize_ratio grid_resolution(void) const {
+    return decoratee().resolution();
+  }
+
+    /**
+   * \brief Determine if a robot is currently on top of a block (i.e. if the
+   * center of the robot has crossed over into the space occupied by the block
+   * extent).
+   *
+   * While the robots also have their own means of checking if they are on a
+   * block or not, there are some false positives, so this function is used as
+   * the final arbiter when deciding whether or not to trigger a given event.
+   *
+   * \param pos The position of a robot.
+   * \param ent_id The ID of the block the robot THINKS it is on.
+   *
+   * \return The ID of the block that the robot is on, or -1 if the robot is not
+   * actually on a block.
+   */
+  virtual rtypes::type_uuid robot_on_block(
+      const rmath::vector2d& pos,
+      const rtypes::type_uuid& ent_id) const RCSW_PURE;
+
+  /**
+   * \brief Determine if placing the specified block at the specified location
+   * will cause a conflict with any entities in the arena.
+   *
+   * Calls \ref spatial::conflict_checker internally to do the actual checking.
+   */
+
+  virtual bool placement_conflict(const crepr::base_block3D* const block,
+                                  const rmath::vector2d& loc) const;
+
+  /**
+   * \brief Update the arena map on the current timestep, before robot
+   * controllers are run.
+   *
+   * Currently updates:
+   *
+   * - Block motion via \ref foraging::block_mover.
+   *
+   * \param t The current timestep.
+   */
+  virtual update_status update(const rtypes::timestep& t);
+
+  /**
+   * \brief Get the free blocks in the arena. Does no locking, so this is only
+   * safe to call in non-concurrent contexts.
+   */
+  virtual cds::block3D_vectorno free_blocks(void) const;
 
   /**
    * \brief Get the list of all the blocks currently present in the arena.
@@ -94,28 +181,6 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \brief Get the # of blocks available in the arena.
    */
   size_t n_blocks(void) const { return m_blockso.size(); }
-
-  template <uint Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2z& d) {
-    return decoratee().template access<Index>(d);
-  }
-  template <uint Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2z& d) const {
-    return decoratee().template access<Index>(d);
-  }
-  template <uint Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type& access(size_t i,
-                                                                        size_t j) {
-    return decoratee().template access<Index>(i, j);
-  }
-  template <uint Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      size_t i,
-      size_t j) const {
-    return decoratee().template access<Index>(i, j);
-  }
 
   /**
    * \brief Distribute all blocks in the arena. Resets arena state. Should only
@@ -139,34 +204,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
                                             const arena_map_locking& locking);
 
-  RCPPSW_DECORATE_FUNC(xdsize, const);
-  RCPPSW_DECORATE_FUNC(ydsize, const);
-  RCPPSW_DECORATE_FUNC(xrsize, const);
-  RCPPSW_DECORATE_FUNC(yrsize, const);
-
-  /**
-   * \brief Determine if a robot is currently on top of a block (i.e. if the
-   * center of the robot has crossed over into the space occupied by the block
-   * extent).
-   *
-   * While the robots also have their own means of checking if they are on a
-   * block or not, there are some false positives, so this function is used as
-   * the final arbiter when deciding whether or not to trigger a given event.
-   *
-   * \param pos The position of a robot.
-   * \param ent_id The ID of the block the robot THINKS it is on.
-   *
-   * \return The ID of the block that the robot is on, or -1 if the robot is not
-   * actually on a block.
-   */
-  virtual rtypes::type_uuid robot_on_block(
-      const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const RCSW_PURE;
-
-  rtypes::discretize_ratio grid_resolution(void) const {
-    return decoratee().resolution();
-  }
-
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
    * the manifest.
@@ -187,12 +224,16 @@ class base_arena_map : public rer::client<base_arena_map>,
     return m_block_dispatcher.distributor();
   }
 
-  const rmath::ranged& distributable_areax(void) const {
-    return m_block_dispatcher.distributable_areax();
+  const cforaging::block_motion_handler* block_motion_handler(void) const {
+    return &m_bm_handler;
   }
 
-  const rmath::ranged& distributable_areay(void) const {
-    return m_block_dispatcher.distributable_areay();
+  const rmath::rangez& distributable_cellsx(void) const {
+    return m_block_dispatcher.distributable_cellsx();
+  }
+
+  const rmath::rangez& distributable_cellsy(void) const {
+    return m_block_dispatcher.distributable_cellsy();
   }
 
   cforaging::block_dist::redist_governor* redist_governor(void) {
@@ -207,7 +248,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * - Nest lights
    * - Block bounding box
    */
-  bool initialize(cpal::argos_sm_adaptor* sm, rmath::rng* rng);
+  bool initialize(cpal::argos_sm_adaptor* sm);
 
   void maybe_lock(std::mutex* mtx, bool cond) {
     if (cond) {
@@ -232,6 +273,7 @@ class base_arena_map : public rer::client<base_arena_map>,
     cds::const_spatial_entity_vector avoid_ents{};
     crepr::base_block3D*             dist_ent{nullptr};
   };
+
   /**
    * \brief Perform necessary locking prior to (1) gathering the list of
    * entities that need to be avoided during block distribution, and (2) doing
@@ -260,12 +302,14 @@ class base_arena_map : public rer::client<base_arena_map>,
   /* clang-format off */
   mutable std::mutex                     m_block_mtx{};
 
+  rmath::rng*                            m_rng;
   rmath::vector3d                        m_block_bb{};
   cds::block3D_vectoro                   m_blockso;
   cds::block3D_vectorno                  m_blocksno{};
   nest_map_type                          m_nests{};
   cforaging::block_dist::dispatcher      m_block_dispatcher;
   cforaging::block_dist::redist_governor m_redist_governor;
+  cforaging::block_motion_handler        m_bm_handler;
   /* clang-format on */
 };
 

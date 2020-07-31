@@ -57,7 +57,7 @@ class redist_governor : public rer::client<redist_governor> {
  public:
   static constexpr const char kStatusSwitchPolicySingle[] = "single";
   static constexpr const char kStatusSwitchPolicyMulti[] = "multi";
-  static constexpr const char kTriggerNull[] = "";
+  static constexpr const char kTriggerNull[] = "Null";
   static constexpr const char kTriggerTime[] = "timestep";
   static constexpr const char kTriggerBlockCount[] = "block_count";
   static constexpr const char kTriggerConvergence[] = "convergence";
@@ -72,7 +72,7 @@ class redist_governor : public rer::client<redist_governor> {
    * \param convergence_status Current swarm convergence status.
    */
   void update(const rtypes::timestep& t,
-              uint blocks_collected,
+              size_t blocks_collected,
               bool convergence_status);
 
   bool dist_status(void) const { return m_dist_status; }

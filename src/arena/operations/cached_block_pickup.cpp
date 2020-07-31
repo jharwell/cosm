@@ -156,6 +156,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
                                            map.grid_resolution(),
                                            arena_map_locking::ekCACHES_AND_GRID_HELD);
     drop_op.visit(cell);
+    drop_op.visit(*m_orphan_block);
 
     /* set block extent cells for the orphan block */
     block_extent_set_visitor set_op(m_orphan_block);

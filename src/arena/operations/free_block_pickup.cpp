@@ -37,6 +37,20 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
+free_block_pickup free_block_pickup::by_robot(
+    crepr::base_block3D* block,
+    const rtypes::type_uuid& robot_id,
+    const rtypes::timestep& t) {
+  return free_block_pickup(block, robot_id, t);
+} /* by_robot() */
+
+free_block_pickup free_block_pickup::by_arena(
+    crepr::base_block3D* block) {
+  return free_block_pickup(block,
+                           rtypes::constants::kNoUUID,
+                           rtypes::timestep(-1));
+} /* by_arena() */
+
 free_block_pickup::free_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id,
                                      const rtypes::timestep& t)
@@ -67,14 +81,11 @@ void free_block_pickup::visit(base_arena_map& map) {
 
   map.grid_mtx()->unlock();
 
-  /* Update block state--already holding block mutex */
-  crops::block_pickup block_op(mc_robot_id, mc_timestep);
-  block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
-
-  ER_INFO("Robot%u: block%d@%s",
-          mc_robot_id.v(),
-          m_block->id().v(),
-          rcppsw::to_string(coord()).c_str());
+  if (rtypes::constants::kNoUUID != mc_robot_id) {
+    /* Update block state--already holding block mutex */
+    crops::block_pickup block_op(mc_robot_id, mc_timestep);
+    block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
+  }
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

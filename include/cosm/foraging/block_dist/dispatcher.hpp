@@ -123,8 +123,8 @@ class dispatcher : public rer::client<dispatcher> {
     return m_dist.get();
   }
 
-  const rmath::ranged& distributable_areax(void) const { return mc_arena_xrange; }
-  const rmath::ranged& distributable_areay(void) const { return mc_arena_yrange; }
+  const rmath::rangez& distributable_cellsx(void) const { return mc_cells_xrange; }
+  const rmath::rangez& distributable_cellsy(void) const { return mc_cells_yrange; }
 
  private:
   /* clang-format off */
@@ -132,8 +132,8 @@ class dispatcher : public rer::client<dispatcher> {
   const config::block_dist_config   mc_config;
   const std::string                 mc_dist_type;
 
-  rmath::ranged                     mc_arena_xrange;
-  rmath::ranged                     mc_arena_yrange;
+  rmath::rangez                     mc_cells_xrange;
+  rmath::rangez                     mc_cells_yrange;
 
   cds::arena_grid*                  m_grid{nullptr};
   std::unique_ptr<base_distributor> m_dist;

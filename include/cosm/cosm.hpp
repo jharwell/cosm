@@ -170,6 +170,7 @@ namespace ds {}
 namespace operations {}
 namespace utils {}
 namespace oracle {}
+namespace metrics {}
 } /* namespace foraging */
 
 namespace arena {
@@ -208,6 +209,7 @@ namespace cfds = cforaging::ds;
 namespace cfops = cforaging::operations;
 namespace cfconfig = cforaging::config;
 namespace cfbd = cforaging::block_dist;
+namespace cfmetrics = cforaging::metrics;
 
 namespace cspatial = cosm::spatial;
 namespace csfsm = cspatial::fsm;

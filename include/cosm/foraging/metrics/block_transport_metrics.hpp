@@ -1,5 +1,5 @@
 /**
- * \file transport_metrics.hpp
+ * \file block_transport_metrics.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_BLOCKS_TRANSPORT_METRICS_HPP_
-#define INCLUDE_COSM_METRICS_BLOCKS_TRANSPORT_METRICS_HPP_
+#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_
+#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
@@ -31,32 +31,32 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics, blocks);
+NS_START(cosm, foraging, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class transport_metrics
- * \ingroup cosm metrics blocks
+ * \class block_transport_metrics
+ * \ingroup cosm foraging metrics
  *
  * \brief Defines the metrics to be collected from blocks about the process of
- * transportation from their original location in the arena after distribution
+ * block_transportation from their original location in the arena after distribution
  * to their final destination (nest, structure, etc).
  *
  * Metrics should be collected upon deposition at the block's final location,
  * rather than every timestep.
  */
-class transport_metrics : public rmetrics::base_metrics {
+class block_transport_metrics : public rmetrics::base_metrics {
  public:
-  transport_metrics(void) = default;
+  block_transport_metrics(void) = default;
 
   /**
    * \brief Return the total # of robots that have carried the block since it
    * was originally distributed in the arena until it arrives at its final
    * destination.
    */
-  virtual uint total_transporters(void) const = 0;
+  virtual size_t total_transporters(void) const = 0;
 
   /**
    * \brief Return the total amount of time that it took from the first pickup
@@ -71,11 +71,11 @@ class transport_metrics : public rmetrics::base_metrics {
   virtual rtypes::timestep initial_wait_time(void) const = 0;
 
   /**
-   * \brief Return the type of the block transported.
+   * \brief Return the type of the block block_transported.
    */
-  virtual repr::block_type type(void) const = 0;
+  virtual crepr::block_type type(void) const = 0;
 };
 
-NS_END(blocks, metrics, cosm);
+NS_END(metrics, foraging, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_BLOCKS_TRANSPORT_METRICS_HPP_ */
+#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_ */

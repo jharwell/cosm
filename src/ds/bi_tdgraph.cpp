@@ -164,7 +164,7 @@ void bi_tdgraph::active_tab_update(const polled_task* const current_task,
             current_task->name().c_str(),
             prob);
 
-    if (prob >= rng->uniform(0.0, 1.0)) {
+    if (rng->bernoulli(prob)) {
       new_tab = tab_parent(active_tab());
     }
   } else {
@@ -175,7 +175,7 @@ void bi_tdgraph::active_tab_update(const polled_task* const current_task,
             active_tab()->root()->name().c_str(),
             current_task->name().c_str(),
             prob);
-    if (prob >= rng->uniform(0.0, 1.0)) {
+    if (rng->bernoulli(prob)) {
       new_tab = tab_child(active_tab(), current_task);
     }
   }

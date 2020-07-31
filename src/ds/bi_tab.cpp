@@ -152,7 +152,7 @@ polled_task* bi_tab::task_allocate(rmath::rng* rng) {
   }
 
   /* We chose not to employ partitioning on the next task allocation */
-  if (partition_prob <= rng->uniform(0.0, 1.0)) {
+  if (!rng->bernoulli(partition_prob)) {
     ER_INFO("Not employing partitioning: Return task '%s'",
             m_root->name().c_str());
     m_employed_partitioning = false;
@@ -237,7 +237,7 @@ polled_task* bi_tab::subtask_allocate(rmath::rng* rng) {
    * to child2, based on time estimates.
    */
   if (m_last_subtask == m_child1 || nullptr == m_last_subtask) {
-    if (prob_12 >= rng->uniform(0.0, 1.0)) {
+    if (rng->bernoulli(prob_12)) {
       ret = m_child2;
     } else {
       ret = m_child1;
@@ -248,7 +248,7 @@ polled_task* bi_tab::subtask_allocate(rmath::rng* rng) {
    * to m_child1, based on time estimates.
    */
   else if (m_last_subtask == m_child2) {
-    if (prob_21 >= rng->uniform(0.0, 1.0)) {
+    if (rng->bernoulli(prob_21)) {
       ret = m_child1;
     } else {
       ret = m_child2;

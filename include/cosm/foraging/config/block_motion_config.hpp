@@ -1,7 +1,7 @@
 /**
- * \file block_parser.cpp
+ * \file block_motion_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,34 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_FORAGING_CONFIG_BLOCK_MOTION_CONFIG_HPP_
+#define INCLUDE_COSM_FORAGING_CONFIG_BLOCK_MOTION_CONFIG_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/xml/blocks_parser.hpp"
+#include <string>
+#include "cosm/cosm.hpp"
+
+#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+NS_START(cosm, foraging, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void blocks_parser::parse(const ticpp::Element& node) {
-  ticpp::Element bnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \struct block_motion_config
+ * \ingroup foraging config
+ *
+ * \brief Configuration for block motion of free blocks within the arena.
+ */
+struct block_motion_config final : public rconfig::base_config {
+  double           random_walk_prob{0};
+  std::string      policy{"Null"};
+};
 
-  m_dist.parse(bnode);
-  m_motion.parse(bnode);
-  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
+NS_END(config, foraging, cosm);
 
-  if (m_motion.is_parsed()) {
-    m_config->motion = *m_motion.config_get<block_motion_parser::config_type>();
-  }
-} /* parse() */
-
-bool blocks_parser::validate(void) const {
-  return m_dist.validate();
-} /* validate() */
-
-NS_END(xml, config, foraging, cosm);
+#endif /* INCLUDE_COSM_FORAGING_CONFIG_BLOCK_MOTION_CONFIG_HPP_ */

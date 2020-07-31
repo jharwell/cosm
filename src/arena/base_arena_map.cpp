@@ -37,6 +37,8 @@
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/nest_extent.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/arena/free_blocks_calculator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -46,16 +48,19 @@ NS_START(cosm, arena);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
+base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
+                               rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.arena.base_arena_map"),
       decorator(config->grid.dims, config->grid.resolution),
+      m_rng(rng),
       m_blockso(foraging::block_dist::block3D_manifest_processor(
           &config->blocks.dist.manifest,
           config->grid.resolution)()),
       m_block_dispatcher(&decoratee(),
                          config->grid.resolution,
                          &config->blocks.dist),
-      m_redist_governor(&config->blocks.dist.redist_governor) {
+      m_redist_governor(&config->blocks.dist.redist_governor),
+      m_bm_handler(&config->blocks.motion, m_rng) {
   ER_INFO("real=(%fx%f), discrete=(%zux%zu), resolution=%f",
           xrsize(),
           yrsize(),
@@ -90,7 +95,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool base_arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
+bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   /* compute block bounding box */
   auto* block = *std::max_element(m_blocksno.begin(),
                                  m_blocksno.end(),
@@ -108,8 +113,16 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm, rmath::rng* rng) {
   }   /* for(&pair..) */
 
   auto precalc = block_dist_precalc(nullptr);
-  return m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, rng);
+  return m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, m_rng);
 } /* initialize() */
+
+update_status base_arena_map::update(const rtypes::timestep&) {
+  size_t count = m_bm_handler.move_blocks(this);
+  if (count > 0) {
+    return update_status::ekBLOCK_MOTION;
+  }
+  return update_status::ekNONE;
+} /* update() */
 
 rtypes::type_uuid base_arena_map::robot_on_block(
     const rmath::vector2d& pos,
@@ -256,5 +269,15 @@ ds::nest_vectorro base_arena_map::nests(void) const {
                  [&](const auto& pair) { return &pair.second; });
   return ret;
 }
+
+cds::block3D_vectorno base_arena_map::free_blocks(void) const {
+  return free_blocks_calculator()(blocks());
+} /* free_blocks() */
+
+bool base_arena_map::placement_conflict(const crepr::base_block3D* const block,
+                                        const rmath::vector2d& loc) const {
+  auto status = cspatial::conflict_checker::placement2D(this, block, loc);
+  return status.x && status.y;
+} /* placement_conflict() */
 
 NS_END(arena, cosm);

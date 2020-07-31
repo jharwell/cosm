@@ -49,7 +49,8 @@ NS_START(cosm, arena);
 class caching_arena_map final : public rer::client<caching_arena_map>,
                                 public base_arena_map {
  public:
-  explicit caching_arena_map(const caconfig::arena_map_config* config);
+  caching_arena_map(const caconfig::arena_map_config* config,
+                    rmath::rng* rng);
 
   /**
    * \brief Get the list of all the caches currently present in the arena and
@@ -100,6 +101,16 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   rtypes::type_uuid robot_on_block(
       const rmath::vector2d& pos,
       const rtypes::type_uuid& ent_id) const override RCSW_PURE;
+
+  /**
+   * \brief Get the free blocks in the arena. Does no locking, so this is only
+   * safe to call in non-concurrent contexts.
+   */
+  cds::block3D_vectorno free_blocks(void) const override;
+
+  bool placement_conflict(const crepr::base_block3D* const block,
+                          const rmath::vector2d& loc) const override;
+
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */

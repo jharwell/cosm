@@ -1,7 +1,7 @@
 /**
- * \file blocks_parser.hpp
+ * \file block_motion_parser.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,22 +18,19 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCKS_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCKS_PARSER_HPP_
+#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MOTION_PARSER_HPP_
+#define INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MOTION_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
 #include <string>
+#include <memory>
 
-#include "rcppsw/config/xml/xml_config_parser.hpp"
-#include "rcppsw/control/config/xml/waveform_parser.hpp"
+#include "cosm/foraging/config/block_motion_config.hpp"
 
-#include "cosm/foraging/config/blocks_config.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/foraging/config/xml/block_dist_parser.hpp"
-#include "cosm/foraging/config/xml/block_motion_parser.hpp"
+#include "rcppsw/config/xml/xml_config_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,24 +41,24 @@ NS_START(cosm, foraging, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class blocks_parser
+ * \class block_motion_parser
  * \ingroup foraging config xml
  *
- * \brief Parses XML parameters related to blocks in the arena into \ref
- * blocks_config.
+ * \brief Parses XML parameters related to block redistribution by the \ref
+ * block_motion.
  */
-class blocks_parser : public rconfig::xml::xml_config_parser {
+class block_motion_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = blocks_config;
+  using config_type = block_motion_config;
 
   /**
-   * \brief The root tag that all block parameters should lie under in the
-   * XML tree.
+   * \brief The root tag that all block motion parameters should lie
+   * under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "blocks";
+  static constexpr const char kXMLRoot[] = "motion";
 
   void parse(const ticpp::Element& node) override RCSW_COLD;
-  bool validate(void) const override RCSW_ATTR(pure, cold);
+  bool validate(void) const override RCSW_COLD;
 
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
@@ -71,12 +68,10 @@ class blocks_parser : public rconfig::xml::xml_config_parser {
   }
 
   /* clang-format off */
-  block_dist_parser            m_dist{};
-  block_motion_parser          m_motion{};
   std::unique_ptr<config_type> m_config{nullptr};
   /* clang-format on */
 };
 
 NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCKS_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MOTION_PARSER_HPP_ */

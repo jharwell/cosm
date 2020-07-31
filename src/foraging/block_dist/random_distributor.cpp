@@ -27,11 +27,11 @@
 
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/foraging/utils/utils.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
 #include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/ds/arena_grid.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -104,8 +104,9 @@ dist_status random_distributor::distribute_block(crepr::base_block3D* block,
                                          carena::arena_map_locking::ekALL_HELD);
   caops::block_extent_set_visitor extent_op(block);
 
-  /* visit cell to update block position */
+  /* Update block position */
   drop_op.visit(*cell);
+  drop_op.visit(*block);
 
   /* with new block position, set extent */
   extent_op.visit(*arena_grid());
@@ -155,19 +156,18 @@ bool random_distributor::verify_block_dist(
     if (e == block) {
       continue;
     }
-    utils::placement_status_t status;
+    using checker = cspatial::conflict_checker;
+    checker::status status;
     if (crepr::entity_dimensionality::ek2D == e->dimensionality()) {
-      status =
-          utils::placement_conflict2D(block->ranchor2D(),
-                                      block->rdim2D(),
-                                      static_cast<const crepr::entity2D*>(e));
+      status = checker::placement2D(block->ranchor2D(),
+                                    block->rdim2D(),
+                                    static_cast<const crepr::entity2D*>(e));
     } else {
-      status =
-          utils::placement_conflict2D(block->ranchor2D(),
-                                      block->rdim2D(),
-                                      static_cast<const crepr::entity3D*>(e));
+      status = checker::placement2D(block->ranchor2D(),
+                                    block->rdim2D(),
+                                    static_cast<const crepr::entity3D*>(e));
     }
-    ER_ASSERT(!(status.x_conflict && status.y_conflict),
+    ER_ASSERT(!(status.x && status.y) ,
               "Placement conflict for block%d@%s/%s after distribution",
               block->id().v(),
               rcppsw::to_string(block->ranchor2D()).c_str(),
@@ -286,17 +286,20 @@ bool random_distributor::coord_conflict_check(
    * user-controllable switch via input parameter.
    */
   auto check_conflict = [&](const auto* ent) {
-    utils::placement_status_t status;
     rmath::vector2d abs_r = rmath::zvec2dvec(c_coord,
                                              arena_grid()->resolution().v());
+    using checker = cspatial::conflict_checker;
     if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
-      status = utils::placement_conflict2D(
-          abs_r, c_block_dim, static_cast<const crepr::entity2D*>(ent));
+      auto status =  checker::placement2D(abs_r,
+                                          c_block_dim,
+                                          static_cast<const crepr::entity2D*>(ent));
+      return status.x && status.y;
     } else {
-      status = utils::placement_conflict2D(
-          abs_r, c_block_dim, static_cast<const crepr::entity3D*>(ent));
+      auto status = checker::placement2D(abs_r,
+                                          c_block_dim,
+                                          static_cast<const crepr::entity3D*>(ent));
+      return status.x && status.y;
     }
-    return status.x_conflict && status.y_conflict;
   };
 
   return std::none_of(c_entities.begin(), c_entities.end(), check_conflict);

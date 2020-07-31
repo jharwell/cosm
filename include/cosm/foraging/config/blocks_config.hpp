@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
+#include "cosm/foraging/config/block_motion_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,7 +41,8 @@ NS_START(cosm, foraging, config);
  * \ingroup foraging config
  */
 struct blocks_config final : public rconfig::base_config {
-  struct block_dist_config dist{};
+  block_dist_config dist{};
+  block_motion_config motion{};
 };
 
 NS_END(config, foraging, cosm);

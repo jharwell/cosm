@@ -55,7 +55,7 @@ argos_sm_adaptor::~argos_sm_adaptor(void) = default;
 template <typename TArenaMap>
 void argos_sm_adaptor::arena_map_create(
     const caconfig::arena_map_config* aconfig) {
-  m_arena_map = std::make_unique<TArenaMap>(aconfig);
+  m_arena_map = std::make_unique<TArenaMap>(aconfig, rng());
 } /* arena_map_create() */
 
 void argos_sm_adaptor::arena_map_init(
@@ -69,7 +69,7 @@ void argos_sm_adaptor::arena_map_init(
     } /* for(&block..) */
   }
 
-  if (!m_arena_map->initialize(this, rng())) {
+  if (!m_arena_map->initialize(this)) {
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }

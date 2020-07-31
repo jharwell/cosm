@@ -51,22 +51,23 @@ NS_START(cosm, arena, operations, detail);
  * \ingroup arena operations detail
  *
  * \brief Fired whenever a robot picks up a free block in the arena (i.e. one
- * that is not part of a cache).
+ * that is not part of a cache), OR when a block moves within the arena.
  */
 class free_block_pickup : public rer::client<free_block_pickup>,
                           public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<carena::base_arena_map,
-                                 crepr::base_block3D>;
+    using value = rmpl::typelist<carena::base_arena_map>;
   };
 
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  free_block_pickup(crepr::base_block3D* block,
-                    const rtypes::type_uuid& robot_id,
-                    const rtypes::timestep& t);
+  static free_block_pickup by_robot(crepr::base_block3D* block,
+                                    const rtypes::type_uuid& robot_id,
+                                    const rtypes::timestep& t);
+
+  static free_block_pickup by_arena(crepr::base_block3D* block);
 
   ~free_block_pickup(void) override = default;
 
@@ -82,6 +83,10 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   void visit(base_arena_map& map);
 
  private:
+  free_block_pickup(crepr::base_block3D* block,
+                    const rtypes::type_uuid& robot_id,
+                    const rtypes::timestep& t);
+
   /* clang-format off */
   const rtypes::type_uuid mc_robot_id;
   const rtypes::timestep  mc_timestep;
@@ -90,15 +95,23 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   /* clang-format on */
 };
 
-NS_END(detail);
-
 /**
  * \brief We use the precise visitor in order to force compile errors if a call
  * to a visitor is made that involves a visitee that is not in our visit set
  * (i.e. remove the possibility of implicit upcasting performed by the
  * compiler).
  */
-using free_block_pickup_visitor = rpvisitor::filtered_visitor<detail::free_block_pickup>;
+using free_block_pickup_visitor_impl =
+    rpvisitor::precise_visitor<free_block_pickup,
+                               free_block_pickup::visit_typelist>;
+
+NS_END(detail);
+
+class free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl {
+ public:
+  using detail::free_block_pickup_visitor_impl::free_block_pickup_visitor_impl;
+};
+
 
 NS_END(operations, arena, cosm);
 

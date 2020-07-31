@@ -32,6 +32,7 @@
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
 #include "cosm/arena/operations/block_extent_set.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,22 +52,6 @@ free_block_drop free_block_drop::for_block(
                          arena_map_locking::ekNONE_HELD);
 } /* for_block() */
 
-static bool block_drop_overlap_with_cache(const crepr::base_block3D* block,
-                                          const carepr::arena_cache* cache,
-                                          const rmath::vector2d& drop_loc);
-
-static bool block_drop_overlap_with_nest(const crepr::base_block3D* block,
-                                         const crepr::nest& nest,
-                                         const rmath::vector2d& drop_loc);
-
-static bool block_drop_loc_conflict(const base_arena_map& map,
-                                    const crepr::base_block3D* block,
-                                    const rmath::vector2d& loc);
-
-static bool block_drop_loc_conflict(const caching_arena_map& map,
-                                    const crepr::base_block3D* block,
-                                    const rmath::vector2d& loc);
-
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
@@ -84,7 +69,6 @@ free_block_drop::free_block_drop(crepr::base_block3D* block,
  * Member Functions
  ******************************************************************************/
 void free_block_drop::visit(cds::cell2D& cell) {
-  visit(*m_block);
   visit(cell.fsm());
 
   /*
@@ -122,8 +106,8 @@ void free_block_drop::visit(base_arena_map& map) {
   map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
-
+  auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
+  bool conflict = status.x && status.y;
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
 
   /*
@@ -133,7 +117,7 @@ void free_block_drop::visit(base_arena_map& map) {
    * the block onto to go into a HAS_CACHE state, when the cell entity is not a
    * cache.
    */
-  if (cell.state_has_block() || conflict) {
+  if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
     map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
   } else {
     /*
@@ -142,6 +126,7 @@ void free_block_drop::visit(base_arena_map& map) {
      *
      * Holding arena map grid lock, block lock if locking enabled.
      */
+    visit(*m_block);
     visit(cell);
 
     /* set block extent */
@@ -170,7 +155,8 @@ void free_block_drop::visit(caching_arena_map& map) {
   map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
-  bool conflict = block_drop_loc_conflict(map, m_block, rloc);
+  auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
+  bool conflict = status.x && status.y;
 
   cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
@@ -192,7 +178,7 @@ void free_block_drop::visit(caching_arena_map& map) {
     op.visit(map);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
-  } else if (cell.state_has_block() || conflict) {
+  } else if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
     map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
     map.maybe_unlock(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
@@ -205,6 +191,7 @@ void free_block_drop::visit(caching_arena_map& map) {
      *
      * Holding arena map grid lock, block lock if locking enabled.
      */
+    visit(*m_block);
     visit(cell);
 
     /* set block extent */
@@ -217,70 +204,5 @@ void free_block_drop::visit(caching_arena_map& map) {
   map.maybe_unlock(map.block_mtx(),
                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
-
-/*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-bool block_drop_loc_conflict(const base_arena_map& map,
-                             const crepr::base_block3D* const block,
-                             const rmath::vector2d& loc) {
-  /*
-   * If the robot is currently right on the edge of a nest, we can't just drop
-   * the block in it, as it will not be processed as a normal \ref
-   * nest_block_drop, and will be discoverable by a robot via LOS but not able
-   * to be acquired, as its color is hidden by that of the nest.
-   */
-  bool conflict = false;
-  for (auto* nest : map.nests()) {
-    conflict |= block_drop_overlap_with_nest(block, *nest, loc);
-  } /* for(&nest..) */
-
-  /*
-   * If the robot is really close to a wall, then dropping a block may make it
-   * inaccessible to future robots trying to reach it, due to obstacle avoidance
-   * kicking in. This can result in an endless loop if said block is the only
-   * one a robot knows about (see FORDYCA#242).
-   */
-  conflict |= map.distributable_areax().contains(loc.x()) &&
-              map.distributable_areay().contains(loc.y());
-  return conflict;
-} /* block_drop_loc_conflict() */
-
-bool block_drop_loc_conflict(const caching_arena_map& map,
-                             const crepr::base_block3D* const block,
-                             const rmath::vector2d& loc) {
-  bool conflict = block_drop_loc_conflict(
-      static_cast<const carena::base_arena_map&>(map), block, loc);
-
-  /*
-   * If the robot is currently right on the edge of a cache, we can't just drop
-   * the block here, as it wipll overlap with the cache, and robots will think
-   * that is accessible, but will not be able to vector to it (not all 4 wheel
-   * sensors will report the color of a block). See FORDYCA#233.
-   */
-  for (auto& cache : map.caches()) {
-    conflict |= block_drop_overlap_with_cache(block, cache, loc);
-  } /* for(cache..) */
-  return conflict;
-} /* block_drop_loc_conflict() */
-
-bool block_drop_overlap_with_nest(const crepr::base_block3D* const block,
-                                  const crepr::nest& nest,
-                                  const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity3D::xrspan(drop_loc, block->xrsize());
-  auto drop_yspan = crepr::entity3D::yrspan(drop_loc, block->yrsize());
-
-  return nest.xrspan().overlaps_with(drop_xspan) &&
-         nest.yrspan().overlaps_with(drop_yspan);
-} /* block_drop_overlap_with_nest() */
-
-bool block_drop_overlap_with_cache(const crepr::base_block3D* const block,
-                                   const carepr::arena_cache* const cache,
-                                   const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block->xrsize());
-  auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block->yrsize());
-  return cache->xrspan().overlaps_with(drop_xspan) &&
-         cache->yrspan().overlaps_with(drop_yspan);
-} /* block_drop_overlap_with_cache() */
 
 NS_END(detail, operations, arena, cosm);

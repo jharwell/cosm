@@ -1,7 +1,7 @@
 /**
- * \file block_parser.cpp
+ * \file update_status.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,34 +18,39 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
+#define INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/xml/blocks_parser.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+NS_START(cosm, arena);
 
 /*******************************************************************************
- * Member Functions
+ * Class Definitions
  ******************************************************************************/
-void blocks_parser::parse(const ticpp::Element& node) {
-  ticpp::Element bnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \brief The status return from \ref base_arena_map::update() (or the overriden
+ * version in a derived class).
+ */
 
-  m_dist.parse(bnode);
-  m_motion.parse(bnode);
-  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
+enum update_status {
+  /**
+   * \brief No updates actually occurred this timestep.
+   */
+  ekNONE,
 
-  if (m_motion.is_parsed()) {
-    m_config->motion = *m_motion.config_get<block_motion_parser::config_type>();
-  }
-} /* parse() */
+  /**
+   * \brief One or more blocks moved, requiring a redraw of the arena floor.
+   */
+  ekBLOCK_MOTION
+};
 
-bool blocks_parser::validate(void) const {
-  return m_dist.validate();
-} /* validate() */
+NS_END(arena, cosm);
 
-NS_END(xml, config, foraging, cosm);
+#endif /* INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_ */

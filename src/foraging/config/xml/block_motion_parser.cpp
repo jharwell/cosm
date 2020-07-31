@@ -1,7 +1,7 @@
 /**
- * \file block_parser.cpp
+ * \file block_motion_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/config/xml/blocks_parser.hpp"
+#include "cosm/foraging/config/xml/block_motion_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -31,21 +31,25 @@ NS_START(cosm, foraging, config, xml);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void blocks_parser::parse(const ticpp::Element& node) {
-  ticpp::Element bnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
-
-  m_dist.parse(bnode);
-  m_motion.parse(bnode);
-  m_config->dist = *m_dist.config_get<block_dist_parser::config_type>();
-
-  if (m_motion.is_parsed()) {
-    m_config->motion = *m_motion.config_get<block_motion_parser::config_type>();
+void block_motion_parser::parse(const ticpp::Element& node) {
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
   }
+  m_config = std::make_unique<config_type>();
+  ticpp::Element lnode = node_get(node, kXMLRoot);
+
+  XML_PARSE_ATTR(lnode, m_config, policy);
+  XML_PARSE_ATTR_DFLT(lnode, m_config, random_walk_prob, 0.0);
 } /* parse() */
 
-bool blocks_parser::validate(void) const {
-  return m_dist.validate();
+bool block_motion_parser::validate(void) const {
+  if (is_parsed()) {
+    RCSW_CHECK(RCSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0));
+  }
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
 NS_END(xml, config, foraging, cosm);

@@ -212,11 +212,13 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``swarm_convergence``                          | Results of swarm convergence calculations.                              | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |    
+| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``oracle_manager``                             | Enable swarms to make decisions based on perfect information.           | append                 |                        |
 +------------------------------------------------+--------------------------------------------------------------------------------------------------+------------------------+
 | ``block_distributor``                          | Block distribution.                                                     | append                 |                        |
++------------------------------------------------+--------------------------------------------------------------------------------------------------+------------------------+
+| ``block_motion``                               | Free block motion by the arena.                                         | append                 |                        |
 +------------------------------------------------+--------------------------------------------------------------------------------------------------+------------------------+
 
 ``convergence``
@@ -454,7 +456,7 @@ XML configuration:
 - Required by: all.
 - Required child attributes if present: none.
 - Required child tags if present: [ ``distribution``, ``manifest`` ].
-- Optional child attributes: none.
+- Optional child attributes: [ ``motion`` ]
 - Optional child tags: none.
 
 XML configuration:
@@ -467,6 +469,9 @@ XML configuration:
            <distribution>
            ...
            </distribution>
+           <motion>
+           ...
+           </motion>
            <manifest>
            ...
            </manifest>
@@ -634,6 +639,38 @@ XML configuration:
 - ``pwr_max`` - Maximum power of 2 for cluster sizes.
 
 - ``n_clusters`` - Max # of clusters the arena.
+
+``arena_map/blocks/motion``
+"""""""""""""""""""""""""""
+
+- Required by: none.
+- Required child attributes if present: ``policy``.
+- Required child tags if present: none.
+- Optional child attributes: [ ``random_walk_prob`` ].
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <blocks>
+       ...
+       <motion>
+           policy="random_walk"
+           prob="FLOAT"
+       </motion>
+       ...
+   </blocks>
+
+- ``policy`` - If the ``<motion>`` tag is present, how should blocks move in the
+  arena ?
+
+  - ``random_walk`` - Block motion is a pure random walk which is executed on
+    each block each timestep with probability ``random_walk_prob``.
+
+- ``random_walk_prob`` - The probability to perform a random walk for a block on
+  a timestep. Only required if ``policy`` is ``random_walk``. Must be >= 0 and
+  <= 1.0.
 
 ``arena_map/nests``
 ^^^^^^^^^^^^^^^^^^

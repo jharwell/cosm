@@ -51,8 +51,10 @@ dispatcher::dispatcher(cds::arena_grid* const grid,
        * Y dimension in order to avoid physics engine errors in ARGoS near arena
        * walls. See COSM#34.
        */
-      mc_arena_xrange(grid->xdsize() * 0.15, grid->xdsize() * 0.85),
-      mc_arena_yrange(grid->ydsize() * 0.15, grid->ydsize() * 0.85),
+      mc_cells_xrange(static_cast<size_t>(grid->xdsize() * 0.15),
+                      static_cast<size_t>(grid->xdsize() * 0.85)),
+      mc_cells_yrange(static_cast<size_t>(grid->ydsize() * 0.15),
+                      static_cast<size_t>(grid->ydsize() * 0.85)),
       m_grid(grid),
       m_dist(nullptr) {}
 
@@ -66,26 +68,26 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
                             rmath::rng* rng) {
   /* clang-format off */
   cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
-      rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
-                      static_cast<size_t>(mc_arena_yrange.lb())),
-      rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
-                      static_cast<size_t>(mc_arena_yrange.ub())));
-  auto left_ll = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
-                                 static_cast<size_t>(mc_arena_yrange.lb()));
-  auto left_ur = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub() * 0.25 / 0.85),
-                                 static_cast<size_t>(mc_arena_yrange.ub()));
-  auto right_ll = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub() * 0.75 / 0.85),
-                                  static_cast<size_t>(mc_arena_yrange.lb()));
-  auto right_ur = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
-                                  static_cast<size_t>(mc_arena_yrange.ub()));
-  auto bottom_ll = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
-                                   static_cast<size_t>(mc_arena_yrange.lb()));
-  auto bottom_ur = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
-                                   static_cast<size_t>(mc_arena_yrange.ub() * 0.25 / 0.85));
-  auto top_ll = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.lb()),
-                                static_cast<size_t>(mc_arena_yrange.ub() * 0.75 / 0.85));
-  auto top_ur = rmath::vector2z(static_cast<size_t>(mc_arena_xrange.ub()),
-                                static_cast<size_t>(mc_arena_yrange.ub()));
+      rmath::vector2z(mc_cells_xrange.lb(),
+                      mc_cells_yrange.lb()),
+      rmath::vector2z(mc_cells_xrange.ub(),
+                      mc_cells_yrange.ub()));
+  auto left_ll = rmath::vector2z(mc_cells_xrange.lb(),
+                                 mc_cells_yrange.lb());
+  auto left_ur = rmath::vector2z(static_cast<size_t>(mc_cells_xrange.ub() * 0.25 / 0.85),
+                                 mc_cells_yrange.ub());
+  auto right_ll = rmath::vector2z(static_cast<size_t>(mc_cells_xrange.ub() * 0.75 / 0.85),
+                                  mc_cells_yrange.lb());
+  auto right_ur = rmath::vector2z(mc_cells_xrange.ub(),
+                                  mc_cells_yrange.ub());
+  auto bottom_ll = rmath::vector2z(mc_cells_xrange.lb(),
+                                   mc_cells_yrange.lb());
+  auto bottom_ur = rmath::vector2z(mc_cells_xrange.ub(),
+                                   static_cast<size_t>(mc_cells_yrange.ub() * 0.25 / 0.85));
+  auto top_ll = rmath::vector2z(mc_cells_xrange.lb(),
+                                static_cast<size_t>(mc_cells_yrange.ub() * 0.75 / 0.85));
+  auto top_ur = rmath::vector2z(mc_cells_xrange.ub(),
+                                mc_cells_yrange.ub());
   if (kDistRandom == mc_dist_type) {
     m_dist = std::make_unique<random_distributor>(arena,
                                                   m_grid,

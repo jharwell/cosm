@@ -30,6 +30,8 @@
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/arena/free_blocks_calculator.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,8 +41,10 @@ NS_START(cosm, arena);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-caching_arena_map::caching_arena_map(const caconfig::arena_map_config* config)
-    : ER_CLIENT_INIT("cosm.arena.caching_arena_map"), base_arena_map(config) {}
+caching_arena_map::caching_arena_map(const caconfig::arena_map_config* config,
+                                     rmath::rng* rng)
+    : ER_CLIENT_INIT("cosm.arena.caching_arena_map"),
+      base_arena_map(config, rng) {}
 
 /*******************************************************************************
  * Member Functions
@@ -171,5 +175,21 @@ caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc
   } /* for(&cache..) */
   return ret;
 } /* block_dist_precalc() */
+
+cds::block3D_vectorno caching_arena_map::free_blocks(void) const {
+  cads::acache_vectorro rocaches;
+  std::transform(caches().begin(),
+                 caches().end(),
+                 std::back_inserter(rocaches),
+                 [&](const auto& c) { return c; });
+
+  return free_blocks_calculator()(blocks(), rocaches);
+} /* free_blocks() */
+
+bool caching_arena_map::placement_conflict(const crepr::base_block3D* const block,
+                                           const rmath::vector2d& loc) const {
+  auto status = cspatial::conflict_checker::placement2D(this, block, loc);
+  return status.x && status.y;
+} /* placement_conflict() */
 
 NS_END(arena, cosm);
