@@ -92,12 +92,20 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
   virtual double avg_motion_throttle(void) const = 0;
 
   bool motion_throttling_enabled(void) const {
-    return (mc_motion_throttle_config) ? true : false;
+    return (m_motion_throttle_config) ? true : false;
+  }
+  bool bc_throttling_enabled(void) const {
+    return (m_bc_throttle_config) ? true : false;
   }
 
-  const ctv::switchable_tv_generator* motion_throttler(
+  RCSW_PURE const ctv::switchable_tv_generator* motion_throttler(
       const rtypes::type_uuid& id) const {
-    return &m_motion_throttlers.at(id);
+    return const_cast<robot_dynamics_applicator*>(this)->motion_throttler(id);
+  }
+
+  RCSW_PURE const ctv::switchable_tv_generator* bc_throttler(
+      const rtypes::type_uuid& id) const {
+    return const_cast<robot_dynamics_applicator*>(this)->bc_throttler(id);
   }
 
   /**
@@ -121,15 +129,31 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
   /**
    * \brief Get a reference to the motion throttler for a specific controller.
    */
-  ctv::switchable_tv_generator* motion_throttler(const rtypes::type_uuid& id) {
-    return &m_motion_throttlers.at(id);
+  RCSW_PURE ctv::switchable_tv_generator* motion_throttler(const rtypes::type_uuid& id) {
+    auto it = m_motion_throttlers.find(id);
+    if (m_motion_throttlers.end() == it) {
+      return nullptr;
+    }
+    return &it->second;
+  }
+
+  RCSW_PURE ctv::switchable_tv_generator* bc_throttler(const rtypes::type_uuid& id) {
+    auto it = m_bc_throttlers.find(id);
+    if (m_bc_throttlers.end() == it) {
+      return nullptr;
+    }
+    return &it->second;
   }
 
  private:
   /* clang-format off */
-  boost::optional<rct::config::waveform_config> mc_motion_throttle_config{};
+  boost::optional<rct::config::waveform_config> m_motion_throttle_config{};
+  boost::optional<rct::config::waveform_config> m_bc_throttle_config{};
+
   std::map<rtypes::type_uuid,
            ctv::switchable_tv_generator>        m_motion_throttlers{};
+  std::map<rtypes::type_uuid,
+           ctv::switchable_tv_generator>        m_bc_throttlers{};
   /* clang-format on */
 };
 

@@ -576,7 +576,7 @@ XML configuration:
 
 
 ``sensing_subsystemQ3D/proximity_sensor``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for proximity sensor configuration.
 
@@ -605,7 +605,7 @@ Parameters for proximity sensor configuration.
   obstacle detection.
 
 ``sensing_subsystemQ3D/ground_sensor``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for ground sensor configuration.
 

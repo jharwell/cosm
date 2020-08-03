@@ -134,16 +134,7 @@ class unicell_entity2D : public entity2D,
   unicell_entity2D(const rtypes::type_uuid& id,
                    const rmath::vector2d& rdim,
                    const rtypes::discretize_ratio& resolution,
-                   const rmath::vector2d& rcenter)
-      : entity2D(id),
-        ER_CLIENT_INIT("cosm.repr.unicell_entity2D"),
-        mc_arena_res(resolution),
-        m_rdim(rdim),
-        m_rcenter(rcenter),
-        m_ranchor(m_rcenter - m_rdim / 2.0),
-        m_ddim(rmath::dvec2zvec(m_rdim, mc_arena_res.v())),
-        m_dcenter(rmath::dvec2zvec(m_rcenter, mc_arena_res.v())),
-        m_danchor(m_dcenter - m_ddim / 2) {}
+                   const rmath::vector2d& rcenter);
 
   const rtypes::discretize_ratio& arena_res(void) const { return mc_arena_res; }
 

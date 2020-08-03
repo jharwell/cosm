@@ -85,14 +85,20 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
   }
 
   void update(void) override {
-    if (!motion_throttling_enabled()) {
+    if (!motion_throttling_enabled() && !bc_throttling_enabled()) {
       return;
     }
     rtypes::timestep t(mc_sm->GetSpace().GetSimulationClock());
+
     auto cb = [&](auto& controller) {
-      motion_throttler(controller->entity_id())
-      ->toggle(controller->is_carrying_block());
-      motion_throttler(controller->entity_id())->update(t);
+      if (auto* mt = motion_throttler(controller->entity_id())) {
+        mt->update(t);
+      }
+
+      if (auto* bct = bc_throttler(controller->entity_id())) {
+        bct->toggle(controller->is_carrying_block());
+        bct->update(t);
+      }
     };
 
     cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,

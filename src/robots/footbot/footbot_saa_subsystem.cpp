@@ -59,9 +59,11 @@ void footbot_saa_subsystem::steer_force2D_apply(void) {
            steer_force2D().value().to_str().c_str(),
            steer_force2D().value().angle().to_str().c_str(),
            steer_force2D().value().length());
+  RCSW_UNUSED double applied = actuation()->governed_diff_drive()->applied_throttle();
+  double active = actuation()->governed_diff_drive()->active_throttle();
+  ER_DEBUG("Applied throttle: %f active throttle: %f", applied, active);
 
-  double throttle = 1.0 - actuation()->governed_diff_drive()->active_throttle();
-  double desired_speed = steer_force2D().value().length() * throttle;
+  double desired_speed = steer_force2D().value().length() * (1.0 - active);
   actuation()->governed_diff_drive()->fsm_drive(desired_speed,
                                                 steer_force2D().value().angle());
 

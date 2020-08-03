@@ -24,8 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/actuators/diff_drive_actuator.hpp"
 #include "cosm/kin2D/diff_drive.hpp"
+
+#include <vector>
+
+#include "cosm/hal/actuators/diff_drive_actuator.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -48,7 +51,8 @@ NS_START(kin2D);
  * \ingroup kin2D
  *
  * \brief A differential drive whose maximum speed can be set in a temporally
- * varyng manner via \ref tv::switchable_tv_generator, if configured to do so.
+ * varyng manner via one or more \ref tv::switchable_tv_generators, if configured
+ * to do so. The effect of all configured generators is cumulative.
  */
 class governed_diff_drive final : public kin2D::diff_drive {
  public:
@@ -76,18 +80,18 @@ class governed_diff_drive final : public kin2D::diff_drive {
   double applied_throttle(void) const RCSW_PURE;
 
   /**
-   * \brief Set the variance generator. This is a function, rather than part of
-   * the constructor because the creation of variance generators is only
-   * performed if a certain type of variance is enabled (e.g. motion throttling
-   * when certain conditions are met).
+   * \brief Add a variance generate to the list of candidate generators. This is
+   * a function, rather than part of the constructor because the creation of
+   * variance generators is only performed if a certain type of variance is
+   * enabled (e.g. motion throttling when certain conditions are met).
    */
   void tv_generator(const tv::switchable_tv_generator* generator) {
-    mc_generator = generator;
+    m_generators.push_back(generator);
   }
 
  private:
   /* clang-format off */
-  const tv::switchable_tv_generator* mc_generator{nullptr};
+  std::vector<const tv::switchable_tv_generator*> m_generators{};
   /* clang-format on */
 };
 

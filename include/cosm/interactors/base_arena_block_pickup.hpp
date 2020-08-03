@@ -130,7 +130,10 @@ class base_arena_block_pickup
                                     const rtypes::timestep& t) {
     if (m_penalty_handler->is_serving_penalty(controller)) {
       if (m_penalty_handler->is_penalty_satisfied(controller, t)) {
+        ER_ASSERT(pre_process_check(controller), "Pre-pickup  check failed");
         process_pickup(controller, t);
+        ER_ASSERT(post_process_check(controller), "Post-pickup check failed");
+
         return interactor_status_type::ekARENA_FREE_BLOCK_PICKUP;
       }
     } else {
@@ -146,13 +149,6 @@ class base_arena_block_pickup
    * pickup.
    */
   void process_pickup(TController& controller, const rtypes::timestep& t) {
-    ER_ASSERT(robot_goal_acquired(controller),
-              "Controller not waiting for free block pickup");
-    ER_ASSERT(m_penalty_handler->is_serving_penalty(controller),
-              "Controller not serving pickup penalty");
-    ER_ASSERT(!controller.is_carrying_block(),
-              "Controller is already carrying block%d",
-              controller.block()->id().v());
     /*
      * More than 1 robot can pick up a block in a timestep, so we have to
      * search for this robot's controller.
@@ -193,14 +189,12 @@ class base_arena_block_pickup
       robot_block_vanished_visitor_type vanished(p.id());
       vanished.visit(controller);
     } else {
+      ER_ASSERT(pre_execute_check(p), "Pre-execute check failed");
       execute_pickup(controller, p, t);
     }
     m_map->block_mtx()->unlock();
 
     m_penalty_handler->penalty_remove(p);
-    ER_ASSERT(
-        !m_penalty_handler->is_serving_penalty(controller),
-        "Multiple instances of same controller serving block pickup penalty");
   }
 
   /**
@@ -211,20 +205,10 @@ class base_arena_block_pickup
   void execute_pickup(TController& controller,
                       const ctv::temporal_penalty& penalty,
                       const rtypes::timestep& t) {
-    /* Holding block mutex not necessary here, but does not hurt */
-    auto it =
-        std::find_if(m_map->blocks().begin(),
-                     m_map->blocks().end(),
-                     [&](const auto& b) { return b->id() == penalty.id(); });
-    ER_ASSERT(it != m_map->blocks().end(),
-              "Block%d from penalty does not exist?",
-              penalty.id().v());
-    ER_ASSERT(!(*it)->is_out_of_sight(),
-              "Attempt to pick up out of sight block%d",
-              (*it)->id().v());
+    auto* block = m_map->blocks()[penalty.id().v()];
 
-    robot_block_pickup_visitor_type rpickup_op(*it, controller.entity_id(), t);
-    auto apickup_op = caops::free_block_pickup_visitor::by_robot(*it,
+    robot_block_pickup_visitor_type rpickup_op(block, controller.entity_id(), t);
+    auto apickup_op = caops::free_block_pickup_visitor::by_robot(block,
                                                                  controller.entity_id(),
                                                                  t);
 
@@ -244,6 +228,54 @@ class base_arena_block_pickup
 
     /* The floor texture must be updated */
     m_floor->SetChanged();
+  }
+
+  bool pre_execute_check(const ctv::temporal_penalty& penalty) const {
+    auto it = std::find_if(m_map->blocks().begin(),
+                           m_map->blocks().end(),
+                           [&](const auto& b) { return b->id() == penalty.id(); });
+    ER_CHECK(it != m_map->blocks().end(),
+             "Block%d from penalty does not exist?",
+             penalty.id().v());
+    ER_CHECK(!(*it)->is_out_of_sight(),
+             "Attempt to pick up out of sight block%d",
+             (*it)->id().v());
+    return true;
+
+ error:
+    return false;
+  }
+
+  bool pre_process_check(const TController& controller) const {
+    ER_CHECK(robot_goal_acquired(controller),
+             "Robot%d@%s/%s not waiting for free block pickup",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+    ER_CHECK(m_penalty_handler->is_serving_penalty(controller),
+             "Robot%d@%s/%s not serving pickup penalty",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+    ER_CHECK(!controller.is_carrying_block(),
+             "Robot%d@%s/%s is already carrying block%d",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str(),
+             controller.block()->id().v());
+    return true;
+
+ error:
+    return false;
+  }
+
+  bool post_process_check(const TController& controller) const {
+    ER_CHECK(!m_penalty_handler->is_serving_penalty(controller),
+             "Multiple instances of same controller serving block pickup penalty");
+    return true;
+
+ error:
+    return false;
   }
 
   /* clang-format off */

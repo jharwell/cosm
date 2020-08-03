@@ -44,6 +44,7 @@ NS_START(cosm, tv, config);
  */
 struct robot_dynamics_applicator_config final : public rconfig::base_config {
   rct::config::waveform_config motion_throttle{};
+  rct::config::waveform_config block_carry_throttle{};
 };
 
 NS_END(config, tv, cosm);

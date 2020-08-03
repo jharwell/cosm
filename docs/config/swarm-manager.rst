@@ -87,7 +87,7 @@ XML configuration:
   placed in.
 
 ``output/metrics/create``
-#########################
+"""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: [ ``output_interval`` ].
@@ -118,7 +118,7 @@ place of the ``...``. Not defining them disables metric collection of the given
 type.
 
 ``output/metrics/append``
-#########################
+"""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: [ ``output_interval`` ].
@@ -148,7 +148,7 @@ place of the ``...``. Not defining them disables metric collection of the given
 type.
 
 ``output/metrics/truncate``
-###########################
+"""""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: [ ``output_interval`` ].
@@ -183,7 +183,7 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_interference_counts``                    | # robots entering, currently encountering, and exiting the inter-robot  | append                 |                        |
+| ``fsm_interference_counts``                    | " robots entering, currently encountering, and exiting the inter-robot  | append                 |                        |
 |                                                | interference avoidance state.                                           |                        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``fsm_interference_locs2D``                    | Spatial distribution of inter-robot interference locations in 2D in the | create,truncate        |                        |
@@ -202,7 +202,7 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_vector_locs2D``                    | 2D spatial distribution of where robots vector to known blocks.         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_transport``                            | # blocks collected/ # transporters.                                     | append                 |                        |
+| ``block_transport``                            | " blocks collected/ " transporters.                                     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``task_distribution``                          | TAB task allocation probabilities/counts.                               | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -322,7 +322,7 @@ XML configuration:
 - ``enable`` - If this measure is enabled or not. Relatively cheap to compute in
   large swarms.
 
-### ``angular_order``
+""" ``angular_order``
 
 A measure of convergence using congruence of robot orientations.
 
@@ -511,7 +511,7 @@ XML configuration:
 
   - ``powerlaw``: Distributed according to a powerlaw.
 
-  - ``single_source`` - Placed within an arena opposite about 90% of the way
+  - ``single_source`` - Placed within an arena opposite about 90" of the way
     from the nest to the other side of the arena Assumes horizontal, rectangular
     arena with a single nest.
 
@@ -523,7 +523,7 @@ XML configuration:
 
 - ``strict_success`` - Do all blocks need to be successfully distributed when
   distribution is attempted? Useful for scripting when you need to have the same
-  # blocks available across a range of arena sizes, and for smaller sizes
+  " blocks available across a range of arena sizes, and for smaller sizes
   failure to distribute all blocks is OK.
 
 ``arena_map/blocks/distribution/redist_governor``
@@ -557,7 +557,7 @@ XML configuration:
   - ``timestep`` - Blocks will be redistributed until the specified timestep. This
                  trigger type can be used with the [ ``single`` ] recurrence policy.
 
-  - ``block_count`` - Blocks will be redistributed until the specified # of
+  - ``block_count`` - Blocks will be redistributed until the specified " of
     blocks have been collected. This trigger type can be used with the
     ``single`` recurrence policy.
 
@@ -605,9 +605,9 @@ XML configuration:
     </distribution>
 
 
-- ``n_cube`` - # Cube blocks that should be used.
+- ``n_cube`` - " Cube blocks that should be used.
 
-- ``n_ramp`` - # Ramp blocks that should be used.
+- ``n_ramp`` - " Ramp blocks that should be used.
 
 - ``unit_dim`` - Unit dimension of blocks. Cubes are 1x1 of this, ramps are 2x1 of
   this.
@@ -638,7 +638,7 @@ XML configuration:
 
 - ``pwr_max`` - Maximum power of 2 for cluster sizes.
 
-- ``n_clusters`` - Max # of clusters the arena.
+- ``n_clusters`` - Max " of clusters the arena.
 
 ``arena_map/blocks/motion``
 """""""""""""""""""""""""""
@@ -696,9 +696,9 @@ XML configuration:
    </arena_map>
 
 ``arena_map/nests/nest``
-########################
+""""""""""""""""""""""""
 
-- Required by: all.
+- Required by: none.
 - Required child attributes if present: [ ``dims``, ``center`` ].
 - Required child tags if present: none.
 - Optional child attributes: none.
@@ -721,7 +721,6 @@ XML configuration:
 
 - ``center`` - Location for center of the nest (nest is a square).  Must be
   specified in a tuple like so: ``1.5, 1.5``.
-
 
 
 ``temporal_variance``
@@ -754,7 +753,7 @@ XML configuration:
 - Required child attributes if present: none.
 - Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: [ ``manip_penalty``, ``carry_throttle`` ].
+- Optional child tags: [ ``blocks``, ``motion_throttle`` ].
 
 Subsections in this section make use of the ``waveform`` XML configuration block:
 
@@ -777,6 +776,9 @@ XML configuration:
 .. code-block:: XML
 
    <env_dynamics>
+       <motion_throttle>
+       ...
+       </motion_throttle>
        <blocks>
            <manip_penalty>
            ...
@@ -787,12 +789,37 @@ XML configuration:
            </blocks>
    </env_dynamics>
 
+``temporal_variance/env_dynamics/motion_throttle``
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+- Required by: none.
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <env_dynamics>
+       ...
+       <motion_throttle>
+           <!-- [waveform config] -->
+       </motion_throttle>
+       ...
+   </env_dynamics>
+
+
+- ``Waveform`` - Parameters defining the waveform of the robot motion throttle
+  which is applied regardless of whether or not they are carrying a block.
+
 ``temporal_variance/env_dynamics/blocks/manip_penalty``
 #######################################################
 
 - Required by: none.
 - Required child attributes if present: none.
-- Required child tags if present: ``waveform``.
+- Required child tags if present: none.
 - Optional child attributes: none.
 - Optional child tags: none.
 
@@ -803,14 +830,12 @@ XML configuration:
    <blocks>
        ...
        <manipulation_penalty>
-       <waveform>
-           ...
-       </waveform>
+           <!-- [waveform config] -->
        </manipulation_penalty>
        ...
    </blocks>
 
-- ``waveform`` - Parameters defining the waveform of block manipulation penalty
+- ``Waveform`` - Parameters defining the waveform of block manipulation penalty
   (picking up/dropping that does not involve caches).
 
 ``temporal_variance/env_dynamics/blocks/carry_throttle``
@@ -818,7 +843,7 @@ XML configuration:
 
 - Required by: none.
 - Required child attributes if present: none.
-- Required child tags if present: ``waveform``.
+- Required child tags if present: none.
 - Optional child attributes: none.
 - Optional child tags: none.
 
@@ -829,14 +854,12 @@ XML configuration:
    <blocks>
        ...
        <carry_throttle>
-       <waveform>
-       ...
-       </waveform>
+           <!-- [waveform config] -->
        </carry_throttle>
        ...
    </blocks>
 
-- ``waveform`` - Parameters defining the waveform of block carry penalty (how
+- ``Waveform`` - Parameters defining the waveform of block carry penalty (how
   much slower robots move when carrying a block).
 
 

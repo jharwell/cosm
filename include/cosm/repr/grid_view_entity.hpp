@@ -100,10 +100,10 @@ class grid_view_entity : public crepr::entity2D {
     return entity2D::ydspan(danchor2D(), ydsize());
   }
 
-  rtypes::spatial_dist xrsize(void) const override {
+  rtypes::spatial_dist xrsize(void) const override final {
     return rtypes::spatial_dist(xdsize() * mc_resolution.v());
   }
-  rtypes::spatial_dist yrsize(void) const override {
+  rtypes::spatial_dist yrsize(void) const override final {
     return rtypes::spatial_dist(ydsize() * mc_resolution.v());
   }
 
@@ -124,8 +124,8 @@ class grid_view_entity : public crepr::entity2D {
    * \brief Return the size of the entity in discrete coordinates. Only suitable
    * for indexing within the entity itself.
    */
-  size_t xdsize(void) const override { return m_view.shape()[0]; }
-  size_t ydsize(void) const override  { return m_view.shape()[1]; }
+  size_t xdsize(void) const override final { return m_view.shape()[0]; }
+  size_t ydsize(void) const override final { return m_view.shape()[1]; }
 
  private:
   /* clang-format off */

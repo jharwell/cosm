@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/kin2D/governed_diff_drive.hpp"
 
+#include <numeric>
+
 #include "cosm/tv/switchable_tv_generator.hpp"
 
 /*******************************************************************************
@@ -34,9 +36,20 @@ NS_START(cosm, kin2D);
  * Member Functions
  ******************************************************************************/
 double governed_diff_drive::active_throttle(void) const {
-  return (nullptr != mc_generator) ? mc_generator->active_tv() : 0.0;
+  return std::accumulate(std::begin(m_generators),
+                         std::end(m_generators),
+                         0.0,
+                         [&](double sum, const auto* generator){
+                           return sum + generator->active_tv();
+                         });
 }
+
 double governed_diff_drive::applied_throttle(void) const {
-  return (nullptr != mc_generator) ? mc_generator->applied_tv() : 0.0;
+  return std::accumulate(std::begin(m_generators),
+                         std::end(m_generators),
+                         0.0,
+                         [&](double sum, const auto* generator){
+                           return sum + generator->applied_tv();
+                         });
 }
 NS_END(kin2d, cosm);

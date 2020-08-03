@@ -116,7 +116,9 @@ class base_nest_block_process
                                     const rtypes::timestep& t) {
     if (m_penalty_handler->is_serving_penalty(controller)) {
       if (m_penalty_handler->is_penalty_satisfied(controller, t)) {
+        ER_ASSERT(pre_process_check(controller), "Pre-drop check failed");
         process_drop(controller, t);
+        ER_ASSERT(post_process_check(controller), "Post-drop check failed");
         return interactor_status_type::ekNEST_BLOCK_PROCESS;
       }
     } else {
@@ -131,11 +133,6 @@ class base_nest_block_process
    * few sanity checks and then execute the block drop.
    */
   void process_drop(TController& controller, const rtypes::timestep& t) {
-    ER_ASSERT(controller.in_nest(), "Controller not in nest");
-    ER_ASSERT(robot_goal_acquired(controller),
-              "Controller not waiting for nest block drop");
-    ER_ASSERT(m_penalty_handler->is_serving_penalty(controller),
-              "Controller not serving drop penalty");
     /*
      * More than 1 robot can drop a block in a timestep, so we have to
      * search for this robot's controller.
@@ -143,9 +140,8 @@ class base_nest_block_process
     const auto& p = *m_penalty_handler->penalty_find(controller);
     execute_drop(controller, p, t);
     m_penalty_handler->penalty_remove(p);
-    ER_ASSERT(!m_penalty_handler->is_serving_penalty(controller),
-              "Multiple instances of same controller serving drop penalty");
   }
+
 
   /**
    * \brief Perform the actual drop in the nest once all preconditions have been
@@ -191,6 +187,38 @@ class base_nest_block_process
 
     /* The floor texture must be updated */
     m_floor->SetChanged();
+  }
+
+  bool pre_process_check(const TController& controller) const {
+    ER_CHECK(controller.in_nest(),
+             "Robot%d@%s/%s not in nest",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+    ER_CHECK(robot_goal_acquired(controller),
+             "Robot%d@%s/%s not waiting for nest block drop",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+    ER_CHECK(m_penalty_handler->is_serving_penalty(controller),
+             "Robot%d@%s/%s not serving drop penalty",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+    return true;
+
+ error:
+    return false;
+  }
+
+  bool post_process_check(const TController& controller) const {
+    ER_CHECK(
+        !m_penalty_handler->is_serving_penalty(controller),
+        "Multiple instances of same controller serving block pickup penalty");
+    return true;
+
+ error:
+    return false;
   }
 
   /* clang-format off */
