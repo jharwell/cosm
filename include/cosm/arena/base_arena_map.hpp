@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <map>
-#include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <vector>
 
@@ -121,7 +121,7 @@ class base_arena_map : public rer::client<base_arena_map>,
     return decoratee().resolution();
   }
 
-    /**
+  /**
    * \brief Determine if a robot is currently on top of a block (i.e. if the
    * center of the robot has crossed over into the space occupied by the block
    * extent).
@@ -140,6 +140,12 @@ class base_arena_map : public rer::client<base_arena_map>,
       const rmath::vector2d& pos,
       const rtypes::type_uuid& ent_id) const RCSW_PURE;
 
+
+  /**
+   * \brief Determine if a robot is currently within the boundaries of a nest.
+   */
+  rtypes::type_uuid robot_in_nest(
+      const rmath::vector2d& pos) const RCSW_PURE;
   /**
    * \brief Determine if placing the specified block at the specified location
    * will cause a conflict with any entities in the arena.
@@ -250,23 +256,35 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   bool initialize(cpal::argos_sm_adaptor* sm);
 
-  void maybe_lock(std::mutex* mtx, bool cond) {
+  void maybe_lock(std::shared_mutex* mtx, bool cond) {
     if (cond) {
       mtx->lock();
     }
   }
-  void maybe_unlock(std::mutex* mtx, bool cond) {
+  void maybe_unlock(std::shared_mutex* mtx, bool cond) {
     if (cond) {
       mtx->unlock();
     }
   }
 
-  std::mutex* grid_mtx(void) { return decoratee().mtx(); }
+  void maybe_lock_shared(std::shared_mutex* mtx, bool cond) const {
+    if (cond) {
+      mtx->lock_shared();
+    }
+  }
+  void maybe_unlock_shared(std::shared_mutex* mtx, bool cond) const {
+    if (cond) {
+      mtx->unlock_shared();
+    }
+  }
+
+  std::shared_mutex* grid_mtx(void) { return decoratee().mtx(); }
 
   /**
    * \brief Protects simultaneous updates to the blocks vector.
    */
-  std::mutex* block_mtx(void) { return &m_block_mtx; }
+  std::shared_mutex* block_mtx(void) { return &m_block_mtx; }
+  std::shared_mutex* block_mtx(void) const { return &m_block_mtx; }
 
  protected:
   struct block_dist_precalc_type {
@@ -300,7 +318,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
 
   /* clang-format off */
-  mutable std::mutex                     m_block_mtx{};
+  mutable std::shared_mutex              m_block_mtx{};
 
   rmath::rng*                            m_rng;
   rmath::vector3d                        m_block_bb{};

@@ -86,8 +86,8 @@ class conflict_checker {
    * - Overlap with all nests.
    */
   static status placement2D(const carena::base_arena_map* map,
-                        const crepr::base_block3D* const block,
-                        const rmath::vector2d& loc);
+                            const crepr::base_block3D* const block,
+                            const rmath::vector2d& loc);
 
   /**
    * \brief Check for conflict if the specified block is placed at the specified
@@ -102,24 +102,24 @@ class conflict_checker {
    * - Overlap with all caches.
    */
   static status placement2D(const carena::caching_arena_map* map,
-                        const crepr::base_block3D* const block,
-                        const rmath::vector2d& loc);
+                            const crepr::base_block3D* const block,
+                            const rmath::vector2d& loc);
 
   /**
    * \brief Determine if an entity anchored at \p ent1_anchor with dimensions
    * \p ent1_dims overlaps 2D entity \p ent2.
    */
   static status placement2D(const rmath::vector2d& ent1_anchor,
-                        const rmath::vector2d& ent1_dims,
-                        const crepr::entity2D* const ent2);
+                            const rmath::vector2d& ent1_dims,
+                            const crepr::entity2D* const ent2);
 
   /**
    * \brief Determine if an entity anchored at \p ent1_anchor with dimensions
    * \p ent1_dims overlaps 3D entity \p ent2.
    */
   static status placement2D(const rmath::vector2d& ent1_anchor,
-                        const rmath::vector2d& ent1_dims,
-                        const crepr::entity3D* const entity);
+                            const rmath::vector2d& ent1_dims,
+                            const crepr::entity3D* const entity);
 };
 
 NS_END(spatial, cosm);

@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <boost/mpl/at.hpp>
+#include <algorithm>
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 
@@ -190,8 +191,14 @@ class base_nest_block_process
   }
 
   bool pre_process_check(const TController& controller) const {
+    ER_CHECK(rtypes::constants::kNoUUID != m_map->robot_in_nest(controller.rpos2D()),
+             "Robot%d@%s/%s not in a nest",
+             controller.entity_id().v(),
+             rcppsw::to_string(controller.rpos2D()).c_str(),
+             rcppsw::to_string(controller.dpos2D()).c_str());
+
     ER_CHECK(controller.in_nest(),
-             "Robot%d@%s/%s not in nest",
+             "Robot%d@%s/%s does not think it is in a nest",
              controller.entity_id().v(),
              rcppsw::to_string(controller.rpos2D()).c_str(),
              rcppsw::to_string(controller.dpos2D()).c_str());

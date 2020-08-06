@@ -24,7 +24,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <mutex>
 #include <string>
 #include <vector>
 
@@ -114,8 +113,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */
-  std::mutex* cache_mtx(void) { return &m_cache_mtx; }
-  std::mutex* cache_mtx(void) const { return &m_cache_mtx; }
+  std::shared_mutex* cache_mtx(void) { return &m_cache_mtx; }
+  std::shared_mutex* cache_mtx(void) const { return &m_cache_mtx; }
 
   /**
    * \brief Clear the list of caches that have been removed this timestep.
@@ -137,7 +136,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
       const crepr::base_block3D* block) override;
 
   /* clang-format off */
-  mutable std::mutex                     m_cache_mtx{};
+  mutable std::shared_mutex              m_cache_mtx{};
 
   cads::acache_vectoro                   m_cacheso{};
   cads::acache_vectorno                  m_cachesno{};

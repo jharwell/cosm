@@ -101,6 +101,16 @@ class util_hfsm : public rpfsm::hfsm,
   /**
    * \brief Robots entering this state will return to the nest.
    *
+   * Once they enter the nest, robots:
+   *
+   * 1. Wander for a set amount of time in order to reduce congestion in the
+   *    nest.
+   * 2. Signal to the parent FSM that they have entered the nest and stop
+   *    moving.
+   *
+   * \todo The wander behavior is somewhat foraging specific, and so this state
+   *       may be of limited utility in other applications.
+   *
    * This state MUST have a parent state defined that is not
    * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
@@ -160,9 +170,9 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr const uint kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
-  uint                                m_nest_count{0};
+  size_t                              m_nest_count{0};
   csubsystem::saa_subsystemQ3D* const m_saa;
-  interference_tracker                   m_tracker;
+  interference_tracker                m_tracker;
   rmath::rng*                         m_rng;
   /* clang-format on */
 

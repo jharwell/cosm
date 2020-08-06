@@ -148,6 +148,18 @@ rtypes::type_uuid base_arena_map::robot_on_block(
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
+rtypes::type_uuid base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
+  auto it = std::find_if(m_nests.begin(),
+                         m_nests.end(),
+                         [&](const auto& pair) {
+                           return pair.second.contains_point2D(pos);
+                         });
+  if (m_nests.end() == it) {
+    return rtypes::constants::kNoUUID;
+  }
+  return it->second.id();
+} /* robot_in_nest() */
+
 cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* block,
                                                           const arena_map_locking& locking) {
   /* The distribution of nothing is ALWAYS successful */

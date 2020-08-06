@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <list>
+#include <string>
 
 #include <argos3/plugins/simulator/entities/light_entity.h>
 
@@ -79,6 +80,8 @@ class nest : public repr::unicell_immovable_entity2D,
        const rutils::color& light_color);
 
   light_list& lights(void) { return m_lights; }
+
+  std::string to_str(bool full = false) const;
 
  private:
   /**

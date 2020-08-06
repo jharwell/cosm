@@ -63,7 +63,7 @@ free_block_pickup::free_block_pickup(crepr::base_block3D* block,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(base_arena_map& map) {
+void free_block_pickup::visit(cds::arena_grid& grid) {
   ER_ASSERT(!m_block->is_out_of_sight(),
             "Block%d out of sight on pickup",
             m_block->id().v());
@@ -71,21 +71,25 @@ void free_block_pickup::visit(base_arena_map& map) {
   caops::block_extent_clear_visitor ec(m_block);
   cdops::cell2D_empty_visitor hc(coord());
 
-  map.grid_mtx()->lock();
+  grid.mtx()->lock();
 
   /* mark host cell as empty (not done as part of clearing block extent)  */
-  hc.visit(map.decoratee());
+  hc.visit(grid);
 
   /* clear block extent */
-  ec.visit(map.decoratee());
+  ec.visit(grid);
 
-  map.grid_mtx()->unlock();
+  grid.mtx()->unlock();
 
   if (rtypes::constants::kNoUUID != mc_robot_id) {
-    /* Update block state--already holding block mutex */
+    /* Update block state--already holding block mutex if it is needed*/
     crops::block_pickup block_op(mc_robot_id, mc_timestep);
     block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
   }
+} /* visit() */
+
+void free_block_pickup::visit(base_arena_map& map) {
+  visit(map.decoratee());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

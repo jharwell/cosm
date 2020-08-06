@@ -53,15 +53,14 @@ void cache_extent_set::visit(cds::arena_grid& grid) {
       auto rcoord = rmath::zvec2dvec(dcoord, grid.resolution().v());
       auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
 
-      if (!m_cache->contains_point2D(rcoord)) {
-        ER_WARN("Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",
+      ER_CHECKW(m_cache->contains_point2D(rcoord),
+                "Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",
                 m_cache->id().v(),
                 rcppsw::to_string(m_cache->rcenter2D()).c_str(),
                 rcppsw::to_string(m_cache->dcenter2D()).c_str(),
                 rcppsw::to_string(m_cache->xrspan()).c_str(),
                 rcppsw::to_string(m_cache->yrspan()).c_str(),
                 rcppsw::to_string(rcoord).c_str());
-      }
 
       if (dcoord != m_cache->dcenter2D()) {
         ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),

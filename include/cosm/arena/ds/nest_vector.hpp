@@ -60,7 +60,7 @@ class nest_vectorno : public std::vector<nest_vectorno_type> {
   /**
    * \brief Get a string representation of the vector contents.
    */
-  std::string to_str(void) const;
+  std::string to_str(bool full = false) const;
 };
 
 
@@ -81,7 +81,7 @@ class nest_vectorro : public std::vector<nest_vectorro_type> {
   /**
    * \brief Get a string representation of the vector contents.
    */
-  std::string to_str(void) const;
+  std::string to_str(bool full = false) const;
 };
 
 NS_END(ds, arena, cosm);

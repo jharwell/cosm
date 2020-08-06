@@ -90,10 +90,6 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
     ER_DEBUG("Executing ekST_TRANSPORT_TO_NEST");
   }
 
-  /*
-   * We have arrived at the nest so send this signal to the parent FSM that is
-   * listing for it.
-   */
   auto* ground =
       m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
   if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
@@ -102,6 +98,11 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
       return util_signal::ekHANDLED;
     } else {
       m_nest_count = 0;
+      /*
+       * We have arrived at the nest so send this signal to the parent FSM that
+       * is listing for it and stop moving.
+       */
+      actuation()->actuator<ckin2D::governed_diff_drive>()->reset();
       return util_signal::ekENTERED_NEST;
     }
   }

@@ -99,4 +99,17 @@ nest::light_list nest::init_rect(const rutils::color& color) const {
               100.0)};
 } /* init_rect() */
 
+std::string nest::to_str(bool full) const {
+  /* Can't call dcenter2D(), as the nest might be even in X and/or Y */
+  std::string base = "nest" + rcppsw::to_string(id()) + "@" + rcenter2D().to_str();
+
+  if (full) {
+    return base +
+        " x=" + rcppsw::to_string(xrspan()) + "/" + rcppsw::to_string(xdspan()) +
+        " y=" + rcppsw::to_string(yrspan()) + "/" + rcppsw::to_string(ydspan());
+  } else {
+    return base;
+  }
+} /* to_str() */
+
 NS_END(repr, cosm);

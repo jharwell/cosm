@@ -40,6 +40,9 @@ class base_arena_map;
 namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
+namespace cosm::ds {
+class arena_grid;
+} /* namespace cosm::ds */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -81,6 +84,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
    * assumed to be held when calling this function.
    */
   void visit(base_arena_map& map);
+  void visit(cds::arena_grid& grid);
 
  private:
   free_block_pickup(crepr::base_block3D* block,

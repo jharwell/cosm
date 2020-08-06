@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <mutex>
+#include <shared_mutex>
 #include <tuple>
 
 #include "rcppsw/ds/stacked_grid2D.hpp"
@@ -90,11 +90,11 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
     }   /* for(i..) */
   }     /* reset */
 
-  std::mutex* mtx(void) { return &m_mtx; }
+  std::shared_mutex* mtx(void) { return &m_mtx; }
 
  private:
   /* clang-format off */
-  std::mutex m_mtx{};
+  std::shared_mutex m_mtx{};
   /* clang-format on */
 };
 

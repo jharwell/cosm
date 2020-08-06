@@ -61,7 +61,7 @@ void foraging_oracle::update(carena::base_arena_map* const map) {
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
      */
-    std::scoped_lock lock(*map->block_mtx());
+    std::shared_lock lock(*map->block_mtx());
 
     std::copy_if(map->blocks().begin(),
                  map->blocks().end(),
@@ -83,7 +83,7 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
      */
-    std::scoped_lock lock(*map->block_mtx());
+    std::shared_lock lock(*map->block_mtx());
 
     std::copy_if(map->blocks().begin(),
                  map->blocks().end(),
@@ -108,7 +108,7 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
 
   auto caches_it = config()->entities.types.find("caches");
   if (config()->entities.types.end() != caches_it && caches_it->second) {
-    std::scoped_lock lock(*map->cache_mtx());
+    std::shared_lock lock(*map->cache_mtx());
     coracle::entities_oracle<carepr::base_cache>::knowledge_type v;
     for (auto& c : map->caches()) {
       v.push_back(c);
