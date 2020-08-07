@@ -27,6 +27,7 @@
 #include <argos3/plugins/simulator/media/led_medium.h>
 
 #include "rcppsw/utils/maskable_enum.hpp"
+#include "rcppsw/ds/rtree2D.hpp"
 
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
@@ -113,7 +114,9 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   }   /* for(&pair..) */
 
   auto precalc = block_dist_precalc(nullptr);
-  return m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, m_rng);
+  bool ret = m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, m_rng);
+  ret |= distribute_all_blocks();
+  return ret;
 } /* initialize() */
 
 update_status base_arena_map::update(const rtypes::timestep&) {
@@ -174,17 +177,22 @@ cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* b
   auto precalc = block_dist_precalc(block);
 
   /* do the distribution */
-  auto status = m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
+  auto status = m_block_dispatcher.distribute_block(precalc.
+                                                    dist_ent,
+                                                    precalc.avoid_ents);
   ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
             "Failed to distribute block%d",
             block->id().v());
+
+  /* Update block location query tree */
+  bloctree_update(block, locking);
 
   /* unlock the arena map */
   post_block_dist_unlock(locking);
   return status;
 } /* disribute_single_block() */
 
-void base_arena_map::distribute_all_blocks(void) {
+bool base_arena_map::distribute_all_blocks(void) {
   /* calculate the entities to avoid during distribution */
   auto precalc = block_dist_precalc(nullptr);
 
@@ -201,8 +209,17 @@ void base_arena_map::distribute_all_blocks(void) {
 
   auto status = m_block_dispatcher.distribute_blocks(dist_blocks,
                                                      precalc.avoid_ents);
-  ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
-            "Unable to perform initial block distribution");
+  ER_CHECK(cfbd::dist_status::ekSUCCESS == status,
+           "Failed to distribute all blocks");
+
+  /*
+   * Update block location query tree for all blocks. No locking is needed,
+   * because this happens during initialization.
+   */
+  for (auto *b : blocks()) {
+    bloctree_update(b, arena_map_locking::ekALL_HELD);
+  } /* for(*b..) */
+
   /*
    * Once all blocks have been distributed, and (possibly) all caches have been
    * created via block consolidation, all cells that do not have anything in
@@ -219,16 +236,21 @@ void base_arena_map::distribute_all_blocks(void) {
       }
     } /* for(j..) */
   }   /* for(i..) */
+  return true;
+
+error:
+  ER_FATAL_SENTINEL("Unable to perform initial block distribution");
+  return false;
 } /* distribute_all_blocks() */
 
 void base_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
-  maybe_lock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_lock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
 } /* pre_block_dist_lock() */
 
 void base_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
-  maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
-  maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
 
 base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
@@ -291,5 +313,45 @@ bool base_arena_map::placement_conflict(const crepr::base_block3D* const block,
   auto status = cspatial::conflict_checker::placement2D(this, block, loc);
   return status.x && status.y;
 } /* placement_conflict() */
+
+void base_arena_map::bloctree_update(const crepr::base_block3D* block,
+                                     const arena_map_locking& locking) {
+  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+
+  /*
+   * If the block is currently carried by a robot, it is not in the arena, so
+   * don't put it in the loctree, which only contains free blocks.
+   */
+  if (block->is_out_of_sight()) {
+    ER_INFO("Remove out of sight block%s from loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            bloctree()->size());
+    m_bloctree.remove(block);
+  } else {
+    ER_INFO("Update block%s@%s/%s in loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            rcppsw::to_string(block->ranchor2D()).c_str(),
+            rcppsw::to_string(block->danchor2D()).c_str(),
+            bloctree()->size());
+    m_bloctree.update(block);
+  }
+  ER_ASSERT(bloctree_verify(), "Bloctree failed verification");
+  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+} /* bloctree_update() */
+
+bool base_arena_map::bloctree_verify(void) const {
+  for (auto &pair : m_bloctree) {
+    auto* block = blocks()[pair.second.v()];
+    ER_CHECK(!block->is_out_of_sight(),
+             "Out of sight block%s in bloctree",
+             rcppsw::to_string(block->id()).c_str());
+  } /* for(&pair..) */
+
+  return true;
+
+ error:
+  ER_FATAL_SENTINEL("Bloctree failed verification")
+  return false;
+} /* bloctree_verify() */
 
 NS_END(arena, cosm);

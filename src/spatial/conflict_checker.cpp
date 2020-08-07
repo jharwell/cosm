@@ -68,29 +68,35 @@ conflict_checker::status conflict_checker::placement2D(
     return {true, true};
   }
 
-  /*
-   * If the robot is currently right on the edge of a nest, we can't just drop
-   * the block in it, as it will not be processed as a normal \ref
-   * nest_block_drop, and will be discoverable by a robot via LOS but not able
-   * to be acquired, as its color is hidden by that of the nest.
-   */
   status conflict;
+
+  /* not that many nests--OK to check all each time */
   for (auto* nest : map->nests()) {
     conflict |= nest_conflict(block, *nest, loc);
   } /* for(&nest..) */
 
-  /* check all blocks, bailing out early if you get a conflict (there can be a
-   * lot of blocks...) */
-  for (auto *b : map->blocks()) {
-    if (b == block) {
-      continue;
-    }
-    conflict |= block_conflict(block, b, loc);
+  /*
+   * To avoid any potential floating point equality comparison errors, pick the
+   * rectangle you pass to the loctree to be larger than the space that would be
+   * occupied by the block if it is dropped at the specified location.
+   *
+   * This is WAY faster than a linear scan.
+   */
+  auto* bloctree = map->bloctree();
+  rmath::vector2d ll(loc - block->rdim2D() * 2.0);
+  rmath::vector2d ur(loc + block->rdim2D() * 2.0);
+  auto ids = bloctree->query(ll, ur);
+  for (auto &id : ids) {
+    /*
+     * Because we picked a larger than strictly required bounding box, we
+     * actually need to check what we get in return for overlap.
+     */
+    conflict |= block_conflict(block, map->blocks()[id.v()], loc);
 
     if (conflict.x && conflict.y) {
       return conflict;
     }
-  } /* for(*block..) */
+  } /* for(&id..) */
 
   return conflict;
 } /* placement2D() */
@@ -107,6 +113,8 @@ conflict_checker::status conflict_checker::placement2D(
    * the block here, as it wipll overlap with the cache, and robots will think
    * that is accessible, but will not be able to vector to it (not all 4 wheel
    * sensors will report the color of a block). See FORDYCA#233.
+   *
+   * Not that many caches, so OK to check all each time.
    */
   for (auto& cache : map->caches()) {
     conflict |= cache_conflict(block, cache, loc);

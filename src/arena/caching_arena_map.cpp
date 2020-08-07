@@ -149,15 +149,15 @@ rtypes::type_uuid caching_arena_map::robot_on_cache(
 } /* robot_on_cache() */
 
 void caching_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
-  maybe_lock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
-  maybe_lock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_lock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+  maybe_lock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
+  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
 } /* pre_block_dist_lock() */
 
 void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
-  maybe_unlock(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
-  maybe_unlock(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_unlock(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
+  maybe_unlock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
 caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(
@@ -191,5 +191,82 @@ bool caching_arena_map::placement_conflict(const crepr::base_block3D* const bloc
   auto status = cspatial::conflict_checker::placement2D(this, block, loc);
   return status.x && status.y;
 } /* placement_conflict() */
+
+bool caching_arena_map::bloctree_verify(void) const {
+  if (!base_arena_map::bloctree_verify()) {
+    return false;
+  }
+
+  for (auto *b : blocks()) {
+    /*
+     * Any blocks that are in a cache should not be in the loctree, as they are
+     * not free blocks.
+     */
+    auto it = std::find_if(caches().begin(),
+                           caches().end(),
+                           [b](const auto* c) { return c->contains_block(b); });
+    if (caches().end() != it) {
+      ER_CHECK(!bloctree()->query(b->id()),
+               "Block%s@%s/%s in cache%s@%s/%s in loctree",
+               rcppsw::to_string(b->id()).c_str(),
+               rcppsw::to_string(b->ranchor2D()).c_str(),
+               rcppsw::to_string(b->danchor2D()).c_str(),
+               rcppsw::to_string((*it)->id()).c_str(),
+               rcppsw::to_string((*it)->rcenter2D()).c_str(),
+               rcppsw::to_string((*it)->dcenter2D()).c_str());
+      continue;
+    }
+  } /* for(*b..) */
+
+        return true;
+
+error:
+  return false;
+} /* bloctree_verify() */
+
+void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
+                                        const arena_map_locking& locking,
+                                        const ds::acache_vectoro& created) {
+  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+
+
+  auto it = std::find_if(created.begin(),
+                         created.end(),
+                         [block](const auto& cache){
+                           return cache->contains_block(block);
+                          });
+
+  /*
+   * If the block is currently carried by a robot or in a cache don't put it in
+   * the loctree, which only contains free blocks.
+   */
+  if (block->is_out_of_sight()) {
+    ER_INFO("Remove out of sight block%s from loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            bloctree()->size());
+    bloctree()->remove(block);
+  } else if (created.end() != it) {
+    /*
+     * If we do things correctly, the update function only needs to check the
+     * newly created caches.
+     */
+    ER_INFO("Remove block%s in created cache%s@%s/%s from loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            rcppsw::to_string((*it)->id()).c_str(),
+            rcppsw::to_string((*it)->rcenter2D()).c_str(),
+            rcppsw::to_string((*it)->dcenter2D()).c_str(),
+            bloctree()->size());
+    bloctree()->remove(block);
+  } else {
+    ER_INFO("Update block%s@%s/%s in loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            rcppsw::to_string(block->ranchor2D()).c_str(),
+            rcppsw::to_string(block->danchor2D()).c_str(),
+            bloctree()->size());
+    bloctree()->update(block);
+  }
+  ER_ASSERT(bloctree_verify(), "Bloctree failed verification");
+  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+} /* bloctree_update() */
 
 NS_END(arena, cosm);

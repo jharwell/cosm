@@ -140,7 +140,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
               m_real_cache->blocks().size());
     m_orphan_block = m_real_cache->oldest_block();
 
-    map.grid_mtx()->lock();
+    map.lock_wr(map.grid_mtx());
 
     /* Clear the cache extent cells (already holding cache mutex) */
     cache_extent_clear_visitor clear_op1(m_real_cache);
@@ -162,7 +162,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     block_extent_set_visitor set_op(m_orphan_block);
     set_op.visit(map.decoratee());
 
-    map.grid_mtx()->unlock();
+    map.unlock_wr(map.grid_mtx());
 
     ER_ASSERT(cell.state_has_block(),
               "Depleted cache host cell@%s not in HAS_BLOCK",
@@ -192,9 +192,9 @@ void cached_block_pickup::visit(crepr::base_block3D& block,
   crops::block_pickup op(mc_robot_id, mc_timestep);
 
   /* need to take mutex--not held in caller */
-  map->block_mtx()->lock();
+  map->lock_wr(map->block_mtx());
   op.visit(block, crops::block_pickup_owner::ekARENA_MAP);
-  map->block_mtx()->unlock();
+  map->unlock_wr(map->block_mtx());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

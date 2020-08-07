@@ -88,25 +88,25 @@ void do_lock(caching_arena_map& map) {
    * order to avoid deadlocks. If we let arena map acquire the cache mutex
    * during block distribution, we can get a deadlock due to ordering.
    */
-  map.cache_mtx()->lock();
-  map.block_mtx()->lock();
-  map.grid_mtx()->lock();
+  map.lock_wr(map.cache_mtx());
+  map.lock_wr(map.block_mtx());
+  map.lock_wr(map.grid_mtx());
 } /* do_lock() */
 
 void do_unlock(caching_arena_map& map) {
-  map.grid_mtx()->unlock();
-  map.block_mtx()->unlock();
-  map.cache_mtx()->unlock();
+  map.unlock_wr(map.grid_mtx());
+  map.unlock_wr(map.block_mtx());
+  map.unlock_wr(map.cache_mtx());
 } /* do_unlock() */
 
 void do_lock(base_arena_map& map) {
-  map.block_mtx()->lock();
-  map.grid_mtx()->lock();
+  map.lock_wr(map.block_mtx());
+  map.lock_wr(map.grid_mtx());
 } /* do_lock() */
 
 void do_unlock(base_arena_map& map) {
-  map.grid_mtx()->unlock();
-  map.block_mtx()->unlock();
+  map.unlock_wr(map.block_mtx());
+  map.unlock_wr(map.grid_mtx());
 } /* do_unlock() */
 
 NS_END(detail, operations, arena, cosm);

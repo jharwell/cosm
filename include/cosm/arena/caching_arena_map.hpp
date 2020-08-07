@@ -110,6 +110,10 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   bool placement_conflict(const crepr::base_block3D* const block,
                           const rmath::vector2d& loc) const override;
 
+  void bloctree_update(const crepr::base_block3D* block,
+                       const arena_map_locking& locking,
+                       const ds::acache_vectoro& created = {});
+
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */
@@ -134,6 +138,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   void post_block_dist_unlock(const arena_map_locking& locking) override;
   block_dist_precalc_type block_dist_precalc(
       const crepr::base_block3D* block) override;
+  bool bloctree_verify(void) const override;
 
   /* clang-format off */
   mutable std::shared_mutex              m_cache_mtx{};

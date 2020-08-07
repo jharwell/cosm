@@ -28,9 +28,11 @@
 #include <shared_mutex>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/multithread/lockable.hpp"
 
 #include "cosm/arena/arena_map_locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
@@ -41,6 +43,7 @@
 #include "cosm/repr/nest.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
 #include "cosm/arena/update_status.hpp"
+#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -76,7 +79,8 @@ NS_START(cosm, arena);
  * efficiency with large numbers of objects.
  */
 class base_arena_map : public rer::client<base_arena_map>,
-                       public rpdecorator::decorator<cds::arena_grid> {
+                       public rpdecorator::decorator<cds::arena_grid>,
+                       public rmultithread::lockable {
  public:
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
@@ -175,6 +179,12 @@ class base_arena_map : public rer::client<base_arena_map>,
   virtual cds::block3D_vectorno free_blocks(void) const;
 
   /**
+   * \brief Update the location index tree after the specified block has moved.
+   */
+  void bloctree_update(const crepr::base_block3D* block,
+                       const arena_map_locking& locking);
+
+  /**
    * \brief Get the list of all the blocks currently present in the arena.
    *
    * Some blocks may not be visible on the base_arena_map, as they are being
@@ -189,15 +199,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   size_t n_blocks(void) const { return m_blockso.size(); }
 
   /**
-   * \brief Distribute all blocks in the arena. Resets arena state. Should only
-   * be called during (re)-initialization.
-   *
-   * \note This operation requires holding the block and grid mutexes in
-   *       multi-threaded contetxts.
-   */
-  void distribute_all_blocks(void);
-
-  /**
    * \brief Distribute a particular block in the arena, according to whatever
    * policy was specified in the .argos file.
    *
@@ -209,6 +210,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
                                             const arena_map_locking& locking);
+
 
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
@@ -246,37 +248,17 @@ class base_arena_map : public rer::client<base_arena_map>,
     return &m_redist_governor;
   }
 
+  const ds::loctree* bloctree(void) const { return &m_bloctree; }
+
   /**
    * \brief Perform deferred initialization. This is not part the constructor so
-   * that it can be verified via return code. Currently it initializes:
+   * that it can be verified via return code. Currently it does the following:
    *
-   * - The block distributor
-   * - Nest lights
-   * - Block bounding box
+   * - Initializes the block distributor and distributes all blocks
+   * - Initializes nest lights
+   * - Calculates block minimal bounding box
    */
   bool initialize(cpal::argos_sm_adaptor* sm);
-
-  void maybe_lock(std::shared_mutex* mtx, bool cond) {
-    if (cond) {
-      mtx->lock();
-    }
-  }
-  void maybe_unlock(std::shared_mutex* mtx, bool cond) {
-    if (cond) {
-      mtx->unlock();
-    }
-  }
-
-  void maybe_lock_shared(std::shared_mutex* mtx, bool cond) const {
-    if (cond) {
-      mtx->lock_shared();
-    }
-  }
-  void maybe_unlock_shared(std::shared_mutex* mtx, bool cond) const {
-    if (cond) {
-      mtx->unlock_shared();
-    }
-  }
 
   std::shared_mutex* grid_mtx(void) { return decoratee().mtx(); }
 
@@ -314,11 +296,25 @@ class base_arena_map : public rer::client<base_arena_map>,
   virtual block_dist_precalc_type block_dist_precalc(
       const crepr::base_block3D* block);
 
+  virtual bool bloctree_verify(void) const;
+
+  ds::loctree* bloctree(void) { return &m_bloctree; }
+
  private:
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
 
+  /**
+   * \brief Distribute all blocks in the arena. Resets arena state. Called as
+   * part of \ref initialize().
+   *
+   * \note This operation requires holding the block and grid mutexes in
+   *       multi-threaded contetxts.
+   */
+  bool distribute_all_blocks(void);
+
   /* clang-format off */
   mutable std::shared_mutex              m_block_mtx{};
+  std::shared_mutex                      m_bloctree_mtx{};
 
   rmath::rng*                            m_rng;
   rmath::vector3d                        m_block_bb{};
@@ -328,6 +324,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   cforaging::block_dist::dispatcher      m_block_dispatcher;
   cforaging::block_dist::redist_governor m_redist_governor;
   cforaging::block_motion_handler        m_bm_handler;
+  ds::loctree                            m_bloctree{};
   /* clang-format on */
 };
 

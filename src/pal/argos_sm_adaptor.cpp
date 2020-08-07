@@ -73,7 +73,6 @@ void argos_sm_adaptor::arena_map_init(
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }
-  m_arena_map->distribute_all_blocks();
 } /* arena_map_init() */
 
 crepr::embodied_block_variant argos_sm_adaptor::make_embodied(

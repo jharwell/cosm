@@ -29,6 +29,7 @@
 #include "rcppsw/types/timestep.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
+#include "cosm/arena/arena_map_locking.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -68,7 +69,8 @@ class free_block_pickup : public rer::client<free_block_pickup>,
 
   static free_block_pickup by_robot(crepr::base_block3D* block,
                                     const rtypes::type_uuid& robot_id,
-                                    const rtypes::timestep& t);
+                                    const rtypes::timestep& t,
+                                    const arena_map_locking& locking);
 
   static free_block_pickup by_arena(crepr::base_block3D* block);
 
@@ -89,11 +91,13 @@ class free_block_pickup : public rer::client<free_block_pickup>,
  private:
   free_block_pickup(crepr::base_block3D* block,
                     const rtypes::type_uuid& robot_id,
-                    const rtypes::timestep& t);
+                    const rtypes::timestep& t,
+                    const arena_map_locking& locking);
 
   /* clang-format off */
   const rtypes::type_uuid mc_robot_id;
   const rtypes::timestep  mc_timestep;
+  const arena_map_locking mc_locking;
 
   crepr::base_block3D*    m_block;
   /* clang-format on */

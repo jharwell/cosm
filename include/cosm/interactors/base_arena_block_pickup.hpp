@@ -163,7 +163,7 @@ class base_arena_block_pickup
      * actually finishes picking up a block, then the second one will not get
      * the necessary \ref block_vanished event. See COSM#594.
      */
-    m_map->block_mtx()->lock();
+    m_map->lock_wr(m_map->block_mtx());
 
     /*
      * If two robots both are serving penalties on the same ramp block (possible
@@ -192,7 +192,7 @@ class base_arena_block_pickup
       ER_ASSERT(pre_execute_check(p), "Pre-execute check failed");
       execute_pickup(controller, p, t);
     }
-    m_map->block_mtx()->unlock();
+    m_map->unlock_wr(m_map->block_mtx());
 
     m_penalty_handler->penalty_remove(p);
   }
@@ -210,7 +210,8 @@ class base_arena_block_pickup
     robot_block_pickup_visitor_type rpickup_op(block, controller.entity_id(), t);
     auto apickup_op = caops::free_block_pickup_visitor::by_robot(block,
                                                                  controller.entity_id(),
-                                                                 t);
+                                                                 t,
+                                                                 arena::arena_map_locking::ekBLOCKS_HELD);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);

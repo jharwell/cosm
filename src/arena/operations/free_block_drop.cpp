@@ -96,14 +96,15 @@ void free_block_drop::visit(crepr::base_block3D& block) {
 } /* visit() */
 
 void free_block_drop::visit(base_arena_map& map) {
-  map.maybe_lock(map.block_mtx(),
+  map.maybe_lock_wr(map.block_mtx(),
                  !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
   /*
    * We might be modifying this cell--don't want block distribution in ANOTHER
    * thread to pick this cell for distribution.
    */
-  map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_lock_wr(map.grid_mtx(),
+                    !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
@@ -132,27 +133,30 @@ void free_block_drop::visit(base_arena_map& map) {
     /* set block extent */
     caops::block_extent_set_visitor e(m_block);
     e.visit(map.decoratee());
+
+    /* update block loctree with new location */
+    map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
   }
 
-  map.maybe_unlock(map.grid_mtx(),
+  map.maybe_unlock_wr(map.grid_mtx(),
                    !(mc_locking & arena_map_locking::ekGRID_HELD));
-  map.maybe_unlock(map.block_mtx(),
+  map.maybe_unlock_wr(map.block_mtx(),
                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 
 void free_block_drop::visit(caching_arena_map& map) {
   /* needed for atomic check for cache overlap+do drop operation */
-  map.maybe_lock(map.cache_mtx(),
+  map.maybe_lock_wr(map.cache_mtx(),
                  !(mc_locking & arena_map_locking::ekCACHES_HELD));
 
-  map.maybe_lock(map.block_mtx(),
+  map.maybe_lock_wr(map.block_mtx(),
                  !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
   /*
    * We might be modifying this cell--don't want block distribution in ANOTHER
    * thread to pick this cell for distribution.
    */
-  map.maybe_lock(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_lock_wr(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
@@ -176,14 +180,14 @@ void free_block_drop::visit(caching_arena_map& map) {
                                 mc_resolution,
                                 arena_map_locking::ekALL_HELD);
     op.visit(map);
-    map.maybe_unlock(map.cache_mtx(),
+    map.maybe_unlock_wr(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
     map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
-    map.maybe_unlock(map.cache_mtx(),
+    map.maybe_unlock_wr(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else {
-    map.maybe_unlock(map.cache_mtx(),
+    map.maybe_unlock_wr(map.cache_mtx(),
                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
@@ -197,11 +201,14 @@ void free_block_drop::visit(caching_arena_map& map) {
     /* set block extent */
     caops::block_extent_set_visitor e(m_block);
     e.visit(map.decoratee());
+
+    /* update block loctree with new location */
+    map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
   }
 
-  map.maybe_unlock(map.grid_mtx(),
+  map.maybe_unlock_wr(map.grid_mtx(),
                    !(mc_locking & arena_map_locking::ekGRID_HELD));
-  map.maybe_unlock(map.block_mtx(),
+  map.maybe_unlock_wr(map.block_mtx(),
                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 

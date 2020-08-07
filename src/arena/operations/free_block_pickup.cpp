@@ -40,24 +40,28 @@ NS_START(cosm, arena, operations, detail);
 free_block_pickup free_block_pickup::by_robot(
     crepr::base_block3D* block,
     const rtypes::type_uuid& robot_id,
-    const rtypes::timestep& t) {
-  return free_block_pickup(block, robot_id, t);
+    const rtypes::timestep& t,
+    const arena_map_locking& locking) {
+  return free_block_pickup(block, robot_id, t, locking);
 } /* by_robot() */
 
 free_block_pickup free_block_pickup::by_arena(
     crepr::base_block3D* block) {
   return free_block_pickup(block,
                            rtypes::constants::kNoUUID,
-                           rtypes::timestep(-1));
+                           rtypes::timestep(-1),
+                           arena_map_locking::ekALL_HELD);
 } /* by_arena() */
 
 free_block_pickup::free_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id,
-                                     const rtypes::timestep& t)
+                                     const rtypes::timestep& t,
+                                     const arena_map_locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
       cell2D_op(block->danchor2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
+      mc_locking(locking),
       m_block(block) {}
 
 /*******************************************************************************
@@ -90,6 +94,9 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
 
 void free_block_pickup::visit(base_arena_map& map) {
   visit(map.decoratee());
+
+  /* Update block loctree */
+  map.bloctree_update(m_block, mc_locking);
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

@@ -75,17 +75,17 @@ void cache_block_drop::visit(caching_arena_map& map) {
    * We might be modifying a cell--don't want block distribution in ANOTHER
    * thread to pick our chosen cell for distribution.
    */
-  map.maybe_lock(map.block_mtx(),
+  map.maybe_lock_wr(map.block_mtx(),
                  !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
   visit(*m_arena_block);
-  map.maybe_unlock(map.block_mtx(),
+  map.maybe_unlock_wr(map.block_mtx(),
                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
-  map.maybe_lock(map.cache_mtx(),
+  map.maybe_lock_wr(map.cache_mtx(),
                  !(mc_locking & arena_map_locking::ekCACHES_HELD));
   visit(*m_cache);
-  map.maybe_unlock(map.cache_mtx(),
+  map.maybe_unlock_wr(map.cache_mtx(),
                    !(mc_locking & arena_map_locking::ekCACHES_HELD));
 
   /*
@@ -97,7 +97,7 @@ void cache_block_drop::visit(caching_arena_map& map) {
    */
   visit(map.access<arena_grid::kCell>(cell2D_op::coord()));
 
-  ER_INFO("arena_map: Block%d dropped in cache%d,total=[%s] (%zu)",
+  ER_INFO("Block%d dropped in cache%d,total=[%s] (%zu)",
           m_arena_block->id().v(),
           m_cache->id().v(),
           rcppsw::to_string(m_cache->blocks()).c_str(),
