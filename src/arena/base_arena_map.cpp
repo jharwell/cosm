@@ -40,6 +40,7 @@
 #include "cosm/repr/operations/nest_extent.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
+#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -61,7 +62,9 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
                          config->grid.resolution,
                          &config->blocks.dist),
       m_redist_governor(&config->blocks.dist.redist_governor),
-      m_bm_handler(&config->blocks.motion, m_rng) {
+      m_bm_handler(&config->blocks.motion, m_rng),
+      m_bloctree(std::make_unique<cads::loctree>()),
+      m_nloctree(std::make_unique<cads::loctree>()) {
   ER_INFO("real=(%fx%f), discrete=(%zux%zu), resolution=%f",
           xrsize(),
           yrsize(),
@@ -83,8 +86,12 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
         op.visit(access<cds::arena_grid::kCell>(coord));
       } /* for(j..) */
     } /* for(i..) */
+
     /* update host cell */
     m_nests.emplace(inst.id(), inst);
+
+    /* add to loctree */
+    m_nloctree->update(&inst);
   } /* for(&nest..) */
 
   /* initialize non-owning block vector exposed to outside classes */
@@ -93,17 +100,19 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
   } /* for(&b..) */
 }
 
+base_arena_map::~base_arena_map(void) = default;
+
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   /* compute block bounding box */
   auto* block = *std::max_element(m_blocksno.begin(),
-                                 m_blocksno.end(),
-                                 [&](const auto* b1,
-                                     const auto* b2) {
-                                   return b1->rdim3D() < b2->rdim3D();
-                                 });
+                                  m_blocksno.end(),
+                                  [&](const auto* b1,
+                                      const auto* b2) {
+                                    return b1->rdim3D() < b2->rdim3D();
+                                  });
   m_block_bb = block->rdim3D();
 
   /* initialize nest lights */
@@ -296,10 +305,11 @@ base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
 } /* block_dist_precalc() */
 
 ds::nest_vectorro base_arena_map::nests(void) const {
-  ds::nest_vectorro ret;
+  ds::nest_vectorro ret(m_nests.size());
+
   std::transform(m_nests.begin(),
                  m_nests.end(),
-                 std::back_inserter(ret),
+                 ret.begin(),
                  [&](const auto& pair) { return &pair.second; });
   return ret;
 }
@@ -326,21 +336,21 @@ void base_arena_map::bloctree_update(const crepr::base_block3D* block,
     ER_INFO("Remove out of sight block%s from loctree,size=%zu",
             rcppsw::to_string(block->id()).c_str(),
             bloctree()->size());
-    m_bloctree.remove(block);
+    m_bloctree->remove(block);
   } else {
     ER_INFO("Update block%s@%s/%s in loctree,size=%zu",
             rcppsw::to_string(block->id()).c_str(),
             rcppsw::to_string(block->ranchor2D()).c_str(),
             rcppsw::to_string(block->danchor2D()).c_str(),
             bloctree()->size());
-    m_bloctree.update(block);
+    m_bloctree->update(block);
   }
   ER_ASSERT(bloctree_verify(), "Bloctree failed verification");
   maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* bloctree_update() */
 
 bool base_arena_map::bloctree_verify(void) const {
-  for (auto &pair : m_bloctree) {
+  for (auto &pair : *m_bloctree) {
     auto* block = blocks()[pair.second.v()];
     ER_CHECK(!block->is_out_of_sight(),
              "Out of sight block%s in bloctree",

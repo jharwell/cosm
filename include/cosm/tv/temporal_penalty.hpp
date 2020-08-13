@@ -68,6 +68,13 @@ class temporal_penalty {
         mc_start_time(start_time),
         mc_controller(controller) {}
 
+  temporal_penalty(const temporal_penalty&) = default;
+  temporal_penalty(temporal_penalty&&) = default;
+
+  /* Not copy/move assignable by default */
+  const temporal_penalty& operator=(const temporal_penalty&) = delete;
+  temporal_penalty& operator=(temporal_penalty&&) = delete;
+
   const controller::base_controller* controller(void) const {
     return mc_controller;
   }

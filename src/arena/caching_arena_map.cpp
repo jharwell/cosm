@@ -32,6 +32,7 @@
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
+#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,7 +45,10 @@ NS_START(cosm, arena);
 caching_arena_map::caching_arena_map(const caconfig::arena_map_config* config,
                                      rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.arena.caching_arena_map"),
-      base_arena_map(config, rng) {}
+      base_arena_map(config, rng),
+      m_cloctree(std::make_unique<cads::loctree>()) {}
+
+caching_arena_map::~caching_arena_map(void) = default;
 
 /*******************************************************************************
  * Member Functions
@@ -54,39 +58,34 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
-  /*
-   * Add all lights of caches to the arena. Cache lights are added directly to
-   * the LED medium, which is different than what is rendered to the screen, so
-   * they actually are invisible.
-   */
+
   for (auto& c : caches) {
+    /*
+     * Add all lights of for the cache to the arena. Cache lights are added
+     * directly to the LED medium, which is different than what is rendered to
+     * the screen, so they actually are invisible.
+     */
     sm->AddEntity(*c->light());
     medium.AddEntity(*c->light());
-  } /* for(&c..) */
 
-  for (auto& c : caches) {
+    /* Add cache to outside accessible vector */
     m_cachesno.push_back(c.get());
+
+    /* Add cache to loctree */
+    cloctree_update(c.get());
+    m_cacheso.push_back(std::move(c));
   } /* for(&c..) */
 
-  m_cacheso.insert(m_cacheso.end(), caches.begin(), caches.end());
+
   ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_cacheso.size());
 } /* caches_add() */
 
 void caching_arena_map::cache_remove(repr::arena_cache* victim,
                                      pal::argos_sm_adaptor* sm) {
-  /* Remove light for cache from ARGoS */
-  auto& medium =
-      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
-  medium.RemoveEntity(*victim->light());
-  sm->RemoveEntity(*victim->light());
-
   ER_ASSERT(m_cachesno.size() == m_cacheso.size(),
             "Owned and access cache vectors have different sizes: %zu != %zu",
             m_cacheso.size(),
             m_cachesno.size());
-
-  size_t before = m_cacheso.size();
-  RCSW_UNUSED rtypes::type_uuid id = victim->id();
 
   /*
    * Lookup the victim in the cache vector, since the i-th cache is not
@@ -95,7 +94,24 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   auto victim_it =
       std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
           return victim->dloccmp(*c);
-      });
+        });
+  ER_ASSERT(victim_it != m_cacheso.end(),
+            "Victim cache%d not found",
+            victim->id().v());
+
+  /* Remove light for cache from ARGoS */
+  auto& medium =
+      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
+  medium.RemoveEntity(*(*victim_it)->light());
+  sm->RemoveEntity(*(*victim_it)->light());
+
+  /* Remove from loctree */
+  cloctree_update(victim_it->get());
+
+  size_t before = m_cacheso.size();
+  RCSW_UNUSED rtypes::type_uuid id = victim->id();
+
+
   /*
    * Copy depleted cache to zombie vector to ensure accurate proper (1) robot
    * event processing of the cache pickp this timestep (2) metric collection
@@ -218,11 +234,25 @@ bool caching_arena_map::bloctree_verify(void) const {
     }
   } /* for(*b..) */
 
-        return true;
+  return true;
 
 error:
   return false;
 } /* bloctree_verify() */
+
+bool caching_arena_map::cloctree_verify(void) const {
+  for (auto *c : caches()) {
+    ER_CHECK(m_cloctree->query(c->id()),
+             "Cache%s@%s/%s not in loctree",
+             rcppsw::to_string(c->id()).c_str(),
+             rcppsw::to_string(c->rcenter2D()).c_str(),
+             rcppsw::to_string(c->dcenter2D()).c_str());
+  } /* for(*b..) */
+  return true;
+
+error:
+  return false;
+} /* cloctree_verify() */
 
 void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
                                         const arena_map_locking& locking,
@@ -265,8 +295,29 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
             bloctree()->size());
     bloctree()->update(block);
   }
-  ER_ASSERT(bloctree_verify(), "Bloctree failed verification");
+  ER_ASSERT(bloctree_verify(), "Block loctree failed verification");
   maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* bloctree_update() */
+
+void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
+  /*
+   * If the cache is currently carried by a robot or in a cache don't put it in
+   * the loctree, which only contains free caches.
+   */
+  if (m_cloctree->query(cache->id())) {
+    ER_INFO("Remove depleted cache%s from loctree,size=%zu",
+            rcppsw::to_string(cache->id()).c_str(),
+            cloctree()->size());
+    m_cloctree->remove(cache);
+  } else {
+    ER_INFO("Add cache%s@%s/%s to loctree,size=%zu",
+            rcppsw::to_string(cache->id()).c_str(),
+            rcppsw::to_string(cache->rcenter2D()).c_str(),
+            rcppsw::to_string(cache->dcenter2D()).c_str(),
+            cloctree()->size());
+    m_cloctree->update(cache);
+  }
+  ER_ASSERT(cloctree_verify(), "Cache loctree failed verification");
+} /* cloctree_update() */
 
 NS_END(arena, cosm);

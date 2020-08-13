@@ -43,7 +43,6 @@
 #include "cosm/repr/nest.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
 #include "cosm/arena/update_status.hpp"
-#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,6 +50,9 @@
 namespace cosm::arena::config {
 struct arena_map_config;
 }
+namespace cosm::arena::ds {
+class loctree;
+} /* namespace cosm::arena::ds */
 
 namespace cosm::pal {
 class argos_sm_adaptor;
@@ -86,6 +88,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
 
   base_arena_map(const caconfig::arena_map_config* config, rmath::rng* rng);
+  ~base_arena_map(void) override;
 
   /* Not move/copy constructable/assignable by default */
   base_arena_map(const base_arena_map&) = delete;
@@ -248,7 +251,8 @@ class base_arena_map : public rer::client<base_arena_map>,
     return &m_redist_governor;
   }
 
-  const ds::loctree* bloctree(void) const { return &m_bloctree; }
+  const cads::loctree* bloctree(void) const { return m_bloctree.get(); }
+  const cads::loctree* nloctree(void) const { return m_nloctree.get(); }
 
   /**
    * \brief Perform deferred initialization. This is not part the constructor so
@@ -298,7 +302,7 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   virtual bool bloctree_verify(void) const;
 
-  ds::loctree* bloctree(void) { return &m_bloctree; }
+  ds::loctree* bloctree(void) { return m_bloctree.get(); }
 
  private:
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
@@ -324,7 +328,8 @@ class base_arena_map : public rer::client<base_arena_map>,
   cforaging::block_dist::dispatcher      m_block_dispatcher;
   cforaging::block_dist::redist_governor m_redist_governor;
   cforaging::block_motion_handler        m_bm_handler;
-  ds::loctree                            m_bloctree{};
+  std::unique_ptr<cads::loctree>         m_bloctree;
+  std::unique_ptr<cads::loctree>         m_nloctree;
   /* clang-format on */
 };
 

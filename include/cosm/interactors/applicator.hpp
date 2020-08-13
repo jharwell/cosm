@@ -64,6 +64,12 @@ class applicator {
   applicator(TBaseController* const controller, const rtypes::timestep& t)
       : mc_timestep(t), m_controller(controller) {}
 
+  /* Not move/copy constructable/assignable by default */
+  applicator(const applicator&) = delete;
+  const applicator& operator=(const applicator&) = delete;
+  applicator(applicator&&) = delete;
+  applicator& operator=(applicator&&) = delete;
+
   template <typename TDerivedController>
   auto operator()(TInteractor<TDerivedController, Args...>& interactor) const
       -> decltype(interactor(std::declval<TDerivedController&>(),

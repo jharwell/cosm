@@ -84,9 +84,11 @@ class block_motion_handler : public rer::client<block_motion_handler>,
 
  private:
   /**
-   * \brief The # of tries to move a free block to an adjacent square
+   * \brief The # of tries to move a free block to an adjacent square. We
+   * have 8 total squares that a given block can be moved to, and we choose
+   * between them uniformly.
    */
-  static constexpr const size_t kMAX_TRIES = 100;
+  static constexpr const size_t kMAX_TRIES = 32;
 
   void random_walk(carena::base_arena_map* map);
 

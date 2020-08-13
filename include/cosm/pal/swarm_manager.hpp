@@ -72,6 +72,8 @@ class swarm_manager : public rer::client<swarm_manager> {
   swarm_manager(const swarm_manager&) = delete;
   const swarm_manager& operator=(const swarm_manager&) = delete;
 
+  rmath::rng* rng(void) { return m_rng; }
+
  protected:
   /**
    * \brief Initialize random number generation for loop function use. Currently
@@ -90,8 +92,6 @@ class swarm_manager : public rer::client<swarm_manager> {
    */
   void output_init(const std::string& output_root,
                    const std::string& output_dir) RCSW_COLD;
-
-  rmath::rng* rng(void) { return m_rng; }
 
  private:
   /* clang-format off */

@@ -26,6 +26,7 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -70,11 +71,6 @@ conflict_checker::status conflict_checker::placement2D(
 
   status conflict;
 
-  /* not that many nests--OK to check all each time */
-  for (auto* nest : map->nests()) {
-    conflict |= nest_conflict(block, *nest, loc);
-  } /* for(&nest..) */
-
   /*
    * To avoid any potential floating point equality comparison errors, pick the
    * rectangle you pass to the loctree to be larger than the space that would be
@@ -82,22 +78,31 @@ conflict_checker::status conflict_checker::placement2D(
    *
    * This is WAY faster than a linear scan.
    */
-  auto* bloctree = map->bloctree();
   rmath::vector2d ll(loc - block->rdim2D() * 2.0);
   rmath::vector2d ur(loc + block->rdim2D() * 2.0);
-  auto ids = bloctree->query(ll, ur);
+  std::vector<rtypes::type_uuid> ids;
+
+  ids = map->nloctree()->query(ll, ur);
+  for (auto&id : ids) {
+    /*
+     * Because we picked a larger than strictly required bounding box, we
+     * actually need to check what we get in return for overlap.
+     */
+    conflict |= nest_conflict(block, *map->nest(id), loc);
+    RCSW_CHECK(!(conflict.x && conflict.y));
+  } /* for(&nest..) */
+
+  ids = map->bloctree()->query(ll, ur);
   for (auto &id : ids) {
     /*
      * Because we picked a larger than strictly required bounding box, we
      * actually need to check what we get in return for overlap.
      */
     conflict |= block_conflict(block, map->blocks()[id.v()], loc);
-
-    if (conflict.x && conflict.y) {
-      return conflict;
-    }
+    RCSW_CHECK(!(conflict.x && conflict.y));
   } /* for(&id..) */
 
+error:
   return conflict;
 } /* placement2D() */
 
@@ -105,8 +110,13 @@ conflict_checker::status conflict_checker::placement2D(
     const carena::caching_arena_map* map,
     const crepr::base_block3D* const block,
     const rmath::vector2d& loc) {
-  auto* base = static_cast<const carena::base_arena_map*>(map);
-  status conflict = placement2D(base, block, loc);
+
+  status conflict = placement2D(static_cast<const carena::base_arena_map*>(map),
+                                block,
+                                loc);
+  if (conflict.x && conflict.y) {
+    return conflict;
+  }
 
   /*
    * If the robot is currently right on the edge of a cache, we can't just drop
@@ -114,11 +124,29 @@ conflict_checker::status conflict_checker::placement2D(
    * that is accessible, but will not be able to vector to it (not all 4 wheel
    * sensors will report the color of a block). See FORDYCA#233.
    *
-   * Not that many caches, so OK to check all each time.
+   * To avoid any potential floating point equality comparison errors, pick the
+   * rectangle you pass to the loctree to be larger than the space that would be
+   * occupied by the block if it is dropped at the specified location.
+   *
+   * This is WAY faster than a linear scan.
    */
-  for (auto& cache : map->caches()) {
-    conflict |= cache_conflict(block, cache, loc);
+  rmath::vector2d ll(loc - block->rdim2D() * 2.0);
+  rmath::vector2d ur(loc + block->rdim2D() * 2.0);
+  auto ids = map->cloctree()->query(ll, ur);
+
+  for (auto& id : ids) {
+    auto it = std::find_if(map->caches().begin(),
+                           map->caches().end(),
+                           [&](const auto*c) { return c->id() == id; });
+    /*
+     * Because we picked a larger than strictly required bounding box, we
+     * actually need to check what we get in return for overlap.
+     */
+    conflict |= cache_conflict(block, *it, loc);
+    RCSW_CHECK(!(conflict.x && conflict.y));
   } /* for(cache..) */
+
+error:
   return conflict;
 } /* placement2D() */
 

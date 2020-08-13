@@ -138,7 +138,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
               m_real_cache->id().v(),
               rcppsw::to_string(m_real_cache->dcenter2D()).c_str(),
               m_real_cache->blocks().size());
-    m_orphan_block = m_real_cache->oldest_block();
+    m_orphan_block = m_real_cache->block_select(nullptr);
 
     map.lock_wr(map.grid_mtx());
 
@@ -172,7 +172,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
               rcppsw::to_string(coord()).c_str(),
               m_orphan_block->id().v());
 
-    /* Already holding cache mutex */
+    /* remove the cache from the arena (already holding cache mutex) */
     map.cache_remove(m_real_cache, m_sm);
 
     ER_INFO("Block%d picked up from cache%d@%s [depleted]",

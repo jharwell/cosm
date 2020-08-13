@@ -51,11 +51,11 @@ class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
     return access(c.x(), c.y());
   }
 
-  rmath::vector3z abs_ll(void) const override;
-  rmath::vector3z abs_ul(void) const override;
-  rmath::vector3z abs_lr(void) const override;
-  rmath::vector3z abs_ur(void) const override;
-  bool contains_abs(const rmath::vector3z& loc) const override;
+  rmath::vector3z abs_ll(void) const override RCSW_PURE;
+  rmath::vector3z abs_ul(void) const override RCSW_PURE;
+  rmath::vector3z abs_lr(void) const override RCSW_PURE;
+  rmath::vector3z abs_ur(void) const override RCSW_PURE;
+  bool contains_abs(const rmath::vector3z& loc) const override RCSW_PURE;
   bool contains_rel(const rmath::vector2z& loc) const override RCSW_PURE;
 
   /**
@@ -68,7 +68,7 @@ class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
    *
    * \return A reference to the cell.
    */
-  const cds::cell3D& access(size_t i, size_t j) const;
+  const cds::cell3D& access(size_t i, size_t j) const RCSW_PURE;
 };
 
 NS_END(repr, cosm);

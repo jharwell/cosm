@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/ds/cache_vector.hpp"
@@ -50,6 +51,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
  public:
   caching_arena_map(const caconfig::arena_map_config* config,
                     rmath::rng* rng);
+  ~caching_arena_map(void) override;
 
   /**
    * \brief Get the list of all the caches currently present in the arena and
@@ -69,6 +71,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    *
    * \param caches The caches to add.
    * \param sm The \ref argos_sm_adaptor.
+   *
+   * \note Cache mutex assumed to be held by the caller for writing.
    */
   void caches_add(const cads::acache_vectoro& caches, pal::argos_sm_adaptor* sm);
 
@@ -77,8 +81,12 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    *
    * \param victim The cache to remove.
    * \param sm The swarm manager (to remove light for cache).
+   *
+   * \note Cache mutex assumed to be held by the caller for writing.
    */
   void cache_remove(repr::arena_cache* victim, pal::argos_sm_adaptor* sm);
+
+  const cads::loctree* cloctree(void) const { return m_cloctree.get(); }
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the
@@ -113,7 +121,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   void bloctree_update(const crepr::base_block3D* block,
                        const arena_map_locking& locking,
                        const ds::acache_vectoro& created = {});
-
+  void cloctree_update(const carepr::arena_cache* cache);
   /**
    * \brief Protects simultaneous updates to the caches vector.
    */
@@ -139,6 +147,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   block_dist_precalc_type block_dist_precalc(
       const crepr::base_block3D* block) override;
   bool bloctree_verify(void) const override;
+  bool cloctree_verify(void) const;
 
   /* clang-format off */
   mutable std::shared_mutex              m_cache_mtx{};
@@ -151,6 +160,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * events.
    */
   cads::acache_vectoro                   m_zombie_caches{};
+  std::unique_ptr<cads::loctree>         m_cloctree;
+
   /* clang-format on */
 };
 

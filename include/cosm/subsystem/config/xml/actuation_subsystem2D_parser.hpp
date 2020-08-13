@@ -57,7 +57,7 @@ class actuation_subsystem2D_parser final : public rconfig::xml::xml_config_parse
    */
   static constexpr const char kXMLRoot[] = "actuation_subsystem2D";
 
-  bool validate(void) const override RCSW_PURE;
+  bool validate(void) const override RCSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCSW_COLD;
 
   RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }

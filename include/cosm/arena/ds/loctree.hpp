@@ -54,7 +54,7 @@ NS_END(detail);
  * \note You can't mix multiple types of entities, and the \ref
  * rtypes::type_uuid does not guarantee uniqueness_across types (duh).
  */
-class loctree : public rpdecorator::decorator<detail::rtree_type> {
+class loctree final : public rpdecorator::decorator<detail::rtree_type> {
  public:
   loctree(void) = default;
 
