@@ -66,7 +66,7 @@ class execution_metrics : public virtual rmetrics::base_metrics {
    * \brief This function should return the interface time of the most recent
    * interface time for the task.
    */
-  virtual rtypes::timestep task_last_interface_time(uint i) const = 0;
+  virtual rtypes::timestep task_last_interface_time(size_t i) const = 0;
 
   /**
    * \brief This function should return \c TRUE iff when the task has been
@@ -90,7 +90,7 @@ class execution_metrics : public virtual rmetrics::base_metrics {
    * \brief Return the current interface time estimate for interface i for a
    * task.
    */
-  virtual const ta::time_estimate& task_interface_estimate(uint i) const = 0;
+  virtual const ta::time_estimate& task_interface_estimate(size_t i) const = 0;
 
   virtual int task_last_active_interface(void) const = 0;
 };

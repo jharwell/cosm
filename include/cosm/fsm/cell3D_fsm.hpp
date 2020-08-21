@@ -89,10 +89,10 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
   void event_block_extent(void);
 
  private:
-  FSM_STATE_DECLARE_ND(cell3D_fsm, state_unknown);
-  FSM_STATE_DECLARE_ND(cell3D_fsm, state_empty);
-  FSM_STATE_DECLARE_ND(cell3D_fsm, state_block);
-  FSM_STATE_DECLARE_ND(cell3D_fsm, state_block_extent);
+  FSM_STATE_DECLARE_ND(cell3D_fsm, state_unknown, RCSW_CONST);
+  FSM_STATE_DECLARE_ND(cell3D_fsm, state_empty, RCSW_CONST);
+  FSM_STATE_DECLARE_ND(cell3D_fsm, state_block, RCSW_CONST);
+  FSM_STATE_DECLARE_ND(cell3D_fsm, state_block_extent, RCSW_CONST);
 
   FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];

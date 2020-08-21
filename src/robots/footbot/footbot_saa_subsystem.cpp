@@ -40,7 +40,15 @@ footbot_saa_subsystem::footbot_saa_subsystem(
     const subsystem::actuation_subsystem2D::actuator_map& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
     : saa_subsystemQ3D(pos, sensors, actuators, steer_config),
-      ER_CLIENT_INIT("cosm.robots.footbot.saa") {}
+      ER_CLIENT_INIT("cosm.robots.footbot.saa") {
+  /*
+   * Before this, the sensing member of our parent class is of the wrong type
+   * for the static casts we do.
+   */
+  auto footbot_sensing = std::make_unique<footbot_sensing_subsystem>(pos,
+                                                                     sensors);
+  saa_subsystemQ3D::sensing(std::move(footbot_sensing));
+}
 
 /*******************************************************************************
  * Member Functions

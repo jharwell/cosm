@@ -96,13 +96,13 @@ void execution_metrics_collector::collect(const rmetrics::base_metrics& metrics)
     ++m_cum.abort_count;
   }
 
-  m_interval.interface_count += static_cast<uint>(m.task_at_interface());
-  m_cum.interface_count += static_cast<uint>(m.task_at_interface());
+  m_interval.interface_count += static_cast<size_t>(m.task_at_interface());
+  m_cum.interface_count += static_cast<size_t>(m.task_at_interface());
 
-  m_interval.exec_estimate += static_cast<uint>(m.task_exec_estimate().v());
-  m_cum.exec_estimate += static_cast<uint>(m.task_exec_estimate().v());
-  m_interval.exec_time += static_cast<uint>(m.task_last_exec_time().v());
-  m_cum.exec_time += static_cast<uint>(m.task_last_exec_time().v());
+  m_interval.exec_estimate += static_cast<size_t>(m.task_exec_estimate().v());
+  m_cum.exec_estimate += static_cast<size_t>(m.task_exec_estimate().v());
+  m_interval.exec_time += static_cast<size_t>(m.task_last_exec_time().v());
+  m_cum.exec_time += static_cast<size_t>(m.task_last_exec_time().v());
 
   /* Can be -1 if we aborted before getting to our task interface */
   int interface = m.task_last_active_interface();
@@ -111,9 +111,9 @@ void execution_metrics_collector::collect(const rmetrics::base_metrics& metrics)
         m.task_last_interface_time(m.task_last_active_interface()).v();
     m_cum.interface_time +=
         m.task_last_interface_time(m.task_last_active_interface()).v();
-    m_interval.interface_estimate += static_cast<uint>(
+    m_interval.interface_estimate += static_cast<size_t>(
         m.task_interface_estimate(m.task_last_active_interface()).v());
-    m_cum.interface_estimate += static_cast<uint>(
+    m_cum.interface_estimate += static_cast<size_t>(
         m.task_interface_estimate(m.task_last_active_interface()).v());
   }
 } /* collect() */
@@ -122,8 +122,8 @@ boost::optional<std::string> execution_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
-  uint int_n_allocs = m_interval.complete_count + m_interval.abort_count;
-  uint cum_n_allocs = m_cum.complete_count + m_cum.abort_count;
+  size_t int_n_allocs = m_interval.complete_count + m_interval.abort_count;
+  size_t cum_n_allocs = m_cum.complete_count + m_cum.abort_count;
   std::string line;
 
   line += csv_entry_domavg(m_interval.exec_time, int_n_allocs);

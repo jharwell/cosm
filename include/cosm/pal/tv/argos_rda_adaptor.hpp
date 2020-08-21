@@ -81,7 +81,12 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
                                             TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
-    return accum / mc_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
+    auto n_robots = mc_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
+    if (0 == n_robots) {
+      return 0.0;
+    } else {
+      return accum / n_robots;
+    }
   }
 
   void update(void) override {

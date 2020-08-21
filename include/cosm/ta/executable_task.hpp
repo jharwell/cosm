@@ -71,10 +71,7 @@ class executable_task : public logical_task,
                         public metrics::execution_metrics,
                         public rer::client<executable_task> {
  public:
-  /*
-   * For now...
-   */
-  static constexpr const uint kMAX_INTERFACES = 1;
+  static constexpr const uint kMAX_INTERFACES = 2;
   static constexpr const char kAbortSrcExec[] = "exec";
   static constexpr const char kAbortSrcInterface[] = "interface";
 
@@ -88,14 +85,20 @@ class executable_task : public logical_task,
   rtypes::timestep task_last_exec_time(void) const override {
     return m_last_exec_time;
   }
-  rtypes::timestep task_last_interface_time(uint i) const override {
+  rtypes::timestep task_last_interface_time(size_t i) const override {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     return m_last_interface_times[i];
   }
   bool task_aborted(void) const override final { return m_task_aborted; }
   const time_estimate& task_exec_estimate(void) const override final {
     return m_exec_estimate;
   }
-  const time_estimate& task_interface_estimate(uint i) const override final {
+  const time_estimate& task_interface_estimate(size_t i) const override final {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     return m_interface_estimates[i];
   }
   bool task_at_interface(void) const override {
@@ -186,7 +189,7 @@ class executable_task : public logical_task,
    * \param i The interface ID.
    * \param last_measure The last measured time.
    */
-  void interface_estimate_update(uint i, const rtypes::timestep& last_measure) {
+  void interface_estimate_update(size_t i, const rtypes::timestep& last_measure) {
     m_interface_estimates[i](last_measure.v());
   }
 
@@ -239,7 +242,12 @@ class executable_task : public logical_task,
    *
    * \param i The interface ID.
    */
-  rtypes::timestep interface_time(uint i) const { return m_interface_times[i]; }
+  rtypes::timestep interface_time(size_t i) const {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
+    return m_interface_times[i];
+  }
 
   /**
    * \brief Get the current abort probability at the specified interface.
@@ -282,7 +290,7 @@ class executable_task : public logical_task,
    */
   void task_exec_count_inc(void) { ++m_exec_count; }
 
-  uint task_exec_count(void) const { return m_exec_count; }
+  size_t task_exec_count(void) const { return m_exec_count; }
 
  protected:
   /**
@@ -293,7 +301,7 @@ class executable_task : public logical_task,
    * \param start_time The timestep upon which the task entered the interface.
    */
   virtual rtypes::timestep interface_time_calc(
-      uint i,
+      size_t i,
       const rtypes::timestep& start_time) = 0;
 
   /**
@@ -301,25 +309,37 @@ class executable_task : public logical_task,
    */
   virtual rtypes::timestep current_time(void) const = 0;
 
-  void interface_time_mark_finish(uint i) {
+  void interface_time_mark_finish(size_t i) {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     m_last_interface_times[i] = m_interface_times[i];
   }
 
   /**
    * \brief Mark the current timestep as the begin of a task's interface.
    */
-  void interface_time_mark_start(uint i) {
+  void interface_time_mark_start(size_t i) {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     m_interface_start_times[i] = current_time();
   }
 
-  bool interface_in_prog(uint i) const { return m_interface_in_prog[i]; }
+  bool interface_in_prog(size_t i) const { return m_interface_in_prog[i]; }
 
-  void interface_enter(uint i) {
+  void interface_enter(size_t i) {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     m_interface_in_prog[i] = true;
     last_active_interface_reset();
   }
 
-  void interface_exit(uint i) {
+  void interface_exit(size_t i) {
+    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+              i,
+              name().c_str());
     m_interface_in_prog[i] = false;
     m_last_active_interface = i;
   }
@@ -334,7 +354,7 @@ class executable_task : public logical_task,
   bool                          m_is_partitionable{false};
   std::vector<bool>             m_interface_in_prog;
   int                           m_last_active_interface{-1};
-  uint                          m_exec_count{0};
+  size_t                        m_exec_count{0};
 
   std::vector<rtypes::timestep> m_interface_times;
   std::vector<rtypes::timestep> m_last_interface_times;

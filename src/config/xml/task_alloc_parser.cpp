@@ -68,7 +68,7 @@ void task_alloc_parser::parse(const ticpp::Element& node) {
   }
 
   if (m_ucb1.is_parsed()) {
-    m_config->ucb1 = *m_epsilon.config_get<ucb1_parser::config_type>();
+    m_config->ucb1 = *m_ucb1.config_get<ucb1_parser::config_type>();
   }
 } /* parse() */
 

@@ -50,7 +50,8 @@ void cache_extent_set::visit(cds::arena_grid& grid) {
   for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       auto dcoord = rmath::vector2z(i, j);
-      auto rcoord = rmath::zvec2dvec(dcoord, grid.resolution().v());
+      RCSW_UNUSED auto rcoord = rmath::zvec2dvec(dcoord,
+                                                 grid.resolution().v());
       auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
 
       ER_CHECKW(m_cache->contains_point2D(rcoord),

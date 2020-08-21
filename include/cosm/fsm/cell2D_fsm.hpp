@@ -120,7 +120,7 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   FSM_STATE_DECLARE(cell2D_fsm, state_cache, struct block_data);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_block_extent);
   FSM_STATE_DECLARE_ND(cell2D_fsm, state_cache_extent);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent);
+  FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent, RCSW_CONST);
 
   FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];

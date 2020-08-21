@@ -72,30 +72,30 @@ class execution_metrics_collector final : public rmetrics::base_metrics_collecto
     /**
      * \brief # Times the task has been completed.
      */
-    std::atomic_uint complete_count{0};
+    std::atomic_size_t complete_count{0};
 
     /**
      * \brief # Times the task has been aborted.
      */
-    std::atomic_uint abort_count{0};
+    std::atomic_size_t abort_count{0};
 
     /**
      * \brief # Times at their interface.
      */
-    std::atomic_uint interface_count{0};
+    std::atomic_size_t interface_count{0};
 
     /**
      * \brief Execution times of the task.
      */
-    std::atomic_uint exec_time{};
+    std::atomic_size_t exec_time{};
 
     /**
      * \brief Interface time of the task.
      */
-    std::atomic_uint interface_time{0};
+    std::atomic_size_t interface_time{0};
 
-    std::atomic_uint exec_estimate{0};
-    std::atomic_uint interface_estimate{0};
+    std::atomic_size_t exec_estimate{0};
+    std::atomic_size_t interface_estimate{0};
   };
 
   /* clang-format off */
