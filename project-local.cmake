@@ -8,16 +8,11 @@ endif()
 if("${COSM_BUILD_FOR}" MATCHES "MSI" )
   message(STATUS "Building for MSI")
   set(COSM_PROJECT_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSICLUSTER})
-
-  if(NOT COSM_PROJECT_DEPS_PREFIX)
-    set(COSM_HAL_TARGET "argos-footbot")
-  endif()
+  set(COSM_HAL_TARGET "argos-footbot")
 
 elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   message(STATUS "Building for ARGoS")
   set(COSM_HAL_TARGET "argos-footbot")
-  if(NOT COSM_PROJECT_DEPS_PREFIX)
-  endif()
   if(NOT COSM_PROJECT_DEPS_PREFIX)
     set(COSM_PROJECT_DEPS_PREFIX /opt/data/local)
   endif()
@@ -86,8 +81,11 @@ endif()
 ################################################################################
 if (NOT ${COSM_WITH_VIS})
     list(REMOVE_ITEM ${target}_SRC
-    ${${target}_SRC_PATH}/vis/block_carry_visualizer.cpp
-    ${${target}_SRC_PATH}/vis/task_visualizer.cpp)
+      ${${target}_SRC_PATH}/vis/block_carry_visualizer.cpp
+      ${${target}_SRC_PATH}/vis/polygon2D_visualizer.cpp
+      ${${target}_SRC_PATH}/vis/steer2D_visualizer.cpp
+      ${${target}_SRC_PATH}/vis/task_visualizer.cpp
+    )
 endif()
 
 ################################################################################

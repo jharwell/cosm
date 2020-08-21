@@ -41,6 +41,7 @@
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/ds/loctree.hpp"
+#include "cosm/spatial/dimension_checker.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -74,7 +75,14 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
 
   ER_INFO("Initialize %zu nests", config->nests.nests.size());
   for (auto& nest : config->nests.nests) {
-    crepr::nest inst(nest.dims,
+    /*
+     * Trim nest size if necessary so it is an even multiple of the grid
+     * resolution--many parts of the code rely on 2D spatial objects on the
+     * arena floor being exact multiples of the grid size.
+     */
+    auto nest_dims = cspatial::dimension_checker::even_multiple(grid_resolution(),
+                                                                nest.dims);
+    crepr::nest inst(nest_dims,
                      nest.center,
                      config->grid.resolution,
                      carepr::light_type_index()[carepr::light_type_index::kNest]);
