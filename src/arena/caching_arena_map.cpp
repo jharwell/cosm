@@ -105,9 +105,6 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   medium.RemoveEntity(*(*victim_it)->light());
   sm->RemoveEntity(*(*victim_it)->light());
 
-  /* Remove from loctree */
-  cloctree_update(victim_it->get());
-
   size_t before = m_cacheso.size();
   RCSW_UNUSED rtypes::type_uuid id = victim->id();
 
@@ -131,6 +128,9 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   ER_ASSERT(m_cacheso.size() == before - 1,
             "Cache%d not removed from owned vector",
             id.v());
+
+  /* Remove from loctree */
+  cloctree_update(victim_it->get()); /* OK because victim in zombie caches */
 } /* cache_remove() */
 
 rtypes::type_uuid caching_arena_map::robot_on_block(
@@ -300,10 +300,6 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
 } /* bloctree_update() */
 
 void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
-  /*
-   * If the cache is currently carried by a robot or in a cache don't put it in
-   * the loctree, which only contains free caches.
-   */
   if (m_cloctree->query(cache->id())) {
     ER_INFO("Remove depleted cache%s from loctree,size=%zu",
             rcppsw::to_string(cache->id()).c_str(),

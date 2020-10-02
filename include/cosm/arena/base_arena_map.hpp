@@ -167,13 +167,25 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \brief Update the arena map on the current timestep, before robot
    * controllers are run.
    *
-   * Currently updates:
+   * Currently updates the following, in order:
    *
    * - Block motion via \ref foraging::block_mover.
    *
    * \param t The current timestep.
    */
-  virtual update_status update(const rtypes::timestep& t);
+  update_status pre_step_update(const rtypes::timestep& t);
+
+  /**
+   * \brief Update the arena map on the current timestep, after robot
+   * controllers are run.
+   *
+   * Currently updates the following, in order:
+   *
+   * - Block distribution status
+   */
+  void post_step_update(const rtypes::timestep& t,
+                        size_t blocks_transported,
+                        bool convergence_status);
 
   /**
    * \brief Get the free blocks in the arena. Does no locking, so this is only

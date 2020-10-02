@@ -52,7 +52,7 @@ cluster_distributor::cluster_distributor(
  ******************************************************************************/
 dist_status cluster_distributor::distribute_block(crepr::base_block3D* block,
                                            cds::const_spatial_entity_vector& entities) {
-  if (m_clust.capacity() == m_clust.block_count()) {
+  if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%zu) reached",
              block->id().v(),
              m_clust.capacity());
@@ -64,7 +64,7 @@ dist_status cluster_distributor::distribute_block(crepr::base_block3D* block,
 dist_status cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
                                                    cds::const_spatial_entity_vector& entities,
                                                    bool strict_success) {
-  if (m_clust.capacity() == m_clust.block_count()) {
+  if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG(
         "Could not distribute any of %zu blocks: Cluster capacity (%zu) reached",
         blocks.size(),

@@ -113,7 +113,7 @@ class block_metadata final : public cfmetrics::block_transport_metrics,
 
   /**
    * \brief Set the time that the block is dropped at its destination location
-   * (eg the nest, a structure).
+   * (e.g. the nest, a structure).
    *
    * \param t The current simulation time.
    */

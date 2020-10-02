@@ -63,7 +63,7 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   size_t n_configured_clusters(void) const override { return 1; }
   size_t n_mapped_clusters(void) const override { return 1; }
   size_t capacity(void) const override { return m_clust.capacity(); }
-  size_t size(void) const override { return m_clust.block_count(); }
+  size_t size(void) const override { return m_clust.n_blocks(); }
 
   dist_status distribute_block(crepr::base_block3D* block,
                                cds::const_spatial_entity_vector& entities) override;

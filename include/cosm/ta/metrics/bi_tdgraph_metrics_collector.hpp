@@ -60,7 +60,7 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collect
    */
   bi_tdgraph_metrics_collector(const std::string& ofname_stem,
                                const rtypes::timestep& interval,
-                               uint decomposition_depth);
+                               size_t decomposition_depth);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;
@@ -69,7 +69,7 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collect
   std::list<std::string> csv_header_cols(void) const override;
   boost::optional<std::string> csv_line_build(void) override;
 
-  const std::vector<std::atomic_uint>& int_task_counts(void) const {
+  const std::vector<std::atomic_size_t>& int_task_counts(void) const {
     return m_int_task_counts;
   }
 
@@ -80,12 +80,12 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collect
    * way, but that smells...).
    */
   /* clang-format off */
-  std::vector<std::atomic_uint> m_int_depth_counts;
-  std::vector<std::atomic_uint> m_int_task_counts;
-  std::vector<std::atomic_uint> m_int_tab_counts;
-  std::vector<std::atomic_uint> m_cum_depth_counts;
-  std::vector<std::atomic_uint> m_cum_task_counts;
-  std::vector<std::atomic_uint> m_cum_tab_counts;
+  std::vector<std::atomic_size_t> m_int_depth_counts;
+  std::vector<std::atomic_size_t> m_int_task_counts;
+  std::vector<std::atomic_size_t> m_int_tab_counts;
+  std::vector<std::atomic_size_t> m_cum_depth_counts;
+  std::vector<std::atomic_size_t> m_cum_task_counts;
+  std::vector<std::atomic_size_t> m_cum_tab_counts;
   /* clang-format on */
 };
 

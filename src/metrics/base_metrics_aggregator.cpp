@@ -60,6 +60,8 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
+#include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/foraging/metrics/block_cluster_metrics_collector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -106,6 +108,9 @@ void base_metrics_aggregator::collect_from_arena(
     const carena::base_arena_map* const map) {
   collect("blocks::motion", *map->block_motion_handler());
   collect("blocks::distributor", *map->block_distributor());
+  for (auto *cluster : map->block_distributor()->block_clusters()) {
+    collect("blocks::clusters", *cluster);
+  } /* for(&cluster..) */
 } /* collect_from_arena() */
 
 void base_metrics_aggregator::register_standard(
@@ -119,6 +124,7 @@ void base_metrics_aggregator::register_standard(
       rmpl::identity<cconvergence::metrics::convergence_metrics_collector>,
     rmpl::identity<ctvmetrics::population_dynamics_metrics_collector>,
     rmpl::identity<cfbd::metrics::distributor_metrics_collector> >;
+
   collector_registerer<>::creatable_set creatable_set = {
       {typeid(csmetrics::movement_metrics_collector),
        "fsm_movement",
@@ -217,5 +223,26 @@ void base_metrics_aggregator::register_with_arena_dims3D(
                                                    std::make_tuple(dims));
   boost::mpl::for_each<collector_typelist>(registerer);
 } /* register_with_arena_dims3D() */
+
+void base_metrics_aggregator::register_with_n_block_clusters(
+    const cmconfig::metrics_config* mconfig,
+    size_t n_clusters) {
+  using collector_typelist = rmpl::typelist<
+      rmpl::identity<cfmetrics::block_cluster_metrics_collector>
+    >;
+  using extra_args_type = std::tuple<size_t>;
+
+  collector_registerer<extra_args_type>::creatable_set creatable_set = {
+    {typeid(cfmetrics::block_cluster_metrics_collector),
+     "block_clusters",
+     "blocks::clusters",
+     rmetrics::output_mode::ekAPPEND}
+  };
+  collector_registerer<extra_args_type> registerer(mconfig,
+                                                   creatable_set,
+                                                   this,
+                                                   std::make_tuple(n_clusters));
+  boost::mpl::for_each<collector_typelist>(registerer);
+} /* register_with_n_block_clusters() */
 
 NS_END(metrics, cosm);

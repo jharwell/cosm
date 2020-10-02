@@ -96,8 +96,27 @@ boost::optional<std::string> block_transport_metrics_collector::csv_line_build(v
   line += csv_entry_domavg(m_interval.transport_time, m_interval.transported);
   line += csv_entry_domavg(m_cum.transport_time, m_cum.transported);
 
-  line += csv_entry_domavg(m_interval.initial_wait_time, m_interval.transported);
-  line += csv_entry_domavg(m_cum.initial_wait_time, m_cum.transported, true);
+  /*
+   * If it is 0, then no blocks were collected this interval, so the initial
+   * wait time is infinite.
+   */
+  if (m_interval.initial_wait_time > 0) {
+    line += csv_entry_domavg(m_interval.initial_wait_time,
+                             m_interval.transported);
+  } else {
+    line += "inf" + separator();
+  }
+
+  /*
+   * If it is 0, then no blocks were collected yet, so the initial wait time is
+   * infinite.
+   */
+  if (m_cum.initial_wait_time > 0) {
+    line += csv_entry_domavg(m_cum.initial_wait_time, m_cum.transported, true);
+  } else {
+    line += "inf";
+  }
+
 
   return boost::make_optional(line);
 } /* csv_line_build() */

@@ -188,11 +188,11 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
 
   bool metrics_write(rmetrics::output_mode mode) {
     if (rmetrics::output_mode::ekAPPEND == mode) {
-      return m_append.metrics_write_all();
+      return m_append.metrics_write_all(true);
     } else if (rmetrics::output_mode::ekTRUNCATE == mode) {
-      return m_truncate.metrics_write_all();
+      return m_truncate.metrics_write_all(true);
     } else if (rmetrics::output_mode::ekCREATE == mode) {
-      return m_create.metrics_write_all();
+      return m_create.metrics_write_all(true);
     }
     return false;
   }
@@ -247,6 +247,15 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
    */
   void register_with_arena_dims3D(const cmconfig::metrics_config* mconfig,
                                   const rmath::vector3z& dims);
+
+  /**
+   * \brief Register metrics collectors that require the # of block clusters in
+   * the arena.
+   *
+   * - blocks::clusters
+   */
+  void register_with_n_block_clusters(const cmconfig::metrics_config* mconfig,
+                                      size_t n_block_clusters);
 
  private:
   /**

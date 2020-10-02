@@ -39,20 +39,20 @@ NS_START(cosm, ta, metrics);
 bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
     const std::string& ofname_stem,
     const rtypes::timestep& interval,
-    uint decomposition_depth)
+    size_t decomposition_depth)
     : base_metrics_collector(ofname_stem,
                              interval,
                              rmetrics::output_mode::ekAPPEND),
       m_int_depth_counts(decomposition_depth + 1),
       m_int_task_counts(
-          static_cast<uint>(std::pow(2, decomposition_depth + 1) - 1)),
+          static_cast<size_t>(std::pow(2, decomposition_depth + 1) - 1)),
       m_int_tab_counts(
-          static_cast<uint>(std::pow(2, decomposition_depth - 1) + 1)),
+          static_cast<size_t>(std::pow(2, decomposition_depth - 1) + 1)),
       m_cum_depth_counts(decomposition_depth + 1),
       m_cum_task_counts(
-          static_cast<uint>(std::pow(2, decomposition_depth + 1) - 1)),
+          static_cast<size_t>(std::pow(2, decomposition_depth + 1) - 1)),
       m_cum_tab_counts(
-          static_cast<uint>(std::pow(2, decomposition_depth - 1) + 1)) {}
+          static_cast<size_t>(std::pow(2, decomposition_depth - 1) + 1)) {}
 
 /*******************************************************************************
  * Member Functions

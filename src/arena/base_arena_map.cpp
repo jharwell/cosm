@@ -136,13 +136,21 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   return ret;
 } /* initialize() */
 
-update_status base_arena_map::update(const rtypes::timestep&) {
+update_status base_arena_map::pre_step_update(const rtypes::timestep&) {
   size_t count = m_bm_handler.move_blocks(this);
   if (count > 0) {
     return update_status::ekBLOCK_MOTION;
   }
   return update_status::ekNONE;
-} /* update() */
+} /* pre_step_update() */
+
+void base_arena_map::post_step_update(const rtypes::timestep& t,
+                                      size_t blocks_transported,
+                                      bool convergence_status) {
+  redist_governor()->update(t,
+                            blocks_transported,
+                            convergence_status);
+} /* post_step_update() */
 
 rtypes::type_uuid base_arena_map::robot_on_block(
     const rmath::vector2d& pos,

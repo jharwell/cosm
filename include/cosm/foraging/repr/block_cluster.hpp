@@ -31,6 +31,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/repr/grid_view_entity.hpp"
 #include "cosm/foraging/repr/block_cluster_params.hpp"
+#include "cosm/foraging/metrics/block_cluster_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -54,6 +55,7 @@ NS_START(cosm, foraging, repr);
  * - The maximum capacity of the cluster.
  */
 class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::const_view>,
+  public metrics::block_cluster_metrics,
                             public rer::client<block_cluster> {
  public:
   explicit block_cluster(const block_cluster_params& params)
@@ -70,9 +72,18 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
         ER_CLIENT_INIT("cosm.foraging.repr.block_cluster"),
         m_capacity(capacity) {}
 
+  /* block cluster metrics */
+  size_t n_blocks(void) const override { return blocks().size(); }
+  rmath::ranged xrspan(void) const override { return grid_view_entity::xrspan(); }
+  rmath::ranged yrspan(void) const override { return grid_view_entity::yrspan(); }
+  rtypes::type_uuid id(void) const override { return base_entity::id(); }
+  rmath::vector2d ranchor2D(void) const override {
+    return grid_view_entity::ranchor2D();
+  }
+
   size_t capacity(void) const { return m_capacity; }
-  size_t block_count(void) const { return blocks().size(); }
   cds::block3D_vectorro blocks(void) const RCSW_PURE;
+
 
  private:
   /* clang-format off */

@@ -167,7 +167,7 @@ class util_hfsm : public rpfsm::hfsm,
    * less congestion by the edge. This is a stopgap solution; a more elegant fix
    * may be forthcoming in the future if warranted.
    */
-  static constexpr const uint kNEST_COUNT_MAX_STEPS = 25;
+  static constexpr const size_t kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
   size_t                              m_nest_count{0};

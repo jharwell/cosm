@@ -89,15 +89,22 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
   auto top_ur = rmath::vector2z(mc_cells_xrange.ub(),
                                 mc_cells_yrange.ub());
   if (kDistRandom == mc_dist_type) {
-    m_dist = std::make_unique<random_distributor>(arena,
-                                                  m_grid,
-                                                  rng);
+    /*
+     * Special case: random distribution = one cluster which covers whole
+     * distributable area.
+     */
+    m_dist = std::make_unique<cluster_distributor>(
+        rtypes::type_uuid(0),
+        arena,
+        m_grid,
+        std::numeric_limits<size_t>::max(),
+        rng);
   } else if (kDistSingleSrc == mc_dist_type) {
     cds::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                              right_ur);
     m_dist = std::make_unique<cluster_distributor>(
         rtypes::type_uuid(0),
-        area,
+        arena,
         m_grid,
         std::numeric_limits<size_t>::max(),
         rng);

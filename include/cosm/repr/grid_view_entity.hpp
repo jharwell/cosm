@@ -68,10 +68,10 @@ class grid_view_entity : public crepr::entity2D {
 
   ~grid_view_entity(void) override = default;
 
-  rmath::vector2d ranchor2D(void) const override final {
+  rmath::vector2d ranchor2D(void) const override {
     return rmath::zvec2dvec(danchor2D(), mc_resolution.v());
   }
-  rmath::vector2d rcenter2D(void) const override final {
+  rmath::vector2d rcenter2D(void) const override {
     return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
   }
 
@@ -79,10 +79,10 @@ class grid_view_entity : public crepr::entity2D {
     return mc_resolution;
   }
 
-  rmath::ranged xrspan(void) const override final {
+  rmath::ranged xrspan(void) const override {
     return entity2D::xrspan(ranchor2D(), xrsize());
   }
-  rmath::ranged yrspan(void) const override final {
+  rmath::ranged yrspan(void) const override {
     return entity2D::yrspan(ranchor2D(), yrsize());
   }
 
@@ -93,10 +93,10 @@ class grid_view_entity : public crepr::entity2D {
     return danchor2D() + rmath::vector2z(xdsize(), ydsize()) / 2;
   }
 
-  rmath::rangez xdspan(void) const override final {
+  rmath::rangez xdspan(void) const override {
     return entity2D::xdspan(danchor2D(), xdsize());
   }
-  rmath::rangez ydspan(void) const override final {
+  rmath::rangez ydspan(void) const override {
     return entity2D::ydspan(danchor2D(), ydsize());
   }
 
