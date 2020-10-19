@@ -104,7 +104,7 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
                                                                              right_ur);
     m_dist = std::make_unique<cluster_distributor>(
         rtypes::type_uuid(0),
-        arena,
+        area,
         m_grid,
         std::numeric_limits<size_t>::max(),
         rng);
@@ -118,6 +118,7 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
         areas,
         m_grid,
         std::numeric_limits<size_t>::max(),
+        rtypes::type_uuid(0),
         rng);
   } else if (kDistQuadSrc == mc_dist_type) {
     /*
@@ -139,6 +140,7 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
         areas,
         m_grid,
         std::numeric_limits<size_t>::max(),
+        rtypes::type_uuid(0),
         rng);
   } else if (kDistPowerlaw == mc_dist_type) {
     auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,

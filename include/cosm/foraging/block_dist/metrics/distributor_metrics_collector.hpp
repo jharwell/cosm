@@ -26,9 +26,9 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -62,29 +62,28 @@ class distributor_metrics_collector final : public rmetrics::base_metrics_collec
 
  private:
   /**
-   * \brief Container for holding distributored statistics. Must be atomic so
-   * counts are valid in parallel metric collection contexts.
+   * \brief Container for holding distributor statistics.
    */
   struct stats {
     /**
-     * \brief  Total # blocks distributored in interval.
+     * \brief  Total # blocks distributed in interval.
      */
-    std::atomic_size_t n_configured_clusters{0};
+    size_t n_configured_clusters{0};
 
     /**
-     * \brief  Total # cube blocks distributored in interval.
+     * \brief  Total # cube blocks distributed in interval.
      */
-    std::atomic_size_t n_mapped_clusters{0};
+    size_t n_mapped_clusters{0};
 
     /**
-     * \brief  Total # ramp blocks distributored in interval.
+     * \brief  Total # ramp blocks distributed in interval.
      */
-    std::atomic_size_t capacity{0};
+    size_t capacity{0};
 
     /**
-     * \brief Total # distributorers for distributored blocks in interval.
+     * \brief Total # distributorers for distributed blocks in interval.
      */
-    std::atomic_size_t size{0};
+    size_t size{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;

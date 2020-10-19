@@ -73,14 +73,14 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   cfds::block3D_cluster_vector block_clusters(void) const override;
   rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }
   rmath::vector2z danchor2D(void) const { return m_clust.danchor2D(); }
-  void coord_search_policy(coord_search_policy policy) {
+  void coord_search_policy(const coord_search_policy& policy) {
     m_impl.coord_search_policy(policy);
   }
 
  private:
   /* clang-format off */
-  cfrepr::block_cluster m_clust;
-  random_distributor    m_impl;
+  cfrepr::block_cluster        m_clust;
+  random_distributor           m_impl;
   /* clang-format on */
 };
 

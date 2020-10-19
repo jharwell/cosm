@@ -24,9 +24,13 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <vector>
+
 #include "rcppsw/metrics/base_metrics.hpp"
-#include "cosm/repr/block_type.hpp"
+#include "rcppsw/math/vector2.hpp"
 #include "rcppsw/types/timestep.hpp"
+
+#include "cosm/repr/block_type.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -71,7 +75,6 @@ class distributor_metrics : public rmetrics::base_metrics {
    * \brief Return the total size (i.e. the # blocks currently contained) across
    * all clusters managed by the distributor.
    */
-
   virtual size_t size(void) const = 0;
 };
 

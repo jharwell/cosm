@@ -38,11 +38,12 @@ multi_cluster_distributor::multi_cluster_distributor(
     const std::vector<cds::arena_grid::view>& grids,
     cds::arena_grid* arena_grid,
     size_t capacity,
+    const rtypes::type_uuid& id_start,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.multi_cluster"),
       base_distributor(arena_grid, rng) {
   for (size_t i = 0; i < grids.size(); ++i) {
-    m_dists.emplace_back(rtypes::type_uuid(i),
+    m_dists.emplace_back(rtypes::type_uuid(i + id_start.v()),
                          grids[i],
                          arena_grid,
                          capacity,

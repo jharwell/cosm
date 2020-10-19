@@ -122,14 +122,14 @@ class random_distributor : public rer::client<random_distributor>,
                          const cds::cell2D* cell) RCSW_PURE;
 
   boost::optional<coord_search_res_t> coord_search_random(
-      const rcppsw::math::rangez& c_xrange,
-      const rcppsw::math::rangez& c_yrange,
+      const rmath::rangez& c_xrange,
+      const rmath::rangez& c_yrange,
       const cds::const_spatial_entity_vector& c_entities,
       const rmath::vector2d& c_block_dim);
 
   boost::optional<coord_search_res_t> coord_search_free_cell(
-      const rcppsw::math::rangez& c_xrange,
-      const rcppsw::math::rangez& c_yrange,
+      const rmath::rangez& c_xrange,
+      const rmath::rangez& c_yrange,
       const cds::const_spatial_entity_vector& c_entities,
       const rmath::vector2d& c_block_dim);
 

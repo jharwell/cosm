@@ -64,7 +64,7 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
     if (mclust->size() == mclust->capacity()) {
       continue;
     }
-    ER_DEBUG("Attempt distribution: block%d -> cluster group: capacity%zu,size=%zu]",
+    ER_DEBUG("Attempt distribution: block%d -> cluster group: capacity=%zu,size=%zu]",
              block->id().v(),
              mclust->capacity(),
              mclust->size());
@@ -112,13 +112,18 @@ void powerlaw_distributor::initialize(
                   return grids[placement.capacity].push_back(placement.view);
     });
 
+  size_t id_start = 0;
   for (auto& pair : grids) {
     auto mclust = std::make_unique<multi_cluster_distributor>(pair.second,
                                                               arena_grid(),
                                                               pair.first,
-                                                              rng());
-    ER_INFO("Mapped multi-cluster: capacity=%zu", mclust->capacity());
+                                                              rtypes::type_uuid(id_start)
+                                                              ,                                                              rng());
+    ER_INFO("Mapped multi-cluster: capacity=%zu,ID start=%zu",
+            mclust->capacity(),
+            id_start);
     m_dists.push_back(std::move(mclust));
+    id_start += pair.second.size();
   } /* for(i..) */
 } /* initialize() */
 

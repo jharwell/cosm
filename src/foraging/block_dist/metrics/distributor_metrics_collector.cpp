@@ -74,21 +74,22 @@ boost::optional<std::string> distributor_metrics_collector::csv_line_build(void)
   line += rcppsw::to_string(m_cum.capacity) + separator();
 
   line += csv_entry_intavg(m_interval.size);
-  line += csv_entry_tsavg(m_cum.size, true);
+  line += csv_entry_tsavg(m_cum.size);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
 
 void distributor_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const distributor_metrics&>(metrics);
-  m_interval.n_configured_clusters = m.n_configured_clusters();
-  m_cum.n_configured_clusters = m.n_configured_clusters();
-  m_interval.n_mapped_clusters = m.n_mapped_clusters();
-  m_cum.n_mapped_clusters = m.n_mapped_clusters();
-  m_interval.capacity = m.capacity();
-  m_cum.capacity = m.capacity();
 
+  m_interval.n_configured_clusters = m.n_configured_clusters();
+  m_interval.n_mapped_clusters = m.n_mapped_clusters();
+  m_interval.capacity = m.capacity();
   m_interval.size += m.size();
+
+  m_cum.n_configured_clusters = m.n_configured_clusters();
+  m_cum.n_mapped_clusters = m.n_mapped_clusters();
+  m_cum.capacity = m.capacity();
   m_cum.size += m.size();
 } /* collect() */
 

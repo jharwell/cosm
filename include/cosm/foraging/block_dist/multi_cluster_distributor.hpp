@@ -50,9 +50,17 @@ NS_START(cosm, foraging, block_dist);
 class multi_cluster_distributor final : public rer::client<multi_cluster_distributor>,
                                         public base_distributor {
  public:
+  /**
+   * \param grids The arena grid views for each cluster of size \p capacity.
+   * \param arena_grid The grid for the arena map.
+   * \param capacity The capacity for all sub-clusters in this multi cluster.
+   *
+   */
+
   multi_cluster_distributor(const std::vector<cds::arena_grid::view>& grids,
                             cds::arena_grid* arena_grid,
                             size_t capacity,
+                            const rtypes::type_uuid& id_start,
                             rmath::rng* rng);
 
   /* not copy constructible or copy assignable by default */

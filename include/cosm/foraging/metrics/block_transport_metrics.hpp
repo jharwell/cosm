@@ -41,8 +41,8 @@ NS_START(cosm, foraging, metrics);
  * \ingroup cosm foraging metrics
  *
  * \brief Defines the metrics to be collected from blocks about the process of
- * block_transportation from their original location in the arena after distribution
- * to their final destination (nest, structure, etc).
+ * block_transportation from their original location in the arena after
+ * distribution to their final destination (nest, structure, etc).
  *
  * Metrics should be collected upon deposition at the block's final location,
  * rather than every timestep.

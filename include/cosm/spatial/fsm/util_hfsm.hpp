@@ -26,10 +26,12 @@
  ******************************************************************************/
 #include <memory>
 #include <string>
+#include <boost/optional.hpp>
 
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/fsm/hfsm.hpp"
+#include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/interference_tracker.hpp"
@@ -86,6 +88,12 @@ class util_hfsm : public rpfsm::hfsm,
   const interference_tracker* inta_tracker(void) const { return &m_tracker; }
 
  protected:
+  struct nest_transport_data : public rpfsm::event_data {
+    explicit nest_transport_data(const rmath::vector2d& in)
+        : nest_loc(in) {}
+    rmath::vector2d nest_loc;
+  };
+
   /**
    * \brief Calculate a random angle in [0, pi] for the purposes of direction
    * change.
@@ -114,7 +122,7 @@ class util_hfsm : public rpfsm::hfsm,
    * This state MUST have a parent state defined that is not
    * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
-  HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, rpfsm::event_data);
+  HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, nest_transport_data);
 
   /**
    * \brief Robots entering this state will leave the nest (they are assumed to
@@ -170,10 +178,10 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr const size_t kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
-  size_t                              m_nest_count{0};
-  csubsystem::saa_subsystemQ3D* const m_saa;
-  interference_tracker                m_tracker;
-  rmath::rng*                         m_rng;
+  boost::optional<rtypes::spatial_dist> m_nest_thresh{0.0};
+  csubsystem::saa_subsystemQ3D* const   m_saa;
+  interference_tracker                  m_tracker;
+  rmath::rng*                           m_rng;
   /* clang-format on */
 
  public:

@@ -183,9 +183,9 @@ boost::optional<typename random_distributor::coord_search_res_t> random_distribu
 coord_search(const cds::const_spatial_entity_vector& c_entities,
                    const rmath::vector2d& c_block_dim) {
   /* -1 because we are working with array indices */
-  rcppsw::math::rangez area_xrange(m_area.index_bases()[0],
+  rmath::rangez area_xrange(m_area.index_bases()[0],
                                    m_area.shape()[0] - 1);
-  rcppsw::math::rangez area_yrange(m_area.index_bases()[1],
+  rmath::rangez area_yrange(m_area.index_bases()[1],
                                    m_area.shape()[1] - 1);
 
   ER_INFO("Coordinate search: rel_xrange=%s,rel_yrange=%s,block_dim=%s,n_entities=%zu",
@@ -211,8 +211,8 @@ coord_search(const cds::const_spatial_entity_vector& c_entities,
 } /* avail_coord_search() */
 
 boost::optional<random_distributor::coord_search_res_t> random_distributor::coord_search_random(
-    const rcppsw::math::rangez& c_xrange,
-    const rcppsw::math::rangez& c_yrange,
+    const rmath::rangez& c_xrange,
+    const rmath::rangez& c_yrange,
     const cds::const_spatial_entity_vector& c_entities,
     const rmath::vector2d& c_block_dim) {
   /*
@@ -240,8 +240,8 @@ boost::optional<random_distributor::coord_search_res_t> random_distributor::coor
 } /* coord_search_random() */
 
 boost::optional<random_distributor::coord_search_res_t> random_distributor::coord_search_free_cell(
-    const rcppsw::math::rangez& c_xrange,
-    const rcppsw::math::rangez& c_yrange,
+    const rmath::rangez& c_xrange,
+    const rmath::rangez& c_yrange,
     const cds::const_spatial_entity_vector& c_entities,
     const rmath::vector2d& c_block_dim) {
   std::vector<rmath::vector2z> rel_coords;
