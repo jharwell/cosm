@@ -192,7 +192,7 @@ metric collector in more than one category is undefined.
 | ``fsm_interference_locs3D``                    | Spatial distribution of inter-robot interference locations in a 3D      | create,truncate        |                        |
 |                                                | volumetric space in the arena.                                          |                        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_movement``                               | Swarm average distance traveled/velocity.                               | append                 |                        |
+| ``spatial_movement``                           | Swarm average distance traveled/velocity for different types of motion. | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+

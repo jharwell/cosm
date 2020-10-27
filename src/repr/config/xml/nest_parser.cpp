@@ -32,11 +32,18 @@ NS_START(cosm, repr, config, xml);
  * Member Functions
  ******************************************************************************/
 void nest_parser::parse(const ticpp::Element& node) {
-  /* we do NOT do a node_get() for this parser--rare exception */
+  ticpp::Element nnode;
+
+  /* we were called as part of arena configuration */
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    nnode = node;
+  } else { /* we were called as part of controller configuration */
+    nnode = node_get(node, kXMLRoot);
+  }
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(node, m_config, center);
-  XML_PARSE_ATTR(node, m_config, dims);
+  XML_PARSE_ATTR(nnode, m_config, center);
+  XML_PARSE_ATTR(nnode, m_config, dims);
 } /* parse() */
 
 bool nest_parser::validate(void) const {

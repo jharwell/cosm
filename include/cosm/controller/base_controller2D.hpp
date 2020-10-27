@@ -74,10 +74,6 @@ class base_controller2D : public base_controller,
   base_controller2D(const base_controller2D&) = delete;
   base_controller2D& operator=(const base_controller2D&) = delete;
 
-  /* movement metrics */
-  rtypes::spatial_dist distance(void) const override RCSW_PURE;
-  rmath::vector3d velocity(void) const override;
-
   /* swarm spatial distribution 2D metrics */
   rmath::vector2d rpos2D(void) const override final RCSW_PURE;
   rmath::vector2z dpos2D(void) const override final RCSW_PURE;
@@ -104,6 +100,9 @@ class base_controller2D : public base_controller,
     return m_saa.get();
   }
   void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
+
+  rtypes::spatial_dist ts_distance_impl(void) const RCSW_PURE;
+  rmath::vector3d ts_velocity_impl(void) const;
 
  private:
   /* clang-format off */

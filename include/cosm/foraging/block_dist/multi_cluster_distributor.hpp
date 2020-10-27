@@ -54,7 +54,6 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
    * \param grids The arena grid views for each cluster of size \p capacity.
    * \param arena_grid The grid for the arena map.
    * \param capacity The capacity for all sub-clusters in this multi cluster.
-   *
    */
 
   multi_cluster_distributor(const std::vector<cds::arena_grid::view>& grids,

@@ -127,8 +127,8 @@ void base_metrics_aggregator::register_standard(
 
   collector_registerer<>::creatable_set creatable_set = {
       {typeid(csmetrics::movement_metrics_collector),
-       "fsm_movement",
-       "fsm::movement",
+       "spatial_movement",
+       "spatial::movement",
        rmetrics::output_mode::ekAPPEND},
       {typeid(csmetrics::interference_metrics_collector),
        "fsm_interference_counts",

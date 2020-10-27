@@ -26,10 +26,14 @@
  ******************************************************************************/
 #include <string>
 #include <atomic>
+#include <vector>
+#include <list>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/spatial/metrics/movement_category.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -71,7 +75,7 @@ class movement_metrics_collector final : public rmetrics::base_metrics_collector
    */
   struct stats {
     std::atomic<double> distance{0.0};
-    std::atomic_uint    robot_count{0};
+    std::atomic_size_t    n_robots{0};
     std::atomic<double> velocity{0.0};
   };
 
@@ -79,8 +83,8 @@ class movement_metrics_collector final : public rmetrics::base_metrics_collector
   boost::optional<std::string>csv_line_build(void) override;
 
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  std::vector<stats> m_interval{rcppsw::as_underlying(movement_category::ekMAX)};
+  std::vector<stats> m_cum{rcppsw::as_underlying(movement_category::ekMAX)};
   /* clang-format on */
 };
 

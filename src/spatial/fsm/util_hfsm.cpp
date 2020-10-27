@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 
+#include <numeric>
+
 #include "cosm/spatial/fsm/util_signal.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
@@ -83,26 +85,29 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   return rpfsm::event_signal::ekHANDLED;
 } /* leaving_nest() */
 
-HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
+HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_TRANSPORT_TO_NEST cannot handle child events");
   if (current_state() != last_state()) {
     ER_DEBUG("Executing ekST_TRANSPORT_TO_NEST");
   }
+  event_data_hold(true);
 
   auto* ground =
       m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
+
   if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
-    if (m_nest_count++ < kNEST_COUNT_MAX_STEPS) {
-      m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
-      return util_signal::ekHANDLED;
-    } else {
-      m_nest_count = 0;
+    auto dist_to_light = (m_saa->sensing()->rpos2D() - data->nest_loc).length();
+    if (!m_nest_thresh) {
+      m_nest_thresh = boost::make_optional(rtypes::spatial_dist(rng()->uniform(0.1, dist_to_light)));
+    }
+    if (dist_to_light <= m_nest_thresh->v()) {
       /*
        * We have arrived at the nest so send this signal to the parent FSM that
        * is listing for it and stop moving.
        */
       actuation()->actuator<ckin2D::governed_diff_drive>()->reset();
+      m_nest_thresh.reset();
       return util_signal::ekENTERED_NEST;
     }
   }
@@ -112,7 +117,7 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, rpfsm::event_data* data) {
    * beeline for its center directly to decrease congestion.
    */
   auto* light = m_saa->sensing()->template sensor<hal::sensors::light_sensor>();
-  m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
+  /* m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng)); */
   m_saa->steer_force2D().accum(
       m_saa->steer_force2D().phototaxis(light->readings()));
 

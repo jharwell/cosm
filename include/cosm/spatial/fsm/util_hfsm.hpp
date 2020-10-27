@@ -178,7 +178,7 @@ class util_hfsm : public rpfsm::hfsm,
   static constexpr const size_t kNEST_COUNT_MAX_STEPS = 25;
 
   /* clang-format off */
-  boost::optional<rtypes::spatial_dist> m_nest_thresh{0.0};
+  boost::optional<rtypes::spatial_dist> m_nest_thresh{};
   csubsystem::saa_subsystemQ3D* const   m_saa;
   interference_tracker                  m_tracker;
   rmath::rng*                           m_rng;

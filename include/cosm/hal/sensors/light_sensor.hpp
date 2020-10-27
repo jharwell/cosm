@@ -26,6 +26,8 @@
  ******************************************************************************/
 #include <vector>
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/types/spatial_dist.hpp"
+
 #include "cosm/hal/hal.hpp"
 
 #if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
@@ -74,15 +76,17 @@ class light_sensor_impl {
   /**
    * \brief A light sensor reading (value, angle) pair.
    *
-   * The first argument is the value of the sensor (distance to light), and the
+   * The first argument is the value of the sensor, and the
    * second argument is the angle of the sensor on the robot in relation to the
    * positive x axis.
    */
   struct reading {
-    double value;
+    double intensity;
     double angle;
 
-    reading(double _value, double _angle) : value(_value), angle(_angle) {}
+    reading(double _intensity, double _angle)
+        : intensity(_intensity),
+          angle(_angle) {}
   };
 
   explicit light_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}

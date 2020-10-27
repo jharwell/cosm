@@ -48,7 +48,7 @@ rmath::vector2d phototaxis_force::operator()(
                       readings.end(),
                       rmath::vector2d(),
                       [&](const rmath::vector2d& v, const auto& r) {
-                        return v + rmath::vector2d(r.value,
+                        return v + rmath::vector2d(r.intensity,
                                                    rmath::radians(r.angle));
                       });
 

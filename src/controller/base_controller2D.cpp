@@ -67,9 +67,9 @@ void base_controller2D::ndc_pusht(void) const {
 #endif
 
 /*******************************************************************************
- * Movement Metrics
+ * Movement
  ******************************************************************************/
-rtypes::spatial_dist base_controller2D::distance(void) const {
+rtypes::spatial_dist base_controller2D::ts_distance_impl(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
@@ -78,9 +78,9 @@ rtypes::spatial_dist base_controller2D::distance(void) const {
     return rtypes::spatial_dist(saa()->sensing()->tick_travel2D().length());
   }
   return rtypes::spatial_dist(0.0);
-} /* distance() */
+} /* ts_distance_impl() */
 
-rmath::vector3d base_controller2D::velocity(void) const {
+rmath::vector3d base_controller2D::ts_velocity_impl(void) const {
   /*
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
@@ -90,7 +90,7 @@ rmath::vector3d base_controller2D::velocity(void) const {
     return {vel.x(), vel.y(), 0.0};
   }
   return {0.0, 0.0, 0.0};
-} /* velocity() */
+} /* ts_velocity_impl() */
 
 /*******************************************************************************
  * Swarm Spatial Metrics

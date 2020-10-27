@@ -27,7 +27,9 @@
 #include "rcppsw/metrics/base_metrics.hpp"
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/spatial/metrics/movement_category.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,15 +52,25 @@ class movement_metrics : virtual public rmetrics::base_metrics {
   ~movement_metrics(void) override = default;
 
   /**
-   * \brief Get the distance that a robot has traveled in a single timestep.
+   * \brief Get the distance that a robot has traveled in a single timestep. If
+   * the robot's motion does not fall into the specified category this timestep,
+   * then the distance traveled should be 0.
+   *
+   * \param category The category of motion to get the distance traveled for.
    */
-  virtual rtypes::spatial_dist distance(void) const = 0;
+  virtual rtypes::spatial_dist ts_distance(
+      const movement_category& category) const = 0;
 
   /**
    * \brief Get the velocity that a robot has on a single timestep. If the robot
-   * is only moving in 2D, then the Z component of the velocity should be 0.
+   * is only moving in 2D, then the Z component of the velocity should be 0. If
+   * the robot's motion does not fall into the specified category this timestep,
+   * then the velocity should be 0.
+   *
+   * \param category The category of motion to get the currently velocity for.
    */
-  virtual rmath::vector3d velocity(void) const = 0;
+  virtual rmath::vector3d ts_velocity(
+      const movement_category& category) const = 0;
 };
 
 NS_END(metrics, spatial, cosm);
