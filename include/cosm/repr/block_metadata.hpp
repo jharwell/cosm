@@ -77,11 +77,11 @@ class block_metadata final : public cfmetrics::block_transport_metrics,
 
   size_t total_transporters(void) const override { return m_transporters; }
 
-  rtypes::timestep total_transport_time(void) const override RCSW_PURE {
+  rtypes::timestep total_transport_time(void) const override RCPPSW_PURE {
     return m_dest_drop_time - m_first_pickup_time;
   }
 
-  rtypes::timestep initial_wait_time(void) const override RCSW_PURE {
+  rtypes::timestep initial_wait_time(void) const override RCPPSW_PURE {
     return m_first_pickup_time - m_dist_time;
   }
   crepr::block_type type(void) const override { return m_type; }

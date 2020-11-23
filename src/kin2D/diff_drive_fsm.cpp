@@ -38,27 +38,27 @@ diff_drive_fsm::diff_drive_fsm(double max_speed,
     : rpfsm::simple_fsm(ekST_MAX_STATES),
       mc_max_speed(max_speed),
       mc_soft_turn_max(soft_turn_max),
-      FSM_DEFINE_STATE_MAP(mc_state_map,
-                           FSM_STATE_MAP_ENTRY(&soft_turn),
-                           FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+      RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
       mc_max_speed(other.mc_max_speed),
       mc_soft_turn_max(other.mc_soft_turn_max),
-      FSM_DEFINE_STATE_MAP(mc_state_map,
-                           FSM_STATE_MAP_ENTRY(&soft_turn),
-                           FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+      RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 /*******************************************************************************
  * Events
  ******************************************************************************/
 void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) {
-  FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
+  RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
       ekST_SOFT_TURN, /* slow turn */
       ekST_HARD_TURN, /* hard turn */
   };
-  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
+  RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
                  std::make_unique<turn_data>(speed, angle));
 } /* set_rel_heading() */
@@ -67,7 +67,7 @@ void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) 
  * States
  ******************************************************************************/
 
-FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
+RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
   rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
 
   rmath::radians angle = data->angle;
@@ -86,7 +86,7 @@ FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
   set_wheel_speeds(speed1, speed2, data->angle);
   return rpfsm::event_signal::ekHANDLED;
 }
-FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
+RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
   rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
   rmath::radians angle = data->angle;
 

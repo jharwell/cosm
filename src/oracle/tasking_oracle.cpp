@@ -72,7 +72,7 @@ void tasking_oracle::listener_add(cta::bi_tdgraph_executive* const executive) {
 void tasking_oracle::task_finish_cb(const cta::polled_task* task) {
   auto& exec_est = boost::get<cta::time_estimate>(
       m_map.find(kExecEstPrefix + std::string(".") + task->name())->second);
-  RCSW_UNUSED int exec_old = exec_est.v();
+  RCPPSW_UNUSED int exec_old = exec_est.v();
   exec_est.calc(task->task_exec_estimate());
 
   ER_DEBUG("Update exec_est.%s on finish: %d -> %d",
@@ -82,7 +82,7 @@ void tasking_oracle::task_finish_cb(const cta::polled_task* task) {
 
   auto& int_est = boost::get<cta::time_estimate>(
       m_map.find(kInterfaceEstPrefix + std::string(".") + task->name())->second);
-  RCSW_UNUSED int int_old = int_est.v();
+  RCPPSW_UNUSED int int_old = int_est.v();
 
   /* Assuming 1 interface! */
   int_est.calc(task->task_interface_estimate(0));
@@ -106,7 +106,7 @@ void tasking_oracle::task_abort_cb(const cta::polled_task* task) {
    */
   auto& exec_est = boost::get<cta::time_estimate>(
       m_map.find(kExecEstPrefix + std::string(".") + task->name())->second);
-  RCSW_UNUSED int exec_old = exec_est.v();
+  RCPPSW_UNUSED int exec_old = exec_est.v();
   exec_est.calc(task->task_exec_estimate());
 
   ER_DEBUG("Update exec_est.%s on abort: %d -> %d",
@@ -116,7 +116,7 @@ void tasking_oracle::task_abort_cb(const cta::polled_task* task) {
 
   auto& int_est = boost::get<cta::time_estimate>(
       m_map.find(kInterfaceEstPrefix + std::string(".") + task->name())->second);
-  RCSW_UNUSED int int_old = int_est.v();
+  RCPPSW_UNUSED int int_old = int_est.v();
 
   /* Assuming 1 interface! */
   int_est.calc(task->task_interface_estimate(0));

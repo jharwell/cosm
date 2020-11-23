@@ -75,7 +75,7 @@ class movement_metrics_collector final : public rmetrics::base_metrics_collector
    */
   struct stats {
     std::atomic<double> distance{0.0};
-    std::atomic_size_t    n_robots{0};
+    std::atomic_size_t  n_robots{0};
     std::atomic<double> velocity{0.0};
   };
 

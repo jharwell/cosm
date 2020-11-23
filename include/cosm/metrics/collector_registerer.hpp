@@ -203,7 +203,7 @@ class collector_registerer_impl<std::tuple<Ts...>>
         } else {
           ER_INFO(
               "Metrics enabled: "
-              "xml_name='%s',scoped_name='%s',fpath_stem=%s,output_interval=%d,"
+              "xml_name='%s',scoped_name='%s',fpath_stem=%s,output_interval=%lu,"
               "mode=%x",
               std::get<1>(*it).c_str(),
               std::get<2>(*it).c_str(),

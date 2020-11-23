@@ -53,7 +53,7 @@ kin::twist force_calculator::to_twist(const rmath::vector2d& force) const {
   twist.linear.x = force.length();
   twist.angular.z =
       (force - m_entity.linear_velocity()).length() *
-      std::sin((force - m_entity.linear_velocity()).angle().value());
+      std::sin((force - m_entity.linear_velocity()).angle().v());
   if (m_entity.linear_velocity().length() > 0) {
     twist.angular.z /= m_entity.linear_velocity().length();
   } else {
@@ -80,7 +80,7 @@ rmath::vector2d force_calculator::wander(rmath::rng* rng) {
   ER_DEBUG("Wander force: (%f, %f)@%f [%f]",
            force.x(),
            force.y(),
-           force.angle().value(),
+           force.angle().v(),
            force.length());
   return force;
 } /* wander() */

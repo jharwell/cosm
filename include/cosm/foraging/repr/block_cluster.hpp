@@ -82,7 +82,7 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
   }
 
   size_t capacity(void) const { return m_capacity; }
-  cds::block3D_vectorro blocks(void) const RCSW_PURE;
+  cds::block3D_vectorro blocks(void) const RCPPSW_PURE;
 
 
  private:

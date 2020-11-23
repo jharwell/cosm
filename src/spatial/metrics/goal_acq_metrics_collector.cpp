@@ -70,18 +70,18 @@ void goal_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
   auto& m = dynamic_cast<const goal_acq_metrics&>(metrics);
   auto [is_exp, true_exp] = m.is_exploring_for_goal();
 
-  m_interval.n_true_exploring_for_goal += static_cast<uint>(is_exp && true_exp);
+  m_interval.n_true_exploring_for_goal += static_cast<size_t>(is_exp && true_exp);
   m_interval.n_false_exploring_for_goal +=
-      static_cast<uint>(is_exp && !true_exp);
+      static_cast<size_t>(is_exp && !true_exp);
   m_interval.n_acquiring_goal +=
-      static_cast<uint>(is_exp || m.is_vectoring_to_goal());
-  m_interval.n_vectoring_to_goal += static_cast<uint>(m.is_vectoring_to_goal());
+      static_cast<size_t>(is_exp || m.is_vectoring_to_goal());
+  m_interval.n_vectoring_to_goal += static_cast<size_t>(m.is_vectoring_to_goal());
 
-  m_cum.n_true_exploring_for_goal += static_cast<uint>(is_exp && true_exp);
-  m_cum.n_false_exploring_for_goal += static_cast<uint>(is_exp && !true_exp);
+  m_cum.n_true_exploring_for_goal += static_cast<size_t>(is_exp && true_exp);
+  m_cum.n_false_exploring_for_goal += static_cast<size_t>(is_exp && !true_exp);
   m_cum.n_acquiring_goal +=
-      static_cast<uint>(is_exp || m.is_vectoring_to_goal());
-  m_cum.n_vectoring_to_goal += static_cast<uint>(m.is_vectoring_to_goal());
+      static_cast<size_t>(is_exp || m.is_vectoring_to_goal());
+  m_cum.n_vectoring_to_goal += static_cast<size_t>(m.is_vectoring_to_goal());
 } /* collect() */
 
 boost::optional<std::string> goal_acq_metrics_collector::csv_line_build(void) {

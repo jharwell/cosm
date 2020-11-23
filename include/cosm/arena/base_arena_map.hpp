@@ -145,14 +145,14 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   virtual rtypes::type_uuid robot_on_block(
       const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const RCSW_PURE;
+      const rtypes::type_uuid& ent_id) const RCPPSW_PURE;
 
 
   /**
    * \brief Determine if a robot is currently within the boundaries of a nest.
    */
   rtypes::type_uuid robot_in_nest(
-      const rmath::vector2d& pos) const RCSW_PURE;
+      const rmath::vector2d& pos) const RCPPSW_PURE;
   /**
    * \brief Determine if placing the specified block at the specified location
    * will cause a conflict with any entities in the arena.
@@ -235,7 +235,7 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   ds::nest_vectorro nests(void) const;
 
-  RCSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
+  RCPPSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
     auto it = m_nests.find(id);
     if (m_nests.end() != it) {
       return &(it->second);

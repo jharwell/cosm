@@ -132,7 +132,7 @@ dist_status random_distributor::distribute_block(crepr::base_block3D* block,
 bool random_distributor::verify_block_dist(
     const crepr::base_block3D* const block,
     const cds::const_spatial_entity_vector& entities,
-    RCSW_UNUSED const cds::cell2D* const cell) {
+    RCPPSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
   ER_CHECK(!block->is_out_of_sight(),
            "Block%d discrete coord still out of sight after distribution",

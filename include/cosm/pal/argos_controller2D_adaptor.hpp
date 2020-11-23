@@ -49,8 +49,8 @@ class argos_controller2D_adaptor : public controller::base_controller2D,
                                    public rmpl::reflectable {
  public:
   /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD { init(node); }
-  void Reset(void) override RCSW_COLD { reset(); }
+  void Init(ticpp::Element& node) override RCPPSW_COLD { init(node); }
+  void Reset(void) override RCPPSW_COLD { reset(); }
   void ControlStep(void) override { control_step(); }
 };
 

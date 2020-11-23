@@ -56,7 +56,7 @@ class pheromone_parser : public rconfig::xml::xml_config_parser {
    */
   static constexpr char kXMLRoot[] = "pheromone";
 
-  bool validate(void) const override RCSW_ATTR(pure, cold);
+  bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override;
   std::string xml_root(void) const override { return kXMLRoot; }
 

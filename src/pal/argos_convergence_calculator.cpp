@@ -79,7 +79,7 @@ argos_convergence_calculator<TController>::argos_convergence_calculator(
  ******************************************************************************/
 template <class TController>
 std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
-    RCSW_UNUSED uint n_threads) const {
+    RCPPSW_UNUSED uint n_threads) const {
   std::vector<rmath::vector2d> v;
   auto cb = [&](auto* robot) {
     v.push_back({robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(),

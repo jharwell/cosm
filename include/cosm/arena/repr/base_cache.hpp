@@ -112,7 +112,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     return this->dcenter2D() == other.dcenter2D();
   }
 
-  bool contains_block(const crepr::base_block3D* const c_block) const RCSW_PURE;
+  bool contains_block(const crepr::base_block3D* const c_block) const RCPPSW_PURE;
   size_t n_blocks(void) const { return blocks().size(); }
 
   /**

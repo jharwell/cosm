@@ -154,7 +154,7 @@ class subtask_sel_probability : public rer::client<subtask_sel_probability>,
    * \param est2 Exec/interface estimate 2.
    */
   double calc_sigmoid(const time_estimate& est1,
-                      const time_estimate& est2) RCSW_PURE;
+                      const time_estimate& est2) RCPPSW_PURE;
 
   /* clang-format off */
   const std::string mc_method;

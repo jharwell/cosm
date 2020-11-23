@@ -50,19 +50,19 @@ class ground_sensor_detection_parser : public rconfig::xml::xml_config_parser {
  public:
   using config_type = ground_sensor_detection_config;
 
-  RCSW_COLD explicit ground_sensor_detection_parser(const std::string& name)
+  RCPPSW_COLD explicit ground_sensor_detection_parser(const std::string& name)
       : m_name(name) {}
 
   ~ground_sensor_detection_parser(void) override = default;
 
-  void parse(const ticpp::Element& node) override RCSW_COLD;
+  void parse(const ticpp::Element& node) override RCPPSW_COLD;
 
-  RCSW_COLD std::string xml_root(void) const override { return m_name; }
+  RCPPSW_COLD std::string xml_root(void) const override { return m_name; }
 
-  RCSW_COLD void set_name(const std::string& name) { m_name = name; }
+  RCPPSW_COLD void set_name(const std::string& name) { m_name = name; }
 
  private:
-  RCSW_COLD const rconfig::base_config* config_get_impl(void) const override {
+  RCPPSW_COLD const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 

@@ -74,13 +74,13 @@ bool convergence_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  RCSW_CHECK(m_config->n_threads > 0);
-  RCSW_CHECK(RCSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0));
-  RCSW_CHECK(m_pos_entropy.validate());
-  RCSW_CHECK(m_task_entropy.validate());
-  RCSW_CHECK(m_interactivity.validate());
-  RCSW_CHECK(m_ang_order.validate());
-  RCSW_CHECK(m_velocity.validate());
+  RCPPSW_CHECK(m_config->n_threads > 0);
+  RCPPSW_CHECK(RCPPSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0));
+  RCPPSW_CHECK(m_pos_entropy.validate());
+  RCPPSW_CHECK(m_task_entropy.validate());
+  RCPPSW_CHECK(m_interactivity.validate());
+  RCPPSW_CHECK(m_ang_order.validate());
+  RCPPSW_CHECK(m_velocity.validate());
   return true;
 
 error:

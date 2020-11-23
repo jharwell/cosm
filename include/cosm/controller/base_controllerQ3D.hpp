@@ -74,17 +74,17 @@ class base_controllerQ3D : public base_controller,
                            public csmetrics::goal_acq_metrics,
                            public csmetrics::dist3D_metrics {
  public:
-  base_controllerQ3D(void) RCSW_COLD;
-  ~base_controllerQ3D(void) override RCSW_COLD;
+  base_controllerQ3D(void) RCPPSW_COLD;
+  ~base_controllerQ3D(void) override RCPPSW_COLD;
 
   base_controllerQ3D(const base_controllerQ3D&) = delete;
   base_controllerQ3D& operator=(const base_controllerQ3D&) = delete;
 
   /* swarm spatial distribution 3D metrics */
-  rmath::vector3d rpos3D(void) const override final RCSW_PURE;
-  rmath::vector3z dpos3D(void) const override final RCSW_PURE;
-  rmath::radians azimuth(void) const override final RCSW_PURE;
-  rmath::radians zenith(void) const override final RCSW_PURE;
+  rmath::vector3d rpos3D(void) const override final RCPPSW_PURE;
+  rmath::vector3z dpos3D(void) const override final RCPPSW_PURE;
+  rmath::radians azimuth(void) const override final RCPPSW_PURE;
+  rmath::radians zenith(void) const override final RCPPSW_PURE;
 
   void sensing_update(const rtypes::timestep& tick,
                       const rtypes::discretize_ratio& ratio) override;
@@ -93,14 +93,14 @@ class base_controllerQ3D : public base_controller,
    * \brief For less typing when doing operations with the arena map, which is
    * (logically) a 2D object.
    */
-  rmath::vector2d rpos2D(void) const RCSW_PURE;
-  rmath::vector2z dpos2D(void) const RCSW_PURE;
+  rmath::vector2d rpos2D(void) const RCPPSW_PURE;
+  rmath::vector2z dpos2D(void) const RCPPSW_PURE;
 
   /**
    * \brief Provided for compatibility with 2D metric gathering without having
    * to resort to template trickery.
    */
-  rmath::radians heading2D(void) const RCSW_PURE;
+  rmath::radians heading2D(void) const RCPPSW_PURE;
 
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
@@ -121,7 +121,7 @@ class base_controllerQ3D : public base_controller,
   }
   void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
 
-  rtypes::spatial_dist ts_distance_impl(void) const RCSW_PURE;
+  rtypes::spatial_dist ts_distance_impl(void) const RCPPSW_PURE;
   rmath::vector3d ts_velocity_impl(void) const;
 
  private:

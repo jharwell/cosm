@@ -91,9 +91,9 @@ class unicell_entity3D : public entity3D,
   }
 
   rmath::vector3z dcenter3D(void) const override final {
-    ER_ASSERT(RCSW_IS_ODD(m_ddim.x()) &&
-              RCSW_IS_ODD(m_ddim.y()) &&
-              RCSW_IS_ODD(m_ddim.z()),
+    ER_ASSERT(RCPPSW_IS_ODD(m_ddim.x()) &&
+              RCPPSW_IS_ODD(m_ddim.y()) &&
+              RCPPSW_IS_ODD(m_ddim.z()),
               "dcenter3D() called on entity without defined center");
     return m_dcenter;
   }

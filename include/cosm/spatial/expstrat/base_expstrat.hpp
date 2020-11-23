@@ -94,11 +94,11 @@ class base_expstrat : public csmetrics::interference_metrics,
 
  public:
   /* collision metrics */
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exp_interference, m_inta_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_interference, m_inta_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_interference, m_inta_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_duration, m_inta_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_loc3D, m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, m_inta_tracker, const)
 };
 
 NS_END(expstrat, spatial, cosm);

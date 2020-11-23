@@ -152,7 +152,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
    *             Should *ALWAYS* be \c TRUE if the function is called external
    *             to this class.
    */
-  RCSW_PURE bool is_serving_penalty(const controller::base_controller& controller,
+  RCPPSW_PURE bool is_serving_penalty(const controller::base_controller& controller,
                                     bool lock = true) const {
     maybe_lock(lock);
     auto it = penalty_find(controller, false);
@@ -173,7 +173,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
    * \return \c TRUE If the robot is currently waiting AND it has satisfied its
    * penalty.
    */
-  RCSW_PURE bool is_penalty_satisfied(
+  RCPPSW_PURE bool is_penalty_satisfied(
       const controller::base_controller& controller,
       const rtypes::timestep& t) const {
     std::scoped_lock lock(m_list_mtx);
@@ -277,11 +277,11 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
   }
 
   /* clang-format off */
-  const std::string              mc_name;
+  const std::string                   mc_name;
 
-  std::list<temporal_penalty>    m_penalty_list{};
-  mutable std::mutex             m_list_mtx{};
-  std::unique_ptr<rct::waveform> m_waveform;
+  std::list<temporal_penalty>         m_penalty_list{};
+  mutable std::mutex                  m_list_mtx{};
+  std::unique_ptr<rct::base_waveform> m_waveform;
   /* clang-format on */
 };
 

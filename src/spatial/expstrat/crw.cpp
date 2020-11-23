@@ -50,7 +50,7 @@ void crw::task_execute(void) {
 
     ER_DEBUG("Found threatening obstacle: %s@%f [%f]",
              obs->to_str().c_str(),
-             obs->angle().value(),
+             obs->angle().v(),
              obs->length());
     leds->set_color(-1, rutils::color::kRED);
   } else {

@@ -45,10 +45,10 @@ rmath::vector2d dimension_checker::odd_dsize(const rtypes::discretize_ratio& res
                                              const rmath::vector2d& to_check) {
   auto checked = to_check;
   auto ddims = rmath::dvec2zvec(to_check, res.v());
-  if (RCSW_IS_EVEN(ddims.x())) {
+  if (RCPPSW_IS_EVEN(ddims.x())) {
     checked.x(checked.x() - res.v());
   }
-  if (RCSW_IS_EVEN(ddims.y())) {
+  if (RCPPSW_IS_EVEN(ddims.y())) {
     checked.y(checked.y() - res.v());
   }
   return checked;
@@ -74,7 +74,7 @@ rtypes::spatial_dist dimension_checker::odd_dsize(
   auto rdims = rmath::vector2d(to_check.v(), to_check.v());
   auto ddims = rmath::dvec2zvec(rdims, res.v());
 
-  if (RCSW_IS_EVEN(ddims.x()) || RCSW_IS_EVEN(ddims.y())) {
+  if (RCPPSW_IS_EVEN(ddims.x()) || RCPPSW_IS_EVEN(ddims.y())) {
     checked -= res.v();
   }
   return checked;

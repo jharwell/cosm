@@ -70,7 +70,7 @@ dist_status multi_cluster_distributor::distribute_block(
     cluster_distributor& dist = m_dists[(start + i) % m_dists.size()];
 
     /* Always/only 1 cluster per cluster distributor, so this is safe to do */
-    RCSW_UNUSED auto clust_id = dist.block_clusters().front()->id();
+    RCPPSW_UNUSED auto clust_id = dist.block_clusters().front()->id();
 
     if (dist.capacity() == dist.size()) {
       ER_TRACE("Block%d to cluster%u failed: capacity (%zu) reached",

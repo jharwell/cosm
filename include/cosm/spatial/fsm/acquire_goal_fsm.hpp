@@ -184,16 +184,16 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   void task_reset(void) override final { init(); }
 
   /* collision metrics */
-  bool exp_interference(void) const override final RCSW_PURE;
-  bool entered_interference(void) const override final RCSW_PURE;
-  bool exited_interference(void) const override final RCSW_PURE;
-  rtypes::timestep interference_duration(void) const override final RCSW_PURE;
-  rmath::vector3z interference_loc3D(void) const override final RCSW_PURE;
+  bool exp_interference(void) const override final RCPPSW_PURE;
+  bool entered_interference(void) const override final RCPPSW_PURE;
+  bool exited_interference(void) const override final RCPPSW_PURE;
+  rtypes::timestep interference_duration(void) const override final RCPPSW_PURE;
+  rmath::vector3z interference_loc3D(void) const override final RCPPSW_PURE;
 
   /* goal acquisition metrics */
-  exp_status is_exploring_for_goal(void) const override final RCSW_PURE;
-  bool is_vectoring_to_goal(void) const override final RCSW_PURE;
-  bool goal_acquired(void) const override final RCSW_PURE;
+  exp_status is_exploring_for_goal(void) const override final RCPPSW_PURE;
+  bool is_vectoring_to_goal(void) const override final RCPPSW_PURE;
+  bool goal_acquired(void) const override final RCPPSW_PURE;
   metrics::goal_acq_metrics::goal_type acquisition_goal(void) const override final;
   rmath::vector3z acquisition_loc3D(void) const override final;
   rmath::vector3z explore_loc3D(void) const override final;
@@ -250,27 +250,27 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   /**
    * \brief Starting/reset state for FSM. Has no purpose other than that.
    */
-  HFSM_STATE_DECLARE_ND(acquire_goal_fsm, start);
+  RCPPSW_HFSM_STATE_DECLARE_ND(acquire_goal_fsm, start);
 
   /**
    * \brief Main state for the FSM. Robots in this state vectoring to an a
    * derised object's location if any objects of the target type are known, and
    * explore for a desired object otherwise.
    */
-  HFSM_STATE_DECLARE_ND(acquire_goal_fsm, fsm_acquire_goal);
+  RCPPSW_HFSM_STATE_DECLARE_ND(acquire_goal_fsm, fsm_acquire_goal);
 
   /**
    * \brief Once a goal has been acquired, controller wait in this state until
    * reset by a higher level FSM.
    */
-  HFSM_STATE_DECLARE_ND(acquire_goal_fsm, finished);
+  RCPPSW_HFSM_STATE_DECLARE_ND(acquire_goal_fsm, finished);
 
   /**
    * \brief Simple state for exit in the main exploration state, used to reset
    * internal \ref vector_fsm and \ref explore_for_goal_fsm.
    * LED color for visualization purposes.
    */
-  HFSM_EXIT_DECLARE(acquire_goal_fsm, exit_fsm_acquire_goal);
+  RCPPSW_HFSM_EXIT_DECLARE(acquire_goal_fsm, exit_fsm_acquire_goal);
 
   /**p
    * \brief Defines the state map for the FSM.
@@ -278,11 +278,11 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
    * Note that the order of the states in the map MUST match the order of the
    * states in \enum states, or things will not work correctly.
    */
-  HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
+  RCPPSW_HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];
   }
 
-  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
+  RCPPSW_HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /* clang-format off */
   rtypes::type_uuid              m_acq_id{rtypes::constants::kNoUUID};

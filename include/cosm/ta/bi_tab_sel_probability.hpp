@@ -138,7 +138,7 @@ class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
    *
    * \return Sigmoid value.
    */
-  double calc_sigmoid(double ratio1, double ratio2) RCSW_PURE;
+  double calc_sigmoid(double ratio1, double ratio2) RCPPSW_PURE;
 
   /* clang-format off */
   const std::string mc_method;

@@ -121,7 +121,7 @@ class diff_drive : public rer::client<diff_drive> {
   /**
    * \brief Limit the value to [-1, 1].
    */
-  double limit(double value) const RCSW_PURE;
+  double limit(double value) const RCPPSW_PURE;
 
   /* clang-format off */
   drive_type                          m_drive_type;

@@ -70,10 +70,11 @@ class interference_metrics_collector final : public rmetrics::base_metrics_colle
    * std::atomic requirements.
    */
   struct stats {
-    std::atomic_uint n_exp_interference{0};
-    std::atomic_uint n_entered_interference{0};
-    std::atomic_uint n_exited_interference{0};
-    std::atomic_uint interference_duration{0};
+    std::atomic_size_t n_exp_interference{0};
+    std::atomic_size_t n_episodes{0};
+    std::atomic_size_t n_entered_interference{0};
+    std::atomic_size_t n_exited_interference{0};
+    std::atomic_size_t interference_duration{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;

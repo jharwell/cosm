@@ -42,18 +42,18 @@ explore_for_goal_fsm::explore_for_goal_fsm(
     const std::function<bool(void)>& goal_detect)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.explore_for_goal"),
-      HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(explore, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
-      HFSM_DEFINE_STATE_MAP(
+      RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(explore, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
+      RCPPSW_HFSM_DEFINE_STATE_MAP(
           mc_state_map,
-          HFSM_STATE_MAP_ENTRY_EX(&start),
-          HFSM_STATE_MAP_ENTRY_EX_ALL(&explore, nullptr, &entry_explore, nullptr),
-          HFSM_STATE_MAP_ENTRY_EX(&finished)),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&start),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&explore, nullptr, &entry_explore, nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_explore_behavior(std::move(behavior)),
       m_goal_detect(goal_detect) {}
 
-HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, start) {
+RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, start) {
   if (ekST_START != last_state()) {
     ER_DEBUG("Executing ekST_START");
   }
@@ -61,14 +61,14 @@ HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, start) {
   return util_signal::ekHANDLED;
 }
 
-RCSW_CONST HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, finished) {
+RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, finished) {
   if (ekST_FINISHED != last_state()) {
     ER_DEBUG("Executing ekST_FINISHED");
   }
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
+RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   if (ekST_EXPLORE != last_state()) {
     ER_DEBUG("Executing ekST_EXPLORE");
     m_explore_time = 0;
@@ -85,7 +85,7 @@ HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   return util_signal::ekHANDLED;
 }
 
-HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kMAGENTA);
 }

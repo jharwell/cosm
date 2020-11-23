@@ -52,7 +52,7 @@ bool ground_sensor_parser::validate(void) const {
       if (d1.first == d2.first) {
         continue;
       }
-      RCSW_CHECK(!d1.second.range.overlaps_with(d2.second.range));
+      RCPPSW_CHECK(!d1.second.range.overlaps_with(d2.second.range));
     } /* for(&d2..) */
   }   /* for(&d..) */
   return true;

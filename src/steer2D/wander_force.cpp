@@ -71,8 +71,8 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
 
   /* calculate displacement force (the actual wandering) */
   rmath::vector2d displacement(
-      mc_circle_radius * std::cos((m_angle + velocity.angle()).value()),
-      mc_circle_radius * std::sin((m_angle + velocity.angle()).value()));
+      mc_circle_radius * std::cos((m_angle + velocity.angle()).v()),
+      mc_circle_radius * std::sin((m_angle + velocity.angle()).v()));
 
   /*
    * Update wander angle so it won't have the same value next time with a
@@ -90,7 +90,7 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
     val = -mc_max_angle_delta + 2 * mc_max_angle_delta * rng->uniform(0.0, 1.0);
   }
   rmath::degrees perturbation(
-      std::fmod(rmath::to_degrees(m_angle).value() + val, mc_max_angle_delta));
+      std::fmod(rmath::to_degrees(m_angle).v() + val, mc_max_angle_delta));
   m_angle = rmath::to_radians(perturbation);
 
   /*
@@ -106,7 +106,7 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
    */
   double angle = std::atan2(displacement.y() - circle_center.y(),
                             displacement.x() - circle_center.x());
-  double angle_diff = angle - circle_center.angle().value();
+  double angle_diff = angle - circle_center.angle().v();
   angle_diff = std::atan2(std::sin(angle_diff), std::cos(angle_diff));
 
   if (std::fabs(angle_diff - m_last_angle) > M_PI) {

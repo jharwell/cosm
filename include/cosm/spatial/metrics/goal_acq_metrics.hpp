@@ -61,7 +61,7 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    */
   struct exp_status {
     bool is_exploring;
-    bool is_false;
+    bool is_true;
   };
 
   /**

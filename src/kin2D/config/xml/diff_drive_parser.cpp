@@ -46,8 +46,8 @@ void diff_drive_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool diff_drive_parser::validate(void) const {
-  RCSW_CHECK(m_config->soft_turn_max.value() > 0.0);
-  RCSW_CHECK(m_config->max_speed > 0.0);
+  RCPPSW_CHECK(m_config->soft_turn_max.v() > 0.0);
+  RCPPSW_CHECK(m_config->max_speed > 0.0);
   return true;
 
 error:

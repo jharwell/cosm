@@ -114,21 +114,21 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
     bool pickup;
   };
 
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_unknown);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_empty);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_block);
-  FSM_STATE_DECLARE(cell2D_fsm, state_cache, struct block_data);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_block_extent);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_cache_extent);
-  FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent, RCSW_CONST);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_unknown);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_empty);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_block);
+  RCPPSW_FSM_STATE_DECLARE(cell2D_fsm, state_cache, struct block_data);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_block_extent);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_cache_extent);
+  RCPPSW_FSM_STATE_DECLARE_ND(cell2D_fsm, state_nest_extent, RCPPSW_CONST);
 
-  FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
+  RCPPSW_FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];
   }
 
-  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, state::ekST_MAX_STATES);
+  RCPPSW_FSM_DECLARE_STATE_MAP(state_map, mc_state_map, state::ekST_MAX_STATES);
   /* clang-format off */
-  uint m_block_count{0};
+  size_t m_block_count{0};
   /* clang-format on */
 };
 

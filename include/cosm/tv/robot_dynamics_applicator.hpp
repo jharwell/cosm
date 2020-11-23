@@ -98,12 +98,12 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
     return (m_bc_throttle_config) ? true : false;
   }
 
-  RCSW_PURE const ctv::switchable_tv_generator* motion_throttler(
+  RCPPSW_PURE const ctv::switchable_tv_generator* motion_throttler(
       const rtypes::type_uuid& id) const {
     return const_cast<robot_dynamics_applicator*>(this)->motion_throttler(id);
   }
 
-  RCSW_PURE const ctv::switchable_tv_generator* bc_throttler(
+  RCPPSW_PURE const ctv::switchable_tv_generator* bc_throttler(
       const rtypes::type_uuid& id) const {
     return const_cast<robot_dynamics_applicator*>(this)->bc_throttler(id);
   }
@@ -129,7 +129,7 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
   /**
    * \brief Get a reference to the motion throttler for a specific controller.
    */
-  RCSW_PURE ctv::switchable_tv_generator* motion_throttler(const rtypes::type_uuid& id) {
+  RCPPSW_PURE ctv::switchable_tv_generator* motion_throttler(const rtypes::type_uuid& id) {
     auto it = m_motion_throttlers.find(id);
     if (m_motion_throttlers.end() == it) {
       return nullptr;
@@ -137,7 +137,7 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
     return &it->second;
   }
 
-  RCSW_PURE ctv::switchable_tv_generator* bc_throttler(const rtypes::type_uuid& id) {
+  RCPPSW_PURE ctv::switchable_tv_generator* bc_throttler(const rtypes::type_uuid& id) {
     auto it = m_bc_throttlers.find(id);
     if (m_bc_throttlers.end() == it) {
       return nullptr;

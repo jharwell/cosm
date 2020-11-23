@@ -85,7 +85,7 @@ boost::optional<std::string> block_cluster_metrics_collector::csv_line_build(voi
   } /* for(&count..) */
 
   for (auto &count : m_cum_block_counts) {
-    line += csv_entry_intavg(count);
+    line += csv_entry_tsavg(count);
   } /* for(&count..) */
 
   for (size_t i = 0; i < m_extents.size() - 1; ++i) {

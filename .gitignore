@@ -49,7 +49,7 @@ compile_options.json
 build
 node_modules
 include/cosm/config.hpp
-ext/rcppsw/
+ext/rcppsw
 
 # Sphinx
 docs/_build/

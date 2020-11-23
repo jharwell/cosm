@@ -85,7 +85,7 @@ rmath::vector3d base_controller2D::ts_velocity_impl(void) const {
    * If you allow distance gathering at timesteps < 1, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
-  if (RCSW_LIKELY(saa()->sensing()->tick() > 1U)) {
+  if (RCPPSW_LIKELY(saa()->sensing()->tick() > 1U)) {
     auto vel = saa()->linear_velocity();
     return {vel.x(), vel.y(), 0.0};
   }

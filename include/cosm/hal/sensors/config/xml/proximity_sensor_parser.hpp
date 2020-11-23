@@ -57,7 +57,7 @@ class proximity_sensor_parser : public rconfig::xml::xml_config_parser {
    */
   static constexpr const char kXMLRoot[] = "proximity_sensor";
 
-  bool validate(void) const override RCSW_PURE;
+  bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;
 
   std::string xml_root(void) const override { return kXMLRoot; }

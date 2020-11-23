@@ -89,7 +89,7 @@ conflict_checker::status conflict_checker::placement2D(
      * actually need to check what we get in return for overlap.
      */
     conflict |= nest_conflict(block, *map->nest(id), loc);
-    RCSW_CHECK(!(conflict.x && conflict.y));
+    RCPPSW_CHECK(!(conflict.x && conflict.y));
   } /* for(&nest..) */
 
   ids = map->bloctree()->query(ll, ur);
@@ -99,7 +99,7 @@ conflict_checker::status conflict_checker::placement2D(
      * actually need to check what we get in return for overlap.
      */
     conflict |= block_conflict(block, map->blocks()[id.v()], loc);
-    RCSW_CHECK(!(conflict.x && conflict.y));
+    RCPPSW_CHECK(!(conflict.x && conflict.y));
   } /* for(&id..) */
 
 error:
@@ -143,7 +143,7 @@ conflict_checker::status conflict_checker::placement2D(
      * actually need to check what we get in return for overlap.
      */
     conflict |= cache_conflict(block, *it, loc);
-    RCSW_CHECK(!(conflict.x && conflict.y));
+    RCPPSW_CHECK(!(conflict.x && conflict.y));
   } /* for(cache..) */
 
 error:

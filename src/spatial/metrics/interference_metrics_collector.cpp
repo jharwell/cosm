@@ -54,6 +54,8 @@ std::list<std::string> interference_metrics_collector::csv_header_cols(
     "cum_avg_entered_interference",
     "int_avg_exited_interference",
     "cum_avg_exited_interference",
+    "int_avg_episodes",
+    "cum_avg_episodes",
     "int_avg_interference_duration",
     "cum_avg_interference_duration"
       /* clang-format on */
@@ -70,17 +72,20 @@ void interference_metrics_collector::reset(void) {
 void interference_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const interference_metrics&>(metrics);
-  m_interval.n_exp_interference += static_cast<uint>(m.exp_interference());
-  m_cum.n_exp_interference += static_cast<uint>(m.exp_interference());
+  m_interval.n_exp_interference += static_cast<size_t>(m.exp_interference());
+  m_cum.n_exp_interference += static_cast<size_t>(m.exp_interference());
 
   m_interval.n_entered_interference +=
-      static_cast<uint>(m.entered_interference());
-  m_cum.n_entered_interference += static_cast<uint>(m.entered_interference());
+      static_cast<size_t>(m.entered_interference());
+  m_cum.n_entered_interference += static_cast<size_t>(m.entered_interference());
 
-  m_interval.n_exited_interference += static_cast<uint>(m.exited_interference());
-  m_cum.n_exited_interference += static_cast<uint>(m.exited_interference());
+  m_interval.n_exited_interference += static_cast<size_t>(m.exited_interference());
+  m_cum.n_exited_interference += static_cast<size_t>(m.exited_interference());
 
   if (m.exited_interference()) {
+    ++m_interval.n_episodes;
+    ++m_cum.n_episodes;
+
     m_interval.interference_duration += m.interference_duration().v();
     m_cum.interference_duration += m.interference_duration().v();
   }
@@ -98,13 +103,19 @@ boost::optional<std::string> interference_metrics_collector::csv_line_build(void
   line += csv_entry_tsavg(m_cum.n_entered_interference.load());
   line += csv_entry_intavg(m_interval.n_exited_interference.load());
   line += csv_entry_tsavg(m_cum.n_exited_interference.load());
-  line += csv_entry_intavg(m_interval.interference_duration.load());
-  line += csv_entry_tsavg(m_cum.interference_duration.load(), true);
 
+  line += csv_entry_intavg(m_interval.n_episodes.load());
+  line += csv_entry_tsavg(m_cum.n_episodes.load());
+  line += csv_entry_domavg(m_interval.interference_duration.load(),
+                           m_interval.n_episodes.load());
+  line += csv_entry_domavg(m_cum.interference_duration.load(),
+                           m_cum.n_episodes.load(),
+                          true);
   return boost::make_optional(line);
 } /* csv_line_build() */
 
 void interference_metrics_collector::reset_after_interval(void) {
+  m_interval.n_episodes = 0;
   m_interval.n_exp_interference = 0;
   m_interval.n_entered_interference = 0;
   m_interval.n_exited_interference = 0;

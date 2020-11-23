@@ -102,7 +102,7 @@ boost::optional<rmath::vector2z> block_motion_handler::free_adjacent_coord(
         continue;
     }
     if (!map->placement_conflict(block, new_rloc)) {
-      RCSW_UNUSED bool in_bounds = new_dloc.x() < map->xdsize() &&
+      RCPPSW_UNUSED bool in_bounds = new_dloc.x() < map->xdsize() &&
                        new_dloc.y() < map->ydsize() &&
           new_dloc.x() > 0 && new_dloc.y() > 0;
       ER_ASSERT(in_bounds,
@@ -110,7 +110,7 @@ boost::optional<rmath::vector2z> block_motion_handler::free_adjacent_coord(
                 rcppsw::to_string(new_dloc).c_str(),
                 map->xdsize(),
                 map->ydsize());
-      RCSW_UNUSED auto& cell = map->access<cds::arena_grid::kCell>(new_dloc);
+      RCPPSW_UNUSED auto& cell = map->access<cds::arena_grid::kCell>(new_dloc);
       ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),
                 "Cell@%s not unknown or empty [state=%d]",
                 rcppsw::to_string(new_dloc).c_str(),

@@ -39,33 +39,33 @@ NS_START(cosm, spatial, fsm);
 vector_fsm::vector_fsm(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.vector"),
-      HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(interference_avoidance, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(interference_recovery, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()),
-      HFSM_DEFINE_STATE_MAP(
+      RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(interference_avoidance, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(interference_recovery, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(arrived, hfsm::top_state()),
+      RCPPSW_HFSM_DEFINE_STATE_MAP(
           mc_state_map,
-          FSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&interference_avoidance,
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&interference_avoidance,
                                      nullptr,
                                      &entry_interference_avoidance,
                                      &exit_interference_avoidance),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&interference_recovery,
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&interference_recovery,
                                      nullptr,
                                      &entry_interference_recovery,
                                      nullptr),
-          FSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
 
 /*******************************************************************************
  * States
  ******************************************************************************/
-RCSW_CONST HFSM_STATE_DEFINE_ND(vector_fsm, start) {
+RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, start) {
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
+RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
   if (ekST_INTERFERENCE_AVOIDANCE != last_state()) {
     ER_DEBUG("Executing ekST_COLLIISION_AVOIDANCE");
   }
@@ -74,7 +74,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
           sensing()->sensor<hal::sensors::proximity_sensor>()->avg_prox_obj()) {
     ER_DEBUG("Found threatening obstacle: %s@%f [%f]",
              obs->to_str().c_str(),
-             obs->angle().value(),
+             obs->angle().v(),
              obs->length());
     saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
     /*
@@ -91,7 +91,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
+RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
   if (ekST_INTERFERENCE_RECOVERY != last_state()) {
     ER_DEBUG("Executing ekST_INTERFERENCE_RECOVERY");
   }
@@ -127,7 +127,7 @@ HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
+RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
   if (ekST_VECTOR != last_state()) {
     ER_DEBUG("Executing ekST_VECTOR");
     ER_INFO("Target=%s, robot=%s",
@@ -158,9 +158,9 @@ HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
   return util_signal::ekHANDLED;
 }
 
-RCSW_CONST HFSM_STATE_DEFINE(vector_fsm,
+RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE(vector_fsm,
                              arrived,
-                             RCSW_UNUSED point_argument* data) {
+                             RCPPSW_UNUSED point_argument* data) {
   if (ekST_ARRIVED != last_state()) {
     ER_DEBUG("Executing ekST_ARRIVED: target=%s, tol=%f",
              data->point().to_str().c_str(),
@@ -169,25 +169,25 @@ RCSW_CONST HFSM_STATE_DEFINE(vector_fsm,
   return util_signal::ekHANDLED;
 }
 
-HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_vector) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_vector) {
   ER_DEBUG("Entering ekST_VECTOR");
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kBLUE);
 }
 
-HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_avoidance) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_avoidance) {
   ER_DEBUG("Entering ekST_INTERFERENCE_AVOIDANCE");
   inta_tracker()->inta_enter();
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kRED);
 }
 
-HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
+RCPPSW_HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
   ER_DEBUG("Exiting ekST_INTERFERENCE_AVOIDANCE");
   inta_tracker()->inta_exit();
 }
 
-HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_recovery) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_recovery) {
   ER_DEBUG("Entering ekST_INTERFERENCE_RECOVERY");
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kYELLOW);
@@ -227,7 +227,7 @@ void vector_fsm::task_start(ta::taskable_argument* c_arg) {
   m_goal = std::move(*a);
 
   ER_ASSERT(nullptr != a, "Bad point argument passed to %s", __FUNCTION__);
-  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
+  RCPPSW_HFSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
                  std::make_unique<point_argument>(a->tolerance(), a->point()));
 } /* task_start() */

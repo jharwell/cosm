@@ -44,9 +44,9 @@ void arrival_force_parser::parse(const ticpp::Element& node) {
 
 bool arrival_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(m_config->slowing_radius > 0.0);
-    RCSW_CHECK(m_config->slowing_speed_min > 0.0);
-    RCSW_CHECK(m_config->max > m_config->slowing_speed_min);
+    RCPPSW_CHECK(m_config->slowing_radius > 0.0);
+    RCPPSW_CHECK(m_config->slowing_speed_min > 0.0);
+    RCPPSW_CHECK(m_config->max > m_config->slowing_speed_min);
   }
   return true;
 

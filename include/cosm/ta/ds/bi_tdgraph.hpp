@@ -103,7 +103,7 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
    * \brief Return a uuid for the active tab (really just an index in the vector
    * of TABs).
    */
-  RCSW_PURE int active_tab_id(void) const {
+  RCPPSW_PURE int active_tab_id(void) const {
     return std::distance(
         m_tabs.begin(),
         std::find_if(m_tabs.begin(), m_tabs.end(), [this](const auto& tab) {
@@ -126,7 +126,7 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
    * \param current_task The current active task in the tab.
    */
   bi_tab* tab_child(const bi_tab* tab,
-                    const polled_task* current_task) RCSW_PURE;
+                    const polled_task* current_task) RCPPSW_PURE;
 
   void active_tab_init(const std::string& method,
                        rmath::rng* rng);
@@ -138,7 +138,7 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
   void active_tab_init_random(rmath::rng* rng);
   void active_tab_init_max_depth(rmath::rng* rng);
   bi_tab* tab_parent(const bi_tab* tab);
-  bool tab_parent_verify(const bi_tab* tab) const RCSW_PURE;
+  bool tab_parent_verify(const bi_tab* tab) const RCPPSW_PURE;
 
   /* clang-format off */
   const config::task_alloc_config mc_config;

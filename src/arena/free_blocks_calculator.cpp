@@ -45,7 +45,7 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
   std::copy_if(c_all_blocks.begin(),
                c_all_blocks.end(),
                std::back_inserter(free_blocks),
-               [&](const auto& b) RCSW_PURE {
+               [&](const auto& b) RCPPSW_PURE {
                  /* block not carried by robot */
                  return rtypes::constants::kNoUUID == b->md()->robot_id() &&
                      /*

@@ -78,10 +78,10 @@ class switchable_tv_generator {
 
  private:
   /* clang-format off */
-  bool                                m_en{false};
-  double                              m_active{0.0};
-  double                              m_applied{0.0};
-  std::unique_ptr<rcontrol::waveform> m_waveform;
+  bool                                     m_en{false};
+  double                                   m_active{0.0};
+  double                                   m_applied{0.0};
+  std::unique_ptr<rcontrol::base_waveform> m_waveform;
   /* clang-format off */
 };
 

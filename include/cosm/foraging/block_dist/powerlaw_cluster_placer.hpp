@@ -80,7 +80,7 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
    */
   placements operator()(
       const cds::const_spatial_entity_vector& c_entities,
-      const std::vector<size_t>& c_sizes) RCSW_COLD;
+      const std::vector<size_t>& c_sizes) RCPPSW_COLD;
 
  private:
   /**
@@ -93,7 +93,7 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
    */
   placement placement_guess(const rtypes::type_uuid& c_id,
                             size_t size,
-                            const rmath::vector3d& c_block_bb) RCSW_COLD;
+                            const rmath::vector3d& c_block_bb) RCPPSW_COLD;
 
   /**
    * \brief Verify that the guessed cluster placement does not overlap with:
@@ -112,7 +112,7 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
    */
   bool placement_check(const placement& c_guess,
                        const placements& c_placed,
-                       const cds::const_spatial_entity_vector& c_entities) const RCSW_ATTR(cold, pure);
+                       const cds::const_spatial_entity_vector& c_entities) const RCPPSW_ATTR(cold, pure);
 
  private:
   /* clang-format off */

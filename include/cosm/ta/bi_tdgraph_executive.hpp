@@ -66,7 +66,7 @@ class bi_tdgraph_executive final : public base_executive,
   /**
    * \brief Get the TAB corresponding to the currently active task.
    */
-  const ds::bi_tab* active_tab(void) const RCSW_PURE;
+  const ds::bi_tab* active_tab(void) const RCPPSW_PURE;
 
   /**
    * \brief Set an optional callback that will be run when a new task is
@@ -78,7 +78,7 @@ class bi_tdgraph_executive final : public base_executive,
     m_task_start_notify.push_back(cb);
   }
 
-  const polled_task* root_task(void) const RCSW_PURE;
+  const polled_task* root_task(void) const RCPPSW_PURE;
 
   /**
    * \brief Get the parent task of the specified one.
@@ -88,7 +88,7 @@ class bi_tdgraph_executive final : public base_executive,
   const ds::bi_tdgraph* graph(void) const;
 
  protected:
-  polled_task* root_task(void) RCSW_PURE;
+  polled_task* root_task(void) RCPPSW_PURE;
   ds::bi_tdgraph* graph(void);
 
  private:

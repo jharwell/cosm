@@ -155,7 +155,7 @@ class convergence_calculator final
    * \brief Return swarm convergence status in an OR fashion (i.e. if ANY of the
    * configured methods say convergence has occured, return \c TRUE).
    */
-  bool converged(void) const RCSW_PURE;
+  bool converged(void) const RCPPSW_PURE;
 
   /**
    * \brief Update convergence calculations for the current timestep

@@ -44,8 +44,8 @@ void sigmoid_sel_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool sigmoid_sel_parser::validate(void) const {
-  RCSW_CHECK(m_sigmoid.validate());
-  RCSW_CHECK(!m_config->method.empty());
+  RCPPSW_CHECK(m_sigmoid.validate());
+  RCPPSW_CHECK(!m_config->method.empty());
   return true;
 
 error:

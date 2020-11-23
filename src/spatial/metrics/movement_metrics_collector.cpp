@@ -51,6 +51,10 @@ std::list<std::string> movement_metrics_collector::csv_header_cols(void) const {
     "cum_avg_distance_homing",
     "int_avg_velocity_homing",
     "cum_avg_velocity_homing",
+    "int_avg_distance_exploring",
+    "cum_avg_distance_exploring",
+    "int_avg_velocity_exploring",
+    "cum_avg_velocity_exploring",
     "int_avg_distance_all",
     "cum_avg_distance_all",
     "int_avg_velocity_all",
@@ -82,6 +86,17 @@ boost::optional<std::string> movement_metrics_collector::csv_line_build(void) {
   line += csv_entry_domavg(m_cum[movement_category::ekHOMING].velocity.load(),
                            m_cum[movement_category::ekHOMING].n_robots);
 
+  /* exploring motion */
+  line += csv_entry_domavg(m_interval[movement_category::ekEXPLORING].distance.load(),
+                           m_interval[movement_category::ekEXPLORING].n_robots);
+  line += csv_entry_domavg(m_cum[movement_category::ekEXPLORING].distance.load(),
+                           m_cum[movement_category::ekEXPLORING].n_robots);
+
+  line += csv_entry_domavg(m_interval[movement_category::ekEXPLORING].velocity.load(),
+                           m_interval[movement_category::ekEXPLORING].n_robots);
+  line += csv_entry_domavg(m_cum[movement_category::ekEXPLORING].velocity.load(),
+                           m_cum[movement_category::ekEXPLORING].n_robots);
+
   /* all motion */
   line += csv_entry_domavg(m_interval[movement_category::ekALL].distance.load(),
                            m_interval[movement_category::ekALL].n_robots);
@@ -100,10 +115,11 @@ boost::optional<std::string> movement_metrics_collector::csv_line_build(void) {
 void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const movement_metrics&>(metrics);
   auto all_filter = [&](double) { return true; };
-  auto homing_filter = [&](double dist) { return dist > 0.0; };
+  auto other_filter = [&](double dist) { return dist > 0.0; };
   std::vector<std::function<bool(double)>> filter_funcs(movement_category::ekMAX);
   filter_funcs[movement_category::ekALL] = all_filter;
-  filter_funcs[movement_category::ekHOMING] = homing_filter;
+  filter_funcs[movement_category::ekHOMING] = other_filter;
+  filter_funcs[movement_category::ekEXPLORING] = other_filter;
 
   for (size_t i = 0; i < movement_category::ekMAX; ++i) {
     auto ienum = static_cast<movement_category>(i);

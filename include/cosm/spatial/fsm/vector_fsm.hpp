@@ -82,9 +82,9 @@ class vector_fsm final : public csfsm::util_hfsm,
   void init(void) override;
 
   /* interference metrics */
-  bool exp_interference(void) const override RCSW_PURE;
-  bool entered_interference(void) const override RCSW_PURE;
-  bool exited_interference(void) const override RCSW_PURE;
+  bool exp_interference(void) const override RCPPSW_PURE;
+  bool entered_interference(void) const override RCPPSW_PURE;
+  bool exited_interference(void) const override RCPPSW_PURE;
   rmath::vector3z interference_loc3D(void) const override;
 
  private:
@@ -135,26 +135,26 @@ class vector_fsm final : public csfsm::util_hfsm,
    * \return The vector, specified with the tail at the robot and the head
    * pointing towards the goal.
    */
-  rmath::vector2d calc_vector_to_goal(const rmath::vector2d& goal) RCSW_PURE;
+  rmath::vector2d calc_vector_to_goal(const rmath::vector2d& goal) RCPPSW_PURE;
 
   /* vector states */
-  HFSM_STATE_DECLARE_ND(vector_fsm, start);
-  HFSM_STATE_DECLARE_ND(vector_fsm, vector);
-  HFSM_STATE_DECLARE_ND(vector_fsm, interference_avoidance);
-  HFSM_STATE_DECLARE_ND(vector_fsm, interference_recovery);
-  HFSM_STATE_DECLARE(vector_fsm, arrived, point_argument);
+  RCPPSW_HFSM_STATE_DECLARE_ND(vector_fsm, start);
+  RCPPSW_HFSM_STATE_DECLARE_ND(vector_fsm, vector);
+  RCPPSW_HFSM_STATE_DECLARE_ND(vector_fsm, interference_avoidance);
+  RCPPSW_HFSM_STATE_DECLARE_ND(vector_fsm, interference_recovery);
+  RCPPSW_HFSM_STATE_DECLARE(vector_fsm, arrived, point_argument);
 
-  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
-  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_avoidance);
-  HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_recovery);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_vector);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_avoidance);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(vector_fsm, entry_interference_recovery);
 
-  HFSM_EXIT_DECLARE(vector_fsm, exit_interference_avoidance);
+  RCPPSW_HFSM_EXIT_DECLARE(vector_fsm, exit_interference_avoidance);
 
-  HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
+  RCPPSW_HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];
   }
 
-  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
+  RCPPSW_HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /* clang-format off */
   fsm_state      m_state{};

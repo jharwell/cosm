@@ -43,16 +43,16 @@ acquire_goal_fsm::acquire_goal_fsm(
     const struct hook_list& hooks)
     : util_hfsm(saa, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.acquire_goal_fsm"),
-      HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(fsm_acquire_goal, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
-      HFSM_DEFINE_STATE_MAP(mc_state_map,
-                            HFSM_STATE_MAP_ENTRY_EX(&start),
-                            HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
+      RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(fsm_acquire_goal, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
+      RCPPSW_HFSM_DEFINE_STATE_MAP(mc_state_map,
+                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&start),
+                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
                                                         nullptr,
                                                         nullptr,
                                                         &exit_fsm_acquire_goal),
-                            HFSM_STATE_MAP_ENTRY_EX(&finished)),
+                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_hooks(hooks),
       m_vector_fsm(saa, rng),
       m_explore_fsm(saa, std::move(behavior), rng, m_hooks.explore_term_cb) {
@@ -60,13 +60,13 @@ acquire_goal_fsm::acquire_goal_fsm(
                               &fsm_acquire_goal);
 }
 
-HFSM_STATE_DEFINE_ND(acquire_goal_fsm, start) {
+RCPPSW_HFSM_STATE_DEFINE_ND(acquire_goal_fsm, start) {
   ER_DEBUG("Executing ekST_START");
   internal_event(ekST_ACQUIRE_GOAL);
   return util_signal::ekHANDLED;
 }
 
-HFSM_STATE_DEFINE_ND(acquire_goal_fsm, fsm_acquire_goal) {
+RCPPSW_HFSM_STATE_DEFINE_ND(acquire_goal_fsm, fsm_acquire_goal) {
   if (ekST_ACQUIRE_GOAL != last_state()) {
     ER_DEBUG("Executing ekST_ACQUIRE_GOAL");
   }
@@ -77,12 +77,12 @@ HFSM_STATE_DEFINE_ND(acquire_goal_fsm, fsm_acquire_goal) {
   return rpfsm::event_signal::ekHANDLED;
 }
 
-HFSM_EXIT_DEFINE(acquire_goal_fsm, exit_fsm_acquire_goal) {
+RCPPSW_HFSM_EXIT_DEFINE(acquire_goal_fsm, exit_fsm_acquire_goal) {
   m_vector_fsm.task_reset();
   m_explore_fsm.task_reset();
 }
 
-RCSW_CONST HFSM_STATE_DEFINE_ND(acquire_goal_fsm, finished) {
+RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE_ND(acquire_goal_fsm, finished) {
   if (ekST_FINISHED != last_state()) {
     ER_DEBUG("Executing ekST_FINISHED");
   }
@@ -124,7 +124,7 @@ bool acquire_goal_fsm::goal_acquired(void) const {
 acquire_goal_fsm::exp_status acquire_goal_fsm::is_exploring_for_goal(void) const {
   return exp_status{current_state() == ekST_ACQUIRE_GOAL &&
                         m_explore_fsm.task_running(),
-                    !m_hooks.candidates_exist()};
+        !m_hooks.candidates_exist()};
 } /* is_exploring_for_goal() */
 
 bool acquire_goal_fsm::is_vectoring_to_goal(void) const {

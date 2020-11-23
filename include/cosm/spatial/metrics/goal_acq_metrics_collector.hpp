@@ -68,10 +68,10 @@ class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector
    * are valid in parallel metric collection contexts.
    */
   struct stats {
-    std::atomic_uint n_true_exploring_for_goal{0};
-    std::atomic_uint n_false_exploring_for_goal{0};
-    std::atomic_uint n_vectoring_to_goal{0};
-    std::atomic_uint n_acquiring_goal{0};
+    std::atomic_size_t n_true_exploring_for_goal{0};
+    std::atomic_size_t n_false_exploring_for_goal{0};
+    std::atomic_size_t n_vectoring_to_goal{0};
+    std::atomic_size_t n_acquiring_goal{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;

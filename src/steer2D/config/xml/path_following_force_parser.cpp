@@ -43,8 +43,8 @@ void path_following_force_parser::parse(const ticpp::Element& node) {
 
 bool path_following_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(m_config->max > 0.0);
-    RCSW_CHECK(m_config->radius > 0.0);
+    RCPPSW_CHECK(m_config->max > 0.0);
+    RCPPSW_CHECK(m_config->radius > 0.0);
   }
   return true;
 

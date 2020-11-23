@@ -49,12 +49,12 @@ class los2D : public crepr::base_los<cds::cell2D>, public rer::client<los2D> {
     return access(c.x(), c.y());
   }
 
-  rmath::vector2z abs_ll(void) const override final RCSW_PURE;
-  rmath::vector2z abs_ul(void) const override final RCSW_PURE;
-  rmath::vector2z abs_lr(void) const override final RCSW_PURE;
-  rmath::vector2z abs_ur(void) const override final RCSW_PURE;
-  bool contains_abs(const rmath::vector2z& loc) const override final RCSW_PURE;
-  bool contains_rel(const rmath::vector2z& loc) const override final RCSW_PURE;
+  rmath::vector2z abs_ll(void) const override final RCPPSW_PURE;
+  rmath::vector2z abs_ul(void) const override final RCPPSW_PURE;
+  rmath::vector2z abs_lr(void) const override final RCPPSW_PURE;
+  rmath::vector2z abs_ur(void) const override final RCPPSW_PURE;
+  bool contains_abs(const rmath::vector2z& loc) const override final RCPPSW_PURE;
+  bool contains_rel(const rmath::vector2z& loc) const override final RCPPSW_PURE;
 
   /**
    * \brief Get the cell associated with a particular grid location within the
@@ -66,7 +66,7 @@ class los2D : public crepr::base_los<cds::cell2D>, public rer::client<los2D> {
    *
    * \return A reference to the cell.
    */
-  const cds::cell2D& access(size_t i, size_t j) const RCSW_PURE;
+  const cds::cell2D& access(size_t i, size_t j) const RCPPSW_PURE;
 };
 
 NS_END(repr, cosm);

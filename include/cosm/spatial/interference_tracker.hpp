@@ -56,11 +56,11 @@ class interference_tracker : public csmetrics::interference_metrics {
   interference_tracker& operator=(const interference_tracker&) = delete;
 
   /* interference metrics */
-  bool exp_interference(void) const override final RCSW_PURE;
-  bool entered_interference(void) const override final RCSW_PURE;
-  bool exited_interference(void) const override final RCSW_PURE;
+  bool exp_interference(void) const override final RCPPSW_PURE;
+  bool entered_interference(void) const override final RCPPSW_PURE;
+  bool exited_interference(void) const override final RCPPSW_PURE;
   rtypes::timestep interference_duration(void) const override final;
-  rmath::vector3z interference_loc3D(void) const override final RCSW_PURE;
+  rmath::vector3z interference_loc3D(void) const override final RCPPSW_PURE;
 
   /**
    * \brief Handle all logic for entering interference avoidance; classes should

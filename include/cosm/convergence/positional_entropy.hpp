@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "rcppsw/algorithm/clustering/entropy.hpp"
+#include "rcppsw/algorithm/clustering/entropy_eh_omp.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/rcppsw.hpp"
@@ -58,7 +59,7 @@ class positional_entropy final
  public:
   positional_entropy(
       double epsilon,
-      std::unique_ptr<raclustering::detail::entropy_impl<rmath::vector2d>> impl,
+      std::unique_ptr<raclustering::entropy_eh_omp<rmath::vector2d>> impl,
       const config::positional_entropy_config* const config)
       : convergence_measure(epsilon),
         entropy_balch2000(std::move(impl),

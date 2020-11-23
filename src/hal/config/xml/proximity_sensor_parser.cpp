@@ -42,8 +42,8 @@ void proximity_sensor_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool proximity_sensor_parser::validate(void) const {
-  RCSW_CHECK(m_config->delta > 0.0);
-  RCSW_CHECK(m_config->fov.lb() < m_config->fov.ub());
+  RCPPSW_CHECK(m_config->delta > 0.0);
+  RCPPSW_CHECK(m_config->fov.lb() < m_config->fov.ub());
   return true;
 
 error:

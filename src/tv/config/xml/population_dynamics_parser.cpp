@@ -46,10 +46,10 @@ void population_dynamics_parser::parse(const ticpp::Element& node) {
 
 bool population_dynamics_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(m_config->birth_mu >= 0.0);
-    RCSW_CHECK(m_config->death_lambda >= 0.0);
-    RCSW_CHECK(m_config->malfunction_lambda >= 0.0);
-    RCSW_CHECK(m_config->repair_mu >= 0.0);
+    RCPPSW_CHECK(m_config->birth_mu >= 0.0);
+    RCPPSW_CHECK(m_config->death_lambda >= 0.0);
+    RCPPSW_CHECK(m_config->malfunction_lambda >= 0.0);
+    RCPPSW_CHECK(m_config->repair_mu >= 0.0);
   }
   return true;
 

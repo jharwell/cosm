@@ -53,27 +53,27 @@ struct normal_op_visitor {
 supervisor_fsm::supervisor_fsm(subsystem::saa_subsystemQ3D* saa)
     : rpfsm::simple_fsm(states::ekST_MAX_STATES, states::ekST_START),
       ER_CLIENT_INIT("cosm.fsm.supervisor"),
-      FSM_DEFINE_STATE_MAP(mc_state_map,
-                           FSM_STATE_MAP_ENTRY(&start),
-                           FSM_STATE_MAP_ENTRY(&normal),
-                           FSM_STATE_MAP_ENTRY(&malfunction)),
+      RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&start),
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&normal),
+                           RCPPSW_FSM_STATE_MAP_ENTRY(&malfunction)),
       m_saa(saa) {}
 
 /*******************************************************************************
  * States
  ******************************************************************************/
-RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
+RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
   internal_event(ekST_NORMAL);
   return rpfsm::event_signal::ekHANDLED;
 }
 
-RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
+RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
   boost::apply_visitor(normal_op_visitor(), m_supervisee);
   m_saa->steer_force2D_apply();
   return rpfsm::event_signal::ekHANDLED;
 }
 
-RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
+RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
   m_saa->actuation()->template actuator<ckin2D::governed_diff_drive>()->reset();
   return rpfsm::event_signal::ekHANDLED;
 }
@@ -82,24 +82,24 @@ RCSW_CONST FSM_STATE_DEFINE_ND(supervisor_fsm, malfunction) {
  * Event Functions
  ******************************************************************************/
 void supervisor_fsm::event_malfunction(void) {
-  FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
+  RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
       /* Possible to have a malfunction event on first timestep  */
       states::ekST_MALFUNCTION,     /* start */
       states::ekST_MALFUNCTION,     /* normal */
       rpfsm::event_signal::ekFATAL, /* malfunction */
   };
-  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
+  RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_malfunction() */
 
 void supervisor_fsm::event_repair(void) {
-  FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
+  RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
       /* Possible to have repair malfunction event on first timestep  */
       states::ekST_NORMAL,          /* start */
       rpfsm::event_signal::ekFATAL, /* normal */
       states::ekST_NORMAL,          /* malfunction */
   };
-  FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
+  RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, states::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_repair() */
 

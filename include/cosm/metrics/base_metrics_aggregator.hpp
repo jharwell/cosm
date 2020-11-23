@@ -168,12 +168,12 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   } /* collect() */
 
   /**
-   * \brief Decorator around \ref collector_group::collector_remove().
+   * \brief Decorator around \ref collector_group::collector_unregister().
    */
-  bool collector_remove(const std::string& scoped_name) {
+  bool collector_unregister(const std::string& scoped_name) {
     auto it = m_collector_map.find(scoped_name);
     if (it != m_collector_map.end()) {
-      return it->second->collector_remove(scoped_name);
+      return it->second->collector_unregister(scoped_name);
     }
     return false;
   }

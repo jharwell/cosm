@@ -75,7 +75,7 @@ class block_carrying_controller {
    */
   std::unique_ptr<crepr::base_block3D> block_release(void);
 
-  void reset(void) RCSW_COLD;
+  void reset(void) RCPPSW_COLD;
 
   /**
    * \brief Return the block robot is carrying, or NULL if the robot is not

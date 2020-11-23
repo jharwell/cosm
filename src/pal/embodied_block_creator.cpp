@@ -89,7 +89,7 @@ argos::CBoxEntity* embodied_block_creator::ramp_bottom(
     const rmath::radians& z_rotation,
     const rtypes::type_uuid& parent_id) const {
   argos::CQuaternion orientation;
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.value()),
+  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()),
                               argos::CRadians::ZERO,
                               argos::CRadians::ZERO);
   std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
@@ -125,7 +125,7 @@ argos::CBoxEntity* embodied_block_creator::ramp_back(
                       block->ranchor3D().y() - y_factor,
                       block->ranchor3D().z());
   argos::CQuaternion orientation;
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.value()), y_rot, x_rot);
+  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()), y_rot, x_rot);
   std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
                      rcppsw::to_string(block->id()) + "_back";
   return new argos::CBoxEntity(name,
@@ -153,7 +153,7 @@ argos::CBoxEntity* embodied_block_creator::ramp_top(
   } else {
     x_rot = -argos::CRadians(angle);
   }
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.value()), y_rot, x_rot);
+  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()), y_rot, x_rot);
   std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
                      rcppsw::to_string(block->id()) + "_top";
 

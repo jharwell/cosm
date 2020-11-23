@@ -84,7 +84,7 @@ class diff_drive_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    RCSW_FPC_RET_V(nullptr != m_wheels);
+    RCPPSW_FPC_RET_V(nullptr != m_wheels);
     m_wheels->SetLinearVelocity(left, right);
   }
 

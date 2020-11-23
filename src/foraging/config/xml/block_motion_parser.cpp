@@ -44,7 +44,7 @@ void block_motion_parser::parse(const ticpp::Element& node) {
 
 bool block_motion_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(RCSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0));
+    RCPPSW_CHECK(RCPPSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0));
   }
   return true;
 

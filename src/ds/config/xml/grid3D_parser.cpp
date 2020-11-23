@@ -46,8 +46,8 @@ void grid3D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool grid3D_parser::validate(void) const {
-  RCSW_CHECK(m_config->resolution.v() > 0.0);
-  RCSW_CHECK(m_config->dims.is_pd());
+  RCPPSW_CHECK(m_config->resolution.v() > 0.0);
+  RCPPSW_CHECK(m_config->dims.is_pd());
   return true;
 
 error:

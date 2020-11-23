@@ -119,7 +119,7 @@ class random_distributor : public rer::client<random_distributor>,
    */
   bool verify_block_dist(const crepr::base_block3D* block,
                          const cds::const_spatial_entity_vector& entities,
-                         const cds::cell2D* cell) RCSW_PURE;
+                         const cds::cell2D* cell) RCPPSW_PURE;
 
   boost::optional<coord_search_res_t> coord_search_random(
       const rmath::rangez& c_xrange,

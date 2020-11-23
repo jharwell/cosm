@@ -91,7 +91,7 @@ class led_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_color(int id, const rutils::color& color) {
-    RCSW_FPC_RET_V(nullptr != m_leds);
+    RCPPSW_FPC_RET_V(nullptr != m_leds);
 
     if (-1 == id) {
       m_leds->SetAllColors(argos::CColor(color.red(),
@@ -119,7 +119,7 @@ class led_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
   void set_intensity(int id, uint8_t intensity) {
-    RCSW_FPC_RET_V(nullptr != m_leds);
+    RCPPSW_FPC_RET_V(nullptr != m_leds);
 
     if (-1 == id) {
       m_leds->SetAllIntensities(intensity);

@@ -40,7 +40,7 @@ NS_START(cosm, robots, footbot);
  *
  * \brief The sensing subsystem for the foot-bot robot.
  */
-class footbot_sensing_subsystem : public csubsystem::sensing_subsystemQ3D {
+class footbot_sensing_subsystem final : public csubsystem::sensing_subsystemQ3D {
  public:
   footbot_sensing_subsystem(const hal::sensors::position_sensor& pos,
                             const typename csubsystem::sensing_subsystemQ3D::sensor_map& sensors)

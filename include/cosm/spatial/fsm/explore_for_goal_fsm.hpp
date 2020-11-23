@@ -95,7 +95,7 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   bool task_finished(void) const override {
     return ekST_FINISHED == current_state();
   }
-  bool task_running(void) const override RCSW_PURE;
+  bool task_running(void) const override RCPPSW_PURE;
   void task_reset(void) override {
     init();
     if (nullptr != m_explore_behavior) {
@@ -115,26 +115,26 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   /**
    * \brief Starting/reset state for FSM. Has no purpose other than that.
    */
-  HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, start);
+  RCPPSW_HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, start);
 
   /**
    * \brief The main state for the explore FSM. Robots in this state maintain
    * their heading, looking for SOMETHING of interest, until they find it or
    * exceed the direction change threshold.
    */
-  HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, explore);
+  RCPPSW_HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, explore);
 
   /**
    * \brief Once a goal has been acquired, controller wait in this state until
    * reset by a higher level FSM.
    */
-  HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, finished);
+  RCPPSW_HFSM_STATE_DECLARE_ND(explore_for_goal_fsm, finished);
 
   /**
    * \brief Simple state for entry in the main exploration state, used to change
    * LED color for visualization purposes.
    */
-  HFSM_ENTRY_DECLARE_ND(explore_for_goal_fsm, entry_explore);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(explore_for_goal_fsm, entry_explore);
 
   /**
    * \brief Defines the state map for the FSM.
@@ -142,11 +142,11 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
    * Note that the order of the states in the map MUST match the order of the
    * states in \enum state, or things will not work correctly.
    */
-  HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
+  RCPPSW_HFSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];
   }
 
-  HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
+  RCPPSW_HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
   /**
    * \brief The minimum # of timesteps that a robot must explore before goal
@@ -156,10 +156,10 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
    * it, and without this minimum they will immediately acquire it and bypass
    * the list).
    */
-  static constexpr const uint kMIN_EXPLORE_TIME = 50;
+  static constexpr const size_t kMIN_EXPLORE_TIME = 50;
 
   /* clang-format off */
-  uint                                     m_explore_time{0};
+  size_t                                   m_explore_time{0};
   std::unique_ptr<expstrat::base_expstrat> m_explore_behavior;
   std::function<bool(void)>                m_goal_detect;
   /* clang-format on */

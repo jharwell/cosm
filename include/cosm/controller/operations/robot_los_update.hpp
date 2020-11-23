@@ -136,10 +136,10 @@ template <typename TController,
           typename TSrcGrid,
           typename TLOS>
 class robot_los_update final
-    : public boost::static_visitor<void>,
-      public rer::client<robot_los_update<TController,
+    : public rer::client<robot_los_update<TController,
                                           TSrcGrid,
-                                          TLOS>> {
+                                          TLOS>>,
+      private boost::static_visitor<void> {
  public:
   explicit robot_los_update(TSrcGrid* const grid)
       : ER_CLIENT_INIT("cosm.support.robot_los_update"), mc_grid(grid) {}

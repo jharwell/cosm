@@ -79,11 +79,11 @@ class argos_sm_adaptor : public swarm_manager,
   const argos_sm_adaptor& operator=(const argos_sm_adaptor&) = delete;
 
   /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCSW_COLD {
+  void Init(ticpp::Element& node) override RCPPSW_COLD {
     m_floor = &GetSpace().GetFloorEntity();
     init(node);
   }
-  void Reset(void) override RCSW_COLD { reset(); }
+  void Reset(void) override RCPPSW_COLD { reset(); }
   void PreStep(void) override { pre_step(); }
   void PostStep(void) override { post_step(); }
   void Destroy(void) override { destroy(); }
@@ -123,12 +123,12 @@ class argos_sm_adaptor : public swarm_manager,
   carena::base_arena_map* arena_map(void) { return m_arena_map.get(); }
 
   template <typename TArenaMap>
-  void arena_map_create(const caconfig::arena_map_config* aconfig) RCSW_COLD;
+  void arena_map_create(const caconfig::arena_map_config* aconfig) RCPPSW_COLD;
 
   /**
    * \brief Initialize the arena contents.
    */
-  void arena_map_init(const cvconfig::visualization_config* vconfig) RCSW_COLD;
+  void arena_map_init(const cvconfig::visualization_config* vconfig) RCPPSW_COLD;
 
   /* clang-format off */
   /**

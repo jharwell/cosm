@@ -41,8 +41,8 @@ void block_manifest_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool block_manifest_parser::validate(void) const {
-  RCSW_CHECK(m_config->unit_dim > 0);
-  RCSW_CHECK(m_config->n_cube > 0 || m_config->n_ramp > 0);
+  RCPPSW_CHECK(m_config->unit_dim > 0);
+  RCPPSW_CHECK(m_config->n_cube > 0 || m_config->n_ramp > 0);
   return true;
 
 error:

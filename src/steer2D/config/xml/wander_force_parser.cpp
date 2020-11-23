@@ -47,11 +47,11 @@ void wander_force_parser::parse(const ticpp::Element& node) {
 
 bool wander_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCSW_CHECK(m_config->circle_distance > 0.0);
-    RCSW_CHECK(m_config->circle_radius > 0.0);
-    RCSW_CHECK(m_config->max_angle_delta < 360);
-    RCSW_CHECK(m_config->interval > 0);
-    RCSW_CHECK(m_config->max > 0);
+    RCPPSW_CHECK(m_config->circle_distance > 0.0);
+    RCPPSW_CHECK(m_config->circle_radius > 0.0);
+    RCPPSW_CHECK(m_config->max_angle_delta < 360);
+    RCPPSW_CHECK(m_config->interval > 0);
+    RCPPSW_CHECK(m_config->max > 0);
   }
   return true;
 

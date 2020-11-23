@@ -121,16 +121,16 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    * heading direction. Threshold for this type of turn is controlled by
    * parameters.
    */
-  FSM_STATE_DECLARE(diff_drive_fsm, soft_turn, turn_data);
+  RCPPSW_FSM_STATE_DECLARE(diff_drive_fsm, soft_turn, turn_data);
 
   /**
    * \brief Robots in this state will execute an in-place turn (a spin really)
    * in the direction of the desired heading. Threshold for this type of turn
    * is controlled by parameters.
    */
-  FSM_STATE_DECLARE(diff_drive_fsm, hard_turn, turn_data);
+  RCPPSW_FSM_STATE_DECLARE(diff_drive_fsm, hard_turn, turn_data);
 
-  FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
+  RCPPSW_FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];
   }
   /* clang-format off */
@@ -138,7 +138,7 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
   const rmath::radians      mc_soft_turn_max;
   std::pair<double, double> m_wheel_speeds{};
 
-  FSM_DECLARE_STATE_MAP(state_map,
+  RCPPSW_FSM_DECLARE_STATE_MAP(state_map,
                         mc_state_map,
                         ekST_MAX_STATES);
   /* clang-format on */

@@ -57,11 +57,11 @@ class task_executive_parser final : public rconfig::xml::xml_config_parser {
    */
   static constexpr const char kXMLRoot[] = "task_executive";
 
-  void parse(const ticpp::Element& node) override RCSW_COLD;
-  RCSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
+  void parse(const ticpp::Element& node) override RCPPSW_COLD;
+  RCPPSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
 
  private:
-  RCSW_COLD rconfig::base_config* config_get_impl(void) const override {
+  RCPPSW_COLD rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 

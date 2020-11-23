@@ -54,8 +54,8 @@ bool nest_parser::validate(void) const {
  * Non-Member Functions
  ******************************************************************************/
 bool nest_parser::validate(const nest_config* config) {
-  RCSW_CHECK(config->center.is_pd());
-  RCSW_CHECK(config->dims.is_pd());
+  RCPPSW_CHECK(config->center.is_pd());
+  RCPPSW_CHECK(config->dims.is_pd());
   return true;
 
 error:

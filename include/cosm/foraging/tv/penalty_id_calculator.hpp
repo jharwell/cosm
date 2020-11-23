@@ -70,7 +70,7 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
    *
    * \param block The block the robot is currently carrying.
    */
-  rtypes::type_uuid from_nest_drop(const crepr::base_block3D* block) const RCSW_PURE;
+  rtypes::type_uuid from_nest_drop(const crepr::base_block3D* block) const RCPPSW_PURE;
 
   /**
    * \brief Compute the ID for the penalty if the operation involves picking up
@@ -83,7 +83,7 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
    */
   rtypes::type_uuid from_free_pickup(const rmath::vector2d& loc,
                                      const rtypes::type_uuid& acq_id,
-                                     const carena::base_arena_map* map) const RCSW_PURE;
+                                     const carena::base_arena_map* map) const RCPPSW_PURE;
 };
 
 NS_END(tv, foraging, cosm);

@@ -106,7 +106,7 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   sm->RemoveEntity(*(*victim_it)->light());
 
   size_t before = m_cacheso.size();
-  RCSW_UNUSED rtypes::type_uuid id = victim->id();
+  RCPPSW_UNUSED rtypes::type_uuid id = victim->id();
 
 
   /*

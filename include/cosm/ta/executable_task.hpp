@@ -124,7 +124,7 @@ class executable_task : public logical_task,
    *
    * \return The ID, or -1 if there is not currently an active interface.
    */
-  int active_interface(void) const RCSW_PURE;
+  int active_interface(void) const RCPPSW_PURE;
 
   /**
    * \brief Get the ID of the last active interface.

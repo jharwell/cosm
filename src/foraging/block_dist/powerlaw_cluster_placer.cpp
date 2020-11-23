@@ -65,7 +65,7 @@ placement_guess(const rtypes::type_uuid& c_id,
   size_t yfactor = static_cast<size_t>(c_block_bb.y() / m_grid->resolution().v());
 
   /*
-   * sqrt() might not be an integer, so we round up to get a smooth-ist
+   * sqrt() might not be an integer, so we round up to get a smooth-ish
    * continuum of cluster sizes.
    */
   auto clust_dim_base = static_cast<size_t>(std::ceil(std::sqrt(size)));

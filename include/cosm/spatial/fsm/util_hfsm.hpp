@@ -122,7 +122,7 @@ class util_hfsm : public rpfsm::hfsm,
    * This state MUST have a parent state defined that is not
    * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
-  HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, nest_transport_data);
+  RCPPSW_HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, nest_transport_data);
 
   /**
    * \brief Robots entering this state will leave the nest (they are assumed to
@@ -131,7 +131,7 @@ class util_hfsm : public rpfsm::hfsm,
    * This state MUST have a parent state defined that is not \ref
    * hfsm::top_state().
    */
-  HFSM_STATE_DECLARE(util_hfsm, leaving_nest, rpfsm::event_data);
+  RCPPSW_HFSM_STATE_DECLARE(util_hfsm, leaving_nest, rpfsm::event_data);
 
   /**
    * \brief Entry state for returning to nest.
@@ -142,19 +142,19 @@ class util_hfsm : public rpfsm::hfsm,
    * - Enable light sensor (disabled otherwise for computational
    *   efficiency).
    */
-  HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_transport_to_nest);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_transport_to_nest);
 
   /**
    * \brief A simple entry state for leaving nest, used to set LED colors for
    * visualization purposes.
    */
-  HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_leaving_nest);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_leaving_nest);
 
   /**
    * \brief Simple state for entry into the "wait for signal" state, used to
    * change LED color for visualization purposes.
    */
-  HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_wait_for_signal);
+  RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_wait_for_signal);
 
   /**
    * \brief Exit state for returning to nest (i.e. when the robot arrives in the
@@ -166,7 +166,7 @@ class util_hfsm : public rpfsm::hfsm,
    * - Disable light sensor (disabled unless a robot is activiely returning to
    *   the nest for computational efficiency).
    */
-  HFSM_EXIT_DECLARE(util_hfsm, exit_transport_to_nest);
+  RCPPSW_HFSM_EXIT_DECLARE(util_hfsm, exit_transport_to_nest);
 
  private:
   /**
@@ -186,11 +186,11 @@ class util_hfsm : public rpfsm::hfsm,
 
  public:
   /* interference metrics */
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exp_interference, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(entered_interference, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(exited_interference, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_duration, m_tracker, const)
-  RCPPSW_DECLDEF_WRAP_OVERRIDE(interference_loc3D, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, m_tracker, const)
 };
 
 NS_END(fsm, spatial, cosm);

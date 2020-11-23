@@ -43,7 +43,7 @@ bool pheromone_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  RCSW_CHECK(m_config->rho > 0.0);
+  RCPPSW_CHECK(m_config->rho > 0.0);
   return true;
 
 error:

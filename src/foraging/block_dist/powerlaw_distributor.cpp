@@ -86,7 +86,7 @@ void powerlaw_distributor::initialize(
   /* First, calc cluster sizes, and sort */
   for (size_t i = 0; i < m_config_clusters; ++i) {
     /* can't have a cluster of size 0 */
-    auto index = static_cast<size_t>(std::max(1U, m_pwrdist(rng())));
+    auto index = static_cast<size_t>(std::max(1UL, m_pwrdist(rng())));
     clust_sizes.push_back(index);
   } /* for(i..) */
   std::sort(clust_sizes.begin(), clust_sizes.end(), std::greater<>());

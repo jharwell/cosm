@@ -46,9 +46,9 @@ bool powerlaw_dist_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  RCSW_CHECK(m_config->pwr_min >= 2);
-  RCSW_CHECK(m_config->pwr_max >= m_config->pwr_min);
-  RCSW_CHECK(m_config->n_clusters > 0);
+  RCPPSW_CHECK(m_config->pwr_min >= 2);
+  RCPPSW_CHECK(m_config->pwr_max >= m_config->pwr_min);
+  RCPPSW_CHECK(m_config->n_clusters > 0);
   return true;
 
 error:

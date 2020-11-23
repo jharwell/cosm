@@ -110,15 +110,15 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
   };
 
   /* supervisor states */
-  FSM_STATE_DECLARE_ND(supervisor_fsm, start);
-  FSM_STATE_DECLARE_ND(supervisor_fsm, normal);
-  FSM_STATE_DECLARE_ND(supervisor_fsm, malfunction);
+  RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, start);
+  RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, normal);
+  RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, malfunction);
 
-  FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
+  RCPPSW_FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
     return &mc_state_map[index];
   }
 
-  FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
+  RCPPSW_FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
 
   /* clang-format off */
   subsystem::saa_subsystemQ3D* m_saa;

@@ -60,9 +60,9 @@ class footbot_saa_subsystem final : public subsystem::saa_subsystemQ3D,
    * robot's current zenith angle.
    */
   rmath::vector2d linear_velocity(void) const override;
-  double angular_velocity(void) const override RCSW_PURE;
-  double max_speed(void) const override RCSW_PURE;
-  rmath::vector2d pos2D(void) const override RCSW_PURE;
+  double angular_velocity(void) const override RCPPSW_PURE;
+  double max_speed(void) const override RCPPSW_PURE;
+  rmath::vector2d pos2D(void) const override RCPPSW_PURE;
 
   /**
    * \brief Apply the summed steering forces; change wheel speeds. Resets the

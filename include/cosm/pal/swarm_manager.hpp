@@ -79,7 +79,7 @@ class swarm_manager : public rer::client<swarm_manager> {
    * \brief Initialize random number generation for loop function use. Currently
    * *NOT* shared between loop functions and robots.
    */
-  void rng_init(const rmath::config::rng_config* config) RCSW_COLD;
+  void rng_init(const rmath::config::rng_config* config) RCPPSW_COLD;
 
   const std::string& output_root(void) const { return m_output_root; }
 
@@ -91,7 +91,7 @@ class swarm_manager : public rer::client<swarm_manager> {
    *                   root directory for THIS experiment's outputs
    */
   void output_init(const std::string& output_root,
-                   const std::string& output_dir) RCSW_COLD;
+                   const std::string& output_dir) RCPPSW_COLD;
 
  private:
   /* clang-format off */

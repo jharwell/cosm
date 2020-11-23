@@ -156,14 +156,14 @@ class bi_tab final : public metrics::bi_tab_metrics,
    *
    * \param task The task to check.
    */
-  bool contains_task(const polled_task* task) const RCSW_PURE;
+  bool contains_task(const polled_task* task) const RCPPSW_PURE;
 
   /**
    * \brief Returns \c TRUE iff the argument is the root task in the TAB.
    *
    * \param task The task to check.
    */
-  bool task_is_root(const polled_task* task) const RCSW_PURE;
+  bool task_is_root(const polled_task* task) const RCPPSW_PURE;
 
   /**
    * \brief Returns \c TRUE iff the argument is one of the child tasks in the
@@ -171,7 +171,7 @@ class bi_tab final : public metrics::bi_tab_metrics,
    *
    * \param task The task to check.
    */
-  bool task_is_child(const polled_task* task) const RCSW_PURE;
+  bool task_is_child(const polled_task* task) const RCPPSW_PURE;
 
   /**
    * \brief Return the TAB root (always a partitionable task), also known as

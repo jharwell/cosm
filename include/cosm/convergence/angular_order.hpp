@@ -58,14 +58,14 @@ class angular_order final : public convergence_measure {
    * parameters and the current state of the swarm.
    */
   bool operator()(const std::vector<rmath::radians>& headings,
-                  RCSW_UNUSED uint n_threads) {
+                  RCPPSW_UNUSED uint n_threads) {
     double y = 0.0;
     double x = 0.0;
 
 #pragma omp parallel for num_threads(n_threads)
     for (auto it = headings.begin(); it < headings.end(); ++it) {
-      y += std::sin((*it).value());
-      x += std::cos((*it).value());
+      y += std::sin((*it).v());
+      x += std::cos((*it).v());
     } /* for(it..) */
     update_raw(std::fabs(std::atan2(y, x)) / headings.size());
     set_norm(rmath::normalize(raw_min(), raw_max(), raw()));

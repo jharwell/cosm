@@ -43,8 +43,8 @@ util_hfsm::util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
                      uint8_t max_states)
     : rpfsm::hfsm(max_states),
       ER_CLIENT_INIT("cosm.spatial.fsm.util_hfsm"),
-      HFSM_CONSTRUCT_STATE(transport_to_nest, hfsm::top_state()),
-      HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(transport_to_nest, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
       m_saa(saa),
       m_tracker(sensing()),
       m_rng(rng) {}
@@ -53,7 +53,7 @@ util_hfsm::util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
  * States
  ******************************************************************************/
 
-HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
+RCPPSW_HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_LEAVING_NEST cannot handle child events");
 
@@ -85,7 +85,7 @@ HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   return rpfsm::event_signal::ekHANDLED;
 } /* leaving_nest() */
 
-HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
+RCPPSW_HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_TRANSPORT_TO_NEST cannot handle child events");
   if (current_state() != last_state()) {
@@ -99,7 +99,8 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
   if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     auto dist_to_light = (m_saa->sensing()->rpos2D() - data->nest_loc).length();
     if (!m_nest_thresh) {
-      m_nest_thresh = boost::make_optional(rtypes::spatial_dist(rng()->uniform(0.1, dist_to_light)));
+      auto dist = rtypes::spatial_dist(rng()->uniform(0.01, dist_to_light));
+      m_nest_thresh = boost::make_optional(dist);
     }
     if (dist_to_light <= m_nest_thresh->v()) {
       /*
@@ -133,22 +134,22 @@ HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
   return rpfsm::event_signal::ekHANDLED;
 } /* transport_to_nest() */
 
-HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_leaving_nest) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_leaving_nest) {
   actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kWHITE);
 }
 
-HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_transport_to_nest) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_transport_to_nest) {
   sensing()->template sensor<hal::sensors::light_sensor>()->enable();
   actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kGREEN);
 }
 
-HFSM_EXIT_DEFINE(util_hfsm, exit_transport_to_nest) {
+RCPPSW_HFSM_EXIT_DEFINE(util_hfsm, exit_transport_to_nest) {
   sensing()->template sensor<hal::sensors::light_sensor>()->disable();
 }
 
-HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
+RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
   actuation()->template actuator<kin2D::governed_diff_drive>()->reset();
   actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kWHITE);
@@ -158,7 +159,7 @@ HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
  * General Member Functions
  ******************************************************************************/
 rmath::radians util_hfsm::random_angle(void) {
-  return rmath::radians(m_rng->uniform(0.0, rmath::radians::kPI.value()));
+  return rmath::radians(m_rng->uniform(0.0, rmath::radians::kPI.v()));
 } /* randomize_vector_angle() */
 
 csubsystem::sensing_subsystemQ3D* util_hfsm::sensing(void) {

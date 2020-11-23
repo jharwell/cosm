@@ -69,10 +69,10 @@ class tv_manager {
   static_assert(
       std::is_base_of<population_dynamics, TPopulationDynamics>::value,
       "FATAL: TPopulationDynamics is not derived from population_dynamics");
-  static_assert(rcppsw::is_detected<defines_update_type, TEnvDynamics>::value,
+  static_assert(rmpl::is_detected<defines_update_type, TEnvDynamics>::value,
                 "TEnvDynamics does not define update()");
   static_assert(
-      rcppsw::is_detected<defines_update_type, TPopulationDynamics>::value,
+      rmpl::is_detected<defines_update_type, TPopulationDynamics>::value,
       "TPopulationDynamics does not define update()");
 
  public:

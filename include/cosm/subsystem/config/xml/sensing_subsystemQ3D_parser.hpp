@@ -59,7 +59,7 @@ class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser
    */
   static constexpr const char kXMLRoot[] = "sensing_subsystemQ3D";
 
-  bool validate(void) const override RCSW_PURE;
+  bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;
 
   std::string xml_root(void) const override { return kXMLRoot; }

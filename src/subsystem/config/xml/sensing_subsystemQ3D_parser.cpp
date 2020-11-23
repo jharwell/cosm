@@ -44,8 +44,8 @@ void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {
-  RCSW_CHECK(m_proximity.validate());
-  RCSW_CHECK(m_ground.validate());
+  RCPPSW_CHECK(m_proximity.validate());
+  RCPPSW_CHECK(m_ground.validate());
   return true;
 
 error:

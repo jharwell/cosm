@@ -150,7 +150,7 @@ void convergence_calculator::positional_entropy_init(const pos_calc_cb_type& cb)
       typeid(positional_entropy),
       positional_entropy(
           mc_config.epsilon,
-          std::make_unique<raclustering::detail::entropy_impl<rmath::vector2d>>(
+          std::make_unique<raclustering::entropy_eh_omp<rmath::vector2d>>(
               mc_config.n_threads),
           &mc_config.pos_entropy));
 } /* positional_entropy_init() */

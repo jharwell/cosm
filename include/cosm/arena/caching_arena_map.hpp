@@ -103,11 +103,11 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * \return The ID of the cache that the robot is on, or -1 if the robot is not
    * actually on a cache.
    */
-  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCSW_PURE;
+  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCPPSW_PURE;
 
   rtypes::type_uuid robot_on_block(
       const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const override RCSW_PURE;
+      const rtypes::type_uuid& ent_id) const override RCPPSW_PURE;
 
   /**
    * \brief Get the free blocks in the arena. Does no locking, so this is only

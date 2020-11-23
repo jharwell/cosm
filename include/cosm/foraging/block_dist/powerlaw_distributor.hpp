@@ -72,7 +72,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   size_t n_mapped_clusters(void) const override {
     return block_clusters().size();
   }
-  size_t capacity(void) const override RCSW_PURE;
+  size_t capacity(void) const override RCPPSW_PURE;
   size_t size(void) const override;
 
   cfds::block3D_cluster_vector block_clusters(void) const override;
@@ -89,7 +89,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
    *                   might be distributed in the arena.
    */
   void initialize(const cds::const_spatial_entity_vector& c_entities,
-                  const rmath::vector3d& c_block_bb) RCSW_COLD;
+                  const rmath::vector3d& c_block_bb) RCPPSW_COLD;
 
  private:
   /* clang-format off */

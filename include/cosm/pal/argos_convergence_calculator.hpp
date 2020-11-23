@@ -59,8 +59,8 @@ class argos_convergence_calculator final
       public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
   argos_convergence_calculator(const cconvconfig::convergence_config* config,
-                               cpal::argos_sm_adaptor* sm) RCSW_COLD;
-  ~argos_convergence_calculator(void) override RCSW_COLD = default;
+                               cpal::argos_sm_adaptor* sm) RCPPSW_COLD;
+  ~argos_convergence_calculator(void) override RCPPSW_COLD = default;
 
   /* Not copy constructible/assignable by default */
   argos_convergence_calculator(const argos_convergence_calculator&) = delete;

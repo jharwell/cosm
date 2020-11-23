@@ -65,8 +65,8 @@ NS_START(cosm, controller);
  */
 class base_controller : public rer::client<base_controller> {
  public:
-  base_controller(void) RCSW_COLD;
-  ~base_controller(void) override RCSW_COLD;
+  base_controller(void) RCPPSW_COLD;
+  ~base_controller(void) override RCPPSW_COLD;
 
   base_controller(const base_controller&) = delete;
   base_controller& operator=(const base_controller&) = delete;
@@ -74,7 +74,7 @@ class base_controller : public rer::client<base_controller> {
   /**
    * \brief Initialize the controller from XML configuration.
    */
-  virtual void init(ticpp::Element&) RCSW_COLD = 0;
+  virtual void init(ticpp::Element&) RCPPSW_COLD = 0;
 
   /**
    * \brief Resut the controller before initialization, after simulation
@@ -82,7 +82,7 @@ class base_controller : public rer::client<base_controller> {
    * after calling this function the same as if the controller had just been
    * created.
    */
-  virtual void reset(void) RCSW_COLD = 0;
+  virtual void reset(void) RCPPSW_COLD = 0;
 
   /**
    * \brief Run the main controller loop.

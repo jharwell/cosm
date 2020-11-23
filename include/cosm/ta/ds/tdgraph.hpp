@@ -108,8 +108,8 @@ class tdgraph : public rer::client<tdgraph> {
    */
   status_t set_root(std::unique_ptr<polled_task> v);
 
-  const polled_task* root(void) const RCSW_PURE;
-  polled_task* root(void) RCSW_PURE;
+  const polled_task* root(void) const RCPPSW_PURE;
+  polled_task* root(void) RCPPSW_PURE;
 
   /**
    * \brief Set the children for an existing node.
@@ -167,8 +167,8 @@ class tdgraph : public rer::client<tdgraph> {
    *
    * \return The task vertex, or NULL if no such vertex id
    */
-  const polled_task* find_vertex(int id) const RCSW_PURE;
-  polled_task* find_vertex(int id) RCSW_PURE;
+  const polled_task* find_vertex(int id) const RCPPSW_PURE;
+  polled_task* find_vertex(int id) RCPPSW_PURE;
 
   /**
    * \brief Run the callback on each node in the graph, in an arbitrary order.
