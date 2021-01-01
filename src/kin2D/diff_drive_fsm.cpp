@@ -39,24 +39,24 @@ diff_drive_fsm::diff_drive_fsm(double max_speed,
       mc_max_speed(max_speed),
       mc_soft_turn_max(soft_turn_max),
       RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+                                  RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
+                                  RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
       mc_max_speed(other.mc_max_speed),
       mc_soft_turn_max(other.mc_soft_turn_max),
       RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
+                                  RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
+                                  RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 /*******************************************************************************
  * Events
  ******************************************************************************/
 void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      ekST_SOFT_TURN, /* slow turn */
-      ekST_HARD_TURN, /* hard turn */
+    ekST_SOFT_TURN, /* slow turn */
+    ekST_HARD_TURN, /* hard turn */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],

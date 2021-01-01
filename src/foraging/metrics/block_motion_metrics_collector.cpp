@@ -43,13 +43,14 @@ block_motion_metrics_collector::block_motion_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> block_motion_metrics_collector::csv_header_cols(void) const {
+std::list<std::string>
+block_motion_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "int_avg_blocks_moved",
     "cum_avg_blocks_moved",
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -60,7 +61,8 @@ void block_motion_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-boost::optional<std::string> block_motion_metrics_collector::csv_line_build(void) {
+boost::optional<std::string>
+block_motion_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
@@ -72,7 +74,8 @@ boost::optional<std::string> block_motion_metrics_collector::csv_line_build(void
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-void block_motion_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+void block_motion_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_motion_metrics&>(metrics);
   m_interval.n_moved += m.n_moved();
   m_cum.n_moved += m.n_moved();

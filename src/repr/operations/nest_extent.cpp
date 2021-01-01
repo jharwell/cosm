@@ -36,8 +36,7 @@ using cds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_extent::nest_extent(const rmath::vector2z& coord,
-                         crepr::nest* nest)
+nest_extent::nest_extent(const rmath::vector2z& coord, crepr::nest* nest)
     : cell2D_op(coord), m_nest(nest) {}
 
 /*******************************************************************************

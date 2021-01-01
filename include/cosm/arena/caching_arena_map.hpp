@@ -24,9 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/ds/cache_vector.hpp"
@@ -49,8 +49,7 @@ NS_START(cosm, arena);
 class caching_arena_map final : public rer::client<caching_arena_map>,
                                 public base_arena_map {
  public:
-  caching_arena_map(const caconfig::arena_map_config* config,
-                    rmath::rng* rng);
+  caching_arena_map(const caconfig::arena_map_config* config, rmath::rng* rng);
   ~caching_arena_map(void) override;
 
   /**
@@ -105,9 +104,9 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    */
   rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCPPSW_PURE;
 
-  rtypes::type_uuid robot_on_block(
-      const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const override RCPPSW_PURE;
+  rtypes::type_uuid
+  robot_on_block(const rmath::vector2d& pos,
+                 const rtypes::type_uuid& ent_id) const override RCPPSW_PURE;
 
   /**
    * \brief Get the free blocks in the arena. Does no locking, so this is only
@@ -144,8 +143,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
  private:
   void pre_block_dist_lock(const arena_map_locking& locking) override;
   void post_block_dist_unlock(const arena_map_locking& locking) override;
-  block_dist_precalc_type block_dist_precalc(
-      const crepr::base_block3D* block) override;
+  block_dist_precalc_type
+  block_dist_precalc(const crepr::base_block3D* block) override;
   bool bloctree_verify(void) const override;
   bool cloctree_verify(void) const;
 

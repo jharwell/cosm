@@ -158,9 +158,10 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
    * \brief Decorator around \ref collector_group::collect_if().
    */
   template <typename T>
-  void collect_if(const std::string& scoped_name,
-                  const T& collectee,
-                  const std::function<bool(const rmetrics::base_metrics&)>& pred) {
+  void
+  collect_if(const std::string& scoped_name,
+             const T& collectee,
+             const std::function<bool(const rmetrics::base_metrics&)>& pred) {
     auto it = m_collector_map.find(scoped_name);
     if (it != m_collector_map.end()) {
       it->second->collect_if(scoped_name, collectee, pred);
@@ -267,9 +268,13 @@ class base_metrics_aggregator : public rer::client<base_metrics_aggregator> {
   /**
    * \brief Register metrics collectors that do not require extra arguments.
    *
-   * - fsm::movement
+   * - spatial::movement
    * - fsm::interference_counts
+   * - blocks::acq_counts
+   * - blocks::transportee
    * - blocks::transport
+   * - blocks::distributor
+   * - blocks::motion
    * - swarm::convergence
    * - tv::population
    */

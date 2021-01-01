@@ -37,13 +37,11 @@ NS_START(cosm, ta);
 subtask_sel_probability::subtask_sel_probability(std::string method)
     : ER_CLIENT_INIT("cosm.ta.subtask_sel_prob"), mc_method(std::move(method)) {
   if (kMethodHarwell2018 == method) {
-    sigmoid::init(kHARWELL2018_REACTIVITY,
-                  kHARWELL2018_OFFSET,
-                  kHARWELL2018_GAMMA);
+    sigmoid::init(
+        kHARWELL2018_REACTIVITY, kHARWELL2018_OFFSET, kHARWELL2018_GAMMA);
   } else if (kMethodBrutschy2014 == method) {
-    sigmoid::init(kBRUTSCHY2014_REACTIVITY,
-                  kBRUTSCHY2014_OFFSET,
-                  kBRUTSCHY2014_GAMMA);
+    sigmoid::init(
+        kBRUTSCHY2014_REACTIVITY, kBRUTSCHY2014_OFFSET, kBRUTSCHY2014_GAMMA);
   } else if (kMethodRandom == method) {
   } else {
     ER_FATAL_SENTINEL("Bad method '%s' selected", method.c_str());

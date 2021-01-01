@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cache_extent_clear.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 
@@ -72,7 +72,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
         e.visit(cell);
       }
     } /* for(j..) */
-  }   /* for(i..) */
+  } /* for(i..) */
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

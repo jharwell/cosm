@@ -58,8 +58,8 @@ class task_dist_entropy final : public convergence_measure {
    *              non-negative integer).
    */
   bool operator()(const std::vector<int>& tasks) {
-    int n_tasks = *std::max_element(tasks.begin(), tasks.end()) +
-                  1; /* 0-based indexing */
+    int n_tasks =
+        *std::max_element(tasks.begin(), tasks.end()) + 1; /* 0-based indexing */
 
     if (-1 == n_tasks) { /* no controller have active tasks */
       return false;

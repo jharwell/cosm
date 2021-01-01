@@ -52,18 +52,17 @@ void robot_dynamics_applicator::register_controller(const rtypes::type_uuid& id)
     return;
   }
   if (m_motion_throttle_config) {
-    m_motion_throttlers.emplace(std::piecewise_construct,
-                                std::forward_as_tuple(id),
-                                std::forward_as_tuple(
-                                    &m_motion_throttle_config.get()));
+    m_motion_throttlers.emplace(
+        std::piecewise_construct,
+        std::forward_as_tuple(id),
+        std::forward_as_tuple(&m_motion_throttle_config.get()));
     m_motion_throttlers.at(id).toggle(true);
   }
 
   if (m_bc_throttle_config) {
     m_bc_throttlers.emplace(std::piecewise_construct,
                             std::forward_as_tuple(id),
-                            std::forward_as_tuple(
-                                &m_bc_throttle_config.get()));
+                            std::forward_as_tuple(&m_bc_throttle_config.get()));
   }
 
   ER_INFO("Registered controller with ID=%d", id.v());

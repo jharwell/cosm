@@ -55,8 +55,8 @@ void stoch_nbhd1_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool stoch_nbhd1_parser::validate(void) const {
-  return !is_parsed() || (m_subtask_sel.validate() &&
-                          m_partitioning.validate() && m_tab_sel.validate());
+  return !is_parsed() || (m_subtask_sel.validate() && m_partitioning.validate() &&
+                          m_tab_sel.validate());
 } /* validate() */
 
 NS_END(xml, config, ta, cosm);

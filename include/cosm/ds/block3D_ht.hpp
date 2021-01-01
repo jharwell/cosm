@@ -28,8 +28,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "cosm/cosm.hpp"
 #include "rcppsw/types/type_uuid.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,8 +53,8 @@ using block3D_htro_value_type = const crepr::base_block3D*;
 NS_START(detail);
 
 struct hash_function {
-  decltype(std::declval<rtypes::type_uuid>().v()) operator()(
-      const rtypes::type_uuid& key) const {
+  decltype(std::declval<rtypes::type_uuid>().v())
+  operator()(const rtypes::type_uuid& key) const {
     return key.v();
   }
 };

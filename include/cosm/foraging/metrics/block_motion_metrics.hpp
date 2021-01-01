@@ -40,12 +40,10 @@ NS_START(cosm, foraging, metrics);
  * \class block_motion_metrics
  * \ingroup cosm foraging metrics
  *
- * \brief Defines the metrics to be collected from blocks about the process of
- * block_motionation from their original location in the arena after distribution
- * to their final destination (nest, structure, etc).
+ * \brief Defines the metrics to be collected from \ref block_motion_handler
+ * about block as they move in the arena after distribution.
  *
- * Metrics should be collected upon deposition at the block's final location,
- * rather than every timestep.
+ * Metrics should be collected every timestep.
  */
 class block_motion_metrics : public rmetrics::base_metrics {
  public:

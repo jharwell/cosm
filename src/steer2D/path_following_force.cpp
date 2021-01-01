@@ -41,15 +41,15 @@ path_following_force::path_following_force(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::vector2d path_following_force::operator()(
-    const boid& entity,
-    csteer2D::ds::path_state* state) const {
+rmath::vector2d
+path_following_force::operator()(const boid& entity,
+                                 csteer2D::ds::path_state* state) const {
   auto next_point = state->next_point();
   if ((entity.pos2D() - next_point).length() <= mc_radius) {
     state->update_point(1);
   }
   if (state->is_complete()) {
-    return {0.0, 0.0}; /* reached the end of the path */
+    return { 0.0, 0.0 }; /* reached the end of the path */
   } else {
     return m_seek(entity, state->next_point());
   }

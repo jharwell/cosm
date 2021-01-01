@@ -39,7 +39,7 @@ double governed_diff_drive::active_throttle(void) const {
   return std::accumulate(std::begin(m_generators),
                          std::end(m_generators),
                          0.0,
-                         [&](double sum, const auto* generator){
+                         [&](double sum, const auto* generator) {
                            return sum + generator->active_tv();
                          });
 }
@@ -48,7 +48,7 @@ double governed_diff_drive::applied_throttle(void) const {
   return std::accumulate(std::begin(m_generators),
                          std::end(m_generators),
                          0.0,
-                         [&](double sum, const auto* generator){
+                         [&](double sum, const auto* generator) {
                            return sum + generator->applied_tv();
                          });
 }

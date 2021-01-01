@@ -86,7 +86,8 @@ class executable_task : public logical_task,
     return m_last_exec_time;
   }
   rtypes::timestep task_last_interface_time(size_t i) const override {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     return m_last_interface_times[i];
@@ -96,14 +97,13 @@ class executable_task : public logical_task,
     return m_exec_estimate;
   }
   const time_estimate& task_interface_estimate(size_t i) const override final {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     return m_interface_estimates[i];
   }
-  bool task_at_interface(void) const override {
-    return -1 != active_interface();
-  }
+  bool task_at_interface(void) const override { return -1 != active_interface(); }
 
   /**
    * \brief Update the calculated interface time for the task if the current
@@ -113,9 +113,8 @@ class executable_task : public logical_task,
   */
   void interface_time_update(void) {
     if (-1 != active_interface()) {
-      m_interface_times[active_interface()] =
-          interface_time_calc(active_interface(),
-                              m_interface_start_times[active_interface()]);
+      m_interface_times[active_interface()] = interface_time_calc(
+          active_interface(), m_interface_start_times[active_interface()]);
     }
   }
 
@@ -243,7 +242,8 @@ class executable_task : public logical_task,
    * \param i The interface ID.
    */
   rtypes::timestep interface_time(size_t i) const {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     return m_interface_times[i];
@@ -300,9 +300,8 @@ class executable_task : public logical_task,
    * \param i The interface ID.
    * \param start_time The timestep upon which the task entered the interface.
    */
-  virtual rtypes::timestep interface_time_calc(
-      size_t i,
-      const rtypes::timestep& start_time) = 0;
+  virtual rtypes::timestep
+  interface_time_calc(size_t i, const rtypes::timestep& start_time) = 0;
 
   /**
    * \brief Get the current time
@@ -310,7 +309,8 @@ class executable_task : public logical_task,
   virtual rtypes::timestep current_time(void) const = 0;
 
   void interface_time_mark_finish(size_t i) {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     m_last_interface_times[i] = m_interface_times[i];
@@ -320,7 +320,8 @@ class executable_task : public logical_task,
    * \brief Mark the current timestep as the begin of a task's interface.
    */
   void interface_time_mark_start(size_t i) {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     m_interface_start_times[i] = current_time();
@@ -329,7 +330,8 @@ class executable_task : public logical_task,
   bool interface_in_prog(size_t i) const { return m_interface_in_prog[i]; }
 
   void interface_enter(size_t i) {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     m_interface_in_prog[i] = true;
@@ -337,7 +339,8 @@ class executable_task : public logical_task,
   }
 
   void interface_exit(size_t i) {
-    ER_ASSERT(i <= kMAX_INTERFACES, "Bad interface ID %zu for task %s",
+    ER_ASSERT(i <= kMAX_INTERFACES,
+              "Bad interface ID %zu for task %s",
               i,
               name().c_str());
     m_interface_in_prog[i] = false;

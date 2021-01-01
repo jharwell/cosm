@@ -33,7 +33,7 @@ NS_START(cosm, spatial, expstrat);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_expstrat::base_expstrat(params* const p) : base_expstrat{p->saa, p->rng} {}
+base_expstrat::base_expstrat(params* const p) : base_expstrat{ p->saa, p->rng } {}
 
 base_expstrat::base_expstrat(subsystem::saa_subsystemQ3D* const saa,
                              rmath::rng* rng)

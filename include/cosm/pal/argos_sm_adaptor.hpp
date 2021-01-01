@@ -102,16 +102,14 @@ class argos_sm_adaptor : public swarm_manager,
    * The \p parent_id is provided as an argument so that multiple otherwise
    * identical embodiments can be uniquely identified, as required by ARGoS.
    */
-  crepr::embodied_block_variant make_embodied(
-      const crepr::block3D_variant& block,
-      const rmath::radians& z_rotation,
-      const rtypes::type_uuid& parent_id);
+  crepr::embodied_block_variant make_embodied(const crepr::block3D_variant& block,
+                                              const rmath::radians& z_rotation,
+                                              const rtypes::type_uuid& parent_id);
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   void ndc_push(void) const {
-    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) +
-                "]");
+    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) + "]");
   }
   void ndc_pop(void) const { ER_NDC_POP(); }
 #else

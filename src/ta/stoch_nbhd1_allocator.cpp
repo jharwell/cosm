@@ -36,8 +36,8 @@ NS_START(cosm, ta);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-polled_task* stoch_nbhd1_allocator::operator()(
-    const polled_task* current_task) const {
+polled_task*
+stoch_nbhd1_allocator::operator()(const polled_task* current_task) const {
   /*
    * If there is no active TAB, then the root task is not partitionable, so
    * return it.

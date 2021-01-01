@@ -43,10 +43,11 @@ convergence_metrics_collector::convergence_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> convergence_metrics_collector::csv_header_cols(void) const {
+std::list<std::string>
+convergence_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "conv_epsilon",
     "int_avg_interact_deg_raw",
     "int_avg_interact_deg_norm",
@@ -63,7 +64,7 @@ std::list<std::string> convergence_metrics_collector::csv_header_cols(void) cons
     "int_avg_velocity_raw",
     "int_avg_velocity_norm",
     "int_avg_velocity_converged"
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -145,11 +146,11 @@ void convergence_metrics_collector::reset(void) {
 } /* reset() */
 
 void convergence_metrics_collector::reset_after_interval(void) {
-  m_interact_stats = {0.0, 0.0, 0};
-  m_order_stats = {0.0, 0.0, 0};
-  m_pos_ent_stats = {0.0, 0.0, 0};
-  m_tdist_ent_stats = {0.0, 0.0, 0};
-  m_velocity_stats = {0.0, 0.0, 0};
+  m_interact_stats = { 0.0, 0.0, 0 };
+  m_order_stats = { 0.0, 0.0, 0 };
+  m_pos_ent_stats = { 0.0, 0.0, 0 };
+  m_tdist_ent_stats = { 0.0, 0.0, 0 };
+  m_velocity_stats = { 0.0, 0.0, 0 };
 } /* reset_after_interval() */
 
 NS_END(metrics, convergence, cosm);

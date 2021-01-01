@@ -23,10 +23,9 @@
  ******************************************************************************/
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
 
-#include "cosm/foraging/repr/block_cluster.hpp"
-
 #include <numeric>
 
+#include "cosm/foraging/repr/block_cluster.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,8 +41,8 @@ std::string do_to_str(const TVector& vec) {
                          vec.end(),
                          std::string(),
                          [&](const std::string& a, const auto& c) {
-                           return a + "cluster" + rcppsw::to_string(c->id()) + "@" +
-                                  c->dcenter2D().to_str() + ",";
+                           return a + "cluster" + rcppsw::to_string(c->id()) +
+                                  "@" + c->dcenter2D().to_str() + ",";
                          });
 } /* do_to_str() */
 

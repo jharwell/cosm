@@ -99,9 +99,7 @@ class population_dynamics : public rer::client<population_dynamics>,
   queue_status birth_queue_status(void) const override RCPPSW_PURE;
   queue_status death_queue_status(void) const override RCPPSW_PURE;
   queue_status repair_queue_status(void) const override RCPPSW_PURE;
-  size_t swarm_max_population(void) const override {
-    return mc_config.max_size;
-  }
+  size_t swarm_max_population(void) const override { return mc_config.max_size; }
   size_t swarm_total_population(void) const override { return m_total_pop; }
   size_t swarm_active_population(void) const override { return m_active_pop; }
   void reset_metrics(void) override final {

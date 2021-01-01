@@ -87,9 +87,9 @@ rmath::vector3d base_controller2D::ts_velocity_impl(void) const {
    */
   if (RCPPSW_LIKELY(saa()->sensing()->tick() > 1U)) {
     auto vel = saa()->linear_velocity();
-    return {vel.x(), vel.y(), 0.0};
+    return { vel.x(), vel.y(), 0.0 };
   }
-  return {0.0, 0.0, 0.0};
+  return { 0.0, 0.0, 0.0 };
 } /* ts_velocity_impl() */
 
 /*******************************************************************************

@@ -112,8 +112,8 @@ uint tdgraph::vertex_depth_impl(const polled_task* const v, int depth) const {
   }
 } /* vertex_depth_impl() */
 
-tdgraph::vertex_iterator tdgraph::find_vertex_impl(
-    const polled_task* const v) const {
+tdgraph::vertex_iterator
+tdgraph::find_vertex_impl(const polled_task* const v) const {
   vertex_iterator v_i, v_end;
   boost::tie(v_i, v_end) = boost::vertices(m_impl);
   auto it = std::find_if(v_i, v_end, [&](const tdgraph::vertex_desc& tmp) {
@@ -143,9 +143,8 @@ polled_task* tdgraph::vertex_parent(const polled_task* const v) const {
    */
   in_edge_iterator ie, ie_end;
   boost::tie(ie, ie_end) = boost::in_edges(*found, m_impl);
-  ER_ASSERT(1 == ie_end - ie,
-            "Vertex %s has more than 1 parent",
-            v->name().c_str());
+  ER_ASSERT(
+      1 == ie_end - ie, "Vertex %s has more than 1 parent", v->name().c_str());
   return m_impl[boost::source(*ie, m_impl)].get();
 } /* vertex_parent() */
 
@@ -161,8 +160,8 @@ error:
   return ERROR;
 } /* set_root() */
 
-std::vector<polled_task*> tdgraph::children(
-    const polled_task* const parent) const {
+std::vector<polled_task*>
+tdgraph::children(const polled_task* const parent) const {
   auto it = find_vertex_impl(parent);
   ER_ASSERT(it != boost::vertices(m_impl).second,
             "No such vertex %s found in graph",

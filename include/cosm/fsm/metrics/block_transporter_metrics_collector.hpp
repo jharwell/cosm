@@ -1,7 +1,7 @@
 /**
- * \file block_transport_metrics_collector.hpp
+ * \file block_transporter_metrics_collector.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_COLLECTOR_HPP_
+#ifndef INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_COLLECTOR_HPP_
+#define INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_COLLECTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -34,74 +34,44 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+NS_START(cosm, fsm, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_transport_metrics_collector
- * \ingroup cosm foraging metrics
+ * \class block_transporter_metrics_collector
+ * \ingroup cosm fsm metrics
  *
- * \brief Collector for \ref block_transport_metrics.
+ * \brief Collector for \ref block_transporter_metrics.
  *
  * Metrics are written out at the specified collection interval.
  */
-class block_transport_metrics_collector final : public rmetrics::base_metrics_collector {
+class block_transporter_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
    * \param ofname_stem The output file name stem.
    * \param interval Collection interval.
    */
-  block_transport_metrics_collector(const std::string& ofname_stem,
+  block_transporter_metrics_collector(const std::string& ofname_stem,
                               const rtypes::timestep& interval);
 
   void reset(void) override;
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
 
-  size_t cum_transported(void) const { return m_cum.transported; }
-
  private:
   /**
-   * \brief Container for holding block_transported statistics. Must be atomic so
-   * counts are valid in parallel metric collection contexts. Ideally the times
-   * would be atomic \ref rtypes::timestep, but that type does not meet the
-   * std::atomic requirements.
+   * \brief Container for holding statistics. Must be atomic so counts are valid
+   * in parallel metric collection contexts. Ideally the times would be atomic
+   * \ref rtypes::timestep, but that type does not meet the std::atomic
+   * requirements.
    */
   struct stats {
     /**
-     * \brief  Total # blocks transported.
+     * \brief  Total # robots phototaxiing to nest.
      */
-    std::atomic_size_t transported{0};
-
-    /**
-     * \brief  Total # cube blocks transported.
-     */
-    std::atomic_size_t cube_transported{0};
-
-    /**
-     * \brief  Total # ramp blocks transported in interval.
-     */
-    std::atomic_size_t ramp_transported{0};
-
-    /**
-     * \brief Total # transporters for transported blocks in interval.
-     */
-    std::atomic_size_t transporters{0};
-
-    /**
-     * \brief Total amount of time taken for all transported blocks to be
-     * transported from original distribution locations to the nest within an
-     * interval.
-     */
-    std::atomic_size_t transport_time{0};
-
-    /**
-     * \brief Total amount of time between original arena distribution and first
-     * pickup for all transported blocks in interval.
-     */
-    std::atomic_size_t initial_wait_time{0};
+    std::atomic_size_t n_phototaxiing_to_goal{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;
@@ -113,6 +83,6 @@ class block_transport_metrics_collector final : public rmetrics::base_metrics_co
   /* clang-format on */
 };
 
-NS_END(metrics, foraging, cosm);
+NS_END(metrics, fsm, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_COLLECTOR_HPP_ */
+#endif /* INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_COLLECTOR_HPP_ */

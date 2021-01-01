@@ -75,10 +75,10 @@ void argos_sm_adaptor::arena_map_init(
   }
 } /* arena_map_init() */
 
-crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
-    const crepr::block3D_variant& block,
-    const rmath::radians& z_rotation,
-    const rtypes::type_uuid& parent_id) {
+crepr::embodied_block_variant
+argos_sm_adaptor::make_embodied(const crepr::block3D_variant& block,
+                                const rmath::radians& z_rotation,
+                                const rtypes::type_uuid& parent_id) {
   auto visitor = std::bind(embodied_block_creator(),
                            std::placeholders::_1,
                            z_rotation,
@@ -87,15 +87,12 @@ crepr::embodied_block_variant argos_sm_adaptor::make_embodied(
   return boost::apply_visitor(visitor, block);
 } /* make_embodied() */
 
-argos::CColor argos_sm_adaptor::GetFloorColor(
-    const argos::CVector2& pos) {
+argos::CColor argos_sm_adaptor::GetFloorColor(const argos::CVector2& pos) {
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
-  rmath::vector2z dpos = rmath::dvec2zvec(rpos,
-                                          m_arena_map->grid_resolution().v());
+  rmath::vector2z dpos =
+      rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());
   auto color = m_arena_map->access<cds::arena_grid::kCell>(dpos).color();
-  return argos::CColor(color.red(),
-                       color.green(),
-                       color.blue());
+  return argos::CColor(color.red(), color.green(), color.blue());
 } /* GetFloorColor() */
 
 /*******************************************************************************

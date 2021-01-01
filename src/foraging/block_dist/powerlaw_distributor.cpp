@@ -25,10 +25,10 @@
 
 #include <map>
 
-#include "cosm/foraging/config/block_dist_config.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/foraging/block_dist/multi_cluster_distributor.hpp"
 #include "cosm/foraging/block_dist/powerlaw_cluster_placer.hpp"
+#include "cosm/foraging/config/block_dist_config.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,8 +51,9 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
-                                                   cds::const_spatial_entity_vector& entities) {
+dist_status powerlaw_distributor::distribute_block(
+    crepr::base_block3D* block,
+    cds::const_spatial_entity_vector& entities) {
   /*
    * Try to find a block cluster to distribute to, starting from a random
    * cluster size.
@@ -64,7 +65,8 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block,
     if (mclust->size() == mclust->capacity()) {
       continue;
     }
-    ER_DEBUG("Attempt distribution: block%d -> cluster group: capacity=%zu,size=%zu]",
+    ER_DEBUG("Attempt distribution: block%d -> cluster group: "
+             "capacity=%zu,size=%zu]",
              block->id().v(),
              mclust->capacity(),
              mclust->size());
@@ -91,7 +93,8 @@ void powerlaw_distributor::initialize(
   } /* for(i..) */
   std::sort(clust_sizes.begin(), clust_sizes.end(), std::greater<>());
 
-  auto sum = std::accumulate(std::begin(clust_sizes), std::end(clust_sizes),
+  auto sum = std::accumulate(std::begin(clust_sizes),
+                             std::end(clust_sizes),
                              std::string(),
                              [&](std::string accum, size_t size) {
                                return accum + rcppsw::to_string(size) + ",";
@@ -99,26 +102,19 @@ void powerlaw_distributor::initialize(
   ER_DEBUG("Cluster sizes: [%s]", sum.c_str());
 
   /* Compute cluster locations in arena */
-  powerlaw_cluster_placer placer(arena_grid(),
-                                 c_block_bb,
-                                 kMAX_DIST_TRIES,
-                                 rng());
+  powerlaw_cluster_placer placer(
+      arena_grid(), c_block_bb, kMAX_DIST_TRIES, rng());
   auto placements = placer(c_entities, clust_sizes);
 
   std::map<size_t, std::vector<cds::arena_grid::view>> grids;
-  std::for_each(placements.begin(),
-                placements.end(),
-                [&](const auto& placement) {
-                  return grids[placement.capacity].push_back(placement.view);
-    });
+  std::for_each(placements.begin(), placements.end(), [&](const auto& placement) {
+    return grids[placement.capacity].push_back(placement.view);
+  });
 
   size_t id_start = 0;
   for (auto& pair : grids) {
-    auto mclust = std::make_unique<multi_cluster_distributor>(pair.second,
-                                                              arena_grid(),
-                                                              pair.first,
-                                                              rtypes::type_uuid(id_start)
-                                                              ,                                                              rng());
+    auto mclust = std::make_unique<multi_cluster_distributor>(
+        pair.second, arena_grid(), pair.first, rtypes::type_uuid(id_start), rng());
     ER_INFO("Mapped multi-cluster: capacity=%zu,ID start=%zu",
             mclust->capacity(),
             id_start);
@@ -131,30 +127,25 @@ ds::block3D_cluster_vector powerlaw_distributor::block_clusters(void) const {
   ds::block3D_cluster_vector ret;
 
   for (auto& dist : m_dists) {
-      auto bclusts = dist->block_clusters();
-      ret.insert(ret.end(), bclusts.begin(), bclusts.end());
-  }   /* for(i..) */
+    auto bclusts = dist->block_clusters();
+    ret.insert(ret.end(), bclusts.begin(), bclusts.end());
+  } /* for(i..) */
 
   return ret;
 } /* block_clusters() */
 
 size_t powerlaw_distributor::capacity(void) const {
-  return std::accumulate(std::begin(m_dists),
-                         std::end(m_dists),
-                         0,
-                         [&](size_t size, const auto& d) {
-                           return size + d->capacity();
-                         });
+  return std::accumulate(
+      std::begin(m_dists), std::end(m_dists), 0, [&](size_t size, const auto& d) {
+        return size + d->capacity();
+      });
 } /* capacity() */
 
 size_t powerlaw_distributor::size(void) const {
-  return std::accumulate(std::begin(m_dists),
-                         std::end(m_dists),
-                         0,
-                         [&](size_t size, const auto& d) {
-                           return size + d->size();
-                         });
+  return std::accumulate(
+      std::begin(m_dists), std::end(m_dists), 0, [&](size_t size, const auto& d) {
+        return size + d->size();
+      });
 } /* capacity() */
-
 
 NS_END(block_dist, foraging, cosm);

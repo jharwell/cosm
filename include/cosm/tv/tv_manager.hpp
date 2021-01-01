@@ -63,17 +63,16 @@ class tv_manager {
    * method update(const rtypes::timestep&).
    */
   template <typename T>
-  using defines_update_type = decltype(
-      std::declval<T>().update(std::declval<const rtypes::timestep&>()));
+  using defines_update_type =
+      decltype(std::declval<T>().update(std::declval<const rtypes::timestep&>()));
 
-  static_assert(
-      std::is_base_of<population_dynamics, TPopulationDynamics>::value,
-      "FATAL: TPopulationDynamics is not derived from population_dynamics");
+  static_assert(std::is_base_of<population_dynamics, TPopulationDynamics>::value,
+                "FATAL: TPopulationDynamics is not derived from "
+                "population_dynamics");
   static_assert(rmpl::is_detected<defines_update_type, TEnvDynamics>::value,
                 "TEnvDynamics does not define update()");
-  static_assert(
-      rmpl::is_detected<defines_update_type, TPopulationDynamics>::value,
-      "TPopulationDynamics does not define update()");
+  static_assert(rmpl::is_detected<defines_update_type, TPopulationDynamics>::value,
+                "TPopulationDynamics does not define update()");
 
  public:
   tv_manager(std::unique_ptr<TEnvDynamics> envd,

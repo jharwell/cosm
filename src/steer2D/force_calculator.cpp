@@ -51,9 +51,8 @@ force_calculator::force_calculator(boid& entity,
 kin::twist force_calculator::to_twist(const rmath::vector2d& force) const {
   kin::twist twist;
   twist.linear.x = force.length();
-  twist.angular.z =
-      (force - m_entity.linear_velocity()).length() *
-      std::sin((force - m_entity.linear_velocity()).angle().v());
+  twist.angular.z = (force - m_entity.linear_velocity()).length() *
+                    std::sin((force - m_entity.linear_velocity()).angle().v());
   if (m_entity.linear_velocity().length() > 0) {
     twist.angular.z /= m_entity.linear_velocity().length();
   } else {
@@ -85,8 +84,8 @@ rmath::vector2d force_calculator::wander(rmath::rng* rng) {
   return force;
 } /* wander() */
 
-rmath::vector2d force_calculator::avoidance(
-    const rmath::vector2d& closest_obstacle) {
+rmath::vector2d
+force_calculator::avoidance(const rmath::vector2d& closest_obstacle) {
   rmath::vector2d force = m_avoidance(m_entity, closest_obstacle);
   m_tracker.force_add("avoidance", force); /* accum */
 
@@ -149,7 +148,7 @@ rmath::vector2d force_calculator::anti_phototaxis(
 
 rmath::vector2d force_calculator::path_following(ds::path_state* state) {
   rmath::vector2d force = m_path_following(m_entity, state);
-  m_tracker.path_add(*state);                   /* idempotent */
+  m_tracker.path_add(*state); /* idempotent */
   m_tracker.force_add("path_following", force); /* accum */
 
   ER_DEBUG("Path following force: %s@%s [%f]",

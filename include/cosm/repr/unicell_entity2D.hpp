@@ -54,17 +54,12 @@ NS_START(cosm, repr);
  *   with the kinds of entities that robots interact with (blocks, caches,
  *   etc.), because the handshaking logic is much simpler.
  */
-class unicell_entity2D : public entity2D,
-                         public rer::client<unicell_entity2D> {
+class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
  public:
   ~unicell_entity2D(void) override = default;
 
-  rmath::vector2d rcenter2D(void) const override final {
-    return m_rcenter;
-  }
-  rmath::vector2d ranchor2D(void) const override final {
-    return m_ranchor;
-  }
+  rmath::vector2d rcenter2D(void) const override final { return m_rcenter; }
+  rmath::vector2d ranchor2D(void) const override final { return m_ranchor; }
   rmath::ranged xrspan(void) const override final {
     return spatial_entity::xrspan(ranchor2D(), xrsize());
   }
@@ -72,7 +67,8 @@ class unicell_entity2D : public entity2D,
     return spatial_entity::yrspan(ranchor2D(), yrsize());
   }
   rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.x()); }
+    return rtypes::spatial_dist(m_rdim.x());
+  }
   rtypes::spatial_dist yrsize(void) const override final {
     return rtypes::spatial_dist(m_rdim.y());
   }
@@ -84,9 +80,7 @@ class unicell_entity2D : public entity2D,
               rcppsw::to_string(m_ddim).c_str());
     return m_dcenter;
   }
-  rmath::vector2z danchor2D(void) const override final {
-    return m_danchor;
-  }
+  rmath::vector2z danchor2D(void) const override final { return m_danchor; }
   rmath::rangez xdspan(void) const override final {
     return spatial_entity::xdspan(danchor2D(), xdsize());
   }
@@ -129,7 +123,7 @@ class unicell_entity2D : public entity2D,
   unicell_entity2D(const rtypes::type_uuid& id,
                    const rmath::vector2d& rdim,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity2D{id, rdim, resolution, rmath::vector2d()} {}
+      : unicell_entity2D{ id, rdim, resolution, rmath::vector2d() } {}
 
   unicell_entity2D(const rtypes::type_uuid& id,
                    const rmath::vector2d& rdim,

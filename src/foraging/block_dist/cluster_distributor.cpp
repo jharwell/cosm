@@ -36,12 +36,11 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-cluster_distributor::cluster_distributor(
-    const rtypes::type_uuid& id,
-    const cds::arena_grid::view& view,
-    cds::arena_grid* arena_grid,
-    size_t capacity,
-    rmath::rng* rng)
+cluster_distributor::cluster_distributor(const rtypes::type_uuid& id,
+                                         const cds::arena_grid::view& view,
+                                         cds::arena_grid* arena_grid,
+                                         size_t capacity,
+                                         rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.cluster"),
       base_distributor(arena_grid, rng),
       m_clust(id, view, arena_grid->resolution(), capacity),
@@ -50,8 +49,9 @@ cluster_distributor::cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status cluster_distributor::distribute_block(crepr::base_block3D* block,
-                                           cds::const_spatial_entity_vector& entities) {
+dist_status cluster_distributor::distribute_block(
+    crepr::base_block3D* block,
+    cds::const_spatial_entity_vector& entities) {
   if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%zu) reached",
              block->id().v(),
@@ -61,21 +61,22 @@ dist_status cluster_distributor::distribute_block(crepr::base_block3D* block,
   return m_impl.distribute_block(block, entities);
 } /* distribute_block() */
 
-dist_status cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
-                                                   cds::const_spatial_entity_vector& entities,
-                                                   bool strict_success) {
+dist_status
+cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
+                                       cds::const_spatial_entity_vector& entities,
+                                       bool strict_success) {
   if (m_clust.capacity() == m_clust.n_blocks()) {
-    ER_DEBUG(
-        "Could not distribute any of %zu blocks: Cluster capacity (%zu) reached",
-        blocks.size(),
-        m_clust.capacity());
+    ER_DEBUG("Could not distribute any of %zu blocks: Cluster capacity (%zu) "
+             "reached",
+             blocks.size(),
+             m_clust.capacity());
     return dist_status::ekFAILURE;
   }
   return m_impl.distribute_blocks(blocks, entities, strict_success);
 } /* distribute_blocks() */
 
 cfds::block3D_cluster_vector cluster_distributor::block_clusters(void) const {
-  return cfds::block3D_cluster_vector{&m_clust};
+  return cfds::block3D_cluster_vector{ &m_clust };
 } /* block_clusters() */
 
 NS_END(block_dist, foraging, cosm);

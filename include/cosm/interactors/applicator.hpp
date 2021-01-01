@@ -57,7 +57,8 @@ NS_START(cosm, interactors);
  * fit in either, and gets its own namespace.
  */
 template <class TBaseController,
-          template <class TDerivedController, class...> class TInteractor,
+          template <class TDerivedController, class...>
+          class TInteractor,
           class... Args>
 class applicator {
  public:

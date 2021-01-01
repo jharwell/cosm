@@ -44,8 +44,8 @@ void block_carrying_controller::block(std::unique_ptr<crepr::base_block3D> block
   m_block = std::move(block);
 }
 
-std::unique_ptr<crepr::base_block3D> block_carrying_controller::block_release(
-    void) {
+std::unique_ptr<crepr::base_block3D>
+block_carrying_controller::block_release(void) {
   return std::move(m_block);
 }
 

@@ -53,7 +53,7 @@ static_assert(COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT,
  * block to ARGoS.
  */
 struct embodied_cube_block {
-  argos::CBoxEntity* box{nullptr};
+  argos::CBoxEntity* box{ nullptr };
 };
 
 /**
@@ -70,9 +70,9 @@ struct embodied_cube_block {
  * block to ARGoS.
  */
 struct embodied_ramp_block {
-  argos::CBoxEntity* top{nullptr};
-  argos::CBoxEntity* bottom{nullptr};
-  argos::CBoxEntity* back{nullptr};
+  argos::CBoxEntity* top{ nullptr };
+  argos::CBoxEntity* bottom{ nullptr };
+  argos::CBoxEntity* back{ nullptr };
 };
 
 using embodied_block_variant =

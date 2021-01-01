@@ -26,13 +26,13 @@
 
 #include "rcppsw/utils/maskable_enum.hpp"
 
+#include "cosm/arena/ds/loctree.hpp"
+#include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/arena/free_blocks_calculator.hpp"
-#include "cosm/arena/ds/loctree.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -58,7 +58,6 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
-
   for (auto& c : caches) {
     /*
      * Add all lights of for the cache to the arena. Cache lights are added
@@ -76,7 +75,6 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
     m_cacheso.push_back(std::move(c));
   } /* for(&c..) */
 
-
   ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_cacheso.size());
 } /* caches_add() */
 
@@ -93,11 +91,10 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
    */
   auto victim_it =
       std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
-          return victim->dloccmp(*c);
-        });
-  ER_ASSERT(victim_it != m_cacheso.end(),
-            "Victim cache%d not found",
-            victim->id().v());
+        return victim->dloccmp(*c);
+      });
+  ER_ASSERT(
+      victim_it != m_cacheso.end(), "Victim cache%d not found", victim->id().v());
 
   /* Remove light for cache from ARGoS */
   auto& medium =
@@ -107,7 +104,6 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
 
   size_t before = m_cacheso.size();
   RCPPSW_UNUSED rtypes::type_uuid id = victim->id();
-
 
   /*
    * Copy depleted cache to zombie vector to ensure accurate proper (1) robot
@@ -133,9 +129,9 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   cloctree_update(victim_it->get()); /* OK because victim in zombie caches */
 } /* cache_remove() */
 
-rtypes::type_uuid caching_arena_map::robot_on_block(
-    const rmath::vector2d& pos,
-    const rtypes::type_uuid& ent_id) const {
+rtypes::type_uuid
+caching_arena_map::robot_on_block(const rmath::vector2d& pos,
+                                  const rtypes::type_uuid& ent_id) const {
   /*
    * Caches hide blocks, add even though a robot may technically be standing on
    * a block, if it is also standing in a cache, that takes priority.
@@ -148,8 +144,8 @@ rtypes::type_uuid caching_arena_map::robot_on_block(
   return base_arena_map::robot_on_block(pos, ent_id);
 } /* robot_on_block() */
 
-rtypes::type_uuid caching_arena_map::robot_on_cache(
-    const rmath::vector2d& pos) const {
+rtypes::type_uuid
+caching_arena_map::robot_on_cache(const rmath::vector2d& pos) const {
   /*
    * We can't use the ID of the cache to index into the caches vector like we
    * can for blocks, because the ID is not guaranteed to be equal to the
@@ -176,8 +172,8 @@ void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking)
   maybe_unlock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
-caching_arena_map::block_dist_precalc_type caching_arena_map::block_dist_precalc(
-    const crepr::base_block3D* block) {
+caching_arena_map::block_dist_precalc_type
+caching_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
   auto ret = base_arena_map::block_dist_precalc(block);
 
   /*
@@ -213,14 +209,14 @@ bool caching_arena_map::bloctree_verify(void) const {
     return false;
   }
 
-  for (auto *b : blocks()) {
+  for (auto* b : blocks()) {
     /*
      * Any blocks that are in a cache should not be in the loctree, as they are
      * not free blocks.
      */
-    auto it = std::find_if(caches().begin(),
-                           caches().end(),
-                           [b](const auto* c) { return c->contains_block(b); });
+    auto it = std::find_if(caches().begin(), caches().end(), [b](const auto* c) {
+      return c->contains_block(b);
+    });
     if (caches().end() != it) {
       ER_CHECK(!bloctree()->query(b->id()),
                "Block%s@%s/%s in cache%s@%s/%s in loctree",
@@ -241,7 +237,7 @@ error:
 } /* bloctree_verify() */
 
 bool caching_arena_map::cloctree_verify(void) const {
-  for (auto *c : caches()) {
+  for (auto* c : caches()) {
     ER_CHECK(m_cloctree->query(c->id()),
              "Cache%s@%s/%s not in loctree",
              rcppsw::to_string(c->id()).c_str(),
@@ -259,12 +255,10 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
                                         const ds::acache_vectoro& created) {
   maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 
-
-  auto it = std::find_if(created.begin(),
-                         created.end(),
-                         [block](const auto& cache){
-                           return cache->contains_block(block);
-                          });
+  auto it =
+      std::find_if(created.begin(), created.end(), [block](const auto& cache) {
+        return cache->contains_block(block);
+      });
 
   /*
    * If the block is currently carried by a robot or in a cache don't put it in

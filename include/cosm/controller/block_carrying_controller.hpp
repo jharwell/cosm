@@ -55,8 +55,8 @@ class block_carrying_controller {
 
   /* Not copy constructable/assignable by default */
   block_carrying_controller(const block_carrying_controller&) = delete;
-  const block_carrying_controller& operator=(const block_carrying_controller&) =
-      delete;
+  const block_carrying_controller&
+  operator=(const block_carrying_controller&) = delete;
 
   /**
    * \brief Return if the robot is currently carrying a block.

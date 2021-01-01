@@ -103,8 +103,7 @@ class base_task_abort
               controller.block()->id().v());
       task_abort_with_block(controller);
     } else {
-      ER_INFO("Robot%d aborted task (no block)",
-              controller.entity_id().v());
+      ER_INFO("Robot%d aborted task (no block)", controller.entity_id().v());
     }
 
     m_envd->penalties_flush(controller);
@@ -121,9 +120,8 @@ class base_task_abort
     auto loc =
         rmath::dvec2zvec(controller.rpos2D(), m_map->grid_resolution().v());
     rtypes::type_uuid block_id = controller.block()->id();
-    robot_free_block_drop_visitor_type rdrop_op(controller.block_release(),
-                                                loc,
-                                                m_map->grid_resolution());
+    robot_free_block_drop_visitor_type rdrop_op(
+        controller.block_release(), loc, m_map->grid_resolution());
 
     caops::free_block_drop_visitor adrop_op(
         m_map->blocks()[block_id.v()],

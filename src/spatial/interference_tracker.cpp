@@ -80,8 +80,7 @@ void interference_tracker::inta_exit(void) {
     m_exited_interference = false;
   }
   m_exp_interference = false;
-  m_entered_interference =
-      false; /* catches 1 timestep interferences correctly */
+  m_entered_interference = false; /* catches 1 timestep interferences correctly */
 } /* inta_exit() */
 
 NS_END(spatial, cosm);

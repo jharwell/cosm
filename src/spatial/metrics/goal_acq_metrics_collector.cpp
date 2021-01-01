@@ -46,7 +46,7 @@ goal_acq_metrics_collector::goal_acq_metrics_collector(
 std::list<std::string> goal_acq_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "int_avg_acquiring_goal",
     "cum_avg_acquiring_goal",
     "int_avg_vectoring_to_goal",
@@ -55,7 +55,7 @@ std::list<std::string> goal_acq_metrics_collector::csv_header_cols(void) const {
     "cum_avg_true_exploring_for_goal",
     "int_avg_false_exploring_for_goal",
     "cum_avg_false_exploring_for_goal",
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;

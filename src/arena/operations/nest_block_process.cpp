@@ -42,9 +42,8 @@ static void do_unlock(base_arena_map& map);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_block_process::nest_block_process(
-    crepr::base_block3D* arena_block,
-    const rtypes::timestep& t)
+nest_block_process::nest_block_process(crepr::base_block3D* arena_block,
+                                       const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
       mc_timestep(t),
       m_arena_block(arena_block) {}

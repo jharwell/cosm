@@ -35,18 +35,16 @@ NS_START(cosm, arena, ds);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TEntity>
+template <typename TEntity>
 void loctree::do_update(const TEntity* ent) {
   decoratee().remove(ent->id());
-  decoratee().insert(ent->id(),
-                     ent->ranchor2D(),
-                     ent->ranchor2D() + ent->rdim2D());
+  decoratee().insert(
+      ent->id(), ent->ranchor2D(), ent->ranchor2D() + ent->rdim2D());
 } /* do_update() */
 
 size_t loctree::remove(const crepr::base_entity* ent) {
   return decoratee().remove(ent->id());
 } /* remove() */
-
 
 /*******************************************************************************
  * Template Instantiations

@@ -62,9 +62,9 @@ void exec_estimates_parser::parse(const ticpp::Element& node) {
    * estimate.
    */
   for (auto& s : m_task_names) {
-    rmath::rangeu tmp{0, 0};
+    rmath::rangeu tmp{ 0, 0 };
     node_attr_get(enode, s, tmp);
-    m_config->ranges.insert({s, tmp});
+    m_config->ranges.insert({ s, tmp });
   } /* for(&s..) */
 } /* parse() */
 

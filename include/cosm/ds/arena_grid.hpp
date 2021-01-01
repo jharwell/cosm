@@ -75,7 +75,7 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
       for (size_t j = 0; j < ydsize(); ++j) {
         access<kCell>(i, j).loc(rmath::vector2z(i, j));
       } /* for(j..) */
-    }   /* for(i..) */
+    } /* for(i..) */
   }
 
   /**
@@ -87,8 +87,8 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
       for (size_t j = 0; j < ydsize(); ++j) {
         access<kCell>(i, j).reset();
       } /* for(j..) */
-    }   /* for(i..) */
-  }     /* reset */
+    } /* for(i..) */
+  } /* reset */
 
   std::shared_mutex* mtx(void) { return &m_mtx; }
 

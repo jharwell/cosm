@@ -32,13 +32,13 @@ XML configuration:
 
 .. code-block:: XML
 
-   <output
-       output_root="output"                                                                                                                           ``fsm_interference_coun
-       output_dir="__current_date__">
-       <metrics>
-           ...
-       </metrics>
-   </output>
+    <output
+        output_root="output"
+        output_dir="__current_date__">
+        <metrics>
+            ...
+        </metrics>
+    </output>
 
 - ``output_root`` - The root output directory in which the directories of
   different simulation runs will be placed. The path specified can be relative
@@ -63,25 +63,22 @@ XML configuration:
 
 .. code-block:: XML
 
-   <output>
-       ...
-       <metrics
-           output_dir="metrics">
-           <create
+    <output>
+        ...
+        <metrics
+            output_dir="metrics">
+            <create
                 output_interval="INTEGER"
-                ...
                 />
-           <append
+            <append
                 output_interval="INTEGER"
-                ...
                 />
-           <truncate
+            <truncate
                 output_interval="INTEGER"
-                ...
                 />
-       </metrics>
-       ...
-   </output>
+        </metrics>
+        ...
+    </output>
 
 - ``output_dir`` - Name of directory within the output root that metrics will be
   placed in.
@@ -99,23 +96,22 @@ XML configuration:
 
 .. code-block:: XML
 
-   <metrics>
-       ...
-       <create
-            output_interval="INTEGER"
-            ...
-            />
-       ...
-   </metrics>
+    <metrics>
+        ...
+        <create
+             output_interval="INTEGER"
+             />
+        ...
+    </metrics>
 
 
 - ``output_interval`` - The timestep interval after which metrics will be
   written out to a NEW ``.csv`` file with a unique timestep tag after the
   provided stem.
 
-Some collectors (see table below) can be added under the ``<metrics>`` tag in
-place of the ``...``. Not defining them disables metric collection of the given
-type.
+Some collectors (see :ref:`ln-metrics-collectors`) can be added under the
+``<create>`` tag as (id,filename) pairs. Not defining them disables metric
+collection of the given type.
 
 ``output/metrics/append``
 """""""""""""""""""""""""
@@ -130,22 +126,20 @@ XML configuration:
 
 .. code-block:: XML
 
-   <metrics>
-       ...
-       <append
-            output_interval="INTEGER"
-            ...
-            />
-       ...
-   </metrics>
+    <metrics>
+        ...
+        <append
+             output_interval="INTEGER"/>
+        ...
+    </metrics>
 
 
 - ``output_interval`` - The timestep interval after which metrics will be
   written out (appended) to the specified ``.csv`` created from the provided stem.
 
-Some collectors (see table below) can be added under the ``<metrics>`` tag in
-place of the ``...``. Not defining them disables metric collection of the given
-type.
+Some collectors (see :ref:`ln-metrics-collectors`) can be added under the ``<append>``
+tag as (id,filename) pairs. Not defining them disables metric collection of the
+given type.
 
 ``output/metrics/truncate``
 """""""""""""""""""""""""""
@@ -160,14 +154,12 @@ XML configuration:
 
 .. code-block:: XML
 
-   <metrics>
-       ...
-       <truncate
-            output_interval="INTEGER"
-            ...
-            />
-       ...
-   </metrics>
+    <metrics>
+        ...
+        <truncate
+             output_interval="INTEGER"/>
+        ...
+    </metrics>
 
 
 - ``output_interval`` - The timestep interval after which metrics will be
@@ -175,11 +167,16 @@ XML configuration:
   each time they are output the results of the previously written out metrics
   are lost.
 
-Collectors (see table below) can be added under *exactly* one of the
-``<append>,<create>,<truncate>"`` tags in place of the ``...``, for. Not
-defining them disables metric collection of the given type. Defining the same
-metric collector in more than one category is undefined.
 
+Collectors (:ref:`ln-metrics-collectors`) can be added under the
+``<append>,<create>,<truncate>`` tags. Not defining them disables metric
+collection of the given type. Defining the same metric collector in more than
+one category is undefined behavior.
+
+.. _ln-metrics-collectors:
+
+Available Metrics Collectors
+""""""""""""""""""""""""""""
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -202,7 +199,9 @@ metric collector in more than one category is undefined.
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_vector_locs2D``                    | 2D spatial distribution of where robots vector to known blocks.         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_transport``                            | " blocks collected/ " transporters.                                     | append                 |                        |
+| ``block_transportee``                          | Swarm # blocks collected/ # transporters per block.                     | append                 |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_transporter``                          | Swarm block transport (not necessarily to the nest)                     | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``task_distribution``                          | TAB task allocation probabilities/counts.                               | append                 |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -675,7 +674,7 @@ XML configuration:
   <= 1.0.
 
 ``arena_map/nests``
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 - Required by: all.
 - Required child attributes if present: [ ``nest`` ].
@@ -687,15 +686,19 @@ XML configuration:
 
 .. code-block:: XML
 
-   <arena_map>
-       ...
-       <nests>
-           <nest .../>
-           <nest .../>
-           ...
-       </nests>
-       ...
-   </arena_map>
+    <arena_map>
+        ...
+        <nests>
+            <nest>
+                ...
+            </nest>
+            <nest>
+                ...
+            </nest>
+            ...
+        </nests>
+        ...
+    </arena_map>
 
 ``arena_map/nests/nest``
 """"""""""""""""""""""""

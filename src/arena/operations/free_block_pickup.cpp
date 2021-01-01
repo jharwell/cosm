@@ -24,10 +24,10 @@
 #include "cosm/arena/operations/free_block_pickup.hpp"
 
 #include "cosm/arena/base_arena_map.hpp"
+#include "cosm/arena/operations/block_extent_clear.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
-#include "cosm/arena/operations/block_extent_clear.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,16 +37,14 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_pickup free_block_pickup::by_robot(
-    crepr::base_block3D* block,
-    const rtypes::type_uuid& robot_id,
-    const rtypes::timestep& t,
-    const arena_map_locking& locking) {
+free_block_pickup free_block_pickup::by_robot(crepr::base_block3D* block,
+                                              const rtypes::type_uuid& robot_id,
+                                              const rtypes::timestep& t,
+                                              const arena_map_locking& locking) {
   return free_block_pickup(block, robot_id, t, locking);
 } /* by_robot() */
 
-free_block_pickup free_block_pickup::by_arena(
-    crepr::base_block3D* block) {
+free_block_pickup free_block_pickup::by_arena(crepr::base_block3D* block) {
   return free_block_pickup(block,
                            rtypes::constants::kNoUUID,
                            rtypes::timestep(-1),

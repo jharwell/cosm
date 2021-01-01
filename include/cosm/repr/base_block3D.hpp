@@ -31,8 +31,8 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/repr/block_metadata.hpp"
-#include "cosm/repr/unicell_movable_entity3D.hpp"
 #include "cosm/repr/operations/block_pickup_owner.hpp"
+#include "cosm/repr/unicell_movable_entity3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -64,8 +64,7 @@ class base_block3D : public crepr::unicell_movable_entity3D,
                const rtypes::discretize_ratio& arena_res,
                const rutils::color& color,
                const crepr::block_type& type)
-      : unicell_movable_entity3D(id, dim, arena_res),
-        m_md(color, type) {}
+      : unicell_movable_entity3D(id, dim, arena_res), m_md(color, type) {}
 
   ~base_block3D(void) override = default;
 
@@ -82,9 +81,7 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * \brief Compare two \ref base_block3D objects for equality based on their
    * ID.
    */
-  bool idcmp(const base_block3D& other) const {
-    return this->id() == other.id();
-  }
+  bool idcmp(const base_block3D& other) const { return this->id() == other.id(); }
 
   /**
    * \brief Compare two \ref base_block3D objects for equality based on their
@@ -143,8 +140,8 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    * up, for visualization/rendering purposes.
    */
   struct out_of_sight3D {
-    rmath::vector3d rpos{1000.0, 1000.0, 0.0};
-    rmath::vector3z dpos{1000, 1000, 0};
+    rmath::vector3d rpos{ 1000.0, 1000.0, 0.0 };
+    rmath::vector3z dpos{ 1000, 1000, 0 };
   };
 
   static const out_of_sight3D kOutOfSight;

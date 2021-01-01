@@ -58,8 +58,8 @@ NS_START(cosm, spatial);
 class conflict_checker {
  public:
   struct status {
-    bool x{false};
-    bool y{false};
+    bool x{ false };
+    bool y{ false };
 
     status& operator|=(const status& other) {
       x |= other.x;

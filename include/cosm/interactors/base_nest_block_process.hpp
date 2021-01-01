@@ -24,8 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/mpl/at.hpp>
 #include <algorithm>
+#include <boost/mpl/at.hpp>
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 
@@ -58,8 +58,7 @@ class base_nest_block_process
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
   using metrics_agg_type = typename controller_spec::metrics_agg_type;
-  using interactor_status_type =
-      typename controller_spec::interactor_status_type;
+  using interactor_status_type = typename controller_spec::interactor_status_type;
   using robot_nest_block_process_visitor_type =
       typename controller_spec::robot_nest_block_process_visitor_type;
 
@@ -143,7 +142,6 @@ class base_nest_block_process
     m_penalty_handler->penalty_remove(p);
   }
 
-
   /**
    * \brief Perform the actual drop in the nest once all preconditions have been
    * satisfied, update both the arena map and the controller, in that order.
@@ -166,8 +164,8 @@ class base_nest_block_process
      */
     caops::nest_block_process_visitor aproc_op(m_map->blocks()[to_drop->id().v()],
                                                t);
-    robot_nest_block_process_visitor_type rdrop_op(m_map->blocks()[to_drop->id().v()],
-                                                   t);
+    robot_nest_block_process_visitor_type rdrop_op(
+        m_map->blocks()[to_drop->id().v()], t);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);
@@ -191,7 +189,8 @@ class base_nest_block_process
   }
 
   bool pre_process_check(const TController& controller) const {
-    ER_CHECK(rtypes::constants::kNoUUID != m_map->robot_in_nest(controller.rpos2D()),
+    ER_CHECK(rtypes::constants::kNoUUID !=
+                 m_map->robot_in_nest(controller.rpos2D()),
              "Robot%d@%s/%s not in a nest",
              controller.entity_id().v(),
              rcppsw::to_string(controller.rpos2D()).c_str(),
@@ -214,17 +213,17 @@ class base_nest_block_process
              rcppsw::to_string(controller.dpos2D()).c_str());
     return true;
 
- error:
+  error:
     return false;
   }
 
   bool post_process_check(const TController& controller) const {
-    ER_CHECK(
-        !m_penalty_handler->is_serving_penalty(controller),
-        "Multiple instances of same controller serving block pickup penalty");
+    ER_CHECK(!m_penalty_handler->is_serving_penalty(controller),
+             "Multiple instances of same controller serving block pickup "
+             "penalty");
     return true;
 
- error:
+  error:
     return false;
   }
 

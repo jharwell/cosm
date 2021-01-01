@@ -47,7 +47,7 @@ bi_tab_metrics_collector::bi_tab_metrics_collector(
 std::list<std::string> bi_tab_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
       "int_avg_subtask1_count",
       "cum_avg_subtask1_count",
       "int_avg_subtask2_count",
@@ -64,7 +64,7 @@ std::list<std::string> bi_tab_metrics_collector::csv_header_cols(void) const {
       "cum_avg_partition_prob",
       "int_avg_subtask_selection_prob",
       "cum_avg_subtask_selection_prob"
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;

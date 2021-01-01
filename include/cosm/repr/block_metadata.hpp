@@ -29,10 +29,10 @@
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/foraging/metrics/block_transport_metrics.hpp"
+#include "cosm/cosm.hpp"
+#include "cosm/foraging/metrics/block_transportee_metrics.hpp"
 #include "cosm/repr/block_type.hpp"
 #include "cosm/repr/colored_entity.hpp"
-#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,7 +51,7 @@ NS_START(cosm, repr);
  * and what color the block is. This does NOT include the ID of the block, which
  * is part of its core definition.
  */
-class block_metadata final : public cfmetrics::block_transport_metrics,
+class block_metadata final : public cfmetrics::block_transportee_metrics,
                              public colored_entity {
  public:
   /**

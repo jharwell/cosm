@@ -45,8 +45,8 @@ footbot_saa_subsystem::footbot_saa_subsystem(
    * Before this, the sensing member of our parent class is of the wrong type
    * for the static casts we do.
    */
-  auto footbot_sensing = std::make_unique<footbot_sensing_subsystem>(pos,
-                                                                     sensors);
+  auto footbot_sensing =
+      std::make_unique<footbot_sensing_subsystem>(pos, sensors);
   saa_subsystemQ3D::sensing(std::move(footbot_sensing));
 }
 
@@ -67,7 +67,8 @@ void footbot_saa_subsystem::steer_force2D_apply(void) {
            steer_force2D().value().to_str().c_str(),
            steer_force2D().value().angle().to_str().c_str(),
            steer_force2D().value().length());
-  RCPPSW_UNUSED double applied = actuation()->governed_diff_drive()->applied_throttle();
+  RCPPSW_UNUSED double applied =
+      actuation()->governed_diff_drive()->applied_throttle();
   double active = actuation()->governed_diff_drive()->active_throttle();
   ER_DEBUG("Applied throttle: %f active throttle: %f", applied, active);
 
@@ -90,9 +91,9 @@ rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {
    * There probably is a better way to do this, but I don't know what it is.
    */
   if (speed <= std::numeric_limits<double>::epsilon()) {
-    return {0.1, sensing()->azimuth()};
+    return { 0.1, sensing()->azimuth() };
   } else {
-    return {sensing()->diff_drive()->current_speed(), sensing()->azimuth()};
+    return { sensing()->diff_drive()->current_speed(), sensing()->azimuth() };
   }
 } /* linear_velocity() */
 

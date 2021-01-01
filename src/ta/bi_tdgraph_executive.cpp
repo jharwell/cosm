@@ -124,9 +124,8 @@ void bi_tdgraph_executive::task_start_handle(polled_task* const new_task) {
 polled_task* bi_tdgraph_executive::task_allocate(const polled_task* last_task) {
   /* perfect forwarding from a lambda */
   auto visitor = [&](auto&& v) {
-    return task_allocator(alloc_config(), rng())(std::forward<decltype(v)>(v),
-                                                 last_task,
-                                                 task_alloc_count());
+    return task_allocator(alloc_config(), rng())(
+        std::forward<decltype(v)>(v), last_task, task_alloc_count());
   };
 
   auto ret = boost::apply_visitor(visitor, *ds());

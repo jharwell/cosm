@@ -33,30 +33,32 @@ NS_START(cosm, fsm);
 cell3D_fsm::cell3D_fsm(void)
     : rpfsm::simple_fsm(state::ekST_MAX_STATES, state::ekST_UNKNOWN),
       ER_CLIENT_INIT("cosm.fsm.cell3D"),
-      RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_unknown),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_empty),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_block),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
+      RCPPSW_FSM_DEFINE_STATE_MAP(
+          mc_state_map,
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_unknown),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_empty),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_block),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
 
 cell3D_fsm::cell3D_fsm(const cell3D_fsm&)
     : rpfsm::simple_fsm(state::ekST_MAX_STATES, state::ekST_UNKNOWN),
       ER_CLIENT_INIT("cosm.fsm.cell3D"),
-      RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_unknown),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_empty),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_block),
-                           RCPPSW_FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
+      RCPPSW_FSM_DEFINE_STATE_MAP(
+          mc_state_map,
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_unknown),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_empty),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_block),
+          RCPPSW_FSM_STATE_MAP_ENTRY(&state_block_extent)) {}
 
 /*******************************************************************************
  * Event Functions
  ******************************************************************************/
 void cell3D_fsm::event_unknown(void) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_UNKNOWN, /* unknown */
-      state::ekST_UNKNOWN, /* empty */
-      state::ekST_UNKNOWN, /* has block */
-      state::ekST_UNKNOWN, /* block extent */
+    state::ekST_UNKNOWN, /* unknown */
+    state::ekST_UNKNOWN, /* empty */
+    state::ekST_UNKNOWN, /* has block */
+    state::ekST_UNKNOWN, /* block extent */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -64,10 +66,10 @@ void cell3D_fsm::event_unknown(void) {
 
 void cell3D_fsm::event_empty(void) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_EMPTY, /* unknown */
-      state::ekST_EMPTY, /* empty */
-      state::ekST_EMPTY, /* has block */
-      state::ekST_EMPTY, /* block extent */
+    state::ekST_EMPTY, /* unknown */
+    state::ekST_EMPTY, /* empty */
+    state::ekST_EMPTY, /* has block */
+    state::ekST_EMPTY, /* block extent */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -75,10 +77,10 @@ void cell3D_fsm::event_empty(void) {
 
 void cell3D_fsm::event_block_place(void) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_HAS_BLOCK,        /* unknown */
-      state::ekST_HAS_BLOCK,        /* empty */
-      rpfsm::event_signal::ekFATAL, /* has block */
-      rpfsm::event_signal::ekFATAL, /* block extent */
+    state::ekST_HAS_BLOCK, /* unknown */
+    state::ekST_HAS_BLOCK, /* empty */
+    rpfsm::event_signal::ekFATAL, /* has block */
+    rpfsm::event_signal::ekFATAL, /* block extent */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);
@@ -86,10 +88,10 @@ void cell3D_fsm::event_block_place(void) {
 
 void cell3D_fsm::event_block_extent(void) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
-      state::ekST_BLOCK_EXTENT,     /* unknown */
-      state::ekST_BLOCK_EXTENT,     /* empty */
-      rpfsm::event_signal::ekFATAL, /* has block */
-      rpfsm::event_signal::ekFATAL, /* block extent */
+    state::ekST_BLOCK_EXTENT, /* unknown */
+    state::ekST_BLOCK_EXTENT, /* empty */
+    rpfsm::event_signal::ekFATAL, /* has block */
+    rpfsm::event_signal::ekFATAL, /* block extent */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, state::ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()], nullptr);

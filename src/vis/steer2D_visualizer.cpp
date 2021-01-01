@@ -69,9 +69,8 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
 
     /* Now draw the path segments and end points */
     for (size_t i = 0; i < path->path().size() - 1; ++i) {
-      auto start = argos::CVector3(path->path()[i].x(),
-                                   path->path()[i].y(),
-                                   pos.z() + kDRAW_OFFSET);
+      auto start = argos::CVector3(
+          path->path()[i].x(), path->path()[i].y(), pos.z() + kDRAW_OFFSET);
       auto end = argos::CVector3(path->path()[i + 1].x(),
                                  path->path()[i + 1].y(),
                                  pos.z() + kDRAW_OFFSET);
@@ -91,8 +90,8 @@ void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker) {
   /* each force gets a ray and a label */
   for (auto& force : tracker->forces()) {
     auto start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
-    auto end = start +
-               argos::CVector3(force.second.x(), force.second.y(), kDRAW_OFFSET);
+    auto end =
+        start + argos::CVector3(force.second.x(), force.second.y(), kDRAW_OFFSET);
     m_qt->DrawRay(argos::CRay3(start, end), argos::CColor::MAGENTA, 5.0);
     m_qt->DrawText(argos::CVector3(start.GetX() + end.GetX() / 2.0,
                                    start.GetY() + end.GetY() / 2.0,
@@ -112,9 +111,7 @@ void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker) {
   auto accum_start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
   auto accum_end =
       accum_start + argos::CVector3(accum.x(), accum.y(), kDRAW_OFFSET);
-  m_qt->DrawRay(argos::CRay3(accum_start, accum_end),
-                argos::CColor::PURPLE,
-                5.0);
+  m_qt->DrawRay(argos::CRay3(accum_start, accum_end), argos::CColor::PURPLE, 5.0);
   m_qt->DrawText(argos::CVector3(accum_start.GetX() + accum_end.GetX() / 2.0,
                                  accum_start.GetY() + accum_end.GetY() / 2.0,
                                  accum_start.GetZ() + m_text_vis_offset),

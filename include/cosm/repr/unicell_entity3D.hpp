@@ -55,17 +55,12 @@ NS_START(cosm, repr);
  *   with the kinds of entities that robots interact with because the
  *   handshaking logic is much simpler.
  */
-class unicell_entity3D : public entity3D,
-                         public rer::client<unicell_entity3D> {
+class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
  public:
   ~unicell_entity3D(void) override = default;
 
-  rmath::vector3d rcenter3D(void) const override final {
-    return m_rcenter;
-  }
-  rmath::vector3d ranchor3D(void) const override final {
-    return m_ranchor;
-  }
+  rmath::vector3d rcenter3D(void) const override final { return m_rcenter; }
+  rmath::vector3d ranchor3D(void) const override final { return m_ranchor; }
   rmath::vector2d rcenter2D(void) const override final {
     return rcenter3D().to_2D();
   }
@@ -82,7 +77,8 @@ class unicell_entity3D : public entity3D,
     return entity3D::zrspan(ranchor3D(), yrsize());
   }
   rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.x()); }
+    return rtypes::spatial_dist(m_rdim.x());
+  }
   rtypes::spatial_dist yrsize(void) const override final {
     return rtypes::spatial_dist(m_rdim.y());
   }
@@ -91,9 +87,8 @@ class unicell_entity3D : public entity3D,
   }
 
   rmath::vector3z dcenter3D(void) const override final {
-    ER_ASSERT(RCPPSW_IS_ODD(m_ddim.x()) &&
-              RCPPSW_IS_ODD(m_ddim.y()) &&
-              RCPPSW_IS_ODD(m_ddim.z()),
+    ER_ASSERT(RCPPSW_IS_ODD(m_ddim.x()) && RCPPSW_IS_ODD(m_ddim.y()) &&
+                  RCPPSW_IS_ODD(m_ddim.z()),
               "dcenter3D() called on entity without defined center");
     return m_dcenter;
   }
@@ -101,9 +96,7 @@ class unicell_entity3D : public entity3D,
   rmath::vector2z dcenter2D(void) const override final {
     return dcenter3D().to_2D();
   }
-  rmath::vector3z danchor3D(void) const override final {
-    return m_danchor;
-  }
+  rmath::vector3z danchor3D(void) const override final { return m_danchor; }
   rmath::vector2z danchor2D(void) const override final {
     return danchor3D().to_2D();
   }
@@ -146,7 +139,7 @@ class unicell_entity3D : public entity3D,
   unicell_entity3D(const rtypes::type_uuid& id,
                    const rmath::vector3d& rdim,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity3D{id, rdim, resolution, rmath::vector3d()} {}
+      : unicell_entity3D{ id, rdim, resolution, rmath::vector3d() } {}
 
   unicell_entity3D(const rtypes::type_uuid& id,
                    const rmath::vector3d& rdim,

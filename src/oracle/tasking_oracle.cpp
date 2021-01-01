@@ -44,9 +44,9 @@ tasking_oracle::tasking_oracle(const coconfig::tasking_oracle_config* const conf
       mc_exec_ests(config->task_exec_ests),
       mc_int_ests(config->task_interface_ests) {
   auto cb = [&](const cta::polled_task* task) {
-    m_map.insert({"exec_est." + task->name(), task->task_exec_estimate()});
+    m_map.insert({ "exec_est." + task->name(), task->task_exec_estimate() });
     m_map.insert(
-        {"interface_est." + task->name(), task->task_interface_estimate(0)});
+        { "interface_est." + task->name(), task->task_interface_estimate(0) });
     ER_WARN("Assuming all tasks have at most 1 interface");
   };
   graph->walk(cb);
@@ -55,8 +55,8 @@ tasking_oracle::tasking_oracle(const coconfig::tasking_oracle_config* const conf
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-boost::optional<tasking_oracle::variant_type> tasking_oracle::ask(
-    const std::string& query) const {
+boost::optional<tasking_oracle::variant_type>
+tasking_oracle::ask(const std::string& query) const {
   auto it = m_map.find(query);
   return (it != m_map.end()) ? boost::make_optional(it->second)
                              : boost::optional<variant_type>();

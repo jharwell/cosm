@@ -46,7 +46,7 @@ bool los2D::contains_abs(const rmath::vector2z& loc) const {
         return true;
       }
     } /* for(j..) */
-  }   /* for(i..) */
+  } /* for(i..) */
   return false;
 } /* contains_abs() */
 

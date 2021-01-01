@@ -54,7 +54,7 @@ class entity3D : public spatial_entity {
    */
   static rmath::ranged zrspan(const rmath::vector3d& anchor,
                               const rtypes::spatial_dist& zdim) {
-    return {anchor.z(), (anchor.z() + zdim).v()};
+    return { anchor.z(), (anchor.z() + zdim).v() };
   }
 
   /**
@@ -68,7 +68,7 @@ class entity3D : public spatial_entity {
    */
   static rmath::rangez zdspan(const rmath::vector3z& anchor, size_t zdim) {
     /* rely on truncation of the 0.5 remainder to 0 */
-    return {anchor.z(), anchor.z() + zdim - 1};
+    return { anchor.z(), anchor.z() + zdim - 1 };
   }
 
   using spatial_entity::spatial_entity;

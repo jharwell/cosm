@@ -60,7 +60,7 @@ class pheromone_density final : public rmath::expression<double>,
    */
   static constexpr const double kUNIT_QUANTITY = 1.0;
 
-  pheromone_density(void) : pheromone_density{-1.0} {}
+  pheromone_density(void) : pheromone_density{ -1.0 } {}
 
   explicit pheromone_density(double rho)
       : ER_CLIENT_INIT("cosm.repr.pheromone"), m_delta(0), m_rho(rho) {}

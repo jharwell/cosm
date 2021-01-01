@@ -27,8 +27,8 @@
 
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -48,7 +48,7 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
                [&](const auto& b) RCPPSW_PURE {
                  /* block not carried by robot */
                  return rtypes::constants::kNoUUID == b->md()->robot_id() &&
-                     /*
+                        /*
                       * Block not inside cache (to catch blocks that were on the
                       * host cell for the cache, and we incorporated into it
                       * during creation).

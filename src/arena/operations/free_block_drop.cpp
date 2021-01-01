@@ -26,12 +26,12 @@
 #include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
+#include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/arena/operations/cache_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
-#include "cosm/arena/operations/block_extent_set.hpp"
+#include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
@@ -43,9 +43,9 @@ using cds::arena_grid;
 /*******************************************************************************
  * Non-Member Functions
  ******************************************************************************/
-free_block_drop free_block_drop::for_block(
-    const rmath::vector2z& coord,
-    const rtypes::discretize_ratio& resolution) {
+free_block_drop
+free_block_drop::for_block(const rmath::vector2z& coord,
+                           const rtypes::discretize_ratio& resolution) {
   return free_block_drop({}, /* empty variant */
                          coord,
                          resolution,
@@ -88,8 +88,8 @@ void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
 void free_block_drop::visit(crepr::base_block3D& block) {
   block.md()->robot_id_reset();
 
-  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(),
-                                               mc_resolution.v()));
+  auto rloc =
+      rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
 
   block.ranchor3D(rloc);
   block.danchor3D(rmath::vector3z(cell2D_op::coord()));
@@ -97,7 +97,7 @@ void free_block_drop::visit(crepr::base_block3D& block) {
 
 void free_block_drop::visit(base_arena_map& map) {
   map.maybe_lock_wr(map.block_mtx(),
-                 !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
   /*
    * We might be modifying this cell--don't want block distribution in ANOTHER
@@ -139,24 +139,25 @@ void free_block_drop::visit(base_arena_map& map) {
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),
-                   !(mc_locking & arena_map_locking::ekGRID_HELD));
+                      !(mc_locking & arena_map_locking::ekGRID_HELD));
   map.maybe_unlock_wr(map.block_mtx(),
-                   !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                      !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 
 void free_block_drop::visit(caching_arena_map& map) {
   /* needed for atomic check for cache overlap+do drop operation */
   map.maybe_lock_wr(map.cache_mtx(),
-                 !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                    !(mc_locking & arena_map_locking::ekCACHES_HELD));
 
   map.maybe_lock_wr(map.block_mtx(),
-                 !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 
   /*
    * We might be modifying this cell--don't want block distribution in ANOTHER
    * thread to pick this cell for distribution.
    */
-  map.maybe_lock_wr(map.grid_mtx(), !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.maybe_lock_wr(map.grid_mtx(),
+                    !(mc_locking & arena_map_locking::ekGRID_HELD));
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
@@ -181,14 +182,14 @@ void free_block_drop::visit(caching_arena_map& map) {
                                 arena_map_locking::ekALL_HELD);
     op.visit(map);
     map.maybe_unlock_wr(map.cache_mtx(),
-                     !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
     map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
     map.maybe_unlock_wr(map.cache_mtx(),
-                     !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else {
     map.maybe_unlock_wr(map.cache_mtx(),
-                     !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
      * on it and change the cell state.
@@ -207,9 +208,9 @@ void free_block_drop::visit(caching_arena_map& map) {
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),
-                   !(mc_locking & arena_map_locking::ekGRID_HELD));
+                      !(mc_locking & arena_map_locking::ekGRID_HELD));
   map.maybe_unlock_wr(map.block_mtx(),
-                   !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                      !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

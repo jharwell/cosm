@@ -122,14 +122,13 @@ void bi_tab::partition_prob_update(rmath::rng* rng) {
                        rng);
 
     } else {
-      ER_WARN(
-          "Cannot update partition prob for TAB rooted at '%s': >= 1 task has "
-          "no last interface",
-          m_root->name().c_str());
+      ER_WARN("Cannot update partition prob for TAB rooted at '%s': >= 1 task "
+              "has "
+              "no last interface",
+              m_root->name().c_str());
     }
   } else {
-    ER_FATAL_SENTINEL("Bad partition input src '%s'",
-                      mc_partition_input.c_str());
+    ER_FATAL_SENTINEL("Bad partition input src '%s'", mc_partition_input.c_str());
   }
 } /* partition_prob_update() */
 
@@ -184,10 +183,9 @@ std::pair<double, double> bi_tab::subtask_sw_calc(rmath::rng* rng) {
         task2 = &m_child2->task_interface_estimate(child1_id);
       } else {
         /* fall through */
-        ER_WARN(
-            "Cannot calc subtask sel prob for TAB rooted at '%s': >= 1 task "
-            "has no last interface: using random selection",
-            m_root->name().c_str());
+        ER_WARN("Cannot calc subtask sel prob for TAB rooted at '%s': >= 1 task "
+                "has no last interface: using random selection",
+                m_root->name().c_str());
       }
     }
   } else if (subtask_sel_probability::kMethodBrutschy2014 ==

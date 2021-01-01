@@ -1,5 +1,5 @@
 /**
- * \file block_transport_metrics_collector.cpp
+ * \file block_transportee_metrics_collector.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,9 +21,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/foraging/metrics/block_transport_metrics_collector.hpp"
+#include "cosm/foraging/metrics/block_transportee_metrics_collector.hpp"
 
-#include "cosm/foraging/metrics/block_transport_metrics.hpp"
+#include "cosm/foraging/metrics/block_transportee_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -33,7 +33,7 @@ NS_START(cosm, foraging, metrics);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-block_transport_metrics_collector::block_transport_metrics_collector(
+block_transportee_metrics_collector::block_transportee_metrics_collector(
     const std::string& ofname_stem,
     const rtypes::timestep& interval)
     : base_metrics_collector(ofname_stem,
@@ -43,10 +43,11 @@ block_transport_metrics_collector::block_transport_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> block_transport_metrics_collector::csv_header_cols(void) const {
+std::list<std::string>
+block_transportee_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "cum_transported",
     "cum_ramp_transported",
     "cum_cube_transported",
@@ -62,18 +63,19 @@ std::list<std::string> block_transport_metrics_collector::csv_header_cols(void) 
     "cum_avg_transport_time",
     "int_avg_initial_wait_time",
     "cum_avg_initial_wait_time"
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
 } /* csv_header_cols() */
 
-void block_transport_metrics_collector::reset(void) {
+void block_transportee_metrics_collector::reset(void) {
   base_metrics_collector::reset();
   reset_after_interval();
 } /* reset() */
 
-boost::optional<std::string> block_transport_metrics_collector::csv_line_build(void) {
+boost::optional<std::string>
+block_transportee_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
@@ -101,8 +103,8 @@ boost::optional<std::string> block_transport_metrics_collector::csv_line_build(v
    * wait time is infinite.
    */
   if (m_interval.initial_wait_time > 0) {
-    line += csv_entry_domavg(m_interval.initial_wait_time,
-                             m_interval.transported);
+    line +=
+        csv_entry_domavg(m_interval.initial_wait_time, m_interval.transported);
   } else {
     line += "inf" + separator();
   }
@@ -117,12 +119,12 @@ boost::optional<std::string> block_transport_metrics_collector::csv_line_build(v
     line += "inf";
   }
 
-
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-void block_transport_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
-  auto& m = static_cast<const block_transport_metrics&>(metrics);
+void block_transportee_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
+  auto& m = static_cast<const block_transportee_metrics&>(metrics);
   ++m_interval.transported;
   m_interval.cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());
@@ -145,7 +147,7 @@ void block_transport_metrics_collector::collect(const rmetrics::base_metrics& me
   m_cum.initial_wait_time += m.initial_wait_time().v();
 } /* collect() */
 
-void block_transport_metrics_collector::reset_after_interval(void) {
+void block_transportee_metrics_collector::reset_after_interval(void) {
   m_interval.transported = 0;
   m_interval.cube_transported = 0;
   m_interval.ramp_transported = 0;

@@ -272,7 +272,7 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
    */
   RCPPSW_HFSM_EXIT_DECLARE(acquire_goal_fsm, exit_fsm_acquire_goal);
 
-  /**p
+  /**
    * \brief Defines the state map for the FSM.
    *
    * Note that the order of the states in the map MUST match the order of the
@@ -287,7 +287,7 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   /* clang-format off */
   rtypes::type_uuid              m_acq_id{rtypes::constants::kNoUUID};
   bool                           m_first_acq_step{false};
-  struct hook_list               m_hooks;
+  hook_list                      m_hooks;
   vector_fsm                     m_vector_fsm;
   explore_for_goal_fsm           m_explore_fsm;
   /* clang-format on */

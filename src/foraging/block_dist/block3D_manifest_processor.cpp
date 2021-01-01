@@ -37,8 +37,7 @@ NS_START(cosm, foraging, block_dist);
 block3D_manifest_processor::block3D_manifest_processor(
     const config::block_manifest* const m,
     const rtypes::discretize_ratio& arena_res)
-    : mc_arena_res(arena_res),
-      mc_manifest(*m) {
+    : mc_arena_res(arena_res), mc_manifest(*m) {
   register_type<crepr::cube_block3D>("cube3D");
   register_type<crepr::ramp_block3D>("ramp3D");
 }
@@ -64,8 +63,7 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
     block->move_out_of_sight();
     v.push_back(std::move(block));
   } /* for(i..) */
-  for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp;
-       ++i) {
+  for (i = mc_manifest.n_cube; i < mc_manifest.n_cube + mc_manifest.n_ramp; ++i) {
     auto block = create("ramp3D",
                         rtypes::type_uuid(i),
                         rmath::vector3d(mc_manifest.unit_dim * 2,

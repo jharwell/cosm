@@ -43,11 +43,11 @@ population_dynamics_metrics_collector::population_dynamics_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(
-    void) const {
+std::list<std::string>
+population_dynamics_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "int_avg_total_population",
     "int_avg_active_population",
     "cum_avg_total_population",
@@ -80,7 +80,7 @@ std::list<std::string> population_dynamics_metrics_collector::csv_header_cols(
     "cum_avg_repair_rate",
     "cum_avg_repair_interval",
     "repair_mu",
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -91,8 +91,8 @@ void population_dynamics_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-boost::optional<std::string> population_dynamics_metrics_collector::csv_line_build(
-    void) {
+boost::optional<std::string>
+population_dynamics_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }

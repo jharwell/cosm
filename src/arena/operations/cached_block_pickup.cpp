@@ -24,14 +24,14 @@
 #include "cosm/arena/operations/cached_block_pickup.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/arena/operations/cache_extent_clear.hpp"
 #include "cosm/arena/operations/block_extent_set.hpp"
+#include "cosm/arena/operations/cache_extent_clear.hpp"
+#include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
-#include "cosm/arena/operations/free_block_drop.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -68,11 +68,13 @@ void cached_block_pickup::visit(cfsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void cached_block_pickup::visit(cds::cell2D& cell) {
-  ER_ASSERT(cell.state_has_cache(), "Cell@%s not in HAS_CACHE [state=%d]",
+  ER_ASSERT(cell.state_has_cache(),
+            "Cell@%s not in HAS_CACHE [state=%d]",
             rcppsw::to_string(cell.loc()).c_str(),
             cell.fsm().current_state());
   visit(cell.fsm());
-  ER_ASSERT(cell.state_has_cache(), "Cell@%s not in HAS_CACHE [state=%d]",
+  ER_ASSERT(cell.state_has_cache(),
+            "Cell@%s not in HAS_CACHE [state=%d]",
             rcppsw::to_string(cell.loc()).c_str(),
             cell.fsm().current_state());
 } /* visit() */
@@ -151,10 +153,11 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     clear_op2.visit(cell);
 
     /* "Drop" orphan block on the old cache host cell */
-    caops::free_block_drop_visitor drop_op(m_orphan_block,
-                                           coord(),
-                                           map.grid_resolution(),
-                                           arena_map_locking::ekCACHES_AND_GRID_HELD);
+    caops::free_block_drop_visitor drop_op(
+        m_orphan_block,
+        coord(),
+        map.grid_resolution(),
+        arena_map_locking::ekCACHES_AND_GRID_HELD);
     drop_op.visit(cell);
     drop_op.visit(*m_orphan_block);
 

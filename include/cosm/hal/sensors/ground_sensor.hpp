@@ -94,7 +94,7 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>> {
       : ER_CLIENT_INIT("cosm.hal.sensors.ground_sensor"),
         mc_config(*config),
         m_sensor(sensor) {}
-  ~ground_sensor_impl(void) override final = default;
+  ~ground_sensor_impl(void) override = default;
 
   const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
   ground_sensor_impl(const ground_sensor_impl&) = default;

@@ -48,7 +48,7 @@ class bi_tdgraph;
  * \ingroup ta
  *
  * \brief Allocates a task from a \ref bi_tdgraph using the STOCH-NBHD1 method
- * from Harwell2020.
+ * from Harwell2020a.
  */
 class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
  public:
@@ -59,8 +59,8 @@ class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
 
   /* Not copy constructable/assignable by default */
   stoch_nbhd1_allocator(const stoch_nbhd1_allocator&) = delete;
-  const stoch_nbhd1_allocator& operator=(const stoch_nbhd1_allocator& other) =
-      delete;
+  const stoch_nbhd1_allocator&
+  operator=(const stoch_nbhd1_allocator& other) = delete;
 
   polled_task* operator()(const polled_task* current_task) const;
 

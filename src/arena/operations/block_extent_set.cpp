@@ -24,9 +24,9 @@
 #include "cosm/arena/operations/block_extent_set.hpp"
 
 #include "cosm/ds/arena_grid.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,8 +37,7 @@ NS_START(cosm, arena, operations, detail);
  * Constructors/Destructor
  ******************************************************************************/
 block_extent_set::block_extent_set(crepr::base_block3D* block)
-    : ER_CLIENT_INIT("cosm.arena.operations.block_extent_set"),
-      m_block(block) {}
+    : ER_CLIENT_INIT("cosm.arena.operations.block_extent_set"), m_block(block) {}
 
 /*******************************************************************************
  * Member Functions
@@ -66,7 +65,7 @@ void block_extent_set::visit(cds::arena_grid& grid) {
         e.visit(grid);
       }
     } /* for(j..) */
-  }   /* for(i..) */
+  } /* for(i..) */
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

@@ -43,13 +43,10 @@ multi_cluster_distributor::multi_cluster_distributor(
     : ER_CLIENT_INIT("cosm.foraging.block_dist.multi_cluster"),
       base_distributor(arena_grid, rng) {
   for (size_t i = 0; i < grids.size(); ++i) {
-    m_dists.emplace_back(rtypes::type_uuid(i + id_start.v()),
-                         grids[i],
-                         arena_grid,
-                         capacity,
-                         rng);
+    m_dists.emplace_back(
+        rtypes::type_uuid(i + id_start.v()), grids[i], arena_grid, capacity, rng);
   } /* for(i..) */
-      }
+}
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
@@ -61,7 +58,6 @@ dist_status multi_cluster_distributor::distribute_block(
           m_dists.size(),
           capacity(),
           size());
-
 
   /* -1 because we are working with array indices */
   size_t start = rng()->uniform(0UL, m_dists.size() - 1);
@@ -85,8 +81,8 @@ dist_status multi_cluster_distributor::distribute_block(
              clust_id.v(),
              dist.capacity(),
              dist.size());
-    double fill = static_cast<double>(dist.size()) /
-                  static_cast<double>(dist.capacity());
+    double fill =
+        static_cast<double>(dist.size()) / static_cast<double>(dist.capacity());
     if (fill > 0.5) {
       dist.coord_search_policy(coord_search_policy::ekFREE_CELL);
     } else {
@@ -100,7 +96,8 @@ dist_status multi_cluster_distributor::distribute_block(
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-cfds::block3D_cluster_vector multi_cluster_distributor::block_clusters(void) const {
+cfds::block3D_cluster_vector
+multi_cluster_distributor::block_clusters(void) const {
   cfds::block3D_cluster_vector ret;
 
   for (auto& dist : m_dists) {

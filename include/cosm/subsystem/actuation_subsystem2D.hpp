@@ -74,7 +74,7 @@ class actuation_subsystem2D {
 
   template <typename TActuator>
   static actuator_map::value_type map_entry_create(const TActuator& actuator) {
-    return {typeid(TActuator), variant_type(actuator)};
+    return { typeid(TActuator), variant_type(actuator) };
   }
 
   /**

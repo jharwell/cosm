@@ -75,9 +75,7 @@ class grid_view_entity : public crepr::entity2D {
     return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
   }
 
-  const rtypes::discretize_ratio& resolution(void) const {
-    return mc_resolution;
-  }
+  const rtypes::discretize_ratio& resolution(void) const { return mc_resolution; }
 
   rmath::ranged xrspan(void) const override {
     return entity2D::xrspan(ranchor2D(), xrsize());

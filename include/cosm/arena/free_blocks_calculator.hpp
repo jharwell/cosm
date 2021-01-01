@@ -24,9 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "cosm/arena/ds/cache_vector.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/ds/block3D_vector.hpp"
-#include "cosm/arena/ds/cache_vector.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -60,10 +60,12 @@ class free_blocks_calculator {
   free_blocks_calculator(free_blocks_calculator&&) = delete;
   free_blocks_calculator& operator=(free_blocks_calculator&&) = delete;
 
-  cds::block3D_vectorno operator()(const cds::block3D_vectorno& c_all_blocks,
-                                   const cads::acache_vectorro& c_all_caches) const;
+  cds::block3D_vectorno
+  operator()(const cds::block3D_vectorno& c_all_blocks,
+             const cads::acache_vectorro& c_all_caches) const;
 
-  cds::block3D_vectorno operator()(const cds::block3D_vectorno& c_all_blocks) const {
+  cds::block3D_vectorno
+  operator()(const cds::block3D_vectorno& c_all_blocks) const {
     return operator()(c_all_blocks, {});
   }
 };

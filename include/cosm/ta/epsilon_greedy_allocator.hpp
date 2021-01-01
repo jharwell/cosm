@@ -71,8 +71,8 @@ class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
 
   /* Not copy constructable/assignable by default */
   epsilon_greedy_allocator(const epsilon_greedy_allocator&) = delete;
-  const epsilon_greedy_allocator& operator=(const epsilon_greedy_allocator&) =
-      delete;
+  const epsilon_greedy_allocator&
+  operator=(const epsilon_greedy_allocator&) = delete;
 
   /**
    * \brief Perform task allocation.

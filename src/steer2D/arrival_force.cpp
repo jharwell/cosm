@@ -67,7 +67,7 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
    */
   auto angle =
       (desired.angle() - entity.linear_velocity().angle()).signed_normalize();
-  return {desired.length(), angle};
+  return { desired.length(), angle };
 } /* operator()() */
 
 NS_END(steer2D, cosm);

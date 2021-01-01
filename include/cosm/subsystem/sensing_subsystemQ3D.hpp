@@ -84,7 +84,7 @@ class sensing_subsystemQ3D {
    */
   template <typename TSensor>
   static sensor_map::value_type map_entry_create(const TSensor& sensor) {
-    return {typeid(TSensor), variant_type(sensor)};
+    return { typeid(TSensor), variant_type(sensor) };
   }
 
   /**

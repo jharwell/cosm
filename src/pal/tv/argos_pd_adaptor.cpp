@@ -71,10 +71,9 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
   size_t total_pop = swarm_total_population();
 
   if (0 == total_pop) {
-    ER_WARN("Not killing robot: total_pop=%zu active_pop=%zu",
-            total_pop,
-            active_pop);
-    return {rtypes::constants::kNoUUID, total_pop, active_pop};
+    ER_WARN(
+        "Not killing robot: total_pop=%zu active_pop=%zu", total_pop, active_pop);
+    return { rtypes::constants::kNoUUID, total_pop, active_pop };
   }
   auto* controller = kill_victim_locate(total_pop);
 
@@ -82,7 +81,7 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
     ER_WARN("Unable to find kill victim: total_pop=%zu, active_pop=%zu",
             total_pop,
             active_pop);
-    return {rtypes::constants::kNoUUID, total_pop, active_pop};
+    return { rtypes::constants::kNoUUID, total_pop, active_pop };
   }
   rtypes::type_uuid id = controller->entity_id();
   ER_INFO("Found kill victim with ID=%d", id.v());
@@ -102,9 +101,9 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
   m_sm->RemoveEntity(name);
 
   /* killing a robot reduces both the active and total populations */
-  return {id,
-          m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-          m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
+  return { id,
+           m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+           m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size() };
 } /* robot_kill() */
 
 template <typename TController>
@@ -118,19 +117,19 @@ op_result argos_pd_adaptor<TController>::robot_add(int max_pop,
             kARGoSRobotNamePrefix,
             id.v(),
             max_pop);
-    return {rtypes::constants::kNoUUID, total_pop, active_pop};
+    return { rtypes::constants::kNoUUID, total_pop, active_pop };
   }
 
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
     if (robot_attempt_add(id)) {
       /* adding a new robot increases both the total and active populations */
-      return {id,
-              m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-              m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size()};
+      return { id,
+               m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+               m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size() };
     }
   } /* for(i..) */
   ER_FATAL_SENTINEL("Unable to add new robot to simulation");
-  return {rtypes::constants::kNoUUID, total_pop, active_pop};
+  return { rtypes::constants::kNoUUID, total_pop, active_pop };
 } /* robot_add() */
 
 template <typename TController>
@@ -142,7 +141,7 @@ op_result argos_pd_adaptor<TController>::robot_malfunction(void) {
     ER_WARN("Cannot force robot malfunction: total_pop=%zu, active_pop=%zu",
             total_pop,
             active_pop);
-    return {rtypes::constants::kNoUUID, total_pop, active_pop};
+    return { rtypes::constants::kNoUUID, total_pop, active_pop };
   }
 
   auto* controller = malfunction_victim_locate(total_pop);
@@ -151,7 +150,7 @@ op_result argos_pd_adaptor<TController>::robot_malfunction(void) {
     ER_WARN("Unable to find malfunction victim: total_pop=%zu, active_pop=%zu",
             total_pop,
             active_pop);
-    return {rtypes::constants::kNoUUID, total_pop, active_pop};
+    return { rtypes::constants::kNoUUID, total_pop, active_pop };
   }
   ER_INFO("Found malfunction victim with ID=%d,n_repairing=%zu",
           controller->entity_id().v(),
@@ -164,12 +163,12 @@ op_result argos_pd_adaptor<TController>::robot_malfunction(void) {
    * @todo: Once the ability to temporarily remove robots from ARGoS by removing
    * it from physics engines is added, do that here.
    */
-  return {controller->entity_id(), total_pop, active_pop - 1};
+  return { controller->entity_id(), total_pop, active_pop - 1 };
 } /* robot_malfunction() */
 
 template <typename TController>
-op_result argos_pd_adaptor<TController>::robot_repair(
-    const rtypes::type_uuid& id) {
+op_result
+argos_pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
   ER_INFO("Robot with ID=%d repaired, n_repairing=%zu",
           id.v(),
           repair_queue_status().size);
@@ -177,8 +176,8 @@ op_result argos_pd_adaptor<TController>::robot_repair(
   cpops::argos_robot_repair visitor;
   auto* entity =
       dynamic_cast<argos::CFootBotEntity*>(&m_sm->GetSpace().GetEntity(name));
-  auto* controller = static_cast<TController*>(
-      &entity->GetControllableEntity().GetController());
+  auto* controller =
+      static_cast<TController*>(&entity->GetControllableEntity().GetController());
   visitor.visit(*controller);
 
   size_t total_pop = swarm_total_population();
@@ -188,12 +187,12 @@ op_result argos_pd_adaptor<TController>::robot_repair(
    * @todo: Once the ability to restore temporarily removed robots from
    * simulation is added, do that here.
    */
-  return {controller->entity_id(), total_pop, active_pop + 1};
+  return { controller->entity_id(), total_pop, active_pop + 1 };
 } /* robot_repair() */
 
 template <typename TController>
-TController* argos_pd_adaptor<TController>::malfunction_victim_locate(
-    size_t total_pop) const {
+TController*
+argos_pd_adaptor<TController>::malfunction_victim_locate(size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
 
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
@@ -210,8 +209,8 @@ TController* argos_pd_adaptor<TController>::malfunction_victim_locate(
 } /* malfunction_victim_locate() */
 
 template <typename TController>
-TController* argos_pd_adaptor<TController>::kill_victim_locate(
-    size_t total_pop) const {
+TController*
+argos_pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
   argos::CFootBotEntity* entity;
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {

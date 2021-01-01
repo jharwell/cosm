@@ -7,7 +7,7 @@ endif()
 
 if("${COSM_BUILD_FOR}" MATCHES "MSI" )
   message(STATUS "Building for MSI")
-  set(COSM_PROJECT_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSICLUSTER})
+  set(COSM_PROJECT_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSIARCH})
   set(COSM_HAL_TARGET "argos-footbot")
 
 elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS")
@@ -70,7 +70,7 @@ configure_file(${${target}_INC_PATH}/${target}/config.hpp.in ${${target}_INC_PAT
 # RCPPSW
 add_subdirectory(ext/rcppsw)
 
-if (${COSM_WITH_VIS})
+if ("${COSM_WITH_VIS}")
   set(CMAKE_AUTOMOC ON)
   find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
   set(CMAKE_AUTOMOC OFF)
@@ -79,7 +79,7 @@ endif()
 ################################################################################
 # Sources                                                                      #
 ################################################################################
-if (NOT ${COSM_WITH_VIS})
+if (NOT "${COSM_WITH_VIS}")
     list(REMOVE_ITEM ${target}_SRC
       ${${target}_SRC_PATH}/vis/block_carry_visualizer.cpp
       ${${target}_SRC_PATH}/vis/polygon2D_visualizer.cpp

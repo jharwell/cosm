@@ -46,7 +46,7 @@ NS_START(cosm, repr);
  */
 class base_entity {
  public:
-  base_entity(void) : base_entity{rtypes::constants::kNoUUID} {}
+  base_entity(void) : base_entity{ rtypes::constants::kNoUUID } {}
   explicit base_entity(const rtypes::type_uuid& id) : m_id(id) {}
 
   base_entity(const base_entity&) = default;

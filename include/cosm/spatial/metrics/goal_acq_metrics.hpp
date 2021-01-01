@@ -75,7 +75,6 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
   goal_acq_metrics(void) = default;
   ~goal_acq_metrics(void) override = default;
 
-
   /**
    * \brief Return the type of acq that is currently being
    * performed.
@@ -93,7 +92,7 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
 
   /**
    * \brief Output only defined if \ref goal_type is not -1. If \c TRUE, then
-   * the robot is vectoring towards its goal (i.e. it knows where it is).
+   * the robot is vectoring towards its goal (i.e., it knows where it is).
    */
   virtual bool is_vectoring_to_goal(void) const = 0;
 

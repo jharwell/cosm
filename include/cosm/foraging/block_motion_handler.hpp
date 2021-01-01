@@ -92,9 +92,9 @@ class block_motion_handler : public rer::client<block_motion_handler>,
 
   void random_walk(carena::base_arena_map* map);
 
-  boost::optional<rmath::vector2z> free_adjacent_coord(
-      const crepr::base_block3D* block,
-      const carena::base_arena_map* map);
+  boost::optional<rmath::vector2z>
+  free_adjacent_coord(const crepr::base_block3D* block,
+                      const carena::base_arena_map* map);
 
   /* clang-format off */
   const config::block_motion_config mc_config;

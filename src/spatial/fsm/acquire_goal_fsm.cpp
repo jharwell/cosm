@@ -46,13 +46,14 @@ acquire_goal_fsm::acquire_goal_fsm(
       RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(fsm_acquire_goal, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(finished, hfsm::top_state()),
-      RCPPSW_HFSM_DEFINE_STATE_MAP(mc_state_map,
-                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&start),
-                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
-                                                        nullptr,
-                                                        nullptr,
-                                                        &exit_fsm_acquire_goal),
-                            RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
+      RCPPSW_HFSM_DEFINE_STATE_MAP(
+          mc_state_map,
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&start),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&fsm_acquire_goal,
+                                             nullptr,
+                                             nullptr,
+                                             &exit_fsm_acquire_goal),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_hooks(hooks),
       m_vector_fsm(saa, rng),
       m_explore_fsm(saa, std::move(behavior), rng, m_hooks.explore_term_cb) {
@@ -122,17 +123,17 @@ bool acquire_goal_fsm::goal_acquired(void) const {
 } /* cache_acquired() */
 
 acquire_goal_fsm::exp_status acquire_goal_fsm::is_exploring_for_goal(void) const {
-  return exp_status{current_state() == ekST_ACQUIRE_GOAL &&
-                        m_explore_fsm.task_running(),
-        !m_hooks.candidates_exist()};
+  return exp_status{ current_state() == ekST_ACQUIRE_GOAL &&
+                         m_explore_fsm.task_running(),
+                     !m_hooks.candidates_exist() };
 } /* is_exploring_for_goal() */
 
 bool acquire_goal_fsm::is_vectoring_to_goal(void) const {
   return current_state() == ekST_ACQUIRE_GOAL && m_vector_fsm.task_running();
 } /* is_vectoring_to_goal() */
 
-metrics::goal_acq_metrics::goal_type acquire_goal_fsm::acquisition_goal(
-    void) const {
+metrics::goal_acq_metrics::goal_type
+acquire_goal_fsm::acquisition_goal(void) const {
   if (ekST_ACQUIRE_GOAL == current_state()) {
     return m_hooks.acquisition_goal();
   }

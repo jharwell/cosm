@@ -55,11 +55,11 @@ class ramp_block3D final : public base_block3D {
   ramp_block3D(const rtypes::type_uuid& id,
                const rmath::vector3d& dim,
                const rtypes::discretize_ratio& arena_res)
-               : base_block3D(id,
-                              dim,
-                              arena_res,
-                              rutils::color::kBLACK,
-                              crepr::block_type::ekRAMP) {}
+      : base_block3D(id,
+                     dim,
+                     arena_res,
+                     rutils::color::kBLACK,
+                     crepr::block_type::ekRAMP) {}
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<ramp_block3D>(id(), rdim3D(), arena_res());

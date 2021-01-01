@@ -69,9 +69,8 @@ void base_executive::run(void) {
   }
 
   double prob = current_task()->abort_prob_calc();
-  ER_DEBUG("Task '%s' abort probability: %f",
-           current_task()->name().c_str(),
-           prob);
+  ER_DEBUG(
+      "Task '%s' abort probability: %f", current_task()->name().c_str(), prob);
   if (m_rng->bernoulli(prob)) {
     ER_INFO("Task '%s' aborted, prob=%f", current_task()->name().c_str(), prob);
     task_abort_handle(current_task());
@@ -148,9 +147,9 @@ void base_executive::task_ests_update(polled_task* const task) {
      * update the interface estimate.
      */
     if (-1 != task->task_last_active_interface()) {
-      task->interface_estimate_update(task->task_last_active_interface(),
-                                      task->interface_time(
-                                          task->task_last_active_interface()));
+      task->interface_estimate_update(
+          task->task_last_active_interface(),
+          task->interface_time(task->task_last_active_interface()));
     }
   }
 } /* task_ests_update() */

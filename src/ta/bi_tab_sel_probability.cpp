@@ -41,9 +41,8 @@ NS_START(cosm, ta);
 bi_tab_sel_probability::bi_tab_sel_probability(const std::string& method)
     : ER_CLIENT_INIT("cosm.ta.bi_tab_sel_prob"), mc_method(method) {
   if (kMethodHarwell2019 == method) {
-    sigmoid::init(kHARWELL2019_REACTIVITY,
-                  kHARWELL2019_OFFSET,
-                  kHARWELL2019_GAMMA);
+    sigmoid::init(
+        kHARWELL2019_REACTIVITY, kHARWELL2019_OFFSET, kHARWELL2019_GAMMA);
   } else if (kMethodRandom == method) {
   }
   ER_FATAL_SENTINEL("Bad method '%s' selected", method.c_str());

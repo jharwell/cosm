@@ -24,13 +24,13 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/types/type_uuid.hpp"
 #include "rcppsw/math/range.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/entity_dimensionality.hpp"
 #include "cosm/repr/base_entity.hpp"
+#include "cosm/repr/entity_dimensionality.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,16 +50,16 @@ NS_START(cosm, repr);
  */
 class spatial_entity : public base_entity {
  public:
-    /**
+  /**
    * \brief Calculate the span in X in real coordinates of an entity given the
    * position of its anchor (2D or 3D) and dimension in X.
    *
    * \return The span in X of the entity.
    */
-  template<typename TCoord>
+  template <typename TCoord>
   static rmath::ranged xrspan(const TCoord& anchor,
                               const rtypes::spatial_dist& xdim) {
-    return {anchor.x(), (anchor.x() + xdim).v()};
+    return { anchor.x(), (anchor.x() + xdim).v() };
   }
 
   /**
@@ -68,10 +68,10 @@ class spatial_entity : public base_entity {
    *
    * \return The span in Y of the entity.
    */
-  template<typename TCoord>
+  template <typename TCoord>
   static rmath::ranged yrspan(const TCoord& anchor,
                               const rtypes::spatial_dist& ydim) {
-    return {anchor.y(), (anchor.y() + ydim).v()};
+    return { anchor.y(), (anchor.y() + ydim).v() };
   }
 
   /**
@@ -83,10 +83,10 @@ class spatial_entity : public base_entity {
    *
    * \return The span in X of the entity (closed interval).
    */
-  template<typename TCoord>
+  template <typename TCoord>
   static rmath::rangez xdspan(const TCoord& anchor, size_t xdim) {
     /* rely on truncation of the 0.5 remainder to 0 */
-    return {anchor.x(), anchor.x() + xdim - 1};
+    return { anchor.x(), anchor.x() + xdim - 1 };
   }
 
   /**
@@ -98,13 +98,13 @@ class spatial_entity : public base_entity {
    *
    * \return The span in Y of the entity (closed interval).
    */
-  template<typename TCoord>
+  template <typename TCoord>
   static rmath::rangez ydspan(const TCoord& anchor, size_t ydim) {
     /* rely on truncation of the 0.5 remainder to 0 */
-    return {anchor.y(), anchor.y() + ydim - 1};
+    return { anchor.y(), anchor.y() + ydim - 1 };
   }
 
-  spatial_entity(void) : spatial_entity{rtypes::constants::kNoUUID} {}
+  spatial_entity(void) : spatial_entity{ rtypes::constants::kNoUUID } {}
   explicit spatial_entity(const rtypes::type_uuid& id) : base_entity(id) {}
 
   spatial_entity(const spatial_entity&) = default;

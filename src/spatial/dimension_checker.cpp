@@ -35,10 +35,11 @@ NS_START(cosm, spatial);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::vector2d dimension_checker::even_multiple(const rtypes::discretize_ratio& res,
-                                                 const rmath::vector2d& to_check) {
-  return {even_multiple(res, rtypes::spatial_dist(to_check.x())).v(),
-        even_multiple(res, rtypes::spatial_dist(to_check.y())).v()};
+rmath::vector2d
+dimension_checker::even_multiple(const rtypes::discretize_ratio& res,
+                                 const rmath::vector2d& to_check) {
+  return { even_multiple(res, rtypes::spatial_dist(to_check.x())).v(),
+           even_multiple(res, rtypes::spatial_dist(to_check.y())).v() };
 } /* even_multiple() */
 
 rmath::vector2d dimension_checker::odd_dsize(const rtypes::discretize_ratio& res,
@@ -54,9 +55,9 @@ rmath::vector2d dimension_checker::odd_dsize(const rtypes::discretize_ratio& res
   return checked;
 } /* even_multiple() */
 
-rtypes::spatial_dist dimension_checker::even_multiple(
-    const rtypes::discretize_ratio& res,
-    const rtypes::spatial_dist& to_check) {
+rtypes::spatial_dist
+dimension_checker::even_multiple(const rtypes::discretize_ratio& res,
+                                 const rtypes::spatial_dist& to_check) {
   double remainder = std::remainder(to_check.v(), res.v());
   rtypes::spatial_dist checked = to_check;
 
@@ -66,9 +67,9 @@ rtypes::spatial_dist dimension_checker::even_multiple(
   return checked;
 } /* even_multiple() */
 
-rtypes::spatial_dist dimension_checker::odd_dsize(
-    const rtypes::discretize_ratio& res,
-    const rtypes::spatial_dist& to_check) {
+rtypes::spatial_dist
+dimension_checker::odd_dsize(const rtypes::discretize_ratio& res,
+                             const rtypes::spatial_dist& to_check) {
   auto checked = to_check;
 
   auto rdims = rmath::vector2d(to_check.v(), to_check.v());
@@ -79,6 +80,5 @@ rtypes::spatial_dist dimension_checker::odd_dsize(
   }
   return checked;
 } /* odd_dsize() */
-
 
 NS_END(spatial, cosm);

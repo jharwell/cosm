@@ -77,15 +77,16 @@ RCPPSW_HFSM_STATE_DEFINE(util_hfsm, leaving_nest, rpfsm::event_data* data) {
   }
   m_saa->steer_force2D().accum(m_saa->steer_force2D().wander(m_rng));
 
-  auto* ground =
-      m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground = m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
   if (!ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     return util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* leaving_nest() */
 
-RCPPSW_HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data) {
+RCPPSW_HFSM_STATE_DEFINE(util_hfsm,
+                         transport_to_nest,
+                         nest_transport_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_TRANSPORT_TO_NEST cannot handle child events");
   if (current_state() != last_state()) {
@@ -93,8 +94,7 @@ RCPPSW_HFSM_STATE_DEFINE(util_hfsm, transport_to_nest, nest_transport_data* data
   }
   event_data_hold(true);
 
-  auto* ground =
-      m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground = m_saa->sensing()->template sensor<hal::sensors::ground_sensor>();
 
   if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     auto dist_to_light = (m_saa->sensing()->rpos2D() - data->nest_loc).length();

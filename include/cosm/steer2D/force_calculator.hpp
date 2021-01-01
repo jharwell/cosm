@@ -115,8 +115,8 @@ class force_calculator : public rer::client<force_calculator> {
    *
    * \param readings The current light sensor readings.
    */
-  rmath::vector2d phototaxis(
-      const phototaxis_force::light_sensor_readings& readings);
+  rmath::vector2d
+  phototaxis(const phototaxis_force::light_sensor_readings& readings);
 
   /**
    * \brief Calculate the \ref phototaxis_force for this timestep.
@@ -126,9 +126,9 @@ class force_calculator : public rer::client<force_calculator> {
    *              camera sensor readings are not this color, they are ignored in
    *              the force calculation.
    */
-  rmath::vector2d phototaxis(
-      const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color);
+  rmath::vector2d
+  phototaxis(const phototaxis_force::camera_sensor_readings& readings,
+             const rutils::color& color);
 
   /**
    * \brief Calculate the \ref path_following_force for this timestep.
@@ -148,8 +148,8 @@ class force_calculator : public rer::client<force_calculator> {
    *
    * \param readings The current light sensor readings.
    */
-  rmath::vector2d anti_phototaxis(
-      const phototaxis_force::light_sensor_readings& readings);
+  rmath::vector2d
+  anti_phototaxis(const phototaxis_force::light_sensor_readings& readings);
 
   /**
    * \brief Calculate the negative of the \ref phototaxis_force for this
@@ -160,9 +160,9 @@ class force_calculator : public rer::client<force_calculator> {
    *              camera sensor readings are not this color, they are ignored in
    *              the force calculation.
    */
-  rmath::vector2d anti_phototaxis(
-      const phototaxis_force::camera_sensor_readings& readings,
-      const rutils::color& color);
+  rmath::vector2d
+  anti_phototaxis(const phototaxis_force::camera_sensor_readings& readings,
+                  const rutils::color& color);
 
   void accum(const rmath::vector2d& force) { m_force_accum += force; }
 

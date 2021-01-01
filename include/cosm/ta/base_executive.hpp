@@ -204,9 +204,7 @@ class base_executive : public rer::client<base_executive> {
    */
   void task_times_update(polled_task* task);
 
-  void current_task(polled_task* current_task) {
-    m_current_task = current_task;
-  }
+  void current_task(polled_task* current_task) { m_current_task = current_task; }
 
   ds::ds_variant* ds(void) { return m_ds.get(); }
 

@@ -25,33 +25,35 @@
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/arena/ds/loctree.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, spatial);
 
-static conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
-                          const crepr::nest& nest,
-                          const rmath::vector2d& drop_loc);
-static conflict_checker::status cache_conflict(const crepr::base_block3D* const block,
-                           const carepr::arena_cache* const cache,
-                           const rmath::vector2d& drop_loc);
+static conflict_checker::status
+nest_conflict(const crepr::base_block3D* const block,
+              const crepr::nest& nest,
+              const rmath::vector2d& drop_loc);
+static conflict_checker::status
+cache_conflict(const crepr::base_block3D* const block,
+               const carepr::arena_cache* const cache,
+               const rmath::vector2d& drop_loc);
 
-static conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
-                                               const crepr::base_block3D* const block2,
-                                               const rmath::vector2d& drop_loc);
+static conflict_checker::status
+block_conflict(const crepr::base_block3D* const block1,
+               const crepr::base_block3D* const block2,
+               const rmath::vector2d& drop_loc);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-conflict_checker::status conflict_checker::placement2D(
-    const carena::base_arena_map* map,
-    const crepr::base_block3D* const block,
-    const rmath::vector2d& loc) {
-
+conflict_checker::status
+conflict_checker::placement2D(const carena::base_arena_map* map,
+                              const crepr::base_block3D* const block,
+                              const rmath::vector2d& loc) {
   /*
    * If the robot is really close to a wall, then dropping a block may make it
    * inaccessible to future robots trying to reach it, due to obstacle avoidance
@@ -66,7 +68,7 @@ conflict_checker::status conflict_checker::placement2D(
                        !map->distributable_cellsy().contains(drop_yspan);
 
   if (out_of_bounds) {
-    return {true, true};
+    return { true, true };
   }
 
   status conflict;
@@ -83,7 +85,7 @@ conflict_checker::status conflict_checker::placement2D(
   std::vector<rtypes::type_uuid> ids;
 
   ids = map->nloctree()->query(ll, ur);
-  for (auto&id : ids) {
+  for (auto& id : ids) {
     /*
      * Because we picked a larger than strictly required bounding box, we
      * actually need to check what we get in return for overlap.
@@ -93,7 +95,7 @@ conflict_checker::status conflict_checker::placement2D(
   } /* for(&nest..) */
 
   ids = map->bloctree()->query(ll, ur);
-  for (auto &id : ids) {
+  for (auto& id : ids) {
     /*
      * Because we picked a larger than strictly required bounding box, we
      * actually need to check what we get in return for overlap.
@@ -106,14 +108,12 @@ error:
   return conflict;
 } /* placement2D() */
 
-conflict_checker::status conflict_checker::placement2D(
-    const carena::caching_arena_map* map,
-    const crepr::base_block3D* const block,
-    const rmath::vector2d& loc) {
-
-  status conflict = placement2D(static_cast<const carena::base_arena_map*>(map),
-                                block,
-                                loc);
+conflict_checker::status
+conflict_checker::placement2D(const carena::caching_arena_map* map,
+                              const crepr::base_block3D* const block,
+                              const rmath::vector2d& loc) {
+  status conflict =
+      placement2D(static_cast<const carena::base_arena_map*>(map), block, loc);
   if (conflict.x && conflict.y) {
     return conflict;
   }
@@ -137,7 +137,7 @@ conflict_checker::status conflict_checker::placement2D(
   for (auto& id : ids) {
     auto it = std::find_if(map->caches().begin(),
                            map->caches().end(),
-                           [&](const auto*c) { return c->id() == id; });
+                           [&](const auto* c) { return c->id() == id; });
     /*
      * Because we picked a larger than strictly required bounding box, we
      * actually need to check what we get in return for overlap.
@@ -150,48 +150,50 @@ error:
   return conflict;
 } /* placement2D() */
 
-conflict_checker::status conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
-                          const rmath::vector2d& ent1_dims,
-                          const crepr::entity2D* const ent2) {
-  auto loc_xspan = crepr::entity2D::xrspan(ent1_anchor,
-                                           rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan = crepr::entity2D::yrspan(ent1_anchor,
-                                           rtypes::spatial_dist(ent1_dims.y()));
-  return {ent2->xrspan().overlaps_with(loc_xspan),
-        ent2->yrspan().overlaps_with(loc_yspan)};
+conflict_checker::status
+conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
+                              const rmath::vector2d& ent1_dims,
+                              const crepr::entity2D* const ent2) {
+  auto loc_xspan =
+      crepr::entity2D::xrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.x()));
+  auto loc_yspan =
+      crepr::entity2D::yrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.y()));
+  return { ent2->xrspan().overlaps_with(loc_xspan),
+           ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
 
-conflict_checker::status conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
-                                        const rmath::vector2d& ent1_dims,
-                                        const crepr::entity3D* const ent2) {
-  auto loc_xspan = crepr::entity3D::xrspan(ent1_anchor,
-                                           rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan = crepr::entity3D::yrspan(ent1_anchor,
-                                           rtypes::spatial_dist(ent1_dims.y()));
-  return {ent2->xrspan().overlaps_with(loc_xspan),
-        ent2->yrspan().overlaps_with(loc_yspan)};
+conflict_checker::status
+conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
+                              const rmath::vector2d& ent1_dims,
+                              const crepr::entity3D* const ent2) {
+  auto loc_xspan =
+      crepr::entity3D::xrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.x()));
+  auto loc_yspan =
+      crepr::entity3D::yrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.y()));
+  return { ent2->xrspan().overlaps_with(loc_xspan),
+           ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
 
 /*******************************************************************************
  * Free Functions
  ******************************************************************************/
 conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
-                   const crepr::nest& nest,
-                   const rmath::vector2d& drop_loc) {
+                                       const crepr::nest& nest,
+                                       const rmath::vector2d& drop_loc) {
   auto drop_xspan = crepr::entity3D::xrspan(drop_loc, block->xrsize());
   auto drop_yspan = crepr::entity3D::yrspan(drop_loc, block->yrsize());
 
-  return {nest.xrspan().overlaps_with(drop_xspan),
-        nest.yrspan().overlaps_with(drop_yspan)};
+  return { nest.xrspan().overlaps_with(drop_xspan),
+           nest.yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_nest() */
 
 conflict_checker::status cache_conflict(const crepr::base_block3D* const block,
-                    const carepr::arena_cache* const cache,
-                    const rmath::vector2d& drop_loc) {
+                                        const carepr::arena_cache* const cache,
+                                        const rmath::vector2d& drop_loc) {
   auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block->xrsize());
   auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block->yrsize());
-  return {cache->xrspan().overlaps_with(drop_xspan),
-        cache->yrspan().overlaps_with(drop_yspan)};
+  return { cache->xrspan().overlaps_with(drop_xspan),
+           cache->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_cache() */
 
 conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
@@ -199,8 +201,8 @@ conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
                                         const rmath::vector2d& drop_loc) {
   auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block1->xrsize());
   auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block1->yrsize());
-  return {block2->xrspan().overlaps_with(drop_xspan),
-        block2->yrspan().overlaps_with(drop_yspan)};
+  return { block2->xrspan().overlaps_with(drop_xspan),
+           block2->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_block() */
 
 NS_END(spatial, cosm);

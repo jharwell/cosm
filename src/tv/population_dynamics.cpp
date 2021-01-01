@@ -52,49 +52,49 @@ population_dynamics::population_dynamics(
 /*******************************************************************************
  * Metrics
  ******************************************************************************/
-population_dynamics::queue_status population_dynamics::death_queue_status(
-    void) const {
+population_dynamics::queue_status
+population_dynamics::death_queue_status(void) const {
   auto ed = m_death.enqueue_data();
   auto dd = m_death.dequeue_data();
-  queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum};
-  queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum};
-  return queue_status{.size = m_death.size(),
-                      .lambda = m_death.lambda(),
-                      .mu = m_death.mu(),
-                      .enqueue = enqueue,
-                      .dequeue = dequeue};
+  queue_op_status enqueue = { .count = ed.count,
+                              .interval_accum = ed.interval_accum };
+  queue_op_status dequeue = { .count = dd.count,
+                              .interval_accum = dd.interval_accum };
+  return queue_status{ .size = m_death.size(),
+                       .lambda = m_death.lambda(),
+                       .mu = m_death.mu(),
+                       .enqueue = enqueue,
+                       .dequeue = dequeue };
 } /* death_queue_status() */
 
-population_dynamics::queue_status population_dynamics::birth_queue_status(
-    void) const {
+population_dynamics::queue_status
+population_dynamics::birth_queue_status(void) const {
   auto ed = m_birth.enqueue_data();
   auto dd = m_birth.dequeue_data();
-  queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum};
-  queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum};
-  return queue_status{.size = std::numeric_limits<size_t>::infinity(),
-                      .lambda = m_birth.lambda(),
-                      .mu = m_birth.mu(),
-                      .enqueue = enqueue,
-                      .dequeue = dequeue};
+  queue_op_status enqueue = { .count = ed.count,
+                              .interval_accum = ed.interval_accum };
+  queue_op_status dequeue = { .count = dd.count,
+                              .interval_accum = dd.interval_accum };
+  return queue_status{ .size = std::numeric_limits<size_t>::infinity(),
+                       .lambda = m_birth.lambda(),
+                       .mu = m_birth.mu(),
+                       .enqueue = enqueue,
+                       .dequeue = dequeue };
 } /* birth_queue_status() */
 
-population_dynamics::queue_status population_dynamics::repair_queue_status(
-    void) const {
+population_dynamics::queue_status
+population_dynamics::repair_queue_status(void) const {
   auto ed = m_repair.enqueue_data();
   auto dd = m_repair.dequeue_data();
-  queue_op_status enqueue = {.count = ed.count,
-                             .interval_accum = ed.interval_accum};
-  queue_op_status dequeue = {.count = dd.count,
-                             .interval_accum = dd.interval_accum};
-  return queue_status{.size = m_repair.size(),
-                      .lambda = m_repair.lambda(),
-                      .mu = m_repair.mu(),
-                      .enqueue = enqueue,
-                      .dequeue = dequeue};
+  queue_op_status enqueue = { .count = ed.count,
+                              .interval_accum = ed.interval_accum };
+  queue_op_status dequeue = { .count = dd.count,
+                              .interval_accum = dd.interval_accum };
+  return queue_status{ .size = m_repair.size(),
+                       .lambda = m_repair.lambda(),
+                       .mu = m_repair.mu(),
+                       .enqueue = enqueue,
+                       .dequeue = dequeue };
 } /* repair_queue_status() */
 
 /*******************************************************************************
@@ -197,11 +197,10 @@ void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
                 "Unexpected active population change: %zu != %zu",
                 res.active_pop,
                 m_active_pop + 1);
-      ER_ASSERT(
-          res.id == id,
-          "Repaired robot uuid (%d) != robot at front of repair queue (%d)",
-          res.id.v(),
-          id->v());
+      ER_ASSERT(res.id == id,
+                "Repaired robot uuid (%d) != robot at front of repair queue (%d)",
+                res.id.v(),
+                id->v());
       ER_INFO("Removed robot with ID=%d from repair queue", res.id.v());
       m_active_pop = res.active_pop;
     } else {

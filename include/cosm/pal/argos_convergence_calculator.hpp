@@ -64,8 +64,8 @@ class argos_convergence_calculator final
 
   /* Not copy constructible/assignable by default */
   argos_convergence_calculator(const argos_convergence_calculator&) = delete;
-  argos_convergence_calculator& operator=(const argos_convergence_calculator&) =
-      delete;
+  argos_convergence_calculator&
+  operator=(const argos_convergence_calculator&) = delete;
 
   RCPPSW_DECORATE_FUNC(update);
   RCPPSW_DECORATE_FUNC(converged);

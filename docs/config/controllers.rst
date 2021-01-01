@@ -397,7 +397,7 @@ Parameters for the UCB1 method described in :xref:`Auer2002`.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for the stochastic task allocation neighborhood  method described in
-:xref:`Harwell2020`.
+:xref:`Harwell2020a`.
 
 - Required by: Task based controllers if the selected policy is ``stoch_nbhd1``.
 - Required child attributes if present: all.
@@ -522,7 +522,7 @@ subtask selection if partitioning is employed.
 
 Parameters for Task Allocation Block (TAB) selection in recursive task
 decomposition graphs used in the STOCH-NBHD1 method described in
-:xref:`Harwell2020`.
+:xref:`Harwell2020a`.
 
 - Required child attributes if present: ``src_sigmoid_sel``.
 - Required child tags if present: none.
@@ -553,7 +553,7 @@ XML configuration:
 ``method`` tag that can be one of [ ``harwell2019`` ].
 
 ``sensing_subsystemQ3D``
------------------------
+------------------------
 
 - Required by: All controllers.
 - Required child attributes if present: none.
@@ -668,7 +668,7 @@ XML configuration:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for the virtual forces used to control robot movement, based on the
-original paper :xref:`Arkin1989` and the tutorial in :xref:`SteeringTutorial`.
+original paper :xref:`Arkin1987` and the tutorial in :xref:`SteeringTutorial`.
 
 - Required by: All controllers.
 - Required child attributes if present: none.

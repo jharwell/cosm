@@ -39,13 +39,12 @@ int base_cache::m_next_id = 0;
  * Constructors/Destructor
  ******************************************************************************/
 base_cache::base_cache(const params& p)
-    : unicell_immovable_entity2D(rtypes::constants::kNoUUID == p.id ?
-                                 rtypes::type_uuid(m_next_id++) :
-                                 p.id,
-                                 rmath::vector2d(p.dimension.v(),
-                                                 p.dimension.v()),
-                                 p.resolution,
-                                 p.center),
+    : unicell_immovable_entity2D(
+          rtypes::constants::kNoUUID == p.id ? rtypes::type_uuid(m_next_id++)
+                                             : p.id,
+          rmath::vector2d(p.dimension.v(), p.dimension.v()),
+          p.resolution,
+          p.center),
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
       mc_resolution(p.resolution) {
@@ -60,7 +59,7 @@ base_cache::base_cache(const params& p)
  * Member Functions
  ******************************************************************************/
 void base_cache::block_add(crepr::base_block3D* block) {
-  m_blocks.insert({block->id(), block});
+  m_blocks.insert({ block->id(), block });
 }
 
 void base_cache::block_remove(const crepr::base_block3D* const victim) {
@@ -69,11 +68,7 @@ void base_cache::block_remove(const crepr::base_block3D* const victim) {
 
 std::unique_ptr<base_cache> base_cache::clone(void) const {
   cds::block3D_vectorno blocks;
-  params p = {xrsize(),
-              mc_resolution,
-              rcenter2D(),
-              blocks,
-              id()};
+  params p = { xrsize(), mc_resolution, rcenter2D(), blocks, id() };
   std::transform(m_blocks.begin(),
                  m_blocks.end(),
                  std::back_inserter(p.blocks),
@@ -85,8 +80,7 @@ bool base_cache::contains_block(const crepr::base_block3D* const c_block) const 
   return m_blocks.end() != m_blocks.find(c_block->id());
 }
 crepr::base_block3D* base_cache::block_select(rmath::rng* rng) {
-  ER_ASSERT(m_blocks.size() > 0,
-            "Cannot select from empty block hashtable");
+  ER_ASSERT(m_blocks.size() > 0, "Cannot select from empty block hashtable");
   if (nullptr != rng) {
     size_t dist = rng->uniform(0UL, m_blocks.size() - 1);
     auto it = m_blocks.begin();

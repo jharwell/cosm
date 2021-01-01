@@ -71,8 +71,7 @@ class base_arena_block_pickup
       typename boost::mpl::at<TControllerSpecMap, TController>::type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
-  using interactor_status_type =
-      typename controller_spec::interactor_status_type;
+  using interactor_status_type = typename controller_spec::interactor_status_type;
   using robot_block_vanished_visitor_type =
       typename controller_spec::robot_block_vanished_visitor_type;
   using robot_block_pickup_visitor_type =
@@ -208,10 +207,8 @@ class base_arena_block_pickup
     auto* block = m_map->blocks()[penalty.id().v()];
 
     robot_block_pickup_visitor_type rpickup_op(block, controller.entity_id(), t);
-    auto apickup_op = caops::free_block_pickup_visitor::by_robot(block,
-                                                                 controller.entity_id(),
-                                                                 t,
-                                                                 arena::arena_map_locking::ekBLOCKS_HELD);
+    auto apickup_op = caops::free_block_pickup_visitor::by_robot(
+        block, controller.entity_id(), t, arena::arena_map_locking::ekBLOCKS_HELD);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);
@@ -232,9 +229,10 @@ class base_arena_block_pickup
   }
 
   bool pre_execute_check(const ctv::temporal_penalty& penalty) const {
-    auto it = std::find_if(m_map->blocks().begin(),
-                           m_map->blocks().end(),
-                           [&](const auto& b) { return b->id() == penalty.id(); });
+    auto it =
+        std::find_if(m_map->blocks().begin(),
+                     m_map->blocks().end(),
+                     [&](const auto& b) { return b->id() == penalty.id(); });
     ER_CHECK(it != m_map->blocks().end(),
              "Block%d from penalty does not exist?",
              penalty.id().v());
@@ -243,7 +241,7 @@ class base_arena_block_pickup
              (*it)->id().v());
     return true;
 
- error:
+  error:
     return false;
   }
 
@@ -266,16 +264,17 @@ class base_arena_block_pickup
              controller.block()->id().v());
     return true;
 
- error:
+  error:
     return false;
   }
 
   bool post_process_check(const TController& controller) const {
     ER_CHECK(!m_penalty_handler->is_serving_penalty(controller),
-             "Multiple instances of same controller serving block pickup penalty");
+             "Multiple instances of same controller serving block pickup "
+             "penalty");
     return true;
 
- error:
+  error:
     return false;
   }
 

@@ -96,9 +96,7 @@ class base_controller2D : public base_controller,
   class subsystem::saa_subsystemQ3D* saa(void) {
     return m_saa.get();
   }
-  const class subsystem::saa_subsystemQ3D* saa(void) const {
-    return m_saa.get();
-  }
+  const class subsystem::saa_subsystemQ3D* saa(void) const { return m_saa.get(); }
   void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
 
   rtypes::spatial_dist ts_distance_impl(void) const RCPPSW_PURE;

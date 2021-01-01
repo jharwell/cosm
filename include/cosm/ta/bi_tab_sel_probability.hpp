@@ -108,9 +108,8 @@ class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
    * \brief Calculate the sel probability based on the configured method,
    * using the most recent time estimates of tasks in each TAB.
    */
-  double operator()(const ds::bi_tab* tab1,
-                    const ds::bi_tab* tab2,
-                    rmath::rng* rng);
+  double
+  operator()(const ds::bi_tab* tab1, const ds::bi_tab* tab2, rmath::rng* rng);
 
  private:
   /**

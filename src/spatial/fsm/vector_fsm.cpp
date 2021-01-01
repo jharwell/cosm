@@ -47,16 +47,22 @@ vector_fsm::vector_fsm(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng)
       RCPPSW_HFSM_DEFINE_STATE_MAP(
           mc_state_map,
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&start, nullptr, nullptr, nullptr),
-          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&vector, nullptr, &entry_vector, nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&vector,
+                                             nullptr,
+                                             &entry_vector,
+                                             nullptr),
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&interference_avoidance,
-                                     nullptr,
-                                     &entry_interference_avoidance,
-                                     &exit_interference_avoidance),
+                                             nullptr,
+                                             &entry_interference_avoidance,
+                                             &exit_interference_avoidance),
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&interference_recovery,
-                                     nullptr,
-                                     &entry_interference_recovery,
-                                     nullptr),
-          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&arrived, nullptr, nullptr, nullptr)) {}
+                                             nullptr,
+                                             &entry_interference_recovery,
+                                             nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&arrived,
+                                             nullptr,
+                                             nullptr,
+                                             nullptr)) {}
 
 /*******************************************************************************
  * States
@@ -159,8 +165,8 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
 }
 
 RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE(vector_fsm,
-                             arrived,
-                             RCPPSW_UNUSED point_argument* data) {
+                                      arrived,
+                                      RCPPSW_UNUSED point_argument* data) {
   if (ekST_ARRIVED != last_state()) {
     ER_DEBUG("Executing ekST_ARRIVED: target=%s, tol=%f",
              data->point().to_str().c_str(),
@@ -217,11 +223,11 @@ rmath::vector3z vector_fsm::interference_loc3D(void) const {
  ******************************************************************************/
 void vector_fsm::task_start(ta::taskable_argument* c_arg) {
   static const uint8_t kTRANSITIONS[] = {
-      ekST_VECTOR,            /* start */
-      ekST_VECTOR,            /* vector */
-      util_signal::ekIGNORED, /* interference avoidance */
-      util_signal::ekIGNORED, /* interference recovery */
-      util_signal::ekIGNORED, /* arrived */
+    ekST_VECTOR, /* start */
+    ekST_VECTOR, /* vector */
+    util_signal::ekIGNORED, /* interference avoidance */
+    util_signal::ekIGNORED, /* interference recovery */
+    util_signal::ekIGNORED, /* arrived */
   };
   auto* const a = dynamic_cast<const point_argument*>(c_arg);
   m_goal = std::move(*a);

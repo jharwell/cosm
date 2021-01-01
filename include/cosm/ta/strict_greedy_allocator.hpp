@@ -56,8 +56,8 @@ class strict_greedy_allocator : public rer::client<strict_greedy_allocator> {
 
   /* Not copy constructable/assignable by default */
   strict_greedy_allocator(const strict_greedy_allocator&) = delete;
-  const strict_greedy_allocator& operator=(const strict_greedy_allocator&) =
-      delete;
+  const strict_greedy_allocator&
+  operator=(const strict_greedy_allocator&) = delete;
 
   /**
    * \brief Perform task allocation.

@@ -49,7 +49,7 @@ cds::block3D_vectorro block_cluster::blocks(void) const {
         ret.push_back(cell.block3D());
       }
     } /* for(j..) */
-  }   /* for(i..) */
+  } /* for(i..) */
   return ret;
 } /* blocks() */
 

@@ -19,6 +19,7 @@
 #
 import os
 import sys
+import subprocess
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('_ext'))
 
@@ -38,6 +39,7 @@ extensions = ['sphinx.ext.intersphinx',
               'sphinx.ext.mathjax',
               'sphinx.ext.ifconfig',
               'xref',
+              'breathe',
               'sphinx_rtd_theme']
 
 # Add any paths that contain templates here, relative to this directory.
@@ -84,45 +86,56 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-COSM_root = os.path.join(os.path.expanduser("~"), "git/cosm")
-breathe_projects = {"COSM": os.path.join(COSM_root, "build/xml")}
-breathe_default_project = "COSM"
-paths = []
-for root, subs, files in os.walk(os.path.join(COSM_root, "cosm/include/")):
-    for f in files:
-        paths.append(os.path.abspath(os.path.join(root, f)))
-breathe_projects_source = {"COSM": (os.path.join(COSM_root, "cosm/include/"), paths)}
 
-exhale_args = {
-    # These arguments are required
-    "containmentFolder":     "./api",
-    "rootFileName":          "library_root.rst",
-    "rootFileTitle":         "Library API",
-    "doxygenStripFromPath":  "..",
-    # Suggested optional arguments
-    "createTreeView":        True,
-    # TIP: if using the sphinx-bootstrap-theme, you need
-    # "treeViewIsBootstrap": True,
-    "exhaleExecutesDoxygen": True,
-    "exhaleDoxygenStdin":    "INPUT = ../include"
-}
+def get_subtree(ns: str):
+    paths = []
+    for root, subs, files in os.walk(os.path.join('../include/rcppsw', ns)):
+        for f in files:
+            paths.append(os.path.abspath(os.path.join(root, f)))
+    return paths
 
+
+project_keys = ['arena',
+                'controller',
+                'convergence',
+                'ds',
+                'foraging',
+                'fsm',
+                'hal',
+                'interactors',
+                'kin',
+                'kin2D',
+                'metrics',
+                'oracle',
+                'pal',
+                'repr',
+                'robots',
+                'subsystem',
+                'ta',
+                'tv',
+                'vis']
+
+breathe_projects = {'cosm': '../build/docs/cosm/xml'}
+breathe_projects_source = {'cosm': ('../include/cosm', get_subtree(''))}
+breathe_default_project = "cosm"
+breathe_default_members = ('members',)
+
+for k in project_keys:
+    breathe_projects.update({k: "../build/docs/cosm/xml"})
+    breathe_projects_source.update({k: ('../include/cosm/' + k, get_subtree(k))})
 
 xref_links = {
-    "Harwell2020": ("Dmystifying Emergent Intelligence and its Effect on Performance in Large Robot Swarms",
-                    "XXXX"),
-    "Auer2002": ("Finite-time Analysis of the Multi-armed Bandit Problem",
-                 "https://link.springer.com/content/pdf/10.1023/A:1013689704352.pdf"),
-    "Pini2011": ("Task Partitioning In Swarms Of Robots: An Adaptive Method For Strategy Selection",
-                 "http://iridia.ulb.ac.be/IridiaTrSeries/rev/IridiaTr2011-013r001.pdf"),
-    "Brutschy2014": ("Self-organized Task Allocation To Sequentially Interdependent Tasks In Swarm Robotics",
-                     "http://iridia.ulb.ac.be/IridiaTrSeries/rev/IridiaTr2012-008r001.pdf"),
-    "SteeringTutorial": ("Steering Tutorial",
-                         "https://gamedevelopment.tutsplus.com/tutorials/understanding-steering-behaviors-path-following--gamedev-8769"),
-    "Arkin1989": ("Motor Schema Based Navigation For, A Mobile Robot: An Approach to Programming by Behavior",
-                  "https://ieeexplore-ieee-org.ezp1.lib.umn.edu/stamp/stamp.jsp?tp=&arnumber=1088037")
+    "COSM": ("COSM", "https://swarm-robotics-cosm.readthedocs.io"),
+    "SILICON": ("SILICON", "https://swarm-robotics-silicon.readthedocs.io"),
+    "SIERRA": ("SIERRA", "https://swarm-robotics-sierra.readthedocs.io"),
+    "LIBRA": ("LIBRA", "https://swarm-robotics-libra.readthedocs.io"),
 
-
+    "Auer2002": ("Auer2002", "https://link.springer.com/article/10.1023/A:1013689704352"),
+    "Pini2011": ("Pini2011", "https://link.springer.com/article/10.1007/s11721-011-0060-1"),
+    "Brutschy2014": ("Brutschy2014", "https://link.springer.com/article/10.1007/s10458-012-9212-y"),
+    "Arkin1987": ("Arkin1987", "https://ieeexplore.ieee.org/document/1088037"),
+    "SteeringTutorial": ("Steering Tutorial", "https://gamedevelopment.tutsplus.com/tutorials/search/Steering+Behaviors"),
+    "Harwell2020a": ("Harwell2020a", "http://ifaamas.org/Proceedings/aamas2020/pdfs/p474.pdf")
 }
 
 # -- Options for HTML output ----------------------------------------------

@@ -25,24 +25,24 @@
  * Includes
  ******************************************************************************/
 #include <map>
+#include <memory>
 #include <shared_mutex>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
 #include "rcppsw/multithread/lockable.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/arena/arena_map_locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
+#include "cosm/arena/update_status.hpp"
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
-#include "cosm/repr/nest.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/arena/update_status.hpp"
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -97,24 +97,23 @@ class base_arena_map : public rer::client<base_arena_map>,
   base_arena_map& operator=(base_arena_map&&) = delete;
 
   template <size_t Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2z& d) {
+  typename cds::arena_grid::layer_value_type<Index>::value_type&
+  access(const rmath::vector2z& d) {
     return decoratee().template access<Index>(d);
   }
   template <size_t Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      const rmath::vector2z& d) const {
+  const typename cds::arena_grid::layer_value_type<Index>::value_type&
+  access(const rmath::vector2z& d) const {
     return decoratee().template access<Index>(d);
   }
   template <size_t Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type& access(size_t i,
-                                                                        size_t j) {
+  typename cds::arena_grid::layer_value_type<Index>::value_type&
+  access(size_t i, size_t j) {
     return decoratee().template access<Index>(i, j);
   }
   template <size_t Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type& access(
-      size_t i,
-      size_t j) const {
+  const typename cds::arena_grid::layer_value_type<Index>::value_type&
+  access(size_t i, size_t j) const {
     return decoratee().template access<Index>(i, j);
   }
 
@@ -122,7 +121,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   RCPPSW_DECORATE_FUNC(ydsize, const);
   RCPPSW_DECORATE_FUNC(xrsize, const);
   RCPPSW_DECORATE_FUNC(yrsize, const);
-
 
   rtypes::discretize_ratio grid_resolution(void) const {
     return decoratee().resolution();
@@ -143,16 +141,14 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \return The ID of the block that the robot is on, or -1 if the robot is not
    * actually on a block.
    */
-  virtual rtypes::type_uuid robot_on_block(
-      const rmath::vector2d& pos,
-      const rtypes::type_uuid& ent_id) const RCPPSW_PURE;
-
+  virtual rtypes::type_uuid
+  robot_on_block(const rmath::vector2d& pos,
+                 const rtypes::type_uuid& ent_id) const RCPPSW_PURE;
 
   /**
    * \brief Determine if a robot is currently within the boundaries of a nest.
    */
-  rtypes::type_uuid robot_in_nest(
-      const rmath::vector2d& pos) const RCPPSW_PURE;
+  rtypes::type_uuid robot_in_nest(const rmath::vector2d& pos) const RCPPSW_PURE;
   /**
    * \brief Determine if placing the specified block at the specified location
    * will cause a conflict with any entities in the arena.
@@ -226,7 +222,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
                                             const arena_map_locking& locking);
 
-
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
    * the manifest.
@@ -287,7 +282,7 @@ class base_arena_map : public rer::client<base_arena_map>,
  protected:
   struct block_dist_precalc_type {
     cds::const_spatial_entity_vector avoid_ents{};
-    crepr::base_block3D*             dist_ent{nullptr};
+    crepr::base_block3D* dist_ent{ nullptr };
   };
 
   /**
@@ -309,8 +304,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \param block The block to distribute. If NULL, then this is the initial
    *              block distribution.
    */
-  virtual block_dist_precalc_type block_dist_precalc(
-      const crepr::base_block3D* block);
+  virtual block_dist_precalc_type
+  block_dist_precalc(const crepr::base_block3D* block);
 
   virtual bool bloctree_verify(void) const;
 

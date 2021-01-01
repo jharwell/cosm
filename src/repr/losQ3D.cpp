@@ -48,13 +48,13 @@ const cds::cell3D& losQ3D::access(size_t i, size_t j) const {
 } /* access() */
 
 bool losQ3D::contains_abs(const rmath::vector3z& loc) const {
-    for (size_t i = 0; i < xsize(); ++i) {
-      for (size_t j = 0; j < ysize(); ++j) {
-        if (access(i, j).loc() == loc) {
-          return true;
-        }
-      } /* for(j..) */
-    }   /* for(i..) */
+  for (size_t i = 0; i < xsize(); ++i) {
+    for (size_t j = 0; j < ysize(); ++j) {
+      if (access(i, j).loc() == loc) {
+        return true;
+      }
+    } /* for(j..) */
+  } /* for(i..) */
   return false;
 } /* contains_abs() */
 

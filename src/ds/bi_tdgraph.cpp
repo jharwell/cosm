@@ -100,10 +100,10 @@ status_t bi_tdgraph::install_tab(polled_task* parent,
                                  rmath::rng* rng) {
   ER_ASSERT(2 == children.size(),
             "Bi tdgraph cannot handle non-binary bifurcations");
-  bi_tab::elements elts = {.graph = this,
-                           .root = parent,
-                           .child1 = children[0].get(),
-                           .child2 = children[1].get()};
+  bi_tab::elements elts = { .graph = this,
+                            .root = parent,
+                            .child1 = children[0].get(),
+                            .child2 = children[1].get() };
   m_tabs.emplace_back(&elts,
                       &mc_config.stoch_nbhd1.partitioning,
                       &mc_config.stoch_nbhd1.subtask_sel);

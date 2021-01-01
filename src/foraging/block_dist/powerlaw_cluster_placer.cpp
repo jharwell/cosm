@@ -38,11 +38,10 @@ using cosm::ds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-powerlaw_cluster_placer::powerlaw_cluster_placer(
-    cds::arena_grid* grid,
-    const rmath::vector3d& c_block_bb,
-    size_t n_attempts,
-    rmath::rng* rng)
+powerlaw_cluster_placer::powerlaw_cluster_placer(cds::arena_grid* grid,
+                                                 const rmath::vector3d& c_block_bb,
+                                                 size_t n_attempts,
+                                                 rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw_cluster_placer"),
       mc_n_attempts(n_attempts),
       mc_block_bb(c_block_bb),
@@ -52,10 +51,10 @@ powerlaw_cluster_placer::powerlaw_cluster_placer(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-powerlaw_cluster_placer::placement powerlaw_cluster_placer::
-placement_guess(const rtypes::type_uuid& c_id,
-                size_t size,
-                const rmath::vector3d& c_block_bb) {
+powerlaw_cluster_placer::placement
+powerlaw_cluster_placer::placement_guess(const rtypes::type_uuid& c_id,
+                                         size_t size,
+                                         const rmath::vector3d& c_block_bb) {
   /*
    * If there are blocks which are larger in X/Y than the arena resolution, we
    * need to account for that so that a cluster of size k will ALWAYS be able to
@@ -98,34 +97,35 @@ placement_guess(const rtypes::type_uuid& c_id,
            rcppsw::to_string(clust_xrange).c_str(),
            rcppsw::to_string(clust_yrange).c_str());
 
-  return {c_id, view, clust_xrange, clust_yrange, size};
+  return { c_id, view, clust_xrange, clust_yrange, size };
 } /* placement_guess() */
 
 bool powerlaw_cluster_placer::placement_check(
     const placement& c_guess,
     const placements& c_placed,
     const cds::const_spatial_entity_vector& c_entities) const {
-
   /* check for placed cluster overlap */
   for (const auto& placement_i : c_placed) {
-      if (placement_i.xrange.overlaps_with(c_guess.xrange) &&
-          placement_i.yrange.overlaps_with(c_guess.yrange)) {
-        ER_TRACE("Placed cluster%d [xrange=%s,yrange=%s] overlaps guessed cluster%d placement [xrange=%s,yrange=%s]",
-                 placement_i.id.v(),
-                 rcppsw::to_string(placement_i.xrange).c_str(),
-                 rcppsw::to_string(placement_i.yrange).c_str(),
-                 c_guess.id.v(),
-                 rcppsw::to_string(c_guess.xrange).c_str(),
-                 rcppsw::to_string(c_guess.yrange).c_str());
-        return false;
-      }
+    if (placement_i.xrange.overlaps_with(c_guess.xrange) &&
+        placement_i.yrange.overlaps_with(c_guess.yrange)) {
+      ER_TRACE("Placed cluster%d [xrange=%s,yrange=%s] overlaps guessed "
+               "cluster%d placement [xrange=%s,yrange=%s]",
+               placement_i.id.v(),
+               rcppsw::to_string(placement_i.xrange).c_str(),
+               rcppsw::to_string(placement_i.yrange).c_str(),
+               c_guess.id.v(),
+               rcppsw::to_string(c_guess.xrange).c_str(),
+               rcppsw::to_string(c_guess.yrange).c_str());
+      return false;
+    }
   } /* for(&placement_i..) */
 
   /* check for entity overlap */
   for (const auto* ent : c_entities) {
     if (ent->xdspan().overlaps_with(c_guess.xrange) &&
         ent->ydspan().overlaps_with(c_guess.yrange)) {
-      ER_TRACE("Entity%d [xrange=%s,yrange=%s] overlaps guessed cluster%d placement [xrange=%s,yrange=%s]",
+      ER_TRACE("Entity%d [xrange=%s,yrange=%s] overlaps guessed cluster%d "
+               "placement [xrange=%s,yrange=%s]",
                ent->id().v(),
                rcppsw::to_string(ent->xdspan()).c_str(),
                rcppsw::to_string(ent->ydspan()).c_str(),
@@ -150,9 +150,7 @@ powerlaw_cluster_placer::placements powerlaw_cluster_placer::operator()(
   placements placed;
   for (size_t j = 0; j < c_sizes.size(); ++j) {
     for (size_t i = 0; i < mc_n_attempts; ++i) {
-      auto guess = placement_guess(rtypes::type_uuid(j),
-                                   c_sizes[j],
-                                   mc_block_bb);
+      auto guess = placement_guess(rtypes::type_uuid(j), c_sizes[j], mc_block_bb);
       if (placement_check(guess, placed, c_entities)) {
         placed.push_back(guess);
         ER_DEBUG("Cluster%d capacity=%zu placed: xrange=%s,yrange=%s",

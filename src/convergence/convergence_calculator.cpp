@@ -62,7 +62,8 @@ class convergence_measure_updater : public boost::static_visitor<void> {
           headings_calc,
       const boost::optional<convergence_calculator::nn_calc_cb_type>& nn_calc,
       const boost::optional<convergence_calculator::pos_calc_cb_type>& pos_calc,
-      const boost::optional<convergence_calculator::tasks_calc_cb_type>& tasks_calc)
+      const boost::optional<convergence_calculator::tasks_calc_cb_type>&
+          tasks_calc)
       : m_n_threads(n),
         m_headings_calc(headings_calc),
         m_nn_calc(nn_calc),
@@ -165,7 +166,8 @@ void convergence_calculator::velocity_init(const pos_calc_cb_type& cb) {
 
 void convergence_calculator::update(void) {
   convergence_measure_updater u{
-      mc_config.n_threads, m_headings_calc, m_nn_calc, m_pos_calc, m_tasks_calc};
+    mc_config.n_threads, m_headings_calc, m_nn_calc, m_pos_calc, m_tasks_calc
+  };
   for (auto& m : m_measures) {
     boost::apply_visitor(u, m.second);
   } /* for(&m..) */
@@ -179,8 +181,8 @@ bool convergence_calculator::converged(void) const {
   return ret;
 } /* converged() */
 
-convergence_calculator::conv_status_t convergence_calculator::swarm_interactivity(
-    void) const {
+convergence_calculator::conv_status_t
+convergence_calculator::swarm_interactivity(void) const {
   if (!mc_config.interactivity.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
@@ -188,8 +190,8 @@ convergence_calculator::conv_status_t convergence_calculator::swarm_interactivit
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_interactivity() */
 
-convergence_calculator::conv_status_t convergence_calculator::swarm_angular_order(
-    void) const {
+convergence_calculator::conv_status_t
+convergence_calculator::swarm_angular_order(void) const {
   if (!mc_config.ang_order.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
@@ -197,8 +199,8 @@ convergence_calculator::conv_status_t convergence_calculator::swarm_angular_orde
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_angular_order() */
 
-convergence_calculator::conv_status_t convergence_calculator::
-    swarm_positional_entropy(void) const {
+convergence_calculator::conv_status_t
+convergence_calculator::swarm_positional_entropy(void) const {
   if (!mc_config.pos_entropy.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
@@ -207,8 +209,8 @@ convergence_calculator::conv_status_t convergence_calculator::
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_positional_entropy() */
 
-convergence_calculator::conv_status_t convergence_calculator::swarm_task_dist_entropy(
-    void) const {
+convergence_calculator::conv_status_t
+convergence_calculator::swarm_task_dist_entropy(void) const {
   if (!mc_config.task_dist_entropy.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
@@ -217,8 +219,8 @@ convergence_calculator::conv_status_t convergence_calculator::swarm_task_dist_en
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_task_dist_entropy() */
 
-convergence_calculator::conv_status_t convergence_calculator::swarm_velocity(
-    void) const {
+convergence_calculator::conv_status_t
+convergence_calculator::swarm_velocity(void) const {
   if (!mc_config.velocity.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }

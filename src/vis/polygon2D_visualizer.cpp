@@ -36,13 +36,13 @@ NS_START(cosm, vis);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void polygon2D_visualizer::relative_draw(const rmath::vector3d& pos,
-                                         const std::vector<rmath::vector2d>& points,
-                                         const rutils::color& color) {
+void polygon2D_visualizer::relative_draw(
+    const rmath::vector3d& pos,
+    const std::vector<rmath::vector2d>& points,
+    const rutils::color& color) {
   for (size_t i = 0; i < points.size(); ++i) {
-    auto start = argos::CVector3(points[i].x(),
-                                 points[i].y(),
-                                 pos.z() + kDRAW_OFFSET);
+    auto start =
+        argos::CVector3(points[i].x(), points[i].y(), pos.z() + kDRAW_OFFSET);
     /* modulo so that the last vertex can be connected to the first one */
     auto end = argos::CVector3(points[(i + 1) % points.size()].x(),
                                points[(i + 1) % points.size()].y(),
@@ -50,9 +50,7 @@ void polygon2D_visualizer::relative_draw(const rmath::vector3d& pos,
 
     /* draw segment line */
     m_qt->DrawRay(argos::CRay3(start, end),
-                  argos::CColor(color.red(),
-                                color.green(),
-                                color.blue()),
+                  argos::CColor(color.red(), color.green(), color.blue()),
                   5.0);
 
     /* draw segment endpoints */
@@ -62,7 +60,7 @@ void polygon2D_visualizer::relative_draw(const rmath::vector3d& pos,
 } /* relative_draw() */
 
 void polygon2D_visualizer::abs_draw(const rmath::vector3d& pos,
-                                  const argos::CQuaternion& orientation,
+                                    const argos::CQuaternion& orientation,
                                     const std::vector<rmath::vector2d>& points,
                                     const rutils::color& color) {
   glPushMatrix();
@@ -82,9 +80,8 @@ void polygon2D_visualizer::abs_draw(const rmath::vector3d& pos,
 
   /* Now draw the polygon in 2D */
   for (size_t i = 0; i < points.size(); ++i) {
-    auto start = argos::CVector3(points[i].x(),
-                                 points[i].y(),
-                                 pos.z() + kDRAW_OFFSET);
+    auto start =
+        argos::CVector3(points[i].x(), points[i].y(), pos.z() + kDRAW_OFFSET);
     /* modulo so that the last vertex can be connected to the first one */
     auto end = argos::CVector3(points[(i + 1) % points.size()].x(),
                                points[(i + 1) % points.size()].y(),
@@ -92,9 +89,7 @@ void polygon2D_visualizer::abs_draw(const rmath::vector3d& pos,
 
     /* draw segment line */
     m_qt->DrawRay(argos::CRay3(start, end),
-                  argos::CColor(color.red(),
-                                color.green(),
-                                color.blue()),
+                  argos::CColor(color.red(), color.green(), color.blue()),
                   5.0);
 
     /* draw segment endpoints */

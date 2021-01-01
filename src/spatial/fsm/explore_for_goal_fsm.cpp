@@ -48,7 +48,10 @@ explore_for_goal_fsm::explore_for_goal_fsm(
       RCPPSW_HFSM_DEFINE_STATE_MAP(
           mc_state_map,
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&start),
-          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&explore, nullptr, &entry_explore, nullptr),
+          RCPPSW_HFSM_STATE_MAP_ENTRY_EX_ALL(&explore,
+                                             nullptr,
+                                             &entry_explore,
+                                             nullptr),
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_explore_behavior(std::move(behavior)),
       m_goal_detect(goal_detect) {}

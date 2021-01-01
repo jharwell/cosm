@@ -39,13 +39,13 @@ avoidance_force::avoidance_force(const config::avoidance_force_config* config)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::vector2d avoidance_force::operator()(const boid&,
-                                            const rmath::vector2d& closest) const {
+rmath::vector2d
+avoidance_force::operator()(const boid&, const rmath::vector2d& closest) const {
   if (closest.length() > 0) {
     rmath::vector2d avoidance = -closest;
     return avoidance.normalize() * mc_max;
   } else {
-    return {0, 0}; /* no threatening obstacles = no avoidance */
+    return { 0, 0 }; /* no threatening obstacles = no avoidance */
   }
 } /* operator()() */
 

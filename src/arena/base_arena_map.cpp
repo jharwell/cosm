@@ -26,10 +26,12 @@
 
 #include <argos3/plugins/simulator/media/led_medium.h>
 
-#include "rcppsw/utils/maskable_enum.hpp"
 #include "rcppsw/ds/rtree2D.hpp"
+#include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/arena/config/arena_map_config.hpp"
+#include "cosm/arena/ds/loctree.hpp"
+#include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/ds/cell2D.hpp"
@@ -39,8 +41,6 @@
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/nest_extent.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/arena/free_blocks_calculator.hpp"
-#include "cosm/arena/ds/loctree.hpp"
 #include "cosm/spatial/dimension_checker.hpp"
 
 /*******************************************************************************
@@ -80,8 +80,8 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
      * resolution--many parts of the code rely on 2D spatial objects on the
      * arena floor being exact multiples of the grid size.
      */
-    auto nest_dims = cspatial::dimension_checker::even_multiple(grid_resolution(),
-                                                                nest.dims);
+    auto nest_dims =
+        cspatial::dimension_checker::even_multiple(grid_resolution(), nest.dims);
     crepr::nest inst(nest_dims,
                      nest.center,
                      config->grid.resolution,
@@ -115,12 +115,10 @@ base_arena_map::~base_arena_map(void) = default;
  ******************************************************************************/
 bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   /* compute block bounding box */
-  auto* block = *std::max_element(m_blocksno.begin(),
-                                  m_blocksno.end(),
-                                  [&](const auto* b1,
-                                      const auto* b2) {
-                                    return b1->rdim3D() < b2->rdim3D();
-                                  });
+  auto* block = *std::max_element(
+      m_blocksno.begin(), m_blocksno.end(), [&](const auto* b1, const auto* b2) {
+        return b1->rdim3D() < b2->rdim3D();
+      });
   m_block_bb = block->rdim3D();
 
   /* initialize nest lights */
@@ -128,7 +126,7 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
     for (auto& l : pair.second.lights()) {
       sm->AddEntity(*l);
     } /* for(&l..) */
-  }   /* for(&pair..) */
+  } /* for(&pair..) */
 
   auto precalc = block_dist_precalc(nullptr);
   bool ret = m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, m_rng);
@@ -147,14 +145,12 @@ update_status base_arena_map::pre_step_update(const rtypes::timestep&) {
 void base_arena_map::post_step_update(const rtypes::timestep& t,
                                       size_t blocks_transported,
                                       bool convergence_status) {
-  redist_governor()->update(t,
-                            blocks_transported,
-                            convergence_status);
+  redist_governor()->update(t, blocks_transported, convergence_status);
 } /* post_step_update() */
 
-rtypes::type_uuid base_arena_map::robot_on_block(
-    const rmath::vector2d& pos,
-    const rtypes::type_uuid& ent_id) const {
+rtypes::type_uuid
+base_arena_map::robot_on_block(const rmath::vector2d& pos,
+                               const rtypes::type_uuid& ent_id) const {
   /*
    * If the robot actually is on the block they think they are, we can short
    * circuit what may be an expensive linear search. ent_id MIGHT be for a
@@ -176,20 +172,20 @@ rtypes::type_uuid base_arena_map::robot_on_block(
   return rtypes::constants::kNoUUID;
 } /* robot_on_block() */
 
-rtypes::type_uuid base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
-  auto it = std::find_if(m_nests.begin(),
-                         m_nests.end(),
-                         [&](const auto& pair) {
-                           return pair.second.contains_point2D(pos);
-                         });
+rtypes::type_uuid
+base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
+  auto it = std::find_if(m_nests.begin(), m_nests.end(), [&](const auto& pair) {
+    return pair.second.contains_point2D(pos);
+  });
   if (m_nests.end() == it) {
     return rtypes::constants::kNoUUID;
   }
   return it->second.id();
 } /* robot_in_nest() */
 
-cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* block,
-                                                          const arena_map_locking& locking) {
+cfbd::dist_status
+base_arena_map::distribute_single_block(crepr::base_block3D* block,
+                                        const arena_map_locking& locking) {
   /* The distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
     return cfbd::dist_status::ekSUCCESS;
@@ -202,9 +198,8 @@ cfbd::dist_status base_arena_map::distribute_single_block(crepr::base_block3D* b
   auto precalc = block_dist_precalc(block);
 
   /* do the distribution */
-  auto status = m_block_dispatcher.distribute_block(precalc.
-                                                    dist_ent,
-                                                    precalc.avoid_ents);
+  auto status =
+      m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
   ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
             "Failed to distribute block%d",
             block->id().v());
@@ -229,11 +224,10 @@ bool base_arena_map::distribute_all_blocks(void) {
   std::copy_if(m_blocksno.begin(),
                m_blocksno.end(),
                std::back_inserter(dist_blocks),
-               [&](const auto* block) { return block->is_out_of_sight();
-               });
+               [&](const auto* block) { return block->is_out_of_sight(); });
 
-  auto status = m_block_dispatcher.distribute_blocks(dist_blocks,
-                                                     precalc.avoid_ents);
+  auto status =
+      m_block_dispatcher.distribute_blocks(dist_blocks, precalc.avoid_ents);
   ER_CHECK(cfbd::dist_status::ekSUCCESS == status,
            "Failed to distribute all blocks");
 
@@ -241,7 +235,7 @@ bool base_arena_map::distribute_all_blocks(void) {
    * Update block location query tree for all blocks. No locking is needed,
    * because this happens during initialization.
    */
-  for (auto *b : blocks()) {
+  for (auto* b : blocks()) {
     bloctree_update(b, arena_map_locking::ekALL_HELD);
   } /* for(*b..) */
 
@@ -260,7 +254,7 @@ bool base_arena_map::distribute_all_blocks(void) {
         op.visit(cell);
       }
     } /* for(j..) */
-  }   /* for(i..) */
+  } /* for(i..) */
   return true;
 
 error:
@@ -278,8 +272,8 @@ void base_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
   maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
 
-base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
-    const crepr::base_block3D* block) {
+base_arena_map::block_dist_precalc_type
+base_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
   /* Entities that need to be avoided during block distribution are:
    *
    * - All existing blocks
@@ -306,11 +300,11 @@ base_arena_map::block_dist_precalc_type base_arena_map::block_dist_precalc(
         ret.dist_ent = b.get();
       }
     } /* for(&b..) */
-    ER_ASSERT(
-        ret.dist_ent->id() == block->id(),
-        "ID of block to distribute != ID of block in block vector: %d != %d",
-        block->id().v(),
-        ret.dist_ent->id().v());
+    ER_ASSERT(ret.dist_ent->id() == block->id(),
+              "ID of block to distribute != ID of block in block vector: %d != "
+              "%d",
+              block->id().v(),
+              ret.dist_ent->id().v());
   }
 
   for (auto& pair : m_nests) {
@@ -366,7 +360,7 @@ void base_arena_map::bloctree_update(const crepr::base_block3D* block,
 } /* bloctree_update() */
 
 bool base_arena_map::bloctree_verify(void) const {
-  for (auto &pair : *m_bloctree) {
+  for (auto& pair : *m_bloctree) {
     auto* block = blocks()[pair.second.v()];
     ER_CHECK(!block->is_out_of_sight(),
              "Out of sight block%s in bloctree",
@@ -375,7 +369,7 @@ bool base_arena_map::bloctree_verify(void) const {
 
   return true;
 
- error:
+error:
   ER_FATAL_SENTINEL("Bloctree failed verification")
   return false;
 } /* bloctree_verify() */

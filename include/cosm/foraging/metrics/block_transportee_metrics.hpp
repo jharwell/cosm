@@ -1,5 +1,5 @@
 /**
- * \file block_transport_metrics.hpp
+ * \file block_transportee_metrics.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_
-#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_
+#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_HPP_
+#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
@@ -37,19 +37,20 @@ NS_START(cosm, foraging, metrics);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_transport_metrics
+ * \class block_transportee_metrics
  * \ingroup cosm foraging metrics
  *
- * \brief Defines the metrics to be collected from blocks about the process of
- * block_transportation from their original location in the arena after
- * distribution to their final destination (nest, structure, etc).
+ * \brief Defines the metrics to be collected from \ref base_block3D objects and
+ * their derived classes about the process of transportation from their original
+ * location in the arena after distribution to their final destination (nest,
+ * structure, etc).
  *
  * Metrics should be collected upon deposition at the block's final location,
  * rather than every timestep.
  */
-class block_transport_metrics : public rmetrics::base_metrics {
+class block_transportee_metrics : public rmetrics::base_metrics {
  public:
-  block_transport_metrics(void) = default;
+  block_transportee_metrics(void) = default;
 
   /**
    * \brief Return the total # of robots that have carried the block since it
@@ -78,4 +79,4 @@ class block_transport_metrics : public rmetrics::base_metrics {
 
 NS_END(metrics, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORT_METRICS_HPP_ */
+#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_HPP_ */

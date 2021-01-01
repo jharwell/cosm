@@ -78,9 +78,7 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
   bool state_in_block_extent(void) const {
     return current_state() == state::ekST_BLOCK_EXTENT;
   }
-  bool state_is_empty(void) const {
-    return current_state() == state::ekST_EMPTY;
-  }
+  bool state_is_empty(void) const { return current_state() == state::ekST_EMPTY; }
 
   /* events */
   void event_unknown(void);

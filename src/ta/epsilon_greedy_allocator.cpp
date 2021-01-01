@@ -35,9 +35,9 @@ NS_START(cosm, ta);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-polled_task* epsilon_greedy_allocator::operator()(
-    const std::vector<polled_task*>& tasks,
-    uint alloc_count) const {
+polled_task*
+epsilon_greedy_allocator::operator()(const std::vector<polled_task*>& tasks,
+                                     uint alloc_count) const {
   double epsilon = 0;
 
   if (kRegretBoundLinear == mc_config->regret_bound) {

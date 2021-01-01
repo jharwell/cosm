@@ -61,11 +61,11 @@ std::list<std::string> bi_tdgraph_metrics_collector::csv_header_cols(void) const
   std::list<std::string> cols = dflt_csv_header_cols();
 
   for (size_t i = 0; i < m_int_depth_counts.size(); ++i) {
-    cols.push_back("int_avg_depth" + rcppsw::to_string(i) + "_count");
+    cols.push_back("int_avg_d" + rcppsw::to_string(i) + "_count");
   } /* for(i..) */
 
   for (size_t i = 0; i < m_cum_depth_counts.size(); ++i) {
-    cols.push_back("cum_avg_depth" + rcppsw::to_string(i) + "_count");
+    cols.push_back("cum_avg_d" + rcppsw::to_string(i) + "_count");
   } /* for(i..) */
 
   for (size_t i = 0; i < m_int_task_counts.size(); ++i) {

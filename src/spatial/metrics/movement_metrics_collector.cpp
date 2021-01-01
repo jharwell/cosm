@@ -46,7 +46,7 @@ movement_metrics_collector::movement_metrics_collector(
 std::list<std::string> movement_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "int_avg_distance_homing",
     "cum_avg_distance_homing",
     "int_avg_velocity_homing",
@@ -59,7 +59,7 @@ std::list<std::string> movement_metrics_collector::csv_header_cols(void) const {
     "cum_avg_distance_all",
     "int_avg_velocity_all",
     "cum_avg_velocity_all"
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -76,24 +76,28 @@ boost::optional<std::string> movement_metrics_collector::csv_line_build(void) {
   }
   std::string line;
   /* homing motion */
-  line += csv_entry_domavg(m_interval[movement_category::ekHOMING].distance.load(),
-                           m_interval[movement_category::ekHOMING].n_robots);
+  line +=
+      csv_entry_domavg(m_interval[movement_category::ekHOMING].distance.load(),
+                       m_interval[movement_category::ekHOMING].n_robots);
   line += csv_entry_domavg(m_cum[movement_category::ekHOMING].distance.load(),
                            m_cum[movement_category::ekHOMING].n_robots);
 
-  line += csv_entry_domavg(m_interval[movement_category::ekHOMING].velocity.load(),
-                           m_interval[movement_category::ekHOMING].n_robots);
+  line +=
+      csv_entry_domavg(m_interval[movement_category::ekHOMING].velocity.load(),
+                       m_interval[movement_category::ekHOMING].n_robots);
   line += csv_entry_domavg(m_cum[movement_category::ekHOMING].velocity.load(),
                            m_cum[movement_category::ekHOMING].n_robots);
 
   /* exploring motion */
-  line += csv_entry_domavg(m_interval[movement_category::ekEXPLORING].distance.load(),
-                           m_interval[movement_category::ekEXPLORING].n_robots);
+  line +=
+      csv_entry_domavg(m_interval[movement_category::ekEXPLORING].distance.load(),
+                       m_interval[movement_category::ekEXPLORING].n_robots);
   line += csv_entry_domavg(m_cum[movement_category::ekEXPLORING].distance.load(),
                            m_cum[movement_category::ekEXPLORING].n_robots);
 
-  line += csv_entry_domavg(m_interval[movement_category::ekEXPLORING].velocity.load(),
-                           m_interval[movement_category::ekEXPLORING].n_robots);
+  line +=
+      csv_entry_domavg(m_interval[movement_category::ekEXPLORING].velocity.load(),
+                       m_interval[movement_category::ekEXPLORING].n_robots);
   line += csv_entry_domavg(m_cum[movement_category::ekEXPLORING].velocity.load(),
                            m_cum[movement_category::ekEXPLORING].n_robots);
 
@@ -136,14 +140,10 @@ void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
     auto cum_vel = m_cum[i].velocity.load();
     auto int_vel = m_interval[i].velocity.load();
 
-    m_cum[i].distance.compare_exchange_strong(cum_dist,
-                                              cum_dist + ts_dist);
-    m_interval[i].distance.compare_exchange_strong(int_dist,
-                                                   int_dist + ts_dist);
-    m_cum[i].velocity.compare_exchange_strong(cum_vel,
-                                              cum_vel + ts_vel);
-    m_interval[i].velocity.compare_exchange_strong(int_vel,
-                                                   int_vel + ts_vel);
+    m_cum[i].distance.compare_exchange_strong(cum_dist, cum_dist + ts_dist);
+    m_interval[i].distance.compare_exchange_strong(int_dist, int_dist + ts_dist);
+    m_cum[i].velocity.compare_exchange_strong(cum_vel, cum_vel + ts_vel);
+    m_interval[i].velocity.compare_exchange_strong(int_vel, int_vel + ts_vel);
   } /* for(i..) */
 } /* collect() */
 

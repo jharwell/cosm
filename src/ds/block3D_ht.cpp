@@ -42,7 +42,8 @@ std::string do_to_str(const THt& table) {
                          table.end(),
                          std::string(),
                          [&](const std::string& a, const auto& pair) {
-                           return a + "b" + rcppsw::to_string(pair.second->id()) + ",";
+                           return a + "b" + rcppsw::to_string(pair.second->id()) +
+                                  ",";
                          });
 } /* do_to_str() */
 

@@ -43,16 +43,17 @@ distributor_metrics_collector::distributor_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> distributor_metrics_collector::csv_header_cols(void) const {
+std::list<std::string>
+distributor_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "n_configured_clusters",
     "n_mapped_clusters",
     "capacity",
     "int_avg_size",
     "cum_avg_size",
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -79,7 +80,8 @@ boost::optional<std::string> distributor_metrics_collector::csv_line_build(void)
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-void distributor_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+void distributor_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const distributor_metrics&>(metrics);
 
   m_interval.n_configured_clusters = m.n_configured_clusters();

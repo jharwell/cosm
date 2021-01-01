@@ -74,7 +74,7 @@ class manip_event_recorder : public ccmetrics::manipulation_metrics {
   template <typename T, size_t... Is>
   std::array<T, sizeof...(Is)> make_array(const T& value,
                                           std::index_sequence<Is...>) {
-    return {(static_cast<void>(Is), value)...};
+    return { (static_cast<void>(Is), value)... };
   }
 
   template <size_t N, typename T>

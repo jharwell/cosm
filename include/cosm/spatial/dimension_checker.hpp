@@ -25,8 +25,8 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
+#include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
 

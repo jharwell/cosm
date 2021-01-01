@@ -47,7 +47,8 @@ block_cluster_metrics_collector::block_cluster_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> block_cluster_metrics_collector::csv_header_cols(void) const {
+std::list<std::string>
+block_cluster_metrics_collector::csv_header_cols(void) const {
   auto cols = dflt_csv_header_cols();
 
   for (size_t i = 0; i < m_int_block_counts.size(); ++i) {
@@ -74,17 +75,18 @@ void block_cluster_metrics_collector::reset(void) {
   reset_after_interval();
 } /* reset() */
 
-boost::optional<std::string> block_cluster_metrics_collector::csv_line_build(void) {
+boost::optional<std::string>
+block_cluster_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
   std::string line;
 
-  for (auto &count : m_int_block_counts) {
+  for (auto& count : m_int_block_counts) {
     line += csv_entry_intavg(count);
   } /* for(&count..) */
 
-  for (auto &count : m_cum_block_counts) {
+  for (auto& count : m_cum_block_counts) {
     line += csv_entry_tsavg(count);
   } /* for(&count..) */
 
@@ -105,7 +107,8 @@ boost::optional<std::string> block_cluster_metrics_collector::csv_line_build(voi
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-void block_cluster_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+void block_cluster_metrics_collector::collect(
+    const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_cluster_metrics&>(metrics);
   m_int_block_counts[m.id().v()] += m.n_blocks();
   m_cum_block_counts[m.id().v()] += m.n_blocks();
@@ -116,17 +119,15 @@ void block_cluster_metrics_collector::collect(const rmetrics::base_metrics& metr
   auto ymax = m_extents[m.id().v()].ymax.load();
   auto area = m_extents[m.id().v()].area.load();
 
-  m_extents[m.id().v()].xmin.compare_exchange_strong(xmin,
-                                                     m.ranchor2D().x());
-  m_extents[m.id().v()].xmax.compare_exchange_strong(xmax,
-                                                     m.ranchor2D().x() + m.xrspan().span());
+  m_extents[m.id().v()].xmin.compare_exchange_strong(xmin, m.ranchor2D().x());
+  m_extents[m.id().v()].xmax.compare_exchange_strong(
+      xmax, m.ranchor2D().x() + m.xrspan().span());
 
-  m_extents[m.id().v()].ymin.compare_exchange_strong(ymin,
-                                                     m.ranchor2D().y());
-  m_extents[m.id().v()].ymax.compare_exchange_strong(ymax,
-                                                     m.ranchor2D().y() + m.yrspan().span());
-  m_extents[m.id().v()].area.compare_exchange_strong(area,
-                                                     m.xrspan().span() * m.yrspan().span());
+  m_extents[m.id().v()].ymin.compare_exchange_strong(ymin, m.ranchor2D().y());
+  m_extents[m.id().v()].ymax.compare_exchange_strong(
+      ymax, m.ranchor2D().y() + m.yrspan().span());
+  m_extents[m.id().v()].area.compare_exchange_strong(
+      area, m.xrspan().span() * m.yrspan().span());
 } /* collect() */
 
 void block_cluster_metrics_collector::reset_after_interval(void) {

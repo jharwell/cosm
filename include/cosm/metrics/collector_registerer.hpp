@@ -201,15 +201,15 @@ class collector_registerer_impl<std::tuple<Ts...>>
           ER_WARN("Collector with scoped_name='%s' already exists!",
                   std::get<2>(*it).c_str());
         } else {
-          ER_INFO(
-              "Metrics enabled: "
-              "xml_name='%s',scoped_name='%s',fpath_stem=%s,output_interval=%lu,"
-              "mode=%x",
-              std::get<1>(*it).c_str(),
-              std::get<2>(*it).c_str(),
-              init->fpath.c_str(),
-              init->output_interval.v(),
-              rcppsw::as_underlying(init->mode));
+          ER_INFO("Metrics enabled: "
+                  "xml_name='%s',scoped_name='%s',fpath_stem=%s,output_interval=%"
+                  "lu,"
+                  "mode=%x",
+                  std::get<1>(*it).c_str(),
+                  std::get<2>(*it).c_str(),
+                  init->fpath.c_str(),
+                  init->output_interval.v(),
+                  rcppsw::as_underlying(init->mode));
         }
       }
     } /* for(it..) */
@@ -230,9 +230,8 @@ class collector_registerer_impl<std::tuple<Ts...>>
                    const rtypes::timestep& interval,
                    rmetrics::output_mode mode) const {
     m_agg->collector_preregister(scoped_name, mode);
-    return m_agg->collector_register<typename TCollectorWrap::type>(scoped_name,
-                                                                    fpath,
-                                                                    interval);
+    return m_agg->collector_register<typename TCollectorWrap::type>(
+        scoped_name, fpath, interval);
   }
 
   template <typename TCollectorWrap,
@@ -280,9 +279,8 @@ class collector_registerer_impl<std::tuple<Ts...>>
                    const rtypes::timestep& interval,
                    rmetrics::output_mode mode) const {
     m_agg->collector_preregister(scoped_name, mode);
-    auto targs =
-        std::tuple_cat(std::make_tuple(scoped_name, fpath, interval, mode),
-                       mc_extra_args);
+    auto targs = std::tuple_cat(
+        std::make_tuple(scoped_name, fpath, interval, mode), mc_extra_args);
     auto lambda = [&](auto&&... args) {
       return m_agg->collector_register<typename TCollectorWrap::type,
                                        const rtypes::timestep&,
@@ -309,9 +307,9 @@ class collector_registerer_impl<std::tuple<Ts...>>
    * \return (output filepath stem, output interval, output mode) for the
    * collector or empty if the collector fails any pre-initialization checks.
    */
-  boost::optional<pre_init_ret_type> collector_pre_initialize(
-      const std::string& xml_name,
-      rmetrics::output_mode allowed) const {
+  boost::optional<pre_init_ret_type>
+  collector_pre_initialize(const std::string& xml_name,
+                           rmetrics::output_mode allowed) const {
     auto append_it = mc_config->append.enabled.find(xml_name);
     auto truncate_it = mc_config->truncate.enabled.find(xml_name);
     auto create_it = mc_config->create.enabled.find(xml_name);
@@ -319,27 +317,26 @@ class collector_registerer_impl<std::tuple<Ts...>>
         static_cast<uint>(append_it != mc_config->append.enabled.end()) +
         static_cast<uint>(truncate_it != mc_config->truncate.enabled.end()) +
         static_cast<uint>(create_it != mc_config->create.enabled.end());
-    ER_ASSERT(
-        sum <= 1,
-        "Collector '%s' present in more than 1 collector group in XML file",
-        xml_name.c_str());
+    ER_ASSERT(sum <= 1,
+              "Collector '%s' present in more than 1 collector group in XML file",
+              xml_name.c_str());
     if (append_it != mc_config->append.enabled.end()) {
       ER_ASSERT(allowed & rmetrics::output_mode::ekAPPEND,
                 "Output mode %d for collector '%s' does not contain ekAPPEND",
                 rcppsw::as_underlying(allowed),
                 xml_name.c_str());
-      auto ret = pre_init_ret_type{m_agg->metrics_path() / append_it->second,
-                                   mc_config->append.output_interval,
-                                   rmetrics::output_mode::ekAPPEND};
+      auto ret = pre_init_ret_type{ m_agg->metrics_path() / append_it->second,
+                                    mc_config->append.output_interval,
+                                    rmetrics::output_mode::ekAPPEND };
       return boost::make_optional(ret);
     } else if (truncate_it != mc_config->truncate.enabled.end()) {
       ER_ASSERT(allowed & rmetrics::output_mode::ekTRUNCATE,
                 "Output mode %d for collector '%s' does not contain ekTRUNCATE",
                 rcppsw::as_underlying(allowed),
                 xml_name.c_str());
-      auto ret = pre_init_ret_type{m_agg->metrics_path() / truncate_it->second,
-                                   mc_config->truncate.output_interval,
-                                   rmetrics::output_mode::ekTRUNCATE};
+      auto ret = pre_init_ret_type{ m_agg->metrics_path() / truncate_it->second,
+                                    mc_config->truncate.output_interval,
+                                    rmetrics::output_mode::ekTRUNCATE };
       return boost::make_optional(ret);
     } else if (create_it != mc_config->create.enabled.end()) {
       ER_ASSERT(allowed & rmetrics::output_mode::ekCREATE,
@@ -349,9 +346,9 @@ class collector_registerer_impl<std::tuple<Ts...>>
       /* Give them their own directory to output stuff into for cleanliness */
       auto dirpath = m_agg->metrics_path() / create_it->second;
       fs::create_directories(dirpath);
-      auto ret = pre_init_ret_type{dirpath / create_it->second,
-                                   mc_config->create.output_interval,
-                                   rmetrics::output_mode::ekCREATE};
+      auto ret = pre_init_ret_type{ dirpath / create_it->second,
+                                    mc_config->create.output_interval,
+                                    rmetrics::output_mode::ekCREATE };
       return boost::make_optional(ret);
     }
     return boost::optional<pre_init_ret_type>();
@@ -384,7 +381,8 @@ template <typename TExtraArgsTuple = std::tuple<>>
 class collector_registerer
     : public detail::collector_registerer_impl<TExtraArgsTuple> {
  public:
-  using detail::collector_registerer_impl<TExtraArgsTuple>::collector_registerer_impl;
+  using detail::collector_registerer_impl<
+      TExtraArgsTuple>::collector_registerer_impl;
   using detail::collector_registerer_impl<TExtraArgsTuple>::operator();
 };
 

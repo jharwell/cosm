@@ -24,11 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/kin2D/diff_drive.hpp"
-
 #include <vector>
 
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"
+#include "cosm/kin2D/diff_drive.hpp"
 
 /*******************************************************************************
  * Namespaces

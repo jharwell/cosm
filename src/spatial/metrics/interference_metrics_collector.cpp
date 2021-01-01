@@ -43,11 +43,11 @@ interference_metrics_collector::interference_metrics_collector(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> interference_metrics_collector::csv_header_cols(
-    void) const {
+std::list<std::string>
+interference_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
-      /* clang-format off */
+    /* clang-format off */
     "int_avg_exp_interference",
     "cum_avg_exp_interference",
     "int_avg_entered_interference",
@@ -58,7 +58,7 @@ std::list<std::string> interference_metrics_collector::csv_header_cols(
     "cum_avg_episodes",
     "int_avg_interference_duration",
     "cum_avg_interference_duration"
-      /* clang-format on */
+    /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
@@ -79,7 +79,8 @@ void interference_metrics_collector::collect(
       static_cast<size_t>(m.entered_interference());
   m_cum.n_entered_interference += static_cast<size_t>(m.entered_interference());
 
-  m_interval.n_exited_interference += static_cast<size_t>(m.exited_interference());
+  m_interval.n_exited_interference +=
+      static_cast<size_t>(m.exited_interference());
   m_cum.n_exited_interference += static_cast<size_t>(m.exited_interference());
 
   if (m.exited_interference()) {
@@ -91,7 +92,8 @@ void interference_metrics_collector::collect(
   }
 } /* collect() */
 
-boost::optional<std::string> interference_metrics_collector::csv_line_build(void) {
+boost::optional<std::string>
+interference_metrics_collector::csv_line_build(void) {
   if (!(timestep() % interval() == 0)) {
     return boost::none;
   }
@@ -108,9 +110,8 @@ boost::optional<std::string> interference_metrics_collector::csv_line_build(void
   line += csv_entry_tsavg(m_cum.n_episodes.load());
   line += csv_entry_domavg(m_interval.interference_duration.load(),
                            m_interval.n_episodes.load());
-  line += csv_entry_domavg(m_cum.interference_duration.load(),
-                           m_cum.n_episodes.load(),
-                          true);
+  line += csv_entry_domavg(
+      m_cum.interference_duration.load(), m_cum.n_episodes.load(), true);
   return boost::make_optional(line);
 } /* csv_line_build() */
 

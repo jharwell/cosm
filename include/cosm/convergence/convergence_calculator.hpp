@@ -59,9 +59,8 @@ NS_START(cosm, convergence);
  * convergence calculation is enabled, then you obviously need to pass a valid
  * callback to calculate the necessary input data).
  */
-class convergence_calculator final
-    : public metrics::convergence_metrics,
-      public rer::client<convergence_calculator> {
+class convergence_calculator final : public metrics::convergence_metrics,
+                                     public rer::client<convergence_calculator> {
  public:
   /**
    * \brief Callback function that returns a vector of robot headings (1 per

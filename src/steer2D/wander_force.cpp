@@ -55,7 +55,7 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
    */
   ++m_count;
   if (m_count % m_interval != 0) {
-    return {0, 0};
+    return { 0, 0 };
   }
 
   /* calculate circle center */

@@ -39,8 +39,7 @@ void nests_parser::parse(const ticpp::Element& node) {
 
   m_config = std::make_unique<config_type>();
 
-  for (node_it = nnode.FirstChildElement(); node_it != node_it.end();
-       ++node_it) {
+  for (node_it = nnode.FirstChildElement(); node_it != node_it.end(); ++node_it) {
     m_nest.parse(*node_it);
     m_config->nests.push_back(*m_nest.config_get<nest_parser::config_type>());
   } /* for(node_it..) */

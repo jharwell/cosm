@@ -32,7 +32,7 @@ NS_START(cosm, arena, repr);
  * Constructors/Destructor
  ******************************************************************************/
 light_type_index::light_type_index(void)
-    : m_index({{kNest, rutils::color::kYELLOW}, {kCache, rutils::color::kRED}}) {
-}
+    : m_index({ { kNest, rutils::color::kYELLOW },
+                { kCache, rutils::color::kRED } }) {}
 
 NS_END(repr, arena, cosm);
