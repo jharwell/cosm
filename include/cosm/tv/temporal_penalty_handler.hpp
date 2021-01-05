@@ -35,6 +35,7 @@
 #include "rcppsw/control/periodic_waveform.hpp"
 #include "rcppsw/control/waveform_generator.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/multithread/lockable.hpp"
 
 #include "cosm/tv/temporal_penalty.hpp"
 
@@ -57,7 +58,8 @@ NS_START(cosm, tv);
  * Does not do much more than provide the penalty list, and functions for
  * manipulating it to derived classes.
  */
-class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
+class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
+                                 public rmultithread::lockable {
  public:
   using const_iterator_type =
       typename std::list<temporal_penalty>::const_iterator;
@@ -106,9 +108,9 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
    *             to this class.
    */
   void penalty_remove(const temporal_penalty& victim, bool lock = true) {
-    maybe_lock(lock);
+    maybe_lock_wr(&m_list_mtx, lock);
     m_penalty_list.remove(victim);
-    maybe_unlock(lock);
+    maybe_unlock_wr(&m_list_mtx, lock);
   }
 
   /**
@@ -134,13 +136,13 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
    */
   const_iterator_type penalty_find(const controller::base_controller& controller,
                                    bool lock = true) const {
-    maybe_lock(lock);
+    maybe_lock_rd(&m_list_mtx, lock);
     auto it = std::find_if(m_penalty_list.begin(),
                            m_penalty_list.end(),
                            [&](const temporal_penalty& p) {
                              return p.controller() == &controller;
                            });
-    maybe_unlock(lock);
+    maybe_unlock_rd(&m_list_mtx, lock);
     return it;
   }
   /**
@@ -155,10 +157,10 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
   RCPPSW_PURE bool
   is_serving_penalty(const controller::base_controller& controller,
                      bool lock = true) const {
-    maybe_lock(lock);
+    maybe_lock_rd(&m_list_mtx, lock);
     auto it = penalty_find(controller, false);
     bool ret = m_penalty_list.end() != it;
-    maybe_unlock(lock);
+    maybe_unlock_rd(&m_list_mtx, lock);
     return ret;
   }
 
@@ -251,37 +253,11 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler> {
     return duration;
   }
 
-  /**
-   * \brief *Possibly* lock the penalty list mutex.
-   *
-   * Needed for switchable locking for functions that are called from other
-   * functions in this class, which generally do not need locking, and functions
-   * that are called externally, and do need locking.
-   */
-  void maybe_lock(bool lock) const {
-    if (lock) {
-      m_list_mtx.lock();
-    }
-  }
-
-  /**
-   * \brief *Possibly* unlock the penalty listf mutex.
-   *
-   * Needed for switchable locking for functions that are called from other
-   * functions in this class, which generally do not need locking, and functions
-   * that are called externally, and do need locking.
-   */
-  void maybe_unlock(bool lock) const {
-    if (lock) {
-      m_list_mtx.unlock();
-    }
-  }
-
   /* clang-format off */
   const std::string                   mc_name;
 
   std::list<temporal_penalty>         m_penalty_list{};
-  mutable std::mutex                  m_list_mtx{};
+  mutable std::shared_mutex           m_list_mtx{};
   std::unique_ptr<rct::base_waveform> m_waveform;
   /* clang-format on */
 };

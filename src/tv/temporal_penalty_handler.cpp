@@ -35,11 +35,13 @@ NS_START(cosm, tv);
  ******************************************************************************/
 void temporal_penalty_handler::penalty_abort(
     const controller::base_controller& controller) {
-  std::scoped_lock lock(m_list_mtx);
+  lock_wr(&m_list_mtx);
   auto it = penalty_find(controller, false);
   if (m_penalty_list.end() != it) {
     penalty_remove(*it, false);
   }
+  unlock_wr(&m_list_mtx);
+
   ER_INFO("Entity%d", controller.entity_id().v());
   ER_ASSERT(!is_serving_penalty(controller, false),
             "Robot still serving penalty after abort?!");

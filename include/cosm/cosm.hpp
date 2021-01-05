@@ -32,75 +32,35 @@
  * Namespaces/Decls
  ******************************************************************************/
 /**
- * \defgroup cosm cosm
- * \brief The root namespace for COSM.
-* @{
-*
-* It is better to define the namespace aliases exported by COSM here, rather
-* than having them be multiply defined in different downstream projects (DRY
-* FTW!).
-*
-* Convention: Namespace aliases from cosm all start with \c 'c', and the first
-* letter of all nested namespaces except the innermost one should be included
-* before the innermost. For example, cosm::fsm::metrics should have the \c 'c'
-* from \c 'cosm' and the \c 'f' from 'fsm' before the target namespace \c
-* 'metrics'.
-*
-* \defgroup tv tv
-* \brief Temporal variance applicators.
-*
-* \defgroup subsystem subsystem
-* \brief Robotic susbystems.
-*
-* \defgroup hal hal
-* \brief Hardware Abstraction Layer
-*
-* \defgroup kin2D kin2D
-* \brief 2D kinematics for wheeled robots.
-*
-* \defgroup steer2D steer2D
-* \brief Steering forces for 2D wheeled robots.
-*
-* \defgroup convergence convergence
-* \brief Swarm convergence measures and calculators.
-*
-* \defgroup metrics metrics
-* \brief Reusable metric interfaces and collectors for robotics.
-*
-* \defgroup repr repr
-* \brief Representation of STUFF that is not strictly a data structure,
-*        mathematical construct, etc., but that is used to model things in the
-*        real world.
-*
-* \defgroup controller controller
-* \brief Robot controllers.
-*
-* \defgroup robots robots
-* \brief Adaptor layer containing specializations/extensions of controllers,
-*        subsystems, etc., that are specific to a particular robot model.
-* @{
-*
-* \defgroup footbot footbot
-* \brief Adaptation layer to the ARGoS footbot robot.
-*
-* @}
-*
-* \defgroup fsm fsm
-* \brief Reusable FSMs not specific to any particular application within swarm
-*        robotics.
-* @{
-*
-* \defgroup metrics metrics
-* \brief General purpose metric interfaces and collectors for FSMs.
-*
-* \defgroup vis vis
-* \brief Qt visualization bindings.
-* @}
-*/
+ * It is better to define the namespace aliases exported by COSM here, rather
+ * than having them be multiply defined in different downstream projects (DRY
+ * FTW!).
+ *
+ * Convention: Namespace aliases from cosm all start with \c 'c', and the first
+ * letter of all nested namespaces except the innermost one should be included
+ * before the innermost. For example, cosm::fsm::metrics should have the \c 'c'
+ * from \c 'cosm' and the \c 'f' from 'fsm' before the target namespace \c
+ * 'metrics'.
+ */
+
+/**
+ * \namespace cosm
+ * \brief The root namespace of the cosm library.
+ */
 namespace cosm {
+
+/**
+ * \namespace tv
+ * \brief Temporal variance applicators.
+ */
 namespace tv {
 namespace metrics {}
 } /* namespace tv */
+
+/**
+ * \namespace subsystem
+ * \brief Robotic susbystems.
+ */
 
 namespace subsystem {
 namespace perception {
@@ -108,35 +68,87 @@ namespace config {}
 } /* namespace perception */
 } /* namespace subsystem */
 
+/**
+ * \namespace hal
+ * \brief Hardware Abstraction Layer
+ */
 namespace hal {}
+
+/**
+ * \namespace kin2D
+ * \brief 2D kinematics for wheeled robots.
+ */
 namespace kin2D {}
+
+/**
+ * \namespace steer2D
+ * \brief Steering forces for 2D wheeled robots.
+ */
 namespace steer2D {}
 
+/**
+ * \namespace convergence
+ * \brief Swarm convergence measures and calculators.
+ */
 namespace convergence {
 namespace config {}
 }
 
+/**
+ * \namespace metrics
+ * \brief Reusable metric interfaces and collectors for robotics.
+ */
 namespace metrics {
 namespace config {}
 } /* namespace metrics */
 
+/**
+ * \namespace repr
+ * \brief Representation of STUFF that is not strictly a data structure,
+ *        mathematical construct, etc., but that is used to model things in the
+ *        real world.
+ */
 namespace repr {
 namespace config {}
 namespace operations {}
 } /* namespace repr */
 
+/**
+ * \namespace controller
+ * \brief Robot controllers.
+ */
 namespace controller {
+
 namespace operations {}
 namespace metrics {}
 namespace config {}
 } /* namespace controller */
 
+/**
+ * \namespace robots
+ * \brief Adaptor layer containing specializations/extensions of controllers,
+ *        subsystems, etc., that are specific to a particular robot model.
+ */
 namespace robots {
+
+/**
+ * \namespace footbot
+ * \brief Adaptation layer to the ARGoS footbot robot.
+ */
 namespace footbot {}
 } /* namespace robots */
 
+/**
+ * \namespace fsm
+ * \brief Reusable FSMs not specific to any particular application within swarm
+ *        robotics.
+ */
 namespace fsm {}
 
+/**
+ * \namespace vis vis
+ * \brief Qt visualization bindings.
+ */
 namespace vis {
 namespace config {}
 } /* namespace vis */
