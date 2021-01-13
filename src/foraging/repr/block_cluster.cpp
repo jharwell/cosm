@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/foraging/repr/block_cluster.hpp"
 
+#include "cosm/repr/base_block3D.hpp"
+
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -31,26 +33,57 @@ NS_START(cosm, foraging, repr);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-cds::block3D_vectorro block_cluster::blocks(void) const {
-  cds::block3D_vectorro ret;
+void block_cluster::blocks_recalc(void) {
+  m_blocks.clear();
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
       auto& cell = block_cluster::cell(i, j);
       ER_ASSERT(!cell.state_has_cache(),
                 "Cell@%s in HAS_CACHE state",
-                cell.loc().to_str().c_str());
+                rcppsw::to_string(cell.loc()).c_str());
       ER_ASSERT(!cell.state_in_cache_extent(),
                 "Cell@%s in CACHE_EXTENT state",
-                cell.loc().to_str().c_str());
+                rcppsw::to_string(cell.loc()).c_str());
       if (cell.state_has_block()) {
         ER_ASSERT(nullptr != cell.block3D(),
                   "Cell@%s null block3D",
-                  cell.loc().to_str().c_str());
-        ret.push_back(cell.block3D());
+                  rcppsw::to_string(cell.loc()).c_str());
+        m_blocks.push_back(cell.block3D());
       }
     } /* for(j..) */
   } /* for(i..) */
-  return ret;
-} /* blocks() */
+} /* blocks_recalc() */
+
+void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
+  ER_ASSERT(contains_cell2D(dropped->danchor2D()),
+            "Block%s@%s not contained in cluster%s extent",
+            rcppsw::to_string(dropped->id()).c_str(),
+            rcppsw::to_string(dropped->danchor2D()).c_str(),
+            rcppsw::to_string(this->id()).c_str());
+
+  auto relative_to = dropped->danchor2D() - danchor2D();
+
+  auto& cell = block_cluster::cell(relative_to);
+  ER_ASSERT(cell.state_has_block(),
+            "Cell@%s not in HAS_BLOCK state",
+            rcppsw::to_string(dropped->danchor2D()).c_str());
+  ER_ASSERT(dropped->id() == cell.block3D()->id(),
+            "Cell@%s block%s != dropped block%s",
+            rcppsw::to_string(cell.loc()).c_str(),
+            rcppsw::to_string(cell.block3D()->id()).c_str(),
+            rcppsw::to_string(dropped->id()).c_str());
+  m_blocks.push_back(dropped);
+} /* update_after_drop() */
+
+void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
+  auto it = std::find_if(m_blocks.begin(),
+                         m_blocks.end(),
+                         [&](const auto* b) { return b->id() == pickup_id;});
+  ER_ASSERT(it != m_blocks.end(),
+            "Block%s not in cluster%s",
+            rcppsw::to_string(pickup_id).c_str(),
+            rcppsw::to_string(this->id()).c_str());
+  m_blocks.erase(std::remove(m_blocks.begin(), m_blocks.end(), *it));
+} /* update_after_pickup() */
 
 NS_END(repr, foraging, cosm);

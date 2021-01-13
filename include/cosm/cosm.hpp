@@ -45,23 +45,34 @@
 
 /**
  * \namespace cosm
+ *
  * \brief The root namespace of the cosm library.
  */
 namespace cosm {
 
 /**
  * \namespace tv
- * \brief Temporal variance applicators.
+ *
+ * \brief Container namespace for temporal variance machinery and
+ * configuration. Used to modify swarm behavior over time (e.g., forcing robots
+ * to slow down after N timesteps, simulating changing weather conditions).
  */
 namespace tv {
+
+/**
+ * \namespace metrics
+ *
+ * \brief Metrics for temporal variance machinery.
+ */
 namespace metrics {}
 } /* namespace tv */
 
 /**
  * \namespace subsystem
- * \brief Robotic susbystems.
+ *
+ * \brief Classes for robotic susbystems such as sensing, perception, and
+ * actuation, and their configuration. Not tied to a specific robot.
  */
-
 namespace subsystem {
 namespace perception {
 namespace config {}
@@ -70,25 +81,36 @@ namespace config {}
 
 /**
  * \namespace hal
- * \brief Hardware Abstraction Layer
+ *
+ * \brief Hardware Abstraction Layer. Compile time switching between different
+ * implementations of robot sensors and actuators to (1) eliminate run-time
+ * penalties when de-muxing, (2) present a uniform interface to higher level
+ * modules, such as \ref subystem classes, regardless of which robot platform
+ * COSM is targeting.
  */
 namespace hal {}
 
 /**
  * \namespace kin2D
- * \brief 2D kinematics for wheeled robots.
+ *
+ * \brief Differential drive classes for wheeled robots moving in 2D, and their
+ * configuration.
  */
 namespace kin2D {}
 
 /**
  * \namespace steer2D
- * \brief Steering forces for 2D wheeled robots.
+ *
+ * \brief Steering forces for 2D wheeled robots, inspired from Arkin's original
+ * 1987 paper: arrival, avoidance, wander, etc., and their configuration.
  */
 namespace steer2D {}
 
 /**
  * \namespace convergence
- * \brief Swarm convergence measures and calculators.
+ *
+ * \brief Swarm convergence measures and calculators: entropy, angular order,
+ * velocity congruence, interactivity, etc., and their configuration.
  */
 namespace convergence {
 namespace config {}
@@ -96,7 +118,9 @@ namespace config {}
 
 /**
  * \namespace metrics
- * \brief Reusable metric interfaces and collectors for robotics.
+ *
+ * \brief Reusable aggregators (groups of metric collectors) for the different
+ * types of metrics that can be collected from COSM and their configuration.
  */
 namespace metrics {
 namespace config {}
@@ -104,30 +128,48 @@ namespace config {}
 
 /**
  * \namespace repr
- * \brief Representation of STUFF that is not strictly a data structure,
- *        mathematical construct, etc., but that is used to model things in the
- *        real world.
+ *
+ * \brief Representation of STUFF within simulation, that is not strictly a data
+ *        structure, mathematical construct, etc., but that is used to model
+ *        things in the real world.
  */
 namespace repr {
+
+/**
+ * \namespace config
+ *
+ * \brief Configuration for some repsentation classes.
+ */
 namespace config {}
+
+/**
+ * \namespace operations
+ *
+ * \brief Common operations (action classes) on some representation types.
+ */
+
 namespace operations {}
 } /* namespace repr */
 
 /**
  * \namespace controller
- * \brief Robot controllers.
+ *
+ * \brief Base classes for robot controllers that actuate in 2D, and that sense
+ * in 2D or 3D, common operations on them (pickup a block, drop a block, etc.),
+ * and metric interfaces
  */
 namespace controller {
-
 namespace operations {}
 namespace metrics {}
-namespace config {}
 } /* namespace controller */
 
 /**
  * \namespace robots
+ *
  * \brief Adaptor layer containing specializations/extensions of controllers,
- *        subsystems, etc., that are specific to a particular robot model.
+ *        subsystems, etc., that are specific to a particular robot model. That
+ *        is, each robot model COSM supports/has been tested with has a
+ *        directory/namespace inside here.
  */
 namespace robots {
 
@@ -153,38 +195,87 @@ namespace vis {
 namespace config {}
 } /* namespace vis */
 
+/**
+ * \namespace ds
+ *
+ * \brief Data structures used throughout COSM, and their associated
+ * configuration and some common operations.
+ */
 namespace ds {
 namespace config {}
 namespace operations {}
 } /* namespace ds */
 
+/**
+ * \namespace pal
+ *
+ * \brief Platform Abstraction Layer. Compile time switching between different
+ * swarm manager platforms (whatever is running above/in addition to robot
+ * controllers and collects metrics from them, processes, events, etc.). Also
+ * contains configuration, operations, and temporal variance adapter classes for
+ * each platform.
+ */
 namespace pal {
 namespace config {}
 namespace operations {}
 namespace tv {}
 } /* namespace pal */
 
+/**
+ * \namespace ta
+ *
+ * \brief Task allocation machinery for different task allocation strategies:
+ * greedy, stochastic choice, random, UCB, etc. Also contains a runtime task
+ * executive which can use any include strategy, necessary configuration, data
+ * structures, and some metrics which can be collected about task
+ * allocation/from tasks as they run.
+ */
 namespace ta {
 namespace metrics {}
 } /* namespace ta */
 
+
+/**
+ * \namespace spatial
+ *
+ * \brief Classes relating to spatial aspects of the arena in which swarms
+ * operate: FSMs for acquiring spatial goal locations, spatial conflict
+ * checkers, metrics, and different spatial exploration strategies.
+ */
 namespace spatial {
 namespace fsm {}
 namespace metrics {}
 namespace expstrat {}
 } /* namespace spatial */
 
+/**
+ * \namespace foraging
+ *
+ * \brief Reusable machinery for foraging applications.
+ *
+ * - Block distriibution
+ * - Representation of block clusters
+ * - Data structures
+ * - Oracles for object locations which can inject perfect knowledge of arena
+ *   state into robot controllers.
+ */
 namespace foraging {
 namespace config {}
 namespace block_dist {}
 namespace repr {}
 namespace ds {}
-namespace operations {}
-namespace utils {}
 namespace oracle {}
 namespace metrics {}
 } /* namespace foraging */
 
+/**
+ * \namespace arena
+ *
+ * \brief The arena map which swarm managers from the PAL use as a data store
+ * for simulation state. Contains arena internal data structures, operations on
+ * the arena (e.g., block pickup/drop), representation of arena internal objects
+ * such as caches, and metric interfaces.
+ */
 namespace arena {
 namespace operations {}
 namespace ds {}
@@ -194,14 +285,24 @@ namespace config {}
 
 } /* namespace arena */
 
+/**
+ * \namespace oracle
+ *
+ * \brief Oracles for injecting  perfect knowledge of simulation state into
+ *  robot controllers.
+ */
 namespace oracle {
 namespace config {}
 } /* namespace oracle */
 
+/**
+ * \namespace interactors
+ *
+ * \brief Base classes for some robot-arena interactions such as block pickup,
+ * block drop, task abort, etc.
+ */
 namespace interactors {}
 } /* namespace cosm */
-
-/** @} */
 
 namespace csubsystem = cosm::subsystem;
 namespace csperception = csubsystem::perception;
@@ -209,16 +310,13 @@ namespace cspconfig = csperception::config;
 
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
-namespace ccontconfig = ccontroller::config;
 namespace ccops = ccontroller::operations;
 namespace ccmetrics = ccontroller::metrics;
 
 namespace cforaging = cosm::foraging;
 namespace cfrepr = cforaging::repr;
 namespace cforacle = cforaging::oracle;
-namespace cfutils = cforaging::utils;
 namespace cfds = cforaging::ds;
-namespace cfops = cforaging::operations;
 namespace cfconfig = cforaging::config;
 namespace cfbd = cforaging::block_dist;
 namespace cfmetrics = cforaging::metrics;

@@ -89,7 +89,7 @@ class random_distributor : public rer::client<random_distributor>,
    dist_status distribute_block(crepr::base_block3D* block,
                                 cds::const_spatial_entity_vector& entities) override;
 
-  cfds::block3D_cluster_vector block_clusters(void) const override { return {}; }
+  cfds::block3D_cluster_vectorno block_clustersno(void) override { return {}; }
 
   void coord_search_policy(coord_search_policy policy) { m_search_policy = policy; }
 

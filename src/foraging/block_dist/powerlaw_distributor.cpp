@@ -123,16 +123,16 @@ void powerlaw_distributor::initialize(
   } /* for(i..) */
 } /* initialize() */
 
-ds::block3D_cluster_vector powerlaw_distributor::block_clusters(void) const {
-  ds::block3D_cluster_vector ret;
+ds::block3D_cluster_vectorno powerlaw_distributor::block_clustersno(void) {
+  ds::block3D_cluster_vectorno ret;
 
   for (auto& dist : m_dists) {
-    auto bclusts = dist->block_clusters();
+    auto bclusts = dist->block_clustersno();
     ret.insert(ret.end(), bclusts.begin(), bclusts.end());
   } /* for(i..) */
 
   return ret;
-} /* block_clusters() */
+} /* block_clustersno() */
 
 size_t powerlaw_distributor::capacity(void) const {
   return std::accumulate(

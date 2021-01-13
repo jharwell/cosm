@@ -70,7 +70,7 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   dist_status distribute_blocks(cds::block3D_vectorno& blocks,
                                 cds::const_spatial_entity_vector& entities,
                                 bool strict_success) override;
-  cfds::block3D_cluster_vector block_clusters(void) const override;
+  cfds::block3D_cluster_vectorno block_clustersno(void) override;
   rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }
   rmath::vector2z danchor2D(void) const { return m_clust.danchor2D(); }
   void coord_search_policy(const coord_search_policy& policy) {
@@ -79,8 +79,8 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
 
  private:
   /* clang-format off */
-  cfrepr::block_cluster        m_clust;
-  random_distributor           m_impl;
+  cfrepr::block_cluster m_clust;
+  random_distributor    m_impl;
   /* clang-format on */
 };
 

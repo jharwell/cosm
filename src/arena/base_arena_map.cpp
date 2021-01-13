@@ -42,6 +42,7 @@
 #include "cosm/repr/operations/nest_extent.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/spatial/dimension_checker.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -144,8 +145,13 @@ update_status base_arena_map::pre_step_update(const rtypes::timestep&) {
 
 void base_arena_map::post_step_update(const rtypes::timestep& t,
                                       size_t blocks_transported,
+                                      bool block_op,
                                       bool convergence_status) {
   redist_governor()->update(t, blocks_transported, convergence_status);
+
+  if (block_op) {
+    m_block_dispatcher.distributor()->clusters_update();
+  }
 } /* post_step_update() */
 
 rtypes::type_uuid

@@ -28,6 +28,8 @@
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
+#include "cosm/foraging/repr/block_cluster.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -75,7 +77,7 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
 
   grid.mtx()->lock();
 
-  /* mark host cell as empty (not done as part of clearing block extent)  */
+  /* mark host cell as empty (not done as part of clearing block extent) */
   hc.visit(grid);
 
   /* clear block extent */
@@ -84,17 +86,32 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
   grid.mtx()->unlock();
 
   if (rtypes::constants::kNoUUID != mc_robot_id) {
-    /* Update block state--already holding block mutex if it is needed*/
+    /* Update block state--already holding block mutex if it is needed */
     crops::block_pickup block_op(mc_robot_id, mc_timestep);
     block_op.visit(*m_block, crops::block_pickup_owner::ekARENA_MAP);
   }
 } /* visit() */
 
 void free_block_pickup::visit(base_arena_map& map) {
+    /* capture where the block used to be */
+  rmath::vector2z old = m_block->danchor2D();
+
+  /* update the arena grid */
   visit(map.decoratee());
 
-  /* Update block loctree */
+  /* update block loctree */
   map.bloctree_update(m_block, mc_locking);
+
+  /* update block clusters--the picked up block disappeared from one of them */
+  auto clusters = map.block_distributor()->block_clustersno();
+  for (auto *clust : clusters) {
+    if (clust->contains_cell2D(old)) {
+      clust->update_after_pickup(m_block->id());
+      return;
+    }
+  } /* for(*clust..) */
+  ER_FATAL_SENTINEL("Block%s not found in any block cluster?",
+                    rcppsw::to_string(m_block->id()).c_str());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

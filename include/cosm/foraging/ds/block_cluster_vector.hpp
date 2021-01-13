@@ -42,23 +42,45 @@ class block_cluster;
 
 NS_START(cosm, foraging, ds);
 
-using block3D_cluster_vector_type = const cfrepr::block_cluster*;
+using block3D_cluster_vectorro_type = const cfrepr::block_cluster*;
+using block3D_cluster_vectorno_type = cfrepr::block_cluster*;
 
 /*******************************************************************************
  * Type Definitions
  ******************************************************************************/
 /**
- * \class block3D_cluster_vector
+ * \class block3D_cluster_vectorro
  * \ingroup foraging ds
  *
- * \brief Specialization of \ref std::vector for block clusters.
+ * \brief Specialization of \ref std::vector for block clusters indicating the
+ * block clusters are NOT owned by this class and have read only access.
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_cluster_vector : public std::vector<block3D_cluster_vector_type> {
+class block3D_cluster_vectorro : public std::vector<block3D_cluster_vectorro_type> {
  public:
-  using std::vector<block3D_cluster_vector_type>::vector;
-  using value_type = std::vector<block3D_cluster_vector_type>::value_type;
+  using std::vector<block3D_cluster_vectorro_type>::vector;
+  using value_type = std::vector<block3D_cluster_vectorro_type>::value_type;
+
+  /**
+   * \brief Get a string representation of the vector contents.
+   */
+  std::string to_str(void) const;
+};
+
+/**
+ * \class block3D_cluster_vectorno
+ * \ingroup foraging ds
+ *
+ * \brief Specialization of \ref std::vector for block clusters indicating that
+ * the block clusters are NOT owned by this class.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
+ */
+class block3D_cluster_vectorno : public std::vector<block3D_cluster_vectorno_type> {
+ public:
+  using std::vector<block3D_cluster_vectorno_type>::vector;
+  using value_type = std::vector<block3D_cluster_vectorno_type>::value_type;
 
   /**
    * \brief Get a string representation of the vector contents.

@@ -58,7 +58,15 @@ dist_status cluster_distributor::distribute_block(
              m_clust.capacity());
     return dist_status::ekFAILURE;
   }
-  return m_impl.distribute_block(block, entities);
+  /* do distribution */
+  auto status = m_impl.distribute_block(block, entities);
+
+  if (dist_status::ekSUCCESS == status) {
+    /* update block cluster--the distributed block is now in it */
+    m_clust.update_after_drop(block);
+  }
+
+  return status;
 } /* distribute_block() */
 
 dist_status
@@ -72,11 +80,23 @@ cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
              m_clust.capacity());
     return dist_status::ekFAILURE;
   }
-  return m_impl.distribute_blocks(blocks, entities, strict_success);
+  auto status = m_impl.distribute_blocks(blocks, entities, strict_success);
+
+  /*
+   * If strict_success is TRUE, then if for some reason not all blocks can be
+   * distributed then status will be ekFAILURE, even though SOME blocks probably
+   * were successfully distributed, and we need to make sure we build the
+   * original block set correctly for our cluster.
+   */
+  if ((dist_status::ekSUCCESS == status) || strict_success) {
+    /* update block cluster */
+    m_clust.blocks_recalc();
+  }
+  return status;
 } /* distribute_blocks() */
 
-cfds::block3D_cluster_vector cluster_distributor::block_clusters(void) const {
-  return cfds::block3D_cluster_vector{ &m_clust };
+cfds::block3D_cluster_vectorno cluster_distributor::block_clustersno(void) {
+  return cfds::block3D_cluster_vectorno{ &m_clust };
 } /* block_clusters() */
 
 NS_END(block_dist, foraging, cosm);

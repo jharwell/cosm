@@ -116,7 +116,11 @@ class grid_view_entity : public crepr::entity2D {
    * \return A reference to the cell.
    */
   const ds::cell2D& cell(size_t i, size_t j) const { return m_view[i][j]; }
+  const ds::cell2D& cell(const rmath::vector2z c) const { return cell(c.x(), c.y()); }
 
+  bool contains_cell2D(const rmath::vector2z& cell) const {
+    return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
+  }
  protected:
   /**
    * \brief Return the size of the entity in discrete coordinates. Only suitable

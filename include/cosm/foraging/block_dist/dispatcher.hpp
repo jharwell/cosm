@@ -122,6 +122,7 @@ class dispatcher : public rer::client<dispatcher> {
   const base_distributor* distributor(void) const {
     return m_dist.get();
   }
+  base_distributor* distributor(void) { return m_dist.get(); }
 
   const rmath::rangez& distributable_cellsx(void) const { return mc_cells_xrange; }
   const rmath::rangez& distributable_cellsy(void) const { return mc_cells_yrange; }

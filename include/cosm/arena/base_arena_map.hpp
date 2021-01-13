@@ -70,7 +70,9 @@ NS_START(cosm, arena);
  * \class base_arena_map
  * \ingroup ds
  *
- * \brief Combines a 2D grid with sets of objects (blocks, caches, nests, etc.)
+ * \brief The core data structure for swarm-arena interactions.
+ *
+ * Combines a 2D grid with sets of objects (blocks, caches, nests, etc.)
  * that populate the grid and move around as the state of the arena
  * changes. The idea is that the arena map should be as simple as possible,
  * providing accessors and mutators, but not more complex logic, separating the
@@ -133,7 +135,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * While the robots also have their own means of checking if they are on a
    * block or not, there are some false positives, so this function is used as
-   * the final arbiter when deciding whether or not to trigger a given event.
+   * the final arbiter when deciding whether or not to trigger a block relted
+   * events.
    *
    * \param pos The position of a robot.
    * \param ent_id The ID of the block the robot THINKS it is on.
@@ -147,15 +150,19 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   /**
    * \brief Determine if a robot is currently within the boundaries of a nest.
+   *
+   * While robots also have their own means of checking if they are in the nest
+   * or not, there can be false positives, so this function is used as the final
+   * arbiter when deciding whether or not to trigger nest related events.
    */
   rtypes::type_uuid robot_in_nest(const rmath::vector2d& pos) const RCPPSW_PURE;
+
   /**
    * \brief Determine if placing the specified block at the specified location
    * will cause a conflict with any entities in the arena.
    *
    * Calls \ref spatial::conflict_checker internally to do the actual checking.
    */
-
   virtual bool placement_conflict(const crepr::base_block3D* const block,
                                   const rmath::vector2d& loc) const;
 
@@ -177,10 +184,22 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * Currently updates the following, in order:
    *
-   * - Block distribution status
+   * - Block distribution status via \ref cforaging::block_dist::redist_governor.
+   * - Block cluster membership re-calculated, if needed, according to \p
+   *   block_op.
+   *
+   * Does no locking, so only safe to call in non-concurrent contexts.
+   *
+   * \param t The current timestep.
+   * \param blocks_transported How many blocks have been cumuluatively
+   *                           transported/collected so far in simulation.
+   * \param block_op Has there been a block pickup/drop/etc. this timestep ?
+   * \param convergence_status Has the currently converged, according to
+   *                           configured convergence measures?
    */
   void post_step_update(const rtypes::timestep& t,
                         size_t blocks_transported,
+                        bool block_op,
                         bool convergence_status);
 
   /**
@@ -191,33 +210,28 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   /**
    * \brief Update the location index tree after the specified block has moved.
+   *
+   * \note This operation requires holding the block mutex in multithreaded
+   * contexts for writing, and takes it internally if not held.
    */
   void bloctree_update(const crepr::base_block3D* block,
                        const arena_map_locking& locking);
 
   /**
    * \brief Get the list of all the blocks currently present in the arena.
-   *
-   * Some blocks may not be visible on the base_arena_map, as they are being
-   * carried by robots.
    */
   cds::block3D_vectorno& blocks(void) { return m_blocksno; }
   const cds::block3D_vectorno& blocks(void) const { return m_blocksno; }
-
-  /**
-   * \brief Get the # of blocks available in the arena.
-   */
-  size_t n_blocks(void) const { return m_blockso.size(); }
 
   /**
    * \brief Distribute a particular block in the arena, according to whatever
    * policy was specified in the .argos file.
    *
    * \param block The block to distribute.
-   * \param locking Is locking needed?
+   * \param locking Currently held locks.
    *
-   * \note This operation requires holding the block and grid mutexes in
-   * multithreaded contexts.
+   * \note This operation requires holding the block and grid mutexes for
+   * writing, and takes them internally if they are not held.
    */
   cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
                                             const arena_map_locking& locking);
@@ -228,8 +242,14 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   const rmath::vector3d& block_bb(void) const { return m_block_bb; }
 
+  /**
+   * \brief Get the set of all nests in the arena.
+   */
   ds::nest_vectorro nests(void) const;
 
+  /**
+   * \brief Get a specific nest in the arena by UUID.
+   */
   RCPPSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
     auto it = m_nests.find(id);
     if (m_nests.end() != it) {
@@ -241,23 +261,9 @@ class base_arena_map : public rer::client<base_arena_map>,
   const cforaging::block_dist::base_distributor* block_distributor(void) const {
     return m_block_dispatcher.distributor();
   }
-
-  const cforaging::block_motion_handler* block_motion_handler(void) const {
-    return &m_bm_handler;
+  cforaging::block_dist::base_distributor* block_distributor(void) {
+    return m_block_dispatcher.distributor();
   }
-
-  const rmath::rangez& distributable_cellsx(void) const {
-    return m_block_dispatcher.distributable_cellsx();
-  }
-
-  const rmath::rangez& distributable_cellsy(void) const {
-    return m_block_dispatcher.distributable_cellsy();
-  }
-
-  cforaging::block_dist::redist_governor* redist_governor(void) {
-    return &m_redist_governor;
-  }
-
   const cads::loctree* bloctree(void) const { return m_bloctree.get(); }
   const cads::loctree* nloctree(void) const { return m_nloctree.get(); }
 
@@ -338,6 +344,15 @@ class base_arena_map : public rer::client<base_arena_map>,
   std::unique_ptr<cads::loctree>         m_bloctree;
   std::unique_ptr<cads::loctree>         m_nloctree;
   /* clang-format on */
+
+ public:
+  RCPPSW_WRAP_DECLDEF(distributable_cellsx, m_block_dispatcher, const);
+  RCPPSW_WRAP_DECLDEF(distributable_cellsy, m_block_dispatcher, const);
+  /**
+   * \brief Get a handle to the block motion handler.
+   */
+  RCPPSW_PTRREF_DECLDEF_CONST(block_motion_handler, m_bm_handler);
+  RCPPSW_PTRREF_DECLDEF(redist_governor, m_redist_governor);
 };
 
 NS_END(arena, cosm);

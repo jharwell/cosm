@@ -82,12 +82,23 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
   }
 
   size_t capacity(void) const { return m_capacity; }
-  cds::block3D_vectorro blocks(void) const RCPPSW_PURE;
-
+  const cds::block3D_vectorro& blocks(void) const { return m_blocks; }
+  void blocks_recalc(void);
+  void update_after_drop(const crepr::base_block3D* dropped);
+  void update_after_pickup(const rtypes::type_uuid& pickup_id);
 
  private:
   /* clang-format off */
-  size_t m_capacity;
+  size_t                m_capacity;
+
+  /**
+   * \brief The current set of blocks in the cluster. We keep this as a cached
+   * value, because it is expensive to compute for large clusters, and can only
+   * change if there has been a block pickup/drop. If that has not happened
+   * since the last time this was calculated, we can just use the cached value,
+   * which is waaayyyyy faster.
+   */
+  cds::block3D_vectorro m_blocks{};
   /* clang-format on */
 };
 

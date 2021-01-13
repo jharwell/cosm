@@ -108,7 +108,7 @@ void base_metrics_aggregator::collect_from_arena(
     const carena::base_arena_map* const map) {
   collect("blocks::motion", *map->block_motion_handler());
   collect("blocks::distributor", *map->block_distributor());
-  for (auto* cluster : map->block_distributor()->block_clusters()) {
+  for (auto* cluster : map->block_distributor()->block_clustersro()) {
     collect("blocks::clusters", *cluster);
   } /* for(&cluster..) */
 } /* collect_from_arena() */

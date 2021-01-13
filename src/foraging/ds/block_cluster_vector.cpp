@@ -1,5 +1,5 @@
 /**
- * \file block3D_cluster_vector.cpp
+ * \file block3D_cluster_vectorro.cpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -49,7 +49,11 @@ std::string do_to_str(const TVector& vec) {
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::string block3D_cluster_vector::to_str(void) const {
+std::string block3D_cluster_vectorro::to_str(void) const {
+  return do_to_str(*this);
+} /* to_str() */
+
+std::string block3D_cluster_vectorno::to_str(void) const {
   return do_to_str(*this);
 } /* to_str() */
 

@@ -1,5 +1,5 @@
 /**
- * \file update_status.hpp
+ * \file base_distributor.cpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,38 +18,39 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
-#define INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/cosm.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
+
+#include "cosm/foraging/repr/block_cluster.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+NS_START(cosm, foraging, block_dist);
 
 /*******************************************************************************
- * Class Definitions
+ * Constructors/Destructors
  ******************************************************************************/
-/**
- * \brief The status return from \ref base_arena_map::update() (or the overriden
- * version in a derived class).
- */
-enum update_status {
-  /**
-   * \brief No updates actually occurred this timestep.
-   */
-  ekNONE,
 
-  /**
-   * \brief One or more blocks moved, requiring a redraw of the arena floor.
-   */
-  ekBLOCK_MOTION
-};
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void base_distributor::clusters_update(void) {
+  for (auto *clust : block_clustersno()) {
+    clust->blocks_recalc();
+  } /* for(*clust..) */
+}
 
-NS_END(arena, cosm);
+cfds::block3D_cluster_vectorro base_distributor::block_clustersro(void) const {
+  auto clusters = const_cast<base_distributor*>(this)->block_clustersno();
+  cfds::block3D_cluster_vectorro ret(clusters.size());
+  std::transform(clusters.begin(),
+                 clusters.end(),
+                 ret.begin(),
+                 [&](const auto& clust) { return clust; });
+  return ret;
+}
 
-#endif /* INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_ */
+NS_END(block_dist, foraging, cosm);

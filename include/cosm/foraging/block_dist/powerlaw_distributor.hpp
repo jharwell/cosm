@@ -70,12 +70,12 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   /* distributor metrics */
   size_t n_configured_clusters(void) const override { return m_config_clusters; }
   size_t n_mapped_clusters(void) const override {
-    return block_clusters().size();
+    return block_clustersro().size();
   }
   size_t capacity(void) const override RCPPSW_PURE;
-  size_t size(void) const override;
+  size_t size(void) const override RCPPSW_PURE;
 
-  cfds::block3D_cluster_vector block_clusters(void) const override;
+  cfds::block3D_cluster_vectorno block_clustersno(void) override;
   dist_status distribute_block(crepr::base_block3D* block,
                                cds::const_spatial_entity_vector& entities) override;
 

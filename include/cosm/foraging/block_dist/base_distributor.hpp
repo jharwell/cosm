@@ -93,7 +93,8 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    * \brief Return a read-only list of \ref block_clusters for capacity checking
    * by external classes.
    */
-  virtual cfds::block3D_cluster_vector block_clusters(void) const = 0;
+  cfds::block3D_cluster_vectorro block_clustersro(void) const;
+  virtual cfds::block3D_cluster_vectorno block_clustersno(void) = 0;
 
   /**
    * \brief Calls \ref distribute_block() on each block.
@@ -114,6 +115,8 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
     }
     return dist_status::ekFAILURE;
   }
+
+  void clusters_update(void);
 
  protected:
   rmath::rng* rng(void) { return m_rng; }

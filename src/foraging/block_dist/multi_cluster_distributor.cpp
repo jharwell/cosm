@@ -66,7 +66,7 @@ dist_status multi_cluster_distributor::distribute_block(
     cluster_distributor& dist = m_dists[(start + i) % m_dists.size()];
 
     /* Always/only 1 cluster per cluster distributor, so this is safe to do */
-    RCPPSW_UNUSED auto clust_id = dist.block_clusters().front()->id();
+    RCPPSW_UNUSED auto clust_id = dist.block_clustersro().front()->id();
 
     if (dist.capacity() == dist.size()) {
       ER_TRACE("Block%d to cluster%u failed: capacity (%zu) reached",
@@ -96,12 +96,12 @@ dist_status multi_cluster_distributor::distribute_block(
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-cfds::block3D_cluster_vector
-multi_cluster_distributor::block_clusters(void) const {
-  cfds::block3D_cluster_vector ret;
+cfds::block3D_cluster_vectorno
+multi_cluster_distributor::block_clustersno(void) {
+  cfds::block3D_cluster_vectorno ret;
 
   for (auto& dist : m_dists) {
-    auto bclusts = dist.block_clusters();
+    auto bclusts = dist.block_clustersno();
     ret.insert(ret.end(), bclusts.begin(), bclusts.end());
   } /* for(&dist..) */
   return ret;

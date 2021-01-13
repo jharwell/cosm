@@ -66,14 +66,14 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   multi_cluster_distributor& operator=(const multi_cluster_distributor&) = delete;
   multi_cluster_distributor(const multi_cluster_distributor&) = delete;
 
-  cfds::block3D_cluster_vector block_clusters(void) const override;
+  cfds::block3D_cluster_vectorno block_clustersno(void) override;
 
   size_t n_configured_clusters(void) const override { return m_dists.size(); }
   size_t n_mapped_clusters(void) const override { return m_dists.size(); }
   size_t capacity(void) const override {
     return m_dists.size() * m_dists[0].capacity();
   }
-  size_t size(void) const override;
+  size_t size(void) const override RCSW_PURE;
 
   dist_status distribute_block(crepr::base_block3D* block,
                                cds::const_spatial_entity_vector& entities) override;
