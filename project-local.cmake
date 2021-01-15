@@ -41,10 +41,6 @@ if(NOT DEFINED COSM_ARGOS_CONTROLLER_XML_ID)
   message(WARNING "COSM_ARGOS_CONTROLLER_XML_ID not defined")
 endif()
 
-if(NOT DEFINED COSM_WITH_ARGOS_ROBOT_LEDS)
-  message(WARNING "COSM_WITH_ARGOS_ROBOT_LEDS not defined")
-endif()
-
 # Conditionally compile/link Qt visualizations.
 #
 # - Qt not reliably available when building for MSI
@@ -144,11 +140,8 @@ endif()
 ################################################################################
 # Compile Options/Definitions                                                  #
 ################################################################################
-if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
-  if (COSM_WITH_ARGOS_ROBOT_LEDS)
-    target_compile_definitions(${target} PUBLIC COSM_WITH_ARGOS_ROBOT_LEDS)
-  endif()
-endif()
+
+
 ################################################################################
 # Exports                                                                      #
 ################################################################################

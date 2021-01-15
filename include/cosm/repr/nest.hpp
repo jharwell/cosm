@@ -85,6 +85,28 @@ class nest : public repr::unicell_immovable_entity2D,
 
  private:
   /**
+   * The ID that will be assigned to the next nest created.
+   */
+  static int m_nest_id;
+
+  /**
+   * \brief The light intensity of all the lights associated with this nest.
+   *
+   * Lights must be sufficiently high above the ground and intense so that
+   * robots can detect them from far away in large arenas.
+   */
+  static constexpr const double kLIGHT_INTENSITY = 400.0;
+
+  /**
+   * \brief The height above the ground for all lights associated with this
+   * nest.
+   *
+   * Lights must be sufficiently high above the ground and intense so that
+   * robots can detect them from far away in large arenas.
+   */
+  static constexpr const double kLIGHT_HEIGHT = 25.0;
+
+  /**
    * \brief Initialize lights above the nest for robots to use for localization,
    * dependent on the geometry of the nest.
    */
@@ -93,10 +115,6 @@ class nest : public repr::unicell_immovable_entity2D,
   light_list init_rect(const rutils::color& color) const;
 
   /* clang-format off */
-  /**
-   * The ID that will be assigned to the next nest created.
-   */
-  static int m_nest_id;
   light_list m_lights;
   /* clang-format on */
 };

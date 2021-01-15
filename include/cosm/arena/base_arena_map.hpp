@@ -33,6 +33,7 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/multithread/lockable.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/arena/arena_map_locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
@@ -42,7 +43,6 @@
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -60,7 +60,9 @@ class argos_sm_adaptor;
 namespace cosm::ds {
 class cell2D;
 } /* namespace cosm::ds */
-
+namespace cosm::repr {
+class nest;
+} /* namespace cosm::repr */
 NS_START(cosm, arena);
 
 /*******************************************************************************
@@ -250,13 +252,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   /**
    * \brief Get a specific nest in the arena by UUID.
    */
-  RCPPSW_PURE const crepr::nest* nest(const rtypes::type_uuid& id) const {
-    auto it = m_nests.find(id);
-    if (m_nests.end() != it) {
-      return &(it->second);
-    }
-    return nullptr;
-  }
+  const crepr::nest* nest(const rtypes::type_uuid& id) const RCPPSW_PURE;
 
   const cforaging::block_dist::base_distributor* block_distributor(void) const {
     return m_block_dispatcher.distributor();
@@ -337,10 +333,10 @@ class base_arena_map : public rer::client<base_arena_map>,
   rmath::vector3d                        m_block_bb{};
   cds::block3D_vectoro                   m_blockso;
   cds::block3D_vectorno                  m_blocksno{};
-  nest_map_type                          m_nests{};
   cforaging::block_dist::dispatcher      m_block_dispatcher;
   cforaging::block_dist::redist_governor m_redist_governor;
   cforaging::block_motion_handler        m_bm_handler;
+  std::unique_ptr<nest_map_type>         m_nests;
   std::unique_ptr<cads::loctree>         m_bloctree;
   std::unique_ptr<cads::loctree>         m_nloctree;
   /* clang-format on */

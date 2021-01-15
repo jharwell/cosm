@@ -27,6 +27,7 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/ds/loctree.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

@@ -16,7 +16,7 @@ successfully build.
 
 - ``COSM_BUILD_FOR`` - The target platform that COSM will be built for. Must be
   one of [ ``MSI``, ``ARGOS``, ``EV3`` ]. Setting this also sets
-  ``COSM_HAL_TARGET`` and ``LOCAL_INSTALL_PREFIX``.
+  ``COSM_HAL_TARGET`` and ``COSM_PROJECT_DEPS_PREFIX``.
 
 - ``COSM_HAL_TARGET`` - Specify the Hardware Abstraction Layer (HAL)
   target. Must be one of: [ ``argos-footbot``, ``lego-ev3`` ].
@@ -31,9 +31,6 @@ successfully build.
 - ``COSM_ARGOS_CONTROLLER_XML_ID`` - The unique name attached to the controller
   of the desired type in the XML input file to the the actual controller class
   in C++ code.
-
-- ``COSM_WITH_ARGOS_ROBOT_LEDS`` - Enable robots to control their LEDS via
-  actuators.
 
 - ``COSM_PROJECT_DEPS_PREFIX`` - Prefix for where ARGoS and other dependencies
   in the parent project have been installed.

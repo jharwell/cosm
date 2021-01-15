@@ -60,12 +60,12 @@ nest::light_list nest::init_lights(const rutils::color& color) const {
 } /* init_lights() */
 
 nest::light_list nest::init_square(const rutils::color& color) const {
-  argos::CVector3 loc(rcenter2D().x(), rcenter2D().y(), 5.0);
+  argos::CVector3 loc(rcenter2D().x(), rcenter2D().y(), kLIGHT_HEIGHT);
   return light_list{ new argos::CLightEntity(
       "nest_light0",
       loc,
       argos::CColor(color.red(), color.green(), color.blue()),
-      100.0) };
+      kLIGHT_INTENSITY) };
 } /* init_square() */
 
 nest::light_list nest::init_rect(const rutils::color& color) const {
@@ -73,30 +73,30 @@ nest::light_list nest::init_rect(const rutils::color& color) const {
   argos::CVector3 loc1, loc2, loc3;
 
   if (xrsize() > yrsize()) {
-    loc1.Set((ranchor2D().x() + xrsize() * 0.25).v(), rcenter2D().y(), 5.0);
-    loc2.Set((ranchor2D().x() + xrsize() * 0.5).v(), rcenter2D().y(), 5.0);
-    loc3.Set((ranchor2D().x() + xrsize() * 0.75).v(), rcenter2D().y(), 5.0);
+    loc1.Set((ranchor2D().x() + xrsize() * 0.25).v(), rcenter2D().y(), kLIGHT_HEIGHT);
+    loc2.Set((ranchor2D().x() + xrsize() * 0.5).v(), rcenter2D().y(), kLIGHT_HEIGHT);
+    loc3.Set((ranchor2D().x() + xrsize() * 0.75).v(), rcenter2D().y(), kLIGHT_HEIGHT);
   } else {
-    loc1.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.25).v(), 5.0);
-    loc2.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.5).v(), 5.0);
-    loc3.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.75).v(), 5.0);
+    loc1.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.25).v(), kLIGHT_HEIGHT);
+    loc2.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.5).v(), kLIGHT_HEIGHT);
+    loc3.Set(rcenter2D().x(), (ranchor2D().y() + yrsize() * 0.75).v(), kLIGHT_HEIGHT);
   }
 
   return { new argos::CLightEntity(
                "nest_light0",
                loc1,
                argos::CColor(color.red(), color.green(), color.blue()),
-               100.0),
+               kLIGHT_INTENSITY),
            new argos::CLightEntity(
                "nest_light1",
                loc2,
                argos::CColor(color.red(), color.green(), color.blue()),
-               100.0),
+               kLIGHT_INTENSITY),
            new argos::CLightEntity(
                "nest_light2",
                loc3,
                argos::CColor(color.red(), color.green(), color.blue()),
-               100.0) };
+               kLIGHT_INTENSITY) };
 } /* init_rect() */
 
 std::string nest::to_str(bool full) const {

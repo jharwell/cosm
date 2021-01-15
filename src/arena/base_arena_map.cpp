@@ -43,6 +43,7 @@
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/spatial/dimension_checker.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
+#include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -65,6 +66,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
                          &config->blocks.dist),
       m_redist_governor(&config->blocks.dist.redist_governor),
       m_bm_handler(&config->blocks.motion, m_rng),
+      m_nests(std::make_unique<nest_map_type>()),
       m_bloctree(std::make_unique<cads::loctree>()),
       m_nloctree(std::make_unique<cads::loctree>()) {
   ER_INFO("real=(%fx%f), discrete=(%zux%zu), resolution=%f",
@@ -97,7 +99,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
     } /* for(i..) */
 
     /* update host cell */
-    m_nests.emplace(inst.id(), inst);
+    m_nests->emplace(inst.id(), inst);
 
     /* add to loctree */
     m_nloctree->update(&inst);
@@ -123,7 +125,7 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
   m_block_bb = block->rdim3D();
 
   /* initialize nest lights */
-  for (auto& pair : m_nests) {
+  for (auto& pair : *m_nests) {
     for (auto& l : pair.second.lights()) {
       sm->AddEntity(*l);
     } /* for(&l..) */
@@ -180,10 +182,10 @@ base_arena_map::robot_on_block(const rmath::vector2d& pos,
 
 rtypes::type_uuid
 base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
-  auto it = std::find_if(m_nests.begin(), m_nests.end(), [&](const auto& pair) {
+  auto it = std::find_if(m_nests->begin(), m_nests->end(), [&](const auto& pair) {
     return pair.second.contains_point2D(pos);
   });
-  if (m_nests.end() == it) {
+  if (m_nests->end() == it) {
     return rtypes::constants::kNoUUID;
   }
   return it->second.id();
@@ -313,18 +315,26 @@ base_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
               ret.dist_ent->id().v());
   }
 
-  for (auto& pair : m_nests) {
+  for (auto& pair : *m_nests) {
     ret.avoid_ents.push_back(&pair.second);
   } /* for(&pair..) */
 
   return ret;
 } /* block_dist_precalc() */
 
-ds::nest_vectorro base_arena_map::nests(void) const {
-  ds::nest_vectorro ret(m_nests.size());
+const crepr::nest* base_arena_map::nest(const rtypes::type_uuid& id) const {
+  auto it = m_nests->find(id);
+  if (m_nests->end() != it) {
+    return &(it->second);
+  }
+  return nullptr;
+}
 
-  std::transform(m_nests.begin(),
-                 m_nests.end(),
+ds::nest_vectorro base_arena_map::nests(void) const {
+  ds::nest_vectorro ret(m_nests->size());
+
+  std::transform(m_nests->begin(),
+                 m_nests->end(),
                  ret.begin(),
                  [&](const auto& pair) { return &pair.second; });
   return ret;
