@@ -240,12 +240,13 @@ namespace metrics {}
  *
  * \brief Classes relating to spatial aspects of the arena in which swarms
  * operate: FSMs for acquiring spatial goal locations, spatial conflict
- * checkers, metrics, and different spatial exploration strategies.
+ * checkers, metrics, and different spatial strategies for exploration,
+ * collision avoidance, etc.
  */
 namespace spatial {
 namespace fsm {}
 namespace metrics {}
-namespace expstrat {}
+namespace strategy {}
 } /* namespace spatial */
 
 /**
@@ -258,6 +259,7 @@ namespace expstrat {}
  * - Data structures
  * - Oracles for object locations which can inject perfect knowledge of arena
  *   state into robot controllers.
+ * - FSMs.
  */
 namespace foraging {
 namespace config {}
@@ -266,6 +268,7 @@ namespace repr {}
 namespace ds {}
 namespace oracle {}
 namespace metrics {}
+namespace fsm {}
 } /* namespace foraging */
 
 /**
@@ -320,11 +323,12 @@ namespace cfds = cforaging::ds;
 namespace cfconfig = cforaging::config;
 namespace cfbd = cforaging::block_dist;
 namespace cfmetrics = cforaging::metrics;
+namespace cffsm = cforaging::fsm;
 
 namespace cspatial = cosm::spatial;
 namespace csfsm = cspatial::fsm;
 namespace csmetrics = cspatial::metrics;
-namespace csexpstrat = cspatial::expstrat;
+namespace csstrategy = cspatial::strategy;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;

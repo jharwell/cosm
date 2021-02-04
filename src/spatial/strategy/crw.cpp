@@ -21,20 +21,20 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/expstrat/crw.hpp"
+#include "cosm/spatial/strategy/crw.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, expstrat);
+NS_START(cosm, spatial, strategy);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
 crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-    : base_expstrat(saa, rng), ER_CLIENT_INIT("cosm.spatial.expstrat.crw") {}
+    : base_strategy(saa, rng), ER_CLIENT_INIT("cosm.spatial.strategy.crw") {}
 
 /*******************************************************************************
  * General Member Functions
@@ -68,4 +68,4 @@ void crw::task_execute(void) {
   }
 } /* task_execute() */
 
-NS_END(expstrat, spatial, cosm);
+NS_END(strategy, spatial, cosm);

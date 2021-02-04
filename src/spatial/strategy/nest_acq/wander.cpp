@@ -1,7 +1,7 @@
 /**
- * \file base_expstrat.cpp
+ * \file wander.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,22 +21,54 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/expstrat/base_expstrat.hpp"
+#include "cosm/spatial/strategy/nest_acq/wander.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, expstrat);
+NS_START(cosm, spatial, strategy, nest_acq);
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_expstrat::base_expstrat(params* const p) : base_expstrat{ p->saa, p->rng } {}
 
-base_expstrat::base_expstrat(subsystem::saa_subsystemQ3D* const saa,
-                             rmath::rng* rng)
-    : m_saa(saa), m_rng(rng), m_inta_tracker(m_saa->sensing()) {}
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void wander::task_start(cta::taskable_argument*) {
+  m_task_running = true;
+  m_steps = rng()->uniform(kMIN_STEPS, kMAX_STEPS);
+} /* task_start() */
 
-NS_END(expstrat, spatial, cosm);
+void wander::task_execute(void) {
+  auto* ground =
+      saa()->sensing()->template sensor<hal::sensors::ground_sensor>();
+
+  handle_ca();
+
+  /*
+   * We might get pushed out of the nest by collision avoidance after initially
+   * entering it.
+   */
+  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+    base_strategy::wander();
+    m_count++;
+    /*
+     * Once we are comfortably inside the nest, stop phootoaxiing and just
+     * wander.
+     */
+    if (m_count <= kMIN_STEPS) {
+      phototaxis();
+    }
+  } else { /* outside nest--just ca+phototaxis */
+    phototaxis();
+  }
+
+  if (m_count >= m_steps) {
+    m_task_running = false;
+  }
+} /* task_execute() */
+
+NS_END(nest_acq, spatial, strategy, cosm);

@@ -38,7 +38,7 @@ NS_START(cosm, spatial, fsm);
  ******************************************************************************/
 acquire_goal_fsm::acquire_goal_fsm(
     subsystem::saa_subsystemQ3D* const saa,
-    std::unique_ptr<expstrat::base_expstrat> behavior,
+    std::unique_ptr<csstrategy::base_strategy> behavior,
     rmath::rng* rng,
     const struct hook_list& hooks)
     : util_hfsm(saa, rng, ekST_MAX_STATES),

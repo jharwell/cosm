@@ -95,7 +95,7 @@ class nest : public repr::unicell_immovable_entity2D,
    * Lights must be sufficiently high above the ground and intense so that
    * robots can detect them from far away in large arenas.
    */
-  static constexpr const double kLIGHT_INTENSITY = 400.0;
+  static constexpr const double kLIGHT_INTENSITY = 10.0;
 
   /**
    * \brief The height above the ground for all lights associated with this
@@ -104,7 +104,7 @@ class nest : public repr::unicell_immovable_entity2D,
    * Lights must be sufficiently high above the ground and intense so that
    * robots can detect them from far away in large arenas.
    */
-  static constexpr const double kLIGHT_HEIGHT = 25.0;
+  static constexpr const double kLIGHT_HEIGHT = 5.0;
 
   /**
    * \brief Initialize lights above the nest for robots to use for localization,

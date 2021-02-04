@@ -164,7 +164,7 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
    *              class.
    */
   acquire_goal_fsm(subsystem::saa_subsystemQ3D* saa,
-                   std::unique_ptr<expstrat::base_expstrat> behavior,
+                   std::unique_ptr<csstrategy::base_strategy> behavior,
                    rmath::rng* rng,
                    const struct hook_list& hooks);
   ~acquire_goal_fsm(void) override = default;

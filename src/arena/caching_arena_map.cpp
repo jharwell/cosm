@@ -64,7 +64,7 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
      * directly to the LED medium, which is different than what is rendered to
      * the screen, so they actually are invisible.
      */
-    sm->AddEntity(*c->light());
+    /* sm->AddEntity(*c->light()); */
     medium.AddEntity(*c->light());
 
     /* Add cache to outside accessible vector */
@@ -100,7 +100,7 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
   medium.RemoveEntity(*(*victim_it)->light());
-  sm->RemoveEntity(*(*victim_it)->light());
+  /* sm->RemoveEntity(*(*victim_it)->light()); */
 
   size_t before = m_cacheso.size();
   RCPPSW_UNUSED rtypes::type_uuid id = victim->id();

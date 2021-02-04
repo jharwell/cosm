@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_EXPSTRAT_CRW_HPP_
-#define INCLUDE_COSM_SPATIAL_EXPSTRAT_CRW_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_
+#define INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_
 
 /*******************************************************************************
  * Includes
@@ -28,26 +28,26 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
 
-#include "cosm/spatial/expstrat/base_expstrat.hpp"
+#include "cosm/spatial/strategy/base_strategy.hpp"
 
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, expstrat);
+NS_START(cosm, spatial, strategy);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class crw
- * \ingroup spatial expstrat
+ * \ingroup spatial strategy
  *
  * \brief Roam around using Correlated Random Walk looking for something until
  * you happen to stumble across it.
  */
-class crw : public csexpstrat::base_expstrat,
+class crw : public csstrategy::base_strategy,
             public rer::client<crw> {
  public:
   crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng);
@@ -65,13 +65,13 @@ class crw : public csexpstrat::base_expstrat,
 
   /**
    * \brief Since we are exploring for something we don't know about, we will
-   * never finish (stopping exploration is handled at a higher level).
+   * never finish (stopping  is handled at a higher level).
    */
   bool task_finished(void) const override final { return false; }
   void task_execute(void) override final;
 
   /* prototype overrides */
-  std::unique_ptr<base_expstrat> clone(void) const override {
+  std::unique_ptr<base_strategy> clone(void) const override {
     return std::make_unique<crw>(saa(), rng());
   }
 
@@ -81,6 +81,6 @@ class crw : public csexpstrat::base_expstrat,
   /* clang-format on */
 };
 
-NS_END(expstrat, spatial, cosm);
+NS_END(strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_EXPSTRAT_CRW_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_ */

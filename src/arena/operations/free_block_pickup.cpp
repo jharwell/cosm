@@ -102,7 +102,11 @@ void free_block_pickup::visit(base_arena_map& map) {
   /* update block loctree */
   map.bloctree_update(m_block, mc_locking);
 
-  /* update block clusters--the picked up block disappeared from one of them */
+  /*
+   * Update block clusters--the picked up block MIGHT disappeared from one of
+   * them. This could also be a free pickup from a block that was previously
+   * dropped as the result of a task abort, and not be in a cluster.
+   */
   auto clusters = map.block_distributor()->block_clustersno();
   for (auto *clust : clusters) {
     if (clust->contains_cell2D(old)) {
@@ -110,8 +114,8 @@ void free_block_pickup::visit(base_arena_map& map) {
       return;
     }
   } /* for(*clust..) */
-  ER_FATAL_SENTINEL("Block%s not found in any block cluster?",
-                    rcppsw::to_string(m_block->id()).c_str());
+  ER_WARN("Block%s not found in any block cluster--from a previous task abort",
+          rcppsw::to_string(m_block->id()).c_str());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

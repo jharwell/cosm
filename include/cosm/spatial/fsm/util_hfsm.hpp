@@ -26,7 +26,6 @@
  ******************************************************************************/
 #include <memory>
 #include <string>
-#include <boost/optional.hpp>
 
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/math/vector2.hpp"
@@ -36,6 +35,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/interference_tracker.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/spatial/strategy/base_strategy.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -83,17 +83,11 @@ class util_hfsm : public rpfsm::hfsm,
   /**
    * \brief Handle to internal interference tracker; provided as a common
    * utility to derived classes that do not utilize/wrap a \ref
-   * spatial::expstrat::base_expstrat which has its own tracker.
+   * spatial::strategy::base_strategy which has its own tracker.
    */
   const interference_tracker* inta_tracker(void) const { return &m_tracker; }
 
  protected:
-  struct nest_transport_data : public rpfsm::event_data {
-    explicit nest_transport_data(const rmath::vector2d& in)
-        : nest_loc(in) {}
-    rmath::vector2d nest_loc;
-  };
-
   /**
    * \brief Calculate a random angle in [0, pi] for the purposes of direction
    * change.
@@ -107,81 +101,16 @@ class util_hfsm : public rpfsm::hfsm,
   interference_tracker* inta_tracker(void) { return &m_tracker; }
 
   /**
-   * \brief Robots entering this state will return to the nest.
-   *
-   * Once they enter the nest, robots:
-   *
-   * 1. Wander for a set amount of time in order to reduce congestion in the
-   *    nest.
-   * 2. Signal to the parent FSM that they have entered the nest and stop
-   *    moving.
-   *
-   * \todo The wander behavior is somewhat foraging specific, and so this state
-   *       may be of limited utility in other applications.
-   *
-   * This state MUST have a parent state defined that is not
-   * \ref rcppsw::patterns::fsm::hfsm::top_state().
-   */
-  RCPPSW_HFSM_STATE_DECLARE(util_hfsm, transport_to_nest, nest_transport_data);
-
-  /**
-   * \brief Robots entering this state will leave the nest (they are assumed to
-   * already be in the nest when this state is entered).
-   *
-   * This state MUST have a parent state defined that is not \ref
-   * hfsm::top_state().
-   */
-  RCPPSW_HFSM_STATE_DECLARE(util_hfsm, leaving_nest, rpfsm::event_data);
-
-  /**
-   * \brief Entry state for returning to nest.
-   *
-   * Used to:
-   *
-   * - Set LED colors for visualization purposes.
-   * - Enable light sensor (disabled otherwise for computational
-   *   efficiency).
-   */
-  RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_transport_to_nest);
-
-  /**
-   * \brief A simple entry state for leaving nest, used to set LED colors for
-   * visualization purposes.
-   */
-  RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_leaving_nest);
-
-  /**
    * \brief Simple state for entry into the "wait for signal" state, used to
    * change LED color for visualization purposes.
    */
   RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_wait_for_signal);
 
-  /**
-   * \brief Exit state for returning to nest (i.e. when the robot arrives in the
-   * nest).
-   *
-   * Used to:
-   *
-   * - Set LED colors for visualization purposes.
-   * - Disable light sensor (disabled unless a robot is activiely returning to
-   *   the nest for computational efficiency).
-   */
-  RCPPSW_HFSM_EXIT_DECLARE(util_hfsm, exit_transport_to_nest);
-
  private:
-  /**
-   * \brief When entering the nest, you want to continue to wander a bit before
-   * signaling upper FSMs that you are in the nest, so that there is (slightly)
-   * less congestion by the edge. This is a stopgap solution; a more elegant fix
-   * may be forthcoming in the future if warranted.
-   */
-  static constexpr const size_t kNEST_COUNT_MAX_STEPS = 25;
-
   /* clang-format off */
-  boost::optional<rtypes::spatial_dist> m_nest_thresh{};
-  csubsystem::saa_subsystemQ3D* const   m_saa;
-  interference_tracker                  m_tracker;
-  rmath::rng*                           m_rng;
+  csubsystem::saa_subsystemQ3D* const      m_saa;
+  interference_tracker                     m_tracker;
+  rmath::rng*                              m_rng;
   /* clang-format on */
 
  public:

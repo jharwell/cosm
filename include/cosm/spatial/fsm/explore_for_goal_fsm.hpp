@@ -28,7 +28,7 @@
 #include <memory>
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/expstrat/base_expstrat.hpp"
+#include "cosm/spatial/strategy/base_strategy.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 
@@ -77,7 +77,7 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   };
 
   explore_for_goal_fsm(subsystem::saa_subsystemQ3D* saa,
-                       std::unique_ptr<csexpstrat::base_expstrat> behavior,
+                       std::unique_ptr<csstrategy::base_strategy> behavior,
                        rmath::rng* rng,
                        const std::function<bool(void)>& goal_detect);
   ~explore_for_goal_fsm(void) override = default;
@@ -160,7 +160,7 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
 
   /* clang-format off */
   size_t                                   m_explore_time{0};
-  std::unique_ptr<expstrat::base_expstrat> m_explore_behavior;
+  std::unique_ptr<csstrategy::base_strategy> m_explore_behavior;
   std::function<bool(void)>                m_goal_detect;
   /* clang-format on */
 };

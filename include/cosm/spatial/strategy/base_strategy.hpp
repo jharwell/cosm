@@ -1,5 +1,5 @@
 /**
- * \file base_expstrat.hpp
+ * \file base_strategy.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_EXPSTRAT_BASE_EXPSTRAT_HPP_
-#define INCLUDE_COSM_SPATIAL_EXPSTRAT_BASE_EXPSTRAT_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_
+#define INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_
 
 /*******************************************************************************
  * Includes
@@ -41,21 +41,21 @@ namespace cosm::subsystem {
 class saa_subsystemQ3D;
 } /* namespace subsystem */
 
-NS_START(cosm, spatial, expstrat);
+NS_START(cosm, spatial, strategy);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class base_expstrat
- * \ingroup spatial expstrat
+ * \class base_strategy
+ * \ingroup spatial strategy
  *
- * \brief Base class for different exploration behaviors that controller can
- * exhibit when looking for stuff.
+ * \brief Base class for different strategies that robots can
+ * employ when exploring, acquiring goals, etc.
  */
-class base_expstrat : public csmetrics::interference_metrics,
+class base_strategy : public csmetrics::interference_metrics,
                       public cta::taskable,
-                      public rpprototype::clonable<base_expstrat> {
+                      public rpprototype::clonable<base_strategy> {
  public:
   struct params {
     params(subsystem::saa_subsystemQ3D* const saa_in, rmath::rng* rng_in)
@@ -65,13 +65,13 @@ class base_expstrat : public csmetrics::interference_metrics,
     rmath::rng* rng;
   };
 
-  explicit base_expstrat(params* const p);
-  base_expstrat(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng);
+  explicit base_strategy(params* const p);
+  base_strategy(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng);
 
-  ~base_expstrat(void) override = default;
+  ~base_strategy(void) override = default;
 
-  base_expstrat(const base_expstrat&) = delete;
-  base_expstrat& operator=(const base_expstrat&) = delete;
+  base_strategy(const base_strategy&) = delete;
+  base_strategy& operator=(const base_strategy&) = delete;
 
  protected:
   subsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
@@ -84,6 +84,9 @@ class base_expstrat : public csmetrics::interference_metrics,
   cspatial::interference_tracker* inta_tracker(void) {
     return &m_inta_tracker;
   }
+  void handle_ca(void);
+  void phototaxis(void);
+  void wander(void);
 
  private:
   /* clang-format off */
@@ -101,6 +104,6 @@ class base_expstrat : public csmetrics::interference_metrics,
   RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, m_inta_tracker, const)
 };
 
-NS_END(expstrat, spatial, cosm);
+NS_END(strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_EXPSTRAT_BASE_EXPSTRAT_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_ */
