@@ -194,7 +194,7 @@ void base_metrics_aggregator::register_with_arena_dims2D(
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::vector_locs2D_metrics_collector),
       "block_acq_vector_locs2D",
-      "blocks::vector_locs2D",
+      "blocks::acq_vector_locs2D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::dist2D_pos_metrics_collector),
       "swarm_dist2D_pos",

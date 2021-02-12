@@ -36,20 +36,24 @@ NS_START(cosm, kin2D);
  * Member Functions
  ******************************************************************************/
 double governed_diff_drive::active_throttle(void) const {
-  return std::accumulate(std::begin(m_generators),
+  auto sum = std::accumulate(std::begin(m_generators),
                          std::end(m_generators),
                          0.0,
-                         [&](double sum, const auto* generator) {
-                           return sum + generator->active_tv();
+                         [&](double accum, const auto* generator) {
+                           return accum + generator->active_tv();
                          });
+  /* active throttle cannot be negative */
+  return std::max(sum, 0.0);
 }
 
 double governed_diff_drive::applied_throttle(void) const {
-  return std::accumulate(std::begin(m_generators),
+  auto sum =  std::accumulate(std::begin(m_generators),
                          std::end(m_generators),
                          0.0,
-                         [&](double sum, const auto* generator) {
-                           return sum + generator->applied_tv();
+                         [&](double accum, const auto* generator) {
+                           return accum + generator->applied_tv();
                          });
+  /* applied throttle cannot be negative */
+  return std::max(sum, 0.0);
 }
 NS_END(kin2d, cosm);

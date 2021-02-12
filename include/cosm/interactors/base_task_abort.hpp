@@ -117,9 +117,10 @@ class base_task_abort
    * happens to be.
    */
   void task_abort_with_block(TController& controller) {
-    auto loc =
-        rmath::dvec2zvec(controller.rpos2D(), m_map->grid_resolution().v());
-    rtypes::type_uuid block_id = controller.block()->id();
+    auto loc = rmath::dvec2zvec(controller.rpos2D(),
+                                m_map->grid_resolution().v());
+    auto block_id = controller.block()->id();
+
     robot_free_block_drop_visitor_type rdrop_op(
         controller.block_release(), loc, m_map->grid_resolution());
 
@@ -129,8 +130,8 @@ class base_task_abort
         m_map->grid_resolution(),
         carena::arena_map_locking::ekNONE_HELD);
 
-    adrop_op.visit(*m_map);
     rdrop_op.visit(controller);
+    adrop_op.visit(*m_map);
 
     m_floor->SetChanged();
   } /* perform_block_drop() */

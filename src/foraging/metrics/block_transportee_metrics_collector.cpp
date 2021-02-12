@@ -125,6 +125,7 @@ block_transportee_metrics_collector::csv_line_build(void) {
 void block_transportee_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_transportee_metrics&>(metrics);
+
   ++m_interval.transported;
   m_interval.cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());

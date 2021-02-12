@@ -59,7 +59,7 @@ class switchable_tv_generator {
   double active_tv(void) const { return m_active; }
 
   /**
-   * \brief Get the current amount of motion_throttling (a percentage between 0
+   * \brief Get the current amount of variance (a percentage between 0
    * and 1) that is configured for for the robot (regardless if it is active or
    * not).
    */

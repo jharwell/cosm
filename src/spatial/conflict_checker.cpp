@@ -121,7 +121,7 @@ conflict_checker::placement2D(const carena::caching_arena_map* map,
 
   /*
    * If the robot is currently right on the edge of a cache, we can't just drop
-   * the block here, as it wipll overlap with the cache, and robots will think
+   * the block here, as it will overlap with the cache, and robots will think
    * that is accessible, but will not be able to vector to it (not all 4 wheel
    * sensors will report the color of a block). See FORDYCA#233.
    *
