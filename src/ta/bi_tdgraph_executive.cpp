@@ -62,7 +62,7 @@ void bi_tdgraph_executive::task_abort_handle(polled_task* task) {
   /*
    * Estimate updating must be BEFORE time updating, because time updating
    * resets current execution time to 0, which results in estimates always
-   * being 0! See #246.
+   * being 0.
    */
   task_ests_update(task);
   task_times_update(task);
