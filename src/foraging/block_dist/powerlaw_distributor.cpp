@@ -65,7 +65,7 @@ dist_status powerlaw_distributor::distribute_block(
     if (mclust->size() == mclust->capacity()) {
       continue;
     }
-    ER_DEBUG("Attempt distribution: block%d -> cluster group: "
+    ER_INFO("Attempt distribution: block%d -> cluster group: "
              "capacity=%zu,size=%zu]",
              block->id().v(),
              mclust->capacity(),
@@ -73,10 +73,9 @@ dist_status powerlaw_distributor::distribute_block(
 
     if (dist_status::ekSUCCESS == mclust->distribute_block(block, entities)) {
       return dist_status::ekSUCCESS;
-    } /* for(&dist..) */
+    } 
   } /* for(i..) */
 
-  ER_FATAL_SENTINEL("Unable to distribute block to any cluster");
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 

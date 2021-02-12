@@ -96,8 +96,6 @@ class base_block3D : public crepr::unicell_movable_entity3D,
 
   /**
    * \brief Update block state given that it has been picked up.
-   *
-   * This function does NOT move the block out of sight.
    */
   void update_on_pickup(const rtypes::type_uuid& robot_id,
                         const rtypes::timestep& t,

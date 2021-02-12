@@ -118,6 +118,10 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
 
   void clusters_update(void);
 
+  void cluster_update_after_pickup(const crepr::base_block3D* block,
+                                   const rmath::vector2z& old_loc);
+  void cluster_update_after_drop(const crepr::base_block3D* block);
+
  protected:
   rmath::rng* rng(void) { return m_rng; }
   cds::arena_grid* arena_grid(void) const { return m_arena_grid; }

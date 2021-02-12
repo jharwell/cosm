@@ -24,6 +24,7 @@
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 
 #include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -42,6 +43,27 @@ void base_distributor::clusters_update(void) {
     clust->blocks_recalc();
   } /* for(*clust..) */
 }
+
+void base_distributor::cluster_update_after_pickup(const crepr::base_block3D* const block,
+                                                   const rmath::vector2z& old_loc) {
+  auto clusters = block_clustersno();
+  for (auto *clust : clusters) {
+    if (clust->contains_cell2D(old_loc)) {
+      clust->update_after_pickup(block->id());
+      return;
+    }
+  } /* for(*clust..) */
+} /* cluster_update_after_pickup() */
+
+void base_distributor::cluster_update_after_drop(const crepr::base_block3D* const block) {
+  auto clusters = block_clustersno();
+  for (auto *clust : clusters) {
+    if (clust->contains_cell2D(block->danchor2D())) {
+      clust->update_after_drop(block);
+      return;
+    }
+  } /* for(*clust..) */
+} /* cluster_update_after_drop() */
 
 cfds::block3D_cluster_vectorro base_distributor::block_clustersro(void) const {
   auto clusters = const_cast<base_distributor*>(this)->block_clustersno();

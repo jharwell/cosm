@@ -72,8 +72,20 @@ void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
             rcppsw::to_string(cell.loc()).c_str(),
             rcppsw::to_string(cell.block3D()->id()).c_str(),
             rcppsw::to_string(dropped->id()).c_str());
-  m_blocks.push_back(dropped);
+
+  /*
+   * This function can be called as a part of a robot block drop OR as an arena
+   * block drop due to block motion. The contexts are different, so need need to
+   * avoid adding the block to the membership list if it already exists.
+   */
+  auto it = std::find_if(m_blocks.begin(),
+                         m_blocks.end(),
+                         [&](const auto* b) { return b->id() == dropped->id();});
+  if (it == m_blocks.end()) {
+    m_blocks.push_back(dropped);
+  }
 } /* update_after_drop() */
+
 
 void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
   auto it = std::find_if(m_blocks.begin(),
@@ -84,6 +96,14 @@ void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
             rcppsw::to_string(pickup_id).c_str(),
             rcppsw::to_string(this->id()).c_str());
   m_blocks.erase(std::remove(m_blocks.begin(), m_blocks.end(), *it));
+
+  it = std::find_if(m_blocks.begin(),
+                         m_blocks.end(),
+                         [&](const auto* b) { return b->id() == pickup_id;});
+  ER_ASSERT(it == m_blocks.end(),
+            "Block%s still in cluster%s",
+            rcppsw::to_string(pickup_id).c_str(),
+            rcppsw::to_string(this->id()).c_str());
 } /* update_after_pickup() */
 
 NS_END(repr, foraging, cosm);

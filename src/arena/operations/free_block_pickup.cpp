@@ -47,6 +47,15 @@ free_block_pickup free_block_pickup::by_robot(crepr::base_block3D* block,
 } /* by_robot() */
 
 free_block_pickup free_block_pickup::by_arena(crepr::base_block3D* block) {
+  /*
+   * Passing "NO UUID" as the ID of the robot which picked up the arena map's
+   * copy of a block works fine, as long as it is a robot which triggers the
+   * free pickup event. If it is triggered by block motion then the pickup event
+   * does everything it should EXCEPT moving the block out of sight.
+   *
+   * This is OK, because the block is immediately "dropped" again on its new
+   * location, and would no longer be out of sight anyway.
+   */
   return free_block_pickup(block,
                            rtypes::constants::kNoUUID,
                            rtypes::timestep(-1),
@@ -103,18 +112,14 @@ void free_block_pickup::visit(base_arena_map& map) {
   map.bloctree_update(m_block, mc_locking);
 
   /*
-   * Update block clusters--the picked up block MIGHT disappeared from one of
-   * them. This could also be a free pickup from a block that was previously
-   * dropped as the result of a task abort, and not be in a cluster.
+   * Update block clusters--the picked up block MIGHT have disappeared from one
+   * of them. This could also be a free pickup from a block that was previously
+   * dropped as the result of a task abort, block motion, etc., and not be in a
+   * cluster.
    */
-  auto clusters = map.block_distributor()->block_clustersno();
-  for (auto *clust : clusters) {
-    if (clust->contains_cell2D(old)) {
-      clust->update_after_pickup(m_block->id());
-      return;
-    }
-  } /* for(*clust..) */
-  ER_WARN("Block%s not found in any block cluster--from a previous task abort",
+  map.block_distributor()->cluster_update_after_pickup(m_block, old);
+
+  ER_WARN("Block%s not found in any block cluster",
           rcppsw::to_string(m_block->id()).c_str());
 } /* visit() */
 

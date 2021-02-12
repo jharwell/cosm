@@ -33,6 +33,7 @@
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -136,6 +137,9 @@ void free_block_drop::visit(base_arena_map& map) {
 
     /* update block loctree with new location */
     map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
+
+    /* possibly update block cluster membership */
+    map.block_distributor()->cluster_update_after_drop(m_block);
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),
@@ -205,6 +209,9 @@ void free_block_drop::visit(caching_arena_map& map) {
 
     /* update block loctree with new location */
     map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
+
+    /* possibly update block cluster membership */
+    map.block_distributor()->cluster_update_after_drop(m_block);
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),
