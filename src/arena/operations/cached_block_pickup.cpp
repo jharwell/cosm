@@ -182,7 +182,8 @@ void cached_block_pickup::visit(caching_arena_map& map) {
      * Update bloctree with the orphan block (needed for proper block drop
      * conflict checking in the vicinity of the old cache).
      */
-    map.bloctree_update(m_orphan_block, arena_map_locking::ekCACHES_HELD);
+    map.bloctree_update(m_orphan_block,
+                        arena_map_locking::ekCACHES_HELD);
 
     ER_INFO("Block%d picked up from cache%d@%s [depleted]",
             m_pickup_block->id().v(),

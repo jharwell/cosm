@@ -38,12 +38,11 @@ void block_cluster::blocks_recalc(void) {
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
       auto& cell = block_cluster::cell(i, j);
-      ER_ASSERT(!cell.state_has_cache(),
-                "Cell@%s in HAS_CACHE state",
-                rcppsw::to_string(cell.loc()).c_str());
-      ER_ASSERT(!cell.state_in_cache_extent(),
-                "Cell@%s in CACHE_EXTENT state",
-                rcppsw::to_string(cell.loc()).c_str());
+      /*
+       * You can't assert that the cell does not have a cache/is not part of a
+       * cache extent, because for RN distributions caches can be in the middle
+       * of the main block cluster.
+       */
       if (cell.state_has_block()) {
         ER_ASSERT(nullptr != cell.block3D(),
                   "Cell@%s null block3D",

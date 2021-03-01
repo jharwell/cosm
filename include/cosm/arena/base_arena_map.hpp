@@ -216,8 +216,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \note This operation requires holding the block mutex in multithreaded
    * contexts for writing, and takes it internally if not held.
    */
-  void bloctree_update(const crepr::base_block3D* block,
-                       const arena_map_locking& locking);
+  virtual void bloctree_update(const crepr::base_block3D* block,
+                               const arena_map_locking& locking);
 
   /**
    * \brief Get the list of all the blocks currently present in the arena.

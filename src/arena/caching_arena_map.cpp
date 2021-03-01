@@ -70,9 +70,12 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
     /* Add cache to outside accessible vector */
     m_cachesno.push_back(c.get());
 
+    /* Add cache to internal owned vector */
+    m_cacheso.push_back(std::move(c));
+
     /* Add cache to loctree */
     cloctree_update(c.get());
-    m_cacheso.push_back(std::move(c));
+    ER_ASSERT(cloctree_verify(), "Cache loctree failed verification");
   } /* for(&c..) */
 
   ER_INFO("Add %zu created caches, total=%zu", caches.size(), m_cacheso.size());
@@ -85,39 +88,52 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
             m_cacheso.size(),
             m_cachesno.size());
 
+  RCPPSW_UNUSED rtypes::type_uuid id = victim->id();
   /*
    * Lookup the victim in the cache vector, since the i-th cache is not
    * guaranteed to be in position i in the vector.
    */
-  auto victim_it =
+  auto victim_oit =
       std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
-        return victim->dloccmp(*c);
+                                                         return id == c->id();
       });
-  ER_ASSERT(
-      victim_it != m_cacheso.end(), "Victim cache%d not found", victim->id().v());
+  auto victim_ait =
+      std::find_if(m_cachesno.begin(), m_cachesno.end(), [&](const auto& c) {
+                                                         return id == c->id();
+                                                       });
+  ER_ASSERT(victim_oit != m_cacheso.end(),
+            "Victim cache%d not found in owned vector",
+            victim->id().v());
+
+  ER_ASSERT(victim_ait != m_cachesno.end(),
+            "Victim cache%d not found in access vector",
+            victim->id().v());
 
   /* Remove light for cache from ARGoS */
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
-  medium.RemoveEntity(*(*victim_it)->light());
-  /* sm->RemoveEntity(*(*victim_it)->light()); */
+  medium.RemoveEntity(*(*victim_oit)->light());
+  /* sm->RemoveEntity(*(*victim_oit)->light()); */
 
   size_t before = m_cacheso.size();
-  RCPPSW_UNUSED rtypes::type_uuid id = victim->id();
 
   /*
    * Copy depleted cache to zombie vector to ensure accurate proper (1) robot
    * event processing of the cache pickp this timestep (2) metric collection
    * THIS timestep about caches.
    */
-  m_zombie_caches.push_back(*victim_it);
+  m_zombie_caches.push_back(*victim_oit);
 
   /*
    * Update owned and access cache vectors, verifying that the removal worked as
    * expected.
    */
-  m_cachesno.erase(std::remove(m_cachesno.begin(), m_cachesno.end(), victim));
-  m_cacheso.erase(std::remove(m_cacheso.begin(), m_cacheso.end(), *victim_it));
+  m_cachesno.erase(std::remove(m_cachesno.begin(),
+                               m_cachesno.end(),
+                               *victim_ait));
+  m_cacheso.erase(std::remove(m_cacheso.begin(),
+                              m_cacheso.end(),
+                              *victim_oit));
   ER_ASSERT(m_cachesno.size() == before - 1,
             "Cache%d not removed from access vector",
             id.v());
@@ -125,8 +141,19 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
             "Cache%d not removed from owned vector",
             id.v());
 
-  /* Remove from loctree */
-  cloctree_update(victim_it->get()); /* OK because victim in zombie caches */
+  /* OK to search because victim memory chunk now in zombie caches */
+  auto sanity_ait =
+      std::find_if(m_zombie_caches.begin(),
+                   m_zombie_caches.end(),
+                   [&](const auto& c) { return id == c->id(); });
+
+  /*
+   * Remove from loctree. Notice that we don't reuse the victim_it--that has
+   * been invalidated by having the element it pointed to removed.
+   */
+  cloctree_update(sanity_ait->get());
+
+  ER_ASSERT(cloctree_verify(), "Cache loctree failed verification");
 } /* cache_remove() */
 
 rtypes::type_uuid
@@ -251,14 +278,22 @@ error:
 } /* cloctree_verify() */
 
 void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
-                                        const arena_map_locking& locking,
-                                        const ds::acache_vectoro& created) {
+                                        const arena_map_locking& locking) {
   maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 
-  auto it =
-      std::find_if(created.begin(), created.end(), [block](const auto& cache) {
+  auto created_it =
+      std::find_if(m_created_caches.begin(),
+                   m_created_caches.end(),
+                   [block](const auto& cache) {
         return cache->contains_block(block);
       });
+
+  auto existing_it =
+      std::find_if(m_cachesno.begin(),
+                   m_cachesno.end(),
+                   [block](const auto& cache) {
+                     return cache->contains_block(block);
+                   });
 
   /*
    * If the block is currently carried by a robot or in a cache don't put it in
@@ -269,16 +304,28 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
             rcppsw::to_string(block->id()).c_str(),
             bloctree()->size());
     bloctree()->remove(block);
-  } else if (created.end() != it) {
+  } else if (m_created_caches.end() != created_it) {
     /*
      * If we do things correctly, the update function only needs to check the
      * newly created caches.
      */
     ER_INFO("Remove block%s in created cache%s@%s/%s from loctree,size=%zu",
             rcppsw::to_string(block->id()).c_str(),
-            rcppsw::to_string((*it)->id()).c_str(),
-            rcppsw::to_string((*it)->rcenter2D()).c_str(),
-            rcppsw::to_string((*it)->dcenter2D()).c_str(),
+            rcppsw::to_string((*created_it)->id()).c_str(),
+            rcppsw::to_string((*created_it)->rcenter2D()).c_str(),
+            rcppsw::to_string((*created_it)->dcenter2D()).c_str(),
+            bloctree()->size());
+    bloctree()->remove(block);
+  } else if (m_cachesno.end() != existing_it) {
+    /*
+     * If we do things correctly, the update function only needs to check the
+     * newly created caches.
+     */
+    ER_INFO("Remove block%s in existing cache%s@%s/%s from loctree,size=%zu",
+            rcppsw::to_string(block->id()).c_str(),
+            rcppsw::to_string((*existing_it)->id()).c_str(),
+            rcppsw::to_string((*existing_it)->rcenter2D()).c_str(),
+            rcppsw::to_string((*existing_it)->dcenter2D()).c_str(),
             bloctree()->size());
     bloctree()->remove(block);
   } else {
@@ -307,7 +354,6 @@ void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
             cloctree()->size());
     m_cloctree->update(cache);
   }
-  ER_ASSERT(cloctree_verify(), "Cache loctree failed verification");
 } /* cloctree_update() */
 
 NS_END(arena, cosm);

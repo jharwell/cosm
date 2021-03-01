@@ -84,7 +84,7 @@ class random_thresh : public csstrategy::base_strategy {
   /* clang-format off */
   bool                 m_task_running{false};
   rmath::vector2d      m_nest_loc{};
-  rtypes::spatial_dist m_thresh{rtypes::spatial_dist(-1)};
+  rtypes::spatial_dist m_thresh{rtypes::spatial_dist(0)};
   /* clang-format on */
 };
 

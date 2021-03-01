@@ -118,8 +118,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
                           const rmath::vector2d& loc) const override;
 
   void bloctree_update(const crepr::base_block3D* block,
-                       const arena_map_locking& locking,
-                       const ds::acache_vectoro& created = {});
+                       const arena_map_locking& locking) override;
   void cloctree_update(const carepr::arena_cache* cache);
   /**
    * \brief Protects simultaneous updates to the caches vector.
@@ -139,6 +138,11 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   const cads::acache_vectoro& zombie_caches(void) const {
     return m_zombie_caches;
   }
+  void created_caches(const cads::acache_vectorro& created_caches) {
+    m_created_caches = created_caches;
+  }
+  void created_caches_clear(void) { m_created_caches.clear(); }
+
 
  private:
   void pre_block_dist_lock(const arena_map_locking& locking) override;
@@ -151,6 +155,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   /* clang-format off */
   mutable std::shared_mutex              m_cache_mtx{};
 
+  cads::acache_vectorro                  m_created_caches{};
   cads::acache_vectoro                   m_cacheso{};
   cads::acache_vectorno                  m_cachesno{};
 
