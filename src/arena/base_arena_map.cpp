@@ -44,6 +44,7 @@
 #include "cosm/spatial/dimension_checker.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/repr/nest.hpp"
+#include "cosm/foraging/block_dist/dispatcher.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -61,9 +62,9 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
       m_blockso(foraging::block_dist::block3D_manifest_processor(
           &config->blocks.dist.manifest,
           config->grid.resolution)()),
-      m_block_dispatcher(&decoratee(),
-                         config->grid.resolution,
-                         &config->blocks.dist),
+      m_block_dispatcher(std::make_unique<cfbd::dispatcher>(&decoratee(),
+                                                            config->grid.resolution,
+                                                            &config->blocks.dist)),
       m_redist_governor(&config->blocks.dist.redist_governor),
       m_bm_handler(&config->blocks.motion, m_rng),
       m_nests(std::make_unique<nest_map_type>()),
@@ -75,6 +76,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
           xdsize(),
           ydsize(),
           grid_resolution().v());
+
 
   ER_INFO("Initialize %zu nests", config->nests.nests.size());
   for (auto& nest : config->nests.nests) {
@@ -117,6 +119,12 @@ base_arena_map::~base_arena_map(void) = default;
  * Member Functions
  ******************************************************************************/
 bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
+  bool ret = initialize_shared(sm);
+  ret |= initialize_private();
+  return ret;
+} /* initialize */
+
+bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm) {
   /* compute block bounding box */
   auto* block = *std::max_element(
       m_blocksno.begin(), m_blocksno.end(), [&](const auto* b1, const auto* b2) {
@@ -131,12 +139,50 @@ bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
     } /* for(&l..) */
   } /* for(&pair..) */
 
-  auto precalc = block_dist_precalc(nullptr);
-  bool ret = m_block_dispatcher.initialize(precalc.avoid_ents, m_block_bb, m_rng);
+  return true;
+} /* initialize_shared() */
+
+bool base_arena_map::initialize_private(void) {
+  /* distribute blocks */
+  auto avoid_ents = initial_dist_precalc(nullptr);
+
+  auto conflict_check = [&](const crepr::base_block3D* block,
+                            const rmath::vector2d& loc) {
+                          return cspatial::conflict_checker::placement2D(this,
+                                                                         block,
+                                                                         loc); };
+  auto dist_success = [&](const crepr::base_block3D* distributed) {
+                        /*
+                         * Update block location query tree. This is called from
+                         * inside a block distributor, and therefore inside a
+                         * context in which all necessary locks have already
+                         * been taken.
+                         */
+                        bloctree_update(distributed,
+                                        arena_map_locking::ekALL_HELD);
+                      };
+
+  bool ret = m_block_dispatcher->initialize(avoid_ents,
+                                            m_block_bb,
+                                            conflict_check,
+                                            dist_success,
+                                            m_rng);
   ret |= distribute_all_blocks();
   return ret;
-} /* initialize() */
+} /* initialize_private() */
 
+const cfbd::base_distributor* base_arena_map::block_distributor(void) const {
+  return m_block_dispatcher->distributor();
+}
+cfbd::base_distributor* base_arena_map::block_distributor(void) {
+  return m_block_dispatcher->distributor();
+}
+const rmath::rangez& base_arena_map::distributable_cellsx(void) const {
+  return m_block_dispatcher->distributable_cellsx();
+}
+const rmath::rangez& base_arena_map::distributable_cellsy(void) const {
+  return m_block_dispatcher->distributable_cellsy();
+}
 update_status base_arena_map::pre_step_update(const rtypes::timestep&) {
   size_t count = m_bm_handler.move_blocks(this);
   if (count > 0) {
@@ -152,7 +198,7 @@ void base_arena_map::post_step_update(const rtypes::timestep& t,
   redist_governor()->update(t, blocks_transported, convergence_status);
 
   if (block_op) {
-    m_block_dispatcher.distributor()->clusters_update();
+    m_block_dispatcher->distributor()->clusters_update();
   }
 } /* post_step_update() */
 
@@ -191,39 +237,47 @@ base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
   return it->second.id();
 } /* robot_in_nest() */
 
-cfbd::dist_status
-base_arena_map::distribute_single_block(crepr::base_block3D* block,
-                                        const arena_map_locking& locking) {
+void base_arena_map::distribute_single_block(crepr::base_block3D* block,
+                                             const arena_map_locking& locking) {
   /* The distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
-    return cfbd::dist_status::ekSUCCESS;
+    return;
   }
 
   /* lock the arena map */
   pre_block_dist_lock(locking);
 
-  /* calculate the entities to avoid during distribution */
-  auto precalc = block_dist_precalc(block);
+  /* block to be distributed is tried before any leftover blocks */
+  m_pending_dists.push_front({block, 0});
 
-  /* do the distribution */
-  auto status =
-      m_block_dispatcher.distribute_block(precalc.dist_ent, precalc.avoid_ents);
-  ER_ASSERT(cfbd::dist_status::ekSUCCESS == status,
-            "Failed to distribute block%d",
-            block->id().v());
+  auto it = m_pending_dists.begin();
+  while (m_pending_dists.end() != it) {
+    /* do the distribution */
+    auto status = m_block_dispatcher->distribute_block(it->block);
 
-  /* Update block location query tree */
-  bloctree_update(block, locking);
+    /*
+     * Failed to distribute block--not a fatal error (can happen for powerlaw
+     * distributions). See COSM#124.
+     */
+    if (cfbd::dist_status::ekFAILURE == status) {
+      ER_WARN("Failed to distribute block%d: fail_count=%zu",
+              it->block->id().v(),
+              it->fail_count);
+      it->fail_count++;
+      ++it;
+    } else {
+      /* Block location query tree already updated in success callback */
+
+      /* Block has been distributed--remove it */
+      it = m_pending_dists.erase(it);
+    }
+  } /* while() */
 
   /* unlock the arena map */
   post_block_dist_unlock(locking);
-  return status;
 } /* disribute_single_block() */
 
 bool base_arena_map::distribute_all_blocks(void) {
-  /* calculate the entities to avoid during distribution */
-  auto precalc = block_dist_precalc(nullptr);
-
   /*
    * If we did deferred arena map initialization, some blocks might already be
    * in use in caches, so we don't distribute them.
@@ -233,19 +287,10 @@ bool base_arena_map::distribute_all_blocks(void) {
                m_blocksno.end(),
                std::back_inserter(dist_blocks),
                [&](const auto* block) { return block->is_out_of_sight(); });
-
   auto status =
-      m_block_dispatcher.distribute_blocks(dist_blocks, precalc.avoid_ents);
+      m_block_dispatcher->distribute_blocks(dist_blocks);
   ER_CHECK(cfbd::dist_status::ekSUCCESS == status,
            "Failed to distribute all blocks");
-
-  /*
-   * Update block location query tree for all blocks. No locking is needed,
-   * because this happens during initialization.
-   */
-  for (auto* b : blocks()) {
-    bloctree_update(b, arena_map_locking::ekALL_HELD);
-  } /* for(*b..) */
 
   /*
    * Once all blocks have been distributed, and (possibly) all caches have been
@@ -279,48 +324,6 @@ void base_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
   maybe_unlock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
   maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
-
-base_arena_map::block_dist_precalc_type
-base_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
-  /* Entities that need to be avoided during block distribution are:
-   *
-   * - All existing blocks
-   * - Nest
-   */
-  block_dist_precalc_type ret;
-
-  /*
-   * If this is the initial block distribution (or distribution after reset),
-   * then we can skip this, because wherever blocks are now is invalid, AND
-   * after a given block is distributed, it is added to the list of entities to
-   * be avoided.
-   */
-  if (nullptr != block) {
-    for (auto& b : m_blockso) {
-      /*
-       * Cannot compare via dloccmp() because the block being distributed is
-       * currently out of sight, just like any other blocks currently carried by
-       * robots, resulting in the wrong block being distributed.
-       */
-      if (!(block == b.get())) {
-        ret.avoid_ents.push_back(b.get());
-      } else {
-        ret.dist_ent = b.get();
-      }
-    } /* for(&b..) */
-    ER_ASSERT(ret.dist_ent->id() == block->id(),
-              "ID of block to distribute != ID of block in block vector: %d != "
-              "%d",
-              block->id().v(),
-              ret.dist_ent->id().v());
-  }
-
-  for (auto& pair : *m_nests) {
-    ret.avoid_ents.push_back(&pair.second);
-  } /* for(&pair..) */
-
-  return ret;
-} /* block_dist_precalc() */
 
 const crepr::nest* base_arena_map::nest(const rtypes::type_uuid& id) const {
   auto it = m_nests->find(id);

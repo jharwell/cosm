@@ -23,9 +23,8 @@
  ******************************************************************************/
 #include "cosm/ds/block3D_vector.hpp"
 
-#include <numeric>
-
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/ds/utils.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -33,31 +32,18 @@
 NS_START(cosm, ds);
 
 /*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-template <typename TVector>
-std::string do_to_str(const TVector& vec) {
-  return std::accumulate(vec.begin(),
-                         vec.end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& b) {
-                           return a + "b" + rcppsw::to_string(b->id()) + ",";
-                         });
-} /* do_to_str() */
-
-/*******************************************************************************
  * Member Functions
  ******************************************************************************/
 std::string block3D_vectoro::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 std::string block3D_vectorno::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 std::string block3D_vectorro::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 NS_END(ds, cosm);

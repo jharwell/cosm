@@ -29,6 +29,7 @@
 #include <shared_mutex>
 #include <string>
 #include <vector>
+#include <list>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/multithread/lockable.hpp"
@@ -40,9 +41,11 @@
 #include "cosm/arena/update_status.hpp"
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/block3D_vector.hpp"
-#include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/ds/entity_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -63,6 +66,11 @@ class cell2D;
 namespace cosm::repr {
 class nest;
 } /* namespace cosm::repr */
+
+namespace cosm::foraging::block_dist {
+class dispatcher;
+}
+
 NS_START(cosm, arena);
 
 /*******************************************************************************
@@ -213,8 +221,8 @@ class base_arena_map : public rer::client<base_arena_map>,
   /**
    * \brief Update the location index tree after the specified block has moved.
    *
-   * \note This operation requires holding the block mutex in multithreaded
-   * contexts for writing, and takes it internally if not held.
+   * This operation requires holding the block mutex in multithreaded contexts
+   * for writing, and takes it internally if not held.
    */
   virtual void bloctree_update(const crepr::base_block3D* block,
                                const arena_map_locking& locking);
@@ -235,8 +243,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \note This operation requires holding the block and grid mutexes for
    * writing, and takes them internally if they are not held.
    */
-  cfbd::dist_status distribute_single_block(crepr::base_block3D* block,
-                                            const arena_map_locking& locking);
+  void distribute_single_block(crepr::base_block3D* block,
+                               const arena_map_locking& locking);
 
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
@@ -254,12 +262,11 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   const crepr::nest* nest(const rtypes::type_uuid& id) const RCPPSW_PURE;
 
-  const cforaging::block_dist::base_distributor* block_distributor(void) const {
-    return m_block_dispatcher.distributor();
-  }
-  cforaging::block_dist::base_distributor* block_distributor(void) {
-    return m_block_dispatcher.distributor();
-  }
+  const cfbd::base_distributor* block_distributor(void) const RCPPSW_PURE;
+  cfbd::base_distributor* block_distributor(void) RCPPSW_PURE;
+  const rmath::rangez& distributable_cellsx(void) const RCPPSW_PURE;
+  const rmath::rangez& distributable_cellsy(void) const RCPPSW_PURE;
+
   const cads::loctree* bloctree(void) const { return m_bloctree.get(); }
   const cads::loctree* nloctree(void) const { return m_nloctree.get(); }
 
@@ -271,7 +278,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * - Initializes nest lights
    * - Calculates block minimal bounding box
    */
-  bool initialize(cpal::argos_sm_adaptor* sm);
+  virtual bool initialize(cpal::argos_sm_adaptor* sm);
 
   std::shared_mutex* grid_mtx(void) { return decoratee().mtx(); }
 
@@ -282,11 +289,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   std::shared_mutex* block_mtx(void) const { return &m_block_mtx; }
 
  protected:
-  struct block_dist_precalc_type {
-    cds::const_spatial_entity_vector avoid_ents{};
-    crepr::base_block3D* dist_ent{ nullptr };
-  };
-
   /**
    * \brief Perform necessary locking prior to (1) gathering the list of
    * entities that need to be avoided during block distribution, and (2) doing
@@ -299,23 +301,13 @@ class base_arena_map : public rer::client<base_arena_map>,
    */
   virtual void post_block_dist_unlock(const arena_map_locking& locking);
 
-  /**
-   * \brief Calculate the list of entities that need to be avoided during block
-   * distribution.
-   *
-   * \param block The block to distribute. If NULL, then this is the initial
-   *              block distribution.
-   */
-  virtual block_dist_precalc_type
-  block_dist_precalc(const crepr::base_block3D* block);
-
   virtual bool bloctree_verify(void) const;
 
   ds::loctree* bloctree(void) { return m_bloctree.get(); }
 
- private:
-  using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
-
+  virtual cds::const_spatial_entity_vector
+  initial_dist_precalc(const crepr::base_block3D*) const { return {}; };
+  bool initialize_shared(cpal::argos_sm_adaptor* sm);
   /**
    * \brief Distribute all blocks in the arena. Resets arena state. Called as
    * part of \ref initialize().
@@ -324,6 +316,18 @@ class base_arena_map : public rer::client<base_arena_map>,
    *       multi-threaded contetxts.
    */
   bool distribute_all_blocks(void);
+  cfbd::dispatcher* block_dispatcher(void) const { return m_block_dispatcher.get(); }
+  rmath::rng* rng(void) const { return m_rng; }
+
+
+ private:
+  using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
+  struct pending_dist_type {
+    crepr::base_block3D* block;
+    size_t fail_count;
+  };
+
+  bool initialize_private(void);
 
   /* clang-format off */
   mutable std::shared_mutex              m_block_mtx{};
@@ -333,17 +337,27 @@ class base_arena_map : public rer::client<base_arena_map>,
   rmath::vector3d                        m_block_bb{};
   cds::block3D_vectoro                   m_blockso;
   cds::block3D_vectorno                  m_blocksno{};
-  cforaging::block_dist::dispatcher      m_block_dispatcher;
-  cforaging::block_dist::redist_governor m_redist_governor;
-  cforaging::block_motion_handler        m_bm_handler;
-  std::unique_ptr<nest_map_type>         m_nests;
-  std::unique_ptr<cads::loctree>         m_bloctree;
-  std::unique_ptr<cads::loctree>         m_nloctree;
+
+  /**
+   * For powerlaw distributions, sometimes the re-distribution of a block
+   * dropped in the nest/dropped due to task abort can fail, because the \ref
+   * cfbd::dispatcher can't find an available space for it (possibly because of
+   * blocks previously re-distributed while the current block is being carried).
+   *
+   * In such cases, we add the block to the list of pending re-distributions,
+   * and try to re-distribute it each time another block is distributed, in the
+   * case arena conditions now are more favorable.
+   */
+  std::list<pending_dist_type>      m_pending_dists{};
+  std::unique_ptr<cfbd::dispatcher> m_block_dispatcher;
+  cfbd::redist_governor             m_redist_governor;
+  cforaging::block_motion_handler   m_bm_handler;
+  std::unique_ptr<nest_map_type>    m_nests;
+  std::unique_ptr<cads::loctree>    m_bloctree;
+  std::unique_ptr<cads::loctree>    m_nloctree;
   /* clang-format on */
 
  public:
-  RCPPSW_WRAP_DECLDEF(distributable_cellsx, m_block_dispatcher, const);
-  RCPPSW_WRAP_DECLDEF(distributable_cellsy, m_block_dispatcher, const);
   /**
    * \brief Get a handle to the block motion handler.
    */

@@ -47,7 +47,7 @@ using cds::arena_grid;
 free_block_drop
 free_block_drop::for_block(const rmath::vector2z& coord,
                            const rtypes::discretize_ratio& resolution) {
-  return free_block_drop({}, /* empty variant */
+  return free_block_drop(nullptr,
                          coord,
                          resolution,
                          arena_map_locking::ekNONE_HELD);

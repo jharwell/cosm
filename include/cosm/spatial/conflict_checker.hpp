@@ -24,6 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <functional>
+
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
@@ -67,6 +69,8 @@ class conflict_checker {
       return *this;
     }
   };
+  using map_cb_type = std::function<status(const crepr::base_block3D* const block,
+                                           const rmath::vector2d& loc)>;
 
   /* Not move/copy constructable/assignable by default */
   conflict_checker(const conflict_checker&) = delete;

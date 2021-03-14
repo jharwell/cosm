@@ -30,6 +30,7 @@
 #include "cosm/foraging/block_dist/random_distributor.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,6 +53,8 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   cluster_distributor(const rtypes::type_uuid& id,
                       const cds::arena_grid::view& view,
                       cds::arena_grid* arena_grid,
+                      const cspatial::conflict_checker::map_cb_type& conflict_check,
+                      const base_distributor::dist_success_cb_type& dist_success,
                       size_t capacity,
                       rmath::rng* rng);
   ~cluster_distributor(void) override = default;
@@ -65,10 +68,8 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   size_t capacity(void) const override { return m_clust.capacity(); }
   size_t size(void) const override { return m_clust.n_blocks(); }
 
-  dist_status distribute_block(crepr::base_block3D* block,
-                               cds::const_spatial_entity_vector& entities) override;
+  dist_status distribute_block(crepr::base_block3D* block) override;
   dist_status distribute_blocks(cds::block3D_vectorno& blocks,
-                                cds::const_spatial_entity_vector& entities,
                                 bool strict_success) override;
   cfds::block3D_cluster_vectorno block_clustersno(void) override;
   rmath::vector2d ranchor2D(void) const { return m_clust.ranchor2D(); }

@@ -39,19 +39,20 @@ NS_START(cosm, foraging, block_dist);
 cluster_distributor::cluster_distributor(const rtypes::type_uuid& id,
                                          const cds::arena_grid::view& view,
                                          cds::arena_grid* arena_grid,
+                                         const cspatial::conflict_checker::map_cb_type& conflict_check,
+                                         const random_distributor::dist_success_cb_type& dist_success,
                                          size_t capacity,
                                          rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.cluster"),
       base_distributor(arena_grid, rng),
       m_clust(id, view, arena_grid->resolution(), capacity),
-      m_impl(view, arena_grid, rng) {}
+      m_impl(view, arena_grid, conflict_check, dist_success, rng) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 dist_status cluster_distributor::distribute_block(
-    crepr::base_block3D* block,
-    cds::const_spatial_entity_vector& entities) {
+    crepr::base_block3D* block) {
   if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%zu) reached",
              block->id().v(),
@@ -59,7 +60,7 @@ dist_status cluster_distributor::distribute_block(
     return dist_status::ekFAILURE;
   }
   /* do distribution */
-  auto status = m_impl.distribute_block(block, entities);
+  auto status = m_impl.distribute_block(block);
 
   if (dist_status::ekSUCCESS == status) {
     /* update block cluster--the distributed block is now in it */
@@ -71,7 +72,6 @@ dist_status cluster_distributor::distribute_block(
 
 dist_status
 cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
-                                       cds::const_spatial_entity_vector& entities,
                                        bool strict_success) {
   if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG("Could not distribute any of %zu blocks: Cluster capacity (%zu) "
@@ -80,7 +80,7 @@ cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
              m_clust.capacity());
     return dist_status::ekFAILURE;
   }
-  auto status = m_impl.distribute_blocks(blocks, entities, strict_success);
+  auto status = m_impl.distribute_blocks(blocks, strict_success);
 
   /*
    * If strict_success is TRUE, then if for some reason not all blocks can be

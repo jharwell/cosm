@@ -33,6 +33,8 @@
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/arena/config/arena_map_config.hpp"
+#include "cosm/foraging/block_dist/dispatcher.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -53,6 +55,41 @@ caching_arena_map::~caching_arena_map(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
+bool caching_arena_map::initialize(pal::argos_sm_adaptor* sm) {
+  bool ret = initialize_shared(sm);
+  ret |= initialize_private();
+  return ret;
+} /* initialize */
+
+bool caching_arena_map::initialize_private(void) {
+  /* distribute blocks */
+  auto avoid_ents = initial_dist_precalc(nullptr);
+
+  auto conflict_check = [&](const crepr::base_block3D* block,
+                            const rmath::vector2d& loc) {
+                          return cspatial::conflict_checker::placement2D(this,
+                                                                         block,
+                                                                         loc); };
+  auto dist_success = [&](const crepr::base_block3D* distributed) {
+                        /*
+                         * Update block location query tree. This is called from
+                         * inside a block distributor, and therefore inside a
+                         * context in which all necessary locks have already
+                         * been taken.
+                         */
+                        bloctree_update(distributed,
+                                        arena_map_locking::ekALL_HELD);
+                      };
+
+  bool ret = block_dispatcher()->initialize(avoid_ents,
+                                            block_bb(),
+                                            conflict_check,
+                                            dist_success,
+                                            rng());
+  ret |= distribute_all_blocks();
+  return ret;
+} /* initialize_private() */
+
 void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
                                    cpal::argos_sm_adaptor* sm) {
   auto& medium =
@@ -199,22 +236,6 @@ void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking)
   maybe_unlock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
-caching_arena_map::block_dist_precalc_type
-caching_arena_map::block_dist_precalc(const crepr::base_block3D* block) {
-  auto ret = base_arena_map::block_dist_precalc(block);
-
-  /*
-   * Additional entities that need to be avoided during block distribution are:
-   *
-   * - All existing caches
-   */
-  cds::const_entity_vector entities;
-  for (auto& cache : m_cacheso) {
-    ret.avoid_ents.push_back(cache.get());
-  } /* for(&cache..) */
-  return ret;
-} /* block_dist_precalc() */
-
 cds::block3D_vectorno caching_arena_map::free_blocks(void) const {
   cads::acache_vectorro rocaches;
   std::transform(caches().begin(),
@@ -224,6 +245,22 @@ cds::block3D_vectorno caching_arena_map::free_blocks(void) const {
 
   return free_blocks_calculator()(blocks(), rocaches);
 } /* free_blocks() */
+
+cds::const_spatial_entity_vector
+caching_arena_map::initial_dist_precalc(const crepr::base_block3D* block) const {
+  auto ret = base_arena_map::initial_dist_precalc(block);
+
+  /*
+   * Additional entities that need to be avoided during block distribution are:
+   *
+   * - All existing caches
+   */
+  cds::const_entity_vector entities;
+  for (auto& cache : m_cacheso) {
+    ret.push_back(cache.get());
+  } /* for(&cache..) */
+  return ret;
+} /* initial_dist_precalc() */
 
 bool caching_arena_map::placement_conflict(const crepr::base_block3D* const block,
                                            const rmath::vector2d& loc) const {

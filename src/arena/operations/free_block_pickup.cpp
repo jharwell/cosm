@@ -102,7 +102,7 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
 } /* visit() */
 
 void free_block_pickup::visit(base_arena_map& map) {
-    /* capture where the block used to be */
+  /* capture where the block used to be */
   rmath::vector2z old = m_block->danchor2D();
 
   /* update the arena grid */

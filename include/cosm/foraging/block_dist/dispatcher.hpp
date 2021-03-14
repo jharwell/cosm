@@ -34,6 +34,8 @@
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/foraging/block_dist/dist_status.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/er/client.hpp"
@@ -52,7 +54,6 @@ class arena_grid;
 } // namespace ds
 
 NS_START(cosm, foraging, block_dist);
-class base_distributor;
 
 /*******************************************************************************
  * Class Definitions
@@ -67,7 +68,7 @@ class base_distributor;
  * - Single and dual source distribution assumes left-right rectangular arena.
  * - Power law, quad source, random distribution assume square arena.
  */
-class dispatcher : public rer::client<dispatcher> {
+class  dispatcher final : public rer::client<dispatcher> {
  public:
   static constexpr const char kDistSingleSrc[] = "single_source";
   static constexpr const char kDistRandom[] = "random";
@@ -97,27 +98,25 @@ class dispatcher : public rer::client<dispatcher> {
    */
   bool initialize(const cds::const_spatial_entity_vector& entities,
                   const rmath::vector3d& block_bb,
+                  const cspatial::conflict_checker::map_cb_type& conflict_check,
+                  const base_distributor::dist_success_cb_type& dist_success,
                   rmath::rng* rng);
 
   /**
    * \brief Distribute a block in the arena.
    *
    * \param block The block to distribute.
-   * \param entities List of all arena entities in the arena that distribution
-   * should treat as obstacles/things that blocks should not be placed in.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  dist_status distribute_block(crepr::base_block3D* block,
-                               cds::const_spatial_entity_vector& entities);
+  dist_status distribute_block(crepr::base_block3D* block);
 
   /**
    * \brief Distribute all blocks in the arena.
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  dist_status distribute_blocks(cds::block3D_vectorno& blocks,
-                                cds::const_spatial_entity_vector& entities);
+  dist_status distribute_blocks(cds::block3D_vectorno& blocks);
 
   const base_distributor* distributor(void) const {
     return m_dist.get();
@@ -129,15 +128,15 @@ class dispatcher : public rer::client<dispatcher> {
 
  private:
   /* clang-format off */
-  const rtypes::discretize_ratio    mc_resolution;
-  const config::block_dist_config   mc_config;
-  const std::string                 mc_dist_type;
+  const rtypes::discretize_ratio                mc_resolution;
+  const config::block_dist_config               mc_config;
+  const std::string                             mc_dist_type;
 
-  rmath::rangez                     mc_cells_xrange;
-  rmath::rangez                     mc_cells_yrange;
+  rmath::rangez                                 mc_cells_xrange;
+  rmath::rangez                                 mc_cells_yrange;
 
-  cds::arena_grid*                  m_grid{nullptr};
-  std::unique_ptr<base_distributor> m_dist;
+  cds::arena_grid*                              m_grid{nullptr};
+  std::unique_ptr<base_distributor>             m_dist;
   /* clang-format on */
 };
 

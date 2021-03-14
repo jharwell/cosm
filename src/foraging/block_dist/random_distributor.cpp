@@ -31,7 +31,6 @@
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -43,12 +42,16 @@ NS_START(cosm, foraging, block_dist);
  ******************************************************************************/
 random_distributor::random_distributor(const cds::arena_grid::view& area,
                                        cds::arena_grid* arena_grid,
+                                       const cspatial::conflict_checker::map_cb_type& conflict_check,
+                                       const dist_success_cb_type& dist_success,
                                        rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.random"),
       base_distributor(arena_grid, rng),
       mc_origin(area.origin()->loc()),
       mc_xspan(mc_origin.x(), mc_origin.x() + area.shape()[0]),
       mc_yspan(mc_origin.y(), mc_origin.y() + area.shape()[1]),
+      mc_conflict_check(conflict_check),
+      mc_dist_success(dist_success),
       m_area(area) {
   ER_INFO("Area: xrange=%s,yrange=%s,resolution=%f",
           mc_xspan.to_str().c_str(),
@@ -60,10 +63,9 @@ random_distributor::random_distributor(const cds::arena_grid::view& area,
  * Member Functions
  ******************************************************************************/
 dist_status
-random_distributor::distribute_block(crepr::base_block3D* block,
-                                     cds::const_spatial_entity_vector& entities) {
+random_distributor::distribute_block(crepr::base_block3D* block) {
   cds::cell2D* cell = nullptr;
-  auto coords = coord_search(entities, block->rdim2D());
+  auto coords = coord_search(block);
   if (!coords) {
     ER_WARN("Unable to find distribution coordinates for block%d",
             block->id().v());
@@ -112,7 +114,7 @@ random_distributor::distribute_block(crepr::base_block3D* block,
   /* with new block position, set extent */
   extent_op.visit(*arena_grid());
 
-  if (verify_block_dist(block, entities, cell)) {
+  if (verify_block_dist(block, cell)) {
     ER_DEBUG("Block%d,ptr=%p distributed@%s/%s",
              block->id().v(),
              block,
@@ -120,9 +122,11 @@ random_distributor::distribute_block(crepr::base_block3D* block,
              rcppsw::to_string(block->danchor2D()).c_str());
     /*
      * Now that the block has been distributed, it is another entity that
-     * needs to be avoided during subsequent distributions.
+     * needs to be avoided during subsequent distributions. This class doesn't
+     * know how to add the block to the list of entities to be avoided during
+     * distribution, so we call back into the arena map to do it.
      */
-    entities.push_back(block);
+    mc_dist_success(block);
     return dist_status::ekSUCCESS;
   }
   ER_WARN("Failed to distribute block%d after finding distribution coord",
@@ -132,7 +136,6 @@ random_distributor::distribute_block(crepr::base_block3D* block,
 
 bool random_distributor::verify_block_dist(
     const crepr::base_block3D* const block,
-    const cds::const_spatial_entity_vector& entities,
     RCPPSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
   ER_CHECK(!block->is_out_of_sight(),
@@ -153,27 +156,14 @@ bool random_distributor::verify_block_dist(
             cell->entity()->id().v());
 
   /* no entity should overlap with the block after distribution */
-  for (auto& e : entities) {
-    if (e == block) {
-      continue;
-    }
-    using checker = cspatial::conflict_checker;
-    checker::status status;
-    if (crepr::entity_dimensionality::ek2D == e->dimensionality()) {
-      status = checker::placement2D(block->ranchor2D(),
-                                    block->rdim2D(),
-                                    static_cast<const crepr::entity2D*>(e));
-    } else {
-      status = checker::placement2D(block->ranchor2D(),
-                                    block->rdim2D(),
-                                    static_cast<const crepr::entity3D*>(e));
-    }
+  {
+    auto status = mc_conflict_check(block, block->ranchor2D());
     ER_ASSERT(!(status.x && status.y),
-              "Placement conflict for block%d@%s/%s after distribution",
-              block->id().v(),
-              rcppsw::to_string(block->ranchor2D()).c_str(),
-              rcppsw::to_string(block->danchor2D()).c_str());
-  } /* for(&e..) */
+            "Placement conflict for block%d@%s/%s after distribution",
+            block->id().v(),
+            rcppsw::to_string(block->ranchor2D()).c_str(),
+            rcppsw::to_string(block->danchor2D()).c_str());
+  }
   return true;
 
 error:
@@ -181,37 +171,32 @@ error:
 } /* verify_block_dist() */
 
 boost::optional<typename random_distributor::coord_search_res_t>
-random_distributor::coord_search(
-    const cds::const_spatial_entity_vector& c_entities,
-    const rmath::vector2d& c_block_dim) {
+random_distributor::coord_search(const crepr::base_block3D* block) {
   /* -1 because we are working with array indices */
   rmath::rangez area_xrange(m_area.index_bases()[0], m_area.shape()[0] - 1);
   rmath::rangez area_yrange(m_area.index_bases()[1], m_area.shape()[1] - 1);
 
-  ER_INFO("Coordinate search: "
-          "rel_xrange=%s,rel_yrange=%s,block_dim=%s,n_entities=%zu",
+  ER_INFO("Coordinate search: rel_xrange=%s,rel_yrange=%s",
           rcppsw::to_string(area_xrange).c_str(),
-          rcppsw::to_string(area_yrange).c_str(),
-          rcppsw::to_string(c_block_dim).c_str(),
-          c_entities.size());
+          rcppsw::to_string(area_yrange).c_str());
 
   if (coord_search_policy::ekFREE_CELL == m_search_policy) {
     ER_INFO("Using FREE_CELL policy");
-    return coord_search_free_cell(
-        area_xrange, area_yrange, c_entities, c_block_dim);
+    return coord_search_free_cell(area_xrange,
+                                  area_yrange,
+                                  block);
   } else if (coord_search_policy::ekRANDOM == m_search_policy) {
     ER_INFO("Using RANDOM policy");
-    return coord_search_random(area_xrange, area_yrange, c_entities, c_block_dim);
+    return coord_search_random(area_xrange, area_yrange, block);
   }
   return boost::none;
-} /* avail_coord_search() */
+} /* coord_search() */
 
 boost::optional<random_distributor::coord_search_res_t>
 random_distributor::coord_search_random(
     const rmath::rangez& c_xrange,
     const rmath::rangez& c_yrange,
-    const cds::const_spatial_entity_vector& c_entities,
-    const rmath::vector2d& c_block_dim) {
+    const crepr::base_block3D* block) {
   /*
    * Try to find an available set of relative+absolute coordinates such that if
    * the entity is placed there it will not overlap any other entities in the
@@ -225,8 +210,9 @@ random_distributor::coord_search_random(
                                    : m_area.index_bases()[1];
     rmath::vector2z rel(x, y);
     rmath::vector2z abs = mc_origin + rel;
+    auto abs_r = rmath::zvec2dvec(abs, arena_grid()->resolution().v());
 
-    if (coord_conflict_check(abs, c_entities, c_block_dim)) {
+    if (coord_conflict_check(block, abs_r)) {
       coord_search_res_t coord = { rel, abs };
       return boost::make_optional(coord);
     }
@@ -238,8 +224,7 @@ boost::optional<random_distributor::coord_search_res_t>
 random_distributor::coord_search_free_cell(
     const rmath::rangez& c_xrange,
     const rmath::rangez& c_yrange,
-    const cds::const_spatial_entity_vector& c_entities,
-    const rmath::vector2d& c_block_dim) {
+    const crepr::base_block3D* block) {
   std::vector<rmath::vector2z> rel_coords;
   for (size_t i = c_xrange.lb(); i <= c_xrange.ub(); ++i) {
     for (size_t j = c_yrange.lb(); j <= c_yrange.ub(); ++j) {
@@ -253,7 +238,8 @@ random_distributor::coord_search_free_cell(
   for (size_t i = 0; i < rel_coords.size(); ++i) {
     auto rel = rel_coords[(start + i) % rel_coords.size()];
     auto abs = mc_origin + rel;
-    if (coord_conflict_check(abs, c_entities, c_block_dim)) {
+    auto abs_r = rmath::zvec2dvec(abs, arena_grid()->resolution().v());
+    if (coord_conflict_check(block, abs_r)) {
       coord_search_res_t coord = { rel, abs };
       return boost::make_optional(coord);
     }
@@ -262,14 +248,8 @@ random_distributor::coord_search_free_cell(
 } /* coord_search_free_cell() */
 
 bool random_distributor::coord_conflict_check(
-    const rmath::vector2z& c_coord,
-    const cds::const_spatial_entity_vector& c_entities,
-    const rmath::vector2d& c_block_dim) const {
-  rmath::vector2z ddim =
-      rmath::dvec2zvec(c_block_dim, arena_grid()->resolution().v());
-  rmath::rangez xrange(c_coord.x(), c_coord.x() + ddim.x());
-  rmath::rangez yrange(c_coord.y(), c_coord.y() + ddim.y());
-
+    const crepr::base_block3D* block,
+    const rmath::vector2d& drop_loc) const {
   /*
    * If this distributor is part of a powerlaw distributor, blocks will not be
    * packed very tightly together via checking real rather than discrete
@@ -281,22 +261,8 @@ bool random_distributor::coord_conflict_check(
    * @todo This should probably be fixed at some point, or at least made a
    * user-controllable switch via input parameter.
    */
-  auto check_conflict = [&](const auto* ent) {
-    rmath::vector2d abs_r =
-        rmath::zvec2dvec(c_coord, arena_grid()->resolution().v());
-    using checker = cspatial::conflict_checker;
-    if (crepr::entity_dimensionality::ek2D == ent->dimensionality()) {
-      auto status = checker::placement2D(
-          abs_r, c_block_dim, static_cast<const crepr::entity2D*>(ent));
-      return status.x && status.y;
-    } else {
-      auto status = checker::placement2D(
-          abs_r, c_block_dim, static_cast<const crepr::entity3D*>(ent));
-      return status.x && status.y;
-    }
-  };
-
-  return std::none_of(c_entities.begin(), c_entities.end(), check_conflict);
+  auto conflict = mc_conflict_check(block, drop_loc);
+  return !(conflict.x && conflict.y);
 } /* coord_conflict_check() */
 
 NS_END(block_dist, foraging, cosm);

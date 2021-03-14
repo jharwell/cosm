@@ -32,6 +32,8 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/foraging/block_dist/base_distributor.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/ds/entity_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -76,19 +78,19 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   size_t size(void) const override RCPPSW_PURE;
 
   cfds::block3D_cluster_vectorno block_clustersno(void) override;
-  dist_status distribute_block(crepr::base_block3D* block,
-                               cds::const_spatial_entity_vector& entities) override;
+  dist_status distribute_block(crepr::base_block3D* block) override;
   /**
    * \brief Computer cluster locations such that no two clusters overlap, and
    * map locations and compositional block distributors into internal data
    * structures.
    *
-   * \param c_entities The entities to avoid during cluster mapping.
    * \param c_block_bb The bounding box large enough to hold any block which
    *                   might be distributed in the arena.
    */
   void initialize(const cds::const_spatial_entity_vector& c_entities,
-                  const rmath::vector3d& c_block_bb) RCPPSW_COLD;
+                  const rmath::vector3d& c_block_bb,
+                  const cspatial::conflict_checker::map_cb_type& conflict_check,
+                  const base_distributor::dist_success_cb_type& dist_success) RCPPSW_COLD;
 
  private:
   /* clang-format off */

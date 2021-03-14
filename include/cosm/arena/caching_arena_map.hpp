@@ -108,6 +108,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   robot_on_block(const rmath::vector2d& pos,
                  const rtypes::type_uuid& ent_id) const override RCPPSW_PURE;
 
+  bool initialize(pal::argos_sm_adaptor* sm) override;
+
   /**
    * \brief Get the free blocks in the arena. Does no locking, so this is only
    * safe to call in non-concurrent contexts.
@@ -143,14 +145,15 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   }
   void created_caches_clear(void) { m_created_caches.clear(); }
 
+  cds::const_spatial_entity_vector
+  initial_dist_precalc(const crepr::base_block3D* block) const override;
 
  private:
   void pre_block_dist_lock(const arena_map_locking& locking) override;
   void post_block_dist_unlock(const arena_map_locking& locking) override;
-  block_dist_precalc_type
-  block_dist_precalc(const crepr::base_block3D* block) override;
   bool bloctree_verify(void) const override;
   bool cloctree_verify(void) const;
+  bool initialize_private(void);
 
   /* clang-format off */
   mutable std::shared_mutex              m_cache_mtx{};

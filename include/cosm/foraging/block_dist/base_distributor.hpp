@@ -32,7 +32,6 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/ds/block3D_vector.hpp"
-#include "cosm/ds/entity_vector.hpp"
 #include "cosm/foraging/ds/block_cluster_vector.hpp"
 #include "cosm/foraging/block_dist/dist_status.hpp"
 #include "cosm/foraging/block_dist/metrics/distributor_metrics.hpp"
@@ -57,6 +56,8 @@ NS_START(cosm, foraging, block_dist);
  */
 class base_distributor : public cfbd::metrics::distributor_metrics {
  public:
+  using dist_success_cb_type = std::function<void(const crepr::base_block3D*)>;
+
   /**
    * \brief How many times to attempt to distribute all blocks before giving up,
    * causing an assertion failure on distribution.
@@ -79,15 +80,11 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    * distributor in turn.
    *
    * \param block The block to distribute.
-   * \param entities The list of entities that the block should be distributed
-   *                 around. If block distribution is successful, then the
-   *                 distributed block is added to the entity list.
    *
    * \return \c TRUE if the block distribution was successful, \c FALSE
    * otherwise.
    */
-  virtual dist_status distribute_block(crepr::base_block3D* block,
-                                       cds::const_spatial_entity_vector& entities) = 0;
+  virtual dist_status distribute_block(crepr::base_block3D* block) = 0;
 
   /**
    * \brief Return a read-only list of \ref block_clusters for capacity checking
@@ -103,12 +100,12 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    * otherwise.
    */
   virtual dist_status distribute_blocks(cds::block3D_vectorno& blocks,
-                                        cds::const_spatial_entity_vector& entities,
                                         bool strict_success) {
+
     auto status = std::all_of(blocks.begin(),
                               blocks.end(),
                               [&](auto& b) {
-                                return dist_status::ekSUCCESS == distribute_block(b, entities);
+                                return dist_status::ekSUCCESS == distribute_block(b);
                               });
     if (!strict_success || status) {
       return dist_status::ekSUCCESS;

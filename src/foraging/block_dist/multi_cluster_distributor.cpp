@@ -37,22 +37,26 @@ NS_START(cosm, foraging, block_dist);
 multi_cluster_distributor::multi_cluster_distributor(
     const std::vector<cds::arena_grid::view>& grids,
     cds::arena_grid* arena_grid,
+    const cspatial::conflict_checker::map_cb_type& conflict_check,
+    const random_distributor::dist_success_cb_type& dist_success,
     size_t capacity,
     const rtypes::type_uuid& id_start,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.multi_cluster"),
       base_distributor(arena_grid, rng) {
   for (size_t i = 0; i < grids.size(); ++i) {
-    m_dists.emplace_back(
-        rtypes::type_uuid(i + id_start.v()), grids[i], arena_grid, capacity, rng);
+    m_dists.emplace_back(rtypes::type_uuid(i + id_start.v()),
+                         grids[i],
+                         arena_grid,
+                         conflict_check,
+                         dist_success,
+                         capacity, rng);
   } /* for(i..) */
 }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status multi_cluster_distributor::distribute_block(
-    crepr::base_block3D* block,
-    cds::const_spatial_entity_vector& entities) {
+dist_status multi_cluster_distributor::distribute_block(crepr::base_block3D* block) {
   ER_INFO("Distribute block%d: n_clusts=%zu,total_capacity=%zu,total_size=%zu",
           block->id().v(),
           m_dists.size(),
@@ -88,7 +92,7 @@ dist_status multi_cluster_distributor::distribute_block(
     } else {
       dist.coord_search_policy(coord_search_policy::ekRANDOM);
     }
-    auto status = dist.distribute_block(block, entities);
+    auto status = dist.distribute_block(block);
     if (dist_status::ekSUCCESS == status) {
       return status;
     }

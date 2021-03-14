@@ -51,9 +51,7 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status powerlaw_distributor::distribute_block(
-    crepr::base_block3D* block,
-    cds::const_spatial_entity_vector& entities) {
+dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block) {
   /*
    * Try to find a block cluster to distribute to, starting from a random
    * cluster size.
@@ -71,7 +69,7 @@ dist_status powerlaw_distributor::distribute_block(
              mclust->capacity(),
              mclust->size());
 
-    if (dist_status::ekSUCCESS == mclust->distribute_block(block, entities)) {
+    if (dist_status::ekSUCCESS == mclust->distribute_block(block)) {
       return dist_status::ekSUCCESS;
     } 
   } /* for(i..) */
@@ -81,7 +79,9 @@ dist_status powerlaw_distributor::distribute_block(
 
 void powerlaw_distributor::initialize(
     const cds::const_spatial_entity_vector& c_entities,
-    const rmath::vector3d& c_block_bb) {
+    const rmath::vector3d& c_block_bb,
+    const cspatial::conflict_checker::map_cb_type& conflict_check,
+    const base_distributor::dist_success_cb_type& dist_success) {
   std::vector<size_t> clust_sizes;
 
   /* First, calc cluster sizes, and sort */
@@ -113,7 +113,13 @@ void powerlaw_distributor::initialize(
   size_t id_start = 0;
   for (auto& pair : grids) {
     auto mclust = std::make_unique<multi_cluster_distributor>(
-        pair.second, arena_grid(), pair.first, rtypes::type_uuid(id_start), rng());
+        pair.second,
+        arena_grid(),
+        conflict_check,
+        dist_success,
+        pair.first,
+        rtypes::type_uuid(id_start),
+        rng());
     ER_INFO("Mapped multi-cluster: capacity=%zu,ID start=%zu",
             mclust->capacity(),
             id_start);

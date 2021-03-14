@@ -23,43 +23,30 @@
  ******************************************************************************/
 #include "cosm/ds/block3D_ht.hpp"
 
-#include <numeric>
 #include <string>
 
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/ds/utils.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, ds);
 
-/*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-template <typename THt>
-std::string do_to_str(const THt& table) {
-  return std::accumulate(table.begin(),
-                         table.end(),
-                         std::string(),
-                         [&](const std::string& a, const auto& pair) {
-                           return a + "b" + rcppsw::to_string(pair.second->id()) +
-                                  ",";
-                         });
-} /* do_to_str() */
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 std::string block3D_hto::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 std::string block3D_htno::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 std::string block3D_htro::to_str(void) const {
-  return do_to_str(*this);
+  return cds::to_string(*this, "b");
 } /* to_str() */
 
 NS_END(ds, cosm);

@@ -1,5 +1,5 @@
 /**
- * \file cache_vector.cpp
+ * \file block3D_list.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,40 +18,50 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_
+#define INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/ds/cache_vector.hpp"
+#include <memory>
+#include <string>
+#include <list>
 
-#include "cosm/arena/repr/arena_cache.hpp"
-#include "cosm/ds/utils.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, ds);
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
+NS_START(cosm, ds);
+
+using block3D_listno_type = crepr::base_block3D*;
 
 /*******************************************************************************
- * Member Functions
+ * Type Definitions
  ******************************************************************************/
-std::string acache_vectoro::to_str(void) const {
-  return cds::to_string(*this, "c");
-} /* to_str() */
 
-std::string acache_vectorno::to_str(void) const {
-  return cds::to_string(*this, "c");
-} /* to_str() */
+/*
+ * \brief Specialization of \ref std::list indicating the blocks are NOT owned
+ * by this class.
+ *
+ * Has a \ref to_str() method for more convenient debugging.
+ */
+class block3D_listno : public std::list<block3D_listno_type> {
+ public:
+  using std::list<block3D_listno_type>::list;
+  using value_type = std::list<block3D_listno_type>::value_type;
 
-std::string acache_vectorro::to_str(void) const {
-  return cds::to_string(*this, "c");
-} /* to_str() */
+  /**
+   * \brief Get a string representation of the list contents.
+   */
+  std::string to_str(void) const;
+};
 
-std::string bcache_vectorno::to_str(void) const {
-  return cds::to_string(*this, "c");
-} /* to_str() */
+NS_END(ds, cosm);
 
-std::string bcache_vectorro::to_str(void) const {
-  return cds::to_string(*this, "c");
-} /* to_str() */
-
-NS_END(ds, arena, cosm);
+#endif /* INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_ */

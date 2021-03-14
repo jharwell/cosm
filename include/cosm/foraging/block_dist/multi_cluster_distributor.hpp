@@ -58,6 +58,8 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
 
   multi_cluster_distributor(const std::vector<cds::arena_grid::view>& grids,
                             cds::arena_grid* arena_grid,
+                            const cspatial::conflict_checker::map_cb_type& conflict_check,
+                            const base_distributor::dist_success_cb_type& dist_success,
                             size_t capacity,
                             const rtypes::type_uuid& id_start,
                             rmath::rng* rng);
@@ -75,8 +77,7 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   }
   size_t size(void) const override RCSW_PURE;
 
-  dist_status distribute_block(crepr::base_block3D* block,
-                               cds::const_spatial_entity_vector& entities) override;
+  dist_status distribute_block(crepr::base_block3D* block) override;
 
  private:
   /* clang-format off */

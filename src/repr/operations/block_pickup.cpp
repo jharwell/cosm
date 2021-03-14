@@ -44,7 +44,6 @@ block_pickup::block_pickup(const rtypes::type_uuid& robot_id,
  ******************************************************************************/
 void block_pickup::visit(crepr::base_block3D& block,
                          const block_pickup_owner& owner) {
-  ER_ASSERT(rtypes::constants::kNoUUID != block.id(), "Unamed block");
   block.update_on_pickup(mc_robot_id, mc_timestep, owner);
 } /* visit() */
 

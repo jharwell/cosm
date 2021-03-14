@@ -37,6 +37,7 @@
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/coord_search_policy.hpp"
+#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -65,6 +66,8 @@ class random_distributor : public rer::client<random_distributor>,
  public:
   random_distributor(const cds::arena_grid::view& area,
                      cds::arena_grid* arena_grid,
+                     const cspatial::conflict_checker::map_cb_type& conflict_check,
+                     const dist_success_cb_type& dist_success,
                      rmath::rng* rng);
 
   random_distributor& operator=(const random_distributor&) = delete;
@@ -79,15 +82,13 @@ class random_distributor : public rer::client<random_distributor>,
    * \brief Distribution a single block in the arena.
    *
    * \param block The block to distribute.
-   * \param entities Entities that need to be avoided during distribution.
    *
    * \note Holding \ref arena_map block, grid mutexes necessary to safely call
    * this function in multithreaded contexts (not handled internally).
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-   dist_status distribute_block(crepr::base_block3D* block,
-                                cds::const_spatial_entity_vector& entities) override;
+   dist_status distribute_block(crepr::base_block3D* block) override;
 
   cfds::block3D_cluster_vectorno block_clustersno(void) override { return {}; }
 
@@ -102,12 +103,8 @@ class random_distributor : public rer::client<random_distributor>,
   /**
    * \brief Find coordinates for distribution that are outside the extent of the
    * all specified entities, while also accounting for block size.
-   *
-   * \param entities The entities to avoid.
    */
-  boost::optional<coord_search_res_t> coord_search(
-      const cds::const_spatial_entity_vector& c_entities,
-      const rmath::vector2d& c_block_dim);
+  boost::optional<coord_search_res_t> coord_search(const crepr::base_block3D* block);
 
   /**
    * \brief Once a block has been distributed, perform distribution sanity
@@ -118,31 +115,31 @@ class random_distributor : public rer::client<random_distributor>,
    * - No entity should overlap with the block after distribution.
    */
   bool verify_block_dist(const crepr::base_block3D* block,
-                         const cds::const_spatial_entity_vector& entities,
                          const cds::cell2D* cell) RCPPSW_PURE;
 
   boost::optional<coord_search_res_t> coord_search_random(
       const rmath::rangez& c_xrange,
       const rmath::rangez& c_yrange,
-      const cds::const_spatial_entity_vector& c_entities,
-      const rmath::vector2d& c_block_dim);
+      const crepr::base_block3D* block);
+
 
   boost::optional<coord_search_res_t> coord_search_free_cell(
       const rmath::rangez& c_xrange,
       const rmath::rangez& c_yrange,
-      const cds::const_spatial_entity_vector& c_entities,
-      const rmath::vector2d& c_block_dim);
+      const crepr::base_block3D* block);
 
-  bool coord_conflict_check(const rmath::vector2z& c_coord,
-                            const cds::const_spatial_entity_vector& c_entities,
-                            const rmath::vector2d& c_block_dim) const;
+  bool coord_conflict_check(const crepr::base_block3D* block,
+                            const rmath::vector2d& drop_loc) const;
+
   /* clang-format off */
-  const rmath::vector2z          mc_origin;
-  const rmath::rangeu            mc_xspan;
-  const rmath::rangeu            mc_yspan;
+  const rmath::vector2z                         mc_origin;
+  const rmath::rangeu                           mc_xspan;
+  const rmath::rangeu                           mc_yspan;
+  const cspatial::conflict_checker::map_cb_type mc_conflict_check;
+  const dist_success_cb_type                    mc_dist_success;
 
-  enum coord_search_policy       m_search_policy{coord_search_policy::ekRANDOM};
-  cds::arena_grid::view          m_area;
+  enum coord_search_policy                      m_search_policy{coord_search_policy::ekRANDOM};
+  cds::arena_grid::view                         m_area;
   /* clang-format on */
 };
 

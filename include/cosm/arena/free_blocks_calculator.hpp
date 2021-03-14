@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_FREE_BLOCK_CALCULATOR_HPP_
-#define INCLUDE_COSM_ARENA_FREE_BLOCK_CALCULATOR_HPP_
+#ifndef INCLUDE_COSM_ARENA_FREE_BLOCKS_CALCULATOR_HPP_
+#define INCLUDE_COSM_ARENA_FREE_BLOCKS_CALCULATOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -72,4 +72,4 @@ class free_blocks_calculator {
 
 NS_END(arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_FREE_BLOCK_CALCULATOR_HPP_ */
+#endif /* INCLUDE_COSM_ARENA_FREE_BLOCKS_CALCULATOR_HPP_ */

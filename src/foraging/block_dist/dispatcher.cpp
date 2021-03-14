@@ -46,6 +46,7 @@ dispatcher::dispatcher(cds::arena_grid* const grid,
       mc_resolution(resolution),
       mc_config(*config),
       mc_dist_type(config->dist_type),
+
       /*
        * All sourced distributions can't occupy more than 70% of either the X or
        * Y dimension in order to avoid physics engine errors in ARGoS near arena
@@ -65,6 +66,8 @@ dispatcher::~dispatcher(void) = default;
  ******************************************************************************/
 bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
                             const rmath::vector3d& block_bb,
+                            const cspatial::conflict_checker::map_cb_type& conflict_check,
+                            const base_distributor::dist_success_cb_type& dist_success,
                             rmath::rng* rng) {
   /* clang-format off */
   cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
@@ -97,6 +100,8 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
         rtypes::type_uuid(0),
         arena,
         m_grid,
+        conflict_check,
+        dist_success,
         std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistSingleSrc == mc_dist_type) {
@@ -106,6 +111,8 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
         rtypes::type_uuid(0),
         area,
         m_grid,
+        conflict_check,
+        dist_success,
         std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistDualSrc == mc_dist_type) {
@@ -117,6 +124,8 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
     m_dist = std::make_unique<multi_cluster_distributor>(
         areas,
         m_grid,
+        conflict_check,
+        dist_success,
         std::numeric_limits<size_t>::max(),
         rtypes::type_uuid(0),
         rng);
@@ -139,6 +148,8 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
     m_dist = std::make_unique<multi_cluster_distributor>(
         areas,
         m_grid,
+        conflict_check,
+        dist_success,
         std::numeric_limits<size_t>::max(),
         rtypes::type_uuid(0),
         rng);
@@ -146,7 +157,7 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
     auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,
                                                     m_grid,
                                                     rng);
-    p->initialize(entities, block_bb),
+    p->initialize(entities, block_bb, conflict_check, dist_success);
     m_dist = std::move(p);
   }
   /* clang-format on */
@@ -154,15 +165,13 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
 } /* initialize() */
 
 dist_status
-dispatcher::distribute_block(crepr::base_block3D* block,
-                             cds::const_spatial_entity_vector& entities) {
-  return m_dist->distribute_block(block, entities);
+dispatcher::distribute_block(crepr::base_block3D* block) {
+  return m_dist->distribute_block(block);
 } /* distribute_block() */
 
 dist_status
-dispatcher::distribute_blocks(cds::block3D_vectorno& blocks,
-                              cds::const_spatial_entity_vector& entities) {
-  return m_dist->distribute_blocks(blocks, entities, mc_config.strict_success);
+dispatcher::distribute_blocks(cds::block3D_vectorno& blocks) {
+  return m_dist->distribute_blocks(blocks, mc_config.strict_success);
 } /* distribute_block() */
 
 NS_END(block_dist, foraging, cosm);

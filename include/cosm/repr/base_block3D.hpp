@@ -94,6 +94,9 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   const block_metadata* md(void) const { return &m_md; }
   block_metadata* md(void) { return &m_md; }
 
+  bool is_carried_by_robot(void) const {
+    return rtypes::constants::kNoUUID != m_md.robot_id();
+  }
   /**
    * \brief Update block state given that it has been picked up.
    */

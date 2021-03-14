@@ -47,8 +47,17 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
                std::back_inserter(free_blocks),
                [&](const auto& b) RCPPSW_PURE {
                  /* block not carried by robot */
-                 return rtypes::constants::kNoUUID == b->md()->robot_id() &&
-                        /*
+                 return !b->is_carried_by_robot() &&
+                     /*
+                      * Block is not out of sight. Handles cases with powerlaw
+                      * distribution where block dropped in the nest fail to
+                      * re-distribute and are currently pending to be
+                      * re-distributed later (maybe) if arena conditions allow
+                      * it (e.g., enough robots have picked up blocks so there
+                      * is space in a cluster for the block). See COSM#124.
+                      */
+                     !b->is_out_of_sight() &&
+                     /*
                       * Block not inside cache (to catch blocks that were on the
                       * host cell for the cache, and we incorporated into it
                       * during creation).

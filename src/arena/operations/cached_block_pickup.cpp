@@ -182,8 +182,17 @@ void cached_block_pickup::visit(caching_arena_map& map) {
      * Update bloctree with the orphan block (needed for proper block drop
      * conflict checking in the vicinity of the old cache).
      */
-    map.bloctree_update(m_orphan_block,
-                        arena_map_locking::ekCACHES_HELD);
+    map.bloctree_update(m_orphan_block, arena_map_locking::ekCACHES_HELD);
+
+    /*
+     * Possibly update block cluster membership. The block could have been part
+     * of a static cache which was inside a block cluster, nd if a robot happens
+     * to come pick up the orphan block before the cache is re-created, this can
+     * cause a segfault with block cluster updating, because the free block is
+     * assumed to be part of the list of blocks a block cluster manages. See
+     * COSM#124.
+     */
+    map.block_distributor()->cluster_update_after_drop(m_orphan_block);
 
     ER_INFO("Block%d picked up from cache%d@%s [depleted]",
             m_pickup_block->id().v(),
