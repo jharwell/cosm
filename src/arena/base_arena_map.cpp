@@ -30,6 +30,7 @@
 #include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/arena/config/arena_map_config.hpp"
+#include "cosm/repr/config/nest_config.hpp"
 #include "cosm/arena/ds/loctree.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
@@ -79,18 +80,18 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
 
 
   ER_INFO("Initialize %zu nests", config->nests.nests.size());
-  for (auto& nest : config->nests.nests) {
+  for (crepr::config::nest_config nest : config->nests.nests) {
     /*
      * Trim nest size if necessary so it is an even multiple of the grid
      * resolution--many parts of the code rely on 2D spatial objects on the
      * arena floor being exact multiples of the grid size.
+     *
+     * Note that we are NOT updating the dimensions held by the parent arena map
+     * configuration.
      */
-    auto nest_dims =
-        cspatial::dimension_checker::even_multiple(grid_resolution(), nest.dims);
-    crepr::nest inst(nest_dims,
-                     nest.center,
-                     config->grid.resolution,
-                     carepr::light_type_index()[carepr::light_type_index::kNest]);
+    nest.dims = cspatial::dimension_checker::even_multiple(grid_resolution(),
+                                                           nest.dims);
+    crepr::nest inst(&nest, config->grid.resolution);
     /* configure nest extent */
     for (size_t i = inst.xdspan().lb(); i <= inst.xdspan().ub(); ++i) {
       for (size_t j = inst.ydspan().lb(); j <= inst.ydspan().ub(); ++j) {
@@ -134,9 +135,8 @@ bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm) {
 
   /* initialize nest lights */
   for (auto& pair : *m_nests) {
-    for (auto& l : pair.second.lights()) {
-      sm->AddEntity(*l);
-    } /* for(&l..) */
+    pair.second.initialize(sm,
+                           carepr::light_type_index()[carepr::light_type_index::kNest]);
   } /* for(&pair..) */
 
   return true;

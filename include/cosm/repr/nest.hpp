@@ -27,12 +27,12 @@
 #include <list>
 #include <string>
 
-#include <argos3/plugins/simulator/entities/light_entity.h>
 
 #include "rcppsw/types/discretize_ratio.hpp"
 
-#include "cosm/repr/colored_entity.hpp"
 #include "cosm/repr/unicell_immovable_entity2D.hpp"
+#include "cosm/repr/nest_light.hpp"
+#include "cosm/repr/config/nest_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -57,13 +57,6 @@ NS_START(cosm, repr);
 class nest : public repr::unicell_immovable_entity2D,
              public repr::colored_entity {
  public:
-  /**
-   * \brief We use raw pointers to indicate we (COSM) do not own the
-   * constructed lights. If we own them, then when ARGoS goes to delete them
-   * after the experiment has ended the arena has already been deconstructed and
-   * the nest lights along with them, and an exception is thrown.
-   */
-  using light_list = std::list<argos::CLightEntity*>;
 
   /**
    * \param dim Dimensions of the nest. Square nests get 1 light above the
@@ -72,16 +65,22 @@ class nest : public repr::unicell_immovable_entity2D,
    * \param center The location of the center of the nest.
    * \param resolution The arena resolution used to map from continous sizes to
    *                   a discrete grid.
-   * \param light_color The color to make the lights above the nest.
    */
-  nest(const rmath::vector2d& dim,
-       const rmath::vector2d& center,
-       const rtypes::discretize_ratio& resolution,
-       const rutils::color& light_color);
+  nest(const config::nest_config* config,
+       const rtypes::discretize_ratio& resolution);
 
-  light_list& lights(void) { return m_lights; }
+  const std::list<nest_light>& lights(void) { return m_lights; }
 
   std::string to_str(bool full = false) const;
+
+  /**
+   * \brief Initialize lights above the nest for robots to use for localization,
+   * dependent on the geometry of the nest.
+   *
+   * \param light_color The color to make the lights above the nest.
+   */
+  void initialize(pal::argos_sm_adaptor* sm,
+                  const rutils::color& light_color);
 
  private:
   /**
@@ -89,33 +88,14 @@ class nest : public repr::unicell_immovable_entity2D,
    */
   static int m_nest_id;
 
-  /**
-   * \brief The light intensity of all the lights associated with this nest.
-   *
-   * Lights must be sufficiently high above the ground and intense so that
-   * robots can detect them from far away in large arenas.
-   */
-  static constexpr const double kLIGHT_INTENSITY = 10.0;
 
-  /**
-   * \brief The height above the ground for all lights associated with this
-   * nest.
-   *
-   * Lights must be sufficiently high above the ground and intense so that
-   * robots can detect them from far away in large arenas.
-   */
-  static constexpr const double kLIGHT_HEIGHT = 5.0;
-
-  /**
-   * \brief Initialize lights above the nest for robots to use for localization,
-   * dependent on the geometry of the nest.
-   */
-  light_list init_lights(const rutils::color& color) const;
-  light_list init_square(const rutils::color& color) const;
-  light_list init_rect(const rutils::color& color) const;
+  std::list<nest_light> init_square(const rutils::color& color) const;
+  std::list<nest_light> init_rect(const rutils::color& color) const;
 
   /* clang-format off */
-  light_list m_lights;
+  const config::nest_config mc_config;
+
+  std::list<nest_light>     m_lights{};
   /* clang-format on */
 };
 

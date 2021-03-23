@@ -1,7 +1,7 @@
 /**
- * \file nest_parser.cpp
+ * \file nest_light.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,47 +21,37 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/config/xml/nest_parser.hpp"
+#include "cosm/repr/nest_light.hpp"
+
+#include "cosm/pal/argos_sm_adaptor.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr, config, xml);
+NS_START(cosm, repr);
+
+/*******************************************************************************
+ * Constructors/Destructors
+ ******************************************************************************/
+nest_light::nest_light(const std::string& name,
+                       const rmath::vector3d& pos,
+                       const rutils::color& color,
+                       double intensity)
+    : colored_entity(color),
+      m_impl(new argos::CLightEntity(name,
+                                     argos::CVector3(pos.x(),
+                                                     pos.y(),
+                                                     pos.z()),
+                                     argos::CColor(color.red(),
+                                                   color.green(),
+                                                   color.blue()),
+                                     intensity)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_parser::parse(const ticpp::Element& node) {
-  ticpp::Element nnode;
+void nest_light::initialize(pal::argos_sm_adaptor* sm) {
+  sm->AddEntity(*m_impl);
+} /* initialize() */
 
-  /* we were called as part of arena configuration */
-  if (nullptr == node.FirstChild(kXMLRoot, false)) {
-    nnode = node;
-  } else { /* we were called as part of controller configuration */
-    nnode = node_get(node, kXMLRoot);
-  }
-  m_config = std::make_unique<config_type>();
-
-  XML_PARSE_ATTR(nnode, m_config, center);
-  XML_PARSE_ATTR(nnode, m_config, dims);
-  XML_PARSE_ATTR_DFLT(nnode, m_config, light_height, rtypes::spatial_dist(0));
-  XML_PARSE_ATTR_DFLT(nnode, m_config, light_intensity, -1.0);
-} /* parse() */
-
-bool nest_parser::validate(void) const {
-  return validate(m_config.get());
-} /* validate() */
-
-/*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-bool nest_parser::validate(const nest_config* config) {
-  RCPPSW_CHECK(config->center.is_pd());
-  RCPPSW_CHECK(config->dims.is_pd());
-  return true;
-
-error:
-  return false;
-} /* validate(const nest_config *config)() */
-
-NS_END(xml, config, repr, cosm);
+NS_END(repr, cosm);
