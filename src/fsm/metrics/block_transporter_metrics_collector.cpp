@@ -48,8 +48,10 @@ block_transporter_metrics_collector::csv_header_cols(void) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
-    "int_avg_phototaxiing_to_goal",
-    "cum_avg_phototaxiing_to_goal",
+    "int_avg_phototaxiing_to_goal_including_ca",
+    "int_avg_phototaxiing_to_goal_no_ca",
+    "cum_avg_phototaxiing_to_goal_including_ca",
+    "cum_avg_phototaxiing_to_goal_no_ca",
     /* clang-format on */
   };
   merged.splice(merged.end(), cols);
@@ -68,8 +70,11 @@ block_transporter_metrics_collector::csv_line_build(void) {
   }
   std::string line;
 
-  line += csv_entry_intavg(m_interval.n_phototaxiing_to_goal);
-  line += csv_entry_tsavg(m_cum.n_phototaxiing_to_goal);
+  line += csv_entry_intavg(m_interval.n_phototaxiing_to_goal_including_ca);
+  line += csv_entry_intavg(m_interval.n_phototaxiing_to_goal_no_ca);
+
+  line += csv_entry_tsavg(m_cum.n_phototaxiing_to_goal_including_ca);
+  line += csv_entry_tsavg(m_cum.n_phototaxiing_to_goal_no_ca);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
@@ -77,12 +82,19 @@ block_transporter_metrics_collector::csv_line_build(void) {
 void block_transporter_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const block_transporter_metrics&>(metrics);
-  m_interval.n_phototaxiing_to_goal += m.is_phototaxiing_to_goal();
-  m_cum.n_phototaxiing_to_goal += m.is_phototaxiing_to_goal();
-      } /* collect() */
+  bool including_ca = m.is_phototaxiing_to_goal(true);
+  bool no_ca = m.is_phototaxiing_to_goal(false);
+
+  m_interval.n_phototaxiing_to_goal_including_ca += including_ca;
+  m_interval.n_phototaxiing_to_goal_no_ca += no_ca;
+
+  m_cum.n_phototaxiing_to_goal_including_ca += including_ca;
+  m_cum.n_phototaxiing_to_goal_no_ca += no_ca;
+} /* collect() */
 
 void block_transporter_metrics_collector::reset_after_interval(void) {
-  m_interval.n_phototaxiing_to_goal = 0;
+  m_interval.n_phototaxiing_to_goal_including_ca = 0;
+  m_interval.n_phototaxiing_to_goal_no_ca = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, fsm, cosm);

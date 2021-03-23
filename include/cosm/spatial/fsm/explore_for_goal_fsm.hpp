@@ -85,11 +85,11 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   explore_for_goal_fsm(const explore_for_goal_fsm&) = delete;
 
   /* interference metrics */
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, exp_interference, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, entered_interference, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(bool, exited_interference, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rtypes::timestep, interference_duration, const);
-  RCPPSW_WRAP_OVERRIDE_DECL(rmath::vector3z, interference_loc3D, const);
+  RCPPSW_WRAP_DECL_OVERRIDE(bool, exp_interference, const);
+  RCPPSW_WRAP_DECL_OVERRIDE(bool, entered_interference, const);
+  RCPPSW_WRAP_DECL_OVERRIDE(bool, exited_interference, const);
+  RCPPSW_WRAP_DECL_OVERRIDE(rtypes::timestep, interference_duration, const);
+  RCPPSW_WRAP_DECL_OVERRIDE(rmath::vector3z, interference_loc3D, const);
 
   /* taskable overrides */
   bool task_finished(void) const override {

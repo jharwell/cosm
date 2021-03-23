@@ -68,10 +68,8 @@ class block_transporter_metrics_collector final : public rmetrics::base_metrics_
    * requirements.
    */
   struct stats {
-    /**
-     * \brief  Total # robots phototaxiing to nest.
-     */
-    std::atomic_size_t n_phototaxiing_to_goal{0};
+    std::atomic_size_t n_phototaxiing_to_goal_including_ca{0};
+    std::atomic_size_t n_phototaxiing_to_goal_no_ca{0};
   };
 
   std::list<std::string> csv_header_cols(void) const override;

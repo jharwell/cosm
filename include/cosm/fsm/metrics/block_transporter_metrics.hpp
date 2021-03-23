@@ -54,8 +54,14 @@ class block_transporter_metrics : public virtual rmetrics::base_metrics {
   /**
    * \brief If \c True, then the robot is moving towards its goal with its block
    * via phototaxis.
+   *
+   * \param include_ca If \c TRUE, then photoaxiing towards a goal is defined to
+   * include collision avoidance manuvers. If \c FALSE, then phototaxiing
+   * towards a goal only occurs when a robot is not also avoiding
+   * collision. That is, are collision and avoidance considered separate states,
+   * or not?
    */
-  virtual bool is_phototaxiing_to_goal(void) const = 0;
+  virtual bool is_phototaxiing_to_goal(bool include_ca) const = 0;
 };
 
 NS_END(metrics, fsm, cosm);
