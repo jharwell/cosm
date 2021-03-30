@@ -40,7 +40,7 @@ NS_START(cosm, foraging, fsm);
  * Constructors/Destructors
  ******************************************************************************/
 foraging_util_hfsm::foraging_util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
-                                       std::unique_ptr<csstrategy::base_strategy> nest_acq,
+                                       std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
                                        rmath::rng* rng,
                                        uint8_t max_states)
     : util_hfsm(saa, rng, max_states),
@@ -149,5 +149,14 @@ RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_transport_to_nest) {
 RCPPSW_HFSM_EXIT_DEFINE(foraging_util_hfsm, exit_transport_to_nest) {
   sensing()->template sensor<hal::sensors::light_sensor>()->disable();
 }
+
+/*******************************************************************************
+ * Nest Acquisition Metrics
+ ******************************************************************************/
+RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
+                          nest_acq_strategy,
+                          m_nest_acq,
+                          nullptr,
+                          const);
 
 NS_END(fsm, foraging, cosm);

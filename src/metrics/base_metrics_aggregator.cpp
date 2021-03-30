@@ -62,6 +62,7 @@
 #include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
+#include "cosm/spatial/strategy/metrics/nest_acq_metrics_collector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -119,6 +120,7 @@ void base_metrics_aggregator::register_standard(
       rmpl::identity<csmetrics::movement_metrics_collector>,
       rmpl::identity<csmetrics::interference_metrics_collector>,
       rmpl::identity<csmetrics::goal_acq_metrics_collector>,
+    rmpl::identity<cssmetrics::nest_acq_metrics_collector>,
     rmpl::identity<cfsm::metrics::block_transporter_metrics_collector>,
     rmpl::identity<cfmetrics::block_transportee_metrics_collector>,
       rmpl::identity<cfmetrics::block_motion_metrics_collector>,
@@ -131,6 +133,10 @@ void base_metrics_aggregator::register_standard(
       "spatial_movement",
       "spatial::movement",
       rmetrics::output_mode::ekAPPEND },
+    {typeid(cssmetrics::nest_acq_metrics_collector),
+    "nest_acq_strategy",
+    "strategy::nest_acq",
+    rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::interference_metrics_collector),
       "fsm_interference_counts",
       "fsm::interference_counts",

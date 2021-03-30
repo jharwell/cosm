@@ -27,6 +27,7 @@
 #include <memory>
 
 #include "cosm/spatial/fsm/util_hfsm.hpp"
+#include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -48,10 +49,11 @@ NS_START(cosm, foraging, fsm);
  * per-se.
  */
 class foraging_util_hfsm : public csfsm::util_hfsm,
+                           public cssmetrics::nest_acq_metrics,
                            public rer::client<foraging_util_hfsm> {
  public:
   foraging_util_hfsm(csubsystem::saa_subsystemQ3D* saa,
-                     std::unique_ptr<csstrategy::base_strategy> nest_acq,
+                     std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
                      rmath::rng* rng,
                      uint8_t max_states);
 
@@ -66,6 +68,10 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
         : nest_loc(in) {}
     rmath::vector2d nest_loc;
   };
+
+  RCPPSW_WRAP_DECL_OVERRIDE(const cssnest_acq::base_nest_acq*,
+                            nest_acq_strategy,
+                            const);
 
   /**
    * \brief Robots entering this state will return to the nest.
@@ -121,9 +127,8 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
   RCPPSW_HFSM_EXIT_DECLARE(foraging_util_hfsm, exit_transport_to_nest);
 
  private:
-
   /* clang-format off */
-  std::unique_ptr<csstrategy::base_strategy> m_nest_acq{nullptr};
+  std::unique_ptr<cssnest_acq::base_nest_acq> m_nest_acq{nullptr};
   /* clang-format on */
 };
 

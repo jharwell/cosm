@@ -61,6 +61,11 @@ class wander_random_thresh : public csstrategy::nest_acq::random_thresh {
   /* taskable overrides */
   void task_execute(void) override final;
 
+  /* strategy metrics */
+  const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
+    return this;
+  }
+
   std::unique_ptr<base_strategy> clone(void) const override {
     return std::make_unique<wander_random_thresh>(saa(), rng());
   }

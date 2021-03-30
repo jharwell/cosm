@@ -246,7 +246,12 @@ namespace metrics {}
 namespace spatial {
 namespace fsm {}
 namespace metrics {}
-namespace strategy {}
+
+namespace strategy {
+namespace metrics {}
+namespace nest_acq {}
+} /* namespace strategy */
+
 } /* namespace spatial */
 
 /**
@@ -329,6 +334,8 @@ namespace cspatial = cosm::spatial;
 namespace csfsm = cspatial::fsm;
 namespace csmetrics = cspatial::metrics;
 namespace csstrategy = cspatial::strategy;
+namespace cssmetrics = csstrategy::metrics;
+namespace cssnest_acq = csstrategy::nest_acq;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;

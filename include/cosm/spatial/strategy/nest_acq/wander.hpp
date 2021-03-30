@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <memory>
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,16 +50,21 @@ NS_START(cosm, spatial, strategy, nest_acq);
  * Robots continue to phototaxis towards the light and avoid collisions while
  * wandering.
  */
-class wander : public csstrategy::base_strategy {
+class wander : public csstrategy::nest_acq::base_nest_acq {
  public:
   wander(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-      : base_strategy(saa, rng) {}
+      : base_nest_acq(saa, rng) {}
 
   /* Not move/copy constructable/assignable by default */
   wander(const wander&) = delete;
   wander& operator=(const wander&) = delete;
   wander(wander&&) = delete;
   wander& operator=(wander&&) = delete;
+
+  /* strategy metrics */
+  const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
+    return this;
+  }
 
   /* taskable overrides */
   void task_start(cta::taskable_argument*) override final;

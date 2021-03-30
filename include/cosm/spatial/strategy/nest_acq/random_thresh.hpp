@@ -24,12 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
+#include <boost/optional.hpp>
 
 #include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -56,16 +56,21 @@ NS_START(cosm, spatial, strategy, nest_acq);
  * Does NOT work well with controllers with memory.
  */
 
-class random_thresh : public csstrategy::base_strategy {
+class random_thresh : public csstrategy::nest_acq::base_nest_acq {
  public:
   random_thresh(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-      : base_strategy(saa, rng) {}
+      : base_nest_acq(saa, rng) {}
 
   /* Not move/copy constructable/assignable by default */
   random_thresh(const random_thresh&) = delete;
   random_thresh& operator=(const random_thresh&) = delete;
   random_thresh(random_thresh&&) = delete;
   random_thresh& operator=(random_thresh&&) = delete;
+
+  /* strategy metrics */
+  const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
+    return this;
+  }
 
   /* taskable overrides */
   void task_start(cta::taskable_argument* arg) override final;
@@ -78,6 +83,14 @@ class random_thresh : public csstrategy::base_strategy {
 
   std::unique_ptr<base_strategy> clone(void) const override {
     return std::make_unique<random_thresh>(saa(), rng());
+  }
+
+  boost::optional<rtypes::spatial_dist> thresh(void) const {
+    if (task_running()) {
+      return boost::make_optional(m_thresh);
+    } else {
+      return boost::none;
+    }
   }
 
  private:

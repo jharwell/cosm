@@ -1,5 +1,5 @@
 /**
- * \file factory.hpp
+ * \file nest_acq_metrics.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,51 +18,52 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_HPP_
+#define INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
+#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/metrics/base_metrics.hpp"
 
-#include "rcppsw/patterns/factory/factory.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm);
+namespace cosm::spatial::strategy::nest_acq {
+class base_nest_acq;
+} /* namespace cosm::spatial::strategy::nest_acq */
 
-namespace subsystem {
-class saa_subsystemQ3D;
-} /* namespace subsystem */
-
-NS_START(spatial, strategy, nest_acq);
+NS_START(cosm, spatial, strategy, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class factory
- * \ingroup spatial strategy nest_acq
+ * \class nest_acq_metrics
+ * \ingroup spatial strategy metrics
  *
- * \brief Factory for creating nest acquisition strategies.
+ * \brief Metrics to be collected from \base_nest_acq and derived classes.
  */
-class factory :
-    public rpfactory::releasing_factory<csstrategy::nest_acq::base_nest_acq,
-                                        std::string, /* key type */
-                                        csubsystem::saa_subsystemQ3D*,
-                                        rmath::rng*> {
+class nest_acq_metrics : virtual rmetrics::base_metrics {
  public:
-  static constexpr char kWander[] = "wander";
-  static constexpr char kRandomThresh[] = "random_thresh";
-  static constexpr char kWanderRandomThresh[] = "wander_random_thresh";
+  nest_acq_metrics(void) = default;
+  ~nest_acq_metrics(void) override = default;
 
-  factory(void);
+  /* Not move/copy constructable/assignable by default */
+  nest_acq_metrics(const nest_acq_metrics&) = delete;
+  nest_acq_metrics& operator=(const nest_acq_metrics&) = delete;
+  nest_acq_metrics(nest_acq_metrics&&) = delete;
+  nest_acq_metrics& operator=(nest_acq_metrics&&) = delete;
+
+  /**
+   * \brief Return the current nest acquisition strategy.
+   */
+  virtual const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const = 0;
 };
 
-NS_END(nest_acq, strategy, spatial, cosm);
+NS_END(metrics, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_HPP_ */
