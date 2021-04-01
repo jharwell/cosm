@@ -28,12 +28,35 @@
  * \brief The configuration definition to compile for the footbot robot within
  * the ARGoS simulator.
  */
-#define HAL_TARGET_ARGOS_FOOTBOT 1
+#define COSM_HAL_TARGET_ARGOS_FOOTBOT 1
 
 /*
- * \brief The configuration definition to compile for the Lego Mindstorm EV3
- * robot.
+ * \brief The configuration definition to compile for the e-puck (an extended
+ * version of the e-puck) robot within the ARGoS simulator. Originally from the
+ * demiurge project: https://github.com/demiurge-project/argos3-epuck.
+ *
+ * I added a 3D physics model to it (by copying code from ARGoS).
+ *
+ * - The e-puck that comes with ARGoS has a 3D physics model, but doesn't have
+ *   all the sensors I need.
+ * - The pi-puck at https://github.com/allsey87/argos3-srocs also has a 3D
+ *   physics model but not all the sensors I need.
  */
-#define HAL_TARGET_LEGO_EV3 2
+#define COSM_HAL_TARGET_ARGOS_EEPUCK3D 2
+
+/*******************************************************************************
+ * Macros
+ ******************************************************************************/
+#define COSM_HAL_SAA_ACCESSOR(category, Typelist, type, name, ...) \
+  __VA_ARGS__ type* name(void) __VA_ARGS__ {                            \
+    return category<type>();                                            \
+  }                                                                     \
+
+#define COSM_HAL_SAA_ACCESSOR_VISITOR(type, ...)                        \
+  template<typename U = T,                                              \
+           RCPPSW_SFINAE_DECLDEF(std::is_same<U, type>::value)>            \
+  __VA_ARGS__ type* operator()(__VA_ARGS__ type& item)  __VA_ARGS__ {   \
+    return &item;                                                       \
+  }
 
 #endif /* INCLUDE_COSM_HAL_HAL_HPP_ */

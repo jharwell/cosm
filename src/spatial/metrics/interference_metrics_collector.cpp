@@ -94,7 +94,7 @@ void interference_metrics_collector::collect(
 
 boost::optional<std::string>
 interference_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0)) {
+  if (!(timestep() % interval() == 0UL)) {
     return boost::none;
   }
   std::string line;

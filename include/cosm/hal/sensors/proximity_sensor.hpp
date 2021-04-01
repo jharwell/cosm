@@ -35,23 +35,31 @@
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
-#else
-#error "Selected hardware has no proximity sensor!"
-#endif /* HAL_TARGET */
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#include <argos3/plugins/robots/e-puck/control_interface/ci_epuck_proximity_sensor.h>
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_FootBotProximitySensor;
+class CCI_EPuckProximitySensor;
+} /* namespace argos */
+
 NS_START(cosm, hal, sensors, detail);
 
 /*******************************************************************************
  * Templates
  ******************************************************************************/
 template<typename TSensor>
-using is_argos_proximity_sensor = std::is_same<TSensor,
-                                               argos::CCI_FootBotProximitySensor>;
+using is_argos_footbot_proximity_sensor = std::is_same<TSensor,
+                                                       argos::CCI_FootBotProximitySensor>;
+template<typename TSensor>
+using is_argos_epuck_proximity_sensor = std::is_same<TSensor,
+                                                       argos::CCI_EPuckProximitySensor>;
 
 NS_END(detail);
 
@@ -67,6 +75,7 @@ NS_END(detail);
  * Supports the following robots:
  *
  * - ARGoS footbot
+ * - ARGoS epuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -76,8 +85,11 @@ NS_END(detail);
 template <typename TSensor>
 class proximity_sensor_impl {
  public:
+  using impl_type = TSensor;
+
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
+                               detail::is_argos_epuck_proximity_sensor<U>::value)>
    proximity_sensor_impl(TSensor * const sensor,
                      const config::proximity_sensor_config* const config)
       : mc_config(*config),
@@ -94,10 +106,11 @@ class proximity_sensor_impl {
    *
    * If there are not enough objects meeting this criteria that are close enough
    * such that the average distance to them is > than the provided delta,
-   * nothing is returned
+   * nothing is returned.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
+                               detail::is_argos_epuck_proximity_sensor<U>::value)>
   boost::optional<rmath::vector2d> avg_prox_obj(void) const {
     rmath::vector2d accum;
     for (auto& r : readings()) {
@@ -112,11 +125,13 @@ class proximity_sensor_impl {
   }
 
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
+                               detail::is_argos_epuck_proximity_sensor<U>::value)>
   void enable(void) const { m_sensor->Enable(); }
 
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
+                               detail::is_argos_epuck_proximity_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
 
  private:
@@ -127,7 +142,8 @@ class proximity_sensor_impl {
    * object distances.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_proximity_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
+                               detail::is_argos_epuck_proximity_sensor<U>::value)>
   std::vector<rmath::vector2d> readings(void) const {
     std::vector<rmath::vector2d> ret;
     for (auto &r : m_sensor->GetReadings()) {
@@ -143,9 +159,13 @@ class proximity_sensor_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
 using proximity_sensor = proximity_sensor_impl<argos::CCI_FootBotProximitySensor>;
-#endif /* HAL_TARGET */
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
+using proximity_sensor = proximity_sensor_impl<argos::CCI_EPuckProximitySensor>;
+#else
+class proximity_sensor{};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

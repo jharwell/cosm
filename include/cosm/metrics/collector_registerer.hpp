@@ -223,7 +223,7 @@ class collector_registerer_impl<std::tuple<Ts...>>
   };
 
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(
+            RCPPSW_SFINAE_DECLDEF(
                 expected_constructible<typename TCollectorWrap::type>::value)>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,
@@ -235,7 +235,7 @@ class collector_registerer_impl<std::tuple<Ts...>>
   }
 
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(constructible_without_collect_interval<
+            RCPPSW_SFINAE_DECLDEF(constructible_without_collect_interval<
                                typename TCollectorWrap::type>::value)>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,
@@ -246,7 +246,7 @@ class collector_registerer_impl<std::tuple<Ts...>>
                                                                     fpath);
   }
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(constructible_with_extra_args<
+            RCPPSW_SFINAE_DECLDEF(constructible_with_extra_args<
                                    typename TCollectorWrap::type>::value &&
                                (sizeof...(Ts) > 0))>
   bool do_register(const std::string& scoped_name,
@@ -272,7 +272,7 @@ class collector_registerer_impl<std::tuple<Ts...>>
   }
 
   template <typename TCollectorWrap,
-            RCPPSW_SFINAE_FUNC(constructible_with_mode_and_extra_args<
+            RCPPSW_SFINAE_DECLDEF(constructible_with_mode_and_extra_args<
                                typename TCollectorWrap::type>::value)>
   bool do_register(const std::string& scoped_name,
                    const std::string& fpath,

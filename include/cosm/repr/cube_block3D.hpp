@@ -30,7 +30,7 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
 #include <boost/optional.hpp>
 
 #include "cosm/repr/embodied_block.hpp"
@@ -75,7 +75,7 @@ class cube_block3D final : public base_block3D {
     return tmp;
   } /* clone() */
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
   const boost::optional<embodied_cube_block>& embodiment(void) const {
     return m_embodiment;
   }
@@ -85,7 +85,7 @@ class cube_block3D final : public base_block3D {
 #endif
 
  private:
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
   /* clang-format off */
   boost::optional<embodied_cube_block> m_embodiment{};
   /* clang-format on */

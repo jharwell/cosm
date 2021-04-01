@@ -152,12 +152,16 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     cdops::cell2D_empty_visitor clear_op2(coord());
     clear_op2.visit(cell);
 
-    /* "Drop" orphan block on the old cache host cell */
+    /*
+     * "Drop" orphan block on the old cache host cell. If the cell happens to
+     * be in a block cluster, we want to update cluster membership.
+     */
     caops::free_block_drop_visitor drop_op(
         m_orphan_block,
         coord(),
         map.grid_resolution(),
-        arena_map_locking::ekCACHES_AND_GRID_HELD);
+        arena_map_locking::ekCACHES_AND_GRID_HELD,
+        true);
     drop_op.visit(cell);
     drop_op.visit(*m_orphan_block);
 
@@ -186,11 +190,11 @@ void cached_block_pickup::visit(caching_arena_map& map) {
 
     /*
      * Possibly update block cluster membership. The block could have been part
-     * of a static cache which was inside a block cluster, nd if a robot happens
-     * to come pick up the orphan block before the cache is re-created, this can
-     * cause a segfault with block cluster updating, because the free block is
-     * assumed to be part of the list of blocks a block cluster manages. See
-     * COSM#124.
+     * of a static cache which was inside a block cluster, and if a robot
+     * happens to come pick up the orphan block before the cache is re-created,
+     * this can cause a segfault with block cluster updating, because the free
+     * block is assumed to be part of the list of blocks a block cluster
+     * manages. See COSM#124.
      */
     map.block_distributor()->cluster_update_after_drop(m_orphan_block);
 

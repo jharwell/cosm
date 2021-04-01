@@ -30,17 +30,13 @@
 
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/interference_tracker.hpp"
-
 #include "cosm/ta/taskable.hpp"
 #include "cosm/cosm.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::subsystem {
-class saa_subsystemQ3D;
-} /* namespace subsystem */
-
 NS_START(cosm, spatial, strategy);
 
 /*******************************************************************************
@@ -58,7 +54,7 @@ class base_strategy : public csmetrics::interference_metrics,
                       public rpprototype::clonable<base_strategy> {
  public:
   struct params {
-    params(subsystem::saa_subsystemQ3D* const saa_in, rmath::rng* rng_in)
+    params(csubsystem::saa_subsystemQ3D* const saa_in, rmath::rng* rng_in)
         : saa(saa_in), rng(rng_in) {}
 
     subsystem::saa_subsystemQ3D* const saa;

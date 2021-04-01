@@ -26,23 +26,24 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_battery_sensor.h>
-#else
-#error "Selected hardware has no battery sensor!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_BatterySensor;
+} /* namespace argos */
+
 NS_START(cosm, hal, sensors, detail);
 
 /*******************************************************************************
  * Templates
  ******************************************************************************/
 template<typename TSensor>
-using is_argos_battery_sensor = std::is_same<TSensor,
-                                             argos::CCI_BatterySensor>;
+using is_argos_battery_sensor = std::is_same<TSensor, argos::CCI_BatterySensor>;
 
 NS_END(detail);
 
@@ -65,6 +66,8 @@ NS_END(detail);
 template <typename TSensor>
 class battery_sensor_impl {
  public:
+  using impl_type = TSensor;
+
   /**
    * \brief A battery sensor reading.
    *
@@ -85,9 +88,9 @@ class battery_sensor_impl {
    * \brief Get the current battery sensor reading for the footbot robot.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_battery_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_battery_sensor<U>::value)>
   sensor_reading reading(void) const {
-    argos::CCI_BatterySensor::SReading temp = m_sensor->GetReading();
+    auto temp = m_sensor->GetReading();
     return {temp.AvailableCharge, temp.TimeLeft};
   }
 
@@ -97,9 +100,11 @@ class battery_sensor_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using battery_sensor = battery_sensor_impl<argos::CCI_BatterySensor>;
-#endif /* HAL_TARGET */
+#else
+class battery_sensor {};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

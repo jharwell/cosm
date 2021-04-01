@@ -1,7 +1,7 @@
 /**
  * \file saa_xml_names.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROBOTS_FOOTBOT_CONFIG_SAA_XML_NAMES_HPP_
-#define INCLUDE_COSM_ROBOTS_FOOTBOT_CONFIG_SAA_XML_NAMES_HPP_
+#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SAA_XML_NAMES_HPP_
+#define INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SAA_XML_NAMES_HPP_
 
 /*******************************************************************************
  * Includes
@@ -32,32 +32,39 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, robots, footbot, config);
+NS_START(cosm, hal, subsystem, config);
 
 /*******************************************************************************
  * Struct Definitions
  ******************************************************************************/
 /**
  * \struct saa_xml_names
- * \ingroup robots footbot config
+ * \ingroup hal subsystem config
  *
  * \brief Collection of names of sensing and actuation component names that
  * ARGoS expects when asking for handles to robot components that can be
- * specified for the foot-bot robot. Collected here in a single place in the
- * interest of DRY.
+ * specified for robots. Collected here in a single place in the interest of
+ * DRY.
  */
 struct saa_xml_names {
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
   static constexpr const char diff_steering_saa[] = "differential_steering";
   static constexpr const char leds_saa[] = "leds";
-  static constexpr const char rab_saa[] = "range_and_bearing";
-  static constexpr const char prox_sensor[] = "footbot_proximity";
   static constexpr const char position_sensor[] = "positioning";
   static constexpr const char camera_sensor[] = "colored_blob_omnidirectional_camera";
+#endif
+
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
+  static constexpr const char prox_sensor[] = "footbot_proximity";
   static constexpr const char light_sensor[] = "footbot_light";
   static constexpr const char ground_sensor[] = "footbot_motor_ground";
-  static constexpr const char battery_sensor[] = "battery";
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
+  static constexpr const char prox_sensor[] = "epuck_proximity";
+  static constexpr const char light_sensor[] = "epuck_light";
+  static constexpr const char ground_sensor[] = "epuck_ground";
+#endif
 };
 
-NS_END(config, footbot, robots, cosm);
+NS_END(config, subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_ROBOTS_FOOTBOT_CONFIG_SAA_XML_NAMES_HPP_ */
+#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SAA_XML_NAMES_HPP_ */

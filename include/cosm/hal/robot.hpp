@@ -1,7 +1,7 @@
 /**
- * \file actuation_subsystem2D.hpp
+ * \file robot.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,36 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
+#ifndef INCLUDE_COSM_HAL_ROBOT_HPP_
+#define INCLUDE_COSM_HAL_ROBOT_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/hal/hal.hpp"
+
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
+#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#include <argos3/plugins/robots/e-puck/simulator/epuck_entity.h>
+#endif /* COSM_HAL_TARGET */
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, subsystem);
+NS_START(cosm, hal);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class actuation_subsystem2D
- * \ingroup subsystem
- *
- * \brief The  actuation subsystem for all actuators used by robot
- * controllers that operate in 2D.
- */
-class actuation_subsystem2D : public chsubsystem::actuation_subsystem2D {
- public:
-  actuation_subsystem2D(const actuator_map& actuators)
-      : chsubsystem::actuation_subsystem2D(actuators) {}
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
+using robot = argos::CFootBotEntity;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+using robot = argos::CEPuckEntity;
+#endif /* COSM_HAL_TARGET */
 
-  /* Not move/copy constructable/assignable by default */
-  actuation_subsystem2D(const actuation_subsystem2D&) = delete;
-  actuation_subsystem2D& operator=(const actuation_subsystem2D&) = delete;
-  actuation_subsystem2D(actuation_subsystem2D&&) = delete;
-  actuation_subsystem2D& operator=(actuation_subsystem2D&&) = delete;
-};
+NS_END(hal, cosm);
 
-NS_END(subsystem, cosm);
-
-#endif /* INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_ */
+#endif /* INCLUDE_COSM_HAL_ROBOT_HPP_ */

@@ -104,7 +104,8 @@ random_distributor::distribute_block(crepr::base_block3D* block) {
   caops::free_block_drop_visitor drop_op(block,
                                          coords->abs,
                                          arena_grid()->resolution(),
-                                         carena::arena_map_locking::ekALL_HELD);
+                                         carena::arena_map_locking::ekALL_HELD,
+                                         true);
   caops::block_extent_set_visitor extent_op(block);
 
   /* Update block position */

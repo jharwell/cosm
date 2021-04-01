@@ -30,11 +30,11 @@
 #include "cosm/cosm.hpp"
 #include "rcsw/common/fpc.h"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
 #else
 #error "Selected component has no LEDs!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -62,6 +62,7 @@ NS_END(detail);
  *  Supports the following robots:
  *
  * - ARGoS footbot
+ * - ARGoS epuck
  *
  * \tparam TActuator The underlying actuator handle type abstracted away by the
  *                   HAL. If nullptr, then that effectively disables the
@@ -71,6 +72,8 @@ NS_END(detail);
 template<typename TActuator>
 class led_actuator_impl {
  public:
+  using impl_type = TActuator;
+
   explicit led_actuator_impl(TActuator* const leds) : m_leds(leds) {}
 
   /**
@@ -89,7 +92,7 @@ class led_actuator_impl {
    * \param color The color to change the LED to. This is application defined.
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_led_actuator<U>::value)>
   void set_color(int id, const rutils::color& color) {
     RCPPSW_FPC_RET_V(nullptr != m_leds);
 
@@ -117,7 +120,7 @@ class led_actuator_impl {
    * \param intensity In the range [0,255]. Application defined meaning.
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_led_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_led_actuator<U>::value)>
   void set_intensity(int id, uint8_t intensity) {
     RCPPSW_FPC_RET_V(nullptr != m_leds);
 
@@ -134,9 +137,9 @@ class led_actuator_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using led_actuator = led_actuator_impl<argos::CCI_LEDsActuator>;
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

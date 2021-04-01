@@ -23,7 +23,6 @@
  ******************************************************************************/
 #include "cosm/pal/argos_convergence_calculator.hpp"
 
-#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 
 #include "rcppsw/algorithm/closest_pair2D.hpp"
 #include "rcppsw/math/vector2.hpp"
@@ -31,6 +30,7 @@
 #include "cosm/pal/argos_controller2D_adaptor.hpp"
 #include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
 #include "cosm/pal/argos_swarm_iterator.hpp"
+#include "cosm/hal/robot.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -84,7 +84,7 @@ std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
     v.push_back({ robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(),
                   robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetY() });
   };
-  cpal::argos_swarm_iterator::robots<argos::CFootBotEntity,
+  cpal::argos_swarm_iterator::robots<chal::robot,
                                      cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
 
@@ -128,7 +128,7 @@ argos_convergence_calculator<TController>::calc_robot_headings2D(uint) const {
   std::vector<rmath::radians> v;
 
   auto cb = [&](const auto* controller) { v.push_back(controller->heading2D()); };
-  cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
+  cpal::argos_swarm_iterator::controllers<chal::robot,
                                           TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
@@ -141,7 +141,7 @@ argos_convergence_calculator<TController>::calc_robot_positions(uint) const {
   std::vector<rmath::vector2d> v;
 
   auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
-  cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
+  cpal::argos_swarm_iterator::controllers<chal::robot,
                                           TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);

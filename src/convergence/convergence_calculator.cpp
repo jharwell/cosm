@@ -21,13 +21,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-/*
- * This is needed because without it boost instantiates static assertions that
- * verify that every possible handler<measure> instantiation is valid. These
- * will not happen in reality (or shouldn't), and if they do it's 100% OK to
- * crash with an exception.
- */
-#define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
 #include "cosm/convergence/convergence_calculator.hpp"
 
 #include <boost/variant.hpp>

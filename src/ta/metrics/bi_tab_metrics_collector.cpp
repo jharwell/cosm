@@ -110,7 +110,7 @@ void bi_tab_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
 } /* collect() */
 
 boost::optional<std::string> bi_tab_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0)) {
+  if (!(timestep() % interval() == 0UL)) {
     return boost::none;
   }
 

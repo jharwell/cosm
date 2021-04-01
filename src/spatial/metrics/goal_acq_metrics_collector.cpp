@@ -85,7 +85,7 @@ void goal_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
 } /* collect() */
 
 boost::optional<std::string> goal_acq_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0)) {
+  if (!(timestep() % interval() == 0UL)) {
     return boost::none;
   }
   std::string line;

@@ -1,5 +1,5 @@
 /**
- * \file footbot_subsystem_fwd.hpp
+ * \file subsystem_fwd.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SUBSYSTEM_FWD_HPP_
-#define INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SUBSYSTEM_FWD_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_
 
 /*******************************************************************************
  * Includes
@@ -29,12 +29,12 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, robots, footbot);
+NS_START(cosm, subsystem);
 
-class footbot_saa_subsystem;
-class footbot_actuation_subsystem;
-class footbot_sensing_subsystem;
+class saa_subsystemQ3D;
+class actuation_subsystem2D;
+class sensing_subsystemQ3D;
 
-NS_END(footbot, robots, cosm);
+NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_ROBOTS_FOOTBOT_FOOTBOT_SUBSYSTEM_FWD_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_ */

@@ -81,7 +81,8 @@ void block_motion_handler::random_walk(carena::base_arena_map* map) {
           b,
           *coord,
           map->grid_resolution(),
-          carena::arena_map_locking::ekALL_HELD);
+          carena::arena_map_locking::ekALL_HELD,
+          true);
       pickup_op.visit(*map);
       ER_ASSERT(b->is_out_of_sight() && !b->is_carried_by_robot(),
                 "Block%d out of sight or carried by robot",

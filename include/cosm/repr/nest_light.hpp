@@ -40,9 +40,6 @@
 namespace cosm::pal {
 class argos_sm_adaptor;
 } /* namespace cosm::pal */
-namespace cosm::repr {
-class nest;
-} /* namespace cosm::repr */
 
 NS_START(cosm, repr);
 
@@ -85,8 +82,6 @@ class nest_light : public repr::colored_entity {
    * the nest lights along with them, and an exception is thrown.
    */
   argos::CLightEntity* m_impl;
-  repr::nest*          m_nest;
-
   /* clang-format on */
 };
 

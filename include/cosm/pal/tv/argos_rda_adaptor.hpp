@@ -24,13 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
-
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/tv/switchable_tv_generator.hpp"
 #include "cosm/tv/robot_dynamics_applicator.hpp"
 #include "cosm/cosm.hpp"
+#include "cosm/hal/robot.hpp"
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/pal/argos_swarm_iterator.hpp"
 #include "cosm/controller/block_carrying_controller.hpp"
@@ -77,7 +76,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
       accum += controller->applied_movement_throttle();
     };
 
-    cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
+    cpal::argos_swarm_iterator::controllers<chal::robot,
                                             TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
@@ -106,7 +105,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
       }
     };
 
-    cpal::argos_swarm_iterator::controllers<argos::CFootBotEntity,
+    cpal::argos_swarm_iterator::controllers<chal::robot,
                                             TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);

@@ -164,7 +164,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * Updates the real anchor,center. Does not change the discrete anchor,center
    * of the entity.
    */
-  template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
+  template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void ranchor3D(const rmath::vector3d& ranchor) {
     m_ranchor = ranchor;
     m_rcenter = m_ranchor + m_rdim / 2.0;
@@ -177,7 +177,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * Updates the discrete anchor,center. Does not change the real anchor,center
    * of the entity.
    */
-  template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
+  template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void danchor3D(const rmath::vector3z& danchor) {
     m_danchor = danchor;
     m_dcenter = m_danchor + m_ddim / 2.0;

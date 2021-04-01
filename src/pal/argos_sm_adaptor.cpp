@@ -91,8 +91,22 @@ argos::CColor argos_sm_adaptor::GetFloorColor(const argos::CVector2& pos) {
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
   rmath::vector2z dpos =
       rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());
-  auto color = m_arena_map->access<cds::arena_grid::kCell>(dpos).color();
-  return argos::CColor(color.red(), color.green(), color.blue());
+
+  /*
+   * The point we are handed can be out of bounds of the discretized extent of
+   * the arena, depending on the size of the robot. For smaller robots which can
+   * get their center closer to the edge of the arena, if their ground sensors
+   * are out on the front (e.g., ARGoS e-puck), then the point we are passed can
+   * be out of bounds. In such cases, always return white.
+   *
+   * See COSM#7.
+   */
+  if (dpos.x() < m_arena_map->xdsize() && dpos.y() < m_arena_map->xdsize()) {
+    auto color = m_arena_map->access<cds::arena_grid::kCell>(dpos).color();
+    return argos::CColor(color.red(), color.green(), color.blue());
+  } else {
+    return argos::CColor::WHITE;
+  }
 } /* GetFloorColor() */
 
 /*******************************************************************************

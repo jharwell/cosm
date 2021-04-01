@@ -1,28 +1,36 @@
 ################################################################################
 # Configuration Options                                                        #
 ################################################################################
-if (NOT DEFINED COSM_BUILD_FOR)
-  message(FATAL_ERROR "COSM_BUILD_FOR not defined")
+if(NOT COSM_BUILD_ENV)
+  set(COSM_BUILD_ENV "LOCAL")
 endif()
 
-if("${COSM_BUILD_FOR}" MATCHES "MSI" )
-  message(STATUS "Building for MSI")
-  set(COSM_PROJECT_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSIARCH})
-  set(COSM_HAL_TARGET "argos-footbot")
-
-elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS")
-  message(STATUS "Building for ARGoS")
-  set(COSM_HAL_TARGET "argos-footbot")
-  if(NOT COSM_PROJECT_DEPS_PREFIX)
-    set(COSM_PROJECT_DEPS_PREFIX /opt/$ENV{USER}/.local)
+if("${COSM_BUILD_ENV}" MATCHES "LOCAL" )
+  message(STATUS "Building for local environment")
+  if(NOT COSM_DEPS_PREFIX)
+    set(COSM_DEPS_PREFIX /opt/$ENV{USER}/.local)
   endif()
-
-elseif("${COSM_BUILD_FOR}" MATCHES "EV3")
-  message(STATUS "Building for EV3")
-  set(COSM_HAL_TARGET "ev3")
+elseif("${COSM_BUILD_ENV}" MATCHES "MSI" )
+  message(STATUS "Building for MSI")
+  set(COSM_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSIARCH})
 else()
   message(FATAL_ERROR
-    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [MSI,ARGOS,EV3]")
+    "Unknown build environment '${COSM_BUILD_ENV}'. Must be: [LOCAL,MSI]")
+endif()
+
+if(NOT COSM_BUILD_FOR)
+  set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
+endif()
+
+if("${COSM_BUILD_FOR}" MATCHES "ARGOS_FOOTBOT")
+  message(STATUS "Building for ARGoS footbot")
+  set(COSM_HAL_TARGET "argos-footbot")
+elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
+  message(STATUS "Building for ARGoS eepuck3D")
+  set(COSM_HAL_TARGET "argos-eepuck3D")
+else()
+  message(FATAL_ERROR
+    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [ARGOS_FOOTBOT,ARGOS_EEPUCK3D]")
 endif()
 
 if (NOT DEFINED COSM_HAL_TARGET)
@@ -44,8 +52,10 @@ endif()
 # Conditionally compile/link Qt visualizations.
 #
 # - Qt not reliably available when building for MSI
+#
 # - Getting it to work with the EV3 would require building Qt from source, and
 #   there is no GUI stuff anyway so...
+#
 # - Qt cmake module is only available on Linux when building for ARGoS, and when
 #   the compiler is not Intel, because the cmake module for Qt does not play
 #   nice with the Intel compiler.
@@ -94,7 +104,7 @@ set(${target}_INCLUDE_DIRS
 
 set(${target}_SYS_INCLUDE_DIRS
   ${rcppsw_SYS_INCLUDE_DIRS}
-  ${COSM_PROJECT_DEPS_PREFIX}/include
+  ${COSM_DEPS_PREFIX}/include
   ${CMAKE_CURRENT_SOURCE_DIR})
 
 ################################################################################
@@ -113,10 +123,10 @@ endif()
 
 set(${target}_LIBRARY_DIRS ${rcppsw_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
-if ("${COSM_BUILD_FOR}" MATCHES "MSI")
+if ("${COSM_BUILD_ENV}" MATCHES "MSI")
   set(${target}_LIBRARY_DIRS
     ${${target}_LIBRARY_DIRS}
-    ${COSM_PROJECT_DEPS_PREFIX}/lib/argos3)
+    ${COSM_DEPS_PREFIX}/lib/argos3)
 endif()
 
 
@@ -126,14 +136,19 @@ if (NOT TARGET ${target})
   target_include_directories(${target} PUBLIC ${${target}_INCLUDE_DIRS})
   target_include_directories(${target} SYSTEM PRIVATE "${${target}_SYS_INCLUDE_DIRS}")
 
+  # This is needed for HAL SAA sensing/actuator access with boost::variant
+  target_compile_definitions(${target} PUBLIC BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
+
   if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
     # Not needed for compilation, but for rtags
     target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
-    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_ARGOS_FOOTBOT)
-  elseif("${COSM_HAL_TARGET}" MATCHES "lego-ev3")
-    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=HAL_TARGET_LEGO_EV3)
+    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
+  elseif("${COSM_HAL_TARGET}" MATCHES "argos-eepuck3D")
+    # Not needed for compilation, but for rtags
+    target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
+    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
   else()
-    message(FATAL_ERROR "Bad HAL Target ${COSM_HAL_TARGET}. Must be [lego-ev3,argos-footbot]")
+    message(FATAL_ERROR "Bad HAL Target ${COSM_HAL_TARGET}. Must be [argos-footbot, argos-eepuck3D]")
   endif()
 endif()
 
@@ -151,5 +166,5 @@ if (NOT IS_ROOT_PROJECT)
   set(${target}_LIBRARIES "${${target}_LIBRARIES}" PARENT_SCOPE)
   set(${target}_LIBRARY_DIRS "${${target}_LIBRARY_DIRS}" PARENT_SCOPE)
   set(COSM_WITH_VIS ${COSM_WITH_VIS} PARENT_SCOPE)
-  set(COSM_PROJECT_DEPS_PREFIX ${COSM_PROJECT_DEPS_PREFIX} PARENT_SCOPE)
+  set(COSM_DEPS_PREFIX ${COSM_DEPS_PREFIX} PARENT_SCOPE)
 endif()

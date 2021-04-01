@@ -23,8 +23,6 @@
  ******************************************************************************/
 #include "cosm/pal/tv/argos_pd_adaptor.hpp"
 
-#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
-
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/pal/argos_controller2D_adaptor.hpp"
 #include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
@@ -32,6 +30,7 @@
 #include "cosm/pal/operations/argos_robot_malfunction.hpp"
 #include "cosm/pal/operations/argos_robot_repair.hpp"
 #include "cosm/tv/config/population_dynamics_config.hpp"
+#include "cosm/hal/robot.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -174,8 +173,7 @@ argos_pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
           repair_queue_status().size);
   std::string name = kARGoSRobotNamePrefix + rcppsw::to_string(id);
   cpops::argos_robot_repair visitor;
-  auto* entity =
-      dynamic_cast<argos::CFootBotEntity*>(&m_sm->GetSpace().GetEntity(name));
+  auto* entity = dynamic_cast<chal::robot*>(&m_sm->GetSpace().GetEntity(name));
   auto* controller =
       static_cast<TController*>(&entity->GetControllableEntity().GetController());
   visitor.visit(*controller);
@@ -198,7 +196,7 @@ argos_pd_adaptor<TController>::malfunction_victim_locate(size_t total_pop) const
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
     auto it = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).begin();
     std::advance(it, m_rng->uniform(range));
-    auto* entity = argos::any_cast<argos::CFootBotEntity*>(it->second);
+    auto* entity = argos::any_cast<chal::robot*>(it->second);
     auto* controller = static_cast<TController*>(
         &entity->GetControllableEntity().GetController());
     if (!currently_repairing(controller->entity_id())) {
@@ -212,11 +210,11 @@ template <typename TController>
 TController*
 argos_pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
-  argos::CFootBotEntity* entity;
+  chal::robot* entity;
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
     auto it = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).begin();
     std::advance(it, m_rng->uniform(range));
-    entity = argos::any_cast<argos::CFootBotEntity*>(it->second);
+    entity = argos::any_cast<chal::robot*>(it->second);
     auto* controller = static_cast<TController*>(
         &entity->GetControllableEntity().GetController());
     if (!already_killed(controller->entity_id())) {
@@ -237,7 +235,7 @@ bool argos_pd_adaptor<TController>::robot_attempt_add(
    */
   rmath::ranged xrange(2.0, mc_arena_dim.x() - 2.0);
   rmath::ranged yrange(2.0, mc_arena_dim.y() - 2.0);
-  argos::CFootBotEntity* fb = nullptr;
+  chal::robot* robot = nullptr;
 
   auto x = m_rng->uniform(xrange);
   auto y = m_rng->uniform(yrange);
@@ -257,27 +255,27 @@ bool argos_pd_adaptor<TController>::robot_attempt_add(
    */
   try {
     /* ick raw pointers--thanks ARGoS... */
-    fb = new argos::CFootBotEntity(kARGoSRobotNamePrefix + rcppsw::to_string(id),
+    robot = new chal::robot(kARGoSRobotNamePrefix + rcppsw::to_string(id),
                                    kARGoSControllerXMLId,
                                    argos::CVector3(x, y, 0.0));
-    m_sm->AddEntity(*fb);
+    m_sm->AddEntity(*robot);
     ER_INFO(
         "Added entity %s attached to physics engine %s at %s",
-        fb->GetId().c_str(),
-        fb->GetEmbodiedEntity().GetPhysicsModel(0).GetEngine().GetId().c_str(),
+        robot->GetId().c_str(),
+        robot->GetEmbodiedEntity().GetPhysicsModel(0).GetEngine().GetId().c_str(),
         rmath::vector2d(x, y).to_str().c_str());
 
     /* Register controller for environmental variances */
     auto* controller =
-        static_cast<TController*>(&fb->GetControllableEntity().GetController());
+        static_cast<TController*>(&robot->GetControllableEntity().GetController());
 
     m_envd->register_controller(*controller);
 
     return true;
   } catch (argos::CARGoSException& e) {
-    delete fb; /* ick raw pointers--thanks ARGoS... */
+    delete robot; /* ick raw pointers--thanks ARGoS... */
     ER_TRACE("Failed to place new robot %s at %s",
-             fb->GetId().c_str(),
+             robot->GetId().c_str(),
              rmath::vector2d(x, y).to_str().c_str());
     return false;
   }

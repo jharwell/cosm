@@ -118,9 +118,6 @@ void free_block_pickup::visit(base_arena_map& map) {
    * cluster.
    */
   map.block_distributor()->cluster_update_after_pickup(m_block, old);
-
-  ER_WARN("Block%s not found in any block cluster",
-          rcppsw::to_string(m_block->id()).c_str());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

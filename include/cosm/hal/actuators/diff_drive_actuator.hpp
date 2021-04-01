@@ -28,11 +28,11 @@
 #include "cosm/hal/hal.hpp"
 #include "rcsw/common/fpc.h"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
 #else
 #error "Selected hardware has no differential drive actuator!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -60,6 +60,7 @@ NS_END(detail);
  * Supports the following robots:
  *
  * - ARGoS footbot
+ * - ARGoS epuck
  *
 * \tparam TActuator The underlying actuator handle type abstracted away by the
  * HAL. If nullptr, then that effectively disables the actuator at compile time,
@@ -68,6 +69,7 @@ NS_END(detail);
 template <typename TActuator>
 class diff_drive_actuator_impl {
  public:
+  using impl_type = TActuator;
   /**
    * \brief Construct the wrapper actuator.
    *
@@ -82,7 +84,7 @@ class diff_drive_actuator_impl {
    * robot. Bounds checking is not performed.
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
     RCPPSW_FPC_RET_V(nullptr != m_wheels);
     m_wheels->SetLinearVelocity(left, right);
@@ -93,7 +95,7 @@ class diff_drive_actuator_impl {
    * immediate stop (i.e. no rampdown).
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_ds_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_actuator<U>::value)>
   void reset(void) { set_wheel_speeds(0.0, 0.0); }
 
  private:
@@ -102,9 +104,9 @@ class diff_drive_actuator_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using diff_drive_actuator = diff_drive_actuator_impl<argos::CCI_DifferentialSteeringActuator>;
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

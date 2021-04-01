@@ -126,7 +126,8 @@ class free_block_drop : public rer::client<free_block_drop>,
   free_block_drop(crepr::base_block3D* block,
                   const rmath::vector2z& coord,
                   const rtypes::discretize_ratio& resolution,
-                  const arena_map_locking& locking);
+                  const arena_map_locking& locking,
+                  bool update_clusters);
 
  private:
   void visit(fsm::cell2D_fsm& fsm);
@@ -134,6 +135,7 @@ class free_block_drop : public rer::client<free_block_drop>,
   /* clang-format off */
   const rtypes::discretize_ratio mc_resolution;
   const arena_map_locking        mc_locking;
+  const bool                     mc_update_clusters;
 
   crepr::base_block3D*           m_block;
   /* clang-format on */

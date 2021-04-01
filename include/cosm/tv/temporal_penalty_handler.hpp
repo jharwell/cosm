@@ -207,7 +207,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
     if (nullptr != m_waveform) {
       penalty.set(static_cast<uint>(m_waveform->value(t.v())));
     }
-    return penalty += static_cast<uint>(penalty == 0);
+    return penalty += static_cast<uint>(penalty == 0UL);
   }
 
  protected:

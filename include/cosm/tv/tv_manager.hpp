@@ -83,23 +83,23 @@ class tv_manager {
   const tv_manager& operator=(const tv_manager&) = delete;
 
   template <dynamics_type type,
-            RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
+            RCPPSW_SFINAE_DECLDEF(dynamics_type::ekPOPULATION == type)>
   const TPopulationDynamics* dynamics(void) const {
     return m_popd.get();
   }
   template <dynamics_type type,
-            RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
+            RCPPSW_SFINAE_DECLDEF(dynamics_type::ekENVIRONMENT == type)>
   const TEnvDynamics* dynamics(void) const {
     return m_envd.get();
   }
 
   template <dynamics_type type,
-            RCPPSW_SFINAE_FUNC(dynamics_type::ekPOPULATION == type)>
+            RCPPSW_SFINAE_DECLDEF(dynamics_type::ekPOPULATION == type)>
   TPopulationDynamics* dynamics(void) {
     return m_popd.get();
   }
   template <dynamics_type type,
-            RCPPSW_SFINAE_FUNC(dynamics_type::ekENVIRONMENT == type)>
+            RCPPSW_SFINAE_DECLDEF(dynamics_type::ekENVIRONMENT == type)>
   TEnvDynamics* dynamics(void) {
     return m_envd.get();
   }

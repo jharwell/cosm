@@ -30,23 +30,32 @@
 
 #include "cosm/hal/hal.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_light_sensor.h>
-#else
-#error "Selected hardware has no light sensor!"
-#endif /* HAL_TARGET */
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#include <argos3/plugins/robots/e-puck/control_interface/ci_epuck_light_sensor.h>
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_FootBotLightSensor;
+class CCI_EPuckLightSensor;
+} /* namespace argos */
+
 NS_START(cosm, hal, sensors, detail);
 
 /*******************************************************************************
  * Templates
  ******************************************************************************/
 template<typename TSensor>
-using is_argos_light_sensor = std::is_same<TSensor,
-                                           argos::CCI_FootBotLightSensor>;
+using is_argos_footbot_light_sensor = std::is_same<TSensor,
+                                                   argos::CCI_FootBotLightSensor>;
+
+template<typename TSensor>
+using is_argos_epuck_light_sensor = std::is_same<TSensor,
+                                                   argos::CCI_EPuckLightSensor>;
 
 NS_END(detail);
 
@@ -61,9 +70,13 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot. The simulated sensor is expensive to update each timestep,
- *   so it is disabled upon creation, so robots can selectively enable/disable
- *   it as needed for maximum speed.
+ * - ARGoS footbot^
+ * - ARGoS epuck^
+ *
+ * ^The simulated sensor is expensive to update each timestep, AND is not
+ *  necessarily needed each timestep, so it is disabled upon creation, so robots
+ *  can selectively enable/disable it as needed for maximum computational
+ *  efficiency.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -73,6 +86,8 @@ NS_END(detail);
 template <typename TSensor>
 class light_sensor_impl {
  public:
+  using impl_type = TSensor;
+
   /**
    * \brief A light sensor reading (value, angle) pair.
    *
@@ -89,7 +104,9 @@ class light_sensor_impl {
           angle(_angle) {}
   };
 
-  explicit light_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit light_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {
+    disable();
+  }
 
   /**
    * \brief Get the current light sensor readings for the footbot robot.
@@ -97,7 +114,8 @@ class light_sensor_impl {
    * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
+                                  detail::is_argos_epuck_light_sensor<U>::value)>
   std::vector<reading>  readings(void) const {
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings()) {
@@ -107,11 +125,13 @@ class light_sensor_impl {
     return ret;
   }
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
+                                  detail::is_argos_epuck_light_sensor<U>::value)>
   void enable(void) const { m_sensor->Enable(); }
 
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_light_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
+                                  detail::is_argos_epuck_light_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
 
  private:
@@ -120,9 +140,13 @@ class light_sensor_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using light_sensor = light_sensor_impl<argos::CCI_FootBotLightSensor>;
-#endif /* HAL_TARGET */
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+using light_sensor = light_sensor_impl<argos::CCI_EPuckLightSensor>;
+#else
+class light_sensor{};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

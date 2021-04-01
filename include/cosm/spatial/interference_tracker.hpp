@@ -26,14 +26,11 @@
  ******************************************************************************/
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::subsystem {
-class sensing_subsystemQ3D;
-}
-
 NS_START(cosm, spatial);
 
 /*******************************************************************************
@@ -49,7 +46,7 @@ NS_START(cosm, spatial);
 class interference_tracker : public csmetrics::interference_metrics {
  public:
   explicit interference_tracker(
-      const subsystem::sensing_subsystemQ3D* const sensing)
+      const csubsystem::sensing_subsystemQ3D* const sensing)
       : mc_sensing(sensing) {}
 
   interference_tracker(const interference_tracker&) = delete;

@@ -88,7 +88,11 @@ namespace config {}
  * modules, such as \ref subystem classes, regardless of which robot platform
  * COSM is targeting.
  */
-namespace hal {}
+namespace hal {
+namespace subsystem {}
+namespace sensors {}
+namespace actuators {}
+} /* namespace hal */
 
 /**
  * \namespace kin2D
@@ -162,23 +166,6 @@ namespace controller {
 namespace operations {}
 namespace metrics {}
 } /* namespace controller */
-
-/**
- * \namespace robots
- *
- * \brief Adaptor layer containing specializations/extensions of controllers,
- *        subsystems, etc., that are specific to a particular robot model. That
- *        is, each robot model COSM supports/has been tested with has a
- *        directory/namespace inside here.
- */
-namespace robots {
-
-/**
- * \namespace footbot
- * \brief Adaptation layer to the ARGoS footbot robot.
- */
-namespace footbot {}
-} /* namespace robots */
 
 /**
  * \namespace fsm
@@ -374,13 +361,15 @@ namespace coconfig = coracle::config;
 namespace crepr = cosm::repr;
 namespace crops = crepr::operations;
 
+namespace chal = cosm::hal;
+namespace chsubsystem = chal::subsystem;
+namespace chsensors = chal::sensors;
+namespace chactuators = chal::actuators;
+
 namespace crconfig = crepr::config;
 
 namespace cfsm = cosm::fsm;
-namespace chal = cosm::hal;
 namespace ckin2D = cosm::kin2D;
 namespace csteer2D = cosm::steer2D;
-namespace crobots = cosm::robots;
-namespace crfootbot = crobots::footbot;
 
 #endif /* INCLUDE_COSM_COSM_HPP_ */

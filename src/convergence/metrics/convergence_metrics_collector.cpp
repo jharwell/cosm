@@ -71,7 +71,7 @@ convergence_metrics_collector::csv_header_cols(void) const {
 } /* csv_header_cols() */
 
 boost::optional<std::string> convergence_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0)) {
+  if (!(timestep() % interval() == 0UL)) {
     return boost::none;
   }
   std::string line;

@@ -66,7 +66,7 @@ struct argos_swarm_iterator {
             typename TController,
             iteration_order order,
             typename TFunction,
-            RCPPSW_SFINAE_FUNC(iteration_order::ekSTATIC == order)>
+            RCPPSW_SFINAE_DECLDEF(iteration_order::ekSTATIC == order)>
   static void controllers(const cpal::argos_sm_adaptor* const sm,
                           const TFunction& cb,
                           const std::string& robot_type) {
@@ -92,7 +92,7 @@ struct argos_swarm_iterator {
   template <typename TController,
             iteration_order order,
             typename TFunction,
-            RCPPSW_SFINAE_FUNC(iteration_order::ekDYNAMIC == order)>
+            RCPPSW_SFINAE_DECLDEF(iteration_order::ekDYNAMIC == order)>
   static void controllers(const cpal::argos_sm_adaptor* const sm,
                           const TFunction& cb) {
     auto wrapper = [&](auto* robot) {
@@ -116,7 +116,7 @@ struct argos_swarm_iterator {
   template <typename TRobot,
             iteration_order order,
             typename TFunction,
-            RCPPSW_SFINAE_FUNC(iteration_order::ekSTATIC == order)>
+            RCPPSW_SFINAE_DECLDEF(iteration_order::ekSTATIC == order)>
   static void robots(const cpal::argos_sm_adaptor* const sm,
                      const TFunction& cb,
                      const std::string& robot_type) {
@@ -138,7 +138,7 @@ struct argos_swarm_iterator {
    */
   template <iteration_order order,
             typename TFunction,
-            RCPPSW_SFINAE_FUNC(iteration_order::ekDYNAMIC == order)>
+            RCPPSW_SFINAE_DECLDEF(iteration_order::ekDYNAMIC == order)>
   static void robots(const cpal::argos_sm_adaptor* const sm,
                      const TFunction& cb) {
     sm->IterateOverControllableEntities(cb);

@@ -31,11 +31,9 @@
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/cosm.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_colored_blob_omnidirectional_camera_sensor.h>
-#else
-#error "Selected hardware has no blob camera sensor!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -63,9 +61,12 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot. The simulated sensor is expensive to update each timestep,
- *   so it is disabled upon creation, so robots can selectively enable/disable
- *   it as needed for maximum speed.
+ * - ARGoS footbot
+ * - ARGoS epuck
+ *
+ * ^The simulated sensor is expensive to update each timestep,
+ *  so it is disabled upon creation, so robots can selectively enable/disable
+ *  it as needed for maximum speed.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -75,6 +76,8 @@ NS_END(detail);
 template <typename TSensor>
 class colored_blob_camera_sensor_impl {
  public:
+  using impl_type = TSensor;
+
   /**
    * \brief A camera sensor reading (color, distance, angle) tuple.
    */
@@ -92,7 +95,7 @@ class colored_blob_camera_sensor_impl {
    * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_blob_camera_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   std::vector<reading>  readings(void) const {
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings().BlobList) {
@@ -109,21 +112,23 @@ class colored_blob_camera_sensor_impl {
   }
 
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_blob_camera_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   void enable(void) const { m_sensor->Enable(); }
 
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_blob_camera_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
 
  private:
   TSensor* const m_sensor;
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using colored_blob_camera_sensor =
     colored_blob_camera_sensor_impl<argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
-#endif /* HAL_TARGET */
+#else
+class colored_blob_camera_sensor{};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

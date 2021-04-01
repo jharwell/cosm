@@ -1,7 +1,7 @@
 /**
- * \file footbot_saa_subsystem.cpp
+ * \file saa_subsystemQ3D.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,39 +21,29 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/robots/footbot/footbot_saa_subsystem.hpp"
-
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, robots, footbot);
+NS_START(cosm, subsystem);
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-footbot_saa_subsystem::footbot_saa_subsystem(
-    const hal::sensors::position_sensor& pos,
-    const subsystem::sensing_subsystemQ3D::sensor_map& sensors,
-    const subsystem::actuation_subsystem2D::actuator_map& actuators,
+saa_subsystemQ3D::saa_subsystemQ3D(
+    const chsubsystem::sensing_subsystemQ3D::sensor_map& sensors,
+    const chsubsystem::actuation_subsystem2D::actuator_map& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
-    : saa_subsystemQ3D(pos, sensors, actuators, steer_config),
-      ER_CLIENT_INIT("cosm.robots.footbot.saa") {
-  /*
-   * Before this, the sensing member of our parent class is of the wrong type
-   * for the static casts we do.
-   */
-  auto footbot_sensing =
-      std::make_unique<footbot_sensing_subsystem>(pos, sensors);
-  saa_subsystemQ3D::sensing(std::move(footbot_sensing));
-}
+    : ER_CLIENT_INIT("cosm.subsystem.saa_subsystemQ3D"),
+      m_actuation(std::make_unique<actuation_type>(actuators)),
+      m_sensing(std::make_unique<sensing_type>(sensors)),
+      m_steer2D_calc(*this, steer_config) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void footbot_saa_subsystem::steer_force2D_apply(void) {
+void saa_subsystemQ3D::steer_force2D_apply(void) {
   ER_DEBUG("position=%s azimuth=%s zenith=%s",
            sensing()->rpos3D().to_str().c_str(),
            sensing()->azimuth().to_str().c_str(),
@@ -79,7 +69,7 @@ void footbot_saa_subsystem::steer_force2D_apply(void) {
   steer_force2D().forces_reset();
 } /* steer_force2D_apply() */
 
-rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {
+rmath::vector2d saa_subsystemQ3D::linear_velocity(void) const {
   auto speed = sensing()->diff_drive()->current_speed();
   /*
    * If speed comes back as 0.0, then we are executing a hard turn, probably as
@@ -97,18 +87,18 @@ rmath::vector2d footbot_saa_subsystem::linear_velocity(void) const {
   }
 } /* linear_velocity() */
 
-double footbot_saa_subsystem::angular_velocity(void) const {
+double saa_subsystemQ3D::angular_velocity(void) const {
   auto reading = sensing()->diff_drive()->reading();
 
   return (reading.vel_right - reading.vel_left) / reading.axle_length;
 } /* angular_velocity() */
 
-double footbot_saa_subsystem::max_speed(void) const {
+double saa_subsystemQ3D::max_speed(void) const {
   return actuation()->governed_diff_drive()->max_speed();
 } /* max_speed() */
 
-rmath::vector2d footbot_saa_subsystem::pos2D(void) const {
+rmath::vector2d saa_subsystemQ3D::pos2D(void) const {
   return sensing()->rpos2D();
 } /* pos2D() */
 
-NS_END(footbot, robots, cosm);
+NS_END(subsystem, cosm);

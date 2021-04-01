@@ -24,22 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
-#include <map>
-#include <typeindex>
-
 #include "rcppsw/types/timestep.hpp"
+#include "cosm/hal/subsystem/sensing_subsystemQ3D.hpp"
 
-#include "cosm/hal/sensors/battery_sensor.hpp"
-#include "cosm/hal/sensors/diff_drive_sensor.hpp"
-#include "cosm/hal/sensors/ground_sensor.hpp"
-#include "cosm/hal/sensors/light_sensor.hpp"
-#include "cosm/hal/sensors/position_sensor.hpp"
-#include "cosm/hal/sensors/proximity_sensor.hpp"
-#include "cosm/hal/sensors/wifi_sensor.hpp"
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-#include "cosm/hal/sensors/colored_blob_camera_sensor.hpp"
-#endif
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -53,70 +40,25 @@ NS_START(cosm, subsystem);
  * \ingroup subsystem
  *
  * \brief Base sensing subsystem for all sensors used by all robot
- * controllers. It uses a \ref hal::sensors::position_sensor for positioning
- * information, and manages any number of additional sensors:
+ * controllers. It adds additional functionality to \ref
+ * chsubsystem::sensing_subsystemQ3D beyond the abstraction of available robot
+ * sensors.
  *
- * - \ref hal::sensors::proximity_sensor
- * - \ref hal::sensors::colored_blob_camera_sensor
- * - \ref hal::sensors::light_sensor
- * - \ref hal::sensors::ground_sensor
- * - \ref hal::sensors::battery_sensor
- * - \ref hal::sensors::diff_drive_sensor
- * - \ref hal::sensors::wifi_sensor
+ * Note that the \ref chal::sensors::position_sensor MUST be in the sensor map,
+ * or \ref update() will crash.
  */
-class sensing_subsystemQ3D {
+class sensing_subsystemQ3D : public chsubsystem::sensing_subsystemQ3D {
  public:
-  using variant_type = boost::variant<hal::sensors::proximity_sensor,
-                                      hal::sensors::wifi_sensor,
-                                      hal::sensors::light_sensor,
-                                      hal::sensors::ground_sensor,
-                                      hal::sensors::battery_sensor,
-                                      hal::sensors::diff_drive_sensor,
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
-                                      hal::sensors::colored_blob_camera_sensor
-#endif
-                                      >;
-  using sensor_map = std::map<std::type_index, variant_type>;
-
-  /**
-   * \brief Convenience function to create a sensor map create for the
-   * specified sensor to make client code cleaner.
-   */
-  template <typename TSensor>
-  static sensor_map::value_type map_entry_create(const TSensor& sensor) {
-    return { typeid(TSensor), variant_type(sensor) };
-  }
-
   /**
    * \param pos Position sensor.
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
-  sensing_subsystemQ3D(const hal::sensors::position_sensor& pos,
-                       const sensor_map& sensors)
-      : m_pos_sensor(pos), m_sensors(sensors) {}
+  explicit sensing_subsystemQ3D(const sensor_map& sensors)
+      : chsubsystem::sensing_subsystemQ3D(sensors) {}
 
   virtual ~sensing_subsystemQ3D(void) = default;
 
   const rtypes::timestep& tick(void) const { return m_tick; }
-
-  template <typename TSensor>
-  bool replace(const TSensor& sensor) {
-    if (m_sensors.end() != m_sensors.find(typeid(sensor))) {
-      m_sensors.erase(m_sensors.find(typeid(sensor)));
-      return m_sensors.insert(map_entry_create(sensor)).second;
-    }
-    return false;
-  }
-
-  template <typename T>
-  const T* sensor(void) const {
-    return &boost::get<T>(m_sensors.find(typeid(T))->second);
-  }
-
-  template <typename T>
-  T* sensor(void) {
-    return &boost::get<T>(m_sensors.find(typeid(T))->second);
-  }
 
   /**
    * \brief Get the robot's current azimuth heading; this effectively is the
@@ -162,7 +104,7 @@ class sensing_subsystemQ3D {
    */
   void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
     m_tick = t;
-    auto reading = m_pos_sensor.reading();
+    auto reading = position()->reading();
 
     /* update 2D position info */
     m_prev_rpos2D = m_rpos2D;
@@ -202,9 +144,6 @@ class sensing_subsystemQ3D {
 
   rmath::radians                m_azimuth{};
   rmath::radians                m_zenith{};
-
-  hal::sensors::position_sensor m_pos_sensor;
-  sensor_map                    m_sensors;
   /* clang-format off */
 };
 

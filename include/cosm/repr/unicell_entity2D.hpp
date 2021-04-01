@@ -139,7 +139,7 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    * Updates the real anchor,center. Does not change the discrete anchor,center
    * of the entity.
    */
-  template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
+  template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void ranchor2D(const rmath::vector2d& ranchor) {
     m_ranchor = ranchor;
     m_rcenter = m_ranchor + m_rdim / 2.0;
@@ -152,7 +152,7 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    * Updates the discrete anchor,center. Does not change the real anchor,center
    * of the entity.
    */
-  template <typename T, RCPPSW_SFINAE_FUNC(T::is_movable())>
+  template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void danchor2D(const rmath::vector2z& danchor) {
     m_danchor = danchor;
     m_dcenter = m_danchor + m_ddim / 2;

@@ -35,9 +35,11 @@ NS_START(cosm, spatial, strategy);
  ******************************************************************************/
 base_strategy::base_strategy(params* const p) : base_strategy{ p->saa, p->rng } {}
 
-base_strategy::base_strategy(subsystem::saa_subsystemQ3D* const saa,
+base_strategy::base_strategy(csubsystem::saa_subsystemQ3D* const saa,
                              rmath::rng* rng)
-    : m_saa(saa), m_rng(rng), m_inta_tracker(m_saa->sensing()) {}
+    : m_saa(saa),
+      m_rng(rng),
+      m_inta_tracker(m_saa->sensing()) {}
 
 /*******************************************************************************
  * Member Functions

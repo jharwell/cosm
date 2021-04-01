@@ -128,7 +128,8 @@ class base_task_abort
         m_map->blocks()[block_id.v()],
         loc,
         m_map->grid_resolution(),
-        carena::arena_map_locking::ekNONE_HELD);
+        carena::arena_map_locking::ekNONE_HELD,
+        true);
 
     rdrop_op.visit(controller);
     adrop_op.visit(*m_map);

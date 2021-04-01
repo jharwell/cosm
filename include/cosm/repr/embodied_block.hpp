@@ -29,7 +29,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/simulator/entities/box_entity.h>
 #endif
 
@@ -41,7 +41,8 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Struct Definitions
  ******************************************************************************/
-static_assert(COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT,
+static_assert((COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) ||
+              (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D),
               "Embodied blocks can only be used in ARGoS");
 /**
  * \struct embodied_cube_block

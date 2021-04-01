@@ -50,7 +50,8 @@ free_block_drop::for_block(const rmath::vector2z& coord,
   return free_block_drop(nullptr,
                          coord,
                          resolution,
-                         arena_map_locking::ekNONE_HELD);
+                         arena_map_locking::ekNONE_HELD,
+                         false);
 } /* for_block() */
 
 /*******************************************************************************
@@ -59,11 +60,13 @@ free_block_drop::for_block(const rmath::vector2z& coord,
 free_block_drop::free_block_drop(crepr::base_block3D* block,
                                  const rmath::vector2z& coord,
                                  const rtypes::discretize_ratio& resolution,
-                                 const arena_map_locking& locking)
+                                 const arena_map_locking& locking,
+                                 bool update_clusters)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
       mc_locking(locking),
+      mc_update_clusters(update_clusters),
       m_block(block) {}
 
 /*******************************************************************************
@@ -138,8 +141,10 @@ void free_block_drop::visit(base_arena_map& map) {
     /* update block loctree with new location */
     map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
 
-    /* possibly update block cluster membership */
-    map.block_distributor()->cluster_update_after_drop(m_block);
+    if (mc_update_clusters) {
+      /* possibly update block cluster membership */
+      map.block_distributor()->cluster_update_after_drop(m_block);
+    }
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),
@@ -210,8 +215,10 @@ void free_block_drop::visit(caching_arena_map& map) {
     /* update block loctree with new location */
     map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
 
-    /* possibly update block cluster membership */
-    map.block_distributor()->cluster_update_after_drop(m_block);
+    if (mc_update_clusters) {
+      /* possibly update block cluster membership */
+      map.block_distributor()->cluster_update_after_drop(m_block);
+    }
   }
 
   map.maybe_unlock_wr(map.grid_mtx(),

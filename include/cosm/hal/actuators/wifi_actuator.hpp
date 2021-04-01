@@ -29,11 +29,11 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/wifi_packet.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h>
 #else
 #error "Selected component has no RAB actuator!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -62,21 +62,26 @@ NS_END(detail);
  * - ARGoS footbot. These robots will use wifi to broadcast data every timestep
  *   to all robots in range until told to do otherwise.
  *
+ * - ARGoS epuck.  These robots will use wifi to broadcast data every timestep
+ *   to all robots in range until told to do otherwise.
+ *
  * \tparam TActuator The underlying actuator handle type abstracted away by the
  *                   HAL. If nullptr, then that effectively disables the
  *                   actuator at compile time, and SFINAE ensures no member
  *                   functions can be called.
  */
-template<typename T>
+template<typename TActuator>
 class wifi_actuator_impl {
  public:
-  explicit wifi_actuator_impl(T* const wifi) : m_wifi(wifi) {}
+  using impl_type = TActuator;
+
+  explicit wifi_actuator_impl(TActuator* const wifi) : m_wifi(wifi) {}
 
   /**
    * \brief Start broadcasting the specified data to all footbots within range.
    */
-  template <typename U = T,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_rab_actuator<U>::value)>
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_start(const struct wifi_packet& packet) {
     for (size_t i = 0; i < packet.data.size(); ++i) {
       m_wifi->SetData(i, packet.data[i]);
@@ -87,8 +92,8 @@ class wifi_actuator_impl {
    * \brief Stop broadcasting the previously specified data to all footbots
    * within range.
    */
-  template <typename U = T,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_rab_actuator<U>::value)>
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_stop(void) {
     m_wifi->ClearData();
   }
@@ -96,8 +101,8 @@ class wifi_actuator_impl {
   /**
    * \brief Reset the wifi device.
    */
-  template <typename U = T,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_rab_actuator<U>::value)>
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void reset(void) {
     if (nullptr != m_wifi) {
       m_wifi->ClearData();
@@ -106,13 +111,13 @@ class wifi_actuator_impl {
 
  private:
   /* clang-format off */
-  T* const m_wifi;
+  TActuator* const m_wifi;
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using wifi_actuator = wifi_actuator_impl<argos::CCI_RangeAndBearingActuator>;
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, hal, cosm);
 

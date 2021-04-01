@@ -15,8 +15,10 @@ COSM requires the following CMake variables to be defined in order to
 successfully build.
 
 - ``COSM_BUILD_FOR`` - The target platform that COSM will be built for. Must be
-  one of [ ``MSI``, ``ARGOS``, ``EV3`` ]. Setting this also sets
-  ``COSM_HAL_TARGET`` and ``COSM_PROJECT_DEPS_PREFIX``.
+  one of [ ``MSI``, ``ARGOS_FOOTBOT``, ``ARGOS_EEPUCK3D`` ].
+
+- ``COSM_BUILD_ENV`` - The target build environment that COSM will be built
+  in. Must be one of [ ``LOCAL``, ``MSI`` ].
 
 - ``COSM_HAL_TARGET`` - Specify the Hardware Abstraction Layer (HAL)
   target. Must be one of: [ ``argos-footbot``, ``lego-ev3`` ].
@@ -32,5 +34,5 @@ successfully build.
   of the desired type in the XML input file to the the actual controller class
   in C++ code.
 
-- ``COSM_PROJECT_DEPS_PREFIX`` - Prefix for where ARGoS and other dependencies
-  in the parent project have been installed.
+- ``COSM_DEPS_PREFIX`` - Prefix for where ARGoS and other dependencies in the
+  parent project have been installed.

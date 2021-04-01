@@ -28,15 +28,17 @@
 #include "cosm/hal/wifi_packet.hpp"
 #include "rcppsw/math/radians.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h>
-#else
-#error "Selected hardware has no RAB wireless communication sensor!"
-#endif /* HAL_TARGET */
+#endif
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_RangeAndBearingSensor;
+} /* namespace argos */
+
 NS_START(cosm, hal, sensors, detail);
 
 /*******************************************************************************
@@ -68,6 +70,8 @@ NS_END(detail);
 template <typename TSensor>
 class wifi_sensor_impl  {
  public:
+  using impl_type = TSensor;
+
   explicit wifi_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
 
   /**
@@ -76,7 +80,7 @@ class wifi_sensor_impl  {
    * \return A vector of \ref wifi_packet.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_sensor<U>::value)>
   std::vector<wifi_packet> readings(void) const {
     std::vector<wifi_packet> ret;
     for (auto &r : m_sensor->GetReadings()) {
@@ -93,9 +97,11 @@ class wifi_sensor_impl  {
   TSensor* m_sensor;
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using wifi_sensor = wifi_sensor_impl<argos::CCI_RangeAndBearingSensor>;
-#endif /* HAL_TARGET */
+#else
+struct wifi_sensor{};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

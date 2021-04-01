@@ -59,7 +59,7 @@ NS_END(detail);
  * Class Definitions
  ******************************************************************************/
 template<typename TContainer,
-         RCPPSW_SFINAE_FUNC(!detail::is_mappish<TContainer>::value)>
+         RCPPSW_SFINAE_DECLDEF(!detail::is_mappish<TContainer>::value)>
 std::string to_string(const TContainer& container, const std::string& prefix) {
   return std::accumulate(container.begin(),
                          container.end(),
@@ -70,7 +70,7 @@ std::string to_string(const TContainer& container, const std::string& prefix) {
 }
 
 template <typename TMap,
-          RCPPSW_SFINAE_FUNC(detail::is_mappish<TMap>::value)>
+          RCPPSW_SFINAE_DECLDEF(detail::is_mappish<TMap>::value)>
 std::string to_string(const TMap& table, const std::string& prefix) {
   return std::accumulate(table.begin(),
                          table.end(),

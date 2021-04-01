@@ -30,11 +30,9 @@
 
 #include "cosm/hal/hal.hpp"
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_positioning_sensor.h>
-#else
-#error "Selected hardware has no position sensor!"
-#endif /* HAL_TARGET */
+#endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -61,7 +59,8 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot.
+ * - ARGoS footbot
+ * - ARGoS epuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                 HAL. If nullptr, then that effectively disables the sensor
@@ -71,6 +70,8 @@ NS_END(detail);
 template <typename TSensor>
 class position_sensor_impl {
  public:
+  using impl_type = TSensor;
+
   /**
    * \brief A position sensor reading, given as a 2D position and a triplet of
    * (X,Y,Z) angles.
@@ -90,7 +91,7 @@ class position_sensor_impl {
    * \return A \ref sensor_reading.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_FUNC(detail::is_argos_position_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
   sensor_reading reading(void) const {
     auto tmp = m_sensor->GetReading();
     sensor_reading ret;
@@ -111,9 +112,11 @@ class position_sensor_impl {
   /* clang-format on */
 };
 
-#if COSM_HAL_TARGET == HAL_TARGET_ARGOS_FOOTBOT
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using position_sensor = position_sensor_impl<argos::CCI_PositioningSensor>;
-#endif /* HAL_TARGET */
+#else
+class position_sensor{};
+#endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, hal, cosm);
 

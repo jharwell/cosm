@@ -1,7 +1,7 @@
 /**
  * \file actuation_subsystem2D.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,12 +21,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/hal/subsystem/actuation_subsystem2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem);
+NS_START(cosm, hal, subsystem);
 
 /*******************************************************************************
  * Struct Definitions
@@ -47,4 +47,4 @@ void actuation_subsystem2D::reset(void) {
   } /* for(&a..) */
 } /* reset() */
 
-NS_END(subsystem, cosm);
+NS_END(subsystem, hal, cosm);
