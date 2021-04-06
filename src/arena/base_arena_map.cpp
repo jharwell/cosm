@@ -343,8 +343,8 @@ ds::nest_vectorro base_arena_map::nests(void) const {
   return ret;
 }
 
-cds::block3D_vectorno base_arena_map::free_blocks(void) const {
-  return free_blocks_calculator()(blocks());
+cds::block3D_vectorno base_arena_map::free_blocks(bool oos_ok) const {
+  return free_blocks_calculator(oos_ok)(blocks());
 } /* free_blocks() */
 
 bool base_arena_map::placement_conflict(const crepr::base_block3D* const block,

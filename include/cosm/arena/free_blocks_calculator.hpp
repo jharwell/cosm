@@ -52,7 +52,7 @@ NS_START(cosm, arena);
  */
 class free_blocks_calculator {
  public:
-  free_blocks_calculator(void) = default;
+  explicit free_blocks_calculator(bool oos_ok) : mc_oos_ok(oos_ok) {}
 
   /* Not move/copy constructable/assignable by default */
   free_blocks_calculator(const free_blocks_calculator&) = delete;
@@ -68,6 +68,9 @@ class free_blocks_calculator {
   operator()(const cds::block3D_vectorno& c_all_blocks) const {
     return operator()(c_all_blocks, {});
   }
+  /* clang-format off */
+  const bool mc_oos_ok;
+  /* clang-format on */
 };
 
 NS_END(arena, cosm);

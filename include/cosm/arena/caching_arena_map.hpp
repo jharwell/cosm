@@ -110,11 +110,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
   bool initialize(pal::argos_sm_adaptor* sm) override;
 
-  /**
-   * \brief Get the free blocks in the arena. Does no locking, so this is only
-   * safe to call in non-concurrent contexts.
-   */
-  cds::block3D_vectorno free_blocks(void) const override;
+  cds::block3D_vectorno free_blocks(bool oos_ok) const override;
 
   bool placement_conflict(const crepr::base_block3D* const block,
                           const rmath::vector2d& loc) const override;

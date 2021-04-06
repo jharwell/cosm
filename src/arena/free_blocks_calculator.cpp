@@ -54,9 +54,11 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
                       * re-distribute and are currently pending to be
                       * re-distributed later (maybe) if arena conditions allow
                       * it (e.g., enough robots have picked up blocks so there
-                      * is space in a cluster for the block). See COSM#124.
+                      * is space in a cluster for the block). See COSM#124. See
+                      * also COSM#142 for correctly computing block cluster
+                      * locations during deferred arena map initialization.
                       */
-                     !b->is_out_of_sight() &&
+                     (mc_oos_ok || !b->is_out_of_sight()) &&
                      /*
                       * Block not inside cache (to catch blocks that were on the
                       * host cell for the cache, and we incorporated into it

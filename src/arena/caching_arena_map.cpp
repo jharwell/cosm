@@ -236,14 +236,14 @@ void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking)
   maybe_unlock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
 } /* post_block_dist_unlock() */
 
-cds::block3D_vectorno caching_arena_map::free_blocks(void) const {
+cds::block3D_vectorno caching_arena_map::free_blocks(bool oos_ok) const {
   cads::acache_vectorro rocaches;
   std::transform(caches().begin(),
                  caches().end(),
                  std::back_inserter(rocaches),
                  [&](const auto& c) { return c; });
 
-  return free_blocks_calculator()(blocks(), rocaches);
+  return free_blocks_calculator(oos_ok)(blocks(), rocaches);
 } /* free_blocks() */
 
 cds::const_spatial_entity_vector

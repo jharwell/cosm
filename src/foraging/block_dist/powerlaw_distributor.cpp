@@ -71,7 +71,7 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block) {
 
     if (dist_status::ekSUCCESS == mclust->distribute_block(block)) {
       return dist_status::ekSUCCESS;
-    } 
+    }
   } /* for(i..) */
 
   return dist_status::ekFAILURE;

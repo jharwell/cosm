@@ -215,8 +215,15 @@ class base_arena_map : public rer::client<base_arena_map>,
   /**
    * \brief Get the free blocks in the arena. Does no locking, so this is only
    * safe to call in non-concurrent contexts.
+   *
+   * \param oos_ok Are out of sight (OOS) blocks OK to include? In general they
+   *               are not, BUT for powerlaw block distributions which require
+   *               deferred arena map initialization, all blocks are out of
+   *               sight pre-init when cluster locations are computed which
+   *               causes problems with clusters overlapping with caches. See
+   *               COSM#142.
    */
-  virtual cds::block3D_vectorno free_blocks(void) const;
+  virtual cds::block3D_vectorno free_blocks(bool oos_ok) const;
 
   /**
    * \brief Update the location index tree after the specified block has moved.

@@ -60,7 +60,7 @@ size_t block_motion_handler::move_blocks(carena::base_arena_map* map) {
 } /* move_blocks() */
 
 void block_motion_handler::random_walk(carena::base_arena_map* map) {
-  auto free_blocks = map->free_blocks();
+  auto free_blocks = map->free_blocks(false);
   for (auto* b : free_blocks) {
     if (!m_rng->bernoulli(mc_config.random_walk_prob)) {
       continue;
@@ -84,7 +84,7 @@ void block_motion_handler::random_walk(carena::base_arena_map* map) {
           carena::arena_map_locking::ekALL_HELD,
           true);
       pickup_op.visit(*map);
-      ER_ASSERT(b->is_out_of_sight() && !b->is_carried_by_robot(),
+      ER_ASSERT(!b->is_out_of_sight() && !b->is_carried_by_robot(),
                 "Block%d out of sight or carried by robot",
                 b->id().v());
 
