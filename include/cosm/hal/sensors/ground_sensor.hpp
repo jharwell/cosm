@@ -80,7 +80,7 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>> {
+class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 

@@ -1,7 +1,7 @@
 /**
- * \file cube_block3D.hpp
+ * \file embodied_block_variant.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
+#ifndef INCLUDE_COSM_PAL_EMBODIED_BLOCK_VARIANT_HPP_
+#define INCLUDE_COSM_PAL_EMBODIED_BLOCK_VARIANT_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <boost/variant.hpp>
 #include <memory>
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
+class base_block3D;
+} /* namespace cosm::repr */
+
+NS_START(cosm, pal);
+
+class embodied_ramp_block;
+class embodied_cube_block;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class cube_block3D
- * \ingroup cosm repr
- *
- * \brief A 3D representation of a cubical block within the arena. Bounding box
- * for cube blocks is 1x1x1 cells in 3D.
- */
-class cube_block3D : public base_block3D {
- public:
-  cube_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res) noexcept
-      : base_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
+using embodied_block_varianto = boost::variant<std::unique_ptr<embodied_ramp_block>,
+                                              std::unique_ptr<embodied_cube_block>>;
 
-  std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
-    this->base_block3D::clone_impl(tmp.get());
-    return tmp;
-  } /* clone() */
-};
-NS_END(repr, cosm);
+using embodied_block_variantno = boost::variant<embodied_ramp_block*,
+                                                embodied_cube_block*>;
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_ */
+NS_END(pal, cosm);
+
+#endif /* INCLUDE_COSM_PAL_EMBODIED_BLOCK_VARIANT_HPP_ */

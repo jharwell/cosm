@@ -1,5 +1,5 @@
 /**
- * \file embodied_block.hpp
+ * \file ramp_block_embodiment.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,47 +18,26 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_EMBODIED_BLOCK_HPP_
-#define INCLUDE_COSM_REPR_EMBODIED_BLOCK_HPP_
+#ifndef INCLUDE_COSM_PAL_RAMP_BLOCK_EMBODIMENT_HPP_
+#define INCLUDE_COSM_PAL_RAMP_BLOCK_EMBODIMENT_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
-
-#include "cosm/cosm.hpp"
-#include "cosm/hal/hal.hpp"
-
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/simulator/entities/box_entity.h>
-#endif
+
+#include "cosm/repr/base_embodiment.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, pal);
 
 /*******************************************************************************
  * Struct Definitions
  ******************************************************************************/
-static_assert((COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) ||
-              (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D),
-              "Embodied blocks can only be used in ARGoS");
 /**
- * \struct embodied_cube_block
- *
- * \brief Handle for the implementation on how to take a \ref cube_block3D and
- * make it physically embodied in the 3D world in ARGoS.
- *
- * Have to use raw pointers and new in order to be able to hand ownership of the
- * block to ARGoS.
- */
-struct embodied_cube_block {
-  argos::CBoxEntity* box{ nullptr };
-};
-
-/**
- * \struct embodied_ramp_block
+ * \struct ramp_block_embodiment
  *
  * \brief Handle for the implementation on how to take a \ref ramp_block3D and
  * make it physically embodied in the 3D world in ARGoS.
@@ -70,15 +49,12 @@ struct embodied_cube_block {
  * Have to use raw pointers and new in order to be able to hand ownership of the
  * block to ARGoS.
  */
-struct embodied_ramp_block {
+struct ramp_block_embodiment : public crepr::base_embodiment {
   argos::CBoxEntity* top{ nullptr };
   argos::CBoxEntity* bottom{ nullptr };
   argos::CBoxEntity* back{ nullptr };
 };
 
-using embodied_block_variant =
-    boost::variant<embodied_cube_block, embodied_ramp_block>;
+NS_END(pal, cosm);
 
-NS_END(repr, cosm);
-
-#endif /* INCLUDE_COSM_REPR_EMBODIED_BLOCK_HPP_ */
+#endif /* INCLUDE_COSM_PAL_RAMP_BLOCK_EMBODIMENT_HPP_ */

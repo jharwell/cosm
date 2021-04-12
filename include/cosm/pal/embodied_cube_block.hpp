@@ -1,7 +1,7 @@
 /**
- * \file cube_block3D.hpp
+ * \file embodied_cube_block.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +18,45 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
+#ifndef INCLUDE_COSM_PAL_EMBODIED_CUBE_BLOCK_HPP_
+#define INCLUDE_COSM_PAL_EMBODIED_CUBE_BLOCK_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <utility>
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/hal/hal.hpp"
+#include "cosm/repr/cube_block3D.hpp"
+#include "cosm/pal/cube_block_embodiment.hpp"
+#include "cosm/repr/embodied_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, pal);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cube_block3D
- * \ingroup cosm repr
+ * \ingroup cosm pal
  *
- * \brief A 3D representation of a cubical block within the arena. Bounding box
- * for cube blocks is 1x1x1 cells in 3D.
+ * \brief A \ref cpal::cube_block3D + ARGoS embodiment.
  */
-class cube_block3D : public base_block3D {
+class embodied_cube_block final : public crepr::cube_block3D,
+                                  public repr::embodied_entity<cube_block_embodiment> {
  public:
-  cube_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res) noexcept
-      : base_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
-
-  std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
-    this->base_block3D::clone_impl(tmp.get());
-    return tmp;
-  } /* clone() */
+  embodied_cube_block(const rtypes::type_uuid& id,
+                      const rmath::vector3d& dim,
+                      const rtypes::discretize_ratio& arena_res,
+                      std::unique_ptr<cube_block_embodiment> embodiment)
+      : cube_block3D(id, dim, arena_res),
+        embodied_entity(std::move(embodiment)) {}
+  ~embodied_cube_block(void) override = default;
 };
-NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_ */
+NS_END(pal, cosm);
+
+#endif /* INCLUDE_COSM_PAL_EMBODIED_CUBE_BLOCK_HPP_ */

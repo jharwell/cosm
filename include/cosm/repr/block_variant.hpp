@@ -35,11 +35,20 @@ NS_START(cosm, repr);
 
 class cube_block3D;
 class ramp_block3D;
+class base_block3D;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using block3D_variant = boost::variant<cube_block3D*, ramp_block3D*>;
+using block3D_variantno = boost::variant<cube_block3D*, ramp_block3D*>;
+using block3D_variantro = boost::variant<const cube_block3D*,
+                                         const ramp_block3D*>;
+
+/*******************************************************************************
+ * Free Functions
+ ******************************************************************************/
+crepr::block3D_variantno make_variant(crepr::base_block3D* block);
+crepr::block3D_variantro make_variant(const crepr::base_block3D* block);
 
 NS_END(repr, cosm);
 

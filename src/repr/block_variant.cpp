@@ -1,7 +1,7 @@
 /**
- * \file cube_block3D.hpp
+ * \file block_variant.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +18,39 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/block_variant.hpp"
+#include "cosm/repr/cube_block3D.hpp"
+#include "cosm/repr/ramp_block3D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, repr);
 
 /*******************************************************************************
- * Class Definitions
+ * Free Functions
  ******************************************************************************/
-/**
- * \class cube_block3D
- * \ingroup cosm repr
- *
- * \brief A 3D representation of a cubical block within the arena. Bounding box
- * for cube blocks is 1x1x1 cells in 3D.
- */
-class cube_block3D : public base_block3D {
- public:
-  cube_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res) noexcept
-      : base_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
+crepr::block3D_variantno make_variant(crepr::base_block3D* block) {
+  if (crepr::block_type::ekCUBE == block->md()->type()) {
+    return {static_cast<crepr::cube_block3D*>(block)};
+  } else if (crepr::block_type::ekRAMP == block->md()->type()) {
+    return {static_cast<crepr::ramp_block3D*>(block)};
+  } else {
+    return {};
+  }
+} /* make_variant() */
 
-  std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
-    this->base_block3D::clone_impl(tmp.get());
-    return tmp;
-  } /* clone() */
-};
+crepr::block3D_variantro make_variant(const crepr::base_block3D* block) {
+  if (crepr::block_type::ekCUBE == block->md()->type()) {
+    return {static_cast<const crepr::cube_block3D*>(block)};
+  } else if (crepr::block_type::ekRAMP == block->md()->type()) {
+    return {static_cast<const crepr::ramp_block3D*>(block)};
+  } else {
+    return {};
+  }
+} /* make_variant() */
+
 NS_END(repr, cosm);
-
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_ */

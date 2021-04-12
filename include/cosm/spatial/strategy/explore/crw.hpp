@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_
+#define INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_
 
 /*******************************************************************************
  * Includes
@@ -35,14 +35,14 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy);
+NS_START(cosm, spatial, strategy, explore);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class crw
- * \ingroup spatial strategy
+ * \ingroup spatial strategy explore
  *
  * \brief Roam around using Correlated Random Walk looking for something until
  * you happen to stumble across it.
@@ -81,6 +81,6 @@ class crw : public csstrategy::base_strategy,
   /* clang-format on */
 };
 
-NS_END(strategy, spatial, cosm);
+NS_END(explore, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_CRW_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_ */

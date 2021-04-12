@@ -1,7 +1,7 @@
 /**
- * \file cube_block3D.hpp
+ * \file cube_block_embodiment.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +18,38 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
+#ifndef INCLUDE_COSM_PAL_CUBE_BLOCK_EMBODIMENT_HPP_
+#define INCLUDE_COSM_PAL_CUBE_BLOCK_EMBODIMENT_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
+#include <argos3/plugins/simulator/entities/box_entity.h>
 
-#include "cosm/repr/base_block3D.hpp"
-
-/*******************************************************************************
- * Namespaces
- ******************************************************************************/
-NS_START(cosm, repr);
+#include "cosm/repr/base_embodiment.hpp"
 
 /*******************************************************************************
- * Class Definitions
+ * Namespaces/Decls
  ******************************************************************************/
+NS_START(cosm, pal);
+
+/*******************************************************************************
+ * Struct Definitions
+ ******************************************************************************/
+
 /**
- * \class cube_block3D
- * \ingroup cosm repr
+ * \struct cube_block_embodiment
  *
- * \brief A 3D representation of a cubical block within the arena. Bounding box
- * for cube blocks is 1x1x1 cells in 3D.
+ * \brief Handle for the implementation on how to take a \ref cube_block3D and
+ * make it physically embodied in the 3D world in ARGoS.
+ *
+ * Have to use raw pointers and new in order to be able to hand ownership of the
+ * block to ARGoS.
  */
-class cube_block3D : public base_block3D {
- public:
-  cube_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res) noexcept
-      : base_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
-
-  std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
-    this->base_block3D::clone_impl(tmp.get());
-    return tmp;
-  } /* clone() */
+struct cube_block_embodiment : public crepr::base_embodiment {
+  argos::CBoxEntity* box{ nullptr };
 };
-NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_ */
+NS_END(pal, cosm);
+
+#endif /* INCLUDE_COSM_PAL_CUBE_BLOCK_EMBODIMENT_HPP_ */

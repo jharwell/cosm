@@ -37,7 +37,7 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/swarm_manager.hpp"
 #include "cosm/repr/block_variant.hpp"
-#include "cosm/repr/embodied_block.hpp"
+#include "cosm/pal/block_embodiment_variant.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -94,17 +94,6 @@ class argos_sm_adaptor : public swarm_manager,
     return m_arena_map.get();
   }
   argos::CFloorEntity* floor(void) const { return m_floor; }
-
-  /**
-   * \brief Create a 3D embodied representation of the block and add it to
-   * ARGoS, returning a handle to the created representation.
-   *
-   * The \p parent_id is provided as an argument so that multiple otherwise
-   * identical embodiments can be uniquely identified, as required by ARGoS.
-   */
-  crepr::embodied_block_variant make_embodied(const crepr::block3D_variant& block,
-                                              const rmath::radians& z_rotation,
-                                              const rtypes::type_uuid& parent_id);
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)

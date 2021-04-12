@@ -124,7 +124,7 @@ class base_block3D : public crepr::unicell_movable_entity3D,
    */
   bool is_out_of_sight(void) const {
     return kOutOfSight.dpos == unicell_movable_entity3D::danchor3D() ||
-           kOutOfSight.rpos == unicell_movable_entity3D::ranchor3D();
+        kOutOfSight.rpos == unicell_movable_entity3D::ranchor3D();
   }
   /**
    * \brief Change the block's location to something outside the visitable space
@@ -133,6 +133,17 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   void move_out_of_sight(void) {
     unicell_movable_entity3D::ranchor3D(kOutOfSight.rpos);
     unicell_movable_entity3D::danchor3D(kOutOfSight.dpos);
+  }
+
+ protected:
+  void clone_impl(base_block3D* const other) const {
+    /* copy core definition features */
+    other->ranchor3D(this->ranchor3D());
+    other->danchor3D(this->danchor3D());
+
+    /* copy metadata */
+    other->md()->robot_id_reset();
+    other->md()->metrics_copy(this->md());
   }
 
  private:

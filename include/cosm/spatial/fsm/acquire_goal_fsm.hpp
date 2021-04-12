@@ -195,9 +195,9 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   bool is_vectoring_to_goal(void) const override final RCPPSW_PURE;
   bool goal_acquired(void) const override final RCPPSW_PURE;
   metrics::goal_acq_metrics::goal_type acquisition_goal(void) const override final;
-  rmath::vector3z acquisition_loc3D(void) const override final;
-  rmath::vector3z explore_loc3D(void) const override final;
-  rmath::vector3z vector_loc3D(void) const override final;
+  rmath::vector3z acquisition_loc3D(void) const override final RCPPSW_PURE;
+  rmath::vector3z explore_loc3D(void) const override final RCPPSW_PURE;
+  rmath::vector3z vector_loc3D(void) const override final RCPPSW_PURE;
   rtypes::type_uuid entity_acquired_id(void) const override final {
     return m_acq_id;
   }

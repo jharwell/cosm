@@ -21,14 +21,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/crw.hpp"
+#include "cosm/spatial/strategy/explore/crw.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy);
+NS_START(cosm, spatial, strategy, explore);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -68,4 +68,4 @@ void crw::task_execute(void) {
   }
 } /* task_execute() */
 
-NS_END(strategy, spatial, cosm);
+NS_END(explore, strategy, spatial, cosm);

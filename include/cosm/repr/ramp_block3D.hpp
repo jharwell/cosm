@@ -25,16 +25,8 @@
  * Includes
  ******************************************************************************/
 #include <memory>
-#include <utility>
 
-#include "cosm/hal/hal.hpp"
 #include "cosm/repr/base_block3D.hpp"
-
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
-#include <boost/optional.hpp>
-
-#include "cosm/repr/embodied_block.hpp"
-#endif
 
 /*******************************************************************************
  * Namespaces
@@ -50,7 +42,7 @@ NS_START(cosm, repr);
  * \brief A 3D representation of a ramp block within the arena. The bounding box
  * for ramp blocks is 2x1x1 cells in 3D.
  */
-class ramp_block3D final : public base_block3D {
+class ramp_block3D : public base_block3D {
  public:
   ramp_block3D(const rtypes::type_uuid& id,
                const rmath::vector3d& dim,
@@ -63,32 +55,9 @@ class ramp_block3D final : public base_block3D {
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<ramp_block3D>(id(), rdim3D(), arena_res());
-
-    /* copy core definition features */
-    tmp->ranchor3D(this->ranchor3D());
-    tmp->danchor3D(this->danchor3D());
-
-    /* copy metadata */
-    tmp->md()->robot_id_reset();
-    tmp->md()->metrics_copy(this->md());
+    this->base_block3D::clone_impl(tmp.get());
     return tmp;
   } /* clone() */
-
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
-  const boost::optional<embodied_ramp_block>& set_embodiment(void) const {
-    return m_embodiment;
-  }
-  void embodiment(boost::optional<embodied_ramp_block>&& b) {
-    m_embodiment = std::move(b);
-  }
-#endif
-
- private:
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
-  /* clang-format off */
-  boost::optional<embodied_ramp_block> m_embodiment{};
-  /* clang-format on */
-#endif
 };
 
 NS_END(repr, cosm);

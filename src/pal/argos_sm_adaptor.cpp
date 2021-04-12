@@ -23,14 +23,12 @@
  ******************************************************************************/
 #include "cosm/pal/argos_sm_adaptor.hpp"
 
-#include <sys/resource.h>
-
 #include "rcppsw/math/rngm.hpp"
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
-#include "cosm/pal/embodied_block_creator.hpp"
+#include "cosm/pal/block_embodiment_creator.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/vis/config/visualization_config.hpp"
 
@@ -38,8 +36,6 @@
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, pal);
-
-void ___sighandler(int signum);
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -74,18 +70,6 @@ void argos_sm_adaptor::arena_map_init(
     std::exit(EXIT_FAILURE);
   }
 } /* arena_map_init() */
-
-crepr::embodied_block_variant
-argos_sm_adaptor::make_embodied(const crepr::block3D_variant& block,
-                                const rmath::radians& z_rotation,
-                                const rtypes::type_uuid& parent_id) {
-  auto visitor = std::bind(embodied_block_creator(),
-                           std::placeholders::_1,
-                           z_rotation,
-                           parent_id,
-                           this);
-  return boost::apply_visitor(visitor, block);
-} /* make_embodied() */
 
 argos::CColor argos_sm_adaptor::GetFloorColor(const argos::CVector2& pos) {
   rmath::vector2d rpos(pos.GetX(), pos.GetY());

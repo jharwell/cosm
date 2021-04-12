@@ -57,7 +57,7 @@ NS_START(cosm, repr);
  * robots can detect them from far away in large arenas, but not so bright and
  * intense as to saturate robot light sensors.
  */
-class nest_light : public repr::colored_entity {
+class nest_light final : public repr::colored_entity {
  public:
   nest_light(const std::string& name,
              const rmath::vector3d& loc,

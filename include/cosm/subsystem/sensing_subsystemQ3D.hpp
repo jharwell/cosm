@@ -47,7 +47,7 @@ NS_START(cosm, subsystem);
  * Note that the \ref chal::sensors::position_sensor MUST be in the sensor map,
  * or \ref update() will crash.
  */
-class sensing_subsystemQ3D : public chsubsystem::sensing_subsystemQ3D {
+class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
  public:
   /**
    * \param pos Position sensor.

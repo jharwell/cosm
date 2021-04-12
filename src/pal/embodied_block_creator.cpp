@@ -26,6 +26,8 @@
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/repr/cube_block3D.hpp"
 #include "cosm/repr/ramp_block3D.hpp"
+#include "cosm/pal/block_embodiment_creator.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -35,135 +37,24 @@ NS_START(cosm, pal);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-crepr::embodied_block_variant
-embodied_block_creator::operator()(const crepr::cube_block3D* block,
-                                   const rmath::radians&,
-                                   const rtypes::type_uuid& parent_id,
-                                   cpal::argos_sm_adaptor* sm) const {
-  crepr::embodied_cube_block ret;
-  argos::CVector3 loc(
-      block->ranchor3D().x(), block->ranchor3D().y(), block->ranchor3D().z());
-  auto name = "parent" + rcppsw::to_string(parent_id) + +"_cube_block" +
-              rcppsw::to_string(block->id());
-  ret.box = new argos::CBoxEntity(name,
-                                  argos::CVector3(block->ranchor3D().x(),
-                                                  block->ranchor3D().y(),
-                                                  block->ranchor3D().z()),
-                                  argos::CQuaternion(),
-                                  false,
-                                  argos::CVector3(block->rdim3D().x(),
-                                                  block->rdim3D().y(),
-                                                  block->rdim3D().z()));
-  sm->AddEntity(*ret.box);
-  return ret;
+cpal::embodied_block_varianto
+embodied_block_creator::operator()(const crepr::cube_block3D* block) const {
+  auto embodied = std::make_unique<embodied_cube_block>(block->id(),
+                                                        block->rdim3D(),
+                                                        const_cast<const cpal::argos_sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
+                                                        nullptr);
+  return {std::move(embodied)};
 }
 
-crepr::embodied_block_variant
-embodied_block_creator::operator()(const crepr::ramp_block3D* block,
-                                   const rmath::radians& z_rotation,
-                                   const rtypes::type_uuid& parent_id,
-                                   cpal::argos_sm_adaptor* sm) const {
-  crepr::embodied_ramp_block ret;
+cpal::embodied_block_varianto
+embodied_block_creator::operator()(const crepr::ramp_block3D* block) const {
+  auto embodied = std::make_unique<embodied_ramp_block>(block->id(),
+                                                        block->rdim3D(),
+                                                        const_cast<const cpal::argos_sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
+                                                        nullptr);
+  return {std::move(embodied)};
 
-  /*
-   * We approximate a ramp by creating top, bottom, and back, because ARGoS does
-   * not (easily) let you create arbitrary polygons, which is necessary for
-   * creating the triangular sides. We use very thin boxes for the top, bottom,
-   * and back, and this seems to work reasonably well.
-   */
-  ret.bottom = ramp_bottom(block, z_rotation, parent_id);
-  sm->AddEntity(*ret.bottom);
 
-  ret.back = ramp_back(block, z_rotation, parent_id);
-  sm->AddEntity(*ret.back);
-
-  ret.top = ramp_top(block, z_rotation, parent_id);
-  sm->AddEntity(*ret.top);
-
-  return ret;
 }
-
-argos::CBoxEntity*
-embodied_block_creator::ramp_bottom(const crepr::ramp_block3D* block,
-                                    const rmath::radians& z_rotation,
-                                    const rtypes::type_uuid& parent_id) const {
-  argos::CQuaternion orientation;
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()),
-                              argos::CRadians::ZERO,
-                              argos::CRadians::ZERO);
-  std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
-                     rcppsw::to_string(block->id()) + "_bottom";
-  return new argos::CBoxEntity(name,
-                               argos::CVector3(block->ranchor3D().x(),
-                                               block->ranchor3D().y(),
-                                               block->ranchor3D().z()),
-                               orientation,
-                               false,
-                               argos::CVector3(block->rdim3D().x(),
-                                               block->rdim3D().y(),
-                                               kRAMP_BOX_THICKNESS));
-} /* ramp_bottom() */
-
-argos::CBoxEntity*
-embodied_block_creator::ramp_back(const crepr::ramp_block3D* block,
-                                  const rmath::radians& z_rotation,
-                                  const rtypes::type_uuid& parent_id) const {
-  double x_factor = 0.0;
-  double y_factor = 0.0;
-  argos::CRadians x_rot = argos::CRadians::ZERO;
-  argos::CRadians y_rot = argos::CRadians::ZERO;
-
-  if (rmath::radians::kZERO == z_rotation) {
-    x_factor = block->rdim3D().x() / 2.0;
-    y_rot = argos::CRadians::PI_OVER_TWO;
-  } else {
-    y_factor = block->rdim3D().x() / 2.0;
-    x_rot = argos::CRadians::PI_OVER_TWO;
-  }
-  argos::CVector3 loc(block->ranchor3D().x() - x_factor,
-                      block->ranchor3D().y() - y_factor,
-                      block->ranchor3D().z());
-  argos::CQuaternion orientation;
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()), y_rot, x_rot);
-  std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
-                     rcppsw::to_string(block->id()) + "_back";
-  return new argos::CBoxEntity(name,
-                               loc,
-                               orientation,
-                               false,
-                               argos::CVector3(block->rdim3D().x(),
-                                               block->rdim3D().y(),
-                                               kRAMP_BOX_THICKNESS));
-} /* ramp_back() */
-
-argos::CBoxEntity*
-embodied_block_creator::ramp_top(const crepr::ramp_block3D* block,
-                                 const rmath::radians& z_rotation,
-                                 const rtypes::type_uuid& parent_id) const {
-  double angle = std::atan2(block->rdim3D().y(), block->rdim3D().x());
-  double halfway_height = std::tan(angle) * block->rdim3D().x() / 2.0;
-  double length = block->rdim3D().x() / std::cos(angle);
-
-  argos::CQuaternion orientation;
-  argos::CRadians x_rot = argos::CRadians::ZERO;
-  argos::CRadians y_rot = argos::CRadians::ZERO;
-  if (rmath::radians::kZERO == z_rotation) {
-    y_rot = argos::CRadians(angle);
-  } else {
-    x_rot = -argos::CRadians(angle);
-  }
-  orientation.FromEulerAngles(argos::CRadians(z_rotation.v()), y_rot, x_rot);
-  std::string name = "parent" + rcppsw::to_string(parent_id) + "_ramp_block" +
-                     rcppsw::to_string(block->id()) + "_top";
-
-  return new argos::CBoxEntity(
-      name,
-      argos::CVector3(block->ranchor3D().x(),
-                      block->ranchor3D().y(),
-                      block->ranchor3D().z() + halfway_height),
-      orientation,
-      false,
-      argos::CVector3(length, block->rdim3D().y(), kRAMP_BOX_THICKNESS));
-} /* ramp_top() */
 
 NS_END(pal, cosm);

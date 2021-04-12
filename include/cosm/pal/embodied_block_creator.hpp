@@ -1,7 +1,7 @@
 /**
  * \file embodied_block_creator.hpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -28,7 +28,9 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/embodied_block.hpp"
+#include "cosm/pal/embodied_cube_block.hpp"
+#include "cosm/pal/embodied_ramp_block.hpp"
+#include "cosm/pal/embodied_block_variant.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -54,51 +56,15 @@ class argos_sm_adaptor;
  */
 class embodied_block_creator {
  public:
-  crepr::embodied_block_variant operator()(const crepr::cube_block3D* block,
-                                           const rmath::radians& z_rotation,
-                                           const rtypes::type_uuid& parent_id,
-                                           cpal::argos_sm_adaptor* sm) const;
-  crepr::embodied_block_variant operator()(const crepr::ramp_block3D* block,
-                                           const rmath::radians& z_rotation,
-                                           const rtypes::type_uuid& parent_id,
-                                           cpal::argos_sm_adaptor* sm) const;
+  explicit embodied_block_creator(cpal::argos_sm_adaptor* sm) : m_sm(sm) {}
+
+  cpal::embodied_block_varianto operator()(const crepr::cube_block3D* block) const;
+  cpal::embodied_block_varianto operator()(const crepr::ramp_block3D* block) const;
 
  private:
-  /**
-   * \brief How thick to make each of the boxes used to approximate the
-   * embodiment of a ramp block.
-   */
-  static constexpr const double kRAMP_BOX_THICKNESS = 0.0001;
-
-  /**
-   * \brief Generate the ARGoS box for the bottom of the ramp.
-   *
-   * \note The returned pointer is OWNING, despite being raw, because that's the
-   * ARGoS API.
-   */
-  argos::CBoxEntity* ramp_bottom(const crepr::ramp_block3D* block,
-                                 const rmath::radians& z_rotation,
-                                 const rtypes::type_uuid& parent_id) const;
-
-  /**
-   * \brief Generate the ARGoS box for the back of the ramp.
-   *
-   * \note The returned pointer is OWNING, despite being raw, because that's the
-   * ARGoS API.
-   */
-  argos::CBoxEntity* ramp_back(const crepr::ramp_block3D* block,
-                               const rmath::radians& z_rotation,
-                               const rtypes::type_uuid& parent_id) const;
-
-  /**
-   * \brief Generate the ARGoS box for the top (slope part) of the ramp.
-   *
-   * \note The returned pointer is OWNING, despite being raw, because that's the
-   * ARGoS API.
-   */
-  argos::CBoxEntity* ramp_top(const crepr::ramp_block3D* block,
-                              const rmath::radians& z_rotation,
-                              const rtypes::type_uuid& parent_id) const;
+  /* clang-format off */
+  cpal::argos_sm_adaptor* m_sm;
+  /* clang-format on */
 };
 
 NS_END(pal, cosm);

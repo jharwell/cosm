@@ -74,11 +74,11 @@ class util_hfsm : public rpfsm::hfsm,
   util_hfsm(const util_hfsm&) = delete;
   util_hfsm& operator=(const util_hfsm&) = delete;
 
-  csubsystem::sensing_subsystemQ3D* sensing(void);
-  const csubsystem::sensing_subsystemQ3D* sensing(void) const;
+  csubsystem::sensing_subsystemQ3D* sensing(void) RCPPSW_PURE;
+  const csubsystem::sensing_subsystemQ3D* sensing(void) const RCPPSW_PURE;
 
-  typename csubsystem::actuation_subsystem2D* actuation(void);
-  typename csubsystem::actuation_subsystem2D* actuation(void) const;
+  typename csubsystem::actuation_subsystem2D* actuation(void) RCPPSW_PURE;
+  typename csubsystem::actuation_subsystem2D* actuation(void) const RCPPSW_PURE;
 
   /**
    * \brief Handle to internal interference tracker; provided as a common
