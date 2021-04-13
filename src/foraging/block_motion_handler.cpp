@@ -27,7 +27,6 @@
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/operations/free_block_pickup.hpp"
 #include "cosm/repr/base_block3D.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

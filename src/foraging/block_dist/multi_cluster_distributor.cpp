@@ -80,7 +80,7 @@ dist_status multi_cluster_distributor::distribute_block(crepr::base_block3D* blo
       continue;
     }
 
-    ER_DEBUG("Block%d to cluster%u: capacity=%zu,size=%zu",
+    ER_DEBUG("Block%d to cluster%d: capacity=%zu,size=%zu",
              block->id().v(),
              clust_id.v(),
              dist.capacity(),

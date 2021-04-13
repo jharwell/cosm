@@ -78,6 +78,7 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block) {
 } /* distribute_block() */
 
 void powerlaw_distributor::initialize(
+    carena::base_arena_map* map,
     const cds::const_spatial_entity_vector& c_entities,
     const rmath::vector3d& c_block_bb,
     const cspatial::conflict_checker::map_cb_type& conflict_check,
@@ -102,7 +103,7 @@ void powerlaw_distributor::initialize(
 
   /* Compute cluster locations in arena */
   powerlaw_cluster_placer placer(
-      arena_grid(), c_block_bb, kMAX_DIST_TRIES, rng());
+      map, c_block_bb, kMAX_DIST_TRIES, rng());
   auto placements = placer(c_entities, clust_sizes);
 
   std::map<size_t, std::vector<cds::arena_grid::view>> grids;

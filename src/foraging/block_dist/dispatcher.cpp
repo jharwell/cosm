@@ -64,7 +64,8 @@ dispatcher::~dispatcher(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
+bool dispatcher::initialize(carena::base_arena_map* map,
+                            const cds::const_spatial_entity_vector& entities,
                             const rmath::vector3d& block_bb,
                             const cspatial::conflict_checker::map_cb_type& conflict_check,
                             const base_distributor::dist_success_cb_type& dist_success,
@@ -157,7 +158,7 @@ bool dispatcher::initialize(const cds::const_spatial_entity_vector& entities,
     auto p = std::make_unique<powerlaw_distributor>(&mc_config.powerlaw,
                                                     m_grid,
                                                     rng);
-    p->initialize(entities, block_bb, conflict_check, dist_success);
+    p->initialize(map, entities, block_bb, conflict_check, dist_success);
     m_dist = std::move(p);
   }
   /* clang-format on */

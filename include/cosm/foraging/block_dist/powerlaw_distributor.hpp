@@ -87,7 +87,8 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
    * \param c_block_bb The bounding box large enough to hold any block which
    *                   might be distributed in the arena.
    */
-  void initialize(const cds::const_spatial_entity_vector& c_entities,
+  void initialize(carena::base_arena_map* map,
+                  const cds::const_spatial_entity_vector& c_entities,
                   const rmath::vector3d& c_block_bb,
                   const cspatial::conflict_checker::map_cb_type& conflict_check,
                   const base_distributor::dist_success_cb_type& dist_success) RCPPSW_COLD;

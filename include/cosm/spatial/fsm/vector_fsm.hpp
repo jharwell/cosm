@@ -85,7 +85,7 @@ class vector_fsm final : public csfsm::util_hfsm,
   bool exp_interference(void) const override RCPPSW_PURE;
   bool entered_interference(void) const override RCPPSW_PURE;
   bool exited_interference(void) const override RCPPSW_PURE;
-  rmath::vector3z interference_loc3D(void) const override;
+  rmath::vector3z interference_loc3D(void) const override RCPPSW_PURE;
 
  private:
   enum state {

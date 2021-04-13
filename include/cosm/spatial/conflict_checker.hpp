@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <functional>
+#include <boost/optional.hpp>
 
 #include "rcppsw/math/vector2.hpp"
 

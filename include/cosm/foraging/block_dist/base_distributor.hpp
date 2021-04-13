@@ -60,9 +60,9 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
 
   /**
    * \brief How many times to attempt to distribute all blocks before giving up,
-   * causing an assertion failure on distribution.
+   * (possibly) causing an assertion failure on distribution.
    */
-  static constexpr const uint kMAX_DIST_TRIES = 1000;
+  static constexpr const uint kMAX_DIST_TRIES = 100;
 
   base_distributor(cds::arena_grid* arena_grid,
                    rmath::rng* const rng)
@@ -102,12 +102,18 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
   virtual dist_status distribute_blocks(cds::block3D_vectorno& blocks,
                                         bool strict_success) {
 
-    auto status = std::all_of(blocks.begin(),
-                              blocks.end(),
-                              [&](auto& b) {
-                                return dist_status::ekSUCCESS == distribute_block(b);
-                              });
-    if (!strict_success || status) {
+    /*
+     * Always try to distribute all blocks, otherwise a single failure early on
+     * when distributing a given block (e.g., powerlaw distribution) can result
+     * in way fewer blocks available in the arena, which throws off averaged
+     * results. See COSM#145.
+     */
+    bool fail = false;
+    for (auto *b : blocks) {
+      fail |= dist_status::ekFAILURE == distribute_block(b);
+    } /* for(*b..) */
+
+    if (!strict_success || !fail) {
       return dist_status::ekSUCCESS;
     }
     return dist_status::ekFAILURE;

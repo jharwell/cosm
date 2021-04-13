@@ -26,8 +26,8 @@
 #include <algorithm>
 #include <cmath>
 
-#include "cosm/ds/arena_grid.hpp"
 #include "cosm/repr/spatial_entity.hpp"
+#include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -38,14 +38,14 @@ using cosm::ds::arena_grid;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-powerlaw_cluster_placer::powerlaw_cluster_placer(cds::arena_grid* grid,
+powerlaw_cluster_placer::powerlaw_cluster_placer(carena::base_arena_map* map,
                                                  const rmath::vector3d& c_block_bb,
                                                  size_t n_attempts,
                                                  rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw_cluster_placer"),
       mc_n_attempts(n_attempts),
       mc_block_bb(c_block_bb),
-      m_grid(grid),
+      m_map(map),
       m_rng(rng) {}
 
 /*******************************************************************************
@@ -60,8 +60,8 @@ powerlaw_cluster_placer::placement_guess(const rtypes::type_uuid& c_id,
    * need to account for that so that a cluster of size k will ALWAYS be able to
    * hold k blocks, regardless of size.
    */
-  size_t xfactor = static_cast<size_t>(c_block_bb.x() / m_grid->resolution().v());
-  size_t yfactor = static_cast<size_t>(c_block_bb.y() / m_grid->resolution().v());
+  size_t xfactor = static_cast<size_t>(c_block_bb.x() / m_map->grid_resolution().v());
+  size_t yfactor = static_cast<size_t>(c_block_bb.y() / m_map->grid_resolution().v());
 
   /*
    * sqrt() might not be an integer, so we round up to get a smooth-ish
@@ -71,8 +71,8 @@ powerlaw_cluster_placer::placement_guess(const rtypes::type_uuid& c_id,
 
   size_t clust_dim_x = clust_dim_base + xfactor * 2;
   size_t clust_dim_y = clust_dim_base + yfactor * 2;
-  rmath::rangez area_xrange(clust_dim_x, m_grid->xdsize() - clust_dim_x - 1);
-  rmath::rangez area_yrange(clust_dim_y, m_grid->ydsize() - clust_dim_y - 1);
+  rmath::rangez area_xrange(clust_dim_x, m_map->xdsize() - clust_dim_x - 1);
+  rmath::rangez area_yrange(clust_dim_y, m_map->ydsize() - clust_dim_y - 1);
 
   ER_TRACE("Cluster%d size=%zu placement area_xrange=%s,area_yrange=%s",
            c_id.v(),
@@ -85,7 +85,7 @@ powerlaw_cluster_placer::placement_guess(const rtypes::type_uuid& c_id,
 
   auto ll = rmath::vector2z(anchor_x, anchor_y);
   auto ur = rmath::vector2z(anchor_x + clust_dim_x, anchor_y + clust_dim_y);
-  auto view = m_grid->layer<arena_grid::kCell>()->subgrid(ll, ur);
+  auto view = m_map->decoratee().layer<arena_grid::kCell>()->subgrid(ll, ur);
   rmath::rangez clust_xrange(view.origin()->loc().x(),
                              view.origin()->loc().x() + view.shape()[0]);
   rmath::rangez clust_yrange(view.origin()->loc().y(),
@@ -135,7 +135,13 @@ bool powerlaw_cluster_placer::placement_check(
       return false;
     }
   } /* for(*ent..) */
+  /* check for out of bounds */
+  RCPPSW_CHECK(m_map->distributable_cellsx().contains(c_guess.xrange));
+  RCPPSW_CHECK(m_map->distributable_cellsy().contains(c_guess.yrange));
   return true;
+
+error:
+  return false;
 } /* placement_check() */
 
 powerlaw_cluster_placer::placements powerlaw_cluster_placer::operator()(

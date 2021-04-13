@@ -150,7 +150,8 @@ bool base_arena_map::initialize_private(void) {
                             const rmath::vector2d& loc) {
                           return cspatial::conflict_checker::placement2D(this,
                                                                          block,
-                                                                         loc); };
+                                                                         loc);
+                        };
   auto dist_success = [&](const crepr::base_block3D* distributed) {
                         /*
                          * Update block location query tree. This is called from
@@ -162,7 +163,8 @@ bool base_arena_map::initialize_private(void) {
                                         arena_map_locking::ekALL_HELD);
                       };
 
-  bool ret = m_block_dispatcher->initialize(avoid_ents,
+  bool ret = m_block_dispatcher->initialize(this,
+                                            avoid_ents,
                                             m_block_bb,
                                             conflict_check,
                                             dist_success,

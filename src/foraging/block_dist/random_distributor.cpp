@@ -182,12 +182,12 @@ random_distributor::coord_search(const crepr::base_block3D* block) {
           rcppsw::to_string(area_yrange).c_str());
 
   if (coord_search_policy::ekFREE_CELL == m_search_policy) {
-    ER_INFO("Using FREE_CELL policy");
+    ER_DEBUG("Using FREE_CELL policy");
     return coord_search_free_cell(area_xrange,
                                   area_yrange,
                                   block);
   } else if (coord_search_policy::ekRANDOM == m_search_policy) {
-    ER_INFO("Using RANDOM policy");
+    ER_DEBUG("Using RANDOM policy");
     return coord_search_random(area_xrange, area_yrange, block);
   }
   return boost::none;
@@ -205,14 +205,11 @@ random_distributor::coord_search_random(
    */
   size_t count = 0;
   while (count++ < kMAX_DIST_TRIES) {
-    size_t x = c_xrange.span() > 0 ? rng()->uniform(c_xrange.lb(), c_xrange.ub())
-                                   : m_area.index_bases()[0];
-    size_t y = c_xrange.span() > 0 ? rng()->uniform(c_yrange.lb(), c_yrange.ub())
-                                   : m_area.index_bases()[1];
+    size_t x = c_xrange.span() > 0 ? rng()->uniform(c_xrange) : mc_origin.x();
+    size_t y = c_xrange.span() > 0 ? rng()->uniform(c_yrange) : mc_origin.y();
     rmath::vector2z rel(x, y);
     rmath::vector2z abs = mc_origin + rel;
     auto abs_r = rmath::zvec2dvec(abs, arena_grid()->resolution().v());
-
     if (coord_conflict_check(block, abs_r)) {
       coord_search_res_t coord = { rel, abs };
       return boost::make_optional(coord);

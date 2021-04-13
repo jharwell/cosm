@@ -30,12 +30,16 @@
 #include "rcppsw/math/range.hpp"
 #include "rcppsw/math/rng.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/entity_vector.hpp"
+#include "cosm/ds/arena_grid.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::arena {
+class base_arena_map;
+} /* namespace cosm::arena */
+
 NS_START(cosm, foraging, block_dist);
 
 /*******************************************************************************
@@ -60,7 +64,7 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
   };
   using placements = std::vector<placement>;
 
-  powerlaw_cluster_placer(cds::arena_grid* grid,
+  powerlaw_cluster_placer(carena::base_arena_map* map,
                           const rmath::vector3d& c_block_bb,
                           size_t n_attempts,
                           rmath::rng* rng);
@@ -116,11 +120,11 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
 
  private:
   /* clang-format off */
-  const size_t           mc_n_attempts;
-  const rmath::vector3d  mc_block_bb;
+  const size_t            mc_n_attempts;
+  const rmath::vector3d   mc_block_bb;
 
-  cds::arena_grid*       m_grid;
-  rmath::rng*            m_rng;
+  carena::base_arena_map* m_map;
+  rmath::rng*             m_rng;
   /* clang-format on */
 };
 

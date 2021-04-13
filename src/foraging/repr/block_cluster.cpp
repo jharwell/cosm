@@ -55,17 +55,22 @@ void block_cluster::blocks_recalc(void) {
 
 void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
   ER_ASSERT(contains_cell2D(dropped->danchor2D()),
-            "Block%s@%s not contained in cluster%s extent",
+            "Block%s@%s not contained in cluster%s extent: xspan=%s,yspan=%s",
             rcppsw::to_string(dropped->id()).c_str(),
             rcppsw::to_string(dropped->danchor2D()).c_str(),
-            rcppsw::to_string(this->id()).c_str());
+            rcppsw::to_string(this->id()).c_str(),
+            rcppsw::to_string(xdspan()).c_str(),
+            rcppsw::to_string(ydspan()).c_str());
 
   auto relative_to = dropped->danchor2D() - danchor2D();
 
   auto& cell = block_cluster::cell(relative_to);
+
+  /* This can happen during initial block distribution and is not an error */
   ER_ASSERT(cell.state_has_block(),
-            "Cell@%s not in HAS_BLOCK state",
-            rcppsw::to_string(dropped->danchor2D()).c_str());
+            "Cell@%s not in HAS_BLOCK state: state=%d",
+            rcppsw::to_string(dropped->danchor2D()).c_str(),
+            cell.fsm().current_state());
   ER_ASSERT(dropped->id() == cell.block3D()->id(),
             "Cell@%s block%s != dropped block%s",
             rcppsw::to_string(cell.loc()).c_str(),

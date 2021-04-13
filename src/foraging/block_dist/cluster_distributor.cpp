@@ -59,6 +59,11 @@ dist_status cluster_distributor::distribute_block(
              m_clust.capacity());
     return dist_status::ekFAILURE;
   }
+  ER_DEBUG("Distribute block to cluster%d, capacity=%zu,size=%zu",
+           m_clust.id().v(),
+           m_clust.capacity(),
+           m_clust.n_blocks());
+
   /* do distribution */
   auto status = m_impl.distribute_block(block);
 
