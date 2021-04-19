@@ -30,21 +30,30 @@
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
-#else
-#error "Selected hardware has no differential drive actuator!"
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#include <argos3/plugins/robots/pi-puck/control_interface/ci_pipuck_differential_drive_actuator.h>
 #endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_DifferentialSteeringActuator;
+class CCI_PiPuckDifferentialDriveActuator;
+} /* namespace argos */
+
 NS_START(cosm, hal, actuators, detail);
 
 /*******************************************************************************
  * Templates
  ******************************************************************************/
 template<typename TSensor>
-using is_argos_ds_actuator = std::is_same<TSensor,
-                                          argos::CCI_DifferentialSteeringActuator>;
+using is_argos_generic_ds_actuator = std::is_same<TSensor,
+                                                  argos::CCI_DifferentialSteeringActuator>;
+
+template<typename TSensor>
+using is_argos_pipuck_ds_actuator = std::is_same<TSensor,
+                                                 argos::CCI_PiPuckDifferentialDriveActuator>;
 
 NS_END(detail);
 
@@ -61,6 +70,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARgoS pipuck
  *
 * \tparam TActuator The underlying actuator handle type abstracted away by the
  * HAL. If nullptr, then that effectively disables the actuator at compile time,
@@ -80,22 +90,32 @@ class diff_drive_actuator_impl {
   explicit diff_drive_actuator_impl(TActuator* const wheels) : m_wheels(wheels) {}
 
   /**
-   * \brief Set the wheel speeds for the current timestep for a footbot
+   * \brief Set the wheel speeds for the current timestep for a footbot/epuck
    * robot. Bounds checking is not performed.
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
     RCPPSW_FPC_RET_V(nullptr != m_wheels);
     m_wheels->SetLinearVelocity(left, right);
   }
 
   /**
-   * \brief Stop the wheels of a footbot robot. As far as I know, this is an
-   * immediate stop (i.e. no rampdown).
+   * \brief Set the wheel speeds for the current timestep for a pipuck
+   * robot. Bounds checking is not performed.
    */
   template <typename U = TActuator,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_actuator<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_actuator<U>::value)>
+  void set_wheel_speeds(double left, double right) {
+    RCPPSW_FPC_RET_V(nullptr != m_wheels);
+    m_wheels->SetTargetVelocityLeft(left);
+    m_wheels->SetTargetVelocityRight(right);
+  }
+
+  /**
+   * \brief Stop the wheels of a robot. As far as I know, this is an immediate
+   * stop (i.e. no rampdown).
+   */
   void reset(void) { set_wheel_speeds(0.0, 0.0); }
 
  private:
@@ -106,6 +126,8 @@ class diff_drive_actuator_impl {
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using diff_drive_actuator = diff_drive_actuator_impl<argos::CCI_DifferentialSteeringActuator>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using diff_drive_actuator = diff_drive_actuator_impl<argos::CCI_PiPuckDifferentialDriveActuator>;
 #endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, hal, cosm);

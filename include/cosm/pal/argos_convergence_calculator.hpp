@@ -73,9 +73,9 @@ class argos_convergence_calculator final
   RCPPSW_DECORATE_FUNC(task_dist_entropy_init);
 
  private:
-  std::vector<double> calc_robot_nn(uint n_threads) const;
-  std::vector<rmath::radians> calc_robot_headings2D(uint n_threads) const;
-  std::vector<rmath::vector2d> calc_robot_positions(uint n_threads) const;
+  std::vector<double> calc_robot_nn(size_t n_threads) const;
+  std::vector<rmath::radians> calc_robot_headings2D(size_t n_threads) const;
+  std::vector<rmath::vector2d> calc_robot_positions(size_t n_threads) const;
 
   /* clang-format off */
   cpal::argos_sm_adaptor* m_sm;

@@ -29,21 +29,29 @@
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_sensor.h>
-#else
-#error "Selected hardware has no differential drive sensor!"
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#include <argos3/plugins/robots/pi-puck/control_interface/ci_pipuck_differential_drive_sensor.h>
 #endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace argos {
+class CCI_DifferentialSteeringSensor;
+class CCI_PiPuckDifferentialDriveSensor;
+} /* namespace argos */
+
 NS_START(cosm, hal, sensors, detail);
 
 /*******************************************************************************
  * Templates
  ******************************************************************************/
 template<typename T>
-using is_argos_ds_sensor = std::is_same<T,
-                                          argos::CCI_DifferentialSteeringSensor>;
+using is_argos_generic_ds_sensor = std::is_same<T,
+                                                argos::CCI_DifferentialSteeringSensor>;
+template<typename T>
+using is_argos_pipuck_ds_sensor = std::is_same<T,
+                                               argos::CCI_PiPuckDifferentialDriveSensor>;
 
 NS_END(detail);
 
@@ -60,6 +68,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                 HAL. If nullptr, then that effectively disables the sensor
@@ -82,10 +91,10 @@ class diff_drive_sensor_impl {
   explicit diff_drive_sensor_impl(TSensor* const sensor) : m_sensor(sensor) {}
 
   /**
-   * \brief Get the current battery sensor reading for the footbot robot.
+   * \brief Get the current differential drive reading for the robot.
    */
   template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_sensor<U>::value)>
   sensor_reading reading(void) const {
     auto tmp = m_sensor->GetReading();
     return {tmp.VelocityLeftWheel,
@@ -96,11 +105,22 @@ class diff_drive_sensor_impl {
   }
 
   /**
+   * \brief Get the current differential drive reading for the robot.
+   */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_sensor<U>::value)>
+  sensor_reading reading(void) const {
+    return {m_sensor->GetLeftVelocity(),
+            m_sensor->GetRightVelocity(),
+            0.0,
+            0.0,
+            0.0};
+  }
+
+  /**
    * \brief Return the current speed of the robot (average of the 2 wheel
    * speeds).
    */
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_ds_sensor<U>::value)>
   double current_speed(void) const {
     auto tmp = reading();
     return (tmp.vel_left + tmp.vel_right) / 2.0;
@@ -116,6 +136,8 @@ class diff_drive_sensor_impl {
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using diff_drive_sensor = diff_drive_sensor_impl<argos::CCI_DifferentialSteeringSensor>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using diff_drive_sensor = diff_drive_sensor_impl<argos::CCI_PiPuckDifferentialDriveSensor>;
 #else
 class diff_drive_sensor{};
 #endif /* COSM_HAL_TARGET */

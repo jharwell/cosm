@@ -70,6 +70,13 @@ NS_START(cosm, hal, subsystem);
     hal::sensors::proximity_sensor,             \
     hal::sensors::colored_blob_camera_sensor,   \
     hal::sensors::position_sensor
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
+#define COSM_HAL_ROBOT_SENSOR_TYPES             \
+    hal::sensors::ground_sensor,                \
+      hal::sensors::proximity_sensor,           \
+    hal::sensors::diff_drive_sensor,            \
+    hal::sensors::colored_blob_camera_sensor,   \
+    hal::sensors::position_sensor
 #endif
 
 /*******************************************************************************

@@ -26,9 +26,9 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_battery_sensor.h>
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /******************************************************************************
  * Namespaces/Decls
@@ -57,6 +57,8 @@ NS_END(detail);
  * \brief Battery sensor wrapper for the following supported robots:
  *
  * - ARGoS footbot
+ * - ARGoS epuck
+ * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -100,11 +102,11 @@ class battery_sensor_impl {
   /* clang-format on */
 };
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 using battery_sensor = battery_sensor_impl<argos::CCI_BatterySensor>;
 #else
 class battery_sensor {};
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);
 

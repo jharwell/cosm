@@ -31,9 +31,9 @@
 #include "rcppsw/math/vector2.hpp"
 #include "cosm/cosm.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_colored_blob_omnidirectional_camera_sensor.h>
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -63,6 +63,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARGoS pipuck
  *
  * ^The simulated sensor is expensive to update each timestep,
  *  so it is disabled upon creation, so robots can selectively enable/disable
@@ -120,15 +121,17 @@ class colored_blob_camera_sensor_impl {
   void disable(void) const { m_sensor->Disable(); }
 
  private:
+  /* clang-format off */
   TSensor* const m_sensor;
+  /* clang-format on */
 };
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 using colored_blob_camera_sensor =
     colored_blob_camera_sensor_impl<argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
 #else
 class colored_blob_camera_sensor{};
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);
 

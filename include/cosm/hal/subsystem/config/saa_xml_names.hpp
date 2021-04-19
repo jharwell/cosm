@@ -47,21 +47,26 @@ NS_START(cosm, hal, subsystem, config);
  * DRY.
  */
 struct saa_xml_names {
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-  static constexpr const char diff_steering_saa[] = "differential_steering";
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
   static constexpr const char leds_saa[] = "leds";
   static constexpr const char position_sensor[] = "positioning";
-  static constexpr const char camera_sensor[] = "colored_blob_omnidirectional_camera";
 #endif
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
+  static constexpr const char camera_sensor[] = "colored_blob_omnidirectional_camera";
+  static constexpr const char diff_steering_saa[] = "differential_steering";
   static constexpr const char prox_sensor[] = "footbot_proximity";
   static constexpr const char light_sensor[] = "footbot_light";
   static constexpr const char ground_sensor[] = "footbot_motor_ground";
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
+  static constexpr const char camera_sensor[] = "colored_blob_omnidirectional_camera";
+  static constexpr const char diff_steering_saa[] = "differential_steering";
   static constexpr const char prox_sensor[] = "epuck_proximity";
   static constexpr const char light_sensor[] = "epuck_light";
   static constexpr const char ground_sensor[] = "epuck_ground";
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
+  static constexpr const char diff_steering_saa[] = "pipuck_differential_drive";
+  static constexpr const char ground_sensor[] = "pipuck_ground";
 #endif
 };
 

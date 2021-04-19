@@ -44,6 +44,12 @@
  */
 #define COSM_HAL_TARGET_ARGOS_EEPUCK3D 2
 
+#define COSM_HAL_TARGET_ARGOS_PIPUCK 3
+
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#define COSM_HAL_TARGET_ARGOS_ROBOT
+#endif
+
 /*******************************************************************************
  * Macros
  ******************************************************************************/

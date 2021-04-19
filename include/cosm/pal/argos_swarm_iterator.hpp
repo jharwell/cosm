@@ -28,6 +28,7 @@
 
 #include "cosm/pal/argos_sm_adaptor.hpp"
 #include "cosm/pal/iteration_order.hpp"
+#include "cosm/hal/robot.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -52,8 +53,6 @@ struct argos_swarm_iterator {
   /**
    * \brief Iterate through controllers using static ordering.
    *
-   * \tparam TRobotType The type of the robot within the ::argos namespace of
-   *                    the robots in the swarm.
    * \tparam TControllerType The type of the controller.
    * \tparam order The order of iteration: static or dynamic.
    * \tparam TFunction Type of the lambda callback to use (inferred).
@@ -62,8 +61,7 @@ struct argos_swarm_iterator {
    * \param cb Function to run on each robot in the swarm.
    * \param robot_type Name associated with the robot type within ARGoS.
    */
-  template <typename TRobot,
-            typename TController,
+  template <typename TController,
             iteration_order order,
             typename TFunction,
             RCPPSW_SFINAE_DECLDEF(iteration_order::ekSTATIC == order)>
@@ -71,7 +69,7 @@ struct argos_swarm_iterator {
                           const TFunction& cb,
                           const std::string& robot_type) {
     for (auto& [name, robotp] : sm->GetSpace().GetEntitiesByType(robot_type)) {
-      auto* robot = ::argos::any_cast<TRobot*>(robotp);
+      auto* robot = ::argos::any_cast<chal::robot*>(robotp);
       auto* controller = static_cast<TController*>(
           &robot->GetControllableEntity().GetController());
       cb(controller);
@@ -104,8 +102,6 @@ struct argos_swarm_iterator {
   /**
    * \brief Iterate through robots using static ordering.
    *
-   * \tparam TRobotType The type of the robot within the ::argos namespace of
-   *                    the robots in the swarm.
    * \tparam TFunction Type of the lambda callback (inferred).
    * \tparam order The order of iteration: static or dynamic.
    *
@@ -113,15 +109,14 @@ struct argos_swarm_iterator {
    * \param cb Function to run on each robot in the swarm.
    * \param robot_type Name associated with the robot type within ARGoS.
    */
-  template <typename TRobot,
-            iteration_order order,
+  template <iteration_order order,
             typename TFunction,
             RCPPSW_SFINAE_DECLDEF(iteration_order::ekSTATIC == order)>
   static void robots(const cpal::argos_sm_adaptor* const sm,
                      const TFunction& cb,
                      const std::string& robot_type) {
     for (auto& [name, robotp] : sm->GetSpace().GetEntitiesByType(robot_type)) {
-      auto* robot = ::argos::any_cast<TRobot*>(robotp);
+      auto* robot = ::argos::any_cast<chal::robot*>(robotp);
       cb(robot);
     } /* for(...) */
   }

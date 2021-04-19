@@ -30,9 +30,9 @@
 
 #include "cosm/hal/hal.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_positioning_sensor.h>
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -61,6 +61,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                 HAL. If nullptr, then that effectively disables the sensor
@@ -112,11 +113,11 @@ class position_sensor_impl {
   /* clang-format on */
 };
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 using position_sensor = position_sensor_impl<argos::CCI_PositioningSensor>;
 #else
 class position_sensor{};
-#endif /* COSM_HAL_TARGET */
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);
 

@@ -48,6 +48,8 @@ NS_START(cosm, pal);
 class embodied_cube_block final : public crepr::cube_block3D,
                                   public repr::embodied_entity<cube_block_embodiment> {
  public:
+  using embodiment_type = cube_block_embodiment;
+
   embodied_cube_block(const rtypes::type_uuid& id,
                       const rmath::vector3d& dim,
                       const rtypes::discretize_ratio& arena_res,

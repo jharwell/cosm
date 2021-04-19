@@ -31,7 +31,7 @@
 #include "rcppsw/mpl/typelist.hpp"
 #include "cosm/hal/hal.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include "cosm/kin2D/diff_drive.hpp"
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/hal/actuators/led_actuator.hpp"
@@ -49,13 +49,21 @@
   hal::actuators::led_actuator,                 \
     hal::actuators::wifi_actuator,              \
     kin2D::diff_drive,                          \
-    kin2D::governed_diff_drive
+    kin2D::governed_diff_drive,                 \
+    hal::actuators::diff_drive_actuator
 
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
+#define COSM_HAL_ROBOT_ACTUATOR_TYPES              \
+  hal::actuators::led_actuator,                    \
+    kin2D::diff_drive,                             \
+    kin2D::governed_diff_drive,                    \
+    hal::actuators::diff_drive_actuator
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
 #define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
   hal::actuators::led_actuator,                 \
     kin2D::diff_drive,                          \
-    kin2D::governed_diff_drive
+    kin2D::governed_diff_drive,                 \
+    hal::actuators::diff_drive_actuator
 #endif
 
 /*******************************************************************************

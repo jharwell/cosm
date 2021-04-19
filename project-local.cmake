@@ -28,9 +28,12 @@ if("${COSM_BUILD_FOR}" MATCHES "ARGOS_FOOTBOT")
 elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
   message(STATUS "Building for ARGoS eepuck3D")
   set(COSM_HAL_TARGET "argos-eepuck3D")
+elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
+  message(STATUS "Building for ARGoS pipuck")
+  set(COSM_HAL_TARGET "argos-pipuck")
 else()
   message(FATAL_ERROR
-    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [ARGOS_FOOTBOT,ARGOS_EEPUCK3D]")
+    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [ARGOS_FOOTBOT,ARGOS_EEPUCK3D,ARGOS_PIPUCK]")
 endif()
 
 if (NOT DEFINED COSM_HAL_TARGET)
@@ -139,16 +142,15 @@ if (NOT TARGET ${target})
   # This is needed for HAL SAA sensing/actuator access with boost::variant
   target_compile_definitions(${target} PUBLIC BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
 
+  # Not needed for compilation, but for rtags
+  target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
+
   if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
-    # Not needed for compilation, but for rtags
-    target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
   elseif("${COSM_HAL_TARGET}" MATCHES "argos-eepuck3D")
-    # Not needed for compilation, but for rtags
-    target_include_directories(${target} SYSTEM PRIVATE /usr/include/lua5.3)
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-  else()
-    message(FATAL_ERROR "Bad HAL Target ${COSM_HAL_TARGET}. Must be [argos-footbot, argos-eepuck3D]")
+  elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
+    target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
   endif()
 endif()
 

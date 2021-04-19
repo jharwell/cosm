@@ -57,6 +57,10 @@ template<typename TSensor>
 using is_argos_epuck_light_sensor = std::is_same<TSensor,
                                                    argos::CCI_EPuckLightSensor>;
 
+template<typename TSensor>
+using is_argos_pipuck_light_sensor = std::is_same<TSensor,
+                                                 std::false_type>;
+
 NS_END(detail);
 
 /*******************************************************************************
@@ -72,6 +76,7 @@ NS_END(detail);
  *
  * - ARGoS footbot^
  * - ARGoS epuck^
+ * - ARGoS pipuck (stub only)
  *
  * ^The simulated sensor is expensive to update each timestep, AND is not
  *  necessarily needed each timestep, so it is disabled upon creation, so robots
@@ -109,7 +114,7 @@ class light_sensor_impl {
   }
 
   /**
-   * \brief Get the current light sensor readings for the footbot robot.
+   * \brief Get the current light sensor readings for the footbot/epuck robots.
    *
    * \return A vector of \ref reading.
    */
@@ -124,6 +129,7 @@ class light_sensor_impl {
 
     return ret;
   }
+
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
@@ -133,6 +139,18 @@ class light_sensor_impl {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
+  void enable(void) const {}
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
+  void disable(void) const {}
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
+  std::vector<reading>  readings(void) const { return {}; }
 
  private:
   /* clang-format off */
@@ -144,6 +162,8 @@ class light_sensor_impl {
 using light_sensor = light_sensor_impl<argos::CCI_FootBotLightSensor>;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using light_sensor = light_sensor_impl<argos::CCI_EPuckLightSensor>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using light_sensor = light_sensor_impl<std::false_type>;
 #else
 class light_sensor{};
 #endif /* COSM_HAL_TARGET */

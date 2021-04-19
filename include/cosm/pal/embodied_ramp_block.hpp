@@ -49,6 +49,8 @@ NS_START(cosm, pal);
 class embodied_ramp_block final : public crepr::ramp_block3D,
                                   public repr::embodied_entity<ramp_block_embodiment> {
  public:
+  using embodiment_type = ramp_block_embodiment;
+
   embodied_ramp_block(const rtypes::type_uuid& id,
                       const rmath::vector3d& dim,
                       const rtypes::discretize_ratio& arena_res,

@@ -31,14 +31,16 @@
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h>
-#else
-#error "Selected component has no RAB actuator!"
 #endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, hal, actuators, detail);
+
+namespace argos {
+class CCI_RangeAndBearingActuator;
+} /* namespace argos */
 
 /*******************************************************************************
  * Templates
@@ -117,6 +119,8 @@ class wifi_actuator_impl {
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using wifi_actuator = wifi_actuator_impl<argos::CCI_RangeAndBearingActuator>;
+#else
+class wifi_actuator {};
 #endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, hal, cosm);

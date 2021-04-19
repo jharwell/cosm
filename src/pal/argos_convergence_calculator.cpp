@@ -78,14 +78,13 @@ argos_convergence_calculator<TController>::argos_convergence_calculator(
  ******************************************************************************/
 template <class TController>
 std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
-    RCPPSW_UNUSED uint n_threads) const {
+    RCPPSW_UNUSED size_t n_threads) const {
   std::vector<rmath::vector2d> v;
   auto cb = [&](auto* robot) {
     v.push_back({ robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetX(),
                   robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetY() });
   };
-  cpal::argos_swarm_iterator::robots<chal::robot,
-                                     cpal::iteration_order::ekSTATIC>(
+  cpal::argos_swarm_iterator::robots<cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
 
   /*
@@ -124,12 +123,11 @@ std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
 
 template <class TController>
 std::vector<rmath::radians>
-argos_convergence_calculator<TController>::calc_robot_headings2D(uint) const {
+argos_convergence_calculator<TController>::calc_robot_headings2D(size_t) const {
   std::vector<rmath::radians> v;
 
   auto cb = [&](const auto* controller) { v.push_back(controller->heading2D()); };
-  cpal::argos_swarm_iterator::controllers<chal::robot,
-                                          TController,
+  cpal::argos_swarm_iterator::controllers<TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
   return v;
@@ -137,12 +135,11 @@ argos_convergence_calculator<TController>::calc_robot_headings2D(uint) const {
 
 template <class TController>
 std::vector<rmath::vector2d>
-argos_convergence_calculator<TController>::calc_robot_positions(uint) const {
+argos_convergence_calculator<TController>::calc_robot_positions(size_t) const {
   std::vector<rmath::vector2d> v;
 
   auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
-  cpal::argos_swarm_iterator::controllers<chal::robot,
-                                          TController,
+  cpal::argos_swarm_iterator::controllers<TController,
                                           cpal::iteration_order::ekSTATIC>(
       m_sm, cb, kARGoSRobotType);
   return v;

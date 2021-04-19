@@ -37,6 +37,8 @@
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h>
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/e-puck/control_interface/ci_epuck_ground_sensor.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#include <argos3/plugins/robots/pi-puck/control_interface/ci_pipuck_ground_sensor.h>
 #endif /* COSM_HAL_TARGET */
 
 /*******************************************************************************
@@ -45,6 +47,7 @@
 namespace argos {
 class CCI_FootBotMotorGroundSensor;
 class CCI_EPuckGroundSensor;
+class CCI_PiPuckGroundSensor;
 } /* namespace argos */
 
 NS_START(cosm, hal, sensors, detail);
@@ -60,6 +63,10 @@ template<typename TSensor>
 using is_argos_epuck_ground_sensor = std::is_same<TSensor,
                                                   argos::CCI_EPuckGroundSensor>;
 
+template<typename TSensor>
+using is_argos_pipuck_ground_sensor = std::is_same<TSensor,
+                                                  argos::CCI_PiPuckGroundSensor>;
+
 NS_END(detail);
 
 /*******************************************************************************
@@ -73,6 +80,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -145,6 +153,24 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   }
 
   /**
+   * \brief Get the current ground sensor readings for the pipuck robot.
+   *
+   * \return A vector of \ref reading.
+   */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ground_sensor<U>::value)>
+  std::vector<reading> readings(void) const {
+    reading r;
+
+    auto cb = [&](const auto& interface) {
+                r.value = interface.Reflected;
+                r.distance = -1.0;
+              };
+    m_sensor->Visit(cb);
+    return {r};
+  }
+
+  /**
    * \brief Detect if a certain condition is met by examining ground sensor
    * readings.
    *
@@ -152,9 +178,6 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
    *
    * \return \c TRUE iff the condition was detected by the specified # readings.
    */
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_ground_sensor<U>::value ||
-                               detail::is_argos_epuck_ground_sensor<U>::value)>
   bool detect(const std::string& name) const {
     ER_ASSERT(mc_config.detect_map.end() != mc_config.detect_map.find(name),
               "Detection %s not found in configured map",
@@ -179,6 +202,8 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
 using ground_sensor = ground_sensor_impl<argos::CCI_FootBotMotorGroundSensor>;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using ground_sensor = ground_sensor_impl<argos::CCI_EPuckGroundSensor>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using ground_sensor = ground_sensor_impl<argos::CCI_PiPuckGroundSensor>;
 #else
 class ground_sensor{};
 #endif /* COSM_HAL_TARGET */

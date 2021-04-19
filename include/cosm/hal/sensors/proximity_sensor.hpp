@@ -60,6 +60,9 @@ using is_argos_footbot_proximity_sensor = std::is_same<TSensor,
 template<typename TSensor>
 using is_argos_epuck_proximity_sensor = std::is_same<TSensor,
                                                        argos::CCI_EPuckProximitySensor>;
+template<typename TSensor>
+using is_argos_pipuck_proximity_sensor = std::is_same<TSensor,
+                                                      std::false_type>;
 
 NS_END(detail);
 
@@ -76,6 +79,7 @@ NS_END(detail);
  *
  * - ARGoS footbot
  * - ARGoS epuck
+ * - ARGoS pipuck (stub only)
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor
@@ -94,6 +98,12 @@ class proximity_sensor_impl {
                      const config::proximity_sensor_config* const config)
       : mc_config(*config),
         m_sensor(sensor) {}
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
+   proximity_sensor_impl(const config::proximity_sensor_config* const config)
+      : mc_config(*config),
+        m_sensor(nullptr) {}
 
   const proximity_sensor_impl& operator=(const proximity_sensor_impl&) = delete;
   proximity_sensor_impl(const proximity_sensor_impl&) = default;
@@ -134,6 +144,19 @@ class proximity_sensor_impl {
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
   void disable(void) const { m_sensor->Disable(); }
 
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
+  boost::optional<rmath::vector2d> avg_prox_obj(void) const {
+    return boost::optional<rmath::vector2d>();
+  }
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
+  void enable(void) const {}
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
+  void disable(void) const {}
+
  private:
   /**
    * \brief Get the current proximity sensor readings for the footbot robot.
@@ -163,6 +186,8 @@ class proximity_sensor_impl {
 using proximity_sensor = proximity_sensor_impl<argos::CCI_FootBotProximitySensor>;
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
 using proximity_sensor = proximity_sensor_impl<argos::CCI_EPuckProximitySensor>;
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
+using proximity_sensor = proximity_sensor_impl<std::false_type>;
 #else
 class proximity_sensor{};
 #endif /* COSM_HAL_TARGET */

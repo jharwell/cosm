@@ -369,11 +369,11 @@ void base_arena_map::bloctree_update(const crepr::base_block3D* block,
             bloctree()->size());
     m_bloctree->remove(block);
   } else {
-    ER_INFO("Update block%s@%s/%s in loctree,size=%zu",
+    ER_INFO("Update block%s in loctree (size=%zu): newloc=%s/%s",
             rcppsw::to_string(block->id()).c_str(),
+            bloctree()->size(),
             rcppsw::to_string(block->ranchor2D()).c_str(),
-            rcppsw::to_string(block->danchor2D()).c_str(),
-            bloctree()->size());
+            rcppsw::to_string(block->danchor2D()).c_str());
     m_bloctree->update(block);
   }
   ER_ASSERT(bloctree_verify(), "Bloctree failed verification");

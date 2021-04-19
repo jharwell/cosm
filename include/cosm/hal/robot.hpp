@@ -30,6 +30,8 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/e-puck/simulator/epuck_entity.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#include <argos3/plugins/robots/pi-puck/simulator/pipuck_entity.h>
 #endif /* COSM_HAL_TARGET */
 
 #include "cosm/cosm.hpp"
@@ -46,6 +48,8 @@ NS_START(cosm, hal);
 using robot = argos::CFootBotEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using robot = argos::CEPuckEntity;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using robot = argos::CPiPuckEntity;
 #endif /* COSM_HAL_TARGET */
 
 NS_END(hal, cosm);

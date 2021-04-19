@@ -41,7 +41,7 @@ struct cube_block_embodiment;
  * Class Definitions
  ******************************************************************************/
 using block_embodiment_variant = boost::variant<std::unique_ptr<ramp_block_embodiment>,
-                                                std::unique_ptr<cube_block_embodiment>>;
+                                              std::unique_ptr<cube_block_embodiment>>;
 
 NS_END(pal, cosm);
 

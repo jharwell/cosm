@@ -76,8 +76,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
       accum += controller->applied_movement_throttle();
     };
 
-    cpal::argos_swarm_iterator::controllers<chal::robot,
-                                            TController,
+    cpal::argos_swarm_iterator::controllers<TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
     auto n_robots = mc_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
@@ -105,8 +104,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
       }
     };
 
-    cpal::argos_swarm_iterator::controllers<chal::robot,
-                                            TController,
+    cpal::argos_swarm_iterator::controllers<TController,
                                             cpal::iteration_order::ekSTATIC>(
                                                 mc_sm, cb, kARGoSRobotType);
   }
