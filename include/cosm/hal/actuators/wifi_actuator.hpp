@@ -24,8 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/utils/color.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/wifi_packet.hpp"
 
@@ -36,11 +37,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, actuators, detail);
-
 namespace argos {
 class CCI_RangeAndBearingActuator;
 } /* namespace argos */
+
+NS_START(cosm, hal, actuators, detail);
 
 /*******************************************************************************
  * Templates
@@ -73,11 +74,16 @@ NS_END(detail);
  *                   functions can be called.
  */
 template<typename TActuator>
-class wifi_actuator_impl {
+class wifi_actuator_impl final : public rer::client<wifi_actuator_impl<TActuator>> {
  public:
   using impl_type = TActuator;
 
-  explicit wifi_actuator_impl(TActuator* const wifi) : m_wifi(wifi) {}
+  explicit wifi_actuator_impl(TActuator* const wifi)
+      : ER_CLIENT_INIT("cosm.hal.actuators.wifi"),
+        m_wifi(wifi) {}
+
+  const wifi_actuator_impl& operator=(const wifi_actuator_impl&) = delete;
+  wifi_actuator_impl(const wifi_actuator_impl&) = default;
 
   /**
    * \brief Start broadcasting the specified data to all footbots within range.
@@ -85,6 +91,9 @@ class wifi_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_start(const struct wifi_packet& packet) {
+    ER_ASSERT(nullptr != m_wifi,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
     for (size_t i = 0; i < packet.data.size(); ++i) {
       m_wifi->SetData(i, packet.data[i]);
     } /* for(i..) */
@@ -97,6 +106,9 @@ class wifi_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_stop(void) {
+    ER_ASSERT(nullptr != m_wifi,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
     m_wifi->ClearData();
   }
 
@@ -105,11 +117,7 @@ class wifi_actuator_impl {
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
-  void reset(void) {
-    if (nullptr != m_wifi) {
-      m_wifi->ClearData();
-    }
-  }
+  void reset(void) { broadcast_stop(); }
 
  private:
   /* clang-format off */

@@ -59,7 +59,7 @@ class task_alloc_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all task allocation XML configuration should lie
    * under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "task_alloc";
+  inline static const std::string kXMLRoot = "task_alloc";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

@@ -61,7 +61,7 @@ void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
 #if (LIBRA_ER >= LIBRA_ER_ALL)
 void base_controller2D::ndc_pusht(void) const {
   ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +
-              std::string("] [ent") + rcppsw::to_string(entity_id()) +
+              std::string("] [") + cpal::kARGoSRobotNamePrefix + rcppsw::to_string(entity_id()) +
               std::string("]"));
 }
 #endif

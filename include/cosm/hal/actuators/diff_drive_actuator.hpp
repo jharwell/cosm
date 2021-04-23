@@ -24,9 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
-#include "rcsw/common/fpc.h"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
@@ -77,7 +77,7 @@ NS_END(detail);
  * and SFINAE ensures no member functions can be called.
  */
 template <typename TActuator>
-class diff_drive_actuator_impl {
+class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TActuator>> {
  public:
   using impl_type = TActuator;
   /**
@@ -87,7 +87,12 @@ class diff_drive_actuator_impl {
    *               disables the actuator, and therefore subsequently calling any
    *               member function will have no effect.
    */
-  explicit diff_drive_actuator_impl(TActuator* const wheels) : m_wheels(wheels) {}
+  explicit diff_drive_actuator_impl(TActuator* const wheels)
+      : ER_CLIENT_INIT("cosm.hal.actuators.diff_drive"),
+        m_wheels(wheels) {}
+
+  const diff_drive_actuator_impl& operator=(const diff_drive_actuator_impl&) = delete;
+  diff_drive_actuator_impl(const diff_drive_actuator_impl&) = default;
 
   /**
    * \brief Set the wheel speeds for the current timestep for a footbot/epuck
@@ -96,7 +101,10 @@ class diff_drive_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    RCPPSW_FPC_RET_V(nullptr != m_wheels);
+    ER_ASSERT(nullptr != m_wheels,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     m_wheels->SetLinearVelocity(left, right);
   }
 
@@ -107,7 +115,9 @@ class diff_drive_actuator_impl {
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    RCPPSW_FPC_RET_V(nullptr != m_wheels);
+    ER_ASSERT(nullptr != m_wheels,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
     m_wheels->SetTargetVelocityLeft(left);
     m_wheels->SetTargetVelocityRight(right);
   }

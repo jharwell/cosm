@@ -94,9 +94,9 @@ class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
   using caches_oracle_type = coracle::entities_oracle<carepr::base_cache>;
   using tasking_oracle_type = coracle::tasking_oracle;
 
-  static constexpr const char kBlocks[] = "entities.blocks";
-  static constexpr const char kCaches[] = "entities.caches";
-  static constexpr const char kTasks[] = "tasks";
+  inline static const std::string kBlocks = "entities.blocks";
+  inline static const std::string kCaches = "entities.caches";
+  inline static const std::string kTasks = "tasks";
 
   explicit foraging_oracle(const coconfig::aggregate_oracle_config* config);
 

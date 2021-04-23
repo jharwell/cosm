@@ -48,7 +48,7 @@ compile_options.json
 # Build process
 build
 node_modules
-include/cosm/config.hpp
+include/cosm/pal/pal.hpp
 ext/rcppsw
 
 # Sphinx

@@ -27,7 +27,6 @@
 #include <vector>
 #include <string>
 
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
@@ -92,7 +91,7 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
  public:
   using impl_type = TSensor;
 
-  static constexpr const char kNestTarget[] = "nest";
+  inline static const std::string kNestTarget = "nest";
 
   /**
    * \brief A ground sensor reading (value, distance) pair.
@@ -103,15 +102,16 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
    * (this may not be used, depending on the actual hardware mapped to).
    */
   struct reading {
+    reading(void) = default;
     reading(double v, double d) noexcept : value(v), distance(d) {}
 
-    double value;
-    double distance;
+    double value{-1.0};
+    double distance{-1.0};
   };
 
   ground_sensor_impl(TSensor * const sensor,
                  const config::ground_sensor_config* const config)
-      : ER_CLIENT_INIT("cosm.hal.sensors.ground_sensor"),
+      : ER_CLIENT_INIT("cosm.hal.sensors.ground"),
         mc_config(*config),
         m_sensor(sensor) {}
   ~ground_sensor_impl(void) override = default;
@@ -127,6 +127,10 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings()) {
       ret.emplace_back(r.Value, -1.0);
@@ -143,6 +147,10 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_epuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<reading> ret;
     double tmp[3];
     m_sensor->GetReadings(tmp);
@@ -160,8 +168,11 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
-    reading r;
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
 
+    reading r;
     auto cb = [&](const auto& interface) {
                 r.value = interface.Reflected;
                 r.distance = -1.0;

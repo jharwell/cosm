@@ -55,17 +55,19 @@ class path_state : public rpfsm::event_data {
 
   const std::vector<rmath::vector2d>& path(void) const { return m_path; }
   rmath::vector2d next_point(void) const { return m_path[m_point_index]; }
-  size_t node_index(const rmath::vector2d& point) const {
+  size_t n_points(void) const { return m_path.size(); }
+  size_t current_index(void) const { return m_point_index;}
+  size_t point_index(const rmath::vector2d& point) const {
     auto it = std::find(m_path.begin(),
                         m_path.end(),
                         point);
     return std::distance(m_path.begin(), it);
   }
 
-  void update_point(size_t amount) { m_point_index += amount; }
+  void mark_progress(size_t amount) { m_point_index += amount; }
 
   bool is_complete(void) const {
-    return node_index(next_point()) >= m_path.size();
+    return point_index(next_point()) >= n_points();
   }
 
   bool operator==(const path_state& other) {

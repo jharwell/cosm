@@ -1,5 +1,5 @@
 ################################################################################
-# Configuration Options                                                        #
+# Build Environment Configuration Options                                      #
 ################################################################################
 if(NOT COSM_BUILD_ENV)
   set(COSM_BUILD_ENV "LOCAL")
@@ -18,6 +18,9 @@ else()
     "Unknown build environment '${COSM_BUILD_ENV}'. Must be: [LOCAL,MSI]")
 endif()
 
+################################################################################
+# HAL Configuration Options                                                    #
+################################################################################
 if(NOT COSM_BUILD_FOR)
   set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
 endif()
@@ -40,17 +43,29 @@ if (NOT DEFINED COSM_HAL_TARGET)
   message(WARNING "COSM_HAL_TARGET not defined")
 endif()
 
-if(NOT DEFINED COSM_ARGOS_ROBOT_TYPE)
-  message(WARNING "COSM_ARGOS_ROBOT_TYPE not defined")
-endif()
+################################################################################
+# PAL Configuration Options                                                    #
+################################################################################
+if("${COSM_BUILD_FOR}" MATCHES "ARGOS")
+  set(COSM_PAL_TARGET "argos")
+  message(STATUS "Building for platorm ARGoS")
+  if(NOT DEFINED COSM_ARGOS_ROBOT_TYPE)
+    message(WARNING "COSM_ARGOS_ROBOT_TYPE not defined")
+  endif()
 
-if(NOT DEFINED COSM_ARGOS_ROBOT_NAME_PREFIX)
-  message(WARNING "COSM_ARGOS_ROBOT_NAME_PREFIX not defined")
-endif()
+  if(NOT DEFINED COSM_ARGOS_ROBOT_NAME_PREFIX)
+    message(WARNING "COSM_ARGOS_ROBOT_NAME_PREFIX not defined")
+  endif()
 
-if(NOT DEFINED COSM_ARGOS_CONTROLLER_XML_ID)
-  message(WARNING "COSM_ARGOS_CONTROLLER_XML_ID not defined")
+  if(NOT DEFINED COSM_ARGOS_CONTROLLER_XML_ID)
+    message(WARNING "COSM_ARGOS_CONTROLLER_XML_ID not defined")
+  endif()
 endif()
+configure_file(${${target}_INC_PATH}/${target}/pal/pal.hpp.in ${${target}_INC_PATH}/${target}/pal/pal.hpp @ONLY)
+
+################################################################################
+# Qt Configuration Options                                                     #
+################################################################################
 
 # Conditionally compile/link Qt visualizations.
 #
@@ -70,8 +85,6 @@ else()
 endif()
 
 set(${target}_CHECK_LANGUAGE "CXX")
-
-configure_file(${${target}_INC_PATH}/${target}/config.hpp.in ${${target}_INC_PATH}/${target}/config.hpp @ONLY)
 
 ################################################################################
 # External Projects                                                            #
@@ -152,12 +165,12 @@ if (NOT TARGET ${target})
   elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
     target_compile_definitions(${target} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
   endif()
+
+  if("${COSM_PAL_TARGET}" MATCHES "argos")
+    target_compile_definitions(${target} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
+  endif()
+
 endif()
-
-################################################################################
-# Compile Options/Definitions                                                  #
-################################################################################
-
 
 ################################################################################
 # Exports                                                                      #

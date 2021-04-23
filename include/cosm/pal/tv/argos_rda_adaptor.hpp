@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
 
+#include "cosm/pal/pal.hpp"
 #include "cosm/tv/switchable_tv_generator.hpp"
 #include "cosm/tv/robot_dynamics_applicator.hpp"
 #include "cosm/cosm.hpp"
@@ -78,8 +79,8 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
 
     cpal::argos_swarm_iterator::controllers<TController,
                                             cpal::iteration_order::ekSTATIC>(
-                                                mc_sm, cb, kARGoSRobotType);
-    auto n_robots = mc_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
+                                                mc_sm, cb, cpal::kARGoSRobotType);
+    auto n_robots = mc_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size();
     if (0 == n_robots) {
       return 0.0;
     } else {
@@ -106,7 +107,7 @@ class argos_rda_adaptor final : public rer::client<argos_rda_adaptor<TController
 
     cpal::argos_swarm_iterator::controllers<TController,
                                             cpal::iteration_order::ekSTATIC>(
-                                                mc_sm, cb, kARGoSRobotType);
+                                                mc_sm, cb, cpal::kARGoSRobotType);
   }
 
  private:

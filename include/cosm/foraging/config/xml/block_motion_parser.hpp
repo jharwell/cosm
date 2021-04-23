@@ -55,7 +55,7 @@ class block_motion_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all block motion parameters should lie
    * under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "motion";
+  inline static const std::string kXMLRoot = "motion";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_COLD;

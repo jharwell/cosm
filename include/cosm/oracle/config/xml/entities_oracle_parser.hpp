@@ -53,7 +53,7 @@ class entities_oracle_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all entity oracle parameters should lie under in
    * the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "entities_oracle";
+  inline static const std::string kXMLRoot = "entities_oracle";
 
   void parse(const ticpp::Element& node) override;
 

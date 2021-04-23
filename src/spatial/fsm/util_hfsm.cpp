@@ -51,9 +51,8 @@ util_hfsm::util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
  * States
  ******************************************************************************/
 RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
-  actuation()->template actuator<kin2D::governed_diff_drive>()->reset();
-  actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kWHITE);
+  actuation()->governed_diff_drive()->reset();
+  actuation()->leds()->set_color(-1, rutils::color::kWHITE);
 }
 
 /*******************************************************************************

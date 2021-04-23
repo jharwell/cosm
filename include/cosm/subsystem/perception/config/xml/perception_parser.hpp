@@ -56,7 +56,7 @@ class perception_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all perception  parameters should lie under in
    * the XML tree.
    */
-  static constexpr char kXMLRoot[] = "perception";
+  inline static std::string kXMLRoot = "perception";
 
   bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;

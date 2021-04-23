@@ -24,6 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <string>
+
 #include "cosm/cosm.hpp"
 #include "cosm/foraging/config/block_redist_governor_config.hpp"
 #include "rcppsw/er/client.hpp"
@@ -55,12 +57,12 @@ NS_START(cosm, foraging, block_dist);
  */
 class redist_governor : public rer::client<redist_governor> {
  public:
-  static constexpr const char kStatusSwitchPolicySingle[] = "single";
-  static constexpr const char kStatusSwitchPolicyMulti[] = "multi";
-  static constexpr const char kTriggerNull[] = "Null";
-  static constexpr const char kTriggerTime[] = "timestep";
-  static constexpr const char kTriggerBlockCount[] = "block_count";
-  static constexpr const char kTriggerConvergence[] = "convergence";
+  inline static const std::string kStatusSwitchPolicySingle = "single";
+  inline static const std::string kStatusSwitchPolicyMulti = "multi";
+  inline static const std::string kTriggerNull = "Null";
+  inline static const std::string kTriggerTime = "timestep";
+  inline static const std::string kTriggerBlockCount = "block_count";
+  inline static const std::string kTriggerConvergence = "convergence";
 
   explicit redist_governor(const config::block_redist_governor_config* config);
 

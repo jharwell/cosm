@@ -83,9 +83,9 @@ class subtask_sel_probability : public rer::client<subtask_sel_probability>,
   static constexpr const double kBRUTSCHY2014_OFFSET = 8.0;
   static constexpr const double kBRUTSCHY2014_GAMMA = 0.01;
 
-  static constexpr const char kMethodBrutschy2014[] = "brutschy2014";
-  static constexpr const char kMethodHarwell2018[] = "harwell2018";
-  static constexpr const char kMethodRandom[] = "random";
+  inline static const std::string kMethodBrutschy2014 = "brutschy2014";
+  inline static const std::string kMethodHarwell2018 = "harwell2018";
+  inline static const std::string kMethodRandom = "random";
 
   /**
    * \brief Initialize subtask sel probability with default values, based

@@ -70,11 +70,11 @@ NS_START(cosm, foraging, block_dist);
  */
 class  dispatcher final : public rer::client<dispatcher> {
  public:
-  static constexpr const char kDistSingleSrc[] = "single_source";
-  static constexpr const char kDistRandom[] = "random";
-  static constexpr const char kDistDualSrc[] = "dual_source";
-  static constexpr const char kDistQuadSrc[] = "quad_source";
-  static constexpr const char kDistPowerlaw[] = "powerlaw";
+  inline static const std::string kDistSingleSrc = "single_source";
+  inline static const std::string kDistRandom = "random";
+  inline static const std::string kDistDualSrc = "dual_source";
+  inline static const std::string kDistQuadSrc = "quad_source";
+  inline static const std::string kDistPowerlaw = "powerlaw";
 
   dispatcher(cds::arena_grid* grid,
              const rtypes::discretize_ratio& resolution,

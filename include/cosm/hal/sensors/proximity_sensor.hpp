@@ -28,11 +28,12 @@
 #include <limits>
 #include <boost/optional.hpp>
 
-#include "rcppsw/rcppsw.hpp"
-#include "cosm/hal/hal.hpp"
 #include "rcppsw/math/range.hpp"
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/er/client.hpp"
+
+#include "cosm/hal/hal.hpp"
 #include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
@@ -87,7 +88,7 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class proximity_sensor_impl {
+class proximity_sensor_impl final : public rer::client<proximity_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
@@ -95,14 +96,16 @@ class proximity_sensor_impl {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
    proximity_sensor_impl(TSensor * const sensor,
-                     const config::proximity_sensor_config* const config)
-      : mc_config(*config),
-        m_sensor(sensor) {}
+                         const config::proximity_sensor_config* const config)
+       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
+         mc_config(*config),
+         m_sensor(sensor) {}
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
    proximity_sensor_impl(const config::proximity_sensor_config* const config)
-      : mc_config(*config),
+       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
+         mc_config(*config),
         m_sensor(nullptr) {}
 
   const proximity_sensor_impl& operator=(const proximity_sensor_impl&) = delete;
@@ -122,6 +125,10 @@ class proximity_sensor_impl {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
   boost::optional<rmath::vector2d> avg_prox_obj(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     rmath::vector2d accum;
     for (auto& r : readings()) {
       accum += r;
@@ -137,12 +144,22 @@ class proximity_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
-  void enable(void) const { m_sensor->Enable(); }
+  void enable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Enable();
+  }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
-  void disable(void) const { m_sensor->Disable(); }
+  void disable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Disable();
+  }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
@@ -168,6 +185,10 @@ class proximity_sensor_impl {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_proximity_sensor<U>::value ||
                                detail::is_argos_epuck_proximity_sensor<U>::value)>
   std::vector<rmath::vector2d> readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<rmath::vector2d> ret;
     for (auto &r : m_sensor->GetReadings()) {
       ret.emplace_back(r.Value, rmath::radians(r.Angle.GetValue()));

@@ -25,8 +25,9 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include "rcppsw/rcppsw.hpp"
+
 #include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -89,7 +90,7 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class light_sensor_impl {
+class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
@@ -109,9 +110,14 @@ class light_sensor_impl {
           angle(_angle) {}
   };
 
-  explicit light_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {
+  explicit light_sensor_impl(TSensor * const sensor)
+      : ER_CLIENT_INIT("cosm.hal.sensors.light"),
+        m_sensor(sensor) {
     disable();
   }
+
+  const light_sensor_impl& operator=(const light_sensor_impl&) = delete;
+  light_sensor_impl(const light_sensor_impl&) = default;
 
   /**
    * \brief Get the current light sensor readings for the footbot/epuck robots.
@@ -122,6 +128,10 @@ class light_sensor_impl {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
   std::vector<reading>  readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings()) {
       ret.push_back({r.Value, r.Angle.GetValue()});
@@ -133,12 +143,22 @@ class light_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
-  void enable(void) const { m_sensor->Enable(); }
+  void enable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Enable();
+  }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
-  void disable(void) const { m_sensor->Disable(); }
+  void disable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Disable();
+  }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>

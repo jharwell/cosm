@@ -71,9 +71,9 @@ class executable_task : public logical_task,
                         public metrics::execution_metrics,
                         public rer::client<executable_task> {
  public:
-  static constexpr const uint kMAX_INTERFACES = 2;
-  static constexpr const char kAbortSrcExec[] = "exec";
-  static constexpr const char kAbortSrcInterface[] = "interface";
+  static constexpr const size_t kMAX_INTERFACES = 2;
+  inline static const std::string kAbortSrcExec = "exec";
+  inline static const std::string kAbortSrcInterface = "interface";
 
   executable_task(const std::string& name,
                   const config::src_sigmoid_sel_config* abort,

@@ -54,7 +54,7 @@ class nest_acq_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all XML configuration for nest acq should lie
    * under in the XML tree.
    */
-  static constexpr char kXMLRoot[] = "nest_acq";
+  inline static const std::string kXMLRoot = "nest_acq";
 
   void parse(const ticpp::Element& node) override;
   std::string xml_root(void) const override { return kXMLRoot; }

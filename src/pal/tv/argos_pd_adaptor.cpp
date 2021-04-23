@@ -52,8 +52,8 @@ argos_pd_adaptor<TController>::argos_pd_adaptor(
     : ER_CLIENT_INIT("cosm.pal.tv.argos_pd_adaptor"),
       population_dynamics(
           config,
-          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-          sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
+          sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size(),
+          sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size(),
           rng),
       mc_sm(sm),
       mc_arena_dim(arena_dim),
@@ -85,7 +85,7 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
   rtypes::type_uuid id = controller->entity_id();
   ER_INFO("Found kill victim with ID=%d", id.v());
 
-  std::string name = kARGoSRobotNamePrefix + rcppsw::to_string(id);
+  std::string name = cpal::kARGoSRobotNamePrefix + rcppsw::to_string(id);
 
   /*
    * Before removing the robot, perform any project-specific robot cleanup.
@@ -101,8 +101,8 @@ op_result argos_pd_adaptor<TController>::robot_kill(void) {
 
   /* killing a robot reduces both the active and total populations */
   return { id,
-           m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-           m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size() };
+           m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size(),
+           m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size() };
 } /* robot_kill() */
 
 template <typename TController>
@@ -113,7 +113,7 @@ op_result argos_pd_adaptor<TController>::robot_add(int max_pop,
 
   if (max_pop != -1 && total_pop >= static_cast<size_t>(max_pop)) {
     ER_INFO("Not adding new robot %s%d: max_pop=%d reached",
-            kARGoSRobotNamePrefix,
+            cpal::kARGoSRobotNamePrefix.c_str(),
             id.v(),
             max_pop);
     return { rtypes::constants::kNoUUID, total_pop, active_pop };
@@ -123,8 +123,8 @@ op_result argos_pd_adaptor<TController>::robot_add(int max_pop,
     if (robot_attempt_add(id)) {
       /* adding a new robot increases both the total and active populations */
       return { id,
-               m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size(),
-               m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size() };
+               m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size(),
+               m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size() };
     }
   } /* for(i..) */
   ER_FATAL_SENTINEL("Unable to add new robot to simulation");
@@ -171,7 +171,7 @@ argos_pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
   ER_INFO("Robot with ID=%d repaired, n_repairing=%zu",
           id.v(),
           repair_queue_status().size);
-  std::string name = kARGoSRobotNamePrefix + rcppsw::to_string(id);
+  std::string name = cpal::kARGoSRobotNamePrefix + rcppsw::to_string(id);
   cpops::argos_robot_repair visitor;
   auto* entity = dynamic_cast<chal::robot*>(&m_sm->GetSpace().GetEntity(name));
   auto* controller =
@@ -194,7 +194,7 @@ argos_pd_adaptor<TController>::malfunction_victim_locate(size_t total_pop) const
   auto range = rmath::rangei(0, total_pop - 1);
 
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
-    auto it = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).begin();
+    auto it = m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).begin();
     std::advance(it, m_rng->uniform(range));
     auto* entity = argos::any_cast<chal::robot*>(it->second);
     auto* controller = static_cast<TController*>(
@@ -212,7 +212,7 @@ argos_pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
   chal::robot* entity;
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
-    auto it = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).begin();
+    auto it = m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).begin();
     std::advance(it, m_rng->uniform(range));
     entity = argos::any_cast<chal::robot*>(it->second);
     auto* controller = static_cast<TController*>(
@@ -255,10 +255,9 @@ bool argos_pd_adaptor<TController>::robot_attempt_add(
    */
   try {
     /* ick raw pointers--thanks ARGoS... */
-    robot = new chal::robot(kARGoSRobotNamePrefix + rcppsw::to_string(id),
-                            kARGoSControllerXMLId,
-                            argos::CVector3(x, y, 0.0),
-                            argos::CQuaternion());
+    robot = new chal::robot(cpal::kARGoSRobotNamePrefix + rcppsw::to_string(id),
+                            cpal::kARGoSControllerXMLId,
+                            argos::CVector3(x, y, 0.0));
     m_sm->AddEntity(*robot);
     ER_INFO(
         "Added entity %s attached to physics engine %s at %s",

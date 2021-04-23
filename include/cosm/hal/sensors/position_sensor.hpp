@@ -25,9 +25,11 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include "rcppsw/math/vector3.hpp"
-#include "cosm/cosm.hpp"
 
+#include "rcppsw/math/vector3.hpp"
+#include "rcppsw/er/client.hpp"
+
+#include "cosm/cosm.hpp"
 #include "cosm/hal/hal.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
@@ -69,7 +71,7 @@ NS_END(detail);
  *                 be called.
  */
 template <typename TSensor>
-class position_sensor_impl {
+class position_sensor_impl final : public rer::client<position_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
@@ -84,7 +86,12 @@ class position_sensor_impl {
     rmath::radians z_ang{};
   };
 
-  explicit position_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit position_sensor_impl(TSensor * const sensor)
+      : ER_CLIENT_INIT("cosm.hal.sensors.position"),
+        m_sensor(sensor) {}
+
+  const position_sensor_impl& operator=(const position_sensor_impl&) = delete;
+  position_sensor_impl(const position_sensor_impl&) = default;
 
   /**
    * \brief Get the current position sensor readings for the footbot robot.
@@ -94,6 +101,10 @@ class position_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
   sensor_reading reading(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     auto tmp = m_sensor->GetReading();
     sensor_reading ret;
     argos::CRadians x, y, z;

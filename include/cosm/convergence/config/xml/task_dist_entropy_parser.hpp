@@ -54,7 +54,7 @@ class task_dist_entropy_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all loop functions relating to task_dist_entropy
    * parameters should lie under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "task_dist_entropy";
+  inline static const std::string kXMLRoot = "task_dist_entropy";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
 

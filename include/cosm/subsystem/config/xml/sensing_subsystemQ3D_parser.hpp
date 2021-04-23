@@ -57,7 +57,7 @@ class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser
    * \brief The root tag that all robot sensing subsystem parameters should
    * lie under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "sensing_subsystemQ3D";
+  inline static const std::string kXMLRoot = "sensing_subsystemQ3D";
 
   bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;

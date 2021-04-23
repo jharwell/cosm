@@ -54,7 +54,7 @@ void redist_governor::update(const rtypes::timestep& t,
     if (t >= mc_config.timestep && m_dist_status) {
       ER_INFO("Redistribution disabled by trigger '%s': "
               "t=%zu,n_blocks=%zu,convergence=%d",
-              kTriggerTime,
+              kTriggerTime.c_str(),
               t.v(),
               blocks_collected,
               convergence_status);
@@ -64,7 +64,7 @@ void redist_governor::update(const rtypes::timestep& t,
     if (blocks_collected >= mc_config.block_count && m_dist_status) {
       ER_INFO("Redistribution disabled by '%s': "
               "t=%zu,n_blocks=%zu,convergence=%d",
-              kTriggerBlockCount,
+              kTriggerBlockCount.c_str(),
               t.v(),
               blocks_collected,
               convergence_status);
@@ -86,7 +86,7 @@ void redist_governor::update(const rtypes::timestep& t,
     ER_INFO("Redistribution=%d triggered by '%s': "
             "t=%zu,n_blocks=%zu,convergence=%d",
             m_dist_status,
-            kTriggerConvergence,
+            kTriggerConvergence.c_str(),
             t.v(),
             blocks_collected,
             convergence_status);

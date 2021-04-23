@@ -54,7 +54,7 @@ class block_manifest_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all block manifest parameters should lie under
    * in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "manifest";
+  inline static const std::string kXMLRoot = "manifest";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

@@ -46,7 +46,7 @@ path_following_force::operator()(const boid& entity,
                                  csteer2D::ds::path_state* state) const {
   auto next_point = state->next_point();
   if ((entity.pos2D() - next_point).length() <= mc_radius) {
-    state->update_point(1);
+    state->mark_progress(1);
   }
   if (state->is_complete()) {
     return { 0.0, 0.0 }; /* reached the end of the path */

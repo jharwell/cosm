@@ -25,8 +25,11 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include "cosm/hal/wifi_packet.hpp"
+
 #include "rcppsw/math/radians.hpp"
+#include "rcppsw/er/client.hpp"
+
+#include "cosm/hal/wifi_packet.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h>
@@ -68,11 +71,16 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class wifi_sensor_impl  {
+class wifi_sensor_impl final : public rer::client<wifi_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
-  explicit wifi_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit wifi_sensor_impl(TSensor * const sensor)
+      : ER_CLIENT_INIT("cosm.hal.sensors.wifi"),
+        m_sensor(sensor) {}
+
+  const wifi_sensor_impl& operator=(const wifi_sensor_impl&) = delete;
+  wifi_sensor_impl(const wifi_sensor_impl&) = default;
 
   /**
    * \brief Get the current rab wifi sensor readings for the footbot robot.
@@ -82,6 +90,10 @@ class wifi_sensor_impl  {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_sensor<U>::value)>
   std::vector<wifi_packet> readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<wifi_packet> ret;
     for (auto &r : m_sensor->GetReadings()) {
       wifi_packet d;
@@ -94,7 +106,9 @@ class wifi_sensor_impl  {
   }
 
  private:
+  /* clang-format off */
   TSensor* m_sensor;
+  /* clang-format on */
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)

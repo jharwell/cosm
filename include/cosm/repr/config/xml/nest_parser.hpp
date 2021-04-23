@@ -54,7 +54,7 @@ class nest_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all \ref crepr::nest parameters should lie under
    * in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "nest";
+  inline static const std::string kXMLRoot = "nest";
 
   static bool validate(const nest_config* config);
 

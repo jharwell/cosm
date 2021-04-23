@@ -64,8 +64,8 @@ NS_START(cosm, oracle);
  */
 class tasking_oracle final : public rer::client<tasking_oracle> {
  public:
-  static constexpr const char kExecEstPrefix[] = "exec_est";
-  static constexpr const char kInterfaceEstPrefix[] = "interface_est";
+  inline static const std::string kExecEstPrefix = "exec_est";
+  inline static const std::string kInterfaceEstPrefix = "interface_est";
 
   using variant_type = boost::variant<cta::time_estimate>;
 

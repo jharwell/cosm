@@ -23,7 +23,8 @@
 /******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
@@ -66,7 +67,7 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class battery_sensor_impl {
+class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
@@ -84,7 +85,12 @@ class battery_sensor_impl {
     double time_left;
   };
 
-  explicit battery_sensor_impl(TSensor * const sensor) : m_sensor(sensor) {}
+  explicit battery_sensor_impl(TSensor * const sensor)
+      : ER_CLIENT_INIT("cosm.hal.sensors.battery"),
+        m_sensor(sensor) {}
+
+  const battery_sensor_impl& operator=(const battery_sensor_impl&) = delete;
+  battery_sensor_impl(const battery_sensor_impl&) = default;
 
   /**
    * \brief Get the current battery sensor reading for the footbot robot.
@@ -92,6 +98,9 @@ class battery_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_battery_sensor<U>::value)>
   sensor_reading reading(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
     auto temp = m_sensor->GetReading();
     return {temp.AvailableCharge, temp.TimeLeft};
   }

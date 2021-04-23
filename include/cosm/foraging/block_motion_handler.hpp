@@ -59,8 +59,8 @@ NS_START(cosm, foraging);
 class block_motion_handler : public rer::client<block_motion_handler>,
                              public cfmetrics::block_motion_metrics {
  public:
-  static constexpr const char kPolicyNull[] = "Null";
-  static constexpr const char kPolicyRandomWalk[] = "random_walk";
+  inline static const std::string kPolicyNull = "Null";
+  inline static const std::string kPolicyRandomWalk = "random_walk";
 
   block_motion_handler(const config::block_motion_config* config,
                        rmath::rng* rng);

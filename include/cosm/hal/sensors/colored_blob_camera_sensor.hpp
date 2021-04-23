@@ -25,10 +25,12 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include "rcppsw/rcppsw.hpp"
+
+#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 #include "rcppsw/utils/color.hpp"
-#include "rcppsw/math/vector2.hpp"
 #include "cosm/cosm.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
@@ -75,12 +77,12 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class colored_blob_camera_sensor_impl {
+class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_camera_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
   /**
-   * \brief A camera sensor reading (color, distance, angle) tuple.
+   * \brief A camera sensor reading (color, distance in meters) tuple.
    */
   struct reading {
     rmath::vector2d vec{};
@@ -88,7 +90,13 @@ class colored_blob_camera_sensor_impl {
   };
 
   explicit colored_blob_camera_sensor_impl(TSensor * const sensor)
-      : m_sensor(sensor) {}
+      : ER_CLIENT_INIT("cosm.hal.sensors.colored_blob_camera"),
+        m_sensor(sensor) {
+    disable();
+  }
+
+  const colored_blob_camera_sensor_impl& operator=(const colored_blob_camera_sensor_impl&) = delete;
+  colored_blob_camera_sensor_impl(const colored_blob_camera_sensor_impl&) = default;
 
   /**
    * \brief Get the sensor readings for the footbot robot.
@@ -98,10 +106,16 @@ class colored_blob_camera_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   std::vector<reading>  readings(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings().BlobList) {
       struct reading s = {
-        .vec = {r->Distance, rmath::radians(r->Angle.GetValue())},
+        /* ARGoS reports this in cm for some reason */
+        .vec = {r->Distance / 100.0,
+                rmath::radians(r->Angle.GetValue())},
         .color = rutils::color(r->Color.GetRed(),
                               r->Color.GetGreen(),
                               r->Color.GetBlue())
@@ -114,11 +128,21 @@ class colored_blob_camera_sensor_impl {
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
-  void enable(void) const { m_sensor->Enable(); }
+  void enable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Enable();
+  }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
-  void disable(void) const { m_sensor->Disable(); }
+  void disable(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    m_sensor->Disable();
+  }
 
  private:
   /* clang-format off */

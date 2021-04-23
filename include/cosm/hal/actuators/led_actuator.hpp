@@ -24,17 +24,18 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/utils/color.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
-#include "rcsw/common/fpc.h"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
-#include <argos3/plugins/robots/pi-puck/control_interface/ci_directional_leds_actuator.h>
+#include <argos3/plugins/robots/generic/control_interface/ci_directional_leds_actuator.h>
 #endif /* COSM_HAL_TARGET */
+#include <argos3/core/utility/datatypes/color.h>
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -80,11 +81,16 @@ NS_END(detail);
  *                   functions can be called.
  */
 template<typename TActuator>
-class led_actuator_impl {
+class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>> {
  public:
   using impl_type = TActuator;
 
-  explicit led_actuator_impl(TActuator* const leds) : m_leds(leds) {}
+  explicit led_actuator_impl(TActuator* const leds)
+      : ER_CLIENT_INIT("cosm.hal.actuators.led"),
+        m_leds(leds) {}
+
+  const led_actuator_impl& operator=(const led_actuator_impl&) = delete;
+  led_actuator_impl(const led_actuator_impl&) = default;
 
   /**
    * \brief Reset the LED actuator (turn all LEDs off).
@@ -100,13 +106,16 @@ class led_actuator_impl {
    * \c ALL LEDs on the robot.
    *
    * \param color The color to change the LED to. This is application defined.
+   *
+   * \return \c TRUE if successful, and \c FALSE otherwise.
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_led_actuator<U>::value ||
                                   detail::is_argos_generic_dirled_actuator<U>::value)>
-  void set_color(int id, const rutils::color& color) {
-    RCPPSW_FPC_RET_V(nullptr != m_leds);
-
+  bool set_color(int id, const rutils::color& color) {
+    ER_CHECK(nullptr != m_leds,
+             "%s called with NULL impl handle!",
+             __FUNCTION__);
     if (-1 == id) {
       m_leds->SetAllColors(argos::CColor(color.red(),
                                          color.green(),
@@ -118,6 +127,10 @@ class led_actuator_impl {
                                                color.blue(),
                                                color.alpha()));
     }
+    return true;
+
+ error:
+    return false;
   }
 
   /**
@@ -129,18 +142,26 @@ class led_actuator_impl {
    * set the intensity of \c ALL LEDs on the robot.
    *
    * \param intensity In the range [0,255]. Application defined meaning.
+   *
+   * \return \c TRUE if successful, and \c FALSE otherwise.
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_led_actuator<U>::value ||
                                   detail::is_argos_generic_dirled_actuator<U>::value)>
-  void set_intensity(int id, uint8_t intensity) {
-    RCPPSW_FPC_RET_V(nullptr != m_leds);
+  bool set_intensity(int id, uint8_t intensity) {
+    ER_CHECK(nullptr != m_leds,
+             "%s called with NULL impl handle!",
+             __FUNCTION__);
 
     if (-1 == id) {
       m_leds->SetAllIntensities(intensity);
     } else {
       m_leds->SetSingleIntensity(id, intensity);
     }
+    return true;
+
+ error:
+    return false;
   }
 
  private:

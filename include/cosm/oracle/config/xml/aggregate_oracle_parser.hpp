@@ -54,7 +54,7 @@ class aggregate_oracle_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all cache parameters should lie under in the
    * XML tree.
    */
-  static constexpr const char kXMLRoot[] = "aggregate_oracle";
+  inline static const std::string kXMLRoot = "aggregate_oracle";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(const, cold);

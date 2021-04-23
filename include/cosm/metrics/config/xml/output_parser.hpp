@@ -56,7 +56,7 @@ class output_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all output loop functions parameters should lie
    * under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "output";
+  inline static const std::string kXMLRoot = "output";
 
   bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;

@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/mpl/reflectable.hpp"
 
+#include "cosm/pal/pal.hpp"
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/pal/argos_controller_adaptor.hpp"
 

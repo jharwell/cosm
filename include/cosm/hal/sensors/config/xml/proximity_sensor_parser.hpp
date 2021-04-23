@@ -55,7 +55,7 @@ class proximity_sensor_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all robot proximity sensor parameters should lie
    * under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "proximity_sensor";
+  inline static const std::string kXMLRoot = "proximity_sensor";
 
   bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;

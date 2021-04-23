@@ -85,7 +85,7 @@ std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
                   robot->GetEmbodiedEntity().GetOriginAnchor().Position.GetY() });
   };
   cpal::argos_swarm_iterator::robots<cpal::iteration_order::ekSTATIC>(
-      m_sm, cb, kARGoSRobotType);
+      m_sm, cb, cpal::kARGoSRobotType);
 
   /*
    * For each closest pair of robots we find, we add the corresponding distance
@@ -94,12 +94,13 @@ std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
    * algorithm).
    */
   std::vector<double> res;
-  size_t n_robots = m_sm->GetSpace().GetEntitiesByType(kARGoSRobotType).size();
+  size_t n_robots = m_sm->GetSpace().GetEntitiesByType(cpal::kARGoSRobotType).size();
 
 #pragma omp parallel for num_threads(n_threads)
   for (size_t i = 0; i < n_robots / 2; ++i) {
-    auto dist_func = std::bind(
-        &rmath::vector2d::distance, std::placeholders::_1, std::placeholders::_2);
+    auto dist_func = std::bind(&rmath::vector2d::l2norm,
+                               std::placeholders::_1,
+                               std::placeholders::_2);
     auto pts = ralg::closest_pair2D<rmath::vector2d>()("recursive", v, dist_func);
     size_t old = v.size();
 #pragma omp critical
@@ -129,7 +130,7 @@ argos_convergence_calculator<TController>::calc_robot_headings2D(size_t) const {
   auto cb = [&](const auto* controller) { v.push_back(controller->heading2D()); };
   cpal::argos_swarm_iterator::controllers<TController,
                                           cpal::iteration_order::ekSTATIC>(
-      m_sm, cb, kARGoSRobotType);
+      m_sm, cb, cpal::kARGoSRobotType);
   return v;
 } /* calc_robot_headings2D() */
 
@@ -141,7 +142,7 @@ argos_convergence_calculator<TController>::calc_robot_positions(size_t) const {
   auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
   cpal::argos_swarm_iterator::controllers<TController,
                                           cpal::iteration_order::ekSTATIC>(
-      m_sm, cb, kARGoSRobotType);
+      m_sm, cb, cpal::kARGoSRobotType);
   return v;
 } /* calc_robot_positions() */
 

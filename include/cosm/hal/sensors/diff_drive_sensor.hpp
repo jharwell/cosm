@@ -24,7 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/hal/hal.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
@@ -76,7 +77,7 @@ NS_END(detail);
  *                 be called.
  */
 template <typename TSensor>
-class diff_drive_sensor_impl {
+class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<TSensor>> {
  public:
   using impl_type = TSensor;
 
@@ -88,7 +89,12 @@ class diff_drive_sensor_impl {
     double axle_length;
   };
 
-  explicit diff_drive_sensor_impl(TSensor* const sensor) : m_sensor(sensor) {}
+  explicit diff_drive_sensor_impl(TSensor* const sensor)
+      : ER_CLIENT_INIT("cosm.hal.sensors.diff_drive"),
+        m_sensor(sensor) {}
+
+  const diff_drive_sensor_impl& operator=(const diff_drive_sensor_impl&) = delete;
+  diff_drive_sensor_impl(const diff_drive_sensor_impl&) = default;
 
   /**
    * \brief Get the current differential drive reading for the robot.
@@ -96,6 +102,10 @@ class diff_drive_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_sensor<U>::value)>
   sensor_reading reading(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     auto tmp = m_sensor->GetReading();
     return {tmp.VelocityLeftWheel,
           tmp.VelocityRightWheel,
@@ -110,6 +120,10 @@ class diff_drive_sensor_impl {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_sensor<U>::value)>
   sensor_reading reading(void) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
     return {m_sensor->GetLeftVelocity(),
             m_sensor->GetRightVelocity(),
             0.0,

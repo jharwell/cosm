@@ -37,6 +37,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/pal/pal.hpp"
 
 /*******************************************************************************
  * Namespaces

@@ -53,7 +53,7 @@ class tasking_oracle_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all cache parameters should lie under in the
    * XML tree.
    */
-  static constexpr const char kXMLRoot[] = "tasking_oracle";
+  inline static const std::string kXMLRoot = "tasking_oracle";
 
   void parse(const ticpp::Element& node) override;
   std::string xml_root(void) const override { return kXMLRoot; }

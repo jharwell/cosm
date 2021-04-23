@@ -55,7 +55,7 @@ class diff_drive_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all diff drive configuration values
    * should lie under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "diff_drive";
+  inline static const std::string kXMLRoot = "diff_drive";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(cold, pure);

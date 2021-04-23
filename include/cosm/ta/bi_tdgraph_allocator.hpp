@@ -24,7 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/common/common.hpp"
+#include <string>
+
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
@@ -57,19 +58,19 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
    * \brief Allocate a task by choosing a random vertex within the graph and
    * return it.
    */
-  static constexpr const char kPolicyRandom[] = "random";
+  inline static const std::string kPolicyRandom = "random";
 
   /**
    * \brief Allocate a task using the eplison-greedy method from Pini2012,
    * Auer2002.
    */
-  static constexpr const char kPolicyEplisonGreedy[] = "epsilon_greedy";
+  inline static const std::string kPolicyEplisonGreedy = "epsilon_greedy";
 
   /**
    * \brief Allocate a task using a matroid optimization approach (strict
    * greedy). No stochasticity is applied.
    */
-  static constexpr const char kPolicyStrictGreedy[] = "strict_greedy";
+  inline static const std::string kPolicyStrictGreedy = "strict_greedy";
 
   /**
    * \brief Allocate a task using a stochastic neighborhood approach.
@@ -80,12 +81,12 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
    * the most recently executed task within some distance. For this method, that
    * distance is set to 1.
    */
-  static constexpr const char kPolicyStochNBHD1[] = "stoch_nbhd1";
+  inline static const std::string kPolicyStochNBHD1 = "stoch_nbhd1";
 
   /**
    * \brief Allocate a task using the UCB1 policy from Auer2002,Pini2012.
    */
-  static constexpr char kPolicyUCB1[] = "UCB1";
+  inline static const std::string kPolicyUCB1 = "UCB1";
 
   bi_tdgraph_allocator(const config::task_alloc_config* config,
                        ds::bi_tdgraph* graph,

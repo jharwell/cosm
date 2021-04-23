@@ -54,7 +54,7 @@ class positional_entropy_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all loop functions relating to positional_entropy
    * parameters should lie under in the XML tree.
    */
-  static constexpr const char kXMLRoot[] = "positional_entropy";
+  inline static const std::string kXMLRoot = "positional_entropy";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
 
