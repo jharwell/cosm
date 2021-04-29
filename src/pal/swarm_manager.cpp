@@ -26,7 +26,6 @@
 #include <sys/resource.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/stacktrace.hpp>
 #include <chrono>
 #include <csignal>
 
@@ -37,12 +36,20 @@
  ******************************************************************************/
 NS_START(cosm, pal);
 
-void ___sighandler(int signum);
-
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
 swarm_manager::swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
+  /*
+   * Enable stacktraces when we crash with a segfault.
+   */
+  signal(SIGSEGV, rer::sigsegv_sighandler);
+
+  /*
+   * Enable stacktraces when we crash with std::terminate().
+   */
+  std::set_terminate(rer::terminate_handler);
+
   /*
    * For some reason GNU parallel on MSI resets the core dump memory limit to 0
    * when running, even if you run "ulimit -s unlimited" right before. And on
@@ -54,7 +61,6 @@ swarm_manager::swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
    * always get a core dump to help diagnose things, regardless of shell
    * configuration.
    */
-  signal(SIGSEGV, ___sighandler);
   struct rlimit r {};
   getrlimit(RLIMIT_CORE, &r);
   r.rlim_cur = RLIM_INFINITY;
@@ -93,25 +99,5 @@ void swarm_manager::rng_init(const rmath::config::rng_config* config) {
     m_rng = rmath::rngm::instance().create("swarm_manager", config->seed);
   }
 } /* rng_init() */
-
-/*******************************************************************************
- * Non-Member Functions
- ******************************************************************************/
-void ___sighandler(int signum) {
-  /* trigger a core dump if we get a segfault or other signal */
-  std::signal(signum, SIG_DFL);
-  int pid = getpid();
-  /*
-   * In addition to a core dump, write out a stacktrace for later retrieval as
-   * well. Between the core dump and stacktrace, there is a lot of redundancy,
-   * but if one doesn't get recorded for some reason, we will still have the
-   * other, and more information is better for debugging.
-   */
-  std::string fname = "./backtrace" + rcppsw::to_string(pid);
-  boost::stacktrace::safe_dump_to(fname.c_str());
-
-  /* rethrow signal and terminate */
-  ::kill(getpid(), signum);
-} /* ___sighandler() */
 
 NS_END(pal, cosm);

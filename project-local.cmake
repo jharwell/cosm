@@ -169,7 +169,6 @@ if (NOT TARGET ${target})
   if("${COSM_PAL_TARGET}" MATCHES "argos")
     target_compile_definitions(${target} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
   endif()
-
 endif()
 
 ################################################################################
