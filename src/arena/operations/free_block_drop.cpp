@@ -50,8 +50,7 @@ free_block_drop::for_block(const rmath::vector2z& coord,
   return free_block_drop(nullptr,
                          coord,
                          resolution,
-                         arena_map_locking::ekNONE_HELD,
-                         false);
+                         locking::ekNONE_HELD);
 } /* for_block() */
 
 /*******************************************************************************
@@ -60,13 +59,11 @@ free_block_drop::for_block(const rmath::vector2z& coord,
 free_block_drop::free_block_drop(crepr::base_block3D* block,
                                  const rmath::vector2z& coord,
                                  const rtypes::discretize_ratio& resolution,
-                                 const arena_map_locking& locking,
-                                 bool update_clusters)
+                                 const locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_drop"),
       cell2D_op(coord),
       mc_resolution(resolution),
       mc_locking(locking),
-      mc_update_clusters(update_clusters),
       m_block(block) {}
 
 /*******************************************************************************
@@ -90,31 +87,31 @@ void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
 } /* visit() */
 
 void free_block_drop::visit(crepr::base_block3D& block) {
+  /* block is no longer carried by a robot */
   block.md()->robot_id_reset();
 
-  auto rloc =
-      rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
+  /* update block location */
+  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(),
+                                               mc_resolution.v()));
 
   block.ranchor3D(rloc);
   block.danchor3D(rmath::vector3z(cell2D_op::coord()));
 } /* visit() */
 
 void free_block_drop::visit(base_arena_map& map) {
-  map.maybe_lock_wr(map.block_mtx(),
-                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
-
   /*
-   * We might be modifying this cell--don't want block distribution in ANOTHER
-   * thread to pick this cell for distribution.
+   * We might need all locks:
+   *
+   * - Grid+block to avoid ANOTHER thread to pick this cell for block
+   *   distribution.
    */
-  map.maybe_lock_wr(map.grid_mtx(),
-                    !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.ordered_lock(mc_locking);
+
+  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
   bool conflict = status.x && status.y;
-  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
-
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
@@ -123,7 +120,12 @@ void free_block_drop::visit(base_arena_map& map) {
    * cache.
    */
   if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
-    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
+    ER_DEBUG("Free drop of block%s@%s not possible: cell_state=%d,conflict=%d -> redistribute",
+             rcppsw::to_string(m_block->id()).c_str(),
+             rcppsw::to_string(coord()).c_str(),
+             cell.fsm().current_state(),
+             conflict);
+    map.distribute_single_block(m_block, locking::ekALL_HELD);
   } else {
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
@@ -131,48 +133,26 @@ void free_block_drop::visit(base_arena_map& map) {
      *
      * Holding arena map grid lock, block lock if locking enabled.
      */
-    visit(*m_block);
-    visit(cell);
-
-    /* set block extent */
-    caops::block_extent_set_visitor e(m_block);
-    e.visit(map.decoratee());
-
-    /* update block loctree with new location */
-    map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
-
-    if (mc_update_clusters) {
-      /* possibly update block cluster membership */
-      map.block_distributor()->cluster_update_after_drop(m_block);
-    }
+    execute_free_drop(map, cell);
   }
-
-  map.maybe_unlock_wr(map.grid_mtx(),
-                      !(mc_locking & arena_map_locking::ekGRID_HELD));
-  map.maybe_unlock_wr(map.block_mtx(),
-                      !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+  map.ordered_unlock(mc_locking);
 } /* visit() */
 
 void free_block_drop::visit(caching_arena_map& map) {
-  /* needed for atomic check for cache overlap+do drop operation */
-  map.maybe_lock_wr(map.cache_mtx(),
-                    !(mc_locking & arena_map_locking::ekCACHES_HELD));
-
-  map.maybe_lock_wr(map.block_mtx(),
-                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
-
   /*
-   * We might be modifying this cell--don't want block distribution in ANOTHER
-   * thread to pick this cell for distribution.
+   * We might need all locks:
+   *
+   * - Cache+block for atomic check for cache overlap+do drop operation
+   * - Grid for updating cells
    */
-  map.maybe_lock_wr(map.grid_mtx(),
-                    !(mc_locking & arena_map_locking::ekGRID_HELD));
+  map.ordered_lock(mc_locking);
+
+  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
 
   auto rloc = rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v());
   auto status = cspatial::conflict_checker::placement2D(&map, m_block, rloc);
   bool conflict = status.x && status.y;
 
-  cds::cell2D& cell = map.access<arena_grid::kCell>(cell2D_op::coord());
   /*
    * Dropping a block onto a cell that already contains a single block (but not
    * a cache) does not work. Failing to do this results robots that are carrying
@@ -185,46 +165,62 @@ void free_block_drop::visit(caching_arena_map& map) {
    * need to drop the block in the host cell for the cache.
    */
   if (cell.state_has_cache() || cell.state_in_cache_extent()) {
+    ER_DEBUG("Free drop of block%s@%s resolves to cache block drop",
+             rcppsw::to_string(m_block->id()).c_str(),
+             rcppsw::to_string(coord()).c_str());
     cache_block_drop_visitor op(m_block,
                                 static_cast<carepr::arena_cache*>(cell.cache()),
                                 mc_resolution,
-                                arena_map_locking::ekALL_HELD);
+                                locking::ekALL_HELD);
     op.visit(map);
-    map.maybe_unlock_wr(map.cache_mtx(),
-                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
   } else if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
-    map.distribute_single_block(m_block, arena_map_locking::ekALL_HELD);
-    map.maybe_unlock_wr(map.cache_mtx(),
-                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
+    ER_DEBUG("Free drop of block%s@%s invalid: cell_state=%d,conflict=%d -> redistribute",
+             rcppsw::to_string(m_block->id()).c_str(),
+             rcppsw::to_string(m_block->danchor2D()).c_str(),
+             cell.fsm().current_state(),
+             conflict);
+    map.distribute_single_block(m_block, locking::ekALL_HELD);
   } else {
-    map.maybe_unlock_wr(map.cache_mtx(),
-                        !(mc_locking & arena_map_locking::ekCACHES_HELD));
     /*
      * Cell does not have a block/cache on it, so it is safe to drop the block
      * on it and change the cell state.
      *
      * Holding arena map grid lock, block lock if locking enabled.
      */
-    visit(*m_block);
-    visit(cell);
-
-    /* set block extent */
-    caops::block_extent_set_visitor e(m_block);
-    e.visit(map.decoratee());
-
-    /* update block loctree with new location */
-    map.bloctree_update(m_block, arena_map_locking::ekALL_HELD);
-
-    if (mc_update_clusters) {
-      /* possibly update block cluster membership */
-      map.block_distributor()->cluster_update_after_drop(m_block);
-    }
+    execute_free_drop(map, cell);
   }
-
-  map.maybe_unlock_wr(map.grid_mtx(),
-                      !(mc_locking & arena_map_locking::ekGRID_HELD));
-  map.maybe_unlock_wr(map.block_mtx(),
-                      !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+  map.ordered_unlock(mc_locking);
 } /* visit() */
+
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+template<typename TMap>
+void free_block_drop::execute_free_drop(TMap& map, cds::cell2D& cell) {
+  ER_DEBUG("Execute free drop of block%s@%s",
+           rcppsw::to_string(m_block->id()).c_str(),
+           rcppsw::to_string(coord()).c_str());
+
+  visit(*m_block);
+  visit(cell);
+
+  /* set block extent */
+  caops::block_extent_set_visitor e(m_block);
+  e.visit(map.decoratee());
+
+  /* update block loctree with new location */
+  map.bloctree_update(m_block, locking::ekALL_HELD);
+
+  /* possibly update block cluster membership */
+  map.block_distributor()->cluster_update_after_drop(m_block);
+} /* execute_free_drop() */
+
+/*******************************************************************************
+ * Template Instantiations
+ ******************************************************************************/
+template void free_block_drop::execute_free_drop(carena::base_arena_map&,
+                                                 cds::cell2D&);
+template void free_block_drop::execute_free_drop(carena::caching_arena_map&,
+                                                 cds::cell2D&);
 
 NS_END(detail, operations, arena, cosm);

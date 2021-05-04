@@ -68,9 +68,9 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   const fsm::cell3D_fsm& fsm(void) const { return decoratee(); }
 
   /* state inquiry */
-  RCPPSW_DECORATE_FUNC(state_is_empty, const)
-  RCPPSW_DECORATE_FUNC(state_has_block, const)
-  RCPPSW_DECORATE_FUNC(state_in_block_extent, const)
+  RCPPSW_DECORATE_DECLDEF(state_is_empty, const)
+  RCPPSW_DECORATE_DECLDEF(state_has_block, const)
+  RCPPSW_DECORATE_DECLDEF(state_in_block_extent, const)
 
   /**
    * \brief Reset the cell to its UNKNOWN state.

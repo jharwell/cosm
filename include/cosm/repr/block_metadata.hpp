@@ -120,7 +120,7 @@ class block_metadata final : public cfmetrics::block_transportee_metrics,
   void dest_drop_time(const rtypes::timestep& t) { m_dest_drop_time = t; }
 
   /**
-   * \brief Set the time that the block was distributed in the arena.
+   * \brief Set the time that the block was distributed/dropped in the arena.
    *
    * \param t The current simulation time.
    */

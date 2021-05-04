@@ -36,7 +36,7 @@
 #include "rcppsw/patterns/decorator/decorator.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/arena/arena_map_locking.hpp"
+#include "cosm/arena/locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
 #include "cosm/arena/update_status.hpp"
 #include "cosm/ds/arena_grid.hpp"
@@ -129,10 +129,10 @@ class base_arena_map : public rer::client<base_arena_map>,
     return decoratee().template access<Index>(i, j);
   }
 
-  RCPPSW_DECORATE_FUNC(xdsize, const);
-  RCPPSW_DECORATE_FUNC(ydsize, const);
-  RCPPSW_DECORATE_FUNC(xrsize, const);
-  RCPPSW_DECORATE_FUNC(yrsize, const);
+  RCPPSW_DECORATE_DECLDEF(xdsize, const);
+  RCPPSW_DECORATE_DECLDEF(ydsize, const);
+  RCPPSW_DECORATE_DECLDEF(xrsize, const);
+  RCPPSW_DECORATE_DECLDEF(yrsize, const);
 
   rtypes::discretize_ratio grid_resolution(void) const {
     return decoratee().resolution();
@@ -151,12 +151,14 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \param pos The position of a robot.
    * \param ent_id The ID of the block the robot THINKS it is on.
    *
+   * \note The block mutex must be held when calling this function.
+   *
    * \return The ID of the block that the robot is on, or -1 if the robot is not
    * actually on a block.
    */
   virtual rtypes::type_uuid
   robot_on_block(const rmath::vector2d& pos,
-                 const rtypes::type_uuid& ent_id) const RCPPSW_PURE;
+                 const rtypes::type_uuid& ent_id) const;
 
   /**
    * \brief Determine if a robot is currently within the boundaries of a nest.
@@ -195,21 +197,17 @@ class base_arena_map : public rer::client<base_arena_map>,
    * Currently updates the following, in order:
    *
    * - Block distribution status via \ref cforaging::block_dist::redist_governor.
-   * - Block cluster membership re-calculated, if needed, according to \p
-   *   block_op.
    *
    * Does no locking, so only safe to call in non-concurrent contexts.
    *
    * \param t The current timestep.
    * \param blocks_transported How many blocks have been cumuluatively
    *                           transported/collected so far in simulation.
-   * \param block_op Has there been a block pickup/drop/etc. this timestep ?
    * \param convergence_status Has the currently converged, according to
    *                           configured convergence measures?
    */
   void post_step_update(const rtypes::timestep& t,
                         size_t blocks_transported,
-                        bool block_op,
                         bool convergence_status);
 
   /**
@@ -232,7 +230,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * for writing, and takes it internally if not held.
    */
   virtual void bloctree_update(const crepr::base_block3D* block,
-                               const arena_map_locking& locking);
+                               const locking& locking);
 
   /**
    * \brief Get the list of all the blocks currently present in the arena.
@@ -251,7 +249,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * writing, and takes them internally if they are not held.
    */
   void distribute_single_block(crepr::base_block3D* block,
-                               const arena_map_locking& locking);
+                               const locking& locking);
 
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
@@ -295,18 +293,21 @@ class base_arena_map : public rer::client<base_arena_map>,
   std::shared_mutex* block_mtx(void) { return &m_block_mtx; }
   std::shared_mutex* block_mtx(void) const { return &m_block_mtx; }
 
+  virtual void ordered_lock(const locking& locking);
+  virtual void ordered_unlock(const locking& locking);
+
  protected:
   /**
    * \brief Perform necessary locking prior to (1) gathering the list of
    * entities that need to be avoided during block distribution, and (2) doing
    * block distribution.
    */
-  virtual void pre_block_dist_lock(const arena_map_locking& locking);
+  virtual void pre_block_dist_lock(const locking& locking);
 
   /**
    * \brief Perform necessary unlocking after block distribution.
    */
-  virtual void post_block_dist_unlock(const arena_map_locking& locking);
+  virtual void post_block_dist_unlock(const locking& locking);
 
   virtual bool bloctree_verify(void) const;
 
@@ -325,7 +326,6 @@ class base_arena_map : public rer::client<base_arena_map>,
   bool distribute_all_blocks(void);
   cfbd::dispatcher* block_dispatcher(void) const { return m_block_dispatcher.get(); }
   rmath::rng* rng(void) const { return m_rng; }
-
 
  private:
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;

@@ -43,7 +43,7 @@ using cds::arena_grid;
 cache_block_drop::cache_block_drop(crepr::base_block3D* arena_block,
                                    carepr::arena_cache* cache,
                                    const rtypes::discretize_ratio& resolution,
-                                   const arena_map_locking& locking)
+                                   const locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.cache_block_drop"),
       cell2D_op(cache->dcenter2D()),
       mc_locking(locking),
@@ -76,17 +76,17 @@ void cache_block_drop::visit(caching_arena_map& map) {
    * thread to pick our chosen cell for distribution.
    */
   map.maybe_lock_wr(map.block_mtx(),
-                    !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                    !(mc_locking & locking::ekBLOCKS_HELD));
 
   visit(*m_arena_block);
   map.maybe_unlock_wr(map.block_mtx(),
-                      !(mc_locking & arena_map_locking::ekBLOCKS_HELD));
+                      !(mc_locking & locking::ekBLOCKS_HELD));
 
   map.maybe_lock_wr(map.cache_mtx(),
-                    !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                    !(mc_locking & locking::ekCACHES_HELD));
   visit(*m_cache);
   map.maybe_unlock_wr(map.cache_mtx(),
-                      !(mc_locking & arena_map_locking::ekCACHES_HELD));
+                      !(mc_locking & locking::ekCACHES_HELD));
 
   /*
    * Do not need to hold grid mutex (but might be) because we know we are the

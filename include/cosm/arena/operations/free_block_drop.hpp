@@ -30,7 +30,7 @@
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/ds/operations/cell2D_op.hpp"
-#include "cosm/arena/arena_map_locking.hpp"
+#include "cosm/arena/locking.hpp"
 #include "cosm/repr/block_variant.hpp"
 
 /*******************************************************************************
@@ -111,7 +111,14 @@ class free_block_drop : public rer::client<free_block_drop>,
   void visit(cds::cell2D& cell);
 
   /**
-   * \brief Update the dropped block. No locking is performed.
+   * \brief Update the dropped block.
+   *
+   * - Reset the ID of the robot carrying the block.
+   * - Update block location to the location of the drop.
+   *
+   * This function does NOT update the distribution time, because it is called
+   * both when a robot drops a block AND when a block distribution happens, and
+   * the currentl time is very difficult to access in the second case.
    */
   void visit(crepr::base_block3D& block);
 
@@ -126,16 +133,17 @@ class free_block_drop : public rer::client<free_block_drop>,
   free_block_drop(crepr::base_block3D* block,
                   const rmath::vector2z& coord,
                   const rtypes::discretize_ratio& resolution,
-                  const arena_map_locking& locking,
-                  bool update_clusters);
+                  const locking& locking);
 
  private:
   void visit(fsm::cell2D_fsm& fsm);
 
+  template <typename TMap>
+  void execute_free_drop(TMap& map, cds::cell2D& cell);
+
   /* clang-format off */
   const rtypes::discretize_ratio mc_resolution;
-  const arena_map_locking        mc_locking;
-  const bool                     mc_update_clusters;
+  const locking                  mc_locking;
 
   crepr::base_block3D*           m_block;
   /* clang-format on */

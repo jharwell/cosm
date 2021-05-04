@@ -72,18 +72,6 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
    */
   rtypes::type_uuid from_nest_drop(const crepr::base_block3D* block) const RCPPSW_PURE;
 
-  /**
-   * \brief Compute the ID for the penalty if the operation involves picking up
-   * a free block in the arena.
-   *
-   * \param loc The robots current location.
-   * \param acq_id The ID of the thing (probably a block) that the robot THINKS
-   *               it has acquired.
-   * \param map The \ref carena::base_arena_map.
-   */
-  rtypes::type_uuid from_free_pickup(const rmath::vector2d& loc,
-                                     const rtypes::type_uuid& acq_id,
-                                     const carena::base_arena_map* map) const RCPPSW_PURE;
 };
 
 NS_END(tv, foraging, cosm);

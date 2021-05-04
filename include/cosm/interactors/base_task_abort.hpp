@@ -117,19 +117,19 @@ class base_task_abort
    * happens to be.
    */
   void task_abort_with_block(TController& controller) {
-    auto loc = rmath::dvec2zvec(controller.rpos2D(),
-                                m_map->grid_resolution().v());
-    auto block_id = controller.block()->id();
+    auto drop_loc = rmath::dvec2zvec(controller.rpos2D(),
+                                     m_map->grid_resolution().v());
+    auto drop_id = controller.block()->id();
 
-    robot_free_block_drop_visitor_type rdrop_op(
-        controller.block_release(), loc, m_map->grid_resolution());
+    robot_free_block_drop_visitor_type rdrop_op(controller.block_release(),
+                                                drop_loc,
+                                                m_map->grid_resolution());
 
-    caops::free_block_drop_visitor adrop_op(
-        m_map->blocks()[block_id.v()],
-        loc,
-        m_map->grid_resolution(),
-        carena::arena_map_locking::ekNONE_HELD,
-        true);
+    auto to_drop = m_map->blocks()[drop_id.v()];
+    caops::free_block_drop_visitor adrop_op(to_drop,
+                                            drop_loc,
+                                            m_map->grid_resolution(),
+                                            carena::locking::ekNONE_HELD);
 
     rdrop_op.visit(controller);
     adrop_op.visit(*m_map);

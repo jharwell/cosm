@@ -95,7 +95,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   }
   event_data_hold(true);
 
-  auto* ground = saa()->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground = saa()->sensing()->ground();
 
   if (!m_nest_acq->task_running()) {
     /* We have entered the nest, so perform our acquisition strategy */

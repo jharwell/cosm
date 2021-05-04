@@ -67,10 +67,10 @@ class argos_convergence_calculator final
   argos_convergence_calculator&
   operator=(const argos_convergence_calculator&) = delete;
 
-  RCPPSW_DECORATE_FUNC(update);
-  RCPPSW_DECORATE_FUNC(converged);
-  RCPPSW_DECORATE_FUNC(reset_metrics);
-  RCPPSW_DECORATE_FUNC(task_dist_entropy_init);
+  RCPPSW_DECORATE_DECLDEF(update);
+  RCPPSW_DECORATE_DECLDEF(converged);
+  RCPPSW_DECORATE_DECLDEF(reset_metrics);
+  RCPPSW_DECORATE_DECLDEF(task_dist_entropy_init);
 
  private:
   std::vector<double> calc_robot_nn(size_t n_threads) const;

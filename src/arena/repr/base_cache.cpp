@@ -47,47 +47,73 @@ base_cache::base_cache(const params& p)
           p.center),
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
-      mc_resolution(p.resolution) {
-  /* build the block map */
-  std::transform(p.blocks.begin(),
-                 p.blocks.end(),
-                 std::inserter(m_blocks, m_blocks.end()),
-                 [&](auto* b) { return std::make_pair(b->id(), b); });
+      mc_resolution(p.resolution),
+      m_blocks_vec(std::move(p.blocks)) {
+  /* /\* build the block map *\/ */
+  /* std::transform(p.blocks.begin(), */
+  /*                p.blocks.end(), */
+  /*                std::inserter(m_blocks, m_blocks.end()), */
+  /*                [&](auto* b) { return std::make_pair(b->id(), b); }); */
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void base_cache::block_add(crepr::base_block3D* block) {
-  m_blocks.insert({ block->id(), block });
+  m_blocks_vec.push_back(block);
+  if (m_map_en) {
+    m_blocks_map.insert({ block->id(), block });
+  }
 }
-
 void base_cache::block_remove(const crepr::base_block3D* const victim) {
-  m_blocks.erase(m_blocks.find(victim->id()));
+  if (m_map_en) {
+    m_blocks_map.erase(m_blocks_map.find(victim->id()));
+  }
+  auto it = std::find_if(m_blocks_vec.begin(),
+                         m_blocks_vec.end(),
+                         [&](const auto*b) { return b->id() == victim->id(); });
+  m_blocks_vec.erase(it);
 } /* block_remove() */
 
+void base_cache::blocks_map_enable(void) {
+  for (auto *b : m_blocks_vec) {
+    m_blocks_map.insert({b->id(), b});
+  } /* for(*b..) */
+
+  m_map_en = true;
+} /* blocks_map_enable() */
+
 std::unique_ptr<base_cache> base_cache::clone(void) const {
-  cds::block3D_vectorno blocks;
-  params p = { xrsize(), mc_resolution, rcenter2D(), blocks, id() };
-  std::transform(m_blocks.begin(),
-                 m_blocks.end(),
-                 std::back_inserter(p.blocks),
-                 [&](auto& pair) { return pair.second; });
+  /* cds::block3D_vectorno blocks; */
+  cds::block3D_vectorno for_cache = m_blocks_vec;
+  params p = { xrsize(), mc_resolution, rcenter2D(), std::move(for_cache), id() };
+  /* std::transform(m_blocks.begin(), */
+  /*                m_blocks.end(), */
+  /*                std::back_inserter(p.blocks), */
+  /*                [&](auto& pair) { return pair.second; }); */
+
   return std::make_unique<base_cache>(p);
 } /* clone() */
 
 bool base_cache::contains_block(const crepr::base_block3D* const c_block) const {
-  return m_blocks.end() != m_blocks.find(c_block->id());
+  if (m_map_en) {
+    return m_blocks_map.end() != m_blocks_map.find(c_block->id());
+  } else {
+    return m_blocks_vec.end() != std::find_if(m_blocks_vec.begin(),
+                                              m_blocks_vec.end(),
+                                              [&](const auto*b) { return b->id() == c_block->id(); });
+  }
 }
 crepr::base_block3D* base_cache::block_select(rmath::rng* rng) {
-  ER_ASSERT(m_blocks.size() > 0, "Cannot select from empty block hashtable");
+  ER_ASSERT(m_blocks_vec.size() > 0, "Cannot select from empty block vector");
   if (nullptr != rng) {
-    size_t dist = rng->uniform(0UL, m_blocks.size() - 1);
-    auto it = m_blocks.begin();
-    std::advance(it, dist);
-    return it->second;
+    size_t dist = rng->uniform(0UL, m_blocks_vec.size() - 1);
+    return m_blocks_vec[dist];
+    /* auto it = m_blocks_vec.begin(); */
+    /* std::advance(it, dist); */
+    /* return it->second; */
   } else {
-    return m_blocks.begin()->second;
+    return m_blocks_vec[0];
   }
 }
 NS_END(repr, arena, cosm);

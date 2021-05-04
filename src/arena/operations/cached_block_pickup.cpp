@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cached_block_pickup.hpp"
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/arena/operations/cache_extent_clear.hpp"
@@ -47,11 +49,13 @@ cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
                                          crepr::base_block3D* pickup_block,
                                          cpal::argos_sm_adaptor* sm,
                                          const rtypes::type_uuid& robot_id,
-                                         const rtypes::timestep& t)
+                                         const rtypes::timestep& t,
+                                         const locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.cached_block_pickup"),
       cell2D_op(cache->dcenter2D()),
       mc_robot_id(robot_id),
       mc_timestep(t),
+      mc_locking(locking),
       m_real_cache(cache),
       m_sm(sm),
       m_pickup_block(pickup_block) {
@@ -106,6 +110,9 @@ void cached_block_pickup::visit(caching_arena_map& map) {
             cell.loc().to_str().c_str(),
             m_real_cache->n_blocks(),
             cell.block_count());
+
+  map.maybe_lock_wr(map.cache_mtx(),
+                    !(mc_locking & locking::ekCACHES_HELD));
   /*
    * If there are more than kMinBlocks blocks in cache, just remove one, and
    * update the underlying cell. If there are only kMinBlocks left, do the same
@@ -113,7 +120,6 @@ void cached_block_pickup::visit(caching_arena_map& map) {
    * is not a cache.
    */
   if (m_real_cache->n_blocks() > base_cache::kMinBlocks) {
-    /* Already holding cache mutex */
     visit(*m_real_cache);
 
     /*
@@ -130,19 +136,26 @@ void cached_block_pickup::visit(caching_arena_map& map) {
             m_pickup_block->id().v(),
             cache_id.v(),
             rcppsw::to_string(coord()).c_str(),
-            rcppsw::to_string(m_real_cache->blocks()).c_str(),
+            rcppsw::to_string(m_real_cache->n_blocks()).c_str(),
             m_real_cache->n_blocks());
   } else {
-    /* Already holding cache mutex */
     visit(*m_real_cache);
-    ER_ASSERT(1 == m_real_cache->blocks().size(),
+    ER_ASSERT(1 == m_real_cache->n_blocks(),
               "Cache%d@%s incorrect # blocks: %zu != 1",
               m_real_cache->id().v(),
               rcppsw::to_string(m_real_cache->dcenter2D()).c_str(),
-              m_real_cache->blocks().size());
-    m_orphan_block = m_real_cache->block_select(nullptr);
+              m_real_cache->n_blocks());
+    auto orphan_block = m_real_cache->block_select(nullptr);
 
-    map.lock_wr(map.grid_mtx());
+    /*
+     * We need the cache+grid mutex around clearing out the old cache
+     * celnl/extent, and the also the block mutex for dropping the orphan
+     * block. We acquire them all here, even though its a bit early, because we
+     * DO always need the locks to be acquired in the same order to avoid
+     * deadlocks. See COSM#151.
+     */
+    map.maybe_lock_wr(map.grid_mtx(),
+                      !(mc_locking & locking::ekGRID_HELD));
 
     /* Clear the cache extent cells (already holding cache mutex) */
     cache_extent_clear_visitor clear_op1(m_real_cache);
@@ -153,71 +166,55 @@ void cached_block_pickup::visit(caching_arena_map& map) {
     clear_op2.visit(cell);
 
     /*
-     * "Drop" orphan block on the old cache host cell. If the cell happens to
-     * be in a block cluster, we want to update cluster membership.
+     * Remove the cache from the arena. This must be BEFORE dropping the orphan
+     * block on the old host cell, so that the drop is an actual drop and does
+     * not trigger block distribution due to a cache conflict.
      */
+    map.cache_remove(m_real_cache, m_sm);
+
+    /* "Drop" orphan block on the old cache host cell. */
     caops::free_block_drop_visitor drop_op(
-        m_orphan_block,
+        orphan_block,
         coord(),
         map.grid_resolution(),
-        arena_map_locking::ekCACHES_AND_GRID_HELD,
-        true);
-    drop_op.visit(cell);
-    drop_op.visit(*m_orphan_block);
+        locking::ekALL_HELD);
+    drop_op.visit(map);
+    ER_INFO("Orphan block%d@%s released to arena",
+            orphan_block->id().v(),
+            rcppsw::to_string(orphan_block->danchor2D()).c_str());
 
-    /* set block extent cells for the orphan block */
-    block_extent_set_visitor set_op(m_orphan_block);
-    set_op.visit(map.decoratee());
-
-    map.unlock_wr(map.grid_mtx());
+    map.maybe_unlock_wr(map.grid_mtx(),
+                      !(mc_locking & locking::ekGRID_HELD));
 
     ER_ASSERT(cell.state_has_block(),
               "Depleted cache host cell@%s not in HAS_BLOCK",
               rcppsw::to_string(coord()).c_str());
-    ER_ASSERT(cell.block3D() == m_orphan_block,
+    ER_ASSERT(cell.block3D() == orphan_block,
               "Cell@%s does not refer to orphan block%d",
               rcppsw::to_string(coord()).c_str(),
-              m_orphan_block->id().v());
-
-    /* remove the cache from the arena (already holding cache mutex) */
-    map.cache_remove(m_real_cache, m_sm);
-
-    /*
-     * Update bloctree with the orphan block (needed for proper block drop
-     * conflict checking in the vicinity of the old cache).
-     */
-    map.bloctree_update(m_orphan_block, arena_map_locking::ekCACHES_HELD);
-
-    /*
-     * Possibly update block cluster membership. The block could have been part
-     * of a static cache which was inside a block cluster, and if a robot
-     * happens to come pick up the orphan block before the cache is re-created,
-     * this can cause a segfault with block cluster updating, because the free
-     * block is assumed to be part of the list of blocks a block cluster
-     * manages. See COSM#124.
-     */
-    map.block_distributor()->cluster_update_after_drop(m_orphan_block);
+              orphan_block->id().v());
 
     ER_INFO("Block%d picked up from cache%d@%s [depleted]",
             m_pickup_block->id().v(),
             cache_id.v(),
             rcppsw::to_string(coord()).c_str());
-    ER_INFO("Orphan block%d@%s released to arena",
-            m_orphan_block->id().v(),
-            rcppsw::to_string(m_orphan_block->danchor2D()).c_str());
   }
+  map.maybe_lock_wr(map.block_mtx(),
+                    !(mc_locking & locking::ekBLOCKS_HELD));
+
   /* finally, update state of arena map owned pickup block */
-  visit(*m_pickup_block, &map);
+  visit(*m_pickup_block);
+
+  map.maybe_unlock_wr(map.block_mtx(),
+                       !(mc_locking & locking::ekBLOCKS_HELD));
+
+  map.maybe_unlock_wr(map.cache_mtx(),
+                      !(mc_locking & locking::ekCACHES_HELD));
 } /* visit() */
 
-void cached_block_pickup::visit(crepr::base_block3D& block,
-                                caching_arena_map* map) {
+void cached_block_pickup::visit(crepr::base_block3D& block) {
   crops::block_pickup op(mc_robot_id, mc_timestep);
-
-  /* need to take mutex--not held in caller */
-  map->lock_wr(map->block_mtx());
   op.visit(block, crops::block_pickup_owner::ekARENA_MAP);
-  map->unlock_wr(map->block_mtx());
 } /* visit() */
 
 NS_END(detail, operations, arena, cosm);

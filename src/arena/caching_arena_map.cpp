@@ -79,7 +79,7 @@ bool caching_arena_map::initialize_private(void) {
                          * been taken.
                          */
                         bloctree_update(distributed,
-                                        arena_map_locking::ekALL_HELD);
+                                        locking::ekALL_HELD);
                       };
 
   bool ret = block_dispatcher()->initialize(this,
@@ -212,6 +212,7 @@ caching_arena_map::robot_on_block(const rmath::vector2d& pos,
 
 rtypes::type_uuid
 caching_arena_map::robot_on_cache(const rmath::vector2d& pos) const {
+  auto ret = rtypes::constants::kNoUUID;
   /*
    * We can't use the ID of the cache to index into the caches vector like we
    * can for blocks, because the ID is not guaranteed to be equal to the
@@ -220,23 +221,11 @@ caching_arena_map::robot_on_cache(const rmath::vector2d& pos) const {
    */
   for (auto& c : m_cacheso) {
     if (c->contains_point2D(pos)) {
-      return c->id();
+      ret = c->id();
     }
   } /* for(&c..) */
-  return rtypes::constants::kNoUUID;
+  return ret;
 } /* robot_on_cache() */
-
-void caching_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
-  maybe_lock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
-  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_lock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
-} /* pre_block_dist_lock() */
-
-void caching_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
-  maybe_unlock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
-  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_unlock_wr(cache_mtx(), !(locking & arena_map_locking::ekCACHES_HELD));
-} /* post_block_dist_unlock() */
 
 cds::block3D_vectorno caching_arena_map::free_blocks(bool oos_ok) const {
   cads::acache_vectorro rocaches;
@@ -317,8 +306,8 @@ error:
 } /* cloctree_verify() */
 
 void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
-                                        const arena_map_locking& locking) {
-  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+                                        const locking& locking) {
+  maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 
   auto created_it =
       std::find_if(m_created_caches.begin(),
@@ -344,10 +333,6 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
             bloctree()->size());
     bloctree()->remove(block);
   } else if (m_created_caches.end() != created_it) {
-    /*
-     * If we do things correctly, the update function only needs to check the
-     * newly created caches.
-     */
     ER_INFO("Remove block%s in created cache%s@%s/%s from loctree,size=%zu",
             rcppsw::to_string(block->id()).c_str(),
             rcppsw::to_string((*created_it)->id()).c_str(),
@@ -356,10 +341,6 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
             bloctree()->size());
     bloctree()->remove(block);
   } else if (m_cachesno.end() != existing_it) {
-    /*
-     * If we do things correctly, the update function only needs to check the
-     * newly created caches.
-     */
     ER_INFO("Remove block%s in existing cache%s@%s/%s from loctree,size=%zu",
             rcppsw::to_string(block->id()).c_str(),
             rcppsw::to_string((*existing_it)->id()).c_str(),
@@ -376,7 +357,7 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
     bloctree()->update(block);
   }
   ER_ASSERT(bloctree_verify(), "Block loctree failed verification");
-  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 } /* bloctree_update() */
 
 void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
@@ -394,5 +375,23 @@ void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
     m_cloctree->update(cache);
   }
 } /* cloctree_update() */
+
+void caching_arena_map::ordered_lock(const locking& locking) {
+    maybe_lock_wr(cache_mtx(),
+                !(locking & locking::ekCACHES_HELD));
+  maybe_lock_wr(block_mtx(),
+                !(locking & locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(),
+                !(locking & locking::ekGRID_HELD));
+} /* ordered_lock() */
+
+void caching_arena_map::ordered_unlock(const locking& locking) {
+  maybe_unlock_wr(grid_mtx(),
+                  !(locking & locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(),
+                  !(locking & locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(cache_mtx(),
+                !(locking & locking::ekCACHES_HELD));
+} /* ordered_unlock() */
 
 NS_END(arena, cosm);

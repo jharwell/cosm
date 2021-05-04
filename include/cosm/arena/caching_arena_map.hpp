@@ -89,7 +89,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
   /**
    * \brief Determine if a robot is currently on top of a cache (i.e. if the
-   * center of the robot has crossed over into the space occupied by the block
+   * center of the robot has crossed over into the space occupied by the cache
    * extent).
    *
    * While the robots also have their own means of checking if they are on a
@@ -97,16 +97,30 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * the final arbiter when deciding whether or not to trigger a cache related
    * event for a particular robot.
    *
+   * \note The cache mutex must be held when calling this function.
+   *
    * \param pos The position of a robot.
    *
    * \return The ID of the cache that the robot is on, or -1 if the robot is not
    * actually on a cache.
    */
-  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const RCPPSW_PURE;
+  rtypes::type_uuid robot_on_cache(const rmath::vector2d& pos) const;
 
+  /**
+   * \brief Determine if a robot is currently on top of a block (i.e. if the
+   * center of the robot has crossed over into the space occupied by the block
+   * extent).
+   *
+   * While the robots also have their own means of checking if they are on a
+   * block or not, there are some false positives, so this function is used as
+   * the final arbiter when deciding whether or not to trigger a block related
+   * event for a particular robot.
+   *
+   * \note The cache AND block mutexes must be held when calling this function.
+   */
   rtypes::type_uuid
   robot_on_block(const rmath::vector2d& pos,
-                 const rtypes::type_uuid& ent_id) const override RCPPSW_PURE;
+                 const rtypes::type_uuid& ent_id) const override;
 
   bool initialize(pal::argos_sm_adaptor* sm) override;
 
@@ -116,7 +130,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
                           const rmath::vector2d& loc) const override;
 
   void bloctree_update(const crepr::base_block3D* block,
-                       const arena_map_locking& locking) override;
+                       const locking& locking) override;
   void cloctree_update(const carepr::arena_cache* cache);
   /**
    * \brief Protects simultaneous updates to the caches vector.
@@ -144,9 +158,17 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   cds::const_spatial_entity_vector
   initial_dist_precalc(const crepr::base_block3D* block) const override;
 
+
+  void ordered_lock(const locking& locking) override;
+  void ordered_unlock(const locking& locking) override;
+
  private:
-  void pre_block_dist_lock(const arena_map_locking& locking) override;
-  void post_block_dist_unlock(const arena_map_locking& locking) override;
+  void pre_block_dist_lock(const locking& locking) override {
+    ordered_lock(locking);
+  }
+  void post_block_dist_unlock(const locking& locking) override {
+    ordered_unlock(locking);
+  }
   bool bloctree_verify(void) const override;
   bool cloctree_verify(void) const;
   bool initialize_private(void);

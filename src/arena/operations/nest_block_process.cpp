@@ -32,14 +32,6 @@
 NS_START(cosm, arena, operations, detail);
 
 /*******************************************************************************
- * Forward Declarations
- ******************************************************************************/
-static void do_lock(caching_arena_map& map);
-static void do_lock(base_arena_map& map);
-static void do_unlock(caching_arena_map& map);
-static void do_unlock(base_arena_map& map);
-
-/*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
 nest_block_process::nest_block_process(crepr::base_block3D* arena_block,
@@ -52,15 +44,21 @@ nest_block_process::nest_block_process(crepr::base_block3D* arena_block,
  * Member Functions
  ******************************************************************************/
 void nest_block_process::visit(base_arena_map& map) {
-  do_lock(map);
+  map.ordered_lock(locking::ekNONE_HELD);
   do_visit(map);
-  do_unlock(map);
+  map.ordered_unlock(locking::ekNONE_HELD);
 } /* visit() */
 
 void nest_block_process::visit(caching_arena_map& map) {
-  do_lock(map);
+  /*
+   * We don't need the cache mutex held here, BUT we do need the other two, and
+   * all mutexes always have to be acquired in the same order everywhere in
+   * order to avoid deadlocks. If we let arena map the acquire the cache mutex
+   * during block distribution, we can get a deadlock due to ordering.
+   */
+  map.ordered_lock(locking::ekNONE_HELD);
   do_visit(map);
-  do_unlock(map);
+  map.ordered_unlock(locking::ekNONE_HELD);
 } /* visit() */
 
 template <typename TArenaMap>
@@ -69,43 +67,12 @@ void nest_block_process::do_visit(TArenaMap& map) {
   visit(*m_arena_block);
 
   /* release block back into the wild */
-  map.distribute_single_block(m_arena_block, arena_map_locking::ekALL_HELD);
+  map.distribute_single_block(m_arena_block, locking::ekALL_HELD);
 } /* do_visit() */
 
 void nest_block_process::visit(crepr::base_block3D& block) {
   block.md()->reset_metrics();
   block.md()->distribution_time(mc_timestep);
 } /* visit() */
-
-/*******************************************************************************
- * Free Functions
- ******************************************************************************/
-void do_lock(caching_arena_map& map) {
-  /*
-   * We don't need the cache mutex held here, BUT we do need the other two, and
-   * all mutexes always have to be acquired in the same order everywhere in
-   * order to avoid deadlocks. If we let arena map acquire the cache mutex
-   * during block distribution, we can get a deadlock due to ordering.
-   */
-  map.lock_wr(map.cache_mtx());
-  map.lock_wr(map.block_mtx());
-  map.lock_wr(map.grid_mtx());
-} /* do_lock() */
-
-void do_unlock(caching_arena_map& map) {
-  map.unlock_wr(map.grid_mtx());
-  map.unlock_wr(map.block_mtx());
-  map.unlock_wr(map.cache_mtx());
-} /* do_unlock() */
-
-void do_lock(base_arena_map& map) {
-  map.lock_wr(map.block_mtx());
-  map.lock_wr(map.grid_mtx());
-} /* do_lock() */
-
-void do_unlock(base_arena_map& map) {
-  map.unlock_wr(map.block_mtx());
-  map.unlock_wr(map.grid_mtx());
-} /* do_unlock() */
 
 NS_END(detail, operations, arena, cosm);

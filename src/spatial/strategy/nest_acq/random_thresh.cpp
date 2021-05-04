@@ -47,8 +47,7 @@ void random_thresh::task_start(cta::taskable_argument* arg) {
 } /* task_start() */
 
 void random_thresh::task_execute(void) {
-  auto* ground =
-      saa()->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground = saa()->sensing()->ground();
   /*
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.

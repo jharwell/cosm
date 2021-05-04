@@ -47,7 +47,7 @@ NS_START(cosm, pal, config, xml);
  */
 class base_sm_repository : public rconfig::xml::xml_config_repository {
  public:
-  base_sm_repository(void) noexcept;
+  base_sm_repository(void) noexcept RCPPSW_COLD;
 };
 
 NS_END(xml, config, pal, cosm);

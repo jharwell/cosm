@@ -1,5 +1,5 @@
 /**
- * \file arena_map_locking.hpp
+ * \file locking.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_ARENA_MAP_LOCKING_HPP_
-#define INCLUDE_COSM_ARENA_ARENA_MAP_LOCKING_HPP_
+#ifndef INCLUDE_COSM_ARENA_LOCKING_HPP_
+#define INCLUDE_COSM_ARENA_LOCKING_HPP_
 
 /*******************************************************************************
  * Includes
@@ -39,14 +39,13 @@ NS_START(cosm, arena);
  * caching_arena_map locks are already held when an operation is performed, so
  * the correct locks will be taken internally.
  */
-enum class arena_map_locking : uint {
+enum class locking : uint {
   ekNONE_HELD = 1 << 0,
   ekBLOCKS_HELD = 1 << 1,
   ekCACHES_HELD = 1 << 2,
   ekGRID_HELD = 1 << 3,
-  ekCACHES_AND_GRID_HELD = ekCACHES_HELD | ekGRID_HELD,
   ekALL_HELD = ekNONE_HELD | ekBLOCKS_HELD | ekCACHES_HELD | ekGRID_HELD
 };
 NS_END(arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_ARENA_MAP_LOCKING_HPP_ */
+#endif /* INCLUDE_COSM_ARENA_LOCKING_HPP_ */

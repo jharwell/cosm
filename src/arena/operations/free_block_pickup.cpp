@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/free_block_pickup.hpp"
 
+#include "rcppsw/utils/maskable_enum.hpp"
+
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/operations/block_extent_clear.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
@@ -42,7 +44,7 @@ NS_START(cosm, arena, operations, detail);
 free_block_pickup free_block_pickup::by_robot(crepr::base_block3D* block,
                                               const rtypes::type_uuid& robot_id,
                                               const rtypes::timestep& t,
-                                              const arena_map_locking& locking) {
+                                              const locking& locking) {
   return free_block_pickup(block, robot_id, t, locking);
 } /* by_robot() */
 
@@ -59,13 +61,13 @@ free_block_pickup free_block_pickup::by_arena(crepr::base_block3D* block) {
   return free_block_pickup(block,
                            rtypes::constants::kNoUUID,
                            rtypes::timestep(-1),
-                           arena_map_locking::ekALL_HELD);
+                           locking::ekALL_HELD);
 } /* by_arena() */
 
 free_block_pickup::free_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id,
                                      const rtypes::timestep& t,
-                                     const arena_map_locking& locking)
+                                     const locking& locking)
     : ER_CLIENT_INIT("cosm.arena.operations.free_block_pickup"),
       cell2D_op(block->danchor2D()),
       mc_robot_id(robot_id),
@@ -84,7 +86,9 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
   caops::block_extent_clear_visitor ec(m_block);
   cdops::cell2D_empty_visitor hc(coord());
 
-  grid.mtx()->lock();
+  if (!(mc_locking & locking::ekGRID_HELD)) {
+    grid.mtx()->lock();
+  }
 
   /* mark host cell as empty (not done as part of clearing block extent) */
   hc.visit(grid);
@@ -92,7 +96,9 @@ void free_block_pickup::visit(cds::arena_grid& grid) {
   /* clear block extent */
   ec.visit(grid);
 
-  grid.mtx()->unlock();
+  if (!(mc_locking & locking::ekGRID_HELD)) {
+    grid.mtx()->unlock();
+  }
 
   if (rtypes::constants::kNoUUID != mc_robot_id) {
     /* Update block state--already holding block mutex if it is needed */

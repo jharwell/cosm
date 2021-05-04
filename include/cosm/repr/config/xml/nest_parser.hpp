@@ -56,7 +56,7 @@ class nest_parser final : public rconfig::xml::xml_config_parser {
    */
   inline static const std::string kXMLRoot = "nest";
 
-  static bool validate(const nest_config* config);
+  static bool validate(const nest_config* config) RCPPSW_ATTR(pure, cold);
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

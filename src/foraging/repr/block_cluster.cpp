@@ -66,7 +66,6 @@ void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
 
   auto& cell = block_cluster::cell(relative_to);
 
-  /* This can happen during initial block distribution and is not an error */
   ER_ASSERT(cell.state_has_block(),
             "Cell@%s not in HAS_BLOCK state: state=%d",
             rcppsw::to_string(dropped->danchor2D()).c_str(),
@@ -77,17 +76,14 @@ void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
             rcppsw::to_string(cell.block3D()->id()).c_str(),
             rcppsw::to_string(dropped->id()).c_str());
 
-  /*
-   * This function can be called as a part of a robot block drop OR as an arena
-   * block drop due to block motion. The contexts are different, so need need to
-   * avoid adding the block to the membership list if it already exists.
-   */
-  auto it = std::find_if(m_blocks.begin(),
-                         m_blocks.end(),
-                         [&](const auto* b) { return b->id() == dropped->id();});
-  if (it == m_blocks.end()) {
-    m_blocks.push_back(dropped);
-  }
+  ER_DEBUG("Add dropped block%d@%s/%s to cluster%d w/xspan=%s,yspan=%s",
+           dropped->id().v(),
+           rcppsw::to_string(dropped->ranchor2D()).c_str(),
+           rcppsw::to_string(dropped->danchor2D()).c_str(),
+           this->id().v(),
+           rcppsw::to_string(xdspan()).c_str(),
+           rcppsw::to_string(ydspan()).c_str());
+  m_blocks.push_back(dropped);
 } /* update_after_drop() */
 
 
@@ -99,6 +95,12 @@ void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
             "Block%s not in cluster%s",
             rcppsw::to_string(pickup_id).c_str(),
             rcppsw::to_string(this->id()).c_str());
+
+  ER_DEBUG("Remove block%d from cluster%d w/xspan=%s,yspan=%s",
+           pickup_id.v(),
+           this->id().v(),
+           rcppsw::to_string(xdspan()).c_str(),
+           rcppsw::to_string(ydspan()).c_str());
   m_blocks.erase(std::remove(m_blocks.begin(), m_blocks.end(), *it));
 
   it = std::find_if(m_blocks.begin(),

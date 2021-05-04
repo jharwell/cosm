@@ -33,7 +33,7 @@
 
 #include "cosm/ds/operations/cell2D_op.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/arena/arena_map_locking.hpp"
+#include "cosm/arena/locking.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -100,7 +100,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
   cache_block_drop(crepr::base_block3D* arena_block,
                    carepr::arena_cache* cache,
                    const rtypes::discretize_ratio& resolution,
-                   const arena_map_locking& locking);
+                   const locking& locking);
 
  private:
   void visit(cds::cell2D& cell);
@@ -109,7 +109,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
   void visit(carepr::arena_cache& cache);
 
   /* clang-format off */
-  const arena_map_locking        mc_locking;
+  const locking                  mc_locking;
   const rtypes::discretize_ratio mc_resolution;
 
   crepr::base_block3D*           m_arena_block;

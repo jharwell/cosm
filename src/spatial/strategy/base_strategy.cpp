@@ -45,10 +45,9 @@ base_strategy::base_strategy(csubsystem::saa_subsystemQ3D* const saa,
  * Member Functions
  ******************************************************************************/
 void base_strategy::phototaxis(void) {
-  auto* light = saa()->sensing()->template sensor<hal::sensors::light_sensor>();
+  auto* light = saa()->sensing()->light();
   saa()->steer_force2D().accum(
       saa()->steer_force2D().phototaxis(light->readings()));
-
 } /* phototaxis() */
 
 void base_strategy::wander(void) {
@@ -56,8 +55,7 @@ void base_strategy::wander(void) {
 } /* wander() */
 
 void base_strategy::handle_ca(void) {
-  auto* prox =
-      saa()->sensing()->template sensor<hal::sensors::proximity_sensor>();
+  auto* prox = saa()->sensing()->proximity();
   if (auto obs = prox->avg_prox_obj()) {
     inta_tracker()->inta_enter();
     saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));

@@ -78,10 +78,10 @@ class loctree final : public rpdecorator::decorator<detail::rtree_type> {
 
   size_t remove(const crepr::base_entity* ent);
 
-  RCPPSW_DECORATE_FUNC(query, const);
-  RCPPSW_DECORATE_FUNC(begin, const);
-  RCPPSW_DECORATE_FUNC(end, const);
-  RCPPSW_DECORATE_FUNC(size, const);
+  RCPPSW_DECORATE_DECLDEF(query, const);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
 
  private:
   template<typename TEntity>

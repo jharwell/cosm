@@ -95,7 +95,7 @@ std::list<nest_light> nest::init_rect(const rutils::color& color) const {
     loc0.set(rcenter2D().x(),
              (ranchor2D().y() + yrsize() * 0.25).v(),
              mc_config.light_height.v());
-    loc2.set(rcenter2D().x(),
+    loc1.set(rcenter2D().x(),
              (ranchor2D().y() + yrsize() * 0.5).v(),
              mc_config.light_height.v());
     loc2.set(rcenter2D().x(),

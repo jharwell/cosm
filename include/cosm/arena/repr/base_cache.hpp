@@ -74,11 +74,11 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    */
   struct params {
     /* clang-format off */
-    rtypes::spatial_dist        dimension; /* caches are square */
-    rtypes::discretize_ratio    resolution;
-    rmath::vector2d             center;
-    cds::block3D_vectorno       blocks;
-    rtypes::type_uuid           id;
+    rtypes::spatial_dist          dimension; /* caches are square */
+    rtypes::discretize_ratio      resolution;
+    rmath::vector2d               center;
+    const cds::block3D_vectorno&& blocks;
+    rtypes::type_uuid             id;
     /* clang-format on */
   };
   /**
@@ -112,14 +112,17 @@ class base_cache : public crepr::unicell_immovable_entity2D,
     return this->dcenter2D() == other.dcenter2D();
   }
 
+  void blocks_map_enable(void);
+
   bool contains_block(const crepr::base_block3D* const c_block) const RCPPSW_PURE;
-  size_t n_blocks(void) const { return blocks().size(); }
+  size_t n_blocks(void) const { return m_blocks_vec.size(); }
 
   /**
    * \brief Get a list of the blocks currently in the cache.
    */
-  cds::block3D_htno& blocks(void) { return m_blocks; }
-  const cds::block3D_htno& blocks(void) const { return m_blocks; }
+  cds::block3D_vectorno& blocks(void) { return m_blocks_vec; }
+  const cds::block3D_vectorno& blocks(void) const { return m_blocks_vec; }
+
 
   /**
    * \brief Add a new block to the cache's list of blocks.
@@ -150,8 +153,21 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
   const rtypes::discretize_ratio mc_resolution;
 
+  bool                           m_map_en{false};
   rtypes::timestep               m_creation{0};
-  cds::block3D_htno              m_blocks{};
+
+  /**
+   * \brief Map of blocks the cache contains. Allows for fast checking of "Does
+   * this cache contain this block?", but (much) slower clone()ing, so it is
+   * disabled by default.
+   */
+  cds::block3D_htno              m_blocks_map{};
+
+  /**
+   * \brief Vector of blocks the cache contains. Allows for fast clone()ing, but
+   * slower checking of "Does this cache contain this block?".
+   */
+  cds::block3D_vectorno          m_blocks_vec{};
   /* clang-format on */
 };
 

@@ -43,8 +43,7 @@ void wander::task_start(cta::taskable_argument*) {
 } /* task_start() */
 
 void wander::task_execute(void) {
-  auto* ground =
-      saa()->sensing()->template sensor<hal::sensors::ground_sensor>();
+  auto* ground = saa()->sensing()->ground();
 
   handle_ca();
 

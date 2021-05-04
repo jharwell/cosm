@@ -185,14 +185,16 @@ class base_arena_block_pickup
       ER_WARN("%s cannot pickup block%d: No such block",
               controller.GetId().c_str(),
               m_penalty_handler->penalty_find(controller)->id().v());
+
+      m_map->unlock_wr(m_map->block_mtx());
+
       robot_block_vanished_visitor_type vanished(p.id());
       vanished.visit(controller);
     } else {
       ER_ASSERT(pre_execute_check(p), "Pre-execute check failed");
       execute_pickup(controller, p, t);
+      m_map->unlock_wr(m_map->block_mtx());
     }
-    m_map->unlock_wr(m_map->block_mtx());
-
     m_penalty_handler->penalty_remove(p);
   }
 
@@ -208,7 +210,7 @@ class base_arena_block_pickup
 
     robot_block_pickup_visitor_type rpickup_op(block, controller.entity_id(), t);
     auto apickup_op = caops::free_block_pickup_visitor::by_robot(
-        block, controller.entity_id(), t, arena::arena_map_locking::ekBLOCKS_HELD);
+        block, controller.entity_id(), t, arena::locking::ekBLOCKS_HELD);
 
     /* update bookkeeping */
     robot_previsit_hook(controller, penalty);

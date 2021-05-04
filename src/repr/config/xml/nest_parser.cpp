@@ -44,6 +44,11 @@ void nest_parser::parse(const ticpp::Element& node) {
 
   XML_PARSE_ATTR(nnode, m_config, center);
   XML_PARSE_ATTR(nnode, m_config, dims);
+
+  /*
+   * Light height/intensity not needed when the <nest> tag is parsed by
+   * controllers.
+   */
   XML_PARSE_ATTR_DFLT(nnode, m_config, light_height, rtypes::spatial_dist(0));
   XML_PARSE_ATTR_DFLT(nnode, m_config, light_intensity, -1.0);
 } /* parse() */

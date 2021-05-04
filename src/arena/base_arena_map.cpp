@@ -160,7 +160,7 @@ bool base_arena_map::initialize_private(void) {
                          * been taken.
                          */
                         bloctree_update(distributed,
-                                        arena_map_locking::ekALL_HELD);
+                                        locking::ekALL_HELD);
                       };
 
   bool ret = m_block_dispatcher->initialize(this,
@@ -195,18 +195,14 @@ update_status base_arena_map::pre_step_update(const rtypes::timestep&) {
 
 void base_arena_map::post_step_update(const rtypes::timestep& t,
                                       size_t blocks_transported,
-                                      bool block_op,
                                       bool convergence_status) {
   redist_governor()->update(t, blocks_transported, convergence_status);
-
-  if (block_op) {
-    m_block_dispatcher->distributor()->clusters_update();
-  }
 } /* post_step_update() */
 
 rtypes::type_uuid
 base_arena_map::robot_on_block(const rmath::vector2d& pos,
                                const rtypes::type_uuid& ent_id) const {
+  auto ret = rtypes::constants::kNoUUID;
   /*
    * If the robot actually is on the block they think they are, we can short
    * circuit what may be an expensive linear search. ent_id MIGHT be for a
@@ -216,16 +212,16 @@ base_arena_map::robot_on_block(const rmath::vector2d& pos,
   if (ent_id != rtypes::constants::kNoUUID &&
       static_cast<size_t>(ent_id.v()) < m_blockso.size() &&
       m_blockso[ent_id.v()]->contains_point2D(pos)) {
-    return ent_id;
+    ret = ent_id;
+  } else {
+    /* General case: linear scan */
+    for (auto& b : m_blockso) {
+      if (b->contains_point2D(pos)) {
+        ret = b->id();
+      }
+    } /* for(&b..) */
   }
-
-  /* General case: linear scan */
-  for (auto& b : m_blockso) {
-    if (b->contains_point2D(pos)) {
-      return b->id();
-    }
-  } /* for(&b..) */
-  return rtypes::constants::kNoUUID;
+  return ret;
 } /* robot_on_block() */
 
 rtypes::type_uuid
@@ -240,7 +236,7 @@ base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
 } /* robot_in_nest() */
 
 void base_arena_map::distribute_single_block(crepr::base_block3D* block,
-                                             const arena_map_locking& locking) {
+                                             const locking& locking) {
   /* The distribution of nothing is ALWAYS successful */
   if (!m_redist_governor.dist_status()) {
     return;
@@ -317,14 +313,14 @@ error:
   return false;
 } /* distribute_all_blocks() */
 
-void base_arena_map::pre_block_dist_lock(const arena_map_locking& locking) {
-  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
-  maybe_lock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
+void base_arena_map::pre_block_dist_lock(const locking& locking) {
+  maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
 } /* pre_block_dist_lock() */
 
-void base_arena_map::post_block_dist_unlock(const arena_map_locking& locking) {
-  maybe_unlock_wr(grid_mtx(), !(locking & arena_map_locking::ekGRID_HELD));
-  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+void base_arena_map::post_block_dist_unlock(const locking& locking) {
+  maybe_unlock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 } /* post_block_dist_unlock() */
 
 const crepr::nest* base_arena_map::nest(const rtypes::type_uuid& id) const {
@@ -356,15 +352,15 @@ bool base_arena_map::placement_conflict(const crepr::base_block3D* const block,
 } /* placement_conflict() */
 
 void base_arena_map::bloctree_update(const crepr::base_block3D* block,
-                                     const arena_map_locking& locking) {
-  maybe_lock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+                                     const locking& locking) {
+  maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 
   /*
    * If the block is currently carried by a robot, it is not in the arena, so
    * don't put it in the loctree, which only contains free blocks.
    */
   if (block->is_out_of_sight()) {
-    ER_INFO("Remove out of sight block%s from loctree,size=%zu",
+    ER_INFO("Remove out of sight block%s from loctree,before_size=%zu",
             rcppsw::to_string(block->id()).c_str(),
             bloctree()->size());
     m_bloctree->remove(block);
@@ -377,7 +373,7 @@ void base_arena_map::bloctree_update(const crepr::base_block3D* block,
     m_bloctree->update(block);
   }
   ER_ASSERT(bloctree_verify(), "Bloctree failed verification");
-  maybe_unlock_wr(block_mtx(), !(locking & arena_map_locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 } /* bloctree_update() */
 
 bool base_arena_map::bloctree_verify(void) const {
@@ -394,5 +390,19 @@ error:
   ER_FATAL_SENTINEL("Bloctree failed verification")
   return false;
 } /* bloctree_verify() */
+
+void base_arena_map::ordered_lock(const locking& locking) {
+  maybe_lock_wr(block_mtx(),
+                !(locking & locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(),
+                !(locking & locking::ekGRID_HELD));
+} /* ordered_lock() */
+
+void base_arena_map::ordered_unlock(const locking& locking) {
+  maybe_unlock_wr(grid_mtx(),
+                  !(locking & locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(),
+                !(locking & locking::ekBLOCKS_HELD));
+} /* ordered_unlock() */
 
 NS_END(arena, cosm);
