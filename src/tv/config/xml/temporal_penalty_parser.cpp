@@ -1,7 +1,7 @@
 /**
- * \file base_env_dynamics_config.hpp
+ * \file temporal_penalty_parser.cpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,38 +18,42 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
-#define INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-
-#include "cosm/tv/config/temporal_penalty_config.hpp"
-#include "cosm/tv/config/robot_dynamics_applicator_config.hpp"
-#include "cosm/cosm.hpp"
+#include "cosm/tv/config/xml/temporal_penalty_parser.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv, config);
+NS_START(cosm, tv, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct base_env_dynamics_config
- * \ingroup tv config
- *
- * \brief Base configuration that can be reused for the environmental dynamics
- * managers defined in projects built on COSM.
- */
-struct base_env_dynamics_config : public rconfig::base_config {
-  ctv::config::robot_dynamics_applicator_config rda{};
-  ctv::config::temporal_penalty_config block_manip_penalty{};
-};
+void temporal_penalty_parser::parse(const ticpp::Element& node) {
+  if (nullptr != node.FirstChild(m_xml_root, false)) {
+    ticpp::Element anode = node_get(node, m_xml_root);
+    m_config = std::make_unique<config_type>();
 
-NS_END(tv, config, cosm);
+    XML_PARSE_ATTR_DFLT(anode, m_config, unique_finish, true);
 
-#endif /* INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_ */
+    /* parse waveform */
+    m_waveform.parse(anode);
+    if (m_waveform.is_parsed()) {
+      m_config->waveform = *m_waveform.config_get<rct::config::xml::waveform_parser::config_type>();
+    }
+  }
+} /* parse() */
+
+bool temporal_penalty_parser::validate(void) const {
+  if (is_parsed()) {
+    RCPPSW_CHECK(m_waveform.validate());
+  }
+  return true;
+
+error:
+  return false;
+} /* validate() */
+
+NS_END(xml, config, tv, cosm);

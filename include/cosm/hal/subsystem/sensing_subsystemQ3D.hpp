@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <typeindex>
-#include <map>
+#include <unordered_map>
 #include <boost/variant.hpp>
 
 #include "rcppsw/mpl/typelist.hpp"
@@ -103,7 +103,7 @@ NS_START(cosm, hal, subsystem);
 class sensing_subsystemQ3D {
  public:
   using variant_type = boost::variant<COSM_HAL_ROBOT_SENSOR_TYPES>;
-  using sensor_map = std::map<std::type_index, variant_type>;
+  using sensor_map = std::unordered_map<std::type_index, variant_type>;
 
   /**
    * \brief Convenience function to create a sensor map create for the

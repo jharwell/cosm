@@ -71,6 +71,8 @@ void saa_subsystemQ3D::steer_force2D_apply(void) {
 
 rmath::vector2d saa_subsystemQ3D::linear_velocity(void) const {
   auto speed = sensing()->diff_drive()->current_speed();
+  auto azimuth = sensing()->azimuth();
+
   /*
    * If speed comes back as 0.0, then we are executing a hard turn, probably as
    * we vector somewhere. In order to have the arrival force work properly, we
@@ -81,9 +83,9 @@ rmath::vector2d saa_subsystemQ3D::linear_velocity(void) const {
    * There probably is a better way to do this, but I don't know what it is.
    */
   if (speed <= std::numeric_limits<double>::epsilon()) {
-    return { 0.1, sensing()->azimuth() };
+    return { 0.01, azimuth };
   } else {
-    return { sensing()->diff_drive()->current_speed(), sensing()->azimuth() };
+    return { speed, azimuth };
   }
 } /* linear_velocity() */
 
