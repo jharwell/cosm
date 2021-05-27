@@ -60,7 +60,6 @@ class crw : public csstrategy::base_strategy,
   void task_start(cta::taskable_argument*) override final {
     m_task_running = true;
   }
-  void task_reset(void) override final { m_task_running = false; }
   bool task_running(void) const override final { return m_task_running; }
 
   /**
@@ -69,6 +68,7 @@ class crw : public csstrategy::base_strategy,
    */
   bool task_finished(void) const override final { return false; }
   void task_execute(void) override final;
+  void task_reset(void) override final;
 
   /* prototype overrides */
   std::unique_ptr<base_strategy> clone(void) const override {

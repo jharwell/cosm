@@ -69,6 +69,7 @@ class base_arena_block_pickup
  public:
   using controller_spec =
       typename boost::mpl::at<TControllerSpecMap, TController>::type;
+  using penalty_init_status_type = typename controller_spec::penalty_init_status_type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
   using interactor_status_type = typename controller_spec::interactor_status_type;
@@ -98,9 +99,16 @@ class base_arena_block_pickup
    * handler type is unknown, and therefore so are the arguments needed for
    * initializing the penalty, beyond the controller and the timestep.
    */
-  virtual void robot_penalty_init(const TController& controller,
-                                  const rtypes::timestep& t,
-                                  penalty_handler_type* handler) = 0;
+  virtual penalty_init_status_type robot_penalty_init(const TController& controller,
+                                                      const rtypes::timestep& t,
+                                                      penalty_handler_type* handler) = 0;
+
+  /**
+   * \brief Called after \ref robot_penalty_init, and passed whatever the return
+   * status from that function was.
+   */
+  virtual void robot_post_penalty_init_hook(TController&,
+                                            const penalty_init_status_type&) const {}
 
   /**
    * \brief Determine if the robot has acquired its goal (a block in this
@@ -132,11 +140,11 @@ class base_arena_block_pickup
         ER_ASSERT(pre_process_check(controller), "Pre-pickup  check failed");
         process_pickup(controller, t);
         ER_ASSERT(post_process_check(controller), "Post-pickup check failed");
-
         return interactor_status_type::ekARENA_FREE_BLOCK_PICKUP;
       }
     } else {
-      robot_penalty_init(controller, t, m_penalty_handler);
+      auto status = robot_penalty_init(controller, t, m_penalty_handler);
+      robot_post_penalty_init_hook(controller, status);
     }
     return interactor_status_type::ekNO_EVENT;
   }
@@ -185,7 +193,6 @@ class base_arena_block_pickup
       ER_WARN("%s cannot pickup block%d: No such block",
               controller.GetId().c_str(),
               m_penalty_handler->penalty_find(controller)->id().v());
-
       m_map->unlock_wr(m_map->block_mtx());
 
       robot_block_vanished_visitor_type vanished(p.id());

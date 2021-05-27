@@ -67,18 +67,10 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm, leaving_nest, rpfsm::event_data* da
    * nest. Instead, wander about within the nest until you find the edge (either
    * on your own or being pushed out via collision avoidance).
    */
-  auto* prox =
-      saa()->sensing()->template sensor<hal::sensors::proximity_sensor>();
-  if (auto obs = prox->avg_prox_obj()) {
-    inta_tracker()->inta_enter();
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
-  } else {
-    inta_tracker()->inta_exit();
-  }
+  ca_state_update();
   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
 
-  auto* ground = saa()->sensing()->template sensor<hal::sensors::ground_sensor>();
-  if (!ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (!saa()->sensing()->ground()->detect(hal::sensors::ground_sensor::kNestTarget)) {
     return csfsm::util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
@@ -100,7 +92,8 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   if (!m_nest_acq->task_running()) {
     /* We have entered the nest, so perform our acquisition strategy */
     if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
-      csfsm::point_argument arg(-1, data->nest_loc); /* tolerance not used */
+      /* tolerance not used at this level */
+      csfsm::point_argument arg(-1, data->nest_loc);
       m_nest_acq->task_reset();
       m_nest_acq->task_start(&arg);
     }
@@ -113,24 +106,17 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
         /*
          * We have arrived at the nest so stop moving and signal.
          */
-        saa()->actuation()->actuator<ckin2D::governed_diff_drive>()->reset();
+        saa()->actuation()->governed_diff_drive()->reset();
+        event_data_hold(false);
         return csfsm::util_signal::ekENTERED_NEST;
       } else { /* we are somehow outside the nest--try again */
         m_nest_acq->task_reset();
       }
     }
   } else { /* still outside the nest, just phototaxis + collision avoidance */
-    auto* prox =
-        saa()->sensing()->template sensor<hal::sensors::proximity_sensor>();
-    if (auto obs = prox->avg_prox_obj()) {
-      inta_tracker()->inta_enter();
-      saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
-    } else {
-      inta_tracker()->inta_exit();
-    }
-    auto* light = saa()->sensing()->template sensor<hal::sensors::light_sensor>();
-    saa()->steer_force2D().accum(
-        saa()->steer_force2D().phototaxis(light->readings()));
+    ca_state_update();
+    auto readings = saa()->sensing()->light()->readings();
+    saa()->steer_force2D().accum(saa()->steer_force2D().phototaxis(readings));
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* transport_to_nest() */
@@ -158,5 +144,17 @@ RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
                           m_nest_acq,
                           nullptr,
                           const);
+
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void foraging_util_hfsm::ca_state_update(void) {
+  if (auto obs = saa()->sensing()->proximity()->avg_prox_obj()) {
+    inta_tracker()->inta_enter();
+    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
+  } else {
+    inta_tracker()->inta_exit();
+  }
+} /* ca_state_update() */
 
 NS_END(fsm, foraging, cosm);

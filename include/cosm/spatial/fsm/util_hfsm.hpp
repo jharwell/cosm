@@ -74,6 +74,7 @@ class util_hfsm : public rpfsm::hfsm,
   util_hfsm(const util_hfsm&) = delete;
   util_hfsm& operator=(const util_hfsm&) = delete;
 
+  void init(void) override;
   csubsystem::sensing_subsystemQ3D* sensing(void) RCPPSW_PURE;
   const csubsystem::sensing_subsystemQ3D* sensing(void) const RCPPSW_PURE;
 

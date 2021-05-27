@@ -61,7 +61,7 @@ class vector_fsm final : public csfsm::util_hfsm,
   vector_fsm(const vector_fsm&) = delete;
 
   /* taskable overrides */
-  void task_reset(void) override { init(); }
+  void task_reset(void) override;
   bool task_running(void) const override {
     return current_state() != ekST_START && current_state() != ekST_ARRIVED;
   }

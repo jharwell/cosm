@@ -95,7 +95,7 @@ rtypes::timestep temporal_penalty_handler::penalty_add(
    * the SAME lock-unlock sequence (not two separate sequences) in order for
    * all robots to always obey cache pickup policies. See COSM#625.
    */
-  std::scoped_lock lock(m_list_mtx);
+  lock_wr(&m_list_mtx);
   auto duration = orig_duration;
 
   if (mc_unique_finish) {
@@ -103,23 +103,38 @@ rtypes::timestep temporal_penalty_handler::penalty_add(
   }
 
   m_penalty_list.push_back(temporal_penalty(controller, id, duration, start));
+  unlock_wr(&m_list_mtx);
   return duration;
 } /* penalty_add() */
 
-RCPPSW_PURE bool
-temporal_penalty_handler::is_penalty_satisfied(
+void temporal_penalty_handler::penalty_remove(const temporal_penalty& victim,
+                                              bool lock) {
+  maybe_lock_wr(&m_list_mtx, lock);
+  m_penalty_list.remove(victim);
+  maybe_unlock_wr(&m_list_mtx, lock);
+} /* penalty_remove() */
+
+temporal_penalty temporal_penalty_handler::penalty_next(void) const {
+  lock_rd(&m_list_mtx);
+  auto ret = m_penalty_list.front();
+  unlock_rd(&m_list_mtx);
+  return ret;
+} /* penalty_next() */
+
+bool temporal_penalty_handler::is_penalty_satisfied(
     const controller::base_controller& controller,
     const rtypes::timestep& t) const {
-  std::scoped_lock lock(m_list_mtx);
+  bool ret = false;
+  lock_rd(&m_list_mtx);
   auto it = penalty_find(controller, false);
   if (it != m_penalty_list.end()) {
-    return it->penalty_satisfied(t);
+    ret = it->penalty_satisfied(t);
   }
-  return false;
+  unlock_rd(&m_list_mtx);
+  return ret;
 } /* is_penalty_satisfied() */
 
-RCPPSW_PURE bool
-temporal_penalty_handler::is_serving_penalty(
+bool temporal_penalty_handler::is_serving_penalty(
     const controller::base_controller& controller,
                    bool lock) const {
   maybe_lock_rd(&m_list_mtx, lock);

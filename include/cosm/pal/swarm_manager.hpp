@@ -33,6 +33,7 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rng.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -93,8 +94,12 @@ class swarm_manager : public rer::client<swarm_manager> {
   void output_init(const std::string& output_root,
                    const std::string& output_dir) RCPPSW_COLD;
 
+  void timestep(const rtypes::timestep& t) { m_timestep = t; }
+  const rtypes::timestep& timestep(void) const { return m_timestep; }
+
  private:
   /* clang-format off */
+  rtypes::timestep                 m_timestep{0};
   std::string                      m_output_root{};
   rmath::rng*                      m_rng{nullptr};
   /* clang-format on */

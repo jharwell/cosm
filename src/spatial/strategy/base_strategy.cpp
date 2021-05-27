@@ -54,13 +54,16 @@ void base_strategy::wander(void) {
   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
 } /* wander() */
 
-void base_strategy::handle_ca(void) {
+bool base_strategy::handle_ca(void) {
   auto* prox = saa()->sensing()->proximity();
+
   if (auto obs = prox->avg_prox_obj()) {
     inta_tracker()->inta_enter();
     saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
+    return true;
   } else {
     inta_tracker()->inta_exit();
+    return false;
   }
 } /* handle_ca() */
 

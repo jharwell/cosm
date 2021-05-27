@@ -92,21 +92,10 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   RCPPSW_WRAP_DECL_OVERRIDE(rmath::vector3z, interference_loc3D, const);
 
   /* taskable overrides */
-  bool task_finished(void) const override {
-    return ekST_FINISHED == current_state();
-  }
+  bool task_finished(void) const override RCPPSW_PURE;
+  void task_start(ta::taskable_argument* c_arg) override;
   bool task_running(void) const override RCPPSW_PURE;
-  void task_reset(void) override {
-    init();
-    if (nullptr != m_explore_behavior) {
-      m_explore_behavior->task_reset();
-    }
-  }
-  void task_start(ta::taskable_argument* c_arg) override {
-    if (nullptr != m_explore_behavior) {
-      m_explore_behavior->task_start(c_arg);
-    }
-  }
+  void task_reset(void) override;
   void task_execute(void) override;
 
  private:

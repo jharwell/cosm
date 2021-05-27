@@ -69,6 +69,8 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
     rmath::vector2d nest_loc;
   };
 
+  void ca_state_update(void);
+
   RCPPSW_WRAP_DECL_OVERRIDE(const cssnest_acq::base_nest_acq*,
                             nest_acq_strategy,
                             const);

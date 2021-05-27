@@ -83,4 +83,11 @@ void interference_tracker::inta_exit(void) {
   m_entered_interference = false; /* catches 1 timestep interferences correctly */
 } /* inta_exit() */
 
+void interference_tracker::inta_reset(void) {
+  m_entered_interference = false;
+  m_exited_interference = false;
+  m_exp_interference = false;
+  m_interference_start = rtypes::timestep(0);
+} /* inta_reset() */
+
 NS_END(spatial, cosm);

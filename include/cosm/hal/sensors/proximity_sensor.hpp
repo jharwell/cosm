@@ -135,7 +135,7 @@ class proximity_sensor_impl final : public rer::client<proximity_sensor_impl<TSe
     }
     if (mc_config.fov.contains(accum.angle()) &&
         accum.length() <= mc_config.delta) {
-      return boost::optional<rmath::vector2d>();
+      return boost::none;
     } else {
       return boost::make_optional(accum);
     }

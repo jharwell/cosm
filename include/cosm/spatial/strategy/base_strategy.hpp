@@ -80,7 +80,7 @@ class base_strategy : public csmetrics::interference_metrics,
   cspatial::interference_tracker* inta_tracker(void) {
     return &m_inta_tracker;
   }
-  void handle_ca(void);
+  bool handle_ca(void);
   void phototaxis(void);
   void wander(void);
 

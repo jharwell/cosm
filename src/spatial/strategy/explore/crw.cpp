@@ -34,38 +34,37 @@ NS_START(cosm, spatial, strategy, explore);
  * Constructors/Destructor
  ******************************************************************************/
 crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-    : base_strategy(saa, rng), ER_CLIENT_INIT("cosm.spatial.strategy.crw") {}
+    : base_strategy(saa, rng),
+      ER_CLIENT_INIT("cosm.spatial.strategy.explore.crw") {}
 
 /*******************************************************************************
- * General Member Functions
+ * Taskable Interface
  ******************************************************************************/
 void crw::task_execute(void) {
-  saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
-  auto* prox = saa()->sensing()->sensor<chal::sensors::proximity_sensor>();
-  auto* leds = saa()->actuation()->actuator<chal::actuators::led_actuator>();
+  /* apply wander force */
+  wander();
 
-  if (auto obs = prox->avg_prox_obj()) {
-    inta_tracker()->inta_enter();
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
-
-    ER_DEBUG("Found threatening obstacle: %s@%f [%f]",
-             obs->to_str().c_str(),
-             obs->angle().v(),
-             obs->length());
-    leds->set_color(-1, rutils::color::kRED);
+  /* Set LEDs in accordance with obstacle detection */
+  if (handle_ca()) {
+    saa()->actuation()->leds()->set_color(-1, rutils::color::kRED);
   } else {
-    inta_tracker()->inta_exit();
-
-    ER_DEBUG("No threatening obstacle found");
-    leds->set_color(-1, rutils::color::kMAGENTA);
-    rmath::vector2d force = saa()->steer_force2D().value();
-    /*
-     * This can be 0 if the wander force is not active this timestep.
-     */
-    if (force.length() >= std::numeric_limits<double>::epsilon()) {
-      saa()->steer_force2D().value(saa()->steer_force2D().value() * 0.7);
-    }
+    saa()->actuation()->leds()->set_color(-1, rutils::color::kMAGENTA);
   }
 } /* task_execute() */
+
+void crw::task_reset(void) {
+  /* no longer running */
+  m_task_running = false;
+
+  /*
+   * If we happened to be experiencing interference, reset that state. This is
+   * needed so if we are wandering and experiencing interference, AND trigger a
+   * change to FSM state which results in not executing CRW for a while, when we
+   * come back to CRW again we probably won't be experiencing interference, so
+   * we don't want to report that we are.
+   */
+  inta_tracker()->inta_reset();
+} /* task_reset() */
+
 
 NS_END(explore, strategy, spatial, cosm);

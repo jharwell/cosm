@@ -72,6 +72,8 @@ class interference_tracker : public csmetrics::interference_metrics {
    */
   void inta_exit(void);
 
+  void inta_reset(void);
+
  private:
   /* clang-format off */
   const subsystem::sensing_subsystemQ3D* const mc_sensing;

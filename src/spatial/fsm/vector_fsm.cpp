@@ -242,10 +242,9 @@ void vector_fsm::task_execute(void) {
   inject_event(util_signal::ekRUN, rpfsm::event_type::ekNORMAL);
 } /* task_execute() */
 
-void vector_fsm::init(void) {
-  actuation()->reset();
-  util_hfsm::init();
-} /* init() */
+void vector_fsm::task_reset(void) {
+  init();
+} /* task_reset() */
 
 /*******************************************************************************
  * Member Functions
@@ -253,5 +252,10 @@ void vector_fsm::init(void) {
 rmath::vector2d vector_fsm::calc_vector_to_goal(const rmath::vector2d& goal) {
   return goal - sensing()->rpos2D();
 } /* calc_vector_to_goal() */
+
+void vector_fsm::init(void) {
+  actuation()->reset();
+  util_hfsm::init();
+} /* init() */
 
 NS_END(fsm, spatial, cosm);

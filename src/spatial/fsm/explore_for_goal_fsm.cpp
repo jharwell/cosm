@@ -73,8 +73,7 @@ RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, finished) {
 
 RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   if (ekST_EXPLORE != last_state()) {
-    ER_DEBUG("Executing ekST_EXPLORE");
-    m_explore_time = 0;
+    ER_DEBUG("Executing ekST_EXPLORE\n");
   }
 
   if (m_explore_time >= kMIN_EXPLORE_TIME && m_goal_detect()) {
@@ -89,8 +88,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
 }
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
-  actuation()->actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kMAGENTA);
+  actuation()->leds()->set_color(-1, rutils::color::kMAGENTA);
 }
 
 /*******************************************************************************
@@ -119,15 +117,40 @@ RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
                          const);
 
 /*******************************************************************************
- * General Member Functions
+ * Taskable Interface
  ******************************************************************************/
+bool explore_for_goal_fsm::task_finished(void) const {
+  return ekST_FINISHED == current_state();
+}
+
 bool explore_for_goal_fsm::task_running(void) const {
-  return ekST_START != current_state() && ekST_FINISHED != current_state() &&
-         nullptr != m_explore_behavior;
+  return ekST_EXPLORE == current_state() && nullptr != m_explore_behavior;
 }
 
 void explore_for_goal_fsm::task_execute(void) {
   inject_event(util_signal::ekRUN, rpfsm::event_type::ekNORMAL);
 } /* task_execute() */
+
+void explore_for_goal_fsm::task_reset(void) {
+  init();
+  m_explore_time = 0;
+  if (nullptr != m_explore_behavior) {
+    m_explore_behavior->task_reset();
+  }
+}
+
+void explore_for_goal_fsm::task_start(ta::taskable_argument* c_arg) {
+  if (nullptr != m_explore_behavior) {
+    m_explore_behavior->task_start(c_arg);
+  }
+
+  static const uint8_t kTRANSITIONS[] = {
+    ekST_EXPLORE, /* start */
+    ekST_EXPLORE, /* explore */
+    ekST_EXPLORE, /* finished */
+  };
+  RCPPSW_HFSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
+  external_event(kTRANSITIONS[current_state()]);
+}
 
 NS_END(fsm, spatial, cosm);

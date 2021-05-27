@@ -78,4 +78,9 @@ csubsystem::actuation_subsystem2D* util_hfsm::actuation(void) const {
   return m_saa->actuation();
 }
 
+void util_hfsm::init(void) {
+  hfsm::init();
+  m_tracker.inta_reset();
+} /* init() */
+
 NS_END(fsm, spatial, cosm);

@@ -122,9 +122,15 @@ set(${target}_SYS_INCLUDE_DIRS
   ${rcppsw_SYS_INCLUDE_DIRS}
   ${COSM_DEPS_PREFIX}/include
   ${CMAKE_CURRENT_SOURCE_DIR}
-  # Not needed for compilation, but for rtags
-  /usr/include/lua5.3)
+  )
 
+if(NOT "${COSM_BUILD_ENV}" MATCHES "MSI" )
+  set(${target}_SYS_INCLUDE_DIRS
+    ${${target}_SYS_INCLUDE_DIRS}
+    # Not needed for compilation, but for rtags
+    /usr/include/lua5.3
+    )
+endif()
 ################################################################################
 # Libraries                                                                    #
 ################################################################################

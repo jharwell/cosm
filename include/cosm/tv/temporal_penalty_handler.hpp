@@ -85,10 +85,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
   /**
    * \brief Get the next penalty which will be satisfied from the list.
    */
-  temporal_penalty penalty_next(void) const {
-    std::scoped_lock lock(m_list_mtx);
-    return m_penalty_list.front();
-  }
+  temporal_penalty penalty_next(void) const;
 
   /**
    * \brief Remove the specified penalty from the list once the robot it
@@ -99,11 +96,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
    *             Should *ALWAYS* be \c TRUE if the function is called external
    *             to this class.
    */
-  void penalty_remove(const temporal_penalty& victim, bool lock = true) {
-    maybe_lock_wr(&m_list_mtx, lock);
-    m_penalty_list.remove(victim);
-    maybe_unlock_wr(&m_list_mtx, lock);
-  }
+  void penalty_remove(const temporal_penalty& victim, bool lock = true);
 
   /**
    * \brief Abort a robot's serving of its penalty.
