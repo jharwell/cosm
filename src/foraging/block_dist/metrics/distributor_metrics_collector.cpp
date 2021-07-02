@@ -34,69 +34,29 @@ NS_START(cosm, foraging, block_dist, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 distributor_metrics_collector::distributor_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-distributor_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "n_configured_clusters",
-    "n_mapped_clusters",
-    "capacity",
-    "int_avg_size",
-    "cum_avg_size",
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void distributor_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
-boost::optional<std::string> distributor_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += rcppsw::to_string(m_cum.n_configured_clusters) + separator();
-  line += rcppsw::to_string(m_cum.n_mapped_clusters) + separator();
-  line += rcppsw::to_string(m_cum.capacity) + separator();
-
-  line += csv_entry_intavg(m_interval.size);
-  line += csv_entry_tsavg(m_cum.size);
-
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void distributor_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const distributor_metrics&>(metrics);
 
-  m_interval.n_configured_clusters = m.n_configured_clusters();
-  m_interval.n_mapped_clusters = m.n_mapped_clusters();
-  m_interval.capacity = m.capacity();
-  m_interval.size += m.size();
+  m_data.interval.n_configured_clusters = m.n_configured_clusters();
+  m_data.interval.n_mapped_clusters = m.n_mapped_clusters();
+  m_data.interval.capacity = m.capacity();
+  m_data.interval.size += m.size();
 
-  m_cum.n_configured_clusters = m.n_configured_clusters();
-  m_cum.n_mapped_clusters = m.n_mapped_clusters();
-  m_cum.capacity = m.capacity();
-  m_cum.size += m.size();
+  m_data.cum.n_configured_clusters = m.n_configured_clusters();
+  m_data.cum.n_mapped_clusters = m.n_mapped_clusters();
+  m_data.cum.capacity = m.capacity();
+  m_data.cum.size += m.size();
 } /* collect() */
 
 void distributor_metrics_collector::reset_after_interval(void) {
-  m_interval.size = 0;
+  m_data.interval.size = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, block_dist, foraging, cosm);

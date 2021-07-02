@@ -1,7 +1,7 @@
 /**
- * \file metrics_config.hpp
+ * \file dist2D_pos_metrics_csv_sink.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,44 +18,30 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_
-#define INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_DIST2D_POS_METRICS_CSV_SINK_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_DIST2D_POS_METRICS_CSV_SINK_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <map>
-#include <string>
-
-#include "rcppsw/config/base_config.hpp"
-#include "rcppsw/rcppsw.hpp"
-#include "rcppsw/types/timestep.hpp"
+#include "rcppsw/metrics/spatial/grid2D_metrics_csv_sink.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, config);
+NS_START(cosm, spatial, metrics);
+class dist2D_pos_metrics_collector;
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
-struct metrics_output_mode_config {
-  using enabled_map_type = std::map<std::string, std::string>;
-  rtypes::timestep output_interval{0};
-  enabled_map_type enabled{};
+class dist2D_pos_metrics_csv_sink final :
+    public rmspatial::grid2D_metrics_csv_sink<rmetrics::spatial::cell_avg> {
+ public:
+  using collector_type = dist2D_pos_metrics_collector;
+  using rmspatial::grid2D_metrics_csv_sink<rmetrics::spatial::cell_avg>::grid2D_metrics_csv_sink;
 };
 
-/**
- * \struct metrics_config
- * \ingroup metrics config
- */
-struct metrics_config final : public rconfig::base_config {
-  std::string                output_dir{};
-  metrics_output_mode_config append{};
-  metrics_output_mode_config truncate{};
-  metrics_output_mode_config create{};
-};
+NS_END(metrics, spatial, cosm);
 
-NS_END(config, metrics, cosm);
-
-#endif /* INCLUDE_COSM_METRICS_CONFIG_METRICS_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_DIST2D_POS_METRICS_CSV_SINK_HPP_ */

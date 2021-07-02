@@ -24,12 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <list>
-#include <string>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/convergence/metrics/convergence_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,33 +49,19 @@ NS_START(cosm, convergence, metrics);
 class convergence_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  convergence_metrics_collector(const std::string& ofname_stem,
-                                const rtypes::timestep& interval);
+  explicit convergence_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
+  void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  struct convergence_measure_stats {
-    double raw{0.0};
-    double norm{0.0};
-    uint converged{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-  void reset_after_interval(void) override;
-
   /* clang-format off */
-  double                           m_conv_epsilon{0.0};
-  struct convergence_measure_stats m_interact_stats{};
-  struct convergence_measure_stats m_order_stats{};
-  struct convergence_measure_stats m_pos_ent_stats{};
-  struct convergence_measure_stats m_tdist_ent_stats{};
-  struct convergence_measure_stats m_velocity_stats{};
+  convergence_metrics_data m_data{};
   /* clang-format on */
 };
 

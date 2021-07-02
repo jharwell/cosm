@@ -34,127 +34,45 @@ NS_START(cosm, foraging, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_transportee_metrics_collector::block_transportee_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-block_transportee_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "cum_transported",
-    "cum_ramp_transported",
-    "cum_cube_transported",
-    "int_avg_transported",
-    "cum_avg_transported",
-    "int_avg_cube_transported",
-    "cum_avg_cube_transported",
-    "int_avg_ramp_transported",
-    "cum_avg_ramp_transported",
-    "int_avg_transporters",
-    "cum_avg_transporters",
-    "int_avg_transport_time",
-    "cum_avg_transport_time",
-    "int_avg_initial_wait_time",
-    "cum_avg_initial_wait_time"
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void block_transportee_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
-boost::optional<std::string>
-block_transportee_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += rcppsw::to_string(m_cum.transported) + separator();
-  line += rcppsw::to_string(m_cum.ramp_transported) + separator();
-  line += rcppsw::to_string(m_cum.cube_transported) + separator();
-
-  line += csv_entry_intavg(m_interval.transported);
-  line += csv_entry_tsavg(m_cum.transported);
-
-  line += csv_entry_intavg(m_interval.cube_transported);
-  line += csv_entry_tsavg(m_cum.cube_transported);
-  line += csv_entry_intavg(m_interval.ramp_transported);
-  line += csv_entry_tsavg(m_cum.ramp_transported);
-  line += csv_entry_domavg(m_interval.transporters, m_interval.transported);
-  line += csv_entry_domavg(m_cum.transporters, m_cum.transported);
-
-  line += csv_entry_domavg(m_interval.transport_time, m_interval.transported);
-  line += csv_entry_domavg(m_cum.transport_time, m_cum.transported);
-
-  /*
-   * If it is 0, then no blocks were collected this interval, so the initial
-   * wait time is infinite.
-   */
-  if (m_interval.initial_wait_time > 0) {
-    line +=
-        csv_entry_domavg(m_interval.initial_wait_time, m_interval.transported);
-  } else {
-    line += "inf" + separator();
-  }
-
-  /*
-   * If it is 0, then no blocks were collected yet, so the initial wait time is
-   * infinite.
-   */
-  if (m_cum.initial_wait_time > 0) {
-    line += csv_entry_domavg(m_cum.initial_wait_time, m_cum.transported, true);
-  } else {
-    line += "inf";
-  }
-
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void block_transportee_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_transportee_metrics&>(metrics);
 
-  ++m_interval.transported;
-  m_interval.cube_transported +=
+  ++m_data.interval.transported;
+  m_data.interval.cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());
-  m_interval.ramp_transported +=
+  m_data.interval.ramp_transported +=
       static_cast<size_t>(crepr::block_type::ekRAMP == m.type());
 
-  ++m_cum.transported;
-  m_cum.cube_transported +=
+  ++m_data.cum.transported;
+  m_data.cum.cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());
-  m_cum.ramp_transported +=
+  m_data.cum.ramp_transported +=
       static_cast<size_t>(crepr::block_type::ekRAMP == m.type());
 
-  m_interval.transporters += m.total_transporters();
-  m_cum.transporters += m.total_transporters();
+  m_data.interval.transporters += m.total_transporters();
+  m_data.cum.transporters += m.total_transporters();
 
-  m_interval.transport_time += m.total_transport_time().v();
-  m_cum.transport_time += m.total_transport_time().v();
+  m_data.interval.transport_time += m.total_transport_time().v();
+  m_data.cum.transport_time += m.total_transport_time().v();
 
-  m_interval.initial_wait_time += m.initial_wait_time().v();
-  m_cum.initial_wait_time += m.initial_wait_time().v();
+  m_data.interval.initial_wait_time += m.initial_wait_time().v();
+  m_data.cum.initial_wait_time += m.initial_wait_time().v();
 } /* collect() */
 
 void block_transportee_metrics_collector::reset_after_interval(void) {
-  m_interval.transported = 0;
-  m_interval.cube_transported = 0;
-  m_interval.ramp_transported = 0;
-  m_interval.transporters = 0;
-  m_interval.transport_time = 0;
-  m_interval.initial_wait_time = 0;
+  m_data.interval.transported = 0;
+  m_data.interval.cube_transported = 0;
+  m_data.interval.ramp_transported = 0;
+  m_data.interval.transporters = 0;
+  m_data.interval.transport_time = 0;
+  m_data.interval.initial_wait_time = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, foraging, cosm);

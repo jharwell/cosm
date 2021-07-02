@@ -24,12 +24,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <memory>
 #include <string>
 #include <list>
-#include <atomic>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/foraging/metrics/block_motion_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,36 +46,23 @@ NS_START(cosm, foraging, metrics);
  * \ingroup cosm foraging metrics
  *
  * \brief Collector for \ref block_motion_metrics.
- *
- * Metrics are written out at the specified collection interval.
  */
 class block_motion_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  block_motion_metrics_collector(const std::string& ofname_stem,
-                                 const rtypes::timestep& interval);
+  block_motion_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  struct stats {
-    /**
-     * \brief  Total # blocks moved.
-     */
-    std::atomic_size_t n_moved{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  block_motion_metrics_data m_data{};
   /* clang-format on */
 };
 

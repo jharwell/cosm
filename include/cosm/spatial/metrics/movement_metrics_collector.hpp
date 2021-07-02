@@ -24,16 +24,13 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <atomic>
-#include <vector>
-#include <list>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/metrics/movement_category.hpp"
+#include "cosm/spatial/metrics/movement_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,41 +47,25 @@ NS_START(cosm, spatial, metrics);
  * \brief Collector for \ref movement_metrics.
  *
  * Metrics CAN be collected in parallel from robots; concurrent updates to the
- * gathered stats are supported. Metrics are written out at the end of the
- * specified interval.
+ * gathered stats are supported.
  */
 class movement_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  movement_metrics_collector(const std::string& ofname_stem,
-                             const rtypes::timestep& interval);
+  explicit movement_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+
 
  private:
-  /**
-   * \brief Container for holding collected statistics. Must be atomic so counts
-   * are valid in parallel metric collection contexts. Ideally the distances
-   * would be atomic \ref rtypes::spatial_dist, but that type does not meet the
-   * std::atomic requirements.
-   */
-  struct stats {
-    std::atomic<double> distance{0.0};
-    std::atomic_size_t  n_robots{0};
-    std::atomic<double> velocity{0.0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string>csv_line_build(void) override;
-
   /* clang-format off */
-  std::vector<stats> m_interval{rcppsw::as_underlying(movement_category::ekMAX)};
-  std::vector<stats> m_cum{rcppsw::as_underlying(movement_category::ekMAX)};
+  movement_metrics_data m_data{};
   /* clang-format on */
 };
 

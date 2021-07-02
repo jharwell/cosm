@@ -49,19 +49,15 @@ NS_START(cosm, spatial, metrics);
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class vector_locs3D_metrics_collector final : public rmetrics::spatial::grid3D_metrics_collector<rmetrics::spatial::cell_avg> {
+class vector_locs3D_metrics_collector final : public rmetrics::spatial::grid3D_metrics_collector {
  public:
-  /**
-   * \param ofname The output file name.
-   * \param interval Collection interval.
-   * \param dims Dimensions of the arena.
-   * \param mode The selected output mode.
+ /**
+   * \param sink The metrics sink to use.
+   * \param dims Dimensions of arena.
    */
-  vector_locs3D_metrics_collector(const std::string& ofname,
-                                  const rtypes::timestep& interval,
-                                  const rmetrics::output_mode& mode,
-                                  const rmath::vector3z& dims) :
-      grid3D_metrics_collector(ofname, interval, mode, dims) {}
+  vector_locs3D_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      const rmath::vector3z& dims);
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };

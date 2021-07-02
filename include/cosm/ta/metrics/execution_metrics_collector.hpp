@@ -24,13 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <list>
-#include <string>
-#include <atomic>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 #include "rcppsw/er/client.hpp"
-#include "cosm/ta/time_estimate.hpp"
+
+#include "cosm/ta/metrics/execution_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -54,54 +53,19 @@ class execution_metrics_collector final : public rmetrics::base_metrics_collecto
                                           public rer::client<execution_metrics_collector> {
  public:
   /**
-   * \param ofname_stem Output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  execution_metrics_collector(const std::string& ofname_stem,
-                              const rtypes::timestep& interval);
+  explicit execution_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  struct stats {
-    /**
-     * \brief # Times the task has been completed.
-     */
-    std::atomic_size_t complete_count{0};
-
-    /**
-     * \brief # Times the task has been aborted.
-     */
-    std::atomic_size_t abort_count{0};
-
-    /**
-     * \brief # Times at their interface.
-     */
-    std::atomic_size_t interface_count{0};
-
-    /**
-     * \brief Execution times of the task.
-     */
-    std::atomic_size_t exec_time{};
-
-    /**
-     * \brief Interface time of the task.
-     */
-    std::atomic_size_t interface_time{0};
-
-    std::atomic_size_t exec_estimate{0};
-    std::atomic_size_t interface_estimate{0};
-  };
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
-
+  execution_metrics_data m_data{};
   /* clang-format on */
 };
 

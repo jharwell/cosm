@@ -24,12 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <list>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/foraging/block_dist/metrics/distributor_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,54 +43,23 @@ NS_START(cosm, foraging, block_dist, metrics);
  * \ingroup cosm foraging block_dist metrics
  *
  * \brief Collector for \ref distributor_metrics.
- *
- * Metrics are written out at the specified collection interval.
  */
 class distributor_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
-   */
-  distributor_metrics_collector(const std::string& ofname_stem,
-                                const rtypes::timestep& interval);
+  * \param sink The metrics sink to use.
+  */
+  explicit distributor_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  /**
-   * \brief Container for holding distributor statistics.
-   */
-  struct stats {
-    /**
-     * \brief  Total # blocks distributed in interval.
-     */
-    size_t n_configured_clusters{0};
-
-    /**
-     * \brief  Total # cube blocks distributed in interval.
-     */
-    size_t n_mapped_clusters{0};
-
-    /**
-     * \brief  Total # ramp blocks distributed in interval.
-     */
-    size_t capacity{0};
-
-    /**
-     * \brief Total # distributorers for distributed blocks in interval.
-     */
-    size_t size{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  distributor_metrics_data m_data{};
   /* clang-format on */
 };
 

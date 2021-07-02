@@ -23,7 +23,6 @@
  ******************************************************************************/
 #include "cosm/controller/base_controller.hpp"
 
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <filesystem>
 #include <fstream>
 
@@ -49,22 +48,12 @@ base_controller::~base_controller(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::string base_controller::output_init(const std::string& output_root,
-                                         const std::string& output_dir) {
-  std::string dir;
-  if ("__current_date__" == output_dir) {
-    boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    dir = output_root + "/" + rcppsw::to_string(now.date().year()) + "-" +
-          rcppsw::to_string(now.date().month()) + "-" +
-          rcppsw::to_string(now.date().day()) + ":" +
-          rcppsw::to_string(now.time_of_day().hours()) + "-" +
-          rcppsw::to_string(now.time_of_day().minutes());
-  } else {
-    dir = output_root + "/" + output_dir;
-  }
+fs::path base_controller::output_init(
+    const cpconfig::output_config* config) {
+  auto path = cpconfig::output_config::root_calc(config);
 
-  if (!fs::exists(dir)) {
-    fs::create_directories(dir);
+  if (!fs::exists(path)) {
+    fs::create_directories(path);
   }
 
 #if (LIBRA_ER == LIBRA_ER_ALL)
@@ -75,15 +64,15 @@ std::string base_controller::output_init(const std::string& output_root,
    * debugging.
    */
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.controller"),
-                 dir + "/controller.log");
-  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.fsm"), dir + "/fsm.log");
+                 path / "controller.log");
+  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.fsm"), path / "fsm.log");
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
-                 dir + "/saa.log");
+                 path / "saa.log");
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
-                 dir + "/saa.log");
+                 path / "saa.log");
 #endif
 
-  return dir;
+  return path;
 } /* output_init() */
 
 void base_controller::rng_init(int seed, const std::string& category) {

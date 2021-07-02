@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_
-#define INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_
+#ifndef INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
+#define INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
@@ -28,28 +28,46 @@
 
 #include "rcppsw/config/base_config.hpp"
 
-#include "cosm/metrics/config/metrics_config.hpp"
+#include "rcppsw/metrics/config/metrics_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics, config);
+NS_START(cosm, pal, config);
+
+namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Structure Definitions
  ******************************************************************************/
 /**
  * \struct output_config
- * \ingroup metrics config
+ * \ingroup pal config
  *
- * \brief Configuration for metrics logging.
+ * \brief Configuration for robot/swarm manager output.
  */
 struct output_config final : public rconfig::base_config {
-  std::string            output_root{};
-  std::string            output_dir{};
-  metrics_config metrics {};
+  /**
+   * \brief Absolute or relative path to the parent directory of the output root
+   *        for the swarm manager/robot.
+   */
+  fs::path                 output_parent{};
+
+  /**
+   * \brief Directory name within the output parent that things should be output
+   * into. This is a separate argument than output_root, because there are
+   * special values of it that have different behavior.
+   *
+   * __current_date__ will cause \p output_leaf to be set to the current date in
+   * the format "Y-M-D:H-M".
+   */
+  std::string              output_leaf{};
+
+  rmconfig::metrics_config metrics {};
+
+  static fs::path root_calc(const output_config* const config);
 };
 
-NS_END(config, metrics, cosm);
+NS_END(config, pal, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_CONFIG_OUTPUT_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_PAL_CONFIG_OUTPUT_CONFIG_HPP_ */

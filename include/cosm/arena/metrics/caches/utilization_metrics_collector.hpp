@@ -24,11 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <list>
-#include <string>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
-#include "cosm/cosm.hpp"
+
+#include "cosm/arena/metrics/caches/utilization_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -45,38 +45,25 @@ NS_START(cosm, arena, metrics, caches);
  * \brief Collector for \ref utilization_metrics.
  *
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
- * are not supported. Metrics are output at the specified interval.
+ * are not supported.
  */
 class utilization_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem Output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  utilization_metrics_collector(const std::string& ofname_stem,
-                                const rtypes::timestep& interval);
+  explicit utilization_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
-  void reset_after_interval(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
+  void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+
 
  private:
-  /**
-   * \brief All stats are cumulative within an interval.
-   */
-  struct stats {
-    uint n_blocks{0};
-    uint n_pickups{0};
-    uint n_drops{0};
-    uint cache_count{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  utilization_metrics_data m_data{};
   /* clang-format on */
 };
 

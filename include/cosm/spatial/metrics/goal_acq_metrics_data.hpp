@@ -1,7 +1,7 @@
 /**
- * \file output_parser.cpp
+ * \file goal_acq_metrics_data.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,37 +18,42 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_DATA_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_DATA_HPP_
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/config/xml/output_parser.hpp"
+#include <atomic>
+
+#include "rcppsw/metrics/base_metrics_data.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, config, xml);
+NS_START(cosm, spatial, metrics, detail);
 
 /*******************************************************************************
- * Member Functions
+ * Class Definitions
  ******************************************************************************/
-void output_parser::parse(const ticpp::Element& node) {
-  ticpp::Element onode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+/**
+ * \brief Container for holding collected statistics. Must be atomic so counts
+ * are valid in parallel metric collection contexts.
+ */
+struct goal_acq_data {
+  std::atomic_size_t n_true_exploring_for_goal{0};
+  std::atomic_size_t n_false_exploring_for_goal{0};
+  std::atomic_size_t n_vectoring_to_goal{0};
+  std::atomic_size_t n_acquiring_goal{0};
+};
 
-  std::vector<std::string> res, res2;
+NS_END(detail);
 
-  m_metrics_parser.parse(onode);
-  if (m_metrics_parser.is_parsed()) {
-    m_config->metrics =
-        *m_metrics_parser.config_get<metrics_parser::config_type>();
-  }
+struct goal_acq_metrics_data : public rmetrics::base_metrics_data {
+  detail::goal_acq_data interval{};
+  detail::goal_acq_data cum{};
+};
 
-  XML_PARSE_ATTR(onode, m_config, output_root);
-  XML_PARSE_ATTR(onode, m_config, output_dir);
-} /* parse() */
+NS_END(metrics, spatial, cosm);
 
-bool output_parser::validate(void) const {
-  return m_metrics_parser.validate();
-} /* validate() */
-
-NS_END(xml, config, metrics, cosm);
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_DATA_HPP_ */

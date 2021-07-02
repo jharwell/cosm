@@ -31,6 +31,14 @@
 NS_START(cosm, spatial, metrics);
 
 /*******************************************************************************
+ * Constructors/Destructor
+ ******************************************************************************/
+vector_locs2D_metrics_collector::vector_locs2D_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      const rmath::vector2z& dims)
+      : grid2D_metrics_collector(std::move(sink), dims) {}
+
+/*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void vector_locs2D_metrics_collector::collect(

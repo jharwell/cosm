@@ -34,67 +34,28 @@ NS_START(cosm, fsm, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_transporter_metrics_collector::block_transporter_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-block_transporter_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "int_avg_phototaxiing_to_goal_including_ca",
-    "int_avg_phototaxiing_to_goal_no_ca",
-    "cum_avg_phototaxiing_to_goal_including_ca",
-    "cum_avg_phototaxiing_to_goal_no_ca",
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void block_transporter_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
-boost::optional<std::string>
-block_transporter_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += csv_entry_intavg(m_interval.n_phototaxiing_to_goal_including_ca);
-  line += csv_entry_intavg(m_interval.n_phototaxiing_to_goal_no_ca);
-
-  line += csv_entry_tsavg(m_cum.n_phototaxiing_to_goal_including_ca);
-  line += csv_entry_tsavg(m_cum.n_phototaxiing_to_goal_no_ca);
-
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void block_transporter_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const block_transporter_metrics&>(metrics);
   bool including_ca = m.is_phototaxiing_to_goal(true);
   bool no_ca = m.is_phototaxiing_to_goal(false);
 
-  m_interval.n_phototaxiing_to_goal_including_ca += including_ca;
-  m_interval.n_phototaxiing_to_goal_no_ca += no_ca;
+  m_data.interval.n_phototaxiing_to_goal_including_ca += including_ca;
+  m_data.interval.n_phototaxiing_to_goal_no_ca += no_ca;
 
-  m_cum.n_phototaxiing_to_goal_including_ca += including_ca;
-  m_cum.n_phototaxiing_to_goal_no_ca += no_ca;
+  m_data.cum.n_phototaxiing_to_goal_including_ca += including_ca;
+  m_data.cum.n_phototaxiing_to_goal_no_ca += no_ca;
 } /* collect() */
 
 void block_transporter_metrics_collector::reset_after_interval(void) {
-  m_interval.n_phototaxiing_to_goal_including_ca = 0;
-  m_interval.n_phototaxiing_to_goal_no_ca = 0;
+  m_data.interval.n_phototaxiing_to_goal_including_ca = 0;
+  m_data.interval.n_phototaxiing_to_goal_no_ca = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, fsm, cosm);

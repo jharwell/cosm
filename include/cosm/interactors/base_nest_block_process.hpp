@@ -57,18 +57,18 @@ class base_nest_block_process
       typename boost::mpl::at<TControllerSpecMap, TController>::type;
   using arena_map_type = typename controller_spec::arena_map_type;
   using penalty_handler_type = typename controller_spec::penalty_handler_type;
-  using metrics_agg_type = typename controller_spec::metrics_agg_type;
+  using metrics_manager_type = typename controller_spec::metrics_manager_type;
   using interactor_status_type = typename controller_spec::interactor_status_type;
   using robot_nest_block_process_visitor_type =
       typename controller_spec::robot_nest_block_process_visitor_type;
 
   base_nest_block_process(arena_map_type* const map,
-                          metrics_agg_type* const metrics_agg,
+                          metrics_manager_type* const metrics_manager,
                           argos::CFloorEntity* const floor,
                           penalty_handler_type* handler)
       : ER_CLIENT_INIT("cosm.interactors.base_nest_block_process"),
         m_floor(floor),
-        m_metrics_agg(metrics_agg),
+        m_metrics_manager(metrics_manager),
         m_map(map),
         m_penalty_handler(handler) {}
   ~base_nest_block_process(void) override = default;
@@ -154,7 +154,7 @@ class base_nest_block_process
      * the nest block drop event resets block metrics.
      */
     controller.block()->md()->dest_drop_time(t);
-    m_metrics_agg->collect_from_block(controller.block());
+    m_metrics_manager->collect_from_block(controller.block());
 
     auto to_drop = controller.block_release();
 
@@ -229,7 +229,7 @@ class base_nest_block_process
 
   /* clang-format off */
   argos::CFloorEntity* const  m_floor;
-  metrics_agg_type* const     m_metrics_agg;
+  metrics_manager_type* const m_metrics_manager;
   arena_map_type* const       m_map;
   penalty_handler_type* const m_penalty_handler;
   /* clang-format on */

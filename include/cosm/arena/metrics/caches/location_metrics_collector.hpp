@@ -48,20 +48,16 @@ NS_START(cosm, arena, metrics, caches);
  * are not supported.
  */
 class location_metrics_collector final :
-    public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+    public rmetrics::spatial::grid2D_metrics_collector {
  public:
   /**
-   * \param ofname The output file name.
-   * \param interval Collection interval.
-   * \param dims Dimensions of the arena.
-   * \param mode The selected output mode.
+   * \param sink The metrics sink to use.
+   * \param dims Dimensions of arena.
    */
-  location_metrics_collector(const std::string& ofname,
-                             const rtypes::timestep& interval,
-                             const rmetrics::output_mode& mode,
-                             const rmath::vector2z& dims) :
-      grid2D_metrics_collector(ofname, interval, mode, dims) {}
-
+  location_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      const rmath::vector2z& dims)
+      : grid2D_metrics_collector(std::move(sink), dims) {}
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };

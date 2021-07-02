@@ -37,116 +37,36 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval,
+    std::unique_ptr<rmetrics::base_metrics_sink> sink,
     size_t decomposition_depth)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND),
-      m_int_depth_counts(decomposition_depth + 1),
-      m_int_task_counts(
-          static_cast<size_t>(std::pow(2, decomposition_depth + 1) - 1)),
-      m_int_tab_counts(
-          static_cast<size_t>(std::pow(2, decomposition_depth - 1) + 1)),
-      m_cum_depth_counts(decomposition_depth + 1),
-      m_cum_task_counts(
-          static_cast<size_t>(std::pow(2, decomposition_depth + 1) - 1)),
-      m_cum_tab_counts(
-          static_cast<size_t>(std::pow(2, decomposition_depth - 1) + 1)) {}
+    : base_metrics_collector(std::move(sink)),
+      m_data(decomposition_depth) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> bi_tdgraph_metrics_collector::csv_header_cols(void) const {
-  std::list<std::string> cols = dflt_csv_header_cols();
-
-  for (size_t i = 0; i < m_int_depth_counts.size(); ++i) {
-    cols.push_back("int_avg_d" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-
-  for (size_t i = 0; i < m_cum_depth_counts.size(); ++i) {
-    cols.push_back("cum_avg_d" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-
-  for (size_t i = 0; i < m_int_task_counts.size(); ++i) {
-    cols.push_back("int_avg_task" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-
-  for (size_t i = 0; i < m_cum_task_counts.size(); ++i) {
-    cols.push_back("cum_avg_task" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-
-  for (size_t i = 0; i < m_int_tab_counts.size(); ++i) {
-    cols.push_back("int_avg_tab" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-
-  for (size_t i = 0; i < m_cum_tab_counts.size(); ++i) {
-    cols.push_back("cum_avg_tab" + rcppsw::to_string(i) + "_count");
-  } /* for(i..) */
-  return cols;
-} /* csv_header_cols() */
-
-void bi_tdgraph_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
 void bi_tdgraph_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const bi_tdgraph_metrics&>(metrics);
-  ++m_int_depth_counts[m.current_task_depth()];
-  ++m_int_task_counts[m.current_task_id()];
-  ++m_int_tab_counts[m.current_task_tab()];
+  ++m_data.interval.depth_counts[m.current_task_depth()];
+  ++m_data.interval.task_counts[m.current_task_id()];
+  ++m_data.interval.tab_counts[m.current_task_tab()];
 
-  ++m_cum_depth_counts[m.current_task_depth()];
-  ++m_cum_task_counts[m.current_task_id()];
-  ++m_cum_tab_counts[m.current_task_tab()];
+  ++m_data.cum.depth_counts[m.current_task_depth()];
+  ++m_data.cum.task_counts[m.current_task_id()];
+  ++m_data.cum.tab_counts[m.current_task_tab()];
 } /* collect() */
 
-boost::optional<std::string> bi_tdgraph_metrics_collector::csv_line_build() {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  for (auto& count : m_int_depth_counts) {
-    line += csv_entry_intavg(count);
-  } /* for(count..) */
-
-  for (auto& count : m_cum_depth_counts) {
-    line += csv_entry_tsavg(count);
-  } /* for(&count..) */
-
-  for (auto& count : m_int_task_counts) {
-    line += csv_entry_intavg(count);
-  } /* for(&count..) */
-
-  for (auto& count : m_cum_task_counts) {
-    line += csv_entry_tsavg(count);
-  } /* for(&count..) */
-
-  for (auto& count : m_int_tab_counts) {
-    line += csv_entry_intavg(count);
-  } /* for(&count..) */
-
-  for (size_t i = 0; i < m_cum_tab_counts.size() - 1; ++i) {
-    line += csv_entry_tsavg(m_cum_tab_counts[i]);
-  } /* for(i..) */
-
-  line += csv_entry_tsavg(m_cum_tab_counts[m_cum_tab_counts.size() - 1], true);
-  return boost::make_optional(line);
-} /* store_foraging_stats() */
-
 void bi_tdgraph_metrics_collector::reset_after_interval(void) {
-  for (size_t i = 0; i < m_int_depth_counts.size(); ++i) {
-    std::atomic_init(&m_int_depth_counts[i], 0U);
+  for (size_t i = 0; i < m_data.interval.depth_counts.size(); ++i) {
+    std::atomic_init(&m_data.interval.depth_counts[i], 0U);
   } /* for(i..) */
 
-  for (size_t i = 0; i < m_int_task_counts.size(); ++i) {
-    std::atomic_init(&m_int_task_counts[i], 0U);
+  for (size_t i = 0; i < m_data.interval.task_counts.size(); ++i) {
+    std::atomic_init(&m_data.interval.task_counts[i], 0U);
   } /* for(i..) */
 
-  for (size_t i = 0; i < m_int_tab_counts.size(); ++i) {
-    std::atomic_init(&m_int_tab_counts[i], 0U);
+  for (size_t i = 0; i < m_data.interval.tab_counts.size(); ++i) {
+    std::atomic_init(&m_data.interval.tab_counts[i], 0U);
   } /* for(i..) */
 } /* reset_after_interval() */
 

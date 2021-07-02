@@ -26,10 +26,11 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
-#include "cosm/cosm.hpp"
+
+#include "cosm/spatial/metrics/goal_acq_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,34 +53,20 @@ NS_START(cosm, spatial, metrics);
 class goal_acq_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem Output file name stem.
-   * \param interval The collection interval.
+   * \param sink The metrics sink to use.
    */
-  goal_acq_metrics_collector(const std::string& ofname_stem,
-                             const rtypes::timestep& interval);
+  explicit goal_acq_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
-  void reset_after_interval(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
+  void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+
 
  private:
-  /**
-   * \brief Container for holding collected statistics. Must be atomic so counts
-   * are valid in parallel metric collection contexts.
-   */
-  struct stats {
-    std::atomic_size_t n_true_exploring_for_goal{0};
-    std::atomic_size_t n_false_exploring_for_goal{0};
-    std::atomic_size_t n_vectoring_to_goal{0};
-    std::atomic_size_t n_acquiring_goal{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  goal_acq_metrics_data m_data{};
   /* clang-format on */
 };
 

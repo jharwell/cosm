@@ -26,10 +26,11 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
-#include "cosm/cosm.hpp"
+
+#include "cosm/foraging/metrics/block_transportee_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -45,71 +46,27 @@ NS_START(cosm, foraging, metrics);
  *
  * \brief Collector for \ref block_transportee_metrics.
  *
- * Metrics are written out at the specified collection interval.
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported.
  */
 class block_transportee_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  block_transportee_metrics_collector(const std::string& ofname_stem,
-                              const rtypes::timestep& interval);
+  explicit block_transportee_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+  size_t cum_transported(void) const { return m_data.cum.transported; }
 
-  size_t cum_transported(void) const { return m_cum.transported; }
 
  private:
-  /**
-   * \brief Container for holding statistics. Must be atomic so counts are valid
-   * in parallel metric collection contexts. Ideally the times would be atomic
-   * \ref rtypes::timestep, but that type does not meet the std::atomic
-   * requirements.
-   */
-  struct stats {
-    /**
-     * \brief  Total # blocks transported.
-     */
-    std::atomic_size_t transported{0};
-
-    /**
-     * \brief  Total # cube blocks transported.
-     */
-    std::atomic_size_t cube_transported{0};
-
-    /**
-     * \brief  Total # ramp blocks transported in interval.
-     */
-    std::atomic_size_t ramp_transported{0};
-
-    /**
-     * \brief Total # transporters for transported blocks in interval.
-     */
-    std::atomic_size_t transporters{0};
-
-    /**
-     * \brief Total amount of time taken for all transported blocks to be
-     * transported from original distribution locations to the nest within an
-     * interval.
-     */
-    std::atomic_size_t transport_time{0};
-
-    /**
-     * \brief Total amount of time between original arena distribution and first
-     * pickup for all transported blocks in interval.
-     */
-    std::atomic_size_t initial_wait_time{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
+  block_transportee_metrics_data m_data{};
   /* clang-format on */
 };
 

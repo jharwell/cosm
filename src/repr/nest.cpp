@@ -43,7 +43,11 @@ nest::nest(const config::nest_config* config,
                                  resolution,
                                  config->center),
       colored_entity(rutils::color::kGRAY70),
-      mc_config(*config) {}
+      ER_CLIENT_INIT("cosm.repr.nest"),
+      mc_config(*config) {
+  ER_ASSERT(mc_config.light_height > 0UL, "Light height must be > 0");
+  ER_ASSERT(mc_config.light_intensity > 0.0, "Light intensity must be > 0");
+}
 
 /*******************************************************************************
  * Member Functions

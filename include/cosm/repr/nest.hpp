@@ -55,9 +55,9 @@ NS_START(cosm, repr);
  * that are on the ground (implementation detail of ARGoS).
  */
 class nest : public repr::unicell_immovable_entity2D,
-             public repr::colored_entity {
+             public repr::colored_entity,
+             public rer::client<nest> {
  public:
-
   /**
    * \param dim Dimensions of the nest. Square nests get 1 light above the
    *            center while rectangular nests get 3 lights evenly spaced along

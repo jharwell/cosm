@@ -35,130 +35,55 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 bi_tab_metrics_collector::bi_tab_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> bi_tab_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-      "int_avg_subtask1_count",
-      "cum_avg_subtask1_count",
-      "int_avg_subtask2_count",
-      "cum_avg_subtask2_count",
-      "int_avg_partition_count",
-      "cum_avg_partition_count",
-      "int_avg_no_partition_count",
-      "cum_avg_no_partition_count",
-      "int_avg_task_sw_count",
-      "cum_avg_task_sw_count",
-      "int_avg_task_depth_sw_count",
-      "cum_avg_task_depth_sw_count",
-      "int_avg_partition_prob",
-      "cum_avg_partition_prob",
-      "int_avg_subtask_selection_prob",
-      "cum_avg_subtask_selection_prob"
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void bi_tab_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
 void bi_tab_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const bi_tab_metrics&>(metrics);
   if (m.employed_partitioning()) {
-    ++m_interval.partition_count;
-    ++m_cum.partition_count;
-    m_interval.subtask1_count += static_cast<uint>(m.subtask1_active());
-    m_cum.subtask1_count += static_cast<uint>(m.subtask1_active());
-    m_interval.subtask2_count += static_cast<uint>(m.subtask2_active());
-    m_cum.subtask2_count += static_cast<uint>(m.subtask2_active());
+    ++m_data.interval.partition_count;
+    ++m_data.cum.partition_count;
+    m_data.interval.subtask1_count += static_cast<size_t>(m.subtask1_active());
+    m_data.cum.subtask1_count += static_cast<size_t>(m.subtask1_active());
+    m_data.interval.subtask2_count += static_cast<size_t>(m.subtask2_active());
+    m_data.cum.subtask2_count += static_cast<size_t>(m.subtask2_active());
 
-    auto int_partition_prob = m_interval.partition_prob.load();
-    auto int_subtask_sel_prob = m_interval.subtask_sel_prob.load();
-    m_interval.partition_prob.compare_exchange_strong(
+    auto int_partition_prob = m_data.interval.partition_prob.load();
+    auto int_subtask_sel_prob = m_data.interval.subtask_sel_prob.load();
+    m_data.interval.partition_prob.compare_exchange_strong(
         int_partition_prob, int_partition_prob + m.partition_prob());
-    m_interval.subtask_sel_prob.compare_exchange_strong(
+    m_data.interval.subtask_sel_prob.compare_exchange_strong(
         int_subtask_sel_prob, int_subtask_sel_prob + m.subtask_selection_prob());
 
-    auto cum_partition_prob = m_cum.partition_prob.load();
-    auto cum_subtask_sel_prob = m_cum.subtask_sel_prob.load();
-    m_cum.partition_prob.compare_exchange_strong(
+    auto cum_partition_prob = m_data.cum.partition_prob.load();
+    auto cum_subtask_sel_prob = m_data.cum.subtask_sel_prob.load();
+    m_data.cum.partition_prob.compare_exchange_strong(
         cum_partition_prob, cum_partition_prob + m.partition_prob());
-    m_cum.subtask_sel_prob.compare_exchange_strong(
+    m_data.cum.subtask_sel_prob.compare_exchange_strong(
         cum_subtask_sel_prob, cum_subtask_sel_prob + m.subtask_selection_prob());
   } else {
-    ++m_interval.no_partition_count;
-    ++m_cum.no_partition_count;
+    ++m_data.interval.no_partition_count;
+    ++m_data.cum.no_partition_count;
   }
 
-  m_interval.task_sw_count += static_cast<uint>(m.task_changed());
-  m_cum.task_sw_count += static_cast<uint>(m.task_changed());
-  m_interval.task_depth_sw_count += static_cast<uint>(m.task_depth_changed());
-  m_cum.task_depth_sw_count += static_cast<uint>(m.task_depth_changed());
+  m_data.interval.task_sw_count += static_cast<size_t>(m.task_changed());
+  m_data.cum.task_sw_count += static_cast<size_t>(m.task_changed());
+  m_data.interval.task_depth_sw_count += static_cast<size_t>(m.task_depth_changed());
+  m_data.cum.task_depth_sw_count += static_cast<size_t>(m.task_depth_changed());
 } /* collect() */
 
-boost::optional<std::string> bi_tab_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-
-  /*
-   * We want to capture average probability per robot, not per
-   * timestep/interval, so we divide by the total # of task allocations
-   * performed (# partitions + # no partitions).
-   */
-  double int_allocs = m_interval.partition_count + m_interval.no_partition_count;
-  double cum_allocs = m_cum.partition_count + m_cum.no_partition_count;
-  std::string line;
-
-  line += csv_entry_domavg(m_interval.subtask1_count, int_allocs);
-  line += csv_entry_domavg(m_cum.subtask1_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.subtask2_count, int_allocs);
-  line += csv_entry_domavg(m_cum.subtask2_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.partition_count, int_allocs);
-  line += csv_entry_domavg(m_cum.partition_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.no_partition_count, int_allocs);
-  line += csv_entry_domavg(m_cum.no_partition_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.task_sw_count, int_allocs);
-  line += csv_entry_domavg(m_cum.task_sw_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.task_depth_sw_count, int_allocs);
-  line += csv_entry_domavg(m_cum.task_depth_sw_count, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.partition_prob, int_allocs);
-  line += csv_entry_domavg(m_cum.partition_prob, cum_allocs);
-
-  line += csv_entry_domavg(m_interval.subtask_sel_prob, int_allocs);
-  line += csv_entry_domavg(m_cum.subtask_sel_prob, cum_allocs, true);
-
-  return boost::make_optional(line);
-} /* store_foraging_stats() */
-
 void bi_tab_metrics_collector::reset_after_interval(void) {
-  m_interval.subtask1_count = 0;
-  m_interval.subtask2_count = 0;
-  m_interval.partition_count = 0;
-  m_interval.no_partition_count = 0;
-  m_interval.task_sw_count = 0;
-  m_interval.task_depth_sw_count = 0;
-  m_interval.partition_prob = 0.0;
-  m_interval.subtask_sel_prob = 0.0;
+  m_data.interval.subtask1_count = 0;
+  m_data.interval.subtask2_count = 0;
+  m_data.interval.partition_count = 0;
+  m_data.interval.no_partition_count = 0;
+  m_data.interval.task_sw_count = 0;
+  m_data.interval.task_depth_sw_count = 0;
+  m_data.interval.partition_prob = 0.0;
+  m_data.interval.subtask_sel_prob = 0.0;
 } /* reset_after_interval() */
 
 NS_END(metrics, ta, cosm);

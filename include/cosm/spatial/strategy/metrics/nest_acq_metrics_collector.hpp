@@ -25,13 +25,11 @@
  * Includes
  ******************************************************************************/
 #include <string>
-#include <atomic>
-#include <vector>
 #include <list>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/spatial/strategy/metrics/nest_acq_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -53,35 +51,20 @@ NS_START(cosm, spatial, strategy, metrics);
  */
 class nest_acq_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
-  /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+    /**
+   * \param sink The metrics sink to use.
    */
-  nest_acq_metrics_collector(const std::string& ofname_stem,
-                             const rtypes::timestep& interval);
+  explicit nest_acq_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  /**
-   * \brief Container for holding collected statistics. Must be atomic so counts
-   * are valid in parallel metric collection contexts. Ideally the distances
-   * would be atomic \ref rtypes::spatial_dist, but that type does not meet the
-   * std::atomic requirements.
-   */
-  struct stats {
-    std::atomic<double> random_thresh{0.0};
-    std::atomic_size_t  n_random_thresh{0};
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string>csv_line_build(void) override;
-
   /* clang-format off */
-  stats m_interval{};
-  stats m_cum{};
+  nest_acq_metrics_data m_data{};
   /* clang-format on */
 };
 

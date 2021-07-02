@@ -38,6 +38,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/pal/pal.hpp"
+#include "cosm/pal/config/output_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -46,7 +47,10 @@ namespace cosm::fsm {
 class supervisor_fsm;
 } /* namespace cosm::fsm */
 
+namespace fs = std::filesystem;
+
 NS_START(cosm, controller);
+
 
 /*******************************************************************************
  * Class Definitions
@@ -173,13 +177,6 @@ class base_controller : public rer::client<base_controller> {
    * \brief Initialize controller output (i.e. where it will log events of
    * interest).
    *
-   * \param output_root Absolute or relative path to the output root for the
-   *                    robot.
-   * \param output_dir Directory name within the output root that things should
-   *                   be logged into. This is a separate argument than
-   *                   output_root, because there are special values of it that
-   *                   have different behavior.
-   *
    * Sets up the following log files in the output directory:
    *
    * - cosm.controller -> controller.log
@@ -188,8 +185,7 @@ class base_controller : public rer::client<base_controller> {
    *
    * \return Absolute path to the output directory.
    */
-  std::string output_init(const std::string& output_root,
-                          const std::string& output_dir);
+  virtual fs::path output_init(const cpconfig::output_config* config);
 
   /**
    * \brief Initialize random number generation for the controller.
@@ -199,7 +195,7 @@ class base_controller : public rer::client<base_controller> {
    * \param category The category of the RNG so that multiple robots can share
    *                 RNG (or not), depending on configuration.
    */
-  void rng_init(int seed, const std::string& category);
+  virtual void rng_init(int seed, const std::string& category);
 
   void supervisor(std::unique_ptr<cfsm::supervisor_fsm> fsm);
 

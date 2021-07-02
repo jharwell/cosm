@@ -115,6 +115,7 @@ namespace steer2D {}
  * velocity congruence, interactivity, etc., and their configuration.
  */
 namespace convergence {
+namespace metrics {}
 namespace config {}
 }
 
@@ -201,7 +202,9 @@ namespace operations {}
  * each platform.
  */
 namespace pal {
-namespace config {}
+namespace config {
+namespace xml{}
+}
 namespace operations {}
 namespace tv {}
 } /* namespace pal */
@@ -351,6 +354,7 @@ namespace cdops = cds::operations;
 namespace cpal = cosm::pal;
 namespace cpops = cpal::operations;
 namespace cpconfig = cpal::config;
+namespace cpcxml = cpconfig::xml;
 namespace cptv = cpal::tv;
 
 namespace coracle = cosm::oracle;

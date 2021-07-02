@@ -34,55 +34,21 @@ NS_START(cosm, foraging, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_motion_metrics_collector::block_motion_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink) :
+    base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-block_motion_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "int_avg_blocks_moved",
-    "cum_avg_blocks_moved",
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void block_motion_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
-boost::optional<std::string>
-block_motion_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += csv_entry_intavg(m_interval.n_moved);
-  line += csv_entry_tsavg(m_cum.n_moved, true);
-
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void block_motion_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_motion_metrics&>(metrics);
-  m_interval.n_moved += m.n_moved();
-  m_cum.n_moved += m.n_moved();
+  m_data.interval.n_moved += m.n_moved();
+  m_data.cum.n_moved += m.n_moved();
 } /* collect() */
 
 void block_motion_metrics_collector::reset_after_interval(void) {
-  m_interval.n_moved = 0;
+  m_data.interval.n_moved = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, foraging, cosm);

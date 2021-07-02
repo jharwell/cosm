@@ -26,10 +26,10 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
-#include "cosm/cosm.hpp"
+
+#include "cosm/tv/metrics/population_dynamics_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -46,61 +46,25 @@ NS_START(cosm, tv, metrics);
  * \brief Collector for \ref population_dynamics_metrics.
  *
  * Metrics CAN be collected in parallel; concurrent updates to the gathered
- * stats are supported. Metrics are written out at the specified collection
- * interval.
+ * stats are supported.
  */
 class population_dynamics_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  population_dynamics_metrics_collector(const std::string& ofname_stem,
-                                        const rtypes::timestep& interval);
+  explicit population_dynamics_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+
 
  private:
-  /**
-   * \brief Container for holding population dynamics statistics collected from
-   * the swarm. Must be atomic so counts are valid in parallel metric collection
-   * contexts.
-   */
-  struct stats {
-    /* clang-format off */
-    std::atomic_uint    n_births{0};
-    std::atomic_uint    birth_interval{0};
-    std::atomic<double> birth_mu{0};
-
-    std::atomic_uint    n_deaths{0};
-    std::atomic_uint    death_interval{0};
-    std::atomic<double> death_lambda{0};
-
-    std::atomic_uint    repair_queue_size{0};
-    std::atomic_uint    n_malfunctions{0};
-    std::atomic_uint    malfunction_interval{0};
-    std::atomic<double> malfunction_lambda{0};
-
-    std::atomic_uint    n_repairs{0};
-    std::atomic_uint    repair_interval{0};
-    std::atomic<double> repair_mu{0};
-
-    std::atomic_uint    total_population{0};
-    std::atomic_uint    active_population{0};
-    std::atomic_uint    max_population{0};
-    /* clang-format on */
-  };
-
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
-  /* clang-format on */
+  population_dynamics_metrics_data m_data{};
 };
 
 NS_END(metrics, tv, cosm);

@@ -24,13 +24,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <memory>
 #include <string>
 #include <list>
-#include <atomic>
-#include <vector>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -45,41 +46,24 @@ NS_START(cosm, foraging, metrics);
  * \ingroup cosm foraging metrics
  *
  * \brief Collector for \ref block_cluster_metrics.
- *
- * Metrics are written out at the specified collection interval.
  */
 class block_cluster_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem The output file name stem.
-   * \param interval Collection interval.
-   * \param n_clusters How many clusters are in the arena?
+   * \param sink The metrics sink to use.
    */
-  block_cluster_metrics_collector(const std::string& ofname_stem,
-                                  const rtypes::timestep& interval,
-                                  size_t n_clusters);
+  block_cluster_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      size_t n_clusters);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
  private:
-  struct cluster_extent {
-    std::atomic<double> area;
-    std::atomic<double> xmin;
-    std::atomic<double> xmax;
-    std::atomic<double> ymin;
-    std::atomic<double> ymax;
-  };
-
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
   /* clang-format off */
-  std::vector<std::atomic_size_t> m_int_block_counts{};
-  std::vector<std::atomic_size_t> m_cum_block_counts{};
-
-  std::vector<cluster_extent>     m_extents{};
+  block_cluster_metrics_data m_data;
   /* clang-format on */
 };
 

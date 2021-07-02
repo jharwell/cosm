@@ -24,13 +24,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
-#include <list>
-#include <string>
-#include <atomic>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
 #include "rcppsw/rcppsw.hpp"
+
+#include "cosm/ta/metrics/bi_tdgraph_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -54,39 +53,25 @@ NS_START(cosm, ta, metrics);
 class bi_tdgraph_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem Output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    * \param decomposition_depth The maximum depth of the \ref bi_tdgraph.
    */
-  bi_tdgraph_metrics_collector(const std::string& ofname_stem,
-                               const rtypes::timestep& interval,
-                               size_t decomposition_depth);
+  explicit bi_tdgraph_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      size_t decomposition_depth);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
-
-  const std::vector<std::atomic_size_t>& int_task_counts(void) const {
-    return m_int_task_counts;
-  }
+  /* const std::vector<std::atomic_size_t>& int_task_counts(void) const { */
+  /*   return m_int_task_counts; */
+  /* } */
 
  private:
-  /*
-   * These are not in a struct because I need to be able to initialize the
-   * vectors directly with the constructor arguments (well I COULD do it another
-   * way, but that smells...).
-   */
   /* clang-format off */
-  std::vector<std::atomic_size_t> m_int_depth_counts;
-  std::vector<std::atomic_size_t> m_int_task_counts;
-  std::vector<std::atomic_size_t> m_int_tab_counts;
-  std::vector<std::atomic_size_t> m_cum_depth_counts;
-  std::vector<std::atomic_size_t> m_cum_task_counts;
-  std::vector<std::atomic_size_t> m_cum_tab_counts;
-  /* clang-format on */
+  bi_tdgraph_metrics_data m_data;
 };
 
 NS_END(metrics, ta, cosm);

@@ -257,7 +257,8 @@ bool argos_pd_adaptor<TController>::robot_attempt_add(
     /* ick raw pointers--thanks ARGoS... */
     robot = new chal::robot(cpal::kARGoSRobotNamePrefix + rcppsw::to_string(id),
                             cpal::kARGoSControllerXMLId,
-                            argos::CVector3(x, y, 0.0));
+                            argos::CVector3(x, y, 0.0),
+                            argos::CQuaternion());
     m_sm->AddEntity(*robot);
     ER_INFO(
         "Added entity %s attached to physics engine %s at %s",

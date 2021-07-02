@@ -111,8 +111,8 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
   /* clang-format off */
   const config::task_alloc_config* mc_config;
 
-  ds::bi_tdgraph*   m_graph;
-  rmath::rng*        m_rng;
+  ds::bi_tdgraph*                  m_graph;
+  rmath::rng*                      m_rng;
   /* clang-format on */
 };
 

@@ -73,17 +73,11 @@ swarm_manager::swarm_manager(void) : ER_CLIENT_INIT("cosm.pal.swarm_manager") {
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void swarm_manager::output_init(const std::string& output_root,
-                                const std::string& output_dir) {
-  if ("__current_date__" == output_dir) {
-    boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    m_output_root = output_root + "/" + rcppsw::to_string(now.date().year()) +
-                    "-" + rcppsw::to_string(now.date().month()) + "-" +
-                    rcppsw::to_string(now.date().day()) + ":" +
-                    rcppsw::to_string(now.time_of_day().hours()) + "-" +
-                    rcppsw::to_string(now.time_of_day().minutes());
-  } else {
-    m_output_root = output_root + "/" + output_dir;
+void swarm_manager::output_init(const cpconfig::output_config* config) {
+  m_output_root = cpconfig::output_config::root_calc(config);
+
+  if (!fs::exists(m_output_root)) {
+    fs::create_directories(m_output_root);
   }
 } /* output_init() */
 

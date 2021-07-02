@@ -27,7 +27,7 @@
 
 #include "cosm/arena/config/xml/arena_map_parser.hpp"
 #include "cosm/convergence/config/xml/convergence_parser.hpp"
-#include "cosm/metrics/config/xml/output_parser.hpp"
+#include "cosm/pal/config/xml/output_parser.hpp"
 #include "cosm/oracle/config/xml/aggregate_oracle_parser.hpp"
 #include "cosm/tv/config/xml/population_dynamics_parser.hpp"
 #include "cosm/vis/config/xml/visualization_parser.hpp"
@@ -41,8 +41,8 @@ NS_START(cosm, pal, config, xml);
  * Constructors/Destructor
  ******************************************************************************/
 base_sm_repository::base_sm_repository(void) noexcept {
-  parser_register<cmconfig::xml::output_parser, cmconfig::output_config>(
-      cmconfig::xml::output_parser::kXMLRoot);
+  parser_register<cpconfig::xml::output_parser, cpconfig::output_config>(
+      cpconfig::xml::output_parser::kXMLRoot);
   parser_register<caconfig::xml::arena_map_parser, caconfig::arena_map_config>(
       caconfig::xml::arena_map_parser::kXMLRoot);
   parser_register<cvconfig::xml::visualization_parser,

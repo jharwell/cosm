@@ -34,93 +34,41 @@ NS_START(cosm, spatial, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 interference_metrics_collector::interference_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-interference_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "int_avg_exp_interference",
-    "cum_avg_exp_interference",
-    "int_avg_entered_interference",
-    "cum_avg_entered_interference",
-    "int_avg_exited_interference",
-    "cum_avg_exited_interference",
-    "int_avg_episodes",
-    "cum_avg_episodes",
-    "int_avg_interference_duration",
-    "cum_avg_interference_duration"
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void interference_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
 void interference_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const interference_metrics&>(metrics);
-  m_interval.n_exp_interference += static_cast<size_t>(m.exp_interference());
-  m_cum.n_exp_interference += static_cast<size_t>(m.exp_interference());
+  m_data.interval.n_exp_interference += static_cast<size_t>(m.exp_interference());
+  m_data.cum.n_exp_interference += static_cast<size_t>(m.exp_interference());
 
-  m_interval.n_entered_interference +=
+  m_data.interval.n_entered_interference +=
       static_cast<size_t>(m.entered_interference());
-  m_cum.n_entered_interference += static_cast<size_t>(m.entered_interference());
+  m_data.cum.n_entered_interference += static_cast<size_t>(m.entered_interference());
 
-  m_interval.n_exited_interference +=
+  m_data.interval.n_exited_interference +=
       static_cast<size_t>(m.exited_interference());
-  m_cum.n_exited_interference += static_cast<size_t>(m.exited_interference());
+  m_data.cum.n_exited_interference += static_cast<size_t>(m.exited_interference());
 
   if (m.exited_interference()) {
-    ++m_interval.n_episodes;
-    ++m_cum.n_episodes;
+    ++m_data.interval.n_episodes;
+    ++m_data.cum.n_episodes;
 
-    m_interval.interference_duration += m.interference_duration().v();
-    m_cum.interference_duration += m.interference_duration().v();
+    m_data.interval.interference_duration += m.interference_duration().v();
+    m_data.cum.interference_duration += m.interference_duration().v();
   }
 } /* collect() */
 
-boost::optional<std::string>
-interference_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += csv_entry_intavg(m_interval.n_exp_interference.load());
-  line += csv_entry_tsavg(m_cum.n_exp_interference.load());
-  line += csv_entry_intavg(m_interval.n_entered_interference.load());
-  line += csv_entry_tsavg(m_cum.n_entered_interference.load());
-  line += csv_entry_intavg(m_interval.n_exited_interference.load());
-  line += csv_entry_tsavg(m_cum.n_exited_interference.load());
-
-  line += csv_entry_intavg(m_interval.n_episodes.load());
-  line += csv_entry_tsavg(m_cum.n_episodes.load());
-  line += csv_entry_domavg(m_interval.interference_duration.load(),
-                           m_interval.n_episodes.load());
-  line += csv_entry_domavg(
-      m_cum.interference_duration.load(), m_cum.n_episodes.load(), true);
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void interference_metrics_collector::reset_after_interval(void) {
-  m_interval.n_episodes = 0;
-  m_interval.n_exp_interference = 0;
-  m_interval.n_entered_interference = 0;
-  m_interval.n_exited_interference = 0;
-  m_interval.interference_duration = 0;
+  m_data.interval.n_episodes = 0;
+  m_data.interval.n_exp_interference = 0;
+  m_data.interval.n_entered_interference = 0;
+  m_data.interval.n_exited_interference = 0;
+  m_data.interval.interference_duration = 0;
 } /* reset_after_interval() */
 
 NS_END(metrics, spatial, cosm);

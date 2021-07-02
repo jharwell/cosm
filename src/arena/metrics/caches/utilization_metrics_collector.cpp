@@ -34,78 +34,33 @@ NS_START(cosm, arena, metrics, caches);
  * Constructors/Destructor
  ******************************************************************************/
 utilization_metrics_collector::utilization_metrics_collector(
-    const std::string& ofname_stem,
-    const rtypes::timestep& interval)
-    : base_metrics_collector(ofname_stem,
-                             interval,
-                             rmetrics::output_mode::ekAPPEND) {}
+    std::unique_ptr<rmetrics::base_metrics_sink> sink)
+    : base_metrics_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-utilization_metrics_collector::csv_header_cols(void) const {
-  auto merged = dflt_csv_header_cols();
-  auto cols = std::list<std::string>{
-    /* clang-format off */
-    "int_avg_blocks",
-    "cum_avg_blocks",
-    "int_avg_pickups",
-    "cum_avg_pickups",
-    "int_avg_drops" ,
-    "cum_avg_drops" ,
-    "int_avg_caches",
-    "cum_avg_caches"
-    /* clang-format on */
-  };
-  merged.splice(merged.end(), cols);
-  return merged;
-} /* csv_header_cols() */
-
-void utilization_metrics_collector::reset(void) {
-  base_metrics_collector::reset();
-  reset_after_interval();
-} /* reset() */
-
-boost::optional<std::string> utilization_metrics_collector::csv_line_build(void) {
-  if (!(timestep() % interval() == 0UL)) {
-    return boost::none;
-  }
-  std::string line;
-
-  line += csv_entry_domavg(m_interval.n_blocks, m_interval.cache_count);
-  line += csv_entry_domavg(m_cum.n_blocks, m_cum.cache_count);
-  line += csv_entry_domavg(m_interval.n_pickups, m_interval.cache_count);
-  line += csv_entry_domavg(m_cum.n_pickups, m_cum.cache_count);
-  line += csv_entry_domavg(m_interval.n_drops, m_interval.cache_count);
-  line += csv_entry_domavg(m_cum.n_drops, m_cum.cache_count);
-  line += csv_entry_intavg(m_interval.cache_count);
-  line += csv_entry_tsavg(m_cum.cache_count, true);
-
-  return boost::make_optional(line);
-} /* csv_line_build() */
-
 void utilization_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const utilization_metrics&>(metrics);
 
-  m_interval.n_pickups += m.total_block_pickups();
-  m_interval.n_drops += m.total_block_drops();
-  m_interval.n_blocks += m.n_blocks();
+  m_data.interval.n_pickups += m.total_block_pickups();
+  m_data.interval.n_drops += m.total_block_drops();
+  m_data.interval.n_blocks += m.n_blocks();
 
-  m_cum.n_pickups += m.total_block_pickups();
-  m_cum.n_drops += m.total_block_drops();
-  m_cum.n_blocks += m.n_blocks();
+  m_data.cum.n_pickups += m.total_block_pickups();
+  m_data.cum.n_drops += m.total_block_drops();
+  m_data.cum.n_blocks += m.n_blocks();
 
-  ++m_interval.cache_count;
-  ++m_cum.cache_count;
+  ++m_data.interval.cache_count;
+  ++m_data.cum.cache_count;
 } /* collect() */
 
 void utilization_metrics_collector::reset_after_interval(void) {
-  m_interval.n_blocks = 0;
-  m_interval.n_pickups = 0;
-  m_interval.n_drops = 0;
-  m_interval.cache_count = 0;
-} /* reset_after_interval() */
+  m_data.interval.n_blocks = 0;
+  m_data.interval.n_pickups = 0;
+  m_data.interval.n_drops = 0;
+  m_data.interval.cache_count = 0;
+} /* resedt_after_interval() */
 
 NS_END(caches, metrics, arena, cosm);

@@ -24,8 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <list>
-#include <string>
+#include <memory>
 
 #include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
 
@@ -41,27 +40,23 @@ NS_START(cosm, spatial, metrics);
  ******************************************************************************/
 /**
  * \class dist2D_pos_metrics_collector
- * \ingroup spatial metrics
+ * \ingroup rcppsw metrics swarm spatial
  *
  * \brief Collector for \ref dist2D_metrics.
  *
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class dist2D_pos_metrics_collector final
-    : public rmetrics::spatial::grid2D_metrics_collector<rmetrics::spatial::cell_avg> {
+class dist2D_pos_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector {
+
  public:
   /**
-   * \param ofname The output file name.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    * \param dims Dimensions of arena.
-   * \param mode The selected output mode.
    */
-  dist2D_pos_metrics_collector(const std::string& ofname,
-                               const rtypes::timestep& interval,
-                               const rmetrics::output_mode& mode,
-                               const rmath::vector2z& dims)
-      : grid2D_metrics_collector(ofname, interval, mode, dims) {}
+  dist2D_pos_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      const rmath::vector2z& dims);
 
   void collect(const rmetrics::base_metrics& metrics) override;
 };

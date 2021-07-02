@@ -25,6 +25,9 @@
  * Includes
  ******************************************************************************/
 #include <vector>
+#include <boost/optional.hpp>
+#include <boost/range/adaptors.hpp>
+#include <boost/range/algorithm.hpp>
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/er/client.hpp"
@@ -99,13 +102,17 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
   colored_blob_camera_sensor_impl(const colored_blob_camera_sensor_impl&) = default;
 
   /**
-   * \brief Get the sensor readings for the footbot robot.
+   * \brief Get the sensor readings for the robot.
+   *
+   * \param ref The angle of the reference frame to use (i.e., the robot's
+   *            current heading).
    *
    * \return A vector of \ref reading.
    */
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
-  std::vector<reading>  readings(void) const {
+  std::vector<reading>  readings(
+      const rmath::radians& rframe = rmath::radians::kZERO) const {
     ER_ASSERT(nullptr != m_sensor,
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -113,9 +120,16 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
     std::vector<reading> ret;
     for (auto &r : m_sensor->GetReadings().BlobList) {
       struct reading s = {
-        /* ARGoS reports this in cm for some reason */
+        /*
+         * ARGoS reports the distance in cm for some reason, so put it in SI
+         * units (meters), like a sane person.
+         *
+         * The angle reported is NOT relative to the global reference frame, but
+         * to the robot's current heading, which is treated as if it is along
+         * the positive X axis.
+         */
         .vec = {r->Distance / 100.0,
-                rmath::radians(r->Angle.GetValue())},
+                rframe + rmath::radians(r->Angle.GetValue())},
         .color = rutils::color(r->Color.GetRed(),
                               r->Color.GetGreen(),
                               r->Color.GetBlue())
@@ -124,6 +138,36 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
     } /* for(&r..) */
 
     return ret;
+  }
+
+  /**
+   * \brief Return the average blob reading within proximity for the
+   * robot of the specified color.
+   */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
+  boost::optional<rmath::vector2d> closest_blob(const rutils::color& color,
+                                                const rmath::radians& rframe) const {
+    ER_ASSERT(nullptr != m_sensor,
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+
+    auto same_color = [&](auto& r) { return color == r.color; };
+
+    /* constructed, not returned, so we need a copy to iterate over */
+    auto readings = this->readings(rframe);
+    auto filtered = readings | boost::adaptors::filtered(same_color);
+
+    auto closest = boost::range::min_element(filtered,
+                                             [&](const auto& r1, const auto& r2) {
+                                               return r1.vec.length() < r2.vec.length();
+                                             });
+
+    if (closest == filtered.end()) {
+      return boost::none;
+    } else {
+      return boost::make_optional(closest->vec);
+    }
   }
 
   template <typename U = TSensor,

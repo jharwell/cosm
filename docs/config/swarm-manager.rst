@@ -1,5 +1,6 @@
+===============================
 Swarm Manager XML Configuration
-================================
+===============================
 
 The following root XML tags are defined for swarm management:
 
@@ -20,7 +21,7 @@ The following root XML tags are defined for swarm management:
 +------------------------+------------------------------------------------------------------------------+
 
 ``output``
-----------
+==========
 
 - Required by: all controllers.
 - Required child attributes if present: all.
@@ -51,13 +52,13 @@ XML configuration:
 
 
 ``output/metrics``
-^^^^^^^^^^^^^^^^^^
+------------------
 
 - Required by: all controllers.
 - Required child attributes if present: [ ``output_dir`` ].
-- Required child tags if present: none.
+- Required child tags if present: [ ``sinks`` ].
 - Optional child attributes: none.
-- Optional child tags: [ ``create``, ``append``, ``truncate`` ].
+- Optional child tags: none.
 
 XML configuration:
 
@@ -67,15 +68,9 @@ XML configuration:
         ...
         <metrics
             output_dir="metrics">
-            <create
-                output_interval="INTEGER"
-                />
-            <append
-                output_interval="INTEGER"
-                />
-            <truncate
-                output_interval="INTEGER"
-                />
+            <sinks
+               <csv ... />
+            </sinks>
         </metrics>
         ...
     </output>
@@ -83,95 +78,69 @@ XML configuration:
 - ``output_dir`` - Name of directory within the output root that metrics will be
   placed in.
 
-``output/metrics/create``
-"""""""""""""""""""""""""
+``output/metrics/sinks``
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Required by: none.
-- Required child attributes if present: [ ``output_interval`` ].
+- Required by: all controllers.
+- Required child attributes if present: none.
 - Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags: [ ``csv`` ].
 
 XML configuration:
 
 .. code-block:: XML
 
     <metrics>
+        ...
+        <sinks>
+            <csv>
+        </sinks>
+        ...
+    </metrics>
+
+``output/metrics/sinks/csv``
+""""""""""""""""""""""""""""
+
+- Required by: none.
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: [ ``append``, ``create``, ``truncate`` ].
+
+XML configuration:
+
+.. code-block:: XML
+
+    <csv>
         ...
         <create
              output_interval="INTEGER"
              />
-        ...
-    </metrics>
-
-
-- ``output_interval`` - The timestep interval after which metrics will be
-  written out to a NEW ``.csv`` file with a unique timestep tag after the
-  provided stem.
-
-Some collectors (see :ref:`ln-metrics-collectors`) can be added under the
-``<create>`` tag as (id,filename) pairs. Not defining them disables metric
-collection of the given type.
-
-``output/metrics/append``
-"""""""""""""""""""""""""
-
-- Required by: none.
-- Required child attributes if present: [ ``output_interval`` ].
-- Required child tags if present: none.
-- Optional child attributes: none.
-- Optional child tags: none.
-
-XML configuration:
-
-.. code-block:: XML
-
-    <metrics>
-        ...
         <append
-             output_interval="INTEGER"/>
-        ...
-    </metrics>
-
-
-- ``output_interval`` - The timestep interval after which metrics will be
-  written out (appended) to the specified ``.csv`` created from the provided stem.
-
-Some collectors (see :ref:`ln-metrics-collectors`) can be added under the ``<append>``
-tag as (id,filename) pairs. Not defining them disables metric collection of the
-given type.
-
-``output/metrics/truncate``
-"""""""""""""""""""""""""""
-
-- Required by: none.
-- Required child attributes if present: [ ``output_interval`` ].
-- Required child tags if present: none.
-- Optional child attributes: none.
-- Optional child tags: none.
-
-XML configuration:
-
-.. code-block:: XML
-
-    <metrics>
-        ...
+            output_interval="INTEGER"
+            />
         <truncate
-             output_interval="INTEGER"/>
+            output_interval="INTEGER"
+            />
+
         ...
-    </metrics>
+    </csv>
 
 
-- ``output_interval`` - The timestep interval after which metrics will be
-  written out to a truncateed ``.csv`` created from the provided stem; that is,
-  each time they are output the results of the previously written out metrics
-  are lost.
+- ``output_interval`` - Required for all child tags. For ``append``, this
+  defines the timestep interval after which metrics will be written out
+  (appended) to the specified ``.csv`` created from the provided stem.  For
+  ``create``, this defines timestep interval after which metrics will be written
+  out to a NEW ``.csv`` file with a unique timestep tag after the provided
+  stem. For ``truncate``, this defines the timestep interval after which metrics
+  will be written out to a truncateed ``.csv`` created from the provided stem;
+  that is, each time they are output the results of the previously written out
+  metrics are lost.
 
-
-Collectors (:ref:`ln-metrics-collectors`) can be added under the
-``<append>,<create>,<truncate>`` tags. Not defining them disables metric
-collection of the given type. Defining the same metric collector in more than
-one category is undefined behavior.
+What collectors can be added under what child tag (id,filename) pairs is defined
+in :ref:`ln-metrics-collectors`) . Not defining them disables metric collection
+of the given type for that category.
 
 .. _ln-metrics-collectors:
 
@@ -196,6 +165,8 @@ Available Metrics Collectors
 | ``block_acq_locs2D``                           | 2D spatial distribution of where robots acquire goals.                  | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_explore_locs2D``                   | 2D spatial distribution of where robots exploring for blocks.           | create,truncate        |                        |
++------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+| ``block_acq_explore_locs3D``                   | 3D spatial distribution of where robots exploring for blocks.           | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 | ``block_acq_vector_locs2D``                    | 2D spatial distribution of where robots vector to known blocks.         | create,truncate        |                        |
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
@@ -225,7 +196,7 @@ Available Metrics Collectors
 +------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
 
 ``convergence``
----------------
+===============
 
 - Required by: none.
 - Required child attributes if present: all.
@@ -263,7 +234,7 @@ XML configuration:
   to have converged when its normalized value is above.
 
 ``convergence/positional_entropy``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 A measure of convergence using robot positions, Shannon's entropy definition,
 and Balch2000's social entropy measure. If it is defined, only the ``enable``
@@ -301,7 +272,7 @@ XML configuration:
 
 
 ``convergence/interactivity``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 A measure of convergence using nearest neighbor distances.
 
@@ -350,7 +321,7 @@ XML configuration:
   large swarms.
 
 ``convergence/angular_order``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 A measure of convergence using stability of robot task allocations over time.
 
@@ -376,7 +347,7 @@ XML configuration:
 
 
 ``convergence/velocity``
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 A measure of convergence using stability of swarm velocity (how much its
 geometric center moves) over time.
@@ -402,7 +373,7 @@ XML configuration:
   large swarms.
 
 ``arena_map``
--------------
+=============
 
 - Required by: all.
 - Required child attributes if present: none.
@@ -427,7 +398,7 @@ XML configuration:
    </arena_map>
 
 ``arena_map/grid``
-^^^^^^^^^^^^^^^^^^
+------------------
 
 - Required by: all.
 - Required child attributes if present: [ ``resolution``, ``size`` ].
@@ -454,7 +425,7 @@ XML configuration:
 - ``size`` - The size of the arena.
 
 ``arena_map/blocks``
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 - Required by: all.
 - Required child attributes if present: none.
@@ -483,7 +454,7 @@ XML configuration:
    </arena_map>
 
 ``arena_map/blocks/distribution``
-"""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Required by: all.
 - Required child attributes if present: ``dist_type``.
@@ -530,7 +501,7 @@ XML configuration:
   failure to distribute all blocks is OK.
 
 ``arena_map/blocks/distribution/redist_governor``
-#################################################
+"""""""""""""""""""""""""""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: ``trigger``.
@@ -585,7 +556,7 @@ XML configuration:
   required if ``trigger`` is ``block_count``.
 
 ``arena_map/blocks/distribution/manifest``
-##########################################
+""""""""""""""""""""""""""""""""""""""""""
 
 - Required by: all.
 - Required child attributes if present: At least one of [ ``n_cube``, ``n_ramp`` ],
@@ -616,7 +587,7 @@ XML configuration:
   this.
 
 ``arena_map/blocks/distribution/powerlaw``
-##########################################
+""""""""""""""""""""""""""""""""""""""""""
 
 - Required by: all iff ``dist_type`` is ``powerlaw``.
 - Required child attributes if present: [ ``pwr_min``, ``pwr_max``, ``n_clusters`` ].
@@ -731,7 +702,7 @@ XML configuration:
 
 
 ``temporal_variance``
----------------------
+=====================
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -754,7 +725,7 @@ XML configuration:
 
 
 ``temporal_variance/env_dynamics``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -797,7 +768,7 @@ XML configuration:
    </env_dynamics>
 
 ``temporal_variance/env_dynamics/motion_throttle``
-""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -822,7 +793,7 @@ XML configuration:
   which is applied regardless of whether or not they are carrying a block.
 
 ``temporal_variance/env_dynamics/blocks/manip_penalty``
-#######################################################
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -846,7 +817,7 @@ XML configuration:
   (picking up/dropping that does not involve caches).
 
 ``temporal_variance/env_dynamics/blocks/carry_throttle``
-########################################################
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -871,7 +842,7 @@ XML configuration:
 
 
 ``temporal_variance/population_dynamics``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------------
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -915,7 +886,7 @@ All parameters have the default values shown above if omitted.
 - ``max_size`` - The maximum swarm size achievable using the pure birth process.
 
 ``oracle_manager``
-------------------
+==================
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -938,7 +909,7 @@ XML configuration:
 
 
 ``oracle_manager/tasking_oracle``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -970,7 +941,7 @@ All attributes default as shown above if omitted.
   robot when it performs task allocation.
 
 ``oracle_manager/entities_oracle``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 - Required by: none.
 - Required child attributes if present: none.
@@ -997,7 +968,7 @@ XML configuration:
   swarm every timestep.
 
 ``visualization``
------------------
+=================
 
 - Required by: none.
 - Required child attributes if present: none.

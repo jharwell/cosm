@@ -133,7 +133,7 @@ RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_transport_to_nest) {
 }
 
 RCPPSW_HFSM_EXIT_DEFINE(foraging_util_hfsm, exit_transport_to_nest) {
-  sensing()->template sensor<hal::sensors::light_sensor>()->disable();
+  sensing()->light()->disable();
 }
 
 /*******************************************************************************

@@ -36,10 +36,13 @@
 #include "rcppsw/types/timestep.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/pal/config/output_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace fs = std::filesystem;
+
 NS_START(cosm, pal);
 
 /*******************************************************************************
@@ -82,26 +85,21 @@ class swarm_manager : public rer::client<swarm_manager> {
    */
   void rng_init(const rmath::config::rng_config* config) RCPPSW_COLD;
 
-  const std::string& output_root(void) const { return m_output_root; }
+  fs::path output_root(void) const { return m_output_root; }
 
   /**
    * \brief Initialize output directories.
-   *
-   * \param output_root Absolute/relative path to output root.
-   * \param output_dir Directory within the overall output root to use as the
-   *                   root directory for THIS experiment's outputs
    */
-  void output_init(const std::string& output_root,
-                   const std::string& output_dir) RCPPSW_COLD;
+  virtual void output_init(const cpconfig::output_config* config) RCPPSW_COLD;
 
   void timestep(const rtypes::timestep& t) { m_timestep = t; }
   const rtypes::timestep& timestep(void) const { return m_timestep; }
 
  private:
   /* clang-format off */
-  rtypes::timestep                 m_timestep{0};
-  std::string                      m_output_root{};
-  rmath::rng*                      m_rng{nullptr};
+  rtypes::timestep m_timestep{0};
+  fs::path         m_output_root{};
+  rmath::rng*      m_rng{nullptr};
   /* clang-format on */
 };
 

@@ -24,12 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <list>
-#include <atomic>
+#include <memory>
 
 #include "rcppsw/metrics/base_metrics_collector.hpp"
-#include "rcppsw/rcppsw.hpp"
+
+#include "cosm/ta/metrics/bi_tab_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -53,69 +52,20 @@ NS_START(cosm, ta, metrics);
 class bi_tab_metrics_collector final : public rmetrics::base_metrics_collector {
  public:
   /**
-   * \param ofname_stem Output file name stem.
-   * \param interval Collection interval.
+   * \param sink The metrics sink to use.
    */
-  bi_tab_metrics_collector(const std::string& ofname_stem,
-                           const rtypes::timestep& interval);
+  explicit bi_tab_metrics_collector(
+      std::unique_ptr<rmetrics::base_metrics_sink> sink);
 
-  void reset(void) override;
+  /* base_metrics_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
+  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
 
-  std::list<std::string> csv_header_cols(void) const override;
-  boost::optional<std::string> csv_line_build(void) override;
 
  private:
-  struct stats {
-    /**
-     * \brief # Times subtask 1 was chosen if partitioning was employed.
-     */
-    std::atomic_uint   subtask1_count{0};
-
-    /**
-     * \brief # Times subtask 2 was chosen if partitioning was employed.
-     */
-    std::atomic_uint   subtask2_count{0};
-
-    /**
-     * \brief # Times partitioning was employed when allocating a task,
-     */
-    std::atomic_uint   partition_count{0};
-
-    /**
-     * \brief # Times partitioning was not employed when allocating a task.
-     */
-    std::atomic_uint   no_partition_count{0};
-
-    /**
-     * \brief # Times when task allocation resulted in a different task being
-     * executed.
-     */
-    std::atomic_uint   task_sw_count{0};
-
-    /**
-     * \brief # Times when task allocation resulted in a task of a different
-     * depth being executed than previous.
-     */
-    std::atomic_uint   task_depth_sw_count{0};
-
-
-    /**
-     * \brief The average partitioning probability of the root task in the TAB.
-     */
-    std::atomic<double> partition_prob{0.0};
-
-    /**
-     * \brief The average subtask selection probability of the root task in the
-     * TAB.
-     */
-    std::atomic<double> subtask_sel_prob{0.0};
-  };
   /* clang-format off */
-  struct stats m_interval{};
-  struct stats m_cum{};
-  /* clang-format on */
+  bi_tab_metrics_data m_data{};
 };
 
 NS_END(metrics, ta, cosm);

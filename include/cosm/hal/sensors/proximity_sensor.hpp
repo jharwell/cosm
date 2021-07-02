@@ -106,7 +106,7 @@ class proximity_sensor_impl final : public rer::client<proximity_sensor_impl<TSe
    proximity_sensor_impl(const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
          mc_config(*config),
-        m_sensor(nullptr) {}
+         m_sensor(nullptr) {}
 
   const proximity_sensor_impl& operator=(const proximity_sensor_impl&) = delete;
   proximity_sensor_impl(const proximity_sensor_impl&) = default;
@@ -130,9 +130,22 @@ class proximity_sensor_impl final : public rer::client<proximity_sensor_impl<TSe
               __FUNCTION__);
 
     rmath::vector2d accum;
-    for (auto& r : readings()) {
+
+    size_t count = 0;
+
+    /* constructed, not returned, so we need a copy to iterate over */
+    auto readings = this->readings();
+    for (auto& r : readings) {
       accum += r;
+      ++count;
     }
+
+    if (count == 0) {
+      return boost::none;
+    }
+
+    accum /= count;
+
     if (mc_config.fov.contains(accum.angle()) &&
         accum.length() <= mc_config.delta) {
       return boost::none;

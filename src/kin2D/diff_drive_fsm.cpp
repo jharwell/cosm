@@ -24,6 +24,7 @@
 #include "cosm/kin2D/diff_drive_fsm.hpp"
 
 #include "rcppsw/math/range.hpp"
+#include "rcppsw/math/angles.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -79,7 +80,7 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
 
   /* Both wheels go straight, but one is faster than the other */
   double speed_factor = std::fabs(
-      (mc_soft_turn_max - rmath::radians::abs(data->angle)) / mc_soft_turn_max);
+      (mc_soft_turn_max - rmath::abs(data->angle)) / mc_soft_turn_max);
   double base_speed = std::min(data->speed, mc_max_speed);
   double speed1 = base_speed - base_speed * (1.0 - speed_factor);
   double speed2 = base_speed + base_speed * (1.0 - speed_factor);
