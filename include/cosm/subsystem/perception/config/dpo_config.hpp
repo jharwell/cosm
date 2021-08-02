@@ -1,7 +1,7 @@
 /**
- * \file perception_config.hpp
+ * \file dpo_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,18 +18,15 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_DPO_CONFIG_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_DPO_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-
 #include "rcppsw/config/base_config.hpp"
 
-#include "cosm/subsystem/perception/config/dpo_config.hpp"
-#include "cosm/subsystem/perception/config/mdpo_config.hpp"
+#include "cosm/subsystem/perception/config/pheromone_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,19 +37,16 @@ NS_START(cosm, subsystem, perception, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * \struct perception_config
+ * \struct dpo_config
  * \ingroup subsystem perception config
  *
- * \brief Configuration for robot perception.
+ * \brief Configuration for the Decaying Pheromone Object (DPO) perception
+ * subsystem.
  */
-struct perception_config final : public rconfig::base_config {
-  std::string model{""};
-  double los_dim{-1};
-
-  struct dpo_config dpo {};
-  struct mdpo_config mdpo {};
+struct dpo_config final : public rconfig::base_config {
+  struct pheromone_config pheromone {};
 };
 
 NS_END(config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_DPO_CONFIG_HPP_ */

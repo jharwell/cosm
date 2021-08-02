@@ -1,5 +1,5 @@
 /**
- * \file perception_parser.hpp
+ * \file dpo_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PERCEPTION_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PERCEPTION_PARSER_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_DPO_PARSER_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_DPO_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -29,9 +29,8 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/subsystem/perception/config/perception_config.hpp"
-#include "cosm/subsystem/perception/config/xml/dpo_parser.hpp"
-#include "cosm/subsystem/perception/config/xml/mdpo_parser.hpp"
+#include "cosm/subsystem/perception/config/dpo_config.hpp"
+#include "cosm/subsystem/perception/config/xml/pheromone_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,39 +41,38 @@ NS_START(cosm, subsystem, perception, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class perception_parser
+ * \class dpo_parser
  * \ingroup subsystem perception config xml
  *
- * \brief Parses XML parameters for various perception subsystems into
- * \ref perception_config.
+ * \brief Parses XML parameters relating to the DPO perception subsystem into
+ * \ref dpo_config.
  */
-class perception_parser final : public rconfig::xml::xml_config_parser {
+class dpo_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = perception_config;
+  using config_type = dpo_config;
 
   /**
-   * \brief The root tag that all perception  parameters should lie under in
-   * the XML tree.
+   * \brief The root tag that all dpo parameters should lie under in the
+   * XML tree.
    */
-  inline static std::string kXMLRoot = "perception";
+  inline static const std::string kXMLRoot = "dpo";
 
   bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
-
-  RCPPSW_COLD std::string xml_root(void) const override { return kXMLRoot; }
+  std::string xml_root(void) const override { return kXMLRoot; }
 
  private:
-  RCPPSW_COLD const rconfig::base_config* config_get_impl(void) const override {
+  const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
 
+ private:
   /* clang-format off */
-  std::unique_ptr<config_type> m_config{nullptr};
-  dpo_parser                   m_dpo{};
-  mdpo_parser                  m_mdpo{};
+  std::shared_ptr<config_type> m_config{nullptr};
+  pheromone_parser             m_pheromone{};
   /* clang-format on */
 };
 
 NS_END(xml, config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_PERCEPTION_XML_PERCEPTION_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_DPO_PARSER_HPP_ */

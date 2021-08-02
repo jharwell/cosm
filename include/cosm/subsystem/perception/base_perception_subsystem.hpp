@@ -28,7 +28,7 @@
 #include <utility>
 
 #include "cosm/subsystem/perception/config/perception_config.hpp"
-#include "cosm/cosm.hpp"
+#include "cosm/subsystem/perception/base_perception_model.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -48,8 +48,10 @@ template<typename TLOS>
 class base_perception_subsystem {
  public:
   explicit base_perception_subsystem(
-      const cspconfig::perception_config* const pconfig)
-      : mc_los_dim(pconfig->los_dim) {}
+      const cspconfig::perception_config* const pconfig,
+      std::unique_ptr<base_perception_model> model)
+      : mc_los_dim(pconfig->los_dim),
+        m_model(std::move(model)) {}
 
   virtual ~base_perception_subsystem(void) = default;
 
@@ -76,11 +78,20 @@ class base_perception_subsystem {
   const TLOS* los(void) const { return m_los.get(); }
   double los_dim(void) const { return mc_los_dim; }
 
+  const base_perception_model* model(void) const { return m_model.get(); }
+  base_perception_model* model(void) { return m_model.get(); }
+
+ protected:
+  void model(std::unique_ptr<base_perception_model> model) {
+    m_model = std::move(model);
+  }
+
  private:
   /* clang-format off */
-  const double              mc_los_dim;
+  const double                           mc_los_dim;
 
-  std::unique_ptr<TLOS> m_los{nullptr};
+  std::unique_ptr<TLOS>                  m_los{nullptr};
+  std::unique_ptr<base_perception_model> m_model{nullptr};
   /* clang-format on */
 };
 

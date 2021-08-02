@@ -1,7 +1,7 @@
 /**
- * \file perception_config.hpp
+ * \file dpo_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,41 +18,41 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-
-#include "rcppsw/config/base_config.hpp"
-
-#include "cosm/subsystem/perception/config/dpo_config.hpp"
-#include "cosm/subsystem/perception/config/mdpo_config.hpp"
+#include "cosm/subsystem/perception/config/xml/dpo_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config);
+NS_START(cosm, subsystem, perception, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Member Functions
  ******************************************************************************/
-/**
- * \struct perception_config
- * \ingroup subsystem perception config
- *
- * \brief Configuration for robot perception.
- */
-struct perception_config final : public rconfig::base_config {
-  std::string model{""};
-  double los_dim{-1};
+void dpo_parser::parse(const ticpp::Element& node) {
+  /* DPO perception not used */
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
+  ticpp::Element dnode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-  struct dpo_config dpo {};
-  struct mdpo_config mdpo {};
-};
+  m_pheromone.parse(dnode);
+  m_config->pheromone = *m_pheromone.config_get<pheromone_parser::config_type>();
+} /* parse() */
 
-NS_END(config, perception, subsystem, cosm);
+bool dpo_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+  RCPPSW_CHECK(m_pheromone.validate());
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_ */
+  return true;
+
+error:
+  return false;
+} /* validate() */
+
+NS_END(xml, config, perception, subsystem, cosm);

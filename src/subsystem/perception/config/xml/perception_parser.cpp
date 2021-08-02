@@ -37,24 +37,20 @@ void perception_parser::parse(const ticpp::Element& node) {
     return;
   }
 
-  ticpp::Element onode = node_get(node, kXMLRoot);
+  ticpp::Element pnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(onode, m_config, los_dim);
+  XML_PARSE_ATTR(pnode, m_config, model);
+  XML_PARSE_ATTR(pnode, m_config, los_dim);
 
-  /* grid optional */
-  if (nullptr !=
-      onode.FirstChild(cds::config::xml::grid2D_parser::kXMLRoot, false)) {
-    m_grid.parse(onode);
-    m_config->occupancy_grid =
-        *m_grid.config_get<cdconfig::xml::grid2D_parser::config_type>();
+  m_dpo.parse(pnode);
+  m_mdpo.parse(pnode);
+
+  if (m_dpo.is_parsed()) {
+    m_config->dpo = *m_dpo.config_get<dpo_parser::config_type>();
   }
-
-  /* pheromones optional */
-  if (nullptr != onode.FirstChild(pheromone_parser::kXMLRoot, false)) {
-    m_pheromone.parse(onode);
-    m_config->pheromone =
-        *m_pheromone.config_get<pheromone_parser::config_type>();
+  if (m_mdpo.is_parsed()) {
+    m_config->mdpo = *m_mdpo.config_get<mdpo_parser::config_type>();
   }
 } /* parse() */
 
@@ -62,7 +58,13 @@ bool perception_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  return m_grid.validate() && m_pheromone.validate();
+  RCPPSW_CHECK(m_dpo.validate());
+  RCPPSW_CHECK(m_mdpo.validate());
+
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
 NS_END(xml, config, perception, subsystem, cosm);

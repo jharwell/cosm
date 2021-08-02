@@ -1,7 +1,7 @@
 /**
- * \file perception_config.hpp
+ * \file mdpo_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,18 +18,16 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_MDPO_CONFIG_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_MDPO_CONFIG_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-
 #include "rcppsw/config/base_config.hpp"
 
-#include "cosm/subsystem/perception/config/dpo_config.hpp"
-#include "cosm/subsystem/perception/config/mdpo_config.hpp"
+#include "cosm/subsystem/perception/config/pheromone_config.hpp"
+#include "cosm/ds/config/grid2D_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,19 +38,17 @@ NS_START(cosm, subsystem, perception, config);
  * Structure Definitions
  ******************************************************************************/
 /**
- * \struct perception_config
+ * \struct mdpo_config
  * \ingroup subsystem perception config
  *
- * \brief Configuration for robot perception.
+ * \brief Configuration for the Mapped Decaying Pheromone Object (MDPO)
+ * perception subsystem.
  */
-struct perception_config final : public rconfig::base_config {
-  std::string model{""};
-  double los_dim{-1};
-
-  struct dpo_config dpo {};
-  struct mdpo_config mdpo {};
+struct mdpo_config final : public rconfig::base_config {
+  struct pheromone_config pheromone {};
+  cds::config::grid2D_config grid {};
 };
 
 NS_END(config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_PERCEPTION_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_MDPO_CONFIG_HPP_ */
