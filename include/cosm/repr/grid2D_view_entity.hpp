@@ -1,5 +1,5 @@
 /**
- * \file grid_view_entity.hpp
+ * \file grid2D_view_entity.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,20 +18,15 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRID_VIEW_ENTITY_HPP_
-#define INCLUDE_COSM_REPR_GRID_VIEW_ENTITY_HPP_
+#ifndef INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_
+#define INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-
-#include "rcppsw/math/range.hpp"
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/types/discretize_ratio.hpp"
-
 #include "cosm/cosm.hpp"
-#include "cosm/ds/arena_grid.hpp"
 #include "cosm/repr/entity2D.hpp"
+#include "cosm/repr/base_grid_view_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,7 +37,7 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class grid_view_entity
+ * \class grid2D_view_entity
  * \ingroup repr
  *
  * \brief Representation of an \ref arena_grid::grid_view or \ref
@@ -58,24 +53,36 @@ NS_START(cosm, repr);
  *   on the same level of abstraction as the arena grid (hence the class name).
  * - Has no concept of movability/immovability (again, it is abstract).
  */
-template <class T>
-class grid_view_entity : public crepr::entity2D {
+template <typename TGridType, typename TGridViewType>
+class grid2D_view_entity : public crepr::entity2D,
+                           public crepr::base_grid_view_entity<TGridType, TGridViewType>,
+                           public rer::client<grid2D_view_entity<TGridType, TGridViewType>> {
  public:
-  grid_view_entity(const rtypes::type_uuid& id,
-                   const T& view,
-                   const rtypes::discretize_ratio& resolution)
-      : entity2D(id), mc_resolution(resolution), m_view(view) {}
+  using base_grid_view_entity_type = base_grid_view_entity<TGridType, TGridViewType>;
 
-  ~grid_view_entity(void) override = default;
+  using typename base_grid_view_entity_type::grid_type;
+  using typename base_grid_view_entity_type::grid_view_type;
+  using typename base_grid_view_entity_type::cell_type;
+  using typename base_grid_view_entity_type::coord_type;
+
+  using base_grid_view_entity_type::resolution;
+  using base_grid_view_entity_type::access;
+
+  grid2D_view_entity(const rtypes::type_uuid& id,
+                     const grid_view_type& the_view,
+                     const rtypes::discretize_ratio& res)
+      : entity2D(id),
+      base_grid_view_entity_type(the_view, res),
+      ER_CLIENT_INIT("cosm.repr.grid2D_view_entity") {}
+
+  ~grid2D_view_entity(void) override = default;
 
   rmath::vector2d ranchor2D(void) const override {
-    return rmath::zvec2dvec(danchor2D(), mc_resolution.v());
+    return rmath::zvec2dvec(danchor2D(), resolution().v());
   }
   rmath::vector2d rcenter2D(void) const override {
     return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
   }
-
-  const rtypes::discretize_ratio& resolution(void) const { return mc_resolution; }
 
   rmath::ranged xrspan(void) const override {
     return entity2D::xrspan(ranchor2D(), xrsize());
@@ -83,9 +90,8 @@ class grid_view_entity : public crepr::entity2D {
   rmath::ranged yrspan(void) const override {
     return entity2D::yrspan(ranchor2D(), yrsize());
   }
-
   rmath::vector2z danchor2D(void) const override final {
-    return m_view.origin()->loc();
+    return view().origin()->loc();
   }
   rmath::vector2z dcenter2D(void) const override final {
     return danchor2D() + rmath::vector2z(xdsize(), ydsize()) / 2;
@@ -99,10 +105,10 @@ class grid_view_entity : public crepr::entity2D {
   }
 
   rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(xdsize() * mc_resolution.v());
+    return rtypes::spatial_dist(xdsize() * resolution().v());
   }
   rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(ydsize() * mc_resolution.v());
+    return rtypes::spatial_dist(ydsize() * resolution().v());
   }
 
   /**
@@ -115,28 +121,35 @@ class grid_view_entity : public crepr::entity2D {
    *
    * \return A reference to the cell.
    */
-  const ds::cell2D& cell(size_t i, size_t j) const { return m_view[i][j]; }
-  const ds::cell2D& cell(const rmath::vector2z c) const { return cell(c.x(), c.y()); }
+  const cell_type& access(size_t i, size_t j) const {
+    ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
+    ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %lu", j, ydsize());
+    return view()[i][j];
+  }
 
-  bool contains_cell2D(const rmath::vector2z& cell) const {
+  const cell_type& access(const coord_type& c) const override {
+    return access(c.x(), c.y());
+  }
+
+  bool contains_abs(const coord_type& cell) const override {
     return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
   }
+
+  bool contains_rel(const coord_type& cell) const override {
+    return (cell.x() < xdsize()) && (cell.y() < ydsize());
+  }
+
  protected:
+  using base_grid_view_entity_type::view;
+
   /**
    * \brief Return the size of the entity in discrete coordinates. Only suitable
    * for indexing within the entity itself.
    */
-  size_t xdsize(void) const override final { return m_view.shape()[0]; }
-  size_t ydsize(void) const override final { return m_view.shape()[1]; }
-
- private:
-  /* clang-format off */
-  const rtypes::discretize_ratio mc_resolution;
-
-  T                              m_view;
-  /* clang-format on */
+  size_t xdsize(void) const override final { return view().shape()[0]; }
+  size_t ydsize(void) const override final { return view().shape()[1]; }
 };
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRID_VIEW_ENTITY_HPP_ */
+#endif /* INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_ */

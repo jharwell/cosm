@@ -54,8 +54,8 @@ using arena_layer_stack = std::tuple<cell2D>;
  */
 class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
  public:
-  using cell_type = cell2D;
-
+  using value_type = cell2D;
+  using coord_type = rmath::vector2z;
   using view = rds::base_grid2D<ds::cell2D>::grid_view;
   using const_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
 

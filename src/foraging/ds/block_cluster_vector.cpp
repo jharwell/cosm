@@ -50,11 +50,11 @@ std::string do_to_str(const TVector& vec) {
  * Member Functions
  ******************************************************************************/
 std::string block3D_cluster_vectorro::to_str(void) const {
-  return do_to_str(*this);
+  return do_to_str(decoratee());
 } /* to_str() */
 
 std::string block3D_cluster_vectorno::to_str(void) const {
-  return do_to_str(*this);
+  return do_to_str(decoratee());
 } /* to_str() */
 
 NS_END(ds, foraging, cosm);

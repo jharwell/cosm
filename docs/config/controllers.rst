@@ -69,9 +69,9 @@ XML configuration:
 ``perception``
 --------------
 
-- Required child attributes if present: [ ``los_dim``, ``model`` ].
+- Required child attributes if present: [  ``type`` ].
 - Required child tags if present: none.
-- Optional child tags: [ ``dpo``, ``mdpo`` ]
+- Optional child tags: [ ``rlos`` ]
 - Optional child attributes: none.
 
 XML configuration:
@@ -79,72 +79,21 @@ XML configuration:
 .. code-block:: XML
 
    <perception
-       los_dim="INTEGER">
-       <dpo>
-           ...
-       <dpo/>
-       <mdpo>
-           ...
-       <mdpo/>
+     type="STRING">
+     <rlos>
+        ...
+     </rlos>
    </perception>
 
-- ``los_dim`` - The dimension of robot LOS (LOS is a square).
-- ``model`` - The perception model to use.
+- ``type`` - The perception type to use.
 
-``perception/dpo``
-^^^^^^^^^^^^^^^^^^
-
-Parameters for the Decaying Pheromone Object (DPO) perception model.
-
-XML configuration:
-
-.. code-block:: XML
-
-   <perception>
-     ...
-     <dpo>
-        <pheromone>
-           ...
-        </pheromone
-     </dpo>
-     ...
-   </perception>
-
-``perception/dpo/pheromone``
-""""""""""""""""""""""""""""
-
-Parameters controlling the decay of the pheromone-based memory for the Decaying
-Pheromone Object (DPO) perception model.
-
-- Required child attributes if present: ``rho``.
-- Required child tags if present: none.
-- Optional child attributes: ``repeat_deposit``.
-- Optional child tags: none.
-
-XML configuration:
-
-.. code-block:: XML
-
-   <dpo>
-     ...
-     <pheromone rho="FLOAT"
-                repeat_deposit="false"/>
-     ...
-   </dpo>
-
-- ``rho`` How fast the relevance of information about a particular cell within a
-  robot's 2D map of the world loses relevance. Should be < 1.0.
-
-- ``repeat_deposit`` - If *true*, then repeated pheromone deposits for objects a
-  robot already knows about will be enabled. ``rho`` should be updated
-  accordingly, probably to a larger value to enable faster decay. Default if
-  omitted: *false*.
-
-
-``perception/mdpo``
+``perception/rlos``
 ^^^^^^^^^^^^^^^^^^^
 
-Parameters for the Mapped Decaying Pheromone Object (MDPO) perception model.
+- Required child attributes if present: [  ``los_dim`` ].
+- Required child tags if present: none.
+- Optional child tags: [ ``arena`` ].
+- Optional child attributes: none.
 
 XML configuration:
 
@@ -152,22 +101,20 @@ XML configuration:
 
    <perception>
      ...
-     <mdpo>
-        <grid2D>
-           ...
-        </grid2D>
-        <pheromone>
-           ...
-        </pheromone
-     </mdpo>
+     <rlos
+       dim="FLOAT">
+       <grid2D>
+         ...
+       </grid2D>
+     </rlos>
      ...
    </perception>
 
-``perception/mdpo/grid2D``
-""""""""""""""""""""""""""
+- ``dim`` - The dimension of robot LOS (LOS is a square).
+- ``grid2D`` - The dimensions of the arena (optional).
 
-Parameters controlling the robot's internal gridded representation of the
-world. Should generally match the discretization of the arena map.
+``perception/rlos/grid2D``
+""""""""""""""""""""""""""
 
 - Required child attributes if present: all.
 - Required child tags if present: none.
@@ -178,12 +125,12 @@ XML configuration:
 
 .. code-block:: XML
 
-   <mdpo>
+   <rlos>
      ...
      <grid2D resolution="FLOAT"
              dims="FLOAT, FLOAT, FLOAT"/>
      ...
-   </mdpo>
+   </rlos>
 
 - ``resolution`` - The size of the cells the arena is broken up (discretized)
   into. Should probably be the same as whatever the block size is, to make
@@ -191,12 +138,6 @@ XML configuration:
 
 - ``dims`` - The size of the arena, specified as "X, Y, Z" (the spaces are
   mandatory).
-
-``perception/mdpo/pheromone``
-"""""""""""""""""""""""""""""
-
-Same as ``perception/dpo/pheromone``.
-
 
 ``task_executive``
 ------------------

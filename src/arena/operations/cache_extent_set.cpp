@@ -52,7 +52,7 @@ void cache_extent_set::visit(cds::arena_grid& grid) {
       RCPPSW_UNUSED auto rcoord = rmath::zvec2dvec(dcoord, grid.resolution().v());
       auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
 
-      ER_CHECKW(m_cache->contains_point2D(rcoord),
+      ER_CHECKW(m_cache->contains_point(rcoord),
                 "Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",
                 m_cache->id().v(),
                 rcppsw::to_string(m_cache->rcenter2D()).c_str(),

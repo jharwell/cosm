@@ -220,7 +220,7 @@ caching_arena_map::robot_on_cache(const rmath::vector2d& pos) const {
    * there aren't ever that many caches in the arena.
    */
   for (auto& c : m_cacheso) {
-    if (c->contains_point2D(pos)) {
+    if (c->contains_point(pos)) {
       ret = c->id();
     }
   } /* for(&c..) */

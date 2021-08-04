@@ -68,10 +68,10 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
     return ranchor3D().to_2D();
   }
   rmath::ranged xrspan(void) const override final {
-    return spatial_entity::xrspan(ranchor3D(), xrsize());
+    return entity3D::xrspan(ranchor3D(), xrsize());
   }
   rmath::ranged yrspan(void) const override final {
-    return spatial_entity::yrspan(ranchor3D(), yrsize());
+    return entity3D::yrspan(ranchor3D(), yrsize());
   }
   rmath::ranged zrspan(void) const override final {
     return entity3D::zrspan(ranchor3D(), yrsize());
@@ -101,10 +101,10 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
     return danchor3D().to_2D();
   }
   rmath::rangez xdspan(void) const override final {
-    return spatial_entity::xdspan(danchor2D(), xdsize());
+    return entity3D::xdspan(danchor2D(), xdsize());
   }
   rmath::rangez ydspan(void) const override final {
-    return spatial_entity::ydspan(danchor2D(), ydsize());
+    return entity3D::ydspan(danchor2D(), ydsize());
   }
   rmath::rangez zdspan(void) const override final {
     return entity3D::ydspan(danchor2D(), zdsize());
@@ -124,12 +124,12 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    *
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
-  bool contains_point2D(const rmath::vector2d& point) const {
+  bool contains_point(const rmath::vector2d& point) const {
     return xrspan().contains(point.x()) && yrspan().contains(point.y());
   }
-  bool contains_point3D(const rmath::vector3d& point) const {
+  bool contains_point(const rmath::vector3d& point) const {
     return xrspan().contains(point.x()) && yrspan().contains(point.y()) &&
-           zrspan().contains(point.z());
+        zrspan().contains(point.z());
   }
 
   const rmath::vector3d& rdim3D(void) const { return m_rdim; }

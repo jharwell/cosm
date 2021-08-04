@@ -28,6 +28,9 @@
 #include <string>
 #include <vector>
 
+#include "rcppsw/er/stringizable.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -39,7 +42,7 @@ class base_block3D;
 
 NS_START(cosm, ds);
 
-using block3D_vectoro_type = std::shared_ptr<crepr::base_block3D>;
+using block3D_vectoro_type = std::unique_ptr<crepr::base_block3D>;
 using block3D_vectorno_type = crepr::base_block3D*;
 using block3D_vectorro_type = const crepr::base_block3D*;
 
@@ -55,15 +58,28 @@ using block3D_vectorro_type = const crepr::base_block3D*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectoro : public std::vector<block3D_vectoro_type> {
+class block3D_vectoro : public rpdecorator::decorator<std::vector<block3D_vectoro_type>>,
+                        public rer::stringizable {
  public:
-  using std::vector<block3D_vectoro_type>::vector;
-  using value_type = std::vector<block3D_vectoro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
+  RCPPSW_DECORATE_DECL(iterator);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty, const);
+
+  std::string to_str(void) const override;
 };
 
 /*
@@ -72,15 +88,28 @@ class block3D_vectoro : public std::vector<block3D_vectoro_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectorno : public std::vector<block3D_vectorno_type> {
+class block3D_vectorno : public rpdecorator::decorator<std::vector<block3D_vectorno_type>>,
+                         public rer::stringizable {
  public:
-  using std::vector<block3D_vectorno_type>::vector;
-  using value_type = std::vector<block3D_vectorno_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
+  RCPPSW_DECORATE_DECL(iterator);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty, const);
+
+  std::string to_str(void) const override;
 };
 
 /*
@@ -89,15 +118,28 @@ class block3D_vectorno : public std::vector<block3D_vectorno_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectorro : public std::vector<block3D_vectorro_type> {
+class block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vectorro_type>>,
+                         public rer::stringizable {
  public:
-  using std::vector<block3D_vectorro_type>::vector;
-  using value_type = std::vector<block3D_vectorro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
+  RCPPSW_DECORATE_DECL(iterator);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty, const);
+
+  std::string to_str(void) const override;
 };
 
 NS_END(ds, cosm);

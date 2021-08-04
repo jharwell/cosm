@@ -46,8 +46,9 @@ block3D_manifest_processor::block3D_manifest_processor(
  * Member Functions
  ******************************************************************************/
 cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
+  size_t i;
   cds::block3D_vectoro v;
-  uint i;
+
   for (i = 0; i < mc_manifest.n_cube; ++i) {
     auto block = create("cube3D",
                         rtypes::type_uuid(i),
@@ -56,9 +57,9 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
                                         mc_manifest.unit_dim),
                         mc_arena_res);
     /*
-     * Move the block out of sight, so that if there are more blocks in the
-     * arena map than can be successfully distributed, we don't run into weird
-     * cases where the block has an undefined location.
+     * Move the block out of sight, so that if there are more blocks in the */
+    /* arena map than can be successfully distributed, we don't run into weird */
+    /* cases where the block has an undefined location.
      */
     block->move_out_of_sight();
     v.push_back(std::move(block));

@@ -1,7 +1,7 @@
 /**
- * \file perception_parser.cpp
+ * \file rlos_parser.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/subsystem/perception/config/xml/perception_parser.hpp"
+#include "cosm/subsystem/perception/config/xml/rlos_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -31,40 +31,18 @@ NS_START(cosm, subsystem, perception, config, xml);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void perception_parser::parse(const ticpp::Element& node) {
-  /* Not all robots use a perception subsystem */
-  if (nullptr == node.FirstChild(kXMLRoot, false)) {
-    return;
-  }
-
-  ticpp::Element pnode = node_get(node, kXMLRoot);
+void rlos_parser::parse(const ticpp::Element& node) {
+  ticpp::Element rnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(pnode, m_config, model);
-  XML_PARSE_ATTR(pnode, m_config, los_dim);
+  XML_PARSE_ATTR(rnode, m_config, dim);
 
-  m_dpo.parse(pnode);
-  m_mdpo.parse(pnode);
+  m_grid.parse(rnode);
 
-  if (m_dpo.is_parsed()) {
-    m_config->dpo = *m_dpo.config_get<dpo_parser::config_type>();
-  }
-  if (m_mdpo.is_parsed()) {
-    m_config->mdpo = *m_mdpo.config_get<mdpo_parser::config_type>();
+  if (m_grid.is_parsed()) {
+    m_config->grid2D = *m_grid.config_get<cdconfig::xml::grid2D_parser::config_type>();
   }
 } /* parse() */
 
-bool perception_parser::validate(void) const {
-  if (!is_parsed()) {
-    return true;
-  }
-  RCPPSW_CHECK(m_dpo.validate());
-  RCPPSW_CHECK(m_mdpo.validate());
-
-  return true;
-
-error:
-  return false;
-} /* validate() */
 
 NS_END(xml, config, perception, subsystem, cosm);

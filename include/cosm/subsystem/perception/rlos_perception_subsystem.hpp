@@ -1,5 +1,5 @@
 /**
- * \file base_perception_subsystem.hpp
+ * \file rlos_perception_subsystem.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,17 +18,16 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_RLOS_PERCEPTION_SUBSYSTEM_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_RLOS_PERCEPTION_SUBSYSTEM_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <memory>
-#include <utility>
 
-#include "cosm/subsystem/perception/config/perception_config.hpp"
-#include "cosm/subsystem/perception/base_perception_model.hpp"
+#include "cosm/subsystem/perception/config/rlos_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,21 +38,19 @@ NS_START(cosm, subsystem, perception);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class base_perception_subsystem
+ * \class rlos_perception_subsystem
  * \ingroup subsystem perception
  *
- * \brief Base class for robot perception common to all subsystems.
+ * \brief Base class for Line-Of-Sight (LOS) based robot perception without
+ * memory (reactive behaviors only).
  */
 template<typename TLOS>
-class base_perception_subsystem {
+class rlos_perception_subsystem {
  public:
-  explicit base_perception_subsystem(
-      const cspconfig::perception_config* const pconfig,
-      std::unique_ptr<base_perception_model> model)
-      : mc_los_dim(pconfig->los_dim),
-        m_model(std::move(model)) {}
+  explicit rlos_perception_subsystem(const cspconfig::rlos_config* const config)
+      : mc_los_dim(config->dim) {}
 
-  virtual ~base_perception_subsystem(void) = default;
+  virtual ~rlos_perception_subsystem(void) = default;
 
   /**
    * \brief Reset the robot's perception of the environment to an initial state
@@ -78,23 +75,14 @@ class base_perception_subsystem {
   const TLOS* los(void) const { return m_los.get(); }
   double los_dim(void) const { return mc_los_dim; }
 
-  const base_perception_model* model(void) const { return m_model.get(); }
-  base_perception_model* model(void) { return m_model.get(); }
-
- protected:
-  void model(std::unique_ptr<base_perception_model> model) {
-    m_model = std::move(model);
-  }
-
  private:
   /* clang-format off */
-  const double                           mc_los_dim;
+  const double          mc_los_dim;
 
-  std::unique_ptr<TLOS>                  m_los{nullptr};
-  std::unique_ptr<base_perception_model> m_model{nullptr};
+  std::unique_ptr<TLOS> m_los{nullptr};
   /* clang-format on */
 };
 
 NS_END(perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_PERCEPTION_SUBSYSTEM_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_LOS_PERCEPTION_SUBSYSTEM_HPP_ */

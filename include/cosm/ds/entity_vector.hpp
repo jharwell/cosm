@@ -35,7 +35,7 @@ namespace cosm::repr {
 class unicell_entity2D;
 class unicell_entity3D;
 class base_entity;
-class spatial_entity;
+class spatial_entity2D;
 } // namespace cosm::repr
 
 NS_START(cosm, ds);
@@ -49,8 +49,12 @@ using const_entity3D_vector_type = const crepr::unicell_entity3D*;
 using entity_vector_type = crepr::base_entity*;
 using const_entity_vector_type = const crepr::base_entity*;
 
-using spatial_entity_vector_type = crepr::spatial_entity*;
-using const_spatial_entity_vector_type = const crepr::spatial_entity*;
+/*
+ * We use spatial_entity2D rather than the base class, because all
+ * spatial_entity3D derived classes are also spatial_entity2D instances.
+ */
+using spatial_entity_vector_type = crepr::spatial_entity2D*;
+using const_spatial_entity_vector_type = const crepr::spatial_entity2D*;
 
 /*******************************************************************************
  * Type Definitions

@@ -35,6 +35,7 @@
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/ds/grid2D_overlay.hpp"
 #include "rcppsw/ds/grid3D_overlay.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/ds/cell2D.hpp"
@@ -43,67 +44,46 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+NS_START(cosm, controller, operations, detail);
+
+/*******************************************************************************
+ * Class Definitions
+ ******************************************************************************/
+/**
+ * \class robot_los_builder
+ * \ingroup controller operations detail
+ *
+ * \brief Compute the line of sight for a given robot as it moves within a 2D/3D
+ * grid.
+ */
+class robot_los_builder {
+ public:
+  robot_los_builder(void) = default;
+
+  template <typename TGrid, typename TLOS>
+  std::unique_ptr<TLOS> operator()(
+      const TGrid* const grid,
+      const typename TLOS::field_coord_rtype& robot_rpos,
+      const rtypes::type_uuid& robot_id,
+      size_t los_grid_size) {
+    auto robot_dpos = rmath::dvec2zvec(robot_rpos - grid->originr(),
+                                       grid->resolution().v());
+    return std::make_unique<TLOS>(robot_id,
+                                  grid->subcircle(robot_dpos,
+                                                  los_grid_size),
+                                  grid->resolution());
+  } /* robot_los_compute */
+
+  /* Not move/copy constructable/assignable by default */
+  robot_los_builder(const robot_los_builder&) = delete;
+  robot_los_builder& operator=(const robot_los_builder&) = delete;
+  robot_los_builder(robot_los_builder&&) = delete;
+  robot_los_builder& operator=(robot_los_builder&&) = delete;
+};
 
 /*******************************************************************************
  * Free Functions
  ******************************************************************************/
-NS_START(detail);
-
-/**
- * \brief Compute the line of sight for a given robot as it moves within a 2D
- * grid.
- */
-template<typename TLOS>
-std::unique_ptr<TLOS> robot_los2D_compute(
-    const rds::grid2D_overlay<cds::cell2D>* grid,
-    const rmath::vector2d& pos,
-    size_t los_grid_size) {
-
-  auto position = rmath::dvec2zvec(pos, grid->resolution().v());
-  return std::make_unique<TLOS>(grid->subcircle(position,
-                                                los_grid_size));
-} /* robot_los_compute */
-
-/**
- * \brief Compute the line of sight for a given robot as it moves within a 3D
- * grid.
- */
-template<typename TLOS>
-std::unique_ptr<TLOS> robot_los3D_compute(
-    const rds::grid3D_overlay<cds::cell3D>* grid,
-    const rmath::vector3d& pos,
-    size_t los_grid_size) {
-  auto position = rmath::dvec2zvec(pos, grid->resolution().v());
-
-  /* LOS can take a reference to the grid it was created from, if desired */
-  if constexpr (std::is_constructible<TLOS,
-                const rds::grid3D_overlay<cds::cell3D>::const_grid_view&,
-                const rds::grid3D_overlay<cds::cell3D>*>::value) {
-      return std::make_unique<TLOS>(grid->subcircle(position,
-                                                    los_grid_size),
-                                    grid);
-    } else {
-    return std::make_unique<TLOS>(grid->subcircle(position,
-                                                  los_grid_size));
-    }
-} /* robot_los_compute */
-
-/**
- * \brief Set the LOS of a robot as it moves within a 2D grid.
- *
- * \todo This should eventually be replaced by a calculation of a robot's LOS by
- * the robot, probably using on-board cameras.
- */
-template <typename TController, typename TLOS>
-void robot_los_set(TController* const controller,
-                     const rds::grid2D_overlay<cds::cell2D>* const grid,
-                     size_t los_grid_size) {
-  auto los = robot_los2D_compute<TLOS>(grid,
-                                       controller->rpos2D() - grid->originr(),
-                                       los_grid_size);
-  controller->perception()->los(std::move(los));
-}
 
 /**
  * \brief Set the LOS of a robot as it moves within a 3D grid.
@@ -111,13 +91,37 @@ void robot_los_set(TController* const controller,
  * \todo This should eventually be replaced by a calculation of a robot's LOS by
  * the robot, probably using on-board cameras.
  */
-template <typename TController, typename TLOS>
+template <typename TController, typename TLOS, typename TGrid,
+          RCPPSW_SFINAE_DECLDEF(std::is_same<TGrid,
+                                rds::grid3D_overlay<cds::cell3D>>::value)>
 void robot_los_set(TController* const controller,
-                   const rds::grid3D_overlay<cds::cell3D>* const grid,
-                   size_t los_grid_size) {
-  auto los = robot_los3D_compute<TLOS>(grid,
-                                       controller->rpos3D() - grid->originr(),
-                                       los_grid_size);
+                   const TGrid* const grid,
+                   size_t los_grid_units) {
+  auto builder = robot_los_builder();
+  auto los = builder.operator()<TGrid, TLOS>(grid,
+                                             controller->rpos3D(),
+                                             controller->entity_id(),
+                                             los_grid_units);
+  controller->perception()->los(std::move(los));
+}
+
+/**
+ * \brief Set the LOS of a robot as it moves within a 2D grid.
+ *
+ * \todo This should eventually be replaced by a calculation of a robot's LOS by
+ * the robot, probably using on-board cameras.
+ */
+template <typename TController, typename TLOS, typename TGrid,
+          RCPPSW_SFINAE_DECLDEF(std::is_same<TGrid,
+                                rds::grid2D_overlay<cds::cell2D>>::value)>
+void robot_los_set(TController* const controller,
+                   const TGrid* const grid,
+                   size_t los_grid_units) {
+  auto builder = robot_los_builder();
+  auto los = builder.operator()<TGrid, TLOS>(grid,
+                                             controller->rpos2D(),
+                                             controller->entity_id(),
+                                             los_grid_units);
   controller->perception()->los(std::move(los));
 }
 
@@ -172,8 +176,8 @@ class robot_los_update final
     auto los_grid_size = static_cast<size_t>(
         std::round(controller->los_dim() / mc_grid->resolution().v()));
     detail::robot_los_set<TController, TLOS>(controller,
-                                                     mc_grid,
-                                                     los_grid_size);
+                                             mc_grid,
+                                             los_grid_size);
   }
 
  private:

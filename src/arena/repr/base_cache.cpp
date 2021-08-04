@@ -62,7 +62,7 @@ base_cache::base_cache(const params& p)
 void base_cache::block_add(crepr::base_block3D* block) {
   m_blocks_vec.push_back(block);
   if (m_map_en) {
-    m_blocks_map.insert({ block->id(), block });
+    m_blocks_map.insert(std::make_pair(block->id(), block));
   }
 }
 void base_cache::block_remove(const crepr::base_block3D* const victim) {
@@ -77,7 +77,7 @@ void base_cache::block_remove(const crepr::base_block3D* const victim) {
 
 void base_cache::blocks_map_enable(void) {
   for (auto *b : m_blocks_vec) {
-    m_blocks_map.insert({b->id(), b});
+    m_blocks_map.insert(std::make_pair(b->id(), b));
   } /* for(*b..) */
 
   m_map_en = true;
@@ -87,11 +87,6 @@ std::unique_ptr<base_cache> base_cache::clone(void) const {
   /* cds::block3D_vectorno blocks; */
   cds::block3D_vectorno for_cache = m_blocks_vec;
   params p = { xrsize(), mc_resolution, rcenter2D(), std::move(for_cache), id() };
-  /* std::transform(m_blocks.begin(), */
-  /*                m_blocks.end(), */
-  /*                std::back_inserter(p.blocks), */
-  /*                [&](auto& pair) { return pair.second; }); */
-
   return std::make_unique<base_cache>(p);
 } /* clone() */
 

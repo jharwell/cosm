@@ -24,11 +24,19 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/ds/base_grid3D.hpp"
+#include "rcppsw/math/vector3.hpp"
+
 #include "cosm/repr/base_los.hpp"
+#include "cosm/repr/grid3D_view_entity.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::ds {
+class cell3D;
+} /* namespace cosm::ds */
+
 NS_START(cosm, repr);
 
 /*******************************************************************************
@@ -41,34 +49,28 @@ NS_START(cosm, repr);
  * \brief A repr of the robot's current line-of-sight in quasi-3D. "Quasi"
  * because the LOS object itself is only 2D, BUT contains information about a
  * slice of 3D cells. This is in keeping with making the robot controllers as
- * simple as possible.
+ * simple as poossible.
  */
-class losQ3D : public crepr::base_los<cds::cell3D>, public rer::client<losQ3D> {
+class losQ3D : public crepr::base_los<
+  grid3D_view_entity<rds::base_grid3D<cds::cell3D>,
+                     rds::base_grid3D<cds::cell3D>::const_grid_view>,
+  rmath::vector3d>,
+               public rer::client<losQ3D> {
  public:
-  explicit losQ3D(const const_grid_view& c_view);
+  using los_type = crepr::base_los<grid3D_view_entity<rds::base_grid3D<cds::cell3D>,
+                                                      rds::base_grid3D<cds::cell3D>::const_grid_view>,
+                                   rmath::vector3d>;
+  using los_type::grid_view_type;
+  using los_type::access;
 
-  const cds::cell3D& access(const rmath::vector2z& c) const override {
-    return access(c.x(), c.y());
-  }
+  losQ3D(const rtypes::type_uuid& c_id,
+         const grid_view_type& c_view,
+         const rtypes::discretize_ratio& c_resolution);
 
-  rmath::vector3z abs_ll(void) const override RCPPSW_PURE;
-  rmath::vector3z abs_ul(void) const override RCPPSW_PURE;
-  rmath::vector3z abs_lr(void) const override RCPPSW_PURE;
-  rmath::vector3z abs_ur(void) const override RCPPSW_PURE;
-  bool contains_abs(const rmath::vector3z& loc) const override RCPPSW_PURE;
-  bool contains_rel(const rmath::vector2z& loc) const override RCPPSW_PURE;
-
-  /**
-   * \brief Get the cell associated with a particular grid location within the
-   * LOS. Asserts that both coordinates are within the bounds of the grid
-   * underlying the LOS.
-   *
-   * \param i The RELATIVE X coord within the LOS.
-   * \param j The RELATIVE Y coord within the LOS.
-   *
-   * \return A reference to the cell.
-   */
-  const cds::cell3D& access(size_t i, size_t j) const RCPPSW_PURE;
+  field_coord_dtype abs_ll(void) const override;
+  field_coord_dtype abs_ul(void) const override;
+  field_coord_dtype abs_lr(void) const override;
+  field_coord_dtype abs_ur(void) const override;
 };
 
 NS_END(repr, cosm);

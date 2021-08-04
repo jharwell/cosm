@@ -61,10 +61,10 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
   rmath::vector2d rcenter2D(void) const override final { return m_rcenter; }
   rmath::vector2d ranchor2D(void) const override final { return m_ranchor; }
   rmath::ranged xrspan(void) const override final {
-    return spatial_entity::xrspan(ranchor2D(), xrsize());
+    return entity2D::xrspan(ranchor2D(), xrsize());
   }
   rmath::ranged yrspan(void) const override final {
-    return spatial_entity::yrspan(ranchor2D(), yrsize());
+    return entity2D::yrspan(ranchor2D(), yrsize());
   }
   rtypes::spatial_dist xrsize(void) const override final {
     return rtypes::spatial_dist(m_rdim.x());
@@ -82,10 +82,10 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
   }
   rmath::vector2z danchor2D(void) const override final { return m_danchor; }
   rmath::rangez xdspan(void) const override final {
-    return spatial_entity::xdspan(danchor2D(), xdsize());
+    return entity2D::xdspan(danchor2D(), xdsize());
   }
   rmath::rangez ydspan(void) const override final {
-    return spatial_entity::ydspan(danchor2D(), ydsize());
+    return entity2D::ydspan(danchor2D(), ydsize());
   }
   size_t xdsize(void) const override final { return m_ddim.x(); }
   size_t ydsize(void) const override final { return m_ddim.y(); }
@@ -101,7 +101,7 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    *
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
-  bool contains_point2D(const rmath::vector2d& point) const {
+  bool contains_point(const rmath::vector2d& point) const {
     return xrspan().contains(point.x()) && yrspan().contains(point.y());
   }
 
@@ -112,7 +112,7 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    *
    * \return \c TRUE if the condition is met, and \c FALSE otherwise.
    */
-  bool contains_cell2D(const rmath::vector2z& cell) const {
+  bool contains_cell(const rmath::vector2z& cell) const {
     return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
   }
 

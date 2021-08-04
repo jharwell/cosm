@@ -48,7 +48,7 @@ void base_distributor::cluster_update_after_pickup(const crepr::base_block3D* co
                                                    const rmath::vector2z& old_loc) {
   auto clusters = block_clustersno();
   for (auto *clust : clusters) {
-    if (clust->contains_cell2D(old_loc)) {
+    if (clust->contains_abs(old_loc)) {
       clust->update_after_pickup(block->id());
       return;
     }
@@ -58,7 +58,7 @@ void base_distributor::cluster_update_after_pickup(const crepr::base_block3D* co
 void base_distributor::cluster_update_after_drop(const crepr::base_block3D* const block) {
   auto clusters = block_clustersno();
   for (auto *clust : clusters) {
-    if (clust->contains_cell2D(block->danchor2D())) {
+    if (clust->contains_abs(block->danchor2D())) {
       clust->update_after_drop(block);
       return;
     }

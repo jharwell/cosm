@@ -28,6 +28,10 @@
 #include <vector>
 #include <memory>
 
+#include "rcppsw/er/stringizable.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -64,15 +68,24 @@ using bcache_vectorro_type = const carepr::base_cache*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectoro : public std::vector<acache_vectoro_type> {
+class acache_vectoro : public rpdecorator::decorator<std::vector<acache_vectoro_type>>,
+                       public rer::stringizable {
  public:
-  using std::vector<acache_vectoro_type>::vector;
-  using value_type = std::vector<acache_vectoro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty);
+
+  std::string to_str(void) const override;
 };
 
 /**
@@ -84,15 +97,24 @@ class acache_vectoro : public std::vector<acache_vectoro_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectorno : public std::vector<acache_vectorno_type> {
+class acache_vectorno : public rpdecorator::decorator<std::vector<acache_vectorno_type>>,
+                        public rer::stringizable {
  public:
-  using std::vector<acache_vectorno_type>::vector;
-  using value_type = std::vector<acache_vectorno_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty);
+
+  std::string to_str(void) const override;
 };
 
 /**
@@ -104,15 +126,24 @@ class acache_vectorno : public std::vector<acache_vectorno_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectorro : public std::vector<acache_vectorro_type> {
+class acache_vectorro : public rpdecorator::decorator<std::vector<acache_vectorro_type>>,
+                        public rer::stringizable {
  public:
-  using std::vector<acache_vectorro_type>::vector;
-  using value_type = std::vector<acache_vectorro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty);
+
+  std::string to_str(void) const override;
 };
 
 /**
@@ -124,15 +155,24 @@ class acache_vectorro : public std::vector<acache_vectorro_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class bcache_vectorno : public std::vector<bcache_vectorno_type> {
+class bcache_vectorno : public rpdecorator::decorator<std::vector<bcache_vectorno_type>>,
+                        public rer::stringizable {
  public:
-  using std::vector<bcache_vectorno_type>::vector;
-  using value_type = std::vector<bcache_vectorno_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty);
+
+  std::string to_str(void) const override;
 };
 
 /**
@@ -144,15 +184,24 @@ class bcache_vectorno : public std::vector<bcache_vectorno_type> {
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class bcache_vectorro : public std::vector<bcache_vectorro_type> {
+class bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorro_type>>,
+                        public rer::stringizable {
  public:
-  using std::vector<bcache_vectorro_type>::vector;
-  using value_type = std::vector<bcache_vectorro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(empty);
+
+  std::string to_str(void) const override;
 };
 
 NS_END(ds, arena, cosm);

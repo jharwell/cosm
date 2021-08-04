@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "cosm/repr/spatial_entity.hpp"
+#include "cosm/repr/spatial_entity2D.hpp"
 #include "cosm/arena/base_arena_map.hpp"
 
 /*******************************************************************************

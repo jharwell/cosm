@@ -33,49 +33,29 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-losQ3D::losQ3D(const const_grid_view& c_view)
-    : base_los(c_view), ER_CLIENT_INIT("cosm.repr.losQ3D") {
-  ER_ASSERT(1 == view().shape()[2], "Q3D view does not have zsize=1");
+losQ3D::losQ3D(const rtypes::type_uuid& c_id,
+               const grid_view_type& c_view,
+               const rtypes::discretize_ratio& c_resolution)
+    : base_los(c_id, c_view, c_resolution),
+      ER_CLIENT_INIT("cosm.repr.losQ3D") {
+  ER_ASSERT(1 == zdsize(), "Q3D view does not have zsize=1");
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-const cds::cell3D& losQ3D::access(size_t i, size_t j) const {
-  ER_ASSERT(i < xsize(), "Out of bounds X access: %zu >= %lu", i, xsize());
-  ER_ASSERT(j < ysize(), "Out of bounds Y access: %zu >= %lu", j, ysize());
-  return view()[i][j][0];
-} /* access() */
+losQ3D::field_coord_dtype losQ3D::abs_ll(void) const {
+  return access(0, 0, 0).loc();
+}
+losQ3D::field_coord_dtype losQ3D::abs_ul(void) const {
+  return access(0, ydsize() - 1, 0).loc();
+}
+losQ3D::field_coord_dtype losQ3D::abs_lr(void) const {
+  return access(xdsize() - 1, 0, 0).loc();
+}
+losQ3D::field_coord_dtype losQ3D::abs_ur(void) const {
+  return access(xdsize() - 1, ydsize() - 1, 0).loc();
+}
 
-bool losQ3D::contains_abs(const rmath::vector3z& loc) const {
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      if (access(i, j).loc() == loc) {
-        return true;
-      }
-    } /* for(j..) */
-  } /* for(i..) */
-  return false;
-} /* contains_abs() */
-
-bool losQ3D::contains_rel(const rmath::vector2z& loc) const {
-  return (loc.x() < xsize()) && (loc.y() < ysize());
-} /* contains_rel() */
-
-rmath::vector3z losQ3D::abs_ll(void) const {
-  return access(0, 0).loc();
-} /* abs_ll() */
-
-rmath::vector3z losQ3D::abs_ul(void) const {
-  return access(0, ysize() - 1).loc();
-} /* abs_ul() */
-
-rmath::vector3z losQ3D::abs_lr(void) const {
-  return access(xsize() - 1, 0).loc();
-} /* abs_lr() */
-
-rmath::vector3z losQ3D::abs_ur(void) const {
-  return access(xsize() - 1, ysize() - 1).loc();
-} /* abs_ur() */
 
 NS_END(repr, cosm);

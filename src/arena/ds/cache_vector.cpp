@@ -35,23 +35,23 @@ NS_START(cosm, arena, ds);
  * Member Functions
  ******************************************************************************/
 std::string acache_vectoro::to_str(void) const {
-  return cds::to_string(*this, "c");
+  return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
 std::string acache_vectorno::to_str(void) const {
-  return cds::to_string(*this, "c");
+  return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
 std::string acache_vectorro::to_str(void) const {
-  return cds::to_string(*this, "c");
+  return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
 std::string bcache_vectorno::to_str(void) const {
-  return cds::to_string(*this, "c");
+  return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
 std::string bcache_vectorro::to_str(void) const {
-  return cds::to_string(*this, "c");
+  return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
 NS_END(ds, arena, cosm);

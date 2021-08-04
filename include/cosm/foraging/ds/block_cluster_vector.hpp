@@ -27,6 +27,9 @@
 #include <string>
 #include <vector>
 
+#include "rcppsw/er/stringizable.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -57,15 +60,28 @@ using block3D_cluster_vectorno_type = cfrepr::block_cluster*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_cluster_vectorro : public std::vector<block3D_cluster_vectorro_type> {
+class block3D_cluster_vectorro : public rpdecorator::decorator<std::vector<block3D_cluster_vectorro_type>>,
+                                 rer::stringizable {
  public:
-  using std::vector<block3D_cluster_vectorro_type>::vector;
-  using value_type = std::vector<block3D_cluster_vectorro_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(front);
+  RCPPSW_DECORATE_DECLDEF(size);
+
+  std::string to_str(void) const override;
 };
 
 /**
@@ -77,15 +93,28 @@ class block3D_cluster_vectorro : public std::vector<block3D_cluster_vectorro_typ
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_cluster_vectorno : public std::vector<block3D_cluster_vectorno_type> {
+class block3D_cluster_vectorno : public rpdecorator::decorator<std::vector<block3D_cluster_vectorno_type>>,
+                                 public rer::stringizable {
  public:
-  using std::vector<block3D_cluster_vectorno_type>::vector;
-  using value_type = std::vector<block3D_cluster_vectorno_type>::value_type;
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the vector contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(operator[]);
+  RCPPSW_DECORATE_DECLDEF(operator[], const);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(clear);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(front);
+  RCPPSW_DECORATE_DECLDEF(size);
+
+  std::string to_str(void) const override;
 };
 
 NS_END(ds, foraging, cosm);

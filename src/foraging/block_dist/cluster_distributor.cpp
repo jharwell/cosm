@@ -101,7 +101,7 @@ cluster_distributor::distribute_blocks(cds::block3D_vectorno& blocks,
 } /* distribute_blocks() */
 
 cfds::block3D_cluster_vectorno cluster_distributor::block_clustersno(void) {
-  return cfds::block3D_cluster_vectorno{ &m_clust };
+  return {&m_clust};
 } /* block_clusters() */
 
 NS_END(block_dist, foraging, cosm);

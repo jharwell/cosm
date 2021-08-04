@@ -24,21 +24,19 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/ds/base_grid2D.hpp"
-#include "rcppsw/ds/base_grid3D.hpp"
+#include <boost/optional.hpp>
+
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/types/discretize_ratio.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/repr/base_grid_view_entity.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::ds {
-class cell2D;
-class cell3D;
-} /* namespace cosm::ds */
-
 NS_START(cosm, repr);
 
 /*******************************************************************************
@@ -48,7 +46,7 @@ NS_START(cosm, repr);
  * \class base_los
  * \ingroup repr
  *
- * \brief A repr of the robot's current line-of-sight.. The robot is only able
+ * \brief A repr of the robot's current line-of-sight. The robot is only able
  * to update its internal state based on the information present in the
  * per-timestep updates to this object.
  *
@@ -57,86 +55,37 @@ NS_START(cosm, repr);
  * accesses. In that case, a truncated LOS is created.
  *
  * All coordinates within a LOS are relative to the LOS itself (not its location
- * within the arena). The origin is in the lower left corner of the LOS.
+ * within the arena). The origin is in the lower left corner of the LOS,
+ * regardless of the orientation of the robot/LOS in the arena.
  */
-template <typename TCell>
-class base_los : public rer::client<base_los<TCell>> {
+template <typename TGridViewEntityType, typename TFieldCoordRType>
+class base_los : public rer::client<base_los<TGridViewEntityType,
+                                             TFieldCoordRType>>,
+                 public TGridViewEntityType {
  public:
-  using grid_view =
-      typename std::conditional<std::is_same<cds::cell2D, TCell>::value,
-                                typename rds::base_grid2D<TCell>::grid_view,
-                                typename rds::base_grid3D<TCell>::grid_view>::type;
-
-  using const_grid_view = typename std::conditional<
-      std::is_same<cds::cell2D, TCell>::value,
-      typename rds::base_grid2D<TCell>::const_grid_view,
-      typename rds::base_grid3D<TCell>::const_grid_view>::type;
-
-  using field_coord_type =
-      typename std::conditional<std::is_same<cds::cell2D, TCell>::value,
-                                rmath::vector2z,
-                                rmath::vector3z>::type;
+  using field_coord_rtype = TFieldCoordRType;
   using los_coord_type = rmath::vector2z;
+  using grid_view_entity_type = TGridViewEntityType;
 
-  explicit base_los(const const_grid_view& c_view)
-      : ER_CLIENT_INIT("cosm.repr.base_los"), mc_view(c_view) {}
+  using typename grid_view_entity_type::grid_type;
+  using typename grid_view_entity_type::cell_type;
+  using typename grid_view_entity_type::grid_view_type;
+  using field_coord_dtype = typename grid_view_entity_type::coord_type;
 
-  /**
-   * \brief Get the cell associated with a particular grid location within the
-   * LOS. Asserts that both coordinates are within the bounds of the grid
-   * underlying the LOS.
-   *
-   * \param c The RELATIVE coord within the LOS.
-   *
-   * \return A reference to the cell.
-   */
-  virtual const TCell& access(const los_coord_type& c) const = 0;
+  using grid_view_entity_type::xdsize;
+  using grid_view_entity_type::ydsize;
+  using grid_view_entity_type::access;
 
-  virtual field_coord_type abs_ll(void) const = 0;
-  virtual field_coord_type abs_ul(void) const = 0;
-  virtual field_coord_type abs_lr(void) const = 0;
-  virtual field_coord_type abs_ur(void) const = 0;
+  virtual field_coord_dtype abs_ll(void) const = 0;
+  virtual field_coord_dtype abs_ul(void) const = 0;
+  virtual field_coord_dtype abs_lr(void) const = 0;
+  virtual field_coord_dtype abs_ur(void) const = 0;
 
-  /**
-   * \brief Determine if the coordinates from the parent field are contained in
-   * the LOS.
-   */
-  virtual bool contains_abs(const field_coord_type& coord) const = 0;
-
-  /**
-   * \brief Determine if the LOS RELATIVE coordinates are contained in the LOS.
-   */
-  virtual bool contains_rel(const los_coord_type& coord) const = 0;
-
-  /**
-   * \brief Get the size of the X dimension for a LOS.
-   *
-   * \return The X dimension.
-   */
-  typename grid_view::size_type xsize(void) const { return mc_view.shape()[0]; }
-
-  /**
-   * \brief Get the size of the Y dimension for a LOS.
-   *
-   * \return The Y dimension.
-   */
-  typename grid_view::size_type ysize(void) const { return mc_view.shape()[1]; }
-
-  rmath::ranged yspan(void) const {
-    return rmath::ranged(abs_ll().y(), abs_ul().y());
-  }
-
-  rmath::ranged xspan(void) const {
-    return rmath::ranged(abs_ll().x(), abs_lr().x());
-  }
-
- protected:
-  const const_grid_view& view(void) const { return mc_view; }
-
- private:
-  /* clang-format off */
-  const const_grid_view mc_view;
-  /* clang-format on */
+  base_los(const rtypes::type_uuid& c_id,
+           const grid_view_type& c_view,
+           const rtypes::discretize_ratio& c_resolution)
+      : ER_CLIENT_INIT("cosm.repr.base_los"),
+        grid_view_entity_type(c_id, c_view, c_resolution) {}
 };
 
 NS_END(repr, cosm);

@@ -37,7 +37,7 @@ void block_cluster::blocks_recalc(void) {
   m_blocks.clear();
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
-      auto& cell = block_cluster::cell(i, j);
+      auto& cell = access(i, j);
       /*
        * You can't assert that the cell does not have a cache/is not part of a
        * cache extent, because for RN distributions caches can be in the middle
@@ -54,7 +54,7 @@ void block_cluster::blocks_recalc(void) {
 } /* blocks_recalc() */
 
 void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
-  ER_ASSERT(contains_cell2D(dropped->danchor2D()),
+  ER_ASSERT(contains_abs(dropped->danchor2D()),
             "Block%s@%s not contained in cluster%s extent: xspan=%s,yspan=%s",
             rcppsw::to_string(dropped->id()).c_str(),
             rcppsw::to_string(dropped->danchor2D()).c_str(),
@@ -64,7 +64,7 @@ void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
 
   auto relative_to = dropped->danchor2D() - danchor2D();
 
-  auto& cell = block_cluster::cell(relative_to);
+  auto& cell = access(relative_to);
 
   ER_ASSERT(cell.state_has_block(),
             "Cell@%s not in HAS_BLOCK state: state=%d",

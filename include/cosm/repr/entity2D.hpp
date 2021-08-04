@@ -27,7 +27,7 @@
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/repr/spatial_entity.hpp"
+#include "cosm/repr/spatial_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,12 +44,9 @@ NS_START(cosm, repr);
  * \brief A base class from which all spatial entities which can be represented
  * in 2D derive.
  */
-class entity2D : public spatial_entity {
+class entity2D : public spatial_entity2D {
  public:
-  using spatial_entity::spatial_entity;
-
-  entity2D(const entity2D&) = default;
-  entity2D& operator=(const entity2D&) = default;
+  using spatial_entity2D::spatial_entity2D;
 
   virtual ~entity2D(void) = default;
 

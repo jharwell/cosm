@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/factory/factory.hpp"
@@ -52,7 +53,7 @@ NS_START(cosm, foraging, block_dist);
  * blocks.
  */
 class block3D_manifest_processor
-    : public rpfactory::sharing_factory<crepr::base_block3D,
+    : public rpfactory::releasing_factory<crepr::base_block3D,
                                         std::string, /* key type */
                                         const rtypes::type_uuid&,
                                         const rmath::vector3d&,

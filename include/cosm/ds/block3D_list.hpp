@@ -28,6 +28,9 @@
 #include <string>
 #include <list>
 
+#include "rcppsw/er/stringizable.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -51,15 +54,18 @@ using block3D_listno_type = crepr::base_block3D*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_listno : public std::list<block3D_listno_type> {
+class block3D_listno : public rpdecorator::decorator<std::list<block3D_listno_type>>,
+                       public rer::stringizable {
  public:
-  using std::list<block3D_listno_type>::list;
-  using value_type = std::list<block3D_listno_type>::value_type;
+  RCPPSW_DECORATE_DECLDEF(push_back);
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
 
-  /**
-   * \brief Get a string representation of the list contents.
-   */
-  std::string to_str(void) const;
+  std::string to_str(void) const override;
+
+  private:
+  /* clang-format off */
+  std::list<block3D_listno_type> m_impl;
 };
 
 NS_END(ds, cosm);

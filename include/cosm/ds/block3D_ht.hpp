@@ -29,6 +29,7 @@
 #include <unordered_map>
 
 #include "rcppsw/types/type_uuid.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -70,21 +71,27 @@ NS_END(detail);
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_hto : public std::unordered_map<block3D_ht_key_type,
-                                              block3D_hto_value_type,
-                                              detail::hash_function> {
+class block3D_hto : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+                                                                     block3D_hto_value_type,
+                                                                     detail::hash_function>>,
+                    public rer::stringizable {
  public:
-  using std::unordered_map<block3D_ht_key_type,
-                           block3D_hto_value_type,
-                           detail::hash_function>::unordered_map;
-  using value_type = std::unordered_map<block3D_ht_key_type,
-                                        block3D_hto_value_type,
-                                        detail::hash_function>::value_type;
+  RCPPSW_DECORATE_DECL(iterator);
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the ht contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(find);
+  RCPPSW_DECORATE_DECLDEF(find, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+
+  std::string to_str(void) const override;
 };
 
 /*
@@ -93,21 +100,27 @@ class block3D_hto : public std::unordered_map<block3D_ht_key_type,
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_htno : public std::unordered_map<block3D_ht_key_type,
-                                               block3D_htno_value_type,
-                                               detail::hash_function> {
+class block3D_htno : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+                                                                      block3D_htno_value_type,
+                                                                      detail::hash_function>>,
+                     public rer::stringizable {
  public:
-  using std::unordered_map<block3D_ht_key_type,
-                           block3D_htno_value_type,
-                           detail::hash_function>::unordered_map;
-  using value_type = std::unordered_map<block3D_ht_key_type,
-                                        block3D_htno_value_type,
-                                        detail::hash_function>::value_type;
+  RCPPSW_DECORATE_DECL(iterator);
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the ht contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(find);
+  RCPPSW_DECORATE_DECLDEF(find, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+
+  std::string to_str(void) const override;
 };
 
 /*
@@ -116,21 +129,27 @@ class block3D_htno : public std::unordered_map<block3D_ht_key_type,
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_htro : public std::unordered_map<block3D_ht_key_type,
-                                               block3D_htro_value_type,
-                                               detail::hash_function> {
+class block3D_htro : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+                                                                      block3D_htro_value_type,
+                                                                      detail::hash_function>>,
+                     public rer::stringizable {
  public:
-  using std::unordered_map<block3D_ht_key_type,
-                           block3D_htro_value_type,
-                           detail::hash_function>::unordered_map;
-  using value_type = std::unordered_map<block3D_ht_key_type,
-                                        block3D_htro_value_type,
-                                        detail::hash_function>::value_type;
+  RCPPSW_DECORATE_DECL(iterator);
+  RCPPSW_DECORATE_DECL(value_type);
 
-  /**
-   * \brief Get a string representation of the ht contents.
-   */
-  std::string to_str(void) const;
+  RCPPSW_DECORATE_CT();
+
+  RCPPSW_DECORATE_DECLDEF(begin);
+  RCPPSW_DECORATE_DECLDEF(end);
+  RCPPSW_DECORATE_DECLDEF(begin, const);
+  RCPPSW_DECORATE_DECLDEF(end, const);
+  RCPPSW_DECORATE_DECLDEF(find);
+  RCPPSW_DECORATE_DECLDEF(find, const);
+  RCPPSW_DECORATE_DECLDEF(erase);
+  RCPPSW_DECORATE_DECLDEF(insert);
+  RCPPSW_DECORATE_DECLDEF(size, const);
+
+  std::string to_str(void) const override;
 };
 
 NS_END(ds, cosm);

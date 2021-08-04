@@ -38,15 +38,15 @@ NS_START(cosm, ds);
  * Member Functions
  ******************************************************************************/
 std::string block3D_hto::to_str(void) const {
-  return cds::to_string(*this, "b");
+  return cds::to_string(decoratee(), "b");
 } /* to_str() */
 
 std::string block3D_htno::to_str(void) const {
-  return cds::to_string(*this, "b");
+  return cds::to_string(decoratee(), "b");
 } /* to_str() */
 
 std::string block3D_htro::to_str(void) const {
-  return cds::to_string(*this, "b");
+  return cds::to_string(decoratee(), "b");
 } /* to_str() */
 
 NS_END(ds, cosm);

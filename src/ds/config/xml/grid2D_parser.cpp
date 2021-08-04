@@ -46,6 +46,9 @@ void grid2D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool grid2D_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
   RCPPSW_CHECK(m_config->resolution.v() > 0.0);
   RCPPSW_CHECK(m_config->dims.is_pd());
   return true;

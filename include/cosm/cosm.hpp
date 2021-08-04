@@ -73,7 +73,9 @@ namespace metrics {}
  */
 namespace subsystem {
 namespace perception {
-namespace config {}
+namespace config {
+namespace xml {}
+} /* namespace config */
 } /* namespace perception */
 } /* namespace subsystem */
 
@@ -303,6 +305,7 @@ namespace interactors {}
 namespace csubsystem = cosm::subsystem;
 namespace csperception = csubsystem::perception;
 namespace cspconfig = csperception::config;
+namespace cspcxml = cspconfig::xml;
 
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;

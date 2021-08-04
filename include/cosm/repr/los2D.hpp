@@ -24,11 +24,19 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/math/vector2.hpp"
+#include "rcppsw/ds/base_grid2D.hpp"
+
 #include "cosm/repr/base_los.hpp"
+#include "cosm/repr/grid2D_view_entity.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::ds {
+class cell2D;
+} /* namespace cosm::ds */
+
 NS_START(cosm, repr);
 
 /*******************************************************************************
@@ -40,33 +48,27 @@ NS_START(cosm, repr);
  *
  * \brief A repr of the robot's current line-of-sight in 2D.
  */
-class los2D : public crepr::base_los<cds::cell2D>, public rer::client<los2D> {
+class los2D : public crepr::base_los<
+  grid2D_view_entity<rds::base_grid2D<cds::cell2D>,
+                     rds::base_grid2D<cds::cell2D>::const_grid_view>,
+  rmath::vector2d>,
+              public rer::client<los2D> {
  public:
-  explicit los2D(const const_grid_view& c_view)
-      : base_los(c_view), ER_CLIENT_INIT("cosm.repr.los2D") {}
+  using los_type = crepr::base_los<grid2D_view_entity<rds::base_grid2D<cds::cell2D>,
+                                                      rds::base_grid2D<cds::cell2D>::const_grid_view>,
+                                   rmath::vector2d>;
+  using los_type::grid_view_type;
+  using los_type::access;
 
-  const cds::cell2D& access(const rmath::vector2z& c) const override {
-    return access(c.x(), c.y());
-  }
 
-  rmath::vector2z abs_ll(void) const override final RCPPSW_PURE;
-  rmath::vector2z abs_ul(void) const override final RCPPSW_PURE;
-  rmath::vector2z abs_lr(void) const override final RCPPSW_PURE;
-  rmath::vector2z abs_ur(void) const override final RCPPSW_PURE;
-  bool contains_abs(const rmath::vector2z& loc) const override final RCPPSW_PURE;
-  bool contains_rel(const rmath::vector2z& loc) const override final RCPPSW_PURE;
+  los2D(const rtypes::type_uuid& c_id,
+        const grid_view_type& c_view,
+        const rtypes::discretize_ratio& c_resolution);
 
-  /**
-   * \brief Get the cell associated with a particular grid location within the
-   * LOS. Asserts that both coordinates are within the bounds of the grid
-   * underlying the LOS.
-   *
-   * \param i The RELATIVE X coord within the LOS.
-   * \param j The RELATIVE Y coord within the LOS.
-   *
-   * \return A reference to the cell.
-   */
-  const cds::cell2D& access(size_t i, size_t j) const RCPPSW_PURE;
+  field_coord_dtype abs_ll(void) const override;
+  field_coord_dtype abs_ul(void) const override;
+  field_coord_dtype abs_lr(void) const override;
+  field_coord_dtype abs_ur(void) const override;
 };
 
 NS_END(repr, cosm);

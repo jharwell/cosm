@@ -29,7 +29,7 @@
 #include "cosm/ds/arena_grid.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/repr/grid_view_entity.hpp"
+#include "cosm/repr/grid2D_view_entity.hpp"
 #include "cosm/foraging/repr/block_cluster_params.hpp"
 #include "cosm/foraging/metrics/block_cluster_metrics.hpp"
 
@@ -54,10 +54,13 @@ NS_START(cosm, foraging, repr);
  * - The blocks distributed in that area.
  * - The maximum capacity of the cluster.
  */
-class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::const_view>,
-  public metrics::block_cluster_metrics,
+class block_cluster final : public crepr::grid2D_view_entity<cds::arena_grid,
+                                                             cds::arena_grid::const_view>,
+                            public metrics::block_cluster_metrics,
                             public rer::client<block_cluster> {
  public:
+  using grid2D_view_entity_type = crepr::grid2D_view_entity<cds::arena_grid,
+                                                            cds::arena_grid::const_view>;
   explicit block_cluster(const block_cluster_params& params)
       : block_cluster{params.id,
         params.view,
@@ -68,17 +71,17 @@ class block_cluster final : public crepr::grid_view_entity<cds::arena_grid::cons
                 const cds::arena_grid::const_view& view,
                 const rtypes::discretize_ratio& resolution,
                 size_t capacity)
-      : grid_view_entity<cds::arena_grid::const_view>(id, view, resolution),
+      : grid2D_view_entity_type(id, view, resolution),
         ER_CLIENT_INIT("cosm.foraging.repr.block_cluster"),
         m_capacity(capacity) {}
 
   /* block cluster metrics */
   size_t n_blocks(void) const override { return blocks().size(); }
-  rmath::ranged xrspan(void) const override { return grid_view_entity::xrspan(); }
-  rmath::ranged yrspan(void) const override { return grid_view_entity::yrspan(); }
+  rmath::ranged xrspan(void) const override { return grid2D_view_entity_type::xrspan(); }
+  rmath::ranged yrspan(void) const override { return grid2D_view_entity_type::yrspan(); }
   rtypes::type_uuid id(void) const override { return base_entity::id(); }
   rmath::vector2d ranchor2D(void) const override {
-    return grid_view_entity::ranchor2D();
+    return grid2D_view_entity_type::ranchor2D();
   }
 
   size_t capacity(void) const { return m_capacity; }

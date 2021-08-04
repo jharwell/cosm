@@ -102,7 +102,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
     } /* for(i..) */
 
     /* update host cell */
-    m_nests->emplace(inst.id(), inst);
+    m_nests->emplace(std::make_pair(inst.id(), inst));
 
     /* add to loctree */
     m_nloctree->update(&inst);
@@ -211,12 +211,12 @@ base_arena_map::robot_on_block(const rmath::vector2d& pos,
    */
   if (ent_id != rtypes::constants::kNoUUID &&
       static_cast<size_t>(ent_id.v()) < m_blockso.size() &&
-      m_blockso[ent_id.v()]->contains_point2D(pos)) {
+      m_blockso[ent_id.v()]->contains_point(pos)) {
     ret = ent_id;
   } else {
     /* General case: linear scan */
     for (auto& b : m_blockso) {
-      if (b->contains_point2D(pos)) {
+      if (b->contains_point(pos)) {
         ret = b->id();
       }
     } /* for(&b..) */
@@ -227,7 +227,7 @@ base_arena_map::robot_on_block(const rmath::vector2d& pos,
 rtypes::type_uuid
 base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
   auto it = std::find_if(m_nests->begin(), m_nests->end(), [&](const auto& pair) {
-    return pair.second.contains_point2D(pos);
+    return pair.second.contains_point(pos);
   });
   if (m_nests->end() == it) {
     return rtypes::constants::kNoUUID;

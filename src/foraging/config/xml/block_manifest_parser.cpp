@@ -35,8 +35,8 @@ void block_manifest_parser::parse(const ticpp::Element& node) {
   ticpp::Element bnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR_DFLT(bnode, m_config, n_cube, 0U);
-  XML_PARSE_ATTR_DFLT(bnode, m_config, n_ramp, 0U);
+  XML_PARSE_ATTR_DFLT(bnode, m_config, n_cube, 0UL);
+  XML_PARSE_ATTR_DFLT(bnode, m_config, n_ramp, 0UL);
   XML_PARSE_ATTR(bnode, m_config, unit_dim);
 } /* parse() */
 

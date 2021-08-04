@@ -22,7 +22,6 @@
  * Includes
  *****************************************************************************/
 #include "cosm/repr/los2D.hpp"
-
 #include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
@@ -31,43 +30,29 @@
 NS_START(cosm, repr);
 
 /*******************************************************************************
+ * Constructors/Destructor
+ ******************************************************************************/
+los2D::los2D(const rtypes::type_uuid& c_id,
+           const grid_view_type& c_view,
+           const rtypes::discretize_ratio& c_resolution)
+    : base_los(c_id, c_view, c_resolution),
+      ER_CLIENT_INIT("cosm.repr.los2D") {}
+
+/*******************************************************************************
  * Member Functions
  ******************************************************************************/
-const cds::cell2D& los2D::access(size_t i, size_t j) const {
-  ER_ASSERT(i < xsize(), "Out of bounds X access: %zu >= %lu", i, xsize());
-  ER_ASSERT(j < ysize(), "Out of bounds Y access: %zu >= %lu", j, ysize());
-  return view()[i][j];
-} /* access() */
-
-bool los2D::contains_abs(const rmath::vector2z& loc) const {
-  for (size_t i = 0; i < xsize(); ++i) {
-    for (size_t j = 0; j < ysize(); ++j) {
-      if (access(i, j).loc() == loc) {
-        return true;
-      }
-    } /* for(j..) */
-  } /* for(i..) */
-  return false;
-} /* contains_abs() */
-
-bool los2D::contains_rel(const rmath::vector2z& loc) const {
-  return (loc.x() < xsize()) && (loc.y() < ysize());
-} /* contains_rel() */
-
-rmath::vector2z los2D::abs_ll(void) const {
+los2D::field_coord_dtype los2D::abs_ll(void) const {
   return access(0, 0).loc();
-} /* abs_ll() */
+}
+los2D::field_coord_dtype los2D::abs_ul(void) const {
+  return access(0, ydsize() - 1).loc();
+}
+los2D::field_coord_dtype los2D::abs_lr(void) const {
+  return access(xdsize() - 1, 0).loc();
+}
+los2D::field_coord_dtype los2D::abs_ur(void) const {
+  return access(xdsize() - 1, ydsize() - 1).loc();
+}
 
-rmath::vector2z los2D::abs_ul(void) const {
-  return access(0, ysize() - 1).loc();
-} /* abs_ul() */
-
-rmath::vector2z los2D::abs_lr(void) const {
-  return access(xsize() - 1, 0).loc();
-} /* abs_lr() */
-
-rmath::vector2z los2D::abs_ur(void) const {
-  return access(xsize() - 1, ysize() - 1).loc();
-} /* abs_ur() */
 
 NS_END(repr, cosm);

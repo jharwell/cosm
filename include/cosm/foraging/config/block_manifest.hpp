@@ -43,8 +43,8 @@ NS_START(cosm, foraging, config);
  * created, as well as size and other characteristics.
  */
 struct block_manifest final : public rconfig::base_config {
-  uint n_cube{0};  /// # cube blocks to distribute in arena
-  uint n_ramp{0};  /// # ramp blocks to distribute in arena
+  size_t n_cube{0};  /// # cube blocks to distribute in arena
+  size_t n_ramp{0};  /// # ramp blocks to distribute in arena
 
   /**
    * \brief Size in meters of the unit dimension for blocks. Cube blocks are 1x1

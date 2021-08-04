@@ -1,5 +1,5 @@
 /**
- * \file mdpo_parser.hpp
+ * \file rlos_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_MDPO_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_MDPO_PARSER_HPP_
+#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_RLOS_PARSER_HPP_
+#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_RLOS_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -29,8 +29,7 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/subsystem/perception/config/mdpo_config.hpp"
-#include "cosm/subsystem/perception/config/xml/pheromone_parser.hpp"
+#include "cosm/subsystem/perception/config/rlos_config.hpp"
 #include "cosm/ds/config/xml/grid2D_parser.hpp"
 
 /*******************************************************************************
@@ -42,23 +41,22 @@ NS_START(cosm, subsystem, perception, config, xml);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class mdpo_parser
+ * \class rlos_parser
  * \ingroup subsystem perception config xml
  *
- * \brief Parses XML parameters relating to the MDPO perception subsystem into
- * \ref mdpo_config.
+ * \brief Parses XML parameters relating to reactive LOS perception
+ * subsystems into \ref rlos_config.
  */
-class mdpo_parser : public rconfig::xml::xml_config_parser {
+class rlos_parser : public rconfig::xml::xml_config_parser {
  public:
-  using config_type = mdpo_config;
+  using config_type = rlos_config;
 
   /**
-   * \brief The root tag that all mdpo parameters should lie under in the
+   * \brief The root tag that all rlos parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "mdpo";
+  inline static const std::string kXMLRoot = "rlos";
 
-  bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   std::string xml_root(void) const override { return kXMLRoot; }
 
@@ -70,11 +68,10 @@ class mdpo_parser : public rconfig::xml::xml_config_parser {
  private:
   /* clang-format off */
   std::shared_ptr<config_type> m_config{nullptr};
-  pheromone_parser             m_pheromone{};
   cdconfig::xml::grid2D_parser m_grid{};
   /* clang-format on */
 };
 
 NS_END(xml, config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_MDPO_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_RLOS_PARSER_HPP_ */
