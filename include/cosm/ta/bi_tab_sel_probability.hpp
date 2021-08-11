@@ -87,8 +87,8 @@ class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
   static constexpr const double kHARWELL2019_OFFSET = 1.25;
   static constexpr const double kHARWELL2019_GAMMA = 1.0;
 
-  inline static const std::string kMethodHarwell2019 = "harwell2019";
-  inline static const std::string kMethodRandom = "random";
+  static inline const std::string kMethodHarwell2019 = "harwell2019";
+  static inline const std::string kMethodRandom = "random";
 
   /**
    * \brief Initialize subtask sel probability with default values, based

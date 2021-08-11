@@ -61,7 +61,7 @@ class convergence_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all XML configuration relating to convergence
    * parameters should lie under in the XML tree.
    */
-  inline static const std::string kXMLRoot = "convergence";
+  static inline const std::string kXMLRoot = "convergence";
 
   bool validate(void) const override RCPPSW_ATTR(const, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;

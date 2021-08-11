@@ -29,14 +29,11 @@
 
 #include "cosm/repr/base_los.hpp"
 #include "cosm/repr/grid3D_view_entity.hpp"
+#include "cosm/ds/cell3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::ds {
-class cell3D;
-} /* namespace cosm::ds */
-
 NS_START(cosm, repr);
 
 /*******************************************************************************

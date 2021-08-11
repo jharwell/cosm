@@ -57,7 +57,7 @@ class ground_sensor_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all robot ground sensor parameters should lie
    * under in the XML tree.
    */
-  inline static const std::string kXMLRoot = "ground_sensor";
+  static inline const std::string kXMLRoot = "ground_sensor";
 
   bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;

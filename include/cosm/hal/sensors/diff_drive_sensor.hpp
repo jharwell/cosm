@@ -107,11 +107,16 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
               __FUNCTION__);
 
     auto tmp = m_sensor->GetReading();
-    return {tmp.VelocityLeftWheel,
-          tmp.VelocityRightWheel,
-          tmp.CoveredDistanceLeftWheel,
-          tmp.CoveredDistanceRightWheel,
-          tmp.WheelAxisLength};
+
+    /*
+     * ARGoS reports the distances and velocities in cm and cm/s for some
+     * reason, so put it in SI units (meters), like a sane person.
+     */
+    return {tmp.VelocityLeftWheel / 100.0,
+            tmp.VelocityRightWheel / 100.0,
+            tmp.CoveredDistanceLeftWheel / 100.0,
+            tmp.CoveredDistanceRightWheel / 100.0,
+            tmp.WheelAxisLength / 100.0};
   }
 
   /**

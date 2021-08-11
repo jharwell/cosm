@@ -729,7 +729,7 @@ not distinguish between these two cases).
 - ``lookahead`` - How far ahead of the robot to look for obstacles. Currently
   unused, but may be used in the future.
 
-- ``max`` - Max value for the force.
+- ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/arrival_force``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -758,7 +758,7 @@ The force which attracts robots towards a goal and gets them to it.
 - ``slowing_speed_min`` - The minimum speed robotics will linearly ramp down
   to. Should be > 0.
 
-- ``max`` - Max value for the force.
+- ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/wander_force``
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -793,7 +793,7 @@ correlated random walk.
 - ``max_angle_delta`` -  +/- Maximum amount of heading change for the wander angle
   (a random value is chosen in this range). Specified in degrees.
 
-- ``max`` - Max value for the force.
+- ``max`` - Max value for the force, in m/s.
 
 - ``interval`` - How many timesteps to skip between applying the force.
 
@@ -819,7 +819,7 @@ The force which attracts/repels robots towards/away from light sources.
       ...
     </force_calculator>
 
-- ``max`` - Max value for the force.
+- ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/path_following_force``
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -842,7 +842,7 @@ The force which guides robots along a specified path.
       ...
     </force_calculator>
 
-- ``max`` - Max value for the force.
+- ``max`` - Max value for the force, in m/s.
 
 - ``radius`` - Radius around each point along the path to consider at part of
   the point; i.e., reaching any point inside the radius is equivalent to
@@ -876,4 +876,4 @@ XML configuration:
   difference greater than the one specified by this parameter to the current
   heading, a hard turn is executed (spin in place). Specified in degrees.
 
-- ``max_speed`` - The maximimum speed of the robot.
+- ``max_speed`` - The maximimum speed of the robot, in m/s.

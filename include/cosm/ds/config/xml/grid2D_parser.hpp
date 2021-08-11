@@ -56,7 +56,7 @@ class grid2D_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all grid parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "grid2D";
+  static inline const std::string kXMLRoot = "grid2D";
 
   bool validate(void) const override RCPPSW_PURE;
   void parse(const ticpp::Element& node) override;

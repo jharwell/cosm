@@ -59,7 +59,7 @@ class arrival_force_parser final : public rconfig::xml::xml_config_parser {
    * \brief The XML root tag that all \ref arrival_force configuration should
    * lie under in the XML tree.
    */
-  inline static const std::string kXMLRoot = "arrival_force";
+  static inline const std::string kXMLRoot = "arrival_force";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

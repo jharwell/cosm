@@ -55,7 +55,7 @@ class sigmoid_sel_parser : public rcppsw::config::xml::xml_config_parser {
    * \brief The root tag that all XML configuration should lie under in the XML
    * tree.
    */
-  inline static const std::string kXMLRoot = "sigmoid_sel";
+  static inline const std::string kXMLRoot = "sigmoid_sel";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

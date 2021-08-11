@@ -56,9 +56,9 @@ class factory :
                                         csubsystem::saa_subsystemQ3D*,
                                         rmath::rng*> {
  public:
-  inline static const std::string kWander = "wander";
-  inline static const std::string kRandomThresh = "random_thresh";
-  inline static const std::string kWanderRandomThresh = "wander_random_thresh";
+  static inline const std::string kWander = "wander";
+  static inline const std::string kRandomThresh = "random_thresh";
+  static inline const std::string kWanderRandomThresh = "wander_random_thresh";
 
   factory(void);
 };

@@ -57,7 +57,7 @@ class arena_map_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all arena map parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "arena_map";
+  static inline const std::string kXMLRoot = "arena_map";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(cold, pure);

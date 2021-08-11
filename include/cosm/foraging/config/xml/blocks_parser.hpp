@@ -58,7 +58,7 @@ class blocks_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all block parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "blocks";
+  static inline const std::string kXMLRoot = "blocks";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(pure, cold);

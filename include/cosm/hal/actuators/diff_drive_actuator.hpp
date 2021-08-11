@@ -97,6 +97,9 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
   /**
    * \brief Set the wheel speeds for the current timestep for a footbot/epuck
    * robot. Bounds checking is not performed.
+   *
+   * \param left Desired speed in m/s for the left wheel.
+   * \param right Desired speed in m/s for the right wheel.
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_actuator<U>::value)>
@@ -105,7 +108,11 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
-    m_wheels->SetLinearVelocity(left, right);
+    /*
+     * ARGoS expects velocities to be specified in cm/s, so we have to convert
+     * from SI units.
+     */
+    m_wheels->SetLinearVelocity(left * 100.0, right * 100.0);
   }
 
   /**

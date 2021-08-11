@@ -55,8 +55,8 @@ class polled_task;
  */
 class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
  public:
-  inline static const std::string kRegretBoundLog = "log";
-  inline static const std::string kRegretBoundLinear = "linear";
+  static inline const std::string kRegretBoundLog = "log";
+  static inline const std::string kRegretBoundLinear = "linear";
 
   /*
    * From Auer2002, 5.0 is considered large enough to give a logarithmic regret

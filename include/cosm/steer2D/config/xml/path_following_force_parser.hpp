@@ -59,7 +59,7 @@ class path_following_force_parser final : public rconfig::xml::xml_config_parser
    * \brief The XML root tag that all \ref path_following_force configuration
    * should lie under in the XML tree.
    */
-  inline static const std::string kXMLRoot = "path_following_force";
+  static inline const std::string kXMLRoot = "path_following_force";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(cold, pure);

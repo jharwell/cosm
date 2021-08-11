@@ -67,8 +67,8 @@ struct sigmoid_sel_config;
 class partition_probability : public rmath::sigmoid,
                               public rer::client<partition_probability> {
  public:
-  inline static const std::string kMethodPini2011 = "pini2011";
-  inline static const std::string kMethodRandom = "random";
+  static inline const std::string kMethodPini2011 = "pini2011";
+  static inline const std::string kMethodRandom = "random";
 
   /*
    * A default reactivity value determined experimentally to work well.

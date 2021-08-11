@@ -91,7 +91,7 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
  public:
   using impl_type = TSensor;
 
-  inline static const std::string kNestTarget = "nest";
+  static inline const std::string kNestTarget = "nest";
 
   /**
    * \brief A ground sensor reading (value, distance) pair.

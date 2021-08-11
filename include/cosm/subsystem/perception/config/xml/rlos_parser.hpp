@@ -55,7 +55,7 @@ class rlos_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all rlos parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "rlos";
+  static inline const std::string kXMLRoot = "rlos";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   std::string xml_root(void) const override { return kXMLRoot; }

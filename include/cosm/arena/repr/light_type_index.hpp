@@ -56,8 +56,8 @@ NS_START(cosm, arena, repr);
 
 class light_type_index {
  public:
-  inline static const std::string kNest = "nest";
-  inline static const std::string kCache = "cache";
+  static inline const std::string kNest = "nest";
+  static inline const std::string kCache = "cache";
 
   light_type_index(void);
 

@@ -41,9 +41,6 @@
  ******************************************************************************/
 NS_START(cosm, hal);
 
-/*******************************************************************************
- * Class Definitions
- ******************************************************************************/
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using robot = argos::CFootBotEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

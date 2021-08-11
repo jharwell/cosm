@@ -54,7 +54,7 @@ class pheromone_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all pheromone parameters should lie under in the
    * XML tree.
    */
-  inline static const std::string kXMLRoot = "pheromone";
+  static inline const std::string kXMLRoot = "pheromone";
 
   bool validate(void) const override RCPPSW_ATTR(pure, cold);
   void parse(const ticpp::Element& node) override RCPPSW_COLD;

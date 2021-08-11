@@ -54,7 +54,7 @@ class angular_order_parser : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all XML configuration for angular order objects
    * should lie under in the XML tree.
    */
-  inline static const std::string kXMLRoot = "angular_order";
+  static inline const std::string kXMLRoot = "angular_order";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
 

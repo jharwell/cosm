@@ -53,18 +53,18 @@ NS_START(cosm, pal);
 /**
  * \brief The name of the type robots within the swarm from the POV of ARGoS.
  */
-inline static const std::string kARGoSRobotType = COSM_PAL_ARGOS_ROBOT_TYPE;
+static inline const std::string kARGoSRobotType = COSM_PAL_ARGOS_ROBOT_TYPE;
 
 /**
  * \brief The prefix that all robot unique IDs have within ARGoS.
  */
-inline static const std::string kARGoSRobotNamePrefix = COSM_PAL_ARGOS_ROBOT_NAME_PREFIX;
+static inline const std::string kARGoSRobotNamePrefix = COSM_PAL_ARGOS_ROBOT_NAME_PREFIX;
 
 /**
  * \brief The unique name attached to the controller of the desired type in the
  * XML input file.
  */
-inline static const std::string kARGoSControllerXMLId = COSM_PAL_ARGOS_CONTROLLER_XML_ID;
+static inline const std::string kARGoSControllerXMLId = COSM_PAL_ARGOS_CONTROLLER_XML_ID;
 
 #undef COSM_PAL_ARGOS_ROBOT_TYPE
 #undef COSM_PAL_ARGOS_ROBOT_NAME_PREFIX

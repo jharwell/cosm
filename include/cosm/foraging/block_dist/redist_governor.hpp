@@ -57,12 +57,12 @@ NS_START(cosm, foraging, block_dist);
  */
 class redist_governor : public rer::client<redist_governor> {
  public:
-  inline static const std::string kStatusSwitchPolicySingle = "single";
-  inline static const std::string kStatusSwitchPolicyMulti = "multi";
-  inline static const std::string kTriggerNull = "Null";
-  inline static const std::string kTriggerTime = "timestep";
-  inline static const std::string kTriggerBlockCount = "block_count";
-  inline static const std::string kTriggerConvergence = "convergence";
+  static inline const std::string kStatusSwitchPolicySingle = "single";
+  static inline const std::string kStatusSwitchPolicyMulti = "multi";
+  static inline const std::string kTriggerNull = "Null";
+  static inline const std::string kTriggerTime = "timestep";
+  static inline const std::string kTriggerBlockCount = "block_count";
+  static inline const std::string kTriggerConvergence = "convergence";
 
   explicit redist_governor(const config::block_redist_governor_config* config);
 

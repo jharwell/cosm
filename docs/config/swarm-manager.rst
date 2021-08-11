@@ -4,21 +4,38 @@ Swarm Manager XML Configuration
 
 The following root XML tags are defined for swarm management:
 
-+------------------------+------------------------------------------------------------------------------+
-| Root XML tag           | Description                                                                  |
-+------------------------+------------------------------------------------------------------------------+
-| ``output``             | Parameters for logging simulation metrics/results.                           |
-+------------------------+------------------------------------------------------------------------------+
-| ``convergence``        | Parameters for computing swarm convergence.                                  |
-+------------------------+------------------------------------------------------------------------------+
-| ``arena_map``          | Parameters for the 2D arena/foraging.                                        |
-+------------------------+------------------------------------------------------------------------------+
-| ``temporal_variance``  | Parameters for temporally varying swarm operating conditions.                |
-+------------------------+------------------------------------------------------------------------------+
-| ``visualization``      | Parameters for visualizing robots in various ways during simulation.         |
-+------------------------+------------------------------------------------------------------------------+
-|  ``oracle_manager``    | Parameters for providing perfect information to the swarm during simulation. |
-+------------------------+------------------------------------------------------------------------------+
+.. list-table::
+   :widths: 25,50,50
+   :header-rows: 1
+
+   * - Root XML Tag
+
+     - Description
+
+   * - ``output``
+
+     - Parameters for logging simulation metrics/results.
+
+   * - ``convergence``
+
+     - Parameters for computing swarm convergence.
+
+   * - ``arena_map``
+
+     - Parameters for the 2D arena/foraging.
+
+   * - ``temporal_variance``
+
+     - Parameters for temporally varying swarm operating conditions.
+
+   * - ``visualization``
+
+     - Parameters for visualizing robots in various ways during simulation.
+
+   * -  ``oracle_manager``
+
+     - Parameters for providing perfect information to the swarm during
+       simulation.
 
 ``output``
 ==========
@@ -142,58 +159,146 @@ What collectors can be added under what child tag (id,filename) pairs is defined
 in :ref:`ln-metrics-collectors`) . Not defining them disables metric collection
 of the given type for that category.
 
-.. _ln-metrics-collectors:
+.. list-table::
+   :widths: 25,50,50
+   :header-rows: 1
 
-Available Metrics Collectors
-""""""""""""""""""""""""""""
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| XML attribute                                  | Description                                                             |Allowable output modes  | Notes                  |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_interference_counts``                    | " robots entering, currently encountering, and exiting the inter-robot  | append                 |                        |
-|                                                | interference avoidance state.                                           |                        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_interference_locs2D``                    | Spatial distribution of inter-robot interference locations in 2D in the | create,truncate        |                        |
-|                                                | arena.                                                                  |                        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``fsm_interference_locs3D``                    | Spatial distribution of inter-robot interference locations in a 3D      | create,truncate        |                        |
-|                                                | volumetric space in the arena.                                          |                        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``spatial_movement``                           | Swarm average distance traveled/velocity for different types of motion. | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_counts``                           | Counts of robots exploring for, vectoring to, and acquiring blocks.     | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_locs2D``                           | 2D spatial distribution of where robots acquire goals.                  | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_explore_locs2D``                   | 2D spatial distribution of where robots exploring for blocks.           | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_explore_locs3D``                   | 3D spatial distribution of where robots exploring for blocks.           | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_acq_vector_locs2D``                    | 2D spatial distribution of where robots vector to known blocks.         | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_transportee``                          | Swarm # blocks collected/ # transporters per block.                     | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_transporter``                          | Swarm block transport (not necessarily to the nest)                     | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``task_distribution``                          | TAB task allocation probabilities/counts.                               | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``swarm_dist_pos2D``                           | Swarm distribution in 2D space.                                         | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``swarm_dist_pos3D``                           | Swarm distribution in 3D space.                                         | create,truncate        |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``swarm_convergence``                          | Results of swarm convergence calculations.                              | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``tv_population``                              | Poisson processes for governing population dynamics.                    | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``oracle_manager``                             | Enable swarms to make decisions based on perfect information.           | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_distributor``                          | Block distribution.                                                     | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_motion``                               | Free block motion in the arena.                                         | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``block_clusters``                             | Size, block count, etc. in block clusters in the arena.                 | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
-| ``nest_acq_strategy``                          | The strategies robots can use to acquire nests in the arena.            | append                 |                        |
-+------------------------------------------------+-------------------------------------------------------------------------+------------------------+------------------------+
+   * - XML Attribute
+
+     - Description
+
+     - Allowable Output Modes
+
+     - Notes
+
+   * - ``fsm_interference_counts``
+
+   - # robots entering, currently encountering, and exiting the inter-robot
+     interference avoidance state.
+
+   - append
+
+   * - ``fsm_interference_locs2D``
+
+   - Spatial distribution of inter-robot interference locations in 2D in the
+     arena
+
+   - create,truncate
+
+   * - ``fsm_interference_locs3D``
+
+   - Spatial distribution of inter-robot interference locations in a 3D
+     volumetric spaces in the arena.
+
+   - create,truncate
+
+   * - ``spatial_movement``
+
+   - Swarm average distance traveled/velocity for different types of motion.
+
+   - append
+
+   * - ``block_acq_counts``
+
+   - Counts of robots exploring for, vectoring to, and acquiring blocks.
+
+   - append
+
+   * - ``block_acq_locs2D``
+
+   - 2D spatial distribution of where robots acquire goals.
+
+   - create,truncate
+
+   * - ``block_acq_explore_locs2D``
+
+   - 2D spatial distribution of where robots exploring for blocks.
+
+   - create,truncate
+
+   * - ``block_acq_explore_locs3D``
+
+   - 3D spatial distribution of where robots exploring for blocks.
+
+   - create,truncate
+
+   * - ``block_acq_vector_locs2D``
+
+   - 2D spatial distribution of where robots vector to known blocks.
+
+   - create,truncate
+
+   * - ``block_transportee``
+
+   - Swarm # blocks collected/ # transporters per block.
+
+   - append
+
+   * - ``block_transporter``
+
+   - Swarm block transport (not necessarily to the nest)
+
+   - append
+
+   * - ``task_distribution``
+
+   - TAB task allocation probabilities/counts.
+
+   - append
+
+   * - ``swarm_dist_pos2D``
+
+   - Swarm distribution in 2D space.
+
+   - create,truncate
+
+   * - ``swarm_dist_pos3D``
+
+   - Swarm distribution in 3D space.
+
+   - create,truncate
+
+   * - ``swarm_convergence``
+
+   - Results of swarm convergence calculations.
+
+   - append
+
+   * - ``tv_population``
+
+   - Poisson processes for governing population dynamics.
+
+   - append
+
+   * - ``oracle_manager``
+
+   - Enable swarms to make decisions based on perfect information.
+
+   - append
+
+   * - ``block_distributor``
+
+   - Block distribution.
+
+   - append
+
+   * - ``block_motion``
+
+   - Free block motion in the arena.
+
+   - append
+
+   * - ``block_clusters``
+
+   - Size, block count, etc. in block clusters in the arena.
+
+   - append
+
+   * - ``nest_acq_strategy``
+
+   - The strategies robots can use to acquire nests in the arena.
+
+   - append
 
 ``convergence``
 ===============

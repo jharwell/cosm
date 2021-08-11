@@ -53,7 +53,7 @@ class phototaxis_force_parser final : public rconfig::xml::xml_config_parser {
    * \brief The root tag that all phototaxis_force parameters should lie under
    * in the XML tree.
    */
-  inline static const std::string kXMLRoot = "phototaxis_force";
+  static inline const std::string kXMLRoot = "phototaxis_force";
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
   bool validate(void) const override RCPPSW_ATTR(cold, pure);

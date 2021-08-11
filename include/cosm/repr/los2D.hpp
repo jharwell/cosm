@@ -29,14 +29,11 @@
 
 #include "cosm/repr/base_los.hpp"
 #include "cosm/repr/grid2D_view_entity.hpp"
+#include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::ds {
-class cell2D;
-} /* namespace cosm::ds */
-
 NS_START(cosm, repr);
 
 /*******************************************************************************
