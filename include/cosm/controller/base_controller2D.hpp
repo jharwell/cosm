@@ -87,9 +87,9 @@ class base_controller2D : public base_controller,
    * \brief Convenience function to add robot ID+timestep to messages during
    * the control step.
    */
-  void ndc_pusht(void) const;
+  void ndc_pusht(void) const override final;
 #else
-  void ndc_pusht(void) const {}
+  void ndc_pusht(void) const override final {}
 #endif
 
  protected:

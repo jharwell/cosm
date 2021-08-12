@@ -28,6 +28,7 @@
 
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/hal/hal.hpp"
@@ -71,7 +72,11 @@ NS_END(detail);
  *                 be called.
  */
 template <typename TSensor>
-class position_sensor_impl final : public rer::client<position_sensor_impl<TSensor>> {
+class position_sensor_impl final : public rer::client<position_sensor_impl<TSensor>>,
+                                   private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
@@ -88,7 +93,7 @@ class position_sensor_impl final : public rer::client<position_sensor_impl<TSens
 
   explicit position_sensor_impl(TSensor * const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.position"),
-        m_sensor(sensor) {}
+        rpdecorator::decorator<TSensor*>(sensor) {}
 
   const position_sensor_impl& operator=(const position_sensor_impl&) = delete;
   position_sensor_impl(const position_sensor_impl&) = default;
@@ -101,11 +106,11 @@ class position_sensor_impl final : public rer::client<position_sensor_impl<TSens
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
   sensor_reading reading(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
-    auto tmp = m_sensor->GetReading();
+    auto tmp = decoratee()->GetReading();
     sensor_reading ret;
     argos::CRadians x, y, z;
     tmp.Orientation.ToEulerAngles(z, y, x);
@@ -118,10 +123,20 @@ class position_sensor_impl final : public rer::client<position_sensor_impl<TSens
     return ret;
   }
 
- private:
-  /* clang-format off */
-  TSensor* const m_sensor;
-  /* clang-format on */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
+  void reset(void) { decoratee()->Reset(); }
+
+template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
+  void disable(void) {
+    ER_ASSERT(nullptr != decoratee(),
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    decoratee()->Disable();
+  }
+
+
 };
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)

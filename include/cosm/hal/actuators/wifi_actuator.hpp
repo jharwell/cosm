@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/utils/color.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/wifi_packet.hpp"
@@ -74,13 +75,17 @@ NS_END(detail);
  *                   functions can be called.
  */
 template<typename TActuator>
-class wifi_actuator_impl final : public rer::client<wifi_actuator_impl<TActuator>> {
+class wifi_actuator_impl final : public rer::client<wifi_actuator_impl<TActuator>>,
+                                 private rpdecorator::decorator<TActuator*> {
+ private:
+  using rpdecorator::decorator<TActuator*>::decoratee;
+
  public:
   using impl_type = TActuator;
 
   explicit wifi_actuator_impl(TActuator* const wifi)
       : ER_CLIENT_INIT("cosm.hal.actuators.wifi"),
-        m_wifi(wifi) {}
+        rpdecorator::decorator<TActuator*>(wifi) {}
 
   const wifi_actuator_impl& operator=(const wifi_actuator_impl&) = delete;
   wifi_actuator_impl(const wifi_actuator_impl&) = default;
@@ -91,11 +96,11 @@ class wifi_actuator_impl final : public rer::client<wifi_actuator_impl<TActuator
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_start(const struct wifi_packet& packet) {
-    ER_ASSERT(nullptr != m_wifi,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
     for (size_t i = 0; i < packet.data.size(); ++i) {
-      m_wifi->SetData(i, packet.data[i]);
+      decoratee()->SetData(i, packet.data[i]);
     } /* for(i..) */
   }
 
@@ -106,23 +111,24 @@ class wifi_actuator_impl final : public rer::client<wifi_actuator_impl<TActuator
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void broadcast_stop(void) {
-    ER_ASSERT(nullptr != m_wifi,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_wifi->ClearData();
+    decoratee()->ClearData();
   }
 
   /**
    * \brief Reset the wifi device.
    */
-  template <typename U = TActuator,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
   void reset(void) { broadcast_stop(); }
 
- private:
-  /* clang-format off */
-  TActuator* const m_wifi;
-  /* clang-format on */
+  /**
+   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so this
+   * does nothing.
+   */
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_rab_actuator<U>::value)>
+  void disable(void) { }
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

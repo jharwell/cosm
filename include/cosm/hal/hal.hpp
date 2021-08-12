@@ -50,19 +50,4 @@
 #define COSM_HAL_TARGET_ARGOS_ROBOT
 #endif
 
-/*******************************************************************************
- * Macros
- ******************************************************************************/
-#define COSM_HAL_SAA_ACCESSOR(category, Typelist, type, name, ...) \
-  __VA_ARGS__ type* name(void) __VA_ARGS__ {                            \
-    return category<type>();                                            \
-  }                                                                     \
-
-#define COSM_HAL_SAA_ACCESSOR_VISITOR(type, ...)                        \
-  template<typename U = T,                                              \
-           RCPPSW_SFINAE_DECLDEF(std::is_same<U, type>::value)>            \
-  __VA_ARGS__ type* operator()(__VA_ARGS__ type& item)  __VA_ARGS__ {   \
-    return &item;                                                       \
-  }
-
 #endif /* INCLUDE_COSM_HAL_HAL_HPP_ */

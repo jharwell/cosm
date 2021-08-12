@@ -154,11 +154,20 @@ class base_controller : public rer::client<base_controller> {
   void ndc_push(void) const {
     ER_NDC_PUSH("[ent" + rcppsw::to_string(entity_id().v()) + "]");
   }
+  /**
+   * \brief Convenience function to add robot ID+timestep to messages during
+   * the control step, if derived classes want to. By default this function does
+   * nothing.
+   */
+  virtual void ndc_pusht(void) const {}
+
   void ndc_pop(void) const { ER_NDC_POP(); }
 
 #else
   void ndc_push(void) const {}
   void ndc_pop(void) const {}
+  virtual void ndc_pusht(void) const {}
+
 #endif
 
   /**

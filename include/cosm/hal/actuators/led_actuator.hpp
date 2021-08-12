@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/utils/color.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
@@ -76,18 +77,20 @@ NS_END(detail);
  * - ARGoS pipuck
  *
  * \tparam TActuator The underlying actuator handle type abstracted away by the
- *                   HAL. If nullptr, then that effectively disables the
- *                   actuator at compile time, and SFINAE ensures no member
- *                   functions can be called.
+ *                   HAL.
  */
 template<typename TActuator>
-class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>> {
+class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>,
+                                private rpdecorator::decorator<TActuator*> {
+ private:
+  using rpdecorator::decorator<TActuator*>::decoratee;
+
  public:
   using impl_type = TActuator;
 
   explicit led_actuator_impl(TActuator* const leds)
       : ER_CLIENT_INIT("cosm.hal.actuators.led"),
-        m_leds(leds) {}
+        rpdecorator::decorator<TActuator*>(leds) {}
 
   const led_actuator_impl& operator=(const led_actuator_impl&) = delete;
   led_actuator_impl(const led_actuator_impl&) = default;
@@ -96,6 +99,16 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
    * \brief Reset the LED actuator (turn all LEDs off).
    */
   void reset(void) { set_color(-1, rutils::color::kBLACK); }
+
+  /**
+   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so this
+   * does nothing.
+   */
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_led_actuator<U>::value ||
+                                  detail::is_argos_generic_dirled_actuator<U>::value)>
+  void disable(void) { }
+
 
   /**
    * \brief Set a single LED on the robot to a specific color (or set all LEDs
@@ -113,16 +126,16 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_led_actuator<U>::value ||
                                   detail::is_argos_generic_dirled_actuator<U>::value)>
   bool set_color(int id, const rutils::color& color) {
-    ER_CHECK(nullptr != m_leds,
+    ER_CHECK(nullptr != decoratee(),
              "%s called with NULL impl handle!",
              __FUNCTION__);
     if (-1 == id) {
-      m_leds->SetAllColors(argos::CColor(color.red(),
+      decoratee()->SetAllColors(argos::CColor(color.red(),
                                          color.green(),
                                          color.blue(),
                                          color.alpha()));
     } else {
-      m_leds->SetSingleColor(id, argos::CColor(color.red(),
+      decoratee()->SetSingleColor(id, argos::CColor(color.red(),
                                                color.green(),
                                                color.blue(),
                                                color.alpha()));
@@ -149,25 +162,20 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_led_actuator<U>::value ||
                                   detail::is_argos_generic_dirled_actuator<U>::value)>
   bool set_intensity(int id, uint8_t intensity) {
-    ER_CHECK(nullptr != m_leds,
+    ER_CHECK(nullptr != decoratee(),
              "%s called with NULL impl handle!",
              __FUNCTION__);
 
     if (-1 == id) {
-      m_leds->SetAllIntensities(intensity);
+      decoratee()->SetAllIntensities(intensity);
     } else {
-      m_leds->SetSingleIntensity(id, intensity);
+      decoratee()->SetSingleIntensity(id, intensity);
     }
     return true;
 
  error:
     return false;
   }
-
- private:
-  /* clang-format off */
-  TActuator* m_leds;
-  /* clang-format on */
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

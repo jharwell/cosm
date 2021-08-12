@@ -31,6 +31,7 @@
 
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "rcppsw/utils/color.hpp"
@@ -80,7 +81,11 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_camera_sensor_impl<TSensor>> {
+class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_camera_sensor_impl<TSensor>>,
+                                              private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
@@ -94,7 +99,7 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
 
   explicit colored_blob_camera_sensor_impl(TSensor * const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.colored_blob_camera"),
-        m_sensor(sensor) {
+        rpdecorator::decorator<TSensor*>(sensor) {
     disable();
   }
 
@@ -113,12 +118,12 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   std::vector<reading>  readings(
       const rmath::radians& rframe = rmath::radians::kZERO) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
     std::vector<reading> ret;
-    for (auto &r : m_sensor->GetReadings().BlobList) {
+    for (auto &r : decoratee()->GetReadings().BlobList) {
       struct reading s = {
         /*
          * ARGoS reports the distance in cm for some reason, so put it in SI
@@ -148,7 +153,7 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   boost::optional<rmath::vector2d> closest_blob(const rutils::color& color,
                                                 const rmath::radians& rframe) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
@@ -173,25 +178,29 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   void enable(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_sensor->Enable();
+    decoratee()->Enable();
   }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
   void disable(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_sensor->Disable();
+    decoratee()->Disable();
   }
 
- private:
-  /* clang-format off */
-  TSensor* const m_sensor;
-  /* clang-format on */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_blob_camera_sensor<U>::value)>
+  void reset(void) const {
+    ER_ASSERT(nullptr != decoratee(),
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    decoratee()->Reset();
+  }
 };
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)

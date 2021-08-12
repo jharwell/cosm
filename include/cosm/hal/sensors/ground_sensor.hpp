@@ -28,6 +28,7 @@
 #include <string>
 
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/sensors/config/ground_sensor_config.hpp"
@@ -87,7 +88,11 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>> {
+class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>,
+                                 private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
@@ -112,8 +117,8 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   ground_sensor_impl(TSensor * const sensor,
                  const config::ground_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.ground"),
-        mc_config(*config),
-        m_sensor(sensor) {}
+        rpdecorator::decorator<TSensor*>(sensor),
+        mc_config(*config) {}
   ~ground_sensor_impl(void) override = default;
 
   const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
@@ -127,12 +132,12 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
     std::vector<reading> ret;
-    for (auto &r : m_sensor->GetReadings()) {
+    for (auto &r : decoratee()->GetReadings()) {
       ret.emplace_back(r.Value, -1.0);
     } /* for(&r..) */
 
@@ -147,13 +152,13 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_epuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
     std::vector<reading> ret;
     double tmp[3];
-    m_sensor->GetReadings(tmp);
+    decoratee()->GetReadings(tmp);
     ret.emplace_back(tmp[0], -1.0);
     ret.emplace_back(tmp[1], -1.0);
     ret.emplace_back(tmp[2], -1.0);
@@ -168,7 +173,7 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
@@ -177,7 +182,7 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
                 r.value = interface.Reflected;
                 r.distance = -1.0;
               };
-    m_sensor->Visit(cb);
+    decoratee()->Visit(cb);
     return {r};
   }
 
@@ -202,10 +207,26 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
     return  sum >= detection.consensus;
   }
 
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_ground_sensor<U>::value ||
+                                  detail::is_argos_epuck_ground_sensor<U>::value ||
+                                  detail::is_argos_pipuck_ground_sensor<U>::value)>
+  void reset(void) { decoratee()->Reset(); }
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_ground_sensor<U>::value ||
+                                  detail::is_argos_epuck_ground_sensor<U>::value ||
+                                  detail::is_argos_pipuck_ground_sensor<U>::value)>
+  void disable(void) const {
+    ER_ASSERT(nullptr != decoratee(),
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    decoratee()->Disable();
+  }
+
  private:
   /* clang-format off */
   const config::ground_sensor_config mc_config;
-  TSensor* const                     m_sensor;
   /* clang-format on */
 };
 

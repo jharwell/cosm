@@ -57,7 +57,7 @@ class governed_diff_drive final : public kin2D::diff_drive {
  public:
   governed_diff_drive(const config::diff_drive_config* config,
                       const hal::actuators::diff_drive_actuator& actuator,
-                      drive_type type)
+                      const drive_type& type)
       : diff_drive(config, actuator, type) {}
 
   const governed_diff_drive& operator=(const governed_diff_drive&) = delete;

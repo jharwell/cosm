@@ -1,7 +1,7 @@
 /**
- * \file actuation_subsystem2D.cpp
+ * \file stop.cpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,30 +21,31 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/controller/operations/stop.hpp"
+
+#include "cosm/fsm/supervisor_fsm.hpp"
+#include "cosm/pal/argos_controller2D_adaptor.hpp"
+#include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, subsystem);
+NS_START(cosm, controller, operations);
 
 /*******************************************************************************
- * Struct Definitions
+ * Depth0 Foraging
  ******************************************************************************/
-struct reset_visitor : public boost::static_visitor<void> {
-  template <typename TActuator>
-  void operator()(TActuator& actuator) const {
-    actuator.reset();
-  }
-};
+void stop::visit(ccontroller::base_controller& controller) {
+  controller.ndc_pusht();
 
-/*******************************************************************************
- * Constructors/Destructor
- ******************************************************************************/
-void actuation_subsystem2D::reset(void) {
-  for (auto& a : m_actuators) {
-    boost::apply_visitor(reset_visitor(), a.second);
-  } /* for(&a..) */
-} /* reset() */
+  visit(*controller.supervisor());
 
-NS_END(subsystem, hal, cosm);
+  ER_INFO("Robot%d stopped", controller.entity_id().v());
+  controller.ndc_pop();
+} /* visit() */
+
+void stop::visit(cfsm::supervisor_fsm& fsm) {
+  fsm.event_stop();
+} /* visit() */
+
+NS_END(operations, controller, cosm);

@@ -20,8 +20,8 @@
                     (setq flycheck-clang-include-path includes-list)
                     (add-to-list 'flycheck-clang-args "-fPIC")
                     (add-to-list 'flycheck-clang-args "-std=c++17")
-                    (add-to-list 'flycheck-clang-definitions "COSM_HAL_TARGET=HAL_TARGET_ARGOS_EEPUCK3D")
-                    (add-to-list 'flycheck-clang-definitions "BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
+                    (add-to-list 'flycheck-clang-definitions "COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT")
+                    (add-to-list 'flycheck-clang-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
                                                                           "$localroot/include")))
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
@@ -31,7 +31,8 @@
                     (setq flycheck-gcc-include-path includes-list)
                     (add-to-list 'flycheck-gcc-args "-fPIC")
                     (add-to-list 'flycheck-gcc-args "-std=c++17")
-                    (add-to-list 'flycheck-gcc-definitions "COSM_HAL_TARGET=HAL_TARGET_ARGOS_EEPUCK3D")
+                    (add-to-list 'flycheck-gcc-definitions "COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT")
+                    (add-to-list 'flycheck-gcc-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-gcc-definitions "BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
                                                                         "$localroot/include")))

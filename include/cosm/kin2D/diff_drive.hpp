@@ -25,7 +25,6 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"
@@ -68,25 +67,17 @@ class diff_drive : public rer::client<diff_drive> {
   };
 
   /**
-   * \brief Initialize diff drive kin model.
-   *
    * \param type The drive type; see \ref drive_type
    * \param actuator The underlying differential steering actuator (via HAL)
    * \param config Configuration.
    */
   diff_drive(const config::diff_drive_config* config,
              const hal::actuators::diff_drive_actuator& actuator,
-             drive_type type);
+             const drive_type& type);
 
   const diff_drive& operator=(const diff_drive&) = delete;
   diff_drive(const diff_drive&) = default;
 
-  /**
-   * \brief Reset the differential drive.
-   *
-   * - Set the wheel speeds to 0.
-   */
-  void reset(void) { m_actuator.reset(); }
   double max_speed(void) const { return m_max_speed; }
 
   /*
@@ -129,6 +120,13 @@ class diff_drive : public rer::client<diff_drive> {
   diff_drive_fsm                      m_fsm;
   hal::actuators::diff_drive_actuator m_actuator;
   /* clang-format on */
+
+ public:
+  /**
+   * \brief Reset the differential drive.
+   */
+  RCPPSW_WRAP_DECLDEF(reset, m_actuator);
+  RCPPSW_WRAP_DECLDEF(disable, m_actuator);
 };
 
 NS_END(kin2D, cosm);

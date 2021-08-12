@@ -39,6 +39,7 @@
 #include "cosm/hal/sensors/position_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/colored_blob_camera_sensor.hpp"
+#include "cosm/hal/subsystem/base_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -100,7 +101,7 @@ NS_START(cosm, hal, subsystem);
  * - \ref hal::sensors::diff_drive_sensor
  * - \ref hal::sensors::wifi_sensor
  */
-class sensing_subsystemQ3D {
+class sensing_subsystemQ3D : private chsubsystem::base_subsystem {
  public:
   using variant_type = boost::variant<COSM_HAL_ROBOT_SENSOR_TYPES>;
   using sensor_map = std::unordered_map<std::type_index, variant_type>;
@@ -121,6 +122,16 @@ class sensing_subsystemQ3D {
       : m_sensors(sensors) {}
 
   virtual ~sensing_subsystemQ3D(void) = default;
+
+  /**
+   * \brief Reset all sensors.
+   */
+  void reset(void) { base_subsystem::reset(m_sensors); }
+
+  /**
+   * \brief Disable all sensors.
+   */
+  void disable(void) { base_subsystem::disable(m_sensors); }
 
   template <typename TSensor>
   bool replace(const TSensor& sensor) {
@@ -199,7 +210,7 @@ class sensing_subsystemQ3D {
 
  private:
   /* clang-format off */
-  sensor_map                    m_sensors;
+  sensor_map m_sensors;
   /* clang-format off */
 };
 

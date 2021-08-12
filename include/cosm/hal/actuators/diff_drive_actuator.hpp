@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -73,11 +74,14 @@ NS_END(detail);
  * - ARgoS pipuck
  *
 * \tparam TActuator The underlying actuator handle type abstracted away by the
- * HAL. If nullptr, then that effectively disables the actuator at compile time,
- * and SFINAE ensures no member functions can be called.
+ *                  HAL.
  */
 template <typename TActuator>
-class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TActuator>> {
+class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TActuator>>,
+                                 private rpdecorator::decorator<TActuator*> {
+ private:
+  using rpdecorator::decorator<TActuator*>::decoratee;
+
  public:
   using impl_type = TActuator;
   /**
@@ -89,7 +93,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
    */
   explicit diff_drive_actuator_impl(TActuator* const wheels)
       : ER_CLIENT_INIT("cosm.hal.actuators.diff_drive"),
-        m_wheels(wheels) {}
+        rpdecorator::decorator<TActuator*>(wheels) {}
 
   const diff_drive_actuator_impl& operator=(const diff_drive_actuator_impl&) = delete;
   diff_drive_actuator_impl(const diff_drive_actuator_impl&) = default;
@@ -104,7 +108,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    ER_ASSERT(nullptr != m_wheels,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
@@ -112,7 +116,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
      * ARGoS expects velocities to be specified in cm/s, so we have to convert
      * from SI units.
      */
-    m_wheels->SetLinearVelocity(left * 100.0, right * 100.0);
+    decoratee()->SetLinearVelocity(left * 100.0, right * 100.0);
   }
 
   /**
@@ -122,11 +126,11 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_actuator<U>::value)>
   void set_wheel_speeds(double left, double right) {
-    ER_ASSERT(nullptr != m_wheels,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_wheels->SetTargetVelocityLeft(left);
-    m_wheels->SetTargetVelocityRight(right);
+    decoratee()->SetTargetVelocityLeft(left);
+    decoratee()->SetTargetVelocityRight(right);
   }
 
   /**
@@ -135,10 +139,14 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
    */
   void reset(void) { set_wheel_speeds(0.0, 0.0); }
 
- private:
-  /* clang-format off */
-  TActuator* const m_wheels;
-  /* clang-format on */
+  /**
+   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so this
+   * does nothing.
+   */
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_actuator<U>::value ||
+                                  detail::is_argos_generic_ds_actuator<U>::value)>
+  void disable(void) { }
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

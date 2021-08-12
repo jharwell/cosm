@@ -28,6 +28,7 @@
 
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/wifi_packet.hpp"
 
@@ -71,13 +72,17 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class wifi_sensor_impl final : public rer::client<wifi_sensor_impl<TSensor>> {
+class wifi_sensor_impl final : public rer::client<wifi_sensor_impl<TSensor>>,
+                               private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
   explicit wifi_sensor_impl(TSensor * const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.wifi"),
-        m_sensor(sensor) {}
+        rpdecorator::decorator<TSensor*>(sensor) {}
 
   const wifi_sensor_impl& operator=(const wifi_sensor_impl&) = delete;
   wifi_sensor_impl(const wifi_sensor_impl&) = default;
@@ -90,12 +95,12 @@ class wifi_sensor_impl final : public rer::client<wifi_sensor_impl<TSensor>> {
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_sensor<U>::value)>
   std::vector<wifi_packet> readings(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
     std::vector<wifi_packet> ret;
-    for (auto &r : m_sensor->GetReadings()) {
+    for (auto &r : decoratee()->GetReadings()) {
       wifi_packet d;
       for (size_t i = 0; i < r.Data.Size(); ++i) {
         d.data.push_back(r.Data[i]);
@@ -105,10 +110,13 @@ class wifi_sensor_impl final : public rer::client<wifi_sensor_impl<TSensor>> {
     return ret;
   }
 
- private:
-  /* clang-format off */
-  TSensor* m_sensor;
-  /* clang-format on */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_sensor<U>::value)>
+  void reset(void) { decoratee()->Reset(); }
+
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_sensor<U>::value)>
+  void disable(void) { decoratee()->Disable(); }
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)

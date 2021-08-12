@@ -28,6 +28,7 @@
 
 #include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -90,7 +91,11 @@ NS_END(detail);
  *                  be called.
  */
 template <typename TSensor>
-class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>> {
+class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
+                                private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
@@ -112,7 +117,7 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>> {
 
   explicit light_sensor_impl(TSensor * const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.light"),
-        m_sensor(sensor) {
+        rpdecorator::decorator<TSensor*>(sensor) {
     disable();
   }
 
@@ -128,12 +133,12 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>> {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
   std::vector<reading>  readings(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
     std::vector<reading> ret;
-    for (auto &r : m_sensor->GetReadings()) {
+    for (auto &r : decoratee()->GetReadings()) {
       ret.push_back({r.Value, r.Angle.GetValue()});
     } /* for(&r..) */
 
@@ -144,38 +149,38 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>> {
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
   void enable(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_sensor->Enable();
+    decoratee()->Enable();
   }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
                                   detail::is_argos_epuck_light_sensor<U>::value)>
   void disable(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
-    m_sensor->Disable();
+    decoratee()->Disable();
   }
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
-  void enable(void) const {}
+  void enable(void) {}
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
-  void disable(void) const {}
+  void disable(void) {}
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
   std::vector<reading>  readings(void) const { return {}; }
 
- private:
-  /* clang-format off */
-  TSensor* const m_sensor;
-  /* clang-format on */
+  template <typename U = TSensor,
+            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
+                                  detail::is_argos_epuck_light_sensor<U>::value)>
+  void reset(void) { decoratee()->Reset(); }
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)

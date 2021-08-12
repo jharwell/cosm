@@ -30,6 +30,7 @@
 
 #include "rcppsw/mpl/typelist.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/hal/subsystem/base_subsystem.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include "cosm/kin2D/diff_drive.hpp"
@@ -80,7 +81,7 @@ NS_START(cosm, hal, subsystem);
  *
  * \brief The actuation subsystem for any robot which operates in 2D.
  */
-class actuation_subsystem2D {
+class actuation_subsystem2D : private chsubsystem::base_subsystem {
  public:
   using variant_type = boost::variant<COSM_HAL_ROBOT_ACTUATOR_TYPES>;
   using actuator_map = std::map<std::type_index, variant_type>;
@@ -97,9 +98,14 @@ class actuation_subsystem2D {
       : m_actuators(actuators) {}
 
   /**
-   * \brief Reset all actuators, including stopping the robot.
+   * \brief Reset all actuators.
    */
-  void reset(void);
+  void reset(void) { base_subsystem::reset(m_actuators); }
+
+  /**
+   * \brief Disable all actuators.
+   */
+  void disable(void) { base_subsystem::disable(m_actuators); }
 
   template <typename T>
   const T* actuator(void) const {

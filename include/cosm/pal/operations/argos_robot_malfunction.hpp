@@ -49,7 +49,7 @@ NS_START(cosm, pal, operations);
  ******************************************************************************/
 /**
  * \class argos_robot_malfunction
- * \ingroup pal operations detail
+ * \ingroup pal operations
  *
  * \brief Fired whenever a robot is determined to have mechanically
  * malfunctioned by the loop functions.
@@ -57,7 +57,7 @@ NS_START(cosm, pal, operations);
  * We do not use the precise visitor, because (1) this is a super generic
  * operation, and (2) doing so makes this not able to be used in the \ref
  * argos_pd_adaptor, which is what it was designed for in the first
- * time. Implicit upcasting is OK is THIS SINGLE CASE.
+ * place. Implicit upcasting is OK is THIS SINGLE CASE.
  */
 class argos_robot_malfunction : public rer::client<argos_robot_malfunction> {
  public:

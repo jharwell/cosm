@@ -1,7 +1,7 @@
 /**
- * \file env_dynamics.hpp
+ * \file stop.hpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,57 +18,54 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_ENV_DYNAMICS_HPP_
-#define INCLUDE_COSM_TV_ENV_DYNAMICS_HPP_
+#ifndef INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_
+#define INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/er/client.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::fsm {
+class supervisor_fsm;
+} /* namespace fsm */
+
+namespace cosm::controller {
+class base_controller;
+}
+
+NS_START(cosm, controller, operations);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class env_dynamics
- * \ingroup tv
+ * \class stop
+ * \ingroup controller operations
  *
- * \brief Interface specifying common functionality across projects for the
- * application of temporal variance in environmental conditions to the swarm.
+ * \brief Fired whenever a robot has been told to/determined to stop doing stuff
+ * indefinitely (until it is reset).
+ *
+ * We do not use the precise visitor, because) this is a super generic
+ * operation. Implicit upcasting is OK is THIS SINGLE CASE.
  */
-template <typename TController>
-class env_dynamics {
+class stop : public rer::client<stop> {
  public:
-  env_dynamics(void) = default;
-  virtual ~env_dynamics(void) = default;
+  stop(void) : ER_CLIENT_INIT("cosm.events.stop") {}
+  ~stop(void) override = default;
 
-  env_dynamics(const env_dynamics&) = delete;
-  const env_dynamics& operator=(const env_dynamics&) = delete;
+  stop(const stop&) = delete;
+  stop& operator=(const stop&) = delete;
 
-  /**
-   * \brief Register a robot controller for all possible types of environmental
-   * variance that could be applied to it.
-   */
-  virtual void register_controller(const TController& c) = 0;
-
-  /**
-   * \brief Undo \ref register_controller(), as well as flushing the controller
-   * from any penalty handlers it might be serving penalties for.
-   */
-  virtual void unregister_controller(const TController& c) = 0;
-
-  /**
-   * \brief Flush the controller from serving penalties for ALL penalty
-   * handlers.
-   */
-  virtual bool penalties_flush(const TController& c) = 0;
+  void visit(cfsm::supervisor_fsm& fsm);
+  void visit(ccontroller::base_controller& controller);
 };
 
-NS_END(tv, cosm);
+NS_END(operations, controller, cosm);
 
-#endif /* INCLUDE_COSM_TV_ENV_DYNAMICS_HPP_ */
+#endif /* INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_ */

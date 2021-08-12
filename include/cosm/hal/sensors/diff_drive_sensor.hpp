@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
 
@@ -77,7 +78,11 @@ NS_END(detail);
  *                 be called.
  */
 template <typename TSensor>
-class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<TSensor>> {
+class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<TSensor>>,
+  private rpdecorator::decorator<TSensor*> {
+ private:
+  using rpdecorator::decorator<TSensor*>::decoratee;
+
  public:
   using impl_type = TSensor;
 
@@ -91,7 +96,7 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
 
   explicit diff_drive_sensor_impl(TSensor* const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.diff_drive"),
-        m_sensor(sensor) {}
+        rpdecorator::decorator<TSensor*>(sensor) {}
 
   const diff_drive_sensor_impl& operator=(const diff_drive_sensor_impl&) = delete;
   diff_drive_sensor_impl(const diff_drive_sensor_impl&) = default;
@@ -102,11 +107,11 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_generic_ds_sensor<U>::value)>
   sensor_reading reading(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
-    auto tmp = m_sensor->GetReading();
+    auto tmp = decoratee()->GetReading();
 
     /*
      * ARGoS reports the distances and velocities in cm and cm/s for some
@@ -125,12 +130,12 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_ds_sensor<U>::value)>
   sensor_reading reading(void) const {
-    ER_ASSERT(nullptr != m_sensor,
+    ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
 
-    return {m_sensor->GetLeftVelocity(),
-            m_sensor->GetRightVelocity(),
+    return {decoratee()->GetLeftVelocity(),
+            decoratee()->GetRightVelocity(),
             0.0,
             0.0,
             0.0};
@@ -146,11 +151,7 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   }
 
   void reset(void) {}
-
- private:
-  /* clang-format off */
-  TSensor* const m_sensor;
-  /* clang-format on */
+  void disable(void) {}
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

@@ -58,7 +58,7 @@ NS_START(fsm);
  *
  * In normal operation, the \ref taskable object is just executed. If a
  * non-standard event is received (implemented in derived classes), then
- * normal operation can be replaced by something else (e.g. stopping all robot
+ * normal operation can be replaced by something else (e.g., stopping all robot
  * motion if a robot malfunction event is received).
  */
 class supervisor_fsm final : public rpfsm::simple_fsm,
@@ -72,6 +72,10 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
   supervisor_fsm& operator=(const supervisor_fsm&) = delete;
   supervisor_fsm(const supervisor_fsm&) = delete;
 
+  bool state_is_stopped(void) const {
+    return current_state() == states::ekST_STOP;
+  }
+
   /**
    * \brief Signal that the  \ref taskable object should not be run every
    * timestep until the robot has been repaired.
@@ -83,6 +87,12 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
    * timestep until the robot has been repaired.
    */
   void event_repair(void);
+
+  /**
+   * \brief Signal that the \ref taskable object should not be run again until
+   * the robot is reset, AND that all sensors and actuators should be disabled.
+   */
+  void event_stop(void);
 
   template <typename T>
   void supervisee_update(T* h) {
@@ -102,9 +112,14 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
     ekST_NORMAL,
 
     /**
-     * Non-normal operation: the robot has malfunctioned
+     * Non-normal operation: the robot has malfunctioned.
      */
     ekST_MALFUNCTION,
+
+    /**
+     * Non-normal operation: the robot has ceased all further operations.
+     */
+    ekST_STOP,
 
     ekST_MAX_STATES
   };
@@ -113,12 +128,16 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
   RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, start);
   RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, normal);
   RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, malfunction);
+  RCPPSW_FSM_ENTRY_DECLARE_ND(supervisor_fsm, entry_stop);
+  RCPPSW_FSM_STATE_DECLARE_ND(supervisor_fsm, stop);
 
-  RCPPSW_FSM_DEFINE_STATE_MAP_ACCESSOR(state_map, index) override {
+  RCPPSW_FSM_DEFINE_STATE_MAP_ACCESSOR(state_map_ex, index) override {
     return &mc_state_map[index];
   }
 
-  RCPPSW_FSM_DECLARE_STATE_MAP(state_map, mc_state_map, states::ekST_MAX_STATES);
+  RCPPSW_FSM_DECLARE_STATE_MAP(state_map_ex,
+                               mc_state_map,
+                               states::ekST_MAX_STATES);
 
   /* clang-format off */
   subsystem::saa_subsystemQ3D* m_saa;

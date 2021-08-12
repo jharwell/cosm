@@ -35,7 +35,7 @@ NS_START(cosm, kin2D);
  ******************************************************************************/
 diff_drive::diff_drive(const config::diff_drive_config* const config,
                        const hal::actuators::diff_drive_actuator& actuator,
-                       drive_type type)
+                       const drive_type& type)
     : ER_CLIENT_INIT("cosm.kin2D.diff_drive"),
       m_drive_type(type),
       m_max_speed(config->max_speed),
