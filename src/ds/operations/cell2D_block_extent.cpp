@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
 
@@ -31,7 +31,7 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, ds, operations, detail);
-using cds::arena_grid;
+using cads::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -53,7 +53,7 @@ void cell2D_block_extent::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_block_extent();
 } /* visit() */
 
-void cell2D_block_extent::visit(cds::arena_grid& grid) {
+void cell2D_block_extent::visit(cads::arena_grid& grid) {
   visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
 } /* visit() */
 

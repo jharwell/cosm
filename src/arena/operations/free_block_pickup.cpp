@@ -78,7 +78,7 @@ free_block_pickup::free_block_pickup(crepr::base_block3D* block,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void free_block_pickup::visit(cds::arena_grid& grid) {
+void free_block_pickup::visit(cads::arena_grid& grid) {
   ER_ASSERT(!m_block->is_out_of_sight(),
             "Block%d out of sight on pickup",
             m_block->id().v());

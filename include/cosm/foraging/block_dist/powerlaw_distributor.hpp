@@ -62,7 +62,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
                                    public base_distributor {
  public:
   powerlaw_distributor(const config::powerlaw_dist_config* config,
-                       cds::arena_grid* arena_grid,
+                       cads::arena_grid* arena_grid,
                        rmath::rng* rng);
 
   /* not copy constructible or copy assignable by default */

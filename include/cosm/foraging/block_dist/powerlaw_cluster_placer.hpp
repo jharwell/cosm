@@ -31,7 +31,7 @@
 #include "rcppsw/math/rng.hpp"
 
 #include "cosm/ds/entity_vector.hpp"
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,7 +57,7 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
  public:
   struct placement {
     rtypes::type_uuid     id;
-    cds::arena_grid::view view;
+    cads::arena_grid::view view;
     rmath::rangez         xrange;
     rmath::rangez         yrange;
     size_t                capacity;

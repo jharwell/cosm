@@ -35,7 +35,7 @@ namespace cosm::arena::repr {
 class base_cache;
 } // namespace repr
 
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } // namespace ds
 
@@ -58,7 +58,7 @@ class cell2D_cache_extent : public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<cds::arena_grid>;
+    using others = rmpl::typelist<cads::arena_grid>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -69,7 +69,7 @@ class cell2D_cache_extent : public cdops::cell2D_op {
   cell2D_cache_extent& operator=(const cell2D_cache_extent&) = delete;
   cell2D_cache_extent(const cell2D_cache_extent&) = delete;
 
-  void visit(cds::arena_grid& grid);
+  void visit(cads::arena_grid& grid);
 
  private:
   void visit(cds::cell2D& cell);

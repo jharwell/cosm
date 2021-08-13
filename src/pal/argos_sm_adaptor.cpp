@@ -86,7 +86,7 @@ argos::CColor argos_sm_adaptor::GetFloorColor(const argos::CVector2& pos) {
    * See COSM#7.
    */
   if (dpos.x() < m_arena_map->xdsize() && dpos.y() < m_arena_map->xdsize()) {
-    auto color = m_arena_map->access<cds::arena_grid::kCell>(dpos).color();
+    auto color = m_arena_map->access<cads::arena_grid::kCell>(dpos).color();
     return argos::CColor(color.red(), color.green(), color.blue());
   } else {
     return argos::CColor::WHITE;

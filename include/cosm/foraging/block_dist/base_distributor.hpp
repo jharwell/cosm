@@ -39,7 +39,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } /* namespace cosm::ds */
 
@@ -64,7 +64,7 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    */
   static constexpr const uint kMAX_DIST_TRIES = 100;
 
-  base_distributor(cds::arena_grid* arena_grid,
+  base_distributor(cads::arena_grid* arena_grid,
                    rmath::rng* const rng)
       : m_rng(rng),
         m_arena_grid(arena_grid) {}
@@ -127,12 +127,12 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
 
  protected:
   rmath::rng* rng(void) { return m_rng; }
-  cds::arena_grid* arena_grid(void) const { return m_arena_grid; }
+  cads::arena_grid* arena_grid(void) const { return m_arena_grid; }
 
  private:
   /* clang-format off */
-  rmath::rng*      m_rng;
-  cds::arena_grid* m_arena_grid;
+  rmath::rng*       m_rng;
+  cads::arena_grid* m_arena_grid;
   /* clang-format on */
 };
 

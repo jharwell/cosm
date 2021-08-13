@@ -27,7 +27,7 @@
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -49,7 +49,7 @@ struct block_cluster_params {
   rtypes::type_uuid        id;
   size_t                   capacity;
   rtypes::discretize_ratio resolution;
-  cds::arena_grid::view    view;
+  cads::arena_grid::view   view;
 };
 
 NS_END(repr, foraging, cosm);

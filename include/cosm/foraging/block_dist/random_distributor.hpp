@@ -34,7 +34,7 @@
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/coord_search_policy.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
@@ -64,8 +64,8 @@ NS_START(foraging, block_dist);
 class random_distributor : public rer::client<random_distributor>,
                            public base_distributor {
  public:
-  random_distributor(const cds::arena_grid::view& area,
-                     cds::arena_grid* arena_grid,
+  random_distributor(const cads::arena_grid::view& area,
+                     cads::arena_grid* arena_grid,
                      const cspatial::conflict_checker::map_cb_type& conflict_check,
                      const dist_success_cb_type& dist_success,
                      rmath::rng* rng);
@@ -139,7 +139,7 @@ class random_distributor : public rer::client<random_distributor>,
   const dist_success_cb_type                    mc_dist_success;
 
   enum coord_search_policy                      m_search_policy{coord_search_policy::ekRANDOM};
-  cds::arena_grid::view                         m_area;
+  cads::arena_grid::view                         m_area;
   /* clang-format on */
 };
 

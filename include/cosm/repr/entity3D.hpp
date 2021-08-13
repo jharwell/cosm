@@ -50,15 +50,24 @@ class entity3D : public spatial_entity3D {
 
   ~entity3D(void) override = default;
 
-  virtual rmath::vector2d rcenter2D(void) const = 0;
-  virtual rmath::vector2d ranchor2D(void) const = 0;
   virtual rmath::vector3d rcenter3D(void) const = 0;
   virtual rmath::vector3d ranchor3D(void) const = 0;
-
-  virtual rmath::vector2z dcenter2D(void) const = 0;
-  virtual rmath::vector2z danchor2D(void) const = 0;
   virtual rmath::vector3z dcenter3D(void) const = 0;
   virtual rmath::vector3z danchor3D(void) const = 0;
+
+  rmath::vector2d rcenter2D(void) const {
+    return rcenter3D().to_2D();
+  }
+  rmath::vector2d ranchor2D(void) const {
+    return ranchor3D().to_2D();
+  }
+  rmath::vector2z dcenter2D(void) const {
+    return dcenter3D().to_2D();
+  }
+  rmath::vector2z danchor2D(void) const {
+    return danchor3D().to_2D();
+  }
+
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek3D;

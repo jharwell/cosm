@@ -117,7 +117,7 @@ block_motion_handler::free_adjacent_coord(const crepr::base_block3D* block,
                 rcppsw::to_string(new_dloc).c_str(),
                 map->xdsize(),
                 map->ydsize());
-      RCPPSW_UNUSED auto& cell = map->access<cds::arena_grid::kCell>(new_dloc);
+      RCPPSW_UNUSED auto& cell = map->access<cads::arena_grid::kCell>(new_dloc);
       ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),
                 "Cell@%s not unknown or empty [state=%d]",
                 rcppsw::to_string(new_dloc).c_str(),

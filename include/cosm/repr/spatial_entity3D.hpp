@@ -41,7 +41,8 @@ NS_START(cosm, repr);
  * \ingroup cosm repr
  *
  * \brief Base class from which all arena spatial entities which can be
- * represented in 3D derive.
+ * represented in 3D derive. Basically defines the interface for a 2D bounding
+ * box for entities.
  */
 class spatial_entity3D : public spatial_entity2D {
  public:

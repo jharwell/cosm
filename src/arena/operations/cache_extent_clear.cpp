@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/cache_extent_clear.hpp"
 
 #include "cosm/arena/repr/arena_cache.hpp"
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 
@@ -43,7 +43,7 @@ cache_extent_clear::cache_extent_clear(carepr::arena_cache* victim)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void cache_extent_clear::visit(cds::arena_grid& grid) {
+void cache_extent_clear::visit(cads::arena_grid& grid) {
   auto xspan = m_victim->xdspan();
   auto yspan = m_victim->ydspan();
 
@@ -56,7 +56,7 @@ void cache_extent_clear::visit(cds::arena_grid& grid) {
   for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       rmath::vector2z c = rmath::vector2z(i, j);
-      auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
+      auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
       if (c != m_victim->dcenter2D()) {
         ER_ASSERT(cell.state_in_cache_extent(),
                   "Cell@%s not in CACHE_EXTENT [state=%d]",

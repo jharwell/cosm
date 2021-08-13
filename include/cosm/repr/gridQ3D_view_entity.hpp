@@ -1,5 +1,5 @@
 /**
- * \file grid3D_view_entity.hpp
+ * \file gridQ3D_view_entity.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,14 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRID3D_VIEW_ENTITY_HPP_
-#define INCLUDE_COSM_REPR_GRID3D_VIEW_ENTITY_HPP_
+#ifndef INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_
+#define INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "cosm/repr/entity3D.hpp"
-#include "cosm/repr/base_grid_view_entity.hpp"
+#include "cosm/repr/grid3D_view_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -36,26 +36,18 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class grid3D_view_entity
+ * \class gridQ3D_view_entity
  * \ingroup repr
  *
- * \brief Representation of an \ref arena_grid::grid_view or \ref
- * arena_grid::const_grid_view object as an entity in the arena. This
- * representation makes it much easier to pass abstract, mult-cell objects that
- * are not entities per-se as entities for various operations such as block
- * distribution in foraging.
- *
- * It has the following characteristics:
- *
- * - Spans multiple cells in the arena.
- * - Does not "exist" in the sense that it is not detectable by robots. It lives
- *   on the same level of abstraction as the arena grid (hence the class name).
- * - Has no concept of movability/immovability (again, it is abstract).
+ * \brief Representation of an entity that lives on 2D grid, but that has an
+ * imaginary Z dimension (i.e., it is a bounding box).
  */
 template <typename TGridType, typename TGridViewType>
-class grid3D_view_entity : public crepr::entity3D,
-                           public crepr::base_grid_view_entity<TGridType, TGridViewType>,
-                           public rer::client<grid3D_view_entity<TGridType, TGridViewType>> {
+class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
+                                                                   TGridViewType>>,
+                            public crepr::entity3D,
+                            public crepr::base_grid_view_entity<TGridType,
+                                                                TGridViewType> {
  public:
   using grid_view_entity_type = base_grid_view_entity<TGridType, TGridViewType>;
 
@@ -65,17 +57,15 @@ class grid3D_view_entity : public crepr::entity3D,
   using typename grid_view_entity_type::coord_type;
 
   using grid_view_entity_type::resolution;
-  using grid_view_entity_type::access;
 
-  grid3D_view_entity(const rtypes::type_uuid& id,
+  gridQ3D_view_entity(const rtypes::type_uuid& id,
                      const grid_view_type& the_view,
                      const rtypes::discretize_ratio& res)
-      : entity3D(id),
-        grid_view_entity_type(the_view, res),
-        ER_CLIENT_INIT("cosm.repr.grid3D_view_entity") {}
+      : ER_CLIENT_INIT("cosm.repr.gridQ3D_view_entity"),
+        entity3D(id),
+        grid_view_entity_type(the_view, res) {}
 
-  ~grid3D_view_entity(void) override = default;
-
+  ~gridQ3D_view_entity(void) override = default;
 
   rmath::vector3d ranchor3D(void) const override {
     return rmath::zvec2dvec(danchor3D(), resolution().v());
@@ -86,13 +76,13 @@ class grid3D_view_entity : public crepr::entity3D,
                                          zrsize().v()) / 2.0;
   }
 
-  coord_type danchor3D(void) const override final {
-    return view().origin()->loc();
+  rmath::vector3z danchor3D(void) const override final {
+    return rmath::vector3z(view().origin()->loc());
   }
-  coord_type dcenter3D(void) const override final {
-    return danchor3D() + coord_type(xdsize(),
-                                    ydsize(),
-                                    zdsize()) / 2;
+  rmath::vector3z dcenter3D(void) const override final {
+    return danchor3D() + rmath::vector3z(xdsize(),
+                                         ydsize(),
+                                         zdsize()) / 2;
   }
 
 
@@ -126,26 +116,22 @@ class grid3D_view_entity : public crepr::entity3D,
     return rtypes::spatial_dist(zdsize() * resolution().v());
   }
 
-  const cell_type& access(size_t i, size_t j, size_t k) const {
+  const cell_type& access(size_t i, size_t j) const {
     ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
     ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %lu", j, ydsize());
-    ER_ASSERT(k < ydsize(), "Out of bounds Z access: %zu >= %lu", k, zdsize());
-    return view()[i][j][k];
+    return view()[i][j];
   }
 
   const cell_type& access(const coord_type& c) const override {
-    return access(c.x(), c.y(), c.z());
+    return access(c.x(), c.y());
   }
 
   bool contains_abs(const coord_type& cell) const override {
-    return xdspan().contains(cell.x()) &&
-        ydspan().contains(cell.y()) &&
-        zdspan().contains(cell.z());
+    return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
   }
+
   bool contains_rel(const coord_type& cell) const override {
-    return (cell.x() < xdsize()) &&
-        (cell.y() < ydsize()) &&
-        (cell.z() < zdsize());
+    return (cell.x() < xdsize()) && (cell.y() < ydsize());
   }
 
   size_t xdsize(void) const override final { return view().shape()[0]; }
@@ -158,4 +144,4 @@ class grid3D_view_entity : public crepr::entity3D,
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRID3D_VIEW_ENTITY_HPP_ */
+#endif /* INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_ */

@@ -42,7 +42,7 @@ cache_extent_set::cache_extent_set(carepr::arena_cache* cache)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void cache_extent_set::visit(cds::arena_grid& grid) {
+void cache_extent_set::visit(cads::arena_grid& grid) {
   auto xspan = m_cache->xdspan();
   auto yspan = m_cache->ydspan();
 
@@ -50,7 +50,7 @@ void cache_extent_set::visit(cds::arena_grid& grid) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       auto dcoord = rmath::vector2z(i, j);
       RCPPSW_UNUSED auto rcoord = rmath::zvec2dvec(dcoord, grid.resolution().v());
-      auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
+      auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
 
       ER_CHECKW(m_cache->contains_point(rcoord),
                 "Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",

@@ -40,7 +40,7 @@
  ******************************************************************************/
 NS_START(cosm, arena, operations, detail);
 using carepr::base_cache;
-using cds::arena_grid;
+using cads::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor

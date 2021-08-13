@@ -1,7 +1,7 @@
 /**
- * \file los2D.cpp
+ * \file block_type.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -20,39 +20,28 @@
 
 /*******************************************************************************
  * Includes
- *****************************************************************************/
-#include "cosm/repr/los2D.hpp"
-#include "cosm/ds/cell2D.hpp"
+ ******************************************************************************/
+#include "cosm/repr/block_type.hpp"
+
+#include <iostream>
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, repr);
 
-/*******************************************************************************
- * Constructors/Destructor
- ******************************************************************************/
-los2D::los2D(const rtypes::type_uuid& c_id,
-           const grid_view_type& c_view,
-           const rtypes::discretize_ratio& c_resolution)
-    : base_los(c_id, c_view, c_resolution),
-      ER_CLIENT_INIT("cosm.repr.los2D") {}
 
 /*******************************************************************************
- * Member Functions
+ * Operators
  ******************************************************************************/
-los2D::field_coord_dtype los2D::abs_ll(void) const {
-  return access(0, 0).loc();
-}
-los2D::field_coord_dtype los2D::abs_ul(void) const {
-  return access(0, ydsize() - 1).loc();
-}
-los2D::field_coord_dtype los2D::abs_lr(void) const {
-  return access(xdsize() - 1, 0).loc();
-}
-los2D::field_coord_dtype los2D::abs_ur(void) const {
-  return access(xdsize() - 1, ydsize() - 1).loc();
+std::ostream& operator>>(std::ostream& out, block_type& b) {
+  out << reinterpret_cast<std::underlying_type<block_type>::type&>(b);
+  return out;
 }
 
+std::istream& operator<<(std::istream& in, block_type& b) {
+  in >> reinterpret_cast<std::underlying_type<block_type>::type&>(b);
+  return in;
+}
 
 NS_END(repr, cosm);

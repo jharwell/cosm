@@ -39,7 +39,7 @@
 #include "cosm/arena/locking.hpp"
 #include "cosm/arena/ds/nest_vector.hpp"
 #include "cosm/arena/update_status.hpp"
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
@@ -78,7 +78,7 @@ NS_START(cosm, arena);
  ******************************************************************************/
 /**
  * \class base_arena_map
- * \ingroup ds
+ * \ingroup arena
  *
  * \brief The core data structure for swarm-arena interactions.
  *
@@ -93,7 +93,7 @@ NS_START(cosm, arena);
  * efficiency with large numbers of objects.
  */
 class base_arena_map : public rer::client<base_arena_map>,
-                       public rpdecorator::decorator<cds::arena_grid>,
+                       public rpdecorator::decorator<ds::arena_grid>,
                        public rmultithread::lockable {
  public:
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
@@ -109,22 +109,22 @@ class base_arena_map : public rer::client<base_arena_map>,
   base_arena_map& operator=(base_arena_map&&) = delete;
 
   template <size_t Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type&
+  typename ds::arena_grid::layer_value_type<Index>::value_type&
   access(const rmath::vector2z& d) {
     return decoratee().template access<Index>(d);
   }
   template <size_t Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type&
+  const typename ds::arena_grid::layer_value_type<Index>::value_type&
   access(const rmath::vector2z& d) const {
     return decoratee().template access<Index>(d);
   }
   template <size_t Index>
-  typename cds::arena_grid::layer_value_type<Index>::value_type&
+  typename ds::arena_grid::layer_value_type<Index>::value_type&
   access(size_t i, size_t j) {
     return decoratee().template access<Index>(i, j);
   }
   template <size_t Index>
-  const typename cds::arena_grid::layer_value_type<Index>::value_type&
+  const typename ds::arena_grid::layer_value_type<Index>::value_type&
   access(size_t i, size_t j) const {
     return decoratee().template access<Index>(i, j);
   }

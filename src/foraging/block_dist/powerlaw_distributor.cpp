@@ -34,14 +34,14 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, foraging, block_dist);
-using cosm::ds::arena_grid;
+using cosm::arena::ds::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
 powerlaw_distributor::powerlaw_distributor(
     const config::powerlaw_dist_config* const config,
-    cds::arena_grid* grid,
+    cads::arena_grid* grid,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.powerlaw"),
       base_distributor(grid, rng),
@@ -106,7 +106,7 @@ void powerlaw_distributor::initialize(
       map, c_block_bb, kMAX_DIST_TRIES, rng());
   auto placements = placer(c_entities, clust_sizes);
 
-  std::map<size_t, std::vector<cds::arena_grid::view>> grids;
+  std::map<size_t, std::vector<cads::arena_grid::view>> grids;
   std::for_each(placements.begin(), placements.end(), [&](const auto& placement) {
     return grids[placement.capacity].push_back(placement.view);
   });

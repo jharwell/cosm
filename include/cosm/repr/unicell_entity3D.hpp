@@ -61,12 +61,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
 
   rmath::vector3d rcenter3D(void) const override final { return m_rcenter; }
   rmath::vector3d ranchor3D(void) const override final { return m_ranchor; }
-  rmath::vector2d rcenter2D(void) const override final {
-    return rcenter3D().to_2D();
-  }
-  rmath::vector2d ranchor2D(void) const override final {
-    return ranchor3D().to_2D();
-  }
+
   rmath::ranged xrspan(void) const override final {
     return entity3D::xrspan(ranchor3D(), xrsize());
   }
@@ -93,21 +88,16 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
     return m_dcenter;
   }
 
-  rmath::vector2z dcenter2D(void) const override final {
-    return dcenter3D().to_2D();
-  }
+
   rmath::vector3z danchor3D(void) const override final { return m_danchor; }
-  rmath::vector2z danchor2D(void) const override final {
-    return danchor3D().to_2D();
-  }
   rmath::rangez xdspan(void) const override final {
-    return entity3D::xdspan(danchor2D(), xdsize());
+    return entity3D::xdspan(danchor3D(), xdsize());
   }
   rmath::rangez ydspan(void) const override final {
-    return entity3D::ydspan(danchor2D(), ydsize());
+    return entity3D::ydspan(danchor3D(), ydsize());
   }
   rmath::rangez zdspan(void) const override final {
-    return entity3D::ydspan(danchor2D(), zdsize());
+    return entity3D::ydspan(danchor3D(), zdsize());
   }
   size_t xdsize(void) const override final { return m_ddim.x(); }
   size_t ydsize(void) const override final { return m_ddim.y(); }

@@ -23,14 +23,14 @@
  ******************************************************************************/
 #include "cosm/ds/operations/cell2D_empty.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, ds, operations);
-using cds::arena_grid;
+using cads::arena_grid;
 
 /*******************************************************************************
  * Member Functions
@@ -45,7 +45,7 @@ void cell2D_empty::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_empty();
 } /* visit() */
 
-void cell2D_empty::visit(cds::arena_grid& grid) {
+void cell2D_empty::visit(cads::arena_grid& grid) {
   visit(grid.access<arena_grid::kCell>(coord()));
 } /* visit() */
 

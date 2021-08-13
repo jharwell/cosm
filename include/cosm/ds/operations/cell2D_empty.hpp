@@ -32,7 +32,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } // namespace cosm::ds
 
@@ -59,7 +59,7 @@ class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<cds::arena_grid>;
+    using others = rmpl::typelist<cads::arena_grid>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -71,7 +71,7 @@ class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
 
   void visit(ds::cell2D& cell);
   void visit(fsm::cell2D_fsm& fsm);
-  void visit(ds::arena_grid& grid);
+  void visit(cads::arena_grid& grid);
 };
 
 /**

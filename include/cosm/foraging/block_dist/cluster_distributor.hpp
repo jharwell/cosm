@@ -51,8 +51,8 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
                                   public base_distributor {
  public:
   cluster_distributor(const rtypes::type_uuid& id,
-                      const cds::arena_grid::view& view,
-                      cds::arena_grid* arena_grid,
+                      const cads::arena_grid::view& view,
+                      cads::arena_grid* arena_grid,
                       const cspatial::conflict_checker::map_cb_type& conflict_check,
                       const base_distributor::dist_success_cb_type& dist_success,
                       size_t capacity,

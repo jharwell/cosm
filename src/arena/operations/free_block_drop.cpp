@@ -39,7 +39,7 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, arena, operations, detail);
-using cds::arena_grid;
+using cads::arena_grid;
 
 /*******************************************************************************
  * Non-Member Functions

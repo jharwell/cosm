@@ -36,14 +36,14 @@
  ******************************************************************************/
 namespace cosm::arena {
 class base_arena_map;
+namespace ds {
+class arena_grid;
+}
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
-namespace cosm::ds {
-class arena_grid;
-} /* namespace cosm::ds */
 
 NS_START(cosm, arena, operations, detail);
 
@@ -93,7 +93,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
                     const rtypes::timestep& t,
                     const locking& locking);
 
-  void visit(cds::arena_grid& grid);
+  void visit(cads::arena_grid& grid);
 
   /* clang-format off */
   const rtypes::type_uuid mc_robot_id;

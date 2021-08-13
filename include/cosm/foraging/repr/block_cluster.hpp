@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include "rcppsw/types/discretize_ratio.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/repr/grid2D_view_entity.hpp"
@@ -54,13 +54,13 @@ NS_START(cosm, foraging, repr);
  * - The blocks distributed in that area.
  * - The maximum capacity of the cluster.
  */
-class block_cluster final : public crepr::grid2D_view_entity<cds::arena_grid,
-                                                             cds::arena_grid::const_view>,
+class block_cluster final : public crepr::grid2D_view_entity<cads::arena_grid,
+                                                             cads::arena_grid::const_view>,
                             public metrics::block_cluster_metrics,
                             public rer::client<block_cluster> {
  public:
-  using grid2D_view_entity_type = crepr::grid2D_view_entity<cds::arena_grid,
-                                                            cds::arena_grid::const_view>;
+  using grid2D_view_entity_type = crepr::grid2D_view_entity<cads::arena_grid,
+                                                            cads::arena_grid::const_view>;
   explicit block_cluster(const block_cluster_params& params)
       : block_cluster{params.id,
         params.view,
@@ -68,7 +68,7 @@ class block_cluster final : public crepr::grid2D_view_entity<cds::arena_grid,
         params.capacity} {}
 
   block_cluster(const rtypes::type_uuid& id,
-                const cds::arena_grid::const_view& view,
+                const cads::arena_grid::const_view& view,
                 const rtypes::discretize_ratio& resolution,
                 size_t capacity)
       : grid2D_view_entity_type(id, view, resolution),

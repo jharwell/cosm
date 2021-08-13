@@ -43,7 +43,8 @@ NS_START(cosm, repr);
  *
  * \brief Entity class from which all entities that which occupy spatial space
  * in the arena inherit. Note that occupying spatial space does not imply robots
- * can physically interact with the entity.
+ * can physically interact with the entity. Basically defines the interface for
+ * a 2D bounding box for entities.
  */
 class spatial_entity2D : public spatial_entity {
  public:

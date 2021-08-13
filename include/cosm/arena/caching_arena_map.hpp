@@ -42,7 +42,7 @@ NS_START(cosm, arena);
  ******************************************************************************/
 /**
  * \class caching_arena_map
- * \ingroup ds
+ * \ingroup arena
  *
  * \brief Decorates \ref base_arena_map to add the ability to manage caches.
  */

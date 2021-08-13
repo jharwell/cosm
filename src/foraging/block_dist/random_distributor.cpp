@@ -27,7 +27,7 @@
 
 #include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
@@ -40,8 +40,8 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-random_distributor::random_distributor(const cds::arena_grid::view& area,
-                                       cds::arena_grid* arena_grid,
+random_distributor::random_distributor(const cads::arena_grid::view& area,
+                                       cads::arena_grid* arena_grid,
                                        const cspatial::conflict_checker::map_cb_type& conflict_check,
                                        const dist_success_cb_type& dist_success,
                                        rmath::rng* rng)

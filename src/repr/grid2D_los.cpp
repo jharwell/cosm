@@ -1,7 +1,7 @@
 /**
- * \file losQ3D.cpp
+ * \file grid2D_los.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,9 +21,8 @@
 /*******************************************************************************
  * Includes
  *****************************************************************************/
-#include "cosm/repr/losQ3D.hpp"
-
-#include "cosm/ds/cell3D.hpp"
+#include "cosm/repr/grid2D_los.hpp"
+#include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -33,28 +32,26 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-losQ3D::losQ3D(const rtypes::type_uuid& c_id,
-               const grid_view_type& c_view,
-               const rtypes::discretize_ratio& c_resolution)
-    : base_los(c_id, c_view, c_resolution),
-      ER_CLIENT_INIT("cosm.repr.losQ3D") {
-  ER_ASSERT(1 == zdsize(), "Q3D view does not have zsize=1");
-}
+grid2D_los::grid2D_los(const rtypes::type_uuid& c_id,
+           const grid_view_type& c_view,
+           const rtypes::discretize_ratio& c_resolution)
+    : base_grid_los(c_id, c_view, c_resolution),
+      ER_CLIENT_INIT("cosm.repr.grid2D_los") {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-losQ3D::field_coord_dtype losQ3D::abs_ll(void) const {
-  return access(0, 0, 0).loc();
+grid2D_los::field_coord_dtype grid2D_los::abs_ll(void) const {
+  return access(0, 0).loc();
 }
-losQ3D::field_coord_dtype losQ3D::abs_ul(void) const {
-  return access(0, ydsize() - 1, 0).loc();
+grid2D_los::field_coord_dtype grid2D_los::abs_ul(void) const {
+  return access(0, ydsize() - 1).loc();
 }
-losQ3D::field_coord_dtype losQ3D::abs_lr(void) const {
-  return access(xdsize() - 1, 0, 0).loc();
+grid2D_los::field_coord_dtype grid2D_los::abs_lr(void) const {
+  return access(xdsize() - 1, 0).loc();
 }
-losQ3D::field_coord_dtype losQ3D::abs_ur(void) const {
-  return access(xdsize() - 1, ydsize() - 1, 0).loc();
+grid2D_los::field_coord_dtype grid2D_los::abs_ur(void) const {
+  return access(xdsize() - 1, ydsize() - 1).loc();
 }
 
 

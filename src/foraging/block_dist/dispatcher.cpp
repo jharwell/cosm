@@ -34,12 +34,12 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, foraging, block_dist);
-using cds::arena_grid;
+using cads::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-dispatcher::dispatcher(cds::arena_grid* const grid,
+dispatcher::dispatcher(cads::arena_grid* const grid,
                        const rtypes::discretize_ratio& resolution,
                        const config::block_dist_config* const config)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.dispatcher"),
@@ -71,7 +71,7 @@ bool dispatcher::initialize(carena::base_arena_map* map,
                             const base_distributor::dist_success_cb_type& dist_success,
                             rmath::rng* rng) {
   /* clang-format off */
-  cds::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
+  cads::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
       rmath::vector2z(mc_cells_xrange.lb(),
                       mc_cells_yrange.lb()),
       rmath::vector2z(mc_cells_xrange.ub(),
@@ -106,7 +106,7 @@ bool dispatcher::initialize(carena::base_arena_map* map,
         std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistSingleSrc == mc_dist_type) {
-    cds::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
+    cads::arena_grid::view area = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                              right_ur);
     m_dist = std::make_unique<cluster_distributor>(
         rtypes::type_uuid(0),
@@ -117,11 +117,11 @@ bool dispatcher::initialize(carena::base_arena_map* map,
         std::numeric_limits<size_t>::max(),
         rng);
   } else if (kDistDualSrc == mc_dist_type) {
-    cds::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(left_ll,
+    cads::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(left_ll,
                                                                                left_ur);
-    cds::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
+    cads::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                                right_ur);
-    std::vector<cds::arena_grid::view> areas{area_l, area_r};
+    std::vector<cads::arena_grid::view> areas{area_l, area_r};
     m_dist = std::make_unique<multi_cluster_distributor>(
         areas,
         m_grid,
@@ -137,15 +137,15 @@ bool dispatcher::initialize(carena::base_arena_map* map,
      * locations to ensure that no segfaults result from cache/cache or
      * cache/cluster overlap. See FORDYCA#581, COSM#34.
      */
-    cds::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(left_ll,
+    cads::arena_grid::view area_l = m_grid->layer<arena_grid::kCell>()->subgrid(left_ll,
                                                                                left_ur);
-    cds::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
+    cads::arena_grid::view area_r = m_grid->layer<arena_grid::kCell>()->subgrid(right_ll,
                                                                                right_ur);
-    cds::arena_grid::view area_b = m_grid->layer<arena_grid::kCell>()->subgrid(bottom_ll,
+    cads::arena_grid::view area_b = m_grid->layer<arena_grid::kCell>()->subgrid(bottom_ll,
                                                                                bottom_ur);
-    cds::arena_grid::view area_u = m_grid->layer<arena_grid::kCell>()->subgrid(top_ll,
+    cads::arena_grid::view area_u = m_grid->layer<arena_grid::kCell>()->subgrid(top_ll,
                                                                                top_ur);
-    std::vector<cds::arena_grid::view> areas{area_l, area_r, area_b, area_u};
+    std::vector<cads::arena_grid::view> areas{area_l, area_r, area_b, area_u};
     m_dist = std::make_unique<multi_cluster_distributor>(
         areas,
         m_grid,

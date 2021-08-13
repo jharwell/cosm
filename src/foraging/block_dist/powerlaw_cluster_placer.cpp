@@ -33,7 +33,7 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, foraging, block_dist);
-using cosm::ds::arena_grid;
+using cosm::arena::ds::arena_grid;
 
 /*******************************************************************************
  * Constructors/Destructor

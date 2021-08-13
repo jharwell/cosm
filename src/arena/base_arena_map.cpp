@@ -97,7 +97,7 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
       for (size_t j = inst.ydspan().lb(); j <= inst.ydspan().ub(); ++j) {
         auto coord = rmath::vector2z(i, j);
         crops::nest_extent_visitor op(coord, &inst);
-        op.visit(access<cds::arena_grid::kCell>(coord));
+        op.visit(access<cads::arena_grid::kCell>(coord));
       } /* for(j..) */
     } /* for(i..) */
 
@@ -297,7 +297,7 @@ bool base_arena_map::distribute_all_blocks(void) {
    */
   for (size_t i = 0; i < xdsize(); ++i) {
     for (size_t j = 0; j < ydsize(); ++j) {
-      cds::cell2D& cell = access<cds::arena_grid::kCell>(i, j);
+      cds::cell2D& cell = access<cads::arena_grid::kCell>(i, j);
       if (!cell.state_has_block() && !cell.state_has_cache() &&
           !cell.state_in_cache_extent() && !cell.state_in_nest_extent() &&
           !cell.state_in_block_extent()) {

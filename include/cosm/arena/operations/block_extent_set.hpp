@@ -38,7 +38,7 @@ namespace cosm::repr {
 class base_block3D;
 }
 
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } /* namespace cosm::ds */
 
@@ -60,7 +60,7 @@ NS_START(cosm, arena, operations, detail);
 class block_extent_set : public rer::client<block_extent_set> {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<cds::arena_grid>;
+    using value = rmpl::typelist<cads::arena_grid>;
   };
 
  public:
@@ -70,7 +70,7 @@ class block_extent_set : public rer::client<block_extent_set> {
   block_extent_set& operator=(const block_extent_set&) = delete;
   block_extent_set(const block_extent_set&) = delete;
 
-  void visit(cds::arena_grid& grid);
+  void visit(cads::arena_grid& grid);
 
  private:
   /* clang-format off */

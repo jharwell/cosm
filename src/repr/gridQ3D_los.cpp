@@ -1,5 +1,5 @@
 /**
- * \file nest_extent.cpp
+ * \file gridQ3D_los.cpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -20,40 +20,42 @@
 
 /*******************************************************************************
  * Includes
- ******************************************************************************/
-#include "cosm/repr/operations/nest_extent.hpp"
+ *****************************************************************************/
+#include "cosm/repr/gridQ3D_los.hpp"
 
-#include "cosm/arena/ds/arena_grid.hpp"
-#include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/nest.hpp"
+#include "cosm/ds/cell3D.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr, operations, detail);
-using cads::arena_grid;
+NS_START(cosm, repr);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_extent::nest_extent(const rmath::vector2z& coord, crepr::nest* nest)
-    : cell2D_op(coord), m_nest(nest) {}
+gridQ3D_los::gridQ3D_los(const rtypes::type_uuid& c_id,
+               const grid_view_type& c_view,
+               const rtypes::discretize_ratio& c_resolution)
+    : base_grid_los(c_id, c_view, c_resolution),
+      ER_CLIENT_INIT("cosm.repr.gridQ3D_los") {
+  ER_ASSERT(1 == zdsize(), "Q3D view does not have zsize=1");
+}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_extent::visit(cds::cell2D& cell) {
-  cell.entity(m_nest);
-  visit(cell.fsm());
-  cell.color(m_nest->color());
-} /* visit() */
+gridQ3D_los::field_coord_dtype gridQ3D_los::abs_ll(void) const {
+  return access(0, 0, 0).loc();
+}
+gridQ3D_los::field_coord_dtype gridQ3D_los::abs_ul(void) const {
+  return access(0, ydsize() - 1, 0).loc();
+}
+gridQ3D_los::field_coord_dtype gridQ3D_los::abs_lr(void) const {
+  return access(xdsize() - 1, 0, 0).loc();
+}
+gridQ3D_los::field_coord_dtype gridQ3D_los::abs_ur(void) const {
+  return access(xdsize() - 1, ydsize() - 1, 0).loc();
+}
 
-void nest_extent::visit(fsm::cell2D_fsm& fsm) {
-  fsm.event_nest_extent();
-} /* visit() */
 
-void nest_extent::visit(cads::arena_grid& grid) {
-  visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
-} /* visit() */
-
-NS_END(detail, operations, repr, cosm);
+NS_END(repr, cosm);

@@ -56,8 +56,8 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
    * \param capacity The capacity for all sub-clusters in this multi cluster.
    */
 
-  multi_cluster_distributor(const std::vector<cds::arena_grid::view>& grids,
-                            cds::arena_grid* arena_grid,
+  multi_cluster_distributor(const std::vector<cads::arena_grid::view>& grids,
+                            cads::arena_grid* arena_grid,
                             const cspatial::conflict_checker::map_cb_type& conflict_check,
                             const base_distributor::dist_success_cb_type& dist_success,
                             size_t capacity,

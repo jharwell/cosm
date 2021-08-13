@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/arena/operations/block_extent_set.hpp"
 
-#include "cosm/ds/arena_grid.hpp"
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
 #include "cosm/repr/base_block3D.hpp"
@@ -42,7 +42,7 @@ block_extent_set::block_extent_set(crepr::base_block3D* block)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_extent_set::visit(cds::arena_grid& grid) {
+void block_extent_set::visit(cads::arena_grid& grid) {
   auto xspan = m_block->xdspan();
   auto yspan = m_block->ydspan();
 
@@ -54,7 +54,7 @@ void block_extent_set::visit(cds::arena_grid& grid) {
   for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       rmath::vector2z c = rmath::vector2z(i, j);
-      auto& cell = grid.access<cds::arena_grid::kCell>(i, j);
+      auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
       if (c != m_block->danchor2D()) {
         ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),
                   "Cell@%s not unknown or empty [state=%d]",

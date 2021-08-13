@@ -84,12 +84,6 @@ class grid2D_view_entity : public crepr::entity2D,
     return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
   }
 
-  rmath::ranged xrspan(void) const override {
-    return entity2D::xrspan(ranchor2D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override {
-    return entity2D::yrspan(ranchor2D(), yrsize());
-  }
   rmath::vector2z danchor2D(void) const override final {
     return view().origin()->loc();
   }
@@ -97,6 +91,12 @@ class grid2D_view_entity : public crepr::entity2D,
     return danchor2D() + rmath::vector2z(xdsize(), ydsize()) / 2;
   }
 
+  rmath::ranged xrspan(void) const override {
+    return entity2D::xrspan(ranchor2D(), xrsize());
+  }
+  rmath::ranged yrspan(void) const override {
+    return entity2D::yrspan(ranchor2D(), yrsize());
+  }
   rmath::rangez xdspan(void) const override {
     return entity2D::xdspan(danchor2D(), xdsize());
   }
@@ -139,15 +139,11 @@ class grid2D_view_entity : public crepr::entity2D,
     return (cell.x() < xdsize()) && (cell.y() < ydsize());
   }
 
- protected:
-  using base_grid_view_entity_type::view;
-
-  /**
-   * \brief Return the size of the entity in discrete coordinates. Only suitable
-   * for indexing within the entity itself.
-   */
   size_t xdsize(void) const override final { return view().shape()[0]; }
   size_t ydsize(void) const override final { return view().shape()[1]; }
+
+ protected:
+  using base_grid_view_entity_type::view;
 };
 
 NS_END(repr, cosm);

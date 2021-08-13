@@ -87,11 +87,11 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   using impl_type = TSensor;
 
   struct sensor_reading {
-    double vel_left;
-    double vel_right;
-    double dist_left;
-    double dist_right;
-    double axle_length;
+    double vel_left;    /* in units of m/s */
+    double vel_right;   /* in units of m/s */
+    double dist_left;   /* in units of m */
+    double dist_right;  /* in units of m */
+    double axle_length; /* in units of m */
   };
 
   explicit diff_drive_sensor_impl(TSensor* const sensor)

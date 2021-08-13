@@ -49,7 +49,7 @@ namespace cosm::repr {
 class multicell_entity;
 } // namespace repr
 
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } // namespace ds
 
@@ -76,7 +76,7 @@ class  dispatcher final : public rer::client<dispatcher> {
   static inline const std::string kDistQuadSrc = "quad_source";
   static inline const std::string kDistPowerlaw = "powerlaw";
 
-  dispatcher(cds::arena_grid* grid,
+  dispatcher(cads::arena_grid* grid,
              const rtypes::discretize_ratio& resolution,
              const config::block_dist_config* config);
   ~dispatcher(void);
@@ -136,7 +136,7 @@ class  dispatcher final : public rer::client<dispatcher> {
   rmath::rangez                                 mc_cells_xrange;
   rmath::rangez                                 mc_cells_yrange;
 
-  cds::arena_grid*                              m_grid{nullptr};
+  cads::arena_grid*                              m_grid{nullptr};
   std::unique_ptr<base_distributor>             m_dist;
   /* clang-format on */
 };

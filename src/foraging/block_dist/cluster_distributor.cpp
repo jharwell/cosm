@@ -37,8 +37,8 @@ NS_START(cosm, foraging, block_dist);
  * Constructors/Destructor
  ******************************************************************************/
 cluster_distributor::cluster_distributor(const rtypes::type_uuid& id,
-                                         const cds::arena_grid::view& view,
-                                         cds::arena_grid* arena_grid,
+                                         const cads::arena_grid::view& view,
+                                         cads::arena_grid* arena_grid,
                                          const cspatial::conflict_checker::map_cb_type& conflict_check,
                                          const random_distributor::dist_success_cb_type& dist_success,
                                          size_t capacity,

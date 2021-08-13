@@ -41,7 +41,7 @@ namespace repr {
 class arena_cache;
 }}
 
-namespace cosm::ds {
+namespace cosm::arena::ds {
 class arena_grid;
 } /* namespace cosm::ds */
 
@@ -63,7 +63,7 @@ NS_START(cosm, arena, operations, detail);
 class cache_extent_set : public rer::client<cache_extent_set> {
  private:
   struct visit_typelist_impl {
-    using value = rmpl::typelist<cds::arena_grid>;
+    using value = rmpl::typelist<cads::arena_grid>;
   };
 
  public:
@@ -73,7 +73,7 @@ class cache_extent_set : public rer::client<cache_extent_set> {
   cache_extent_set& operator=(const cache_extent_set&) = delete;
   cache_extent_set(const cache_extent_set&) = delete;
 
-  void visit(cds::arena_grid& grid);
+  void visit(cads::arena_grid& grid);
 
  private:
   /* clang-format off */
