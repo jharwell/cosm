@@ -77,6 +77,7 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
 
   RCPPSW_DECORATE_DECLDEF(find, const);
   RCPPSW_DECORATE_DECLDEF(vertices, const);
+  RCPPSW_DECORATE_DECLDEF(n_vertices, const);
   RCPPSW_DECORATE_DECLDEF(adjacent_vertices, const);
   RCPPSW_DECORATE_DECLDEF(vertex_properties, const);
   RCPPSW_DECORATE_DECLDEF(out_edges, const);

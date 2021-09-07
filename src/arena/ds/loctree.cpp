@@ -37,9 +37,10 @@ NS_START(cosm, arena, ds);
  ******************************************************************************/
 template <typename TEntity>
 void loctree::do_update(const TEntity* ent) {
-  decoratee().remove(ent->id());
-  decoratee().insert(
-      ent->id(), ent->ranchor2D(), ent->ranchor2D() + ent->rdim2D());
+  remove(ent);
+  decoratee().insert(ent->id(),
+                     rds::make_rtree_box(ent->ranchor2D(),
+                                         ent->ranchor2D() + ent->rdim2D()));
 } /* do_update() */
 
 size_t loctree::remove(const crepr::base_entity* ent) {

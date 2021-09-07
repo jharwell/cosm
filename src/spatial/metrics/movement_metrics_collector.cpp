@@ -42,8 +42,8 @@ movement_metrics_collector::movement_metrics_collector(
  ******************************************************************************/
 void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const movement_metrics&>(metrics);
-  auto all_filter = [&](double) { return true; };
-  auto other_filter = [&](double dist) { return dist > 0.0; };
+  auto all_filter = [&](double) noexcept { return true; };
+  auto other_filter = [&](double dist) noexcept { return dist > 0.0; };
   std::vector<std::function<bool(double)>> filter_funcs(movement_category::ekMAX);
   filter_funcs[movement_category::ekALL] = all_filter;
   filter_funcs[movement_category::ekHOMING] = other_filter;

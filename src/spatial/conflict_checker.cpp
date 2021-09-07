@@ -85,7 +85,7 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
   rmath::vector2d ur(loc + block->rdim2D() * 2.0);
   std::vector<rtypes::type_uuid> ids;
 
-  ids = map->nloctree()->query(ll, ur);
+  ids = map->nloctree()->intersections(rds::make_rtree_box(ll, ur));
   for (auto& id : ids) {
     /*
      * Because we picked a larger than strictly required bounding box, we
@@ -95,7 +95,7 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
     RCPPSW_CHECK(!(conflict.x && conflict.y));
   } /* for(&nest..) */
 
-  ids = map->bloctree()->query(ll, ur);
+  ids = map->bloctree()->intersections(rds::make_rtree_box(ll, ur));
   for (auto& id : ids) {
     /*
      * Because we picked a larger than strictly required bounding box, we
@@ -136,7 +136,7 @@ conflict_checker::placement2D(const carena::caching_arena_map* map,
    */
   rmath::vector2d ll(loc - block->rdim2D() * 2.0);
   rmath::vector2d ur(loc + block->rdim2D() * 2.0);
-  auto ids = map->cloctree()->query(ll, ur);
+  auto ids = map->cloctree()->intersections(rds::make_rtree_box(ll, ur));
 
   for (auto& id : ids) {
     auto it = std::find_if(map->caches().begin(),

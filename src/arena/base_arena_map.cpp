@@ -26,7 +26,6 @@
 
 #include <argos3/plugins/simulator/media/led_medium.h>
 
-#include "rcppsw/ds/rtree2D.hpp"
 #include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/arena/config/arena_map_config.hpp"

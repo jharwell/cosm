@@ -24,9 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/ds/rtree2D.hpp"
+#include "rcppsw/ds/rtree.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/math/vector2.hpp"
 
 #include "cosm/repr/unicell_entity2D.hpp"
 #include "cosm/repr/unicell_entity3D.hpp"
@@ -36,9 +37,9 @@
  ******************************************************************************/
 NS_START(cosm, arena, ds, detail);
 
-using rtree_type = rds::rtree2D<double,
-                                rtypes::type_uuid,
-                                16>;  /* Max # elements per node */
+using rtree_spec_type = rds::rtree_spec<rmath::vector2d,
+                                        rds::rtree_box<rmath::vector2d>,
+                                        rtypes::type_uuid>;
 NS_END(detail);
 
 /*******************************************************************************
@@ -52,9 +53,9 @@ NS_END(detail);
  * fast querying.
  *
  * \note You can't mix multiple types of entities, and the \ref
- * rtypes::type_uuid does not guarantee uniqueness_across types (duh).
+ * rtypes::type_uuid does not guarantee uniqueness across types (duh).
  */
-class loctree final : public rpdecorator::decorator<detail::rtree_type> {
+class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spec_type>> {
  public:
   loctree(void) = default;
 
@@ -78,7 +79,8 @@ class loctree final : public rpdecorator::decorator<detail::rtree_type> {
 
   size_t remove(const crepr::base_entity* ent);
 
-  RCPPSW_DECORATE_DECLDEF(query, const);
+  RCPPSW_DECORATE_DECLDEF(intersections, const);
+  RCPPSW_DECORATE_DECLDEF(contains, const);
   RCPPSW_DECORATE_DECLDEF(begin, const);
   RCPPSW_DECORATE_DECLDEF(end, const);
   RCPPSW_DECORATE_DECLDEF(size, const);
@@ -86,9 +88,6 @@ class loctree final : public rpdecorator::decorator<detail::rtree_type> {
  private:
   template<typename TEntity>
   void do_update(const TEntity* ent);
-
-  /* clang-format off */
-  /* clang-format on */
 };
 
 NS_END(ds, arena, cosm);

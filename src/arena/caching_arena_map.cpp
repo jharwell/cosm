@@ -273,7 +273,7 @@ bool caching_arena_map::bloctree_verify(void) const {
       return c->contains_block(b);
     });
     if (caches().end() != it) {
-      ER_CHECK(!bloctree()->query(b->id()),
+      ER_CHECK(!bloctree()->contains(b->id()),
                "Block%s@%s/%s in cache%s@%s/%s in loctree",
                rcppsw::to_string(b->id()).c_str(),
                rcppsw::to_string(b->ranchor2D()).c_str(),
@@ -293,7 +293,7 @@ error:
 
 bool caching_arena_map::cloctree_verify(void) const {
   for (auto* c : caches()) {
-    ER_CHECK(m_cloctree->query(c->id()),
+    ER_CHECK(m_cloctree->contains(c->id()),
              "Cache%s@%s/%s not in loctree",
              rcppsw::to_string(c->id()).c_str(),
              rcppsw::to_string(c->rcenter2D()).c_str(),
@@ -361,7 +361,7 @@ void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
 } /* bloctree_update() */
 
 void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
-  if (m_cloctree->query(cache->id())) {
+  if (m_cloctree->contains(cache->id())) {
     ER_INFO("Remove depleted cache%s from loctree,size=%zu",
             rcppsw::to_string(cache->id()).c_str(),
             cloctree()->size());

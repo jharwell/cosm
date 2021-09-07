@@ -63,6 +63,7 @@ class graph3D_view_entity : public crepr::entity3D,
   using graph_view_entity_type::unit;
   using graph_view_entity_type::out_edges;
   using graph_view_entity_type::target;
+  using graph_view_entity_type::n_vertices;
 
   graph3D_view_entity(const rtypes::type_uuid& c_id,
                       const graph_view_type& c_view,
