@@ -59,11 +59,13 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
   using grid_view_entity_type::resolution;
 
   gridQ3D_view_entity(const rtypes::type_uuid& id,
-                     const grid_view_type& the_view,
-                     const rtypes::discretize_ratio& res)
+                      const grid_view_type& the_view,
+                      size_t zdsize,
+                      const rtypes::discretize_ratio& res)
       : ER_CLIENT_INIT("cosm.repr.gridQ3D_view_entity"),
         entity3D(id),
-        grid_view_entity_type(the_view, res) {}
+        grid_view_entity_type(the_view, res),
+        mc_zdsize(zdsize) {}
 
   ~gridQ3D_view_entity(void) override = default;
 
@@ -93,7 +95,7 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
     return entity3D::yrspan(ranchor3D(), yrsize());
   }
   rmath::ranged zrspan(void) const override {
-    return entity3D::zrspan(ranchor3D(), yrsize());
+    return entity3D::zrspan(ranchor3D(), zrsize());
   }
 
   rmath::rangez xdspan(void) const override {
@@ -136,10 +138,15 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
 
   size_t xdsize(void) const override final { return view().shape()[0]; }
   size_t ydsize(void) const override final { return view().shape()[1]; }
-  size_t zdsize(void) const override final { return view().shape()[2]; }
+  size_t zdsize(void) const override final { return mc_zdsize; }
 
  protected:
   using grid_view_entity_type::view;
+
+ private:
+  /* clang-format off */
+  const size_t mc_zdsize;
+  /* clang-format on */
 };
 
 NS_END(repr, cosm);

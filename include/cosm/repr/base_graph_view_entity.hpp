@@ -24,6 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <utility>
+
 #include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
@@ -66,9 +68,9 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   using decoratee_type = typename decorator_type::decoratee_type;
   using decorator_type::decoratee;
 
-  base_graph_view_entity(const graph_view_type& view,
+  base_graph_view_entity(graph_view_type&& view,
                          const rtypes::spatial_dist& unit)
-      : rpdecorator::decorator<graph_view_type>(view),
+      : rpdecorator::decorator<graph_view_type>(std::move(view)),
         mc_unit(unit) {}
 
   virtual ~base_graph_view_entity(void) = default;
@@ -79,14 +81,12 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   RCPPSW_DECORATE_DECLDEF(vertices, const);
   RCPPSW_DECORATE_DECLDEF(n_vertices, const);
   RCPPSW_DECORATE_DECLDEF(adjacent_vertices, const);
-  RCPPSW_DECORATE_DECLDEF(vertex_properties, const);
   RCPPSW_DECORATE_DECLDEF(out_edges, const);
   RCPPSW_DECORATE_DECLDEF(target, const);
 
   RCPPSW_DECORATE_DECLDEF(find);
   RCPPSW_DECORATE_DECLDEF(vertices);
   RCPPSW_DECORATE_DECLDEF(adjacent_vertices);
-  RCPPSW_DECORATE_DECLDEF(vertex_properties);
   RCPPSW_DECORATE_DECLDEF(out_edges);
   RCPPSW_DECORATE_DECLDEF(target);
 

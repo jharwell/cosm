@@ -82,7 +82,7 @@ class graph_los_update final
               controller->los_dim(),
               mc_unit_dim.v());
 
-    auto max_dist = static_cast<size_t>(std::round(controller->los_dim() / mc_unit_dim.v()));
+    auto max_dist = rtypes::manhattan_dist(static_cast<int>(controller->los_dim() / mc_unit_dim.v()));
     graph_los_set(controller, center, max_dist);
   }
 
@@ -95,7 +95,7 @@ class graph_los_update final
    */
   void graph_los_set(TController* const controller,
                      const typename TSrcGraph::vertex_descriptor& center,
-                     size_t max_dist) const {
+                     const rtypes::manhattan_dist& max_dist) const {
     auto los = std::make_unique<los_type>(controller->entity_id(),
                                           mc_graph->subgraph(center, max_dist),
                                           mc_unit_dim);

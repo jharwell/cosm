@@ -128,7 +128,8 @@ bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm) {
   /* compute block bounding box */
   auto* block = *std::max_element(
       m_blocksno.begin(), m_blocksno.end(), [&](const auto* b1, const auto* b2) {
-        return b1->rdim3D() < b2->rdim3D();
+                                              return rmath::componentwise_compare()(b1->rdim3D(),
+                                                                                    b2->rdim3D());
       });
   m_block_bb = block->rdim3D();
 

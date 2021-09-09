@@ -24,6 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <utility>
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
@@ -59,10 +60,10 @@ class base_graph_los : public rer::client<base_graph_los<TGraphViewEntityType>>,
   using graph_view_type = typename graph_view_entity_type::graph_view_type;
 
   base_graph_los(const rtypes::type_uuid& c_id,
-                 const graph_view_type& c_view,
+                 graph_view_type&& the_view,
                  const rtypes::spatial_dist& c_unit)
       : ER_CLIENT_INIT("cosm.repr.base_graph_los"),
-        graph_view_entity_type(c_id, c_view, c_unit) {}
+        graph_view_entity_type(c_id, std::move(the_view), c_unit) {}
 };
 
 NS_END(repr, cosm);

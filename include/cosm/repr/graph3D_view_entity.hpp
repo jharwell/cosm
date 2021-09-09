@@ -24,9 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <boost/optional.hpp>
+#include <utility>
+
 #include "cosm/repr/entity3D.hpp"
 #include "cosm/repr/base_graph_view_entity.hpp"
-#include <boost/optional.hpp>
 
 /*******************************************************************************
  * Namespaces
@@ -66,10 +68,10 @@ class graph3D_view_entity : public crepr::entity3D,
   using graph_view_entity_type::n_vertices;
 
   graph3D_view_entity(const rtypes::type_uuid& c_id,
-                      const graph_view_type& c_view,
+                      graph_view_type&& the_view,
                       const rtypes::spatial_dist& c_unit)
       : entity3D(c_id),
-        graph_view_entity_type(c_view, c_unit),
+        graph_view_entity_type(std::move(the_view), c_unit),
         ER_CLIENT_INIT("cosm.repr.graph3D_view_entity") {}
 
   ~graph3D_view_entity(void) override = default;
@@ -137,11 +139,7 @@ class graph3D_view_entity : public crepr::entity3D,
               c.z(),
               zdsize());
 
-
-    if (auto vd = view().find(c)) {
-      return access(*vd);
-    }
-    return nullptr;
+    return view().lookup(c);
   }
   const vertex_property_type* access(vertex_descriptor vd) const override {
       return &view()[vd];

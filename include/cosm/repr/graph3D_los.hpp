@@ -24,6 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <utility>
+
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/ds/graph/hgrid3D.hpp"
 
@@ -58,9 +60,9 @@ class graph3D_los : public crepr::base_graph_los<
   using graph_view_entity_type::find;
 
   graph3D_los(const rtypes::type_uuid& c_id,
-              const graph_view_type& c_view,
+              graph_view_type&& the_view,
               const rtypes::spatial_dist& c_unit)
-      : base_graph_los<graph_view_entity_type>(c_id, c_view, c_unit) {}
+      : base_graph_los<graph_view_entity_type>(c_id, std::move(the_view), c_unit) {}
 };
 
 NS_END(repr, cosm);
