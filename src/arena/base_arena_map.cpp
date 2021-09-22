@@ -78,36 +78,14 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
           grid_resolution().v());
 
 
-  ER_INFO("Initialize %zu nests", config->nests.nests.size());
-  for (crepr::config::nest_config nest : config->nests.nests) {
-    /*
-     * Trim nest size if necessary so it is an even multiple of the grid
-     * resolution--many parts of the code rely on 2D spatial objects on the
-     * arena floor being exact multiples of the grid size.
-     *
-     * Note that we are NOT updating the dimensions held by the parent arena map
-     * configuration.
-     */
-    nest.dims = cspatial::dimension_checker::even_multiple(grid_resolution(),
-                                                           nest.dims);
-    crepr::nest inst(&nest, config->grid.resolution);
-    /* configure nest extent */
-    for (size_t i = inst.xdspan().lb(); i <= inst.xdspan().ub(); ++i) {
-      for (size_t j = inst.ydspan().lb(); j <= inst.ydspan().ub(); ++j) {
-        auto coord = rmath::vector2z(i, j);
-        crops::nest_extent_visitor op(coord, &inst);
-        op.visit(access<cads::arena_grid::kCell>(coord));
-      } /* for(j..) */
-    } /* for(i..) */
+  /*
+   * Initialize nests, if configured (nests can also be manually initialized
+   * later). The swarm manager is not yet initialized, so we can't do that part
+   * of nest initialization later.
+   */
+  initialize_nests(&config->nests, nullptr, config->grid.resolution);
 
-    /* update host cell */
-    m_nests->emplace(std::make_pair(inst.id(), inst));
-
-    /* add to loctree */
-    m_nloctree->update(&inst);
-  } /* for(&nest..) */
-
-  /* initialize non-owning block vector exposed to outside classes */
+  /* Initialize non-owning block vector exposed to outside classes */
   for (auto& b : m_blockso) {
     m_blocksno.push_back(b.get());
   } /* for(&b..) */
@@ -116,28 +94,27 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
 base_arena_map::~base_arena_map(void) = default;
 
 /*******************************************************************************
- * Member Functions
+ * Initialization Functions
  ******************************************************************************/
-bool base_arena_map::initialize(pal::argos_sm_adaptor* sm) {
-  bool ret = initialize_shared(sm);
+bool base_arena_map::initialize(pal::argos_sm_adaptor* sm,
+                                const crepr::config::nests_config* nests) {
+  bool ret = initialize_shared(sm, nests);
   ret |= initialize_private();
   return ret;
 } /* initialize */
 
-bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm) {
+bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm,
+                                       const crepr::config::nests_config* nests) {
   /* compute block bounding box */
   auto* block = *std::max_element(
       m_blocksno.begin(), m_blocksno.end(), [&](const auto* b1, const auto* b2) {
-                                              return rmath::componentwise_compare()(b1->rdim3D(),
-                                                                                    b2->rdim3D());
+                                              return rmath::vector3d::componentwise_compare()(b1->rdims3D(),
+                                                                                    b2->rdims3D());
       });
-  m_block_bb = block->rdim3D();
+  m_block_bb = block->rdims3D();
 
-  /* initialize nest lights */
-  for (auto& pair : *m_nests) {
-    pair.second.initialize(sm,
-                           carepr::light_type_index()[carepr::light_type_index::kNest]);
-  } /* for(&pair..) */
+  /* initialize nests */
+  initialize_nests(nests, sm, grid_resolution());
 
   return true;
 } /* initialize_shared() */
@@ -173,6 +150,55 @@ bool base_arena_map::initialize_private(void) {
   return ret;
 } /* initialize_private() */
 
+void base_arena_map::initialize_nests(const crepr::config::nests_config* nests,
+                                      pal::argos_sm_adaptor* sm,
+                                      const rtypes::discretize_ratio& resolution) {
+  if (nullptr != nests) {
+    ER_INFO("Initialize %zu nests", nests->nests.size());
+    for (crepr::config::nest_config nest : nests->nests) {
+      /*
+       * Trim nest size if necessary so it is an even multiple of the grid
+       * resolution--many parts of the code rely on 2D spatial objects on the
+       * arena floor being exact multiples of the grid size.
+       *
+       * Note that we are NOT updating the dimensions held by the parent arena
+       * map configuration.
+       */
+      nest.dims = cspatial::dimension_checker::even_multiple(grid_resolution(),
+                                                             nest.dims);
+      crepr::nest inst(&nest, rdims2D(), resolution);
+      /* configure nest extent */
+      for (size_t i = inst.xdspan().lb(); i <= inst.xdspan().ub(); ++i) {
+        for (size_t j = inst.ydspan().lb(); j <= inst.ydspan().ub(); ++j) {
+          auto coord = rmath::vector2z(i, j);
+          crops::nest_extent_visitor op(coord, &inst);
+          op.visit(access<cads::arena_grid::kCell>(coord));
+        } /* for(j..) */
+      } /* for(i..) */
+
+      /* add to set of arena nests */
+      m_nests->emplace(std::make_pair(inst.id(), inst));
+
+      /* add to loctree */
+      m_nloctree->update(&inst);
+    } /* for(nest...) */
+  }
+
+  if (nullptr != sm) {
+    /*
+     * Initialize nest lights. Might do nothing if the lights have already been
+     * initialized.
+     */
+    for (auto& pair : *m_nests) {
+      pair.second.initialize(sm,
+                             carepr::light_type_index()[carepr::light_type_index::kNest]);
+    } /* for(&pair..) */
+  }
+} /* initialize_nests() */
+
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
 const cfbd::base_distributor* base_arena_map::block_distributor(void) const {
   return m_block_dispatcher->distributor();
 }

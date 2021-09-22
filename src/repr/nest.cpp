@@ -37,24 +37,27 @@ int nest::m_nest_id = 0;
  * Constructors/Destructors
  ******************************************************************************/
 nest::nest(const config::nest_config* config,
+           const rmath::vector2d& arena_dim,
            const rtypes::discretize_ratio& resolution)
     : unicell_immovable_entity2D(rtypes::type_uuid(m_nest_id++),
                                  config->dims,
-                                 resolution,
-                                 config->center),
+                                 config->center - config->dims / 2.0,
+                                 resolution),
       colored_entity(rutils::color::kGRAY70),
       ER_CLIENT_INIT("cosm.repr.nest"),
-      mc_config(*config) {
-  ER_ASSERT(mc_config.light_height > 0UL, "Light height must be > 0");
-  ER_ASSERT(mc_config.light_intensity > 0.0, "Light intensity must be > 0");
-}
+      mc_light_intensity(light_intensity_calc(arena_dim)),
+      mc_light_height(light_height_calc(arena_dim)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void nest::initialize(pal::argos_sm_adaptor* sm,
                       const rutils::color& light_color) {
-  if (std::fabs(rdim2D().x() - rdim2D().y()) <=
+  if (m_initialized) {
+    return;
+  }
+
+  if (std::fabs(rdims2D().x() - rdims2D().y()) <=
       std::numeric_limits<double>::epsilon()) {
     m_lights = init_square(light_color);
   } else {
@@ -64,21 +67,22 @@ void nest::initialize(pal::argos_sm_adaptor* sm,
   for (auto light : m_lights) {
     light.initialize(sm);
   } /* for(light..) */
+  m_initialized = true;
 } /* initialize() */
 
 
-std::list<nest_light> nest::init_square(const rutils::color& color) const {
+std::list<nest_light> nest::init_square(const rutils::color& color) {
   return std::list<nest_light>{
     nest_light("nest" + rcppsw::to_string(id()) + "_" + "light0",
                rmath::vector3(rcenter2D().x(),
                               rcenter2D().y(),
-                              mc_config.light_height.v()),
+                              mc_light_height.v()),
                color,
-               mc_config.light_intensity)
+               mc_light_intensity)
       };
 } /* init_square() */
 
-std::list<nest_light> nest::init_rect(const rutils::color& color) const {
+std::list<nest_light> nest::init_rect(const rutils::color& color) {
   std::list<nest_light> ret;
   rmath::vector3d loc0, loc1, loc2;
   std::string name0 = "nest" + rcppsw::to_string(id()) + "_" + "light0";
@@ -88,53 +92,44 @@ std::list<nest_light> nest::init_rect(const rutils::color& color) const {
   if (xrsize() > yrsize()) {
     loc0.set((ranchor2D().x() + xrsize() * 0.25).v(),
              rcenter2D().y(),
-             mc_config.light_height.v());
+             mc_light_height.v());
     loc1.set((ranchor2D().x() + xrsize() * 0.5).v(),
              rcenter2D().y(),
-             mc_config.light_height.v());
+             mc_light_height.v());
     loc2.set((ranchor2D().x() + xrsize() * 0.75).v(),
              rcenter2D().y(),
-             mc_config.light_height.v());
+             mc_light_height.v());
   } else {
     loc0.set(rcenter2D().x(),
              (ranchor2D().y() + yrsize() * 0.25).v(),
-             mc_config.light_height.v());
+             mc_light_height.v());
     loc1.set(rcenter2D().x(),
              (ranchor2D().y() + yrsize() * 0.5).v(),
-             mc_config.light_height.v());
+             mc_light_height.v());
     loc2.set(rcenter2D().x(),
              (ranchor2D().y() + yrsize() * 0.75).v(),
-             mc_config.light_height.v());
+             mc_light_height.v());
   }
 
   return { nest_light(name0,
                       loc0,
                       color,
-                      mc_config.light_intensity),
+                      mc_light_intensity),
            nest_light(name1,
                       loc1,
                       color,
-                      mc_config.light_intensity),
+                      mc_light_intensity),
            nest_light(name2,
                       loc2,
                       color,
-                      mc_config.light_intensity)
+                      mc_light_intensity)
   };
 } /* init_rect() */
 
 
-std::string nest::to_str(bool full) const {
+std::string nest::to_str(void) const {
   /* Can't call dcenter2D(), as the nest might be even in X and/or Y */
-  std::string base =
-      "nest" + rcppsw::to_string(id()) + "@" + rcenter2D().to_str();
-
-  if (full) {
-    return base + " x=" + rcppsw::to_string(xrspan()) + "/" +
-           rcppsw::to_string(xdspan()) + " y=" + rcppsw::to_string(yrspan()) +
-           "/" + rcppsw::to_string(ydspan());
-  } else {
-    return base;
-  }
+  return "nest" + rcppsw::to_string(id()) + "@" + rcenter2D().to_str();
 } /* to_str() */
 
 NS_END(repr, cosm);

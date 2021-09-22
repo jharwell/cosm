@@ -46,6 +46,9 @@ namespace cosm::arena::config {
 struct arena_map_config;
 } // namespace cosm::arena::config
 
+namespace cosm::repr::config {
+struct nests_config;
+} /* namespace cosm::repr::config */
 namespace cosm::arena {
 class base_arena_map;
 class caching_arena_map;
@@ -78,11 +81,15 @@ class argos_sm_adaptor : public swarm_manager,
   argos_sm_adaptor(const argos_sm_adaptor&) = delete;
   const argos_sm_adaptor& operator=(const argos_sm_adaptor&) = delete;
 
+  /* swarm_manager overrides */
+  void init(ticpp::Element&) override;
+  void pre_step(void) override;
+  void reset(void) override {}
+  void post_step(void) override {}
+  void destroy(void) override {}
+
   /* ARGoS hook overrides */
-  void Init(ticpp::Element& node) override RCPPSW_COLD {
-    m_floor = &GetSpace().GetFloorEntity();
-    init(node);
-  }
+  void Init(ticpp::Element& node) override RCPPSW_COLD { init(node); };
   void Reset(void) override RCPPSW_COLD { reset(); }
   void PreStep(void) override { pre_step(); }
   void PostStep(void) override { post_step(); }
@@ -115,7 +122,8 @@ class argos_sm_adaptor : public swarm_manager,
   /**
    * \brief Initialize the arena contents.
    */
-  void arena_map_init(const cvconfig::visualization_config* vconfig) RCPPSW_COLD;
+  void arena_map_init(const cvconfig::visualization_config* vconfig,
+                      const crepr::config::nests_config* nconfig) RCPPSW_COLD;
 
   /* clang-format off */
   /**

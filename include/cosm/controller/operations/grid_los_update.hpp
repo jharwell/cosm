@@ -132,47 +132,47 @@ class grid_los_update final
   /**
    * \brief Set the LOS of a robot as it moves within a 3D grid.
    *
-   * \todo This should eventually be replaced by a calculation of a robot's LOS by
-   * the robot, probably using on-board cameras.
+   * \todo This should eventually be replaced by a calculation of a robot's LOS
+   * by the robot, probably using on-board cameras.
    */
   template <typename U = TSrcGrid,
             RCPPSW_SFINAE_DECLDEF(std::is_same<U,
                                   rds::grid3D_overlay<cds::cell3D>>::value)>
-  void grid_los_set(TController* const controller, size_t los_grid_units) {
+  void grid_los_set(TController* const controller, size_t los_grid_units) const {
     controller->perception()->los(make_los3D(controller, los_grid_units));
   }
 
   /**
    * \brief Set the LOS of a robot as it moves within a 2D grid.
    *
-   * \todo This should eventually be replaced by a calculation of a robot's LOS by
-   * the robot, probably using on-board cameras.
+   * \todo This should eventually be replaced by a calculation of a robot's LOS
+   * by the robot, probably using on-board cameras.
    */
   template <typename U = TSrcGrid,
             RCPPSW_SFINAE_DECLDEF(std::is_same<U,
                                   rds::grid2D_overlay<cds::cell2D>>::value)>
-  void grid_los_set(TController* const controller, size_t los_grid_units) {
+  void grid_los_set(TController* const controller, size_t los_grid_units) const {
     controller->perception()->los(make_los2D(controller, los_grid_units));
   }
 
   std::unique_ptr<TLOS> make_los2D(const TController* controller,
-                                   size_t los_grid_units) {
+                                   size_t los_grid_units) const {
     auto robot_dpos = rmath::dvec2zvec(controller->rpos2D() - mc_grid->originr(),
                                        mc_grid->resolution().v());
-    auto los  = std::make_unique<TLOS>(controller->entity_id(),
-                                       mc_grid->subcircle(robot_dpos,
-                                                       los_grid_units),
-                                       mc_grid->resolution());
+    return std::make_unique<TLOS>(controller->entity_id(),
+                                  mc_grid->subcircle(robot_dpos,
+                                                     los_grid_units),
+                                  mc_grid->resolution());
   }
 
   std::unique_ptr<TLOS> make_los3D(const TController* controller,
-                                   size_t los_grid_units) {
+                                   size_t los_grid_units) const {
     auto robot_dpos = rmath::dvec2zvec(controller->rpos3D() - mc_grid->originr(),
                                        mc_grid->resolution().v());
-    auto los  = std::make_unique<TLOS>(controller->entity_id(),
-                                       mc_grid->subcircle(robot_dpos,
-                                                       los_grid_units),
-                                       mc_grid->resolution());
+    return std::make_unique<TLOS>(controller->entity_id(),
+                                  mc_grid->subcircle(robot_dpos,
+                                                     los_grid_units),
+                                  mc_grid->resolution());
   }
   /* clang-format off */
   const TSrcGrid* const mc_grid;

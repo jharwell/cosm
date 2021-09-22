@@ -48,31 +48,6 @@ class spatial_entity3D : public spatial_entity2D {
  public:
   using spatial_entity2D::spatial_entity2D;
 
-  /**
-   * \brief Calculate the span in Z in real coordinates of an entity given the
-   * position of its 3D center and dimension in Z.
-   *
-   * \return The span in Z of the entity.
-   */
-  static rmath::ranged zrspan(const rmath::vector3d& anchor,
-                              const rtypes::spatial_dist& zdim) {
-    return { anchor.z(), (anchor.z() + zdim).v() };
-  }
-
-  /**
-   * \brief Calculate the span in Z in discrete coordinates of an entity given
-   * its discrete anchor and Z dimension.
-   *
-   * This function can only be called for entities which have a defined discrete
-   * anchor.
-   *
-   * \return The span in Z of the entity (closed interval).
-   */
-  static rmath::rangez zdspan(const rmath::vector3z& anchor, size_t zdim) {
-    /* rely on truncation of the 0.5 remainder to 0 */
-    return { anchor.z(), anchor.z() + zdim - 1 };
-  }
-
   ~spatial_entity3D(void) override = default;
 
   /**
@@ -81,24 +56,26 @@ class spatial_entity3D : public spatial_entity2D {
    *
    * \return The span in Z of the entity.
    */
-  virtual rmath::ranged zrspan(void) const = 0;
+  rmath::ranged zrspan(void) const { return rbb().xspan(); }
 
   /**
    * \brief Get the size of the 3D entity in the Z direction in real
    * coordinates.
    */
-  virtual rtypes::spatial_dist zrsize(void) const = 0;
+  rtypes::spatial_dist zrsize(void) const {
+    return rtypes::spatial_dist(rbb().zsize());
+  }
 
   /**
    * \brief Calculate the span in Z of the entity in discrete coordinates.
    */
-  virtual rmath::rangez zdspan(void) const = 0;
+  rmath::rangez zdspan(void) const { return dbb().zspan(); }
 
   /**
    * \brief Get the size of the 3D entity in the Z direction in discrete
    * coordinates.
    */
-  virtual size_t zdsize(void) const = 0;
+  size_t zdsize(void) const { return dbb().zsize(); }
 };
 
 NS_END(repr, cosm);

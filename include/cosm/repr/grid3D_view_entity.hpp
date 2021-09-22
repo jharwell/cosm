@@ -70,61 +70,16 @@ class grid3D_view_entity : public crepr::entity3D,
   grid3D_view_entity(const rtypes::type_uuid& id,
                      const grid_view_type& the_view,
                      const rtypes::discretize_ratio& res)
-      : entity3D(id),
+      : entity3D(id,
+                 rmath::vector3z(the_view.shape()[0],
+                                 the_view.shape()[1],
+                                 the_view.shape()[2]),
+                 the_view.origin()->loc(),
+                 rtypes::spatial_dist(res.v())),
         grid_view_entity_type(the_view, res),
         ER_CLIENT_INIT("cosm.repr.grid3D_view_entity") {}
 
   ~grid3D_view_entity(void) override = default;
-
-
-  rmath::vector3d ranchor3D(void) const override {
-    return rmath::zvec2dvec(danchor3D(), resolution().v());
-  }
-  rmath::vector3d rcenter3D(void) const override {
-    return ranchor3D() + rmath::vector3d(xrsize().v(),
-                                         yrsize().v(),
-                                         zrsize().v()) / 2.0;
-  }
-
-  coord_type danchor3D(void) const override final {
-    return view().origin()->loc();
-  }
-  coord_type dcenter3D(void) const override final {
-    return danchor3D() + coord_type(xdsize(),
-                                    ydsize(),
-                                    zdsize()) / 2;
-  }
-
-
-  rmath::ranged xrspan(void) const override {
-    return entity3D::xrspan(ranchor3D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override {
-    return entity3D::yrspan(ranchor3D(), yrsize());
-  }
-  rmath::ranged zrspan(void) const override {
-    return entity3D::zrspan(ranchor3D(), yrsize());
-  }
-
-  rmath::rangez xdspan(void) const override {
-    return entity3D::xdspan(danchor3D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override {
-    return entity3D::ydspan(danchor3D(), ydsize());
-  }
-  rmath::rangez zdspan(void) const override {
-    return entity3D::zdspan(danchor3D(), zdsize());
-  }
-
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(xdsize() * resolution().v());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(ydsize() * resolution().v());
-  }
-  rtypes::spatial_dist zrsize(void) const override final {
-    return rtypes::spatial_dist(zdsize() * resolution().v());
-  }
 
   const cell_type& access(size_t i, size_t j, size_t k) const {
     ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
@@ -147,10 +102,6 @@ class grid3D_view_entity : public crepr::entity3D,
         (cell.y() < ydsize()) &&
         (cell.z() < zdsize());
   }
-
-  size_t xdsize(void) const override final { return view().shape()[0]; }
-  size_t ydsize(void) const override final { return view().shape()[1]; }
-  size_t zdsize(void) const override final { return view().shape()[2]; }
 
  protected:
   using grid_view_entity_type::view;

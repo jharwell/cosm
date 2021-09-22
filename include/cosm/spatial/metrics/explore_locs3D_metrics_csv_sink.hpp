@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/metrics/spatial/grid3D_metrics_csv_sink.hpp"
+#include "rcppsw/ds/metrics/grid3D_metrics_csv_sink.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -36,10 +36,10 @@ class explore_locs3D_metrics_collector;
  * Class Definitions
  ******************************************************************************/
 class explore_locs3D_metrics_csv_sink final :
-    public rmspatial::grid3D_metrics_csv_sink<rmetrics::spatial::cell_avg> {
+    public rdmetrics::grid3D_metrics_csv_sink<rdmetrics::cell_avg> {
  public:
   using collector_type = explore_locs3D_metrics_collector;
-  using rmspatial::grid3D_metrics_csv_sink<rmetrics::spatial::cell_avg>::grid3D_metrics_csv_sink;
+  using rdmetrics::grid3D_metrics_csv_sink<rdmetrics::cell_avg>::grid3D_metrics_csv_sink;
 };
 
 NS_END(metrics, spatial, cosm);

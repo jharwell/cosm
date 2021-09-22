@@ -57,51 +57,17 @@ NS_START(cosm, repr);
  */
 class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
  public:
+  using entity3D::danchor3D;
+  using entity3D::ranchor3D;
+
   ~unicell_entity3D(void) override = default;
 
-  rmath::vector3d rcenter3D(void) const override final { return m_rcenter; }
-  rmath::vector3d ranchor3D(void) const override final { return m_ranchor; }
-
-  rmath::ranged xrspan(void) const override final {
-    return entity3D::xrspan(ranchor3D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override final {
-    return entity3D::yrspan(ranchor3D(), yrsize());
-  }
-  rmath::ranged zrspan(void) const override final {
-    return entity3D::zrspan(ranchor3D(), yrsize());
-  }
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.x());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.y());
-  }
-  rtypes::spatial_dist zrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.z());
-  }
-
-  rmath::vector3z dcenter3D(void) const override final {
-    ER_ASSERT(RCPPSW_IS_ODD(m_ddim.x()) && RCPPSW_IS_ODD(m_ddim.y()) &&
-                  RCPPSW_IS_ODD(m_ddim.z()),
+  rmath::vector3z dcenter3D(void) const {
+    ER_ASSERT(RCPPSW_IS_ODD(dbb().xsize()) && RCPPSW_IS_ODD(dbb().ysize()) &&
+              RCPPSW_IS_ODD(dbb().zsize()),
               "dcenter3D() called on entity without defined center");
-    return m_dcenter;
+    return entity3D::dcenter3D();
   }
-
-
-  rmath::vector3z danchor3D(void) const override final { return m_danchor; }
-  rmath::rangez xdspan(void) const override final {
-    return entity3D::xdspan(danchor3D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override final {
-    return entity3D::ydspan(danchor3D(), ydsize());
-  }
-  rmath::rangez zdspan(void) const override final {
-    return entity3D::ydspan(danchor3D(), zdsize());
-  }
-  size_t xdsize(void) const override final { return m_ddim.x(); }
-  size_t ydsize(void) const override final { return m_ddim.y(); }
-  size_t zdsize(void) const override final { return m_ddim.z(); }
 
   /**
    * \brief Return if a real-valued point lies within the extent of the 3D
@@ -122,28 +88,21 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
         zrspan().contains(point.z());
   }
 
-  const rmath::vector3d& rdim3D(void) const { return m_rdim; }
-  rmath::vector2d rdim2D(void) const { return rdim3D().to_2D(); }
-
  protected:
   unicell_entity3D(const rtypes::type_uuid& id,
-                   const rmath::vector3d& rdim,
+                   const rmath::vector3d& dims,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity3D{ id, rdim, resolution, rmath::vector3d() } {}
+      : entity3D(id, dims, rtypes::spatial_dist(resolution.v())),
+        ER_CLIENT_INIT("cosm.repr.unicell_entity3D"),
+        mc_arena_res(resolution) {}
 
   unicell_entity3D(const rtypes::type_uuid& id,
-                   const rmath::vector3d& rdim,
-                   const rtypes::discretize_ratio& resolution,
-                   const rmath::vector3d& rcenter)
-      : entity3D(id),
+                   const rmath::vector3d& dims,
+                   const rmath::vector3d& center,
+                   const rtypes::discretize_ratio& resolution)
+      : entity3D(id, dims, center, rtypes::spatial_dist(resolution.v())),
         ER_CLIENT_INIT("cosm.repr.unicell_entity3D"),
-        mc_arena_res(resolution),
-        m_rdim(rdim),
-        m_rcenter(rcenter),
-        m_ranchor(m_rcenter - m_rdim / 2.0),
-        m_ddim(rmath::dvec2zvec(m_rdim, mc_arena_res.v())),
-        m_dcenter(rmath::dvec2zvec(m_rcenter, mc_arena_res.v())),
-        m_danchor(m_dcenter - m_ddim / 2) {}
+        mc_arena_res(resolution) {}
 
   const rtypes::discretize_ratio& arena_res(void) const { return mc_arena_res; }
 
@@ -155,10 +114,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
-  void ranchor3D(const rmath::vector3d& ranchor) {
-    m_ranchor = ranchor;
-    m_rcenter = m_ranchor + m_rdim / 2.0;
-  }
+  void ranchor3D(const rmath::vector3d& ranchor) { rbb().update(ranchor); }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
@@ -168,22 +124,11 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
-  void danchor3D(const rmath::vector3z& danchor) {
-    m_danchor = danchor;
-    m_dcenter = m_danchor + m_ddim / 2.0;
-  }
+  void danchor3D(const rmath::vector3z& danchor) { dbb().update(danchor); }
 
  private:
   /* clang-format off */
   const rtypes::discretize_ratio mc_arena_res;
-
-  rmath::vector3d                m_rdim;
-  rmath::vector3d                m_rcenter{};
-  rmath::vector3d                m_ranchor{};
-
-  rmath::vector3z                m_ddim;
-  rmath::vector3z                m_dcenter{};
-  rmath::vector3z                m_danchor{};
   /* clang-format on */
 };
 

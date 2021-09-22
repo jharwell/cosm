@@ -62,10 +62,10 @@ class grid2D_los : public crepr::base_grid_los<
              const grid_view_type& c_view,
              const rtypes::discretize_ratio& c_resolution);
 
-  field_coord_dtype abs_ll(void) const override;
-  field_coord_dtype abs_ul(void) const override;
-  field_coord_dtype abs_lr(void) const override;
-  field_coord_dtype abs_ur(void) const override;
+  field_coord_dtype abs_ll(void) const override final;
+  field_coord_dtype abs_ul(void) const override final;
+  field_coord_dtype abs_lr(void) const override final;
+  field_coord_dtype abs_ur(void) const override final;
 };
 
 NS_END(repr, cosm);

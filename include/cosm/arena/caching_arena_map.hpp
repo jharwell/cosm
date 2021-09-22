@@ -122,7 +122,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   robot_on_block(const rmath::vector2d& pos,
                  const rtypes::type_uuid& ent_id) const override;
 
-  bool initialize(pal::argos_sm_adaptor* sm) override;
+  bool initialize(pal::argos_sm_adaptor* sm,
+                  const crepr::config::nests_config* nests) override;
 
   cds::block3D_vectorno free_blocks(bool oos_ok) const override;
 

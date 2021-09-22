@@ -56,39 +56,16 @@ NS_START(cosm, repr);
  */
 class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
  public:
+  using entity2D::danchor2D;
+  using entity2D::ranchor2D;
+
   ~unicell_entity2D(void) override = default;
 
-  rmath::vector2d rcenter2D(void) const override final { return m_rcenter; }
-  rmath::vector2d ranchor2D(void) const override final { return m_ranchor; }
-  rmath::ranged xrspan(void) const override final {
-    return entity2D::xrspan(ranchor2D(), xrsize());
+  rmath::vector2z dcenter2D(void) const {
+    ER_ASSERT(RCPPSW_IS_ODD(dbb().xsize()) && RCPPSW_IS_ODD(dbb().ysize()),
+              "dcenter3D() called on entity without defined center");
+    return entity2D::dcenter2D();
   }
-  rmath::ranged yrspan(void) const override final {
-    return entity2D::yrspan(ranchor2D(), yrsize());
-  }
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.x());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(m_rdim.y());
-  }
-
-  RCPPSW_PURE rmath::vector2z dcenter2D(void) const override final {
-    ER_ASSERT(RCPPSW_IS_ODD(m_ddim.x()) && RCPPSW_IS_ODD(m_ddim.y()),
-              "dcenter2D() called on entity%d without defined center: dims=%s",
-              id().v(),
-              rcppsw::to_string(m_ddim).c_str());
-    return m_dcenter;
-  }
-  rmath::vector2z danchor2D(void) const override final { return m_danchor; }
-  rmath::rangez xdspan(void) const override final {
-    return entity2D::xdspan(danchor2D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override final {
-    return entity2D::ydspan(danchor2D(), ydsize());
-  }
-  size_t xdsize(void) const override final { return m_ddim.x(); }
-  size_t ydsize(void) const override final { return m_ddim.y(); }
 
   /**
    * \brief Return if a real-valued point lies within the extent of the 2D
@@ -116,19 +93,24 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
     return xdspan().contains(cell.x()) && ydspan().contains(cell.y());
   }
 
-  const rmath::vector2d& rdim2D(void) const { return m_rdim; }
-  const rmath::vector2z& ddim2D(void) const { return m_ddim; }
-
  protected:
   unicell_entity2D(const rtypes::type_uuid& id,
-                   const rmath::vector2d& rdim,
+                   const rmath::vector2d& dims,
                    const rtypes::discretize_ratio& resolution)
-      : unicell_entity2D{ id, rdim, resolution, rmath::vector2d() } {}
+      : entity2D(id, rmath::vector3d(dims, 0.0), rtypes::spatial_dist(resolution.v())),
+        ER_CLIENT_INIT("cosm.repr.unicell_entity2D"),
+        mc_arena_res(resolution) {}
 
   unicell_entity2D(const rtypes::type_uuid& id,
-                   const rmath::vector2d& rdim,
-                   const rtypes::discretize_ratio& resolution,
-                   const rmath::vector2d& rcenter);
+                   const rmath::vector2d& dims,
+                   const rmath::vector2d& center,
+                   const rtypes::discretize_ratio& resolution)
+      : entity2D(id,
+                 rmath::vector3d(dims, 0.0),
+                 rmath::vector3d(center, 0.0),
+                 rtypes::spatial_dist(resolution.v())),
+        ER_CLIENT_INIT("cosm.repr.unicell_entity2D"),
+        mc_arena_res(resolution) {}
 
   const rtypes::discretize_ratio& arena_res(void) const { return mc_arena_res; }
 
@@ -141,8 +123,7 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void ranchor2D(const rmath::vector2d& ranchor) {
-    m_ranchor = ranchor;
-    m_rcenter = m_ranchor + m_rdim / 2.0;
+    rbb().update(rmath::vector3d(ranchor, 0.0));
   }
 
   /**
@@ -154,21 +135,12 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
   void danchor2D(const rmath::vector2z& danchor) {
-    m_danchor = danchor;
-    m_dcenter = m_danchor + m_ddim / 2;
+    dbb().update(rmath::vector3z(danchor, 0));
   }
 
  private:
   /* clang-format off */
   const rtypes::discretize_ratio mc_arena_res;
-
-  rmath::vector2d                m_rdim;
-  rmath::vector2d                m_rcenter{};
-  rmath::vector2d                m_ranchor{};
-
-  rmath::vector2z                m_ddim;
-  rmath::vector2z                m_dcenter{};
-  rmath::vector2z                m_danchor{};
   /* clang-format on */
 };
 

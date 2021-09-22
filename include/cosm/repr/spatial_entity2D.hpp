@@ -48,110 +48,59 @@ NS_START(cosm, repr);
  */
 class spatial_entity2D : public spatial_entity {
  public:
-  /**
-   * \brief Calculate the span in X in real coordinates of an entity given the
-   * position of its anchor (2D or 3D) and dimension in X.
-   *
-   * \return The span in X of the entity.
-   */
-  template <typename TCoord>
-  static rmath::ranged xrspan(const TCoord& anchor,
-                              const rtypes::spatial_dist& xdim) {
-    return { anchor.x(), (anchor.x() + xdim).v() };
-  }
-
-  /**
-   * \brief Calculate the span in Y in real coordinates of an entity given the
-   * position of its anchor (2D or 3D) and dimension in Y.
-   *
-   * \return The span in Y of the entity.
-   */
-  template <typename TCoord>
-  static rmath::ranged yrspan(const TCoord& anchor,
-                              const rtypes::spatial_dist& ydim) {
-    return { anchor.y(), (anchor.y() + ydim).v() };
-  }
-
-  /**
-   * \brief Calculate the span in X in discrete coordinates of an entity given
-   * its discrete anchor (2D or 3D) and X dimension.
-   *
-   * This function can only be called for entities which have a defined discrete
-   * center.
-   *
-   * \return The span in X of the entity (closed interval).
-   */
-  template <typename TCoord>
-  static rmath::rangez xdspan(const TCoord& anchor, size_t xdim) {
-    /* rely on truncation of the 0.5 remainder to 0 */
-    return { anchor.x(), anchor.x() + xdim - 1 };
-  }
-
-  /**
-   * \brief Calculate the span in Y in discrete coordinates of an entity given
-   * its discrete cahor (2D or 3D) and Y dimension.
-   *
-   * This function can only be called for entities which have a defined discrete
-   * center.
-   *
-   * \return The span in Y of the entity (closed interval).
-   */
-  template <typename TCoord>
-  static rmath::rangez ydspan(const TCoord& anchor, size_t ydim) {
-    /* rely on truncation of the 0.5 remainder to 0 */
-    return { anchor.y(), anchor.y() + ydim - 1 };
-  }
-
-  spatial_entity2D(void) : spatial_entity2D{ rtypes::constants::kNoUUID } {}
-  explicit spatial_entity2D(const rtypes::type_uuid& id) : spatial_entity(id) {}
+  using spatial_entity::spatial_entity;
 
   ~spatial_entity2D(void) override = default;
 
   /**
    * \brief Calculate the span in X of th entity in real coordinates.
    */
-  virtual rmath::ranged xrspan(void) const = 0;
+  rmath::ranged xrspan(void) const { return rbb().xspan(); }
 
   /**
    * \brief Calculate the span in Y of the entity in real coordinates.
    */
-  virtual rmath::ranged yrspan(void) const = 0;
+  rmath::ranged yrspan(void) const { return rbb().yspan(); }
+
+  /**
+   * \brief Get the size of the entity in the X direction in real
+   * coordinates.
+   */
+  rtypes::spatial_dist xrsize(void) const {
+    return rtypes::spatial_dist(rbb().xsize());
+  }
+
+  /**
+   * \brief Get the size of the entity in the Y direction in real
+   * coordinates.
+   */
+  rtypes::spatial_dist yrsize(void) const {
+    return rtypes::spatial_dist(rbb().ysize());
+  }
 
   /**
    * \brief Calculate the span in X of the entity in discrete coordinates.
    *
    * \return The span in X of the entity.
    */
-  virtual rmath::rangez xdspan(void) const = 0;
+  rmath::rangez xdspan(void) const { return dbb().xspan(); }
 
   /**
    * \brief Calculate the span in Y of the entity in discrete coordinates.
    */
-  virtual rmath::rangez ydspan(void) const = 0;
-
-  /**
-   * \brief Get the size of the entity in the X direction in real
-   * coordinates.
-   */
-  virtual rtypes::spatial_dist xrsize(void) const = 0;
-
-  /**
-   * \brief Get the size of the entity in the Y direction in real
-   * coordinates.
-   */
-  virtual rtypes::spatial_dist yrsize(void) const = 0;
+  rmath::rangez ydspan(void) const { return dbb().yspan(); }
 
   /**
    * \brief Get the size of the entity in the X direction in discrete
    * coordinates.
    */
-  virtual size_t xdsize(void) const = 0;
+  size_t xdsize(void) const { return dbb().xsize(); }
 
   /**
    * \brief Get the size of the entity in the Y direction in discrete
    * coordinates.
    */
-  virtual size_t ydsize(void) const = 0;
+  size_t ydsize(void) const { return dbb().ysize(); }
 };
 
 NS_END(repr, cosm);

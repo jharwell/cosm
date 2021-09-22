@@ -62,8 +62,8 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
    * one a robot knows about (see FORDYCA#242).
    */
   auto dloc = rmath::dvec2zvec(loc, map->grid_resolution().v());
-  auto drop_xspan = crepr::entity3D::xdspan(dloc, block->xdsize());
-  auto drop_yspan = crepr::entity3D::ydspan(dloc, block->ydsize());
+  auto drop_xspan = rmath::xspan(dloc, block->xdsize());
+  auto drop_yspan = rmath::yspan(dloc, block->ydsize());
 
   bool out_of_bounds = !map->distributable_cellsx().contains(drop_xspan) ||
                        !map->distributable_cellsy().contains(drop_yspan);
@@ -81,8 +81,8 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
    *
    * This is WAY faster than a linear scan.
    */
-  rmath::vector2d ll(loc - block->rdim2D() * 2.0);
-  rmath::vector2d ur(loc + block->rdim2D() * 2.0);
+  rmath::vector2d ll(loc - block->rdims2D() * 2.0);
+  rmath::vector2d ur(loc + block->rdims2D() * 2.0);
   std::vector<rtypes::type_uuid> ids;
 
   ids = map->nloctree()->intersections(rds::make_rtree_box(ll, ur));
@@ -134,8 +134,8 @@ conflict_checker::placement2D(const carena::caching_arena_map* map,
    *
    * This is WAY faster than a linear scan.
    */
-  rmath::vector2d ll(loc - block->rdim2D() * 2.0);
-  rmath::vector2d ur(loc + block->rdim2D() * 2.0);
+  rmath::vector2d ll(loc - block->rdims2D() * 2.0);
+  rmath::vector2d ur(loc + block->rdims2D() * 2.0);
   auto ids = map->cloctree()->intersections(rds::make_rtree_box(ll, ur));
 
   for (auto& id : ids) {
@@ -158,10 +158,8 @@ conflict_checker::status
 conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
                               const rmath::vector2d& ent1_dims,
                               const crepr::entity2D* const ent2) {
-  auto loc_xspan =
-      crepr::entity2D::xrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan =
-      crepr::entity2D::yrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.y()));
+  auto loc_xspan = rmath::xspan(ent1_anchor, ent1_dims.x());
+  auto loc_yspan = rmath::yspan(ent1_anchor, ent1_dims.y());
   return { ent2->xrspan().overlaps_with(loc_xspan),
            ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
@@ -170,10 +168,8 @@ conflict_checker::status
 conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
                               const rmath::vector2d& ent1_dims,
                               const crepr::entity3D* const ent2) {
-  auto loc_xspan =
-      crepr::entity3D::xrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.x()));
-  auto loc_yspan =
-      crepr::entity3D::yrspan(ent1_anchor, rtypes::spatial_dist(ent1_dims.y()));
+  auto loc_xspan = rmath::xspan(ent1_anchor, ent1_dims.x());
+  auto loc_yspan = rmath::yspan(ent1_anchor, ent1_dims.y());
   return { ent2->xrspan().overlaps_with(loc_xspan),
            ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
@@ -184,8 +180,8 @@ conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
 conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
                                        const crepr::nest& nest,
                                        const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity3D::xrspan(drop_loc, block->xrsize());
-  auto drop_yspan = crepr::entity3D::yrspan(drop_loc, block->yrsize());
+  auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());
+  auto drop_yspan = rmath::yspan(drop_loc, block->yrsize().v());
 
   return { nest.xrspan().overlaps_with(drop_xspan),
            nest.yrspan().overlaps_with(drop_yspan) };
@@ -194,8 +190,8 @@ conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
 conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
                                         const crepr::base_block3D* const block2,
                                         const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block1->xrsize());
-  auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block1->yrsize());
+  auto drop_xspan = rmath::xspan(drop_loc, block1->xrsize().v());
+  auto drop_yspan = rmath::yspan(drop_loc, block1->yrsize().v());
   return { block2->xrspan().overlaps_with(drop_xspan),
            block2->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_block() */
@@ -203,8 +199,8 @@ conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
 conflict_checker::status cache_conflict(const crepr::base_block3D* const block,
                                         const carepr::arena_cache* const cache,
                                         const rmath::vector2d& drop_loc) {
-  auto drop_xspan = crepr::entity2D::xrspan(drop_loc, block->xrsize());
-  auto drop_yspan = crepr::entity2D::yrspan(drop_loc, block->yrsize());
+  auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());
+  auto drop_yspan = rmath::yspan(drop_loc, block->yrsize().v());
   return { cache->xrspan().overlaps_with(drop_xspan),
            cache->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_cache() */

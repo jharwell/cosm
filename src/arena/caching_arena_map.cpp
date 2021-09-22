@@ -55,8 +55,9 @@ caching_arena_map::~caching_arena_map(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool caching_arena_map::initialize(pal::argos_sm_adaptor* sm) {
-  bool ret = initialize_shared(sm);
+bool caching_arena_map::initialize(pal::argos_sm_adaptor* sm,
+                                   const crepr::config::nests_config* nests) {
+  bool ret = initialize_shared(sm, nests);
   ret |= initialize_private();
   return ret;
 } /* initialize */

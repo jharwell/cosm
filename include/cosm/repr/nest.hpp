@@ -56,22 +56,16 @@ NS_START(cosm, repr);
  */
 class nest : public repr::unicell_immovable_entity2D,
              public repr::colored_entity,
-             public rer::client<nest> {
+             public rer::client<nest>,
+             public rer::stringizable {
  public:
-  /**
-   * \param dim Dimensions of the nest. Square nests get 1 light above the
-   *            center while rectangular nests get 3 lights evenly spaced along
-   *            the longer dimension.
-   * \param center The location of the center of the nest.
-   * \param resolution The arena resolution used to map from continous sizes to
-   *                   a discrete grid.
-   */
   nest(const config::nest_config* config,
+       const rmath::vector2d& arena_dim,
        const rtypes::discretize_ratio& resolution);
 
   const std::list<nest_light>& lights(void) { return m_lights; }
 
-  std::string to_str(bool full = false) const;
+  std::string to_str(void) const override;
 
   /**
    * \brief Initialize lights above the nest for robots to use for localization,
@@ -88,14 +82,23 @@ class nest : public repr::unicell_immovable_entity2D,
    */
   static int m_nest_id;
 
+  static rtypes::spatial_dist light_height_calc(const rmath::vector2d& arena) {
+    return rtypes::spatial_dist{std::pow(arena.x() * arena.y(), 0.25)};
+  }
 
-  std::list<nest_light> init_square(const rutils::color& color) const;
-  std::list<nest_light> init_rect(const rutils::color& color) const;
+  static double light_intensity_calc(const rmath::vector2d& arena) {
+    return std::pow(arena.x() * arena.y(), 0.5);
+  }
+
+  std::list<nest_light> init_square(const rutils::color& color);
+  std::list<nest_light> init_rect(const rutils::color& color);
 
   /* clang-format off */
-  const config::nest_config mc_config;
+  const double               mc_light_intensity;
+  const rtypes::spatial_dist mc_light_height;
 
-  std::list<nest_light>     m_lights{};
+  bool                       m_initialized{false};
+  std::list<nest_light>      m_lights{};
   /* clang-format on */
 };
 

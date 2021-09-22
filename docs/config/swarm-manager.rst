@@ -482,9 +482,9 @@ XML configuration:
 
 - Required by: all.
 - Required child attributes if present: none.
-- Required child tags if present: [ ``grid``, ``blocks``, ``nests`` ].
+- Required child tags if present: [ ``grid``, ``blocks`` ].
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags: none [ ``nests`` ].
 
 XML configuration:
 
@@ -754,11 +754,11 @@ XML configuration:
 ``arena_map/nests``
 ^^^^^^^^^^^^^^^^^^^
 
-- Required by: all.
-- Required child attributes if present: [ ``nest`` ].
+- Required by: none.
+- Required child attributes if present: none.
 - Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags: [ ``nest`` ].
 
 XML configuration:
 

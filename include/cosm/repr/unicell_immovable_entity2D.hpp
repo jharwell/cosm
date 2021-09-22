@@ -49,10 +49,10 @@ class unicell_immovable_entity2D : public unicell_entity2D {
   static constexpr bool is_movable(void) { return false; }
 
   unicell_immovable_entity2D(const rtypes::type_uuid& id,
-                             const rmath::vector2d& rdim,
-                             const rtypes::discretize_ratio& resolution,
-                             const rmath::vector2d& rcenter)
-      : unicell_entity2D(id, rdim, resolution, rcenter) {}
+                             const rmath::vector2d& dims,
+                             const rmath::vector2d& anchor,
+                             const rtypes::discretize_ratio& resolution)
+      : unicell_entity2D(id, dims, anchor, resolution) {}
 
   ~unicell_immovable_entity2D(void) override = default;
 };

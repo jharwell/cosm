@@ -108,7 +108,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    * \brief Compare two \ref base_cache objects for equality based on their
    * discrete center.
    */
-  bool dloccmp(const base_cache& other) const {
+  bool dloccmp(base_cache& other) {
     return this->dcenter2D() == other.dcenter2D();
   }
 

@@ -34,6 +34,13 @@ NS_START(cosm, repr, config, xml);
  * Member Functions
  ******************************************************************************/
 void nests_parser::parse(const ticpp::Element& node) {
+  /*
+   * Can be omitted if nests are to be initialized in a way other than from the
+   * XML file.
+   */
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
   ticpp::Element nnode = node_get(node, kXMLRoot);
   ticpp::Iterator<ticpp::Element> node_it;
 
@@ -46,6 +53,9 @@ void nests_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool nests_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
   for (auto& nest : m_config->nests) {
     RCPPSW_CHECK(nest_parser::validate(&nest));
   } /* for(&nest..) */

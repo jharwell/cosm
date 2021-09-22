@@ -44,8 +44,10 @@ void arena_map_parser::parse(const ticpp::Element& node) {
       *m_blocks.config_get<cfconfig::xml::blocks_parser::config_type>();
 
   m_nests.parse(anode);
-  m_config->nests =
-      *m_nests.config_get<crconfig::xml::nests_parser::config_type>();
+  if (m_nests.is_parsed()) {
+    m_config->nests =
+        *m_nests.config_get<crconfig::xml::nests_parser::config_type>();
+  }
 } /* parse() */
 
 bool arena_map_parser::validate(void) const {

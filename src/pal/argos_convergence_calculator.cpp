@@ -98,10 +98,10 @@ std::vector<double> argos_convergence_calculator<TController>::calc_robot_nn(
 
 #pragma omp parallel for num_threads(n_threads)
   for (size_t i = 0; i < n_robots / 2; ++i) {
-    auto dist_func = std::bind(&rmath::vector2d::l2norm,
-                               std::placeholders::_1,
-                               std::placeholders::_2);
-    auto pts = ralg::closest_pair2D<rmath::vector2d>()("recursive", v, dist_func);
+    auto calculator = ralg::closest_pair2D<rmath::vector2d>();
+    auto pts = calculator.operator()<decltype(&rmath::l2norm<rmath::vector2d>)>("recursive",
+                                                                                v,
+                                                                                rmath::l2norm);
     size_t old = v.size();
 #pragma omp critical
     {

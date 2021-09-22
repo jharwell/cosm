@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <memory>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/ds/metrics/grid2D_metrics_collector.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -47,7 +47,7 @@ NS_START(cosm, spatial, metrics);
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class dist2D_pos_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector {
+class dist2D_pos_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
 
  public:
   /**

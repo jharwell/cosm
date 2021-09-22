@@ -40,7 +40,7 @@ NS_START(cosm, pal);
 cpal::embodied_block_varianto
 embodied_block_creator::operator()(const crepr::cube_block3D* block) const {
   auto embodied = std::make_unique<embodied_cube_block>(block->id(),
-                                                        block->rdim3D(),
+                                                        block->rdims3D(),
                                                         const_cast<const cpal::argos_sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
                                                         nullptr);
   return {std::move(embodied)};
@@ -49,7 +49,7 @@ embodied_block_creator::operator()(const crepr::cube_block3D* block) const {
 cpal::embodied_block_varianto
 embodied_block_creator::operator()(const crepr::ramp_block3D* block) const {
   auto embodied = std::make_unique<embodied_ramp_block>(block->id(),
-                                                        block->rdim3D(),
+                                                        block->rdims3D(),
                                                         const_cast<const cpal::argos_sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
                                                         nullptr);
   return {std::move(embodied)};

@@ -55,7 +55,8 @@ void argos_sm_adaptor::arena_map_create(
 } /* arena_map_create() */
 
 void argos_sm_adaptor::arena_map_init(
-    const cvconfig::visualization_config* vconfig) {
+    const cvconfig::visualization_config* vconfig,
+    const crepr::config::nests_config* nconfig) {
   /*
    * If null, visualization has been disabled.
    */
@@ -65,7 +66,7 @@ void argos_sm_adaptor::arena_map_init(
     } /* for(&block..) */
   }
 
-  if (!m_arena_map->initialize(this)) {
+  if (!m_arena_map->initialize(this, nconfig)) {
     ER_ERR("Could not initialize arena map");
     std::exit(EXIT_FAILURE);
   }
@@ -92,6 +93,17 @@ argos::CColor argos_sm_adaptor::GetFloorColor(const argos::CVector2& pos) {
     return argos::CColor::WHITE;
   }
 } /* GetFloorColor() */
+
+/*******************************************************************************
+ * ARGoS Hooks
+ ******************************************************************************/
+void argos_sm_adaptor::init(ticpp::Element&) {
+  m_floor = &GetSpace().GetFloorEntity();
+} /* Init() */
+
+void argos_sm_adaptor::pre_step(void) {
+  timestep(rtypes::timestep(GetSpace().GetSimulationClock()));
+} /* pre_step() */
 
 /*******************************************************************************
  * Template Instantiations

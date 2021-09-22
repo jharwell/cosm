@@ -65,6 +65,9 @@ class cell2D;
 } /* namespace cosm::ds */
 namespace cosm::repr {
 class nest;
+namespace config {
+struct nests_config;
+} /* namespace config */
 } /* namespace cosm::repr */
 
 namespace cosm::foraging::block_dist {
@@ -133,6 +136,8 @@ class base_arena_map : public rer::client<base_arena_map>,
   RCPPSW_DECORATE_DECLDEF(ydsize, const);
   RCPPSW_DECORATE_DECLDEF(xrsize, const);
   RCPPSW_DECORATE_DECLDEF(yrsize, const);
+  RCPPSW_DECORATE_DECLDEF(rdims2D, const);
+  RCPPSW_DECORATE_DECLDEF(ddims2D, const);
 
   rtypes::discretize_ratio grid_resolution(void) const {
     return decoratee().resolution();
@@ -279,11 +284,16 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \brief Perform deferred initialization. This is not part the constructor so
    * that it can be verified via return code. Currently it does the following:
    *
-   * - Initializes the block distributor and distributes all blocks
+   * - Initializes the block distributor and distributes all blocks.
    * - Initializes nest lights
    * - Calculates block minimal bounding box
+   * - (Possibly) initializes additional nests.
+   *
+   * \param sm The swarm manager.
+   * \param nests Additional nests to initialize (can be NULL).
    */
-  virtual bool initialize(cpal::argos_sm_adaptor* sm);
+  virtual bool initialize(cpal::argos_sm_adaptor* sm,
+                          const crepr::config::nests_config* nests);
 
   std::shared_mutex* grid_mtx(void) { return decoratee().mtx(); }
 
@@ -315,7 +325,9 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   virtual cds::const_spatial_entity_vector
   initial_dist_precalc(const crepr::base_block3D*) const { return {}; };
-  bool initialize_shared(cpal::argos_sm_adaptor* sm);
+  bool initialize_shared(cpal::argos_sm_adaptor* sm,
+                         const crepr::config::nests_config* nests);
+
   /**
    * \brief Distribute all blocks in the arena. Resets arena state. Called as
    * part of \ref initialize().
@@ -334,7 +346,21 @@ class base_arena_map : public rer::client<base_arena_map>,
     size_t fail_count;
   };
 
+  /**
+   * \brief Perform private initialization for this class which is not shared
+   * with derived classes. Currently:
+   *
+   * - Initialize block distributor and distribute all blocks.
+   */
   bool initialize_private(void);
+
+  /**
+   * \brief Initialize the nests in \p nests. If the set of nests to initialize
+   * is empty, no action is performed.
+   */
+  void initialize_nests(const crepr::config::nests_config* nests,
+                        pal::argos_sm_adaptor* sm,
+                        const rtypes::discretize_ratio& resolution);
 
   /* clang-format off */
   mutable std::shared_mutex              m_block_mtx{};
@@ -355,13 +381,13 @@ class base_arena_map : public rer::client<base_arena_map>,
    * and try to re-distribute it each time another block is distributed, in the
    * case arena conditions now are more favorable.
    */
-  std::list<pending_dist_type>      m_pending_dists{};
-  std::unique_ptr<cfbd::dispatcher> m_block_dispatcher;
-  cfbd::redist_governor             m_redist_governor;
-  cforaging::block_motion_handler   m_bm_handler;
-  std::unique_ptr<nest_map_type>    m_nests;
-  std::unique_ptr<cads::loctree>    m_bloctree;
-  std::unique_ptr<cads::loctree>    m_nloctree;
+  std::list<pending_dist_type>           m_pending_dists{};
+  std::unique_ptr<cfbd::dispatcher>      m_block_dispatcher;
+  cfbd::redist_governor                  m_redist_governor;
+  cforaging::block_motion_handler        m_bm_handler;
+  mutable std::unique_ptr<nest_map_type>         m_nests;
+  std::unique_ptr<cads::loctree>         m_bloctree;
+  std::unique_ptr<cads::loctree>         m_nloctree;
   /* clang-format on */
 
  public:

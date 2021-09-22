@@ -40,7 +40,7 @@ void loctree::do_update(const TEntity* ent) {
   remove(ent);
   decoratee().insert(ent->id(),
                      rds::make_rtree_box(ent->ranchor2D(),
-                                         ent->ranchor2D() + ent->rdim2D()));
+                                         ent->ranchor2D() + ent->rdims2D()));
 } /* do_update() */
 
 size_t loctree::remove(const crepr::base_entity* ent) {

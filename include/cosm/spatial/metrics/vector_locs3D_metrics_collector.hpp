@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <string>
 
-#include "rcppsw/metrics/spatial/grid3D_metrics_collector.hpp"
+#include "rcppsw/ds/metrics/grid3D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -49,7 +49,7 @@ NS_START(cosm, spatial, metrics);
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class vector_locs3D_metrics_collector final : public rmetrics::spatial::grid3D_metrics_collector {
+class vector_locs3D_metrics_collector final : public rdmetrics::grid3D_metrics_collector {
  public:
  /**
    * \param sink The metrics sink to use.

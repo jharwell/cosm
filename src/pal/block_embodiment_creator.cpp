@@ -48,9 +48,9 @@ block_embodiment_creator::operator()(const cpal::embodied_cube_block* block) con
                                                   block->ranchor3D().z()),
                                   argos::CQuaternion(),
                                   false,
-                                  argos::CVector3(block->rdim3D().x(),
-                                                  block->rdim3D().y(),
-                                                  block->rdim3D().z()));
+                                  argos::CVector3(block->rdims3D().x(),
+                                                  block->rdims3D().y(),
+                                                  block->rdims3D().z()));
   m_sm->AddEntity(*ret->box);
   return {std::move(ret)};
 }
@@ -93,8 +93,8 @@ block_embodiment_creator::ramp_bottom(const cpal::embodied_ramp_block* block,
                                                block->ranchor3D().z()),
                                orientation,
                                false,
-                               argos::CVector3(block->rdim3D().x(),
-                                               block->rdim3D().y(),
+                               argos::CVector3(block->rdims3D().x(),
+                                               block->rdims3D().y(),
                                                kRAMP_BOX_THICKNESS));
 } /* ramp_bottom() */
 
@@ -108,10 +108,10 @@ block_embodiment_creator::ramp_back(const cpal::embodied_ramp_block* block,
   argos::CRadians y_rot = argos::CRadians::ZERO;
 
   if (rmath::radians::kZERO == z_rotation) {
-    x_factor = block->rdim3D().x() / 2.0;
+    x_factor = block->rdims3D().x() / 2.0;
     y_rot = argos::CRadians::PI_OVER_TWO;
   } else {
-    y_factor = block->rdim3D().x() / 2.0;
+    y_factor = block->rdims3D().x() / 2.0;
     x_rot = argos::CRadians::PI_OVER_TWO;
   }
   argos::CVector3 loc(block->ranchor3D().x() - x_factor,
@@ -125,8 +125,8 @@ block_embodiment_creator::ramp_back(const cpal::embodied_ramp_block* block,
                                loc,
                                orientation,
                                false,
-                               argos::CVector3(block->rdim3D().x(),
-                                               block->rdim3D().y(),
+                               argos::CVector3(block->rdims3D().x(),
+                                               block->rdims3D().y(),
                                                kRAMP_BOX_THICKNESS));
 } /* ramp_back() */
 
@@ -134,9 +134,9 @@ argos::CBoxEntity*
 block_embodiment_creator::ramp_top(const cpal::embodied_ramp_block* block,
                                  const rmath::radians& z_rotation,
                                  const rtypes::type_uuid& parent_id) const {
-  double angle = std::atan2(block->rdim3D().y(), block->rdim3D().x());
-  double halfway_height = std::tan(angle) * block->rdim3D().x() / 2.0;
-  double length = block->rdim3D().x() / std::cos(angle);
+  double angle = std::atan2(block->rdims3D().y(), block->rdims3D().x());
+  double halfway_height = std::tan(angle) * block->rdims3D().x() / 2.0;
+  double length = block->rdims3D().x() / std::cos(angle);
 
   argos::CQuaternion orientation;
   argos::CRadians x_rot = argos::CRadians::ZERO;
@@ -157,7 +157,7 @@ block_embodiment_creator::ramp_top(const cpal::embodied_ramp_block* block,
                       block->ranchor3D().z() + halfway_height),
       orientation,
       false,
-      argos::CVector3(length, block->rdim3D().y(), kRAMP_BOX_THICKNESS));
+      argos::CVector3(length, block->rdims3D().y(), kRAMP_BOX_THICKNESS));
 } /* ramp_top() */
 
 NS_END(pal, cosm);

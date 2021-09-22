@@ -27,7 +27,7 @@
 #include <string>
 #include <list>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/ds/metrics/grid2D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -48,7 +48,7 @@ NS_START(cosm, arena, metrics, caches);
  * are not supported.
  */
 class location_metrics_collector final :
-    public rmetrics::spatial::grid2D_metrics_collector {
+    public rdmetrics::grid2D_metrics_collector {
  public:
   /**
    * \param sink The metrics sink to use.

@@ -49,8 +49,6 @@ NS_START(cosm, repr, config);
 struct nest_config final : public rconfig::base_config {
   rmath::vector2d center{};
   rmath::vector2d dims{};
-  rtypes::spatial_dist light_height{0};
-  double light_intensity{-1};
 };
 
 NS_END(config, repr, cosm);

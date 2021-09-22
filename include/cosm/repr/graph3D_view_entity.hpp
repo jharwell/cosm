@@ -70,60 +70,14 @@ class graph3D_view_entity : public crepr::entity3D,
   graph3D_view_entity(const rtypes::type_uuid& c_id,
                       graph_view_type&& the_view,
                       const rtypes::spatial_dist& c_unit)
-      : entity3D(c_id),
+      : entity3D(c_id,
+                 rmath::zvec2dvec(the_view.dims3D(), c_unit.v()),
+                 rmath::zvec2dvec(the_view.center3D(), c_unit.v()),
+                 c_unit),
         graph_view_entity_type(std::move(the_view), c_unit),
         ER_CLIENT_INIT("cosm.repr.graph3D_view_entity") {}
 
   ~graph3D_view_entity(void) override = default;
-
-
-  rmath::vector3d ranchor3D(void) const override {
-    return rmath::zvec2dvec(danchor3D(), unit().v());
-  }
-  rmath::vector3d rcenter3D(void) const override {
-    return ranchor3D() + rmath::vector3d(xrsize().v(),
-                                         yrsize().v(),
-                                         zrsize().v()) / 2.0;
-  }
-
-  vertex_coord_type danchor3D(void) const override final {
-    return view().ll();
-  }
-  vertex_coord_type dcenter3D(void) const override final {
-    return view().center();
-  }
-
-
-  rmath::ranged xrspan(void) const override {
-    return entity3D::xrspan(ranchor3D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override {
-    return entity3D::yrspan(ranchor3D(), yrsize());
-  }
-  rmath::ranged zrspan(void) const override {
-    return entity3D::zrspan(ranchor3D(), yrsize());
-  }
-
-  rmath::rangez xdspan(void) const override {
-    return entity3D::xdspan(danchor3D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override {
-    return entity3D::ydspan(danchor3D(), ydsize());
-  }
-  rmath::rangez zdspan(void) const override {
-    return entity3D::zdspan(danchor3D(), zdsize());
-  }
-
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(xdsize() * unit().v());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(ydsize() * unit().v());
-  }
-  rtypes::spatial_dist zrsize(void) const override final {
-    return rtypes::spatial_dist(zdsize() * unit().v());
-  }
-
 
   const vertex_property_type* access(const vertex_coord_type& c) const override {
     ER_ASSERT(c.x() < xdsize(),
@@ -151,10 +105,6 @@ class graph3D_view_entity : public crepr::entity3D,
   bool contains(const vertex_coord_type& c) const override {
     return boost::none != view().find(c);
   }
-
-  size_t xdsize(void) const override final { return view().xsize(); }
-  size_t ydsize(void) const override final { return view().ysize(); }
-  size_t zdsize(void) const override final { return view().zsize(); }
 
  protected:
   using graph_view_entity_type::view;

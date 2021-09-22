@@ -71,45 +71,14 @@ class grid2D_view_entity : public crepr::entity2D,
   grid2D_view_entity(const rtypes::type_uuid& id,
                      const grid_view_type& the_view,
                      const rtypes::discretize_ratio& res)
-      : entity2D(id),
+      : entity2D(id,
+                 rmath::vector3z({the_view.shape()[0], the_view.shape()[1]}, 0),
+                 rmath::vector3z(the_view.origin()->loc(), 0),
+                 rtypes::spatial_dist(res.v())),
       base_grid_view_entity_type(the_view, res),
       ER_CLIENT_INIT("cosm.repr.grid2D_view_entity") {}
 
   ~grid2D_view_entity(void) override = default;
-
-  rmath::vector2d ranchor2D(void) const override {
-    return rmath::zvec2dvec(danchor2D(), resolution().v());
-  }
-  rmath::vector2d rcenter2D(void) const override {
-    return ranchor2D() + rmath::vector2d(xrsize().v(), yrsize().v()) / 2.0;
-  }
-
-  rmath::vector2z danchor2D(void) const override final {
-    return view().origin()->loc();
-  }
-  rmath::vector2z dcenter2D(void) const override final {
-    return danchor2D() + rmath::vector2z(xdsize(), ydsize()) / 2;
-  }
-
-  rmath::ranged xrspan(void) const override {
-    return entity2D::xrspan(ranchor2D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override {
-    return entity2D::yrspan(ranchor2D(), yrsize());
-  }
-  rmath::rangez xdspan(void) const override {
-    return entity2D::xdspan(danchor2D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override {
-    return entity2D::ydspan(danchor2D(), ydsize());
-  }
-
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(xdsize() * resolution().v());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(ydsize() * resolution().v());
-  }
 
   /**
    * \brief Get the cell associated with a particular grid location within the
@@ -138,9 +107,6 @@ class grid2D_view_entity : public crepr::entity2D,
   bool contains_rel(const coord_type& cell) const override {
     return (cell.x() < xdsize()) && (cell.y() < ydsize());
   }
-
-  size_t xdsize(void) const override final { return view().shape()[0]; }
-  size_t ydsize(void) const override final { return view().shape()[1]; }
 
  protected:
   using base_grid_view_entity_type::view;

@@ -53,19 +53,19 @@ class entity2D : public spatial_entity2D {
   /**
    * \brief Return the anchor (LL corner) of the object in real coordinates.
    */
-  virtual rmath::vector2d ranchor2D(void) const = 0;
+  rmath::vector2d ranchor2D(void) const { return rbb().anchor3D().to_2D(); }
 
   /**
    * \brief Return the 2D center of the object in real coordinates. This ALWAYS
    * exists, even if the \ref dcenter2D() does not.
    */
-  virtual rmath::vector2d rcenter2D(void) const = 0;
+  rmath::vector2d rcenter2D(void) const { return rbb().center3D().to_2D(); }
 
   /**
    * \brief Return the anchor (LL corner) of the object in discrete
    * coordinates. This ALWAYS exists, evenif if \ref center2D() does not.
    */
-  virtual rmath::vector2z danchor2D(void) const = 0;
+  rmath::vector2z danchor2D(void) const { return dbb().anchor3D().to_2D(); }
 
   /*
    * \brief Return the center of the object in discrete coordinates,
@@ -75,7 +75,10 @@ class entity2D : public spatial_entity2D {
    * If this function is called on an entity which has no center, an assertion
    * should be triggered.
    */
-  virtual rmath::vector2z dcenter2D(void) const = 0;
+  rmath::vector2z dcenter2D(void) const { return dbb().center3D().to_2D(); }
+
+  rmath::vector2d rdims2D(void) const { return rbb().dims3D().to_2D(); }
+  rmath::vector2z ddims2D(void) const { return dbb().dims3D().to_2D(); }
 
   entity_dimensionality dimensionality(void) const override final {
     return entity_dimensionality::ek2D;

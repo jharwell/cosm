@@ -55,7 +55,7 @@ class cube_block3D : public base_block3D {
                      crepr::block_type::ekCUBE) {}
 
   std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdim3D(), arena_res());
+    auto tmp = std::make_unique<cube_block3D>(id(), rdims3D(), arena_res());
     this->base_block3D::clone_impl(tmp.get());
     return tmp;
   } /* clone() */

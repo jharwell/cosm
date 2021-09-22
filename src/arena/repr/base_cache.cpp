@@ -43,8 +43,8 @@ base_cache::base_cache(const params& p)
           rtypes::constants::kNoUUID == p.id ? rtypes::type_uuid(m_next_id++)
                                              : p.id,
           rmath::vector2d(p.dimension.v(), p.dimension.v()),
-          p.resolution,
-          p.center),
+          p.center - rmath::vector2d(p.dimension.v(), p.dimension.v()) / 2.0,
+          p.resolution),
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
       mc_resolution(p.resolution),

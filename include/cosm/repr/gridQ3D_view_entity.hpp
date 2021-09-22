@@ -63,60 +63,13 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
                       size_t zdsize,
                       const rtypes::discretize_ratio& res)
       : ER_CLIENT_INIT("cosm.repr.gridQ3D_view_entity"),
-        entity3D(id),
-        grid_view_entity_type(the_view, res),
-        mc_zdsize(zdsize) {}
+        entity3D(id,
+                 rmath::vector3z({the_view.shape()[0], the_view.shape()[1]}, zdsize),
+                 rmath::vector3z(the_view.origin()->loc(), 0),
+                 rtypes::spatial_dist(res.v())),
+        grid_view_entity_type(the_view, res) {}
 
   ~gridQ3D_view_entity(void) override = default;
-
-  rmath::vector3d ranchor3D(void) const override {
-    return rmath::zvec2dvec(danchor3D(), resolution().v());
-  }
-  rmath::vector3d rcenter3D(void) const override {
-    return ranchor3D() + rmath::vector3d(xrsize().v(),
-                                         yrsize().v(),
-                                         zrsize().v()) / 2.0;
-  }
-
-  rmath::vector3z danchor3D(void) const override final {
-    return rmath::vector3z(view().origin()->loc());
-  }
-  rmath::vector3z dcenter3D(void) const override final {
-    return danchor3D() + rmath::vector3z(xdsize(),
-                                         ydsize(),
-                                         zdsize()) / 2;
-  }
-
-
-  rmath::ranged xrspan(void) const override {
-    return entity3D::xrspan(ranchor3D(), xrsize());
-  }
-  rmath::ranged yrspan(void) const override {
-    return entity3D::yrspan(ranchor3D(), yrsize());
-  }
-  rmath::ranged zrspan(void) const override {
-    return entity3D::zrspan(ranchor3D(), zrsize());
-  }
-
-  rmath::rangez xdspan(void) const override {
-    return entity3D::xdspan(danchor3D(), xdsize());
-  }
-  rmath::rangez ydspan(void) const override {
-    return entity3D::ydspan(danchor3D(), ydsize());
-  }
-  rmath::rangez zdspan(void) const override {
-    return entity3D::zdspan(danchor3D(), zdsize());
-  }
-
-  rtypes::spatial_dist xrsize(void) const override final {
-    return rtypes::spatial_dist(xdsize() * resolution().v());
-  }
-  rtypes::spatial_dist yrsize(void) const override final {
-    return rtypes::spatial_dist(ydsize() * resolution().v());
-  }
-  rtypes::spatial_dist zrsize(void) const override final {
-    return rtypes::spatial_dist(zdsize() * resolution().v());
-  }
 
   const cell_type& access(size_t i, size_t j) const {
     ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
@@ -136,17 +89,8 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
     return (cell.x() < xdsize()) && (cell.y() < ydsize());
   }
 
-  size_t xdsize(void) const override final { return view().shape()[0]; }
-  size_t ydsize(void) const override final { return view().shape()[1]; }
-  size_t zdsize(void) const override final { return mc_zdsize; }
-
  protected:
   using grid_view_entity_type::view;
-
- private:
-  /* clang-format off */
-  const size_t mc_zdsize;
-  /* clang-format on */
 };
 
 NS_END(repr, cosm);

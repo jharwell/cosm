@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <memory>
 
-#include "rcppsw/metrics/spatial/grid2D_metrics_collector.hpp"
+#include "rcppsw/ds/metrics/grid2D_metrics_collector.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -48,7 +48,7 @@ NS_START(cosm, spatial, metrics);
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class interference_locs2D_metrics_collector final : public rmetrics::spatial::grid2D_metrics_collector {
+class interference_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
  public:
   /**
    * \param sink The metrics sink to use.
