@@ -36,10 +36,10 @@ class location_metrics_collector;
  * Class Definitions
  ******************************************************************************/
 class location_metrics_csv_sink final :
-    public rmspatial::grid2D_metrics_csv_sink<rmetrics::spatial::cell_avg> {
+    public rdmetrics::grid2D_metrics_csv_sink<rdmetrics::cell_avg> {
  public:
   using collector_type = location_metrics_collector;
-  using rmspatial::grid2D_metrics_csv_sink<rmetrics::spatial::cell_avg>::grid2D_metrics_csv_sink;
+  using rdmetrics::grid2D_metrics_csv_sink<rdmetrics::cell_avg>::grid2D_metrics_csv_sink;
 };
 
 NS_END(metrics, caches, arena, cosm);

@@ -82,7 +82,8 @@ class graph_los_update final
               controller->los_dim(),
               mc_unit_dim.v());
 
-    auto max_dist = rtypes::manhattan_dist(static_cast<int>(controller->los_dim() / mc_unit_dim.v()));
+    auto max_dist = rtypes::manhattan_dist(static_cast<int>(
+        std::round(controller->los_dim() / mc_unit_dim.v())));
     graph_los_set(controller, center, max_dist);
   }
 

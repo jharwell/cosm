@@ -59,7 +59,7 @@ void temporal_penalty_handler::penalty_abort(
   }
   unlock_wr(&m_list_mtx);
 
-  ER_INFO("Entity%d", controller.entity_id().v());
+  ER_INFO("Abort penalty serving for entity%d", controller.entity_id().v());
   ER_ASSERT(!is_serving_penalty(controller, false),
             "Robot still serving penalty after abort?!");
 } /* penalty_abort() */
