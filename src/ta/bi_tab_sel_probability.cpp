@@ -89,7 +89,7 @@ double bi_tab_sel_probability::calc_harwell2019(const ds::bi_tab& tab1,
     ratio2 = std::abs(((t2r_est - (t2c1_est + t2c2_est)) / t2r_est).v());
   }
 
-  /* Not enough on one or both TAB's children--explore! */
+  /* Not enough info on one or both TAB's children--explore! */
   if (ratio1 <= 0 || ratio2 <= 0) {
     return 0.5;
   }

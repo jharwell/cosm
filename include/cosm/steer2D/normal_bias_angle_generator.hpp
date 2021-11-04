@@ -1,7 +1,7 @@
 /**
- * \file wander_force.hpp
+ * \file normal_bias_angle_generator.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,20 +18,13 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_
+#ifndef INCLUDE_COSM_STEER2D_NORMAL_BIAS_ANGLE_GENERATOR_HPP_
+#define INCLUDE_COSM_STEER2D_NORMAL_BIAS_ANGLE_GENERATOR_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
-#include "rcppsw/math/radians.hpp"
-#include "rcppsw/math/rng.hpp"
-#include "rcppsw/rcppsw.hpp"
-
-#include "cosm/steer2D/boid.hpp"
-#include "cosm/steer2D/config/wander_force_config.hpp"
+#include "cosm/steer2D/config/bias_angle_config.hpp"
 #include "cosm/steer2D/base_bias_angle_generator.hpp"
 
 /*******************************************************************************
@@ -42,32 +35,28 @@ NS_START(cosm, steer2D);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
- * \class wander_force
+ * \class normal_bias_angle_generator
  * \ingroup steer2D
  *
- * \brief A small random perturbation that can be added to a robot's current
- * velocity in order to make it move randomly throughout the environment. This
- * can be thought of as a directed random walk.
+ * \brief Generates bias angles for the \ref wander_force drawn from a normal
+ * distribution.
  */
-class wander_force {
+class normal_bias_angle_generator : public csteer2D::base_bias_angle_generator {
  public:
-  explicit wander_force(const config::wander_force_config* config);
+  explicit normal_bias_angle_generator(const config::bias_angle_config* config):
+      base_bias_angle_generator(config) {}
 
-  rmath::vector2d operator()(const boid& entity, rmath::rng* rng);
+  /* Not move/copy constructable/assignable by default */
+  normal_bias_angle_generator(const normal_bias_angle_generator&) = delete;
+  normal_bias_angle_generator& operator=(const normal_bias_angle_generator&) = delete;
+  normal_bias_angle_generator(normal_bias_angle_generator&&) = delete;
+  normal_bias_angle_generator& operator=(normal_bias_angle_generator&&) = delete;
 
- private:
-  /* clang-format off */
-  const config::wander_force_config          mc_config;
-
-  int                                        m_count{-1};
-  rmath::radians                             m_last_angle{0};
-  rmath::radians                             m_angle{0};
-  std::unique_ptr<base_bias_angle_generator> m_bias_generator;
-  /* clang-format on */
+  rmath::radians operator()(const rmath::radians& last_heading,
+                            rmath::rng* rng) override;
 };
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_ */
+#endif /* INCLUDE_COSM_STEER2D_NORMAL_BIAS_ANGLE_GENERATOR_HPP_ */

@@ -40,8 +40,9 @@ void wander_force_parser::parse(const ticpp::Element& node) {
     XML_PARSE_ATTR(wnode, m_config, max);
     XML_PARSE_ATTR(wnode, m_config, circle_distance);
     XML_PARSE_ATTR(wnode, m_config, circle_radius);
-    XML_PARSE_ATTR(wnode, m_config, max_angle_delta);
-    XML_PARSE_ATTR(wnode, m_config, normal_dist);
+    m_bias.parse(wnode);
+
+    m_config->bias_angle = *m_bias.config_get<bias_angle_config>();
   }
 } /* parse() */
 
@@ -49,9 +50,9 @@ bool wander_force_parser::validate(void) const {
   if (is_parsed()) {
     RCPPSW_CHECK(m_config->circle_distance > 0.0);
     RCPPSW_CHECK(m_config->circle_radius > 0.0);
-    RCPPSW_CHECK(m_config->max_angle_delta < 360);
     RCPPSW_CHECK(m_config->interval > 0);
     RCPPSW_CHECK(m_config->max > 0);
+    RCPPSW_CHECK(m_bias.validate());
   }
   return true;
 

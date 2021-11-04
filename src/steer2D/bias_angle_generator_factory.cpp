@@ -1,7 +1,7 @@
 /**
- * \file diff_drive_parser.cpp
+ * \file bias_angle_generator_factory.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,34 +21,25 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/kin2D/config/xml/diff_drive_parser.hpp"
+#include "cosm/steer2D/bias_angle_generator_factory.hpp"
 
-#include "rcppsw/math/angles.hpp"
-#include "rcppsw/math/degrees.hpp"
+#include "cosm/steer2D/uniform_bias_angle_generator.hpp"
+#include "cosm/steer2D/normal_bias_angle_generator.hpp"
+#include "cosm/steer2D/custom_bias_angle_generator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config, xml);
+NS_START(cosm, steer2D);
 
 /*******************************************************************************
- * Member Functions
+ * Constructors/Destructors
  ******************************************************************************/
-void diff_drive_parser::parse(const ticpp::Element& node) {
-  ticpp::Element wnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+bias_angle_generator_factory::bias_angle_generator_factory(void) {
+  register_type<uniform_bias_angle_generator>(kUniform);
+  register_type<normal_bias_angle_generator>(kNormal);
+  register_type<custom_bias_angle_generator>(kCustom);
 
-  XML_PARSE_ATTR(wnode, m_config, max_speed);
-  XML_PARSE_ATTR(wnode, m_config, soft_turn_max);
-} /* parse() */
+}
 
-bool diff_drive_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->soft_turn_max.v() > 0.0);
-  RCPPSW_CHECK(m_config->max_speed > 0.0);
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(xml, config, kin2D, cosm);
+NS_END(steer2D, cosm);

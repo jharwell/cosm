@@ -1,7 +1,7 @@
 /**
- * \file diff_drive_parser.cpp
+ * \file uniform_bias_angle_generator.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,34 +21,24 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/kin2D/config/xml/diff_drive_parser.hpp"
-
-#include "rcppsw/math/angles.hpp"
-#include "rcppsw/math/degrees.hpp"
+#include "cosm/steer2D/uniform_bias_angle_generator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config, xml);
+NS_START(cosm, steer2D);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive_parser::parse(const ticpp::Element& node) {
-  ticpp::Element wnode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+rmath::radians uniform_bias_angle_generator::operator()(
+    const rmath::radians& last_heading,
+    rmath::rng* rng) {
+  auto bias = -config()->max_delta +
+              2 * config()->max_delta * rng->uniform(0.0, 1.0);
+  return rmath::radians(std::fmod((last_heading + bias).v(),
+                                  config()->max_delta.v()));
+  return bias;
+} /* operator()() */
 
-  XML_PARSE_ATTR(wnode, m_config, max_speed);
-  XML_PARSE_ATTR(wnode, m_config, soft_turn_max);
-} /* parse() */
-
-bool diff_drive_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->soft_turn_max.v() > 0.0);
-  RCPPSW_CHECK(m_config->max_speed > 0.0);
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(xml, config, kin2D, cosm);
+NS_END(steer2D, cosm);

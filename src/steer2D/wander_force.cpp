@@ -4,7 +4,7 @@
  * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
-nn *
+ *
  * COSM is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
@@ -27,6 +27,7 @@ nn *
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/steer2D/config/wander_force_config.hpp"
+#include "cosm/steer2D/bias_angle_generator_factory.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -37,12 +38,9 @@ NS_START(cosm, steer2D);
  * Constructors/Destructor
  ******************************************************************************/
 wander_force::wander_force(const config::wander_force_config* const config)
-    : mc_use_normal(config->normal_dist),
-      mc_max(config->max),
-      mc_circle_distance(config->circle_distance),
-      mc_circle_radius(config->circle_radius),
-      mc_max_angle_delta(config->max_angle_delta),
-      m_interval(config->interval) {}
+    : mc_config(*config),
+      m_bias_generator(bias_angle_generator_factory().create(config->bias_angle.src,
+                                                             &config->bias_angle)) {}
 
 /*******************************************************************************
  * Member Functions
@@ -54,7 +52,7 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
    * time if the perturbations are applied every timestep.
    */
   ++m_count;
-  if (m_count % m_interval != 0) {
+  if (m_count % mc_config.interval != 0) {
     return { 0, 0 };
   }
 
@@ -67,39 +65,30 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
   }
 
   rmath::vector2d circle_center =
-      (velocity).normalize().scale(mc_circle_distance);
-
-  /* calculate displacement force (the actual wandering) */
-  rmath::vector2d displacement(
-      mc_circle_radius * std::cos((m_angle + velocity.angle()).v()),
-      mc_circle_radius * std::sin((m_angle + velocity.angle()).v()));
+      (velocity).normalize().scale(mc_config.circle_distance);
 
   /*
-   * Update wander angle so it won't have the same value next time with a
-   * random pertubation in the range [-max delta, max_delta].
+   * Calculate displacement force (the actual wandering) using the wander angle
+   * from the PREVIOUS timestep.
    */
-  double val;
-  if (mc_use_normal) {
-    /*
-     * Both min and max are 3 std deviations away from the mean of 0, so it is
-     * very unlikely that we will get a value outside the max deviation. If we
-     * do, just shrink the max angle in the input parameters.
-     */
-    val = rng->gaussian(0, 2 * mc_max_angle_delta / 6.0);
-  } else {
-    val = -mc_max_angle_delta + 2 * mc_max_angle_delta * rng->uniform(0.0, 1.0);
-  }
-  rmath::degrees perturbation(
-      std::fmod(rmath::to_degrees(m_angle).v() + val, mc_max_angle_delta));
-  m_angle = rmath::to_radians(perturbation);
+  rmath::vector2d displacement(
+      mc_config.circle_radius * std::cos((m_angle + velocity.angle()).v()),
+      mc_config.circle_radius * std::sin((m_angle + velocity.angle()).v()));
+
+  /*
+   * Generate the new bias angle and store it so the next time we calculate it
+   * we have a reference point so we can compute the bias correctly under the
+   * maximum delta config parameter.
+   */
+  m_angle = m_bias_generator->operator()(m_angle, rng);
 
   /*
    * Wandering is a combination of the current velocity, projected outward a
    * certain distance, and a displacement calculated at that point.
    *
    * There can be discontinuous jumps from a small positive angle for the wander
-   * force to a large negative angle between timesteps and vice versa which play
-   * havoc with controller' ability to compensate.
+   * force to a large negative angle between timesteps and vice versa which
+   * wreak havoc with controller's ability to compensate.
    *
    * So, compute the angle indirectly using sine and cosine in order to account
    * for sign differences and ensure continuity.
@@ -109,14 +98,14 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
   double angle_diff = angle - circle_center.angle().v();
   angle_diff = std::atan2(std::sin(angle_diff), std::cos(angle_diff));
 
-  if (std::fabs(angle_diff - m_last_angle) > M_PI) {
+  if (std::fabs(angle_diff - m_last_angle.v()) > M_PI) {
     angle_diff -= std::copysign(2 * M_PI, angle_diff);
   }
-  m_last_angle = angle_diff;
+  m_last_angle = rmath::radians(angle_diff);
 
   rmath::vector2d wander((circle_center + displacement).length(),
                          rmath::radians(angle_diff));
-  return wander.normalize() * mc_max;
+  return wander.normalize() * mc_config.max;
 } /* operator()() */
 
 NS_END(steer2D, cosm);

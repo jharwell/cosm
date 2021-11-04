@@ -1,2 +1,5 @@
+sphinx
+docutils==0.16
+sphinx-rtd-theme
 breathe
 cmake

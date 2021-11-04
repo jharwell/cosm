@@ -1,10 +1,11 @@
+============================
 Controller XML Configuration
 ============================
 
 The following root XML tags are defined for all controller types:
 
 .. list-table::
-   :widths: 25,50,50
+   :widths: 25,50
    :header-rows: 1
 
    * - Root XML Tag
@@ -41,7 +42,7 @@ The following root XML tags are defined for all controller types:
 
 
 ``output``
-----------
+==========
 
 - Required by: All controllers.
 - Required child attributes if present: all.
@@ -67,7 +68,7 @@ XML configuration:
   simulation will get a unique output directory in the form YYYY-MM-DD:HH-MM.
 
 ``perception``
---------------
+==============
 
 - Required child attributes if present: [  ``type`` ].
 - Required child tags if present: none.
@@ -88,7 +89,7 @@ XML configuration:
 - ``type`` - The perception type to use.
 
 ``perception/rlos``
-^^^^^^^^^^^^^^^^^^^
+-------------------
 
 - Required child attributes if present: [  ``los_dim`` ].
 - Required child tags if present: none.
@@ -114,7 +115,7 @@ XML configuration:
 - ``grid2D`` - The dimensions of the arena (optional).
 
 ``perception/rlos/grid2D``
-""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Required child attributes if present: all.
 - Required child tags if present: none.
@@ -140,7 +141,7 @@ XML configuration:
   mandatory).
 
 ``task_executive``
-------------------
+==================
 
 - Required by: None. Used by all task based controllers with the default values
   shown below if it is omitted.
@@ -166,7 +167,7 @@ XML configuration:
   task. Estimate is updated on both abort and completion. Default if omitted: *false*.
 
 ``task_alloc``
---------------
+==============
 
 - Required by: None. Used by all task based controllers with the default values
   shown below if it is omitted.
@@ -248,7 +249,7 @@ XML configuration:
   probability.
 
 ``task_alloc/task_abort``
-^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------
 
 Parameters governing task abort calculations.
 
@@ -281,7 +282,7 @@ XML configuration:
    </task_alloc>
 
 ``task_alloc/task_exec_estimates``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 Parameters governing how/if task execution cost estimates (time costs) will be
 seeded and updated.
@@ -318,7 +319,7 @@ XML configuration:
   *true*. Valid values for ``<task_name>`` are project-specific.
 
 ``task_alloc/task_exec_estimates/ema``
-""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The exponential moving average (EMA) parameters for task execution estimate
 updating.
@@ -343,7 +344,7 @@ XML configuration:
   the true execution/interface time of a task. Must be < 1.0.
 
 ``task_alloc/epsilon_greedy``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 Parameters for the epsilon-greedy method described in :xref:`Auer2002`.
 
@@ -373,7 +374,7 @@ Parameters for the epsilon-greedy method described in :xref:`Auer2002`.
   - ``linear`` - Linearly bounded (more regret).
 
 ``task_alloc/ucb1``
-^^^^^^^^^^^^^^^^^^^
+-------------------
 
 Parameters for the UCB1 method described in :xref:`Auer2002`.
 
@@ -395,7 +396,7 @@ Parameters for the UCB1 method described in :xref:`Auer2002`.
   method. Must be between 0.0 and 1.0.
 
 ``task_alloc/stoch_nbhd1``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 Parameters for the stochastic task allocation neighborhood  method described in
 :xref:`Harwell2020a`.
@@ -440,7 +441,7 @@ XML configuration:
 
 
 ``task_alloc/stoch_nbhd1/task_partition``
-"""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Task partitioning parameters for the STOCH-NBHD1 method. Based on the work in
 :xref:`Pini2011`.
@@ -484,7 +485,7 @@ partitioning decision. Calculated once upon each task allocation, after the
 previous task is finished or aborted.
 
 ``task_alloc/stoch_nbhd1/subtask_sel``
-""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Task partitioning parameters for the STOCH-NBHD1 method. Based on the work in
 :xref:`Pini2011`, :xref:`Brutschy2014`.
@@ -519,7 +520,7 @@ XML configuration:
 subtask selection if partitioning is employed.
 
 ``task_alloc/stoch_nbhd1/tab_sel``
-""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters for Task Allocation Block (TAB) selection in recursive task
 decomposition graphs used in the STOCH-NBHD1 method described in
@@ -554,7 +555,7 @@ XML configuration:
 ``method`` tag that can be one of [ ``harwell2019`` ].
 
 ``sensing_subsystemQ3D``
-------------------------
+========================
 
 - Required by: All controllers.
 - Required child attributes if present: none.
@@ -577,7 +578,7 @@ XML configuration:
 
 
 ``sensing_subsystemQ3D/proximity_sensor``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------------
 
 Parameters for proximity sensor configuration.
 
@@ -606,7 +607,7 @@ Parameters for proximity sensor configuration.
   obstacle detection.
 
 ``sensing_subsystemQ3D/ground_sensor``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------
 
 Parameters for ground sensor configuration.
 
@@ -643,7 +644,7 @@ required:
   specified range in order for a detection to be triggered.
 
 ``actuation_subsystem2D``
--------------------------
+=========================
 
 - Required by: All controllers.
 - Required child attributes if present: none.
@@ -666,7 +667,7 @@ XML configuration:
 
 
 ``actuation_subsystem2D/force_calculator``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------------
 
 Parameters for the virtual forces used to control robot movement, based on the
 original paper :xref:`Arkin1987` and the tutorial in :xref:`SteeringTutorial`.
@@ -706,7 +707,7 @@ XML configuration:
 
 
 ``actuation_subsystem2D/force_calculator/avoidance_force``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The force which repels robots from other nearby robots and obstacles (robots do
 not distinguish between these two cases).
@@ -732,7 +733,7 @@ not distinguish between these two cases).
 - ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/arrival_force``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The force which attracts robots towards a goal and gets them to it.
 
@@ -761,14 +762,14 @@ The force which attracts robots towards a goal and gets them to it.
 - ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/wander_force``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The force which causes robots to wander randomly in the environment in a
 correlated random walk.
 
 - Required by: none.
 - Required child attributes if present: all.
-- Required child tags if present: none.
+- Required child tags if present: [ ``bias_angle`` ].
 - Optional child attributes: none.
 - Optional child tags: none.
 
@@ -778,10 +779,12 @@ correlated random walk.
       ...
       <wander_force circle_distance="FLOAT"
                     circle_radius_min="FLOAT"
-                    max_angle_delta="FLOAT"
                     max="FLOAT"
-                    interval="INTEGER"
-                    normal_dist="false"/>
+                    interval="INTEGER">
+         <bias_angle>
+         ...
+         </bias_angle>
+      </wander_force>
       ...
     </force_calculator>
 
@@ -790,18 +793,51 @@ correlated random walk.
 - ``circle_radius`` - Displacement (i.e. wander) circle radius; placed at
   ``circle_distance`` from the robot.
 
-- ``max_angle_delta`` -  +/- Maximum amount of heading change for the wander angle
-  (a random value is chosen in this range). Specified in degrees.
-
 - ``max`` - Max value for the force, in m/s.
 
 - ``interval`` - How many timesteps to skip between applying the force.
 
-- ``normal_dist`` - Should the deviations be drawn from a uniform distribution
-  (default), or from a normal distribution?
+``actuation_subsystem2D/force_calculator/wander_force/bias_angle``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Configuration for how the wander/bias angle should be calculated if the wander
+force is employed.
+
+- Required by: none.
+- Required child attributes if present: [ ``src`` ].
+- Required child tags if present: none.
+- Optional child attributes: none.
+- Optional child tags: none.
+
+.. code-block:: XML
+
+    <wander_force>
+      ...
+      <bias_angle src="normal|uniform|custom"
+                    max_delta="FLOAT"
+                    angles="FLOAT,FLOAT,FLOAT,..."/>
+      ...
+    </wander_force>
+
+- ``src`` - The bias angle distribution source.
+
+  - ``normal`` - Use a normal distribution, truncated at 3 std deviations
+    from 0 and wrapped into  [-``max_delta``, ``max_delta`` ].
+
+  - ``uniform`` - Use a uniform distribution [-``max_delta``, ``max_delta`` ].
+
+  - ``custom`` - Specify a custom distribution via a list of specific angles
+    which will be drawn from uniformly.
+
+- ``max_delta`` -  +/- Maximum amount of heading change for the wander angle
+  (a random value is chosen in this range). Specified in radians. Only affects
+  ``normal`` and ``uniform`` sources.
+
+- ``angles`` - A comma separated list of angles specified in radians defining
+  the custom bias angle distribution to draw from.
 
 ``actuation_subsystem2D/force_calculator/phototaxis_force``
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The force which attracts/repels robots towards/away from light sources.
 
@@ -822,7 +858,7 @@ The force which attracts/repels robots towards/away from light sources.
 - ``max`` - Max value for the force, in m/s.
 
 ``actuation_subsystem2D/force_calculator/path_following_force``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The force which guides robots along a specified path.
 
@@ -850,7 +886,7 @@ The force which guides robots along a specified path.
 
 
 ``actuation_subsystem2D/diff_drive``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 
 Parameters for robot differential drive.
 
@@ -874,6 +910,6 @@ XML configuration:
 
 - ``soft_turn_max`` - If actuators are told to change to a heading within a
   difference greater than the one specified by this parameter to the current
-  heading, a hard turn is executed (spin in place). Specified in degrees.
+  heading, a hard turn is executed (spin in place). Specified in radians.
 
 - ``max_speed`` - The maximimum speed of the robot, in m/s.

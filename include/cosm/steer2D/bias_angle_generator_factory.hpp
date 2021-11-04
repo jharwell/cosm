@@ -1,7 +1,7 @@
 /**
- * \file wander_force.hpp
+ * \file bias_angle_generator_factory.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,20 +18,17 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_
+#ifndef INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_
+#define INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
+#include <string>
 
-#include "rcppsw/math/radians.hpp"
-#include "rcppsw/math/rng.hpp"
-#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/patterns/factory/factory.hpp"
 
-#include "cosm/steer2D/boid.hpp"
-#include "cosm/steer2D/config/wander_force_config.hpp"
+#include "cosm/cosm.hpp"
 #include "cosm/steer2D/base_bias_angle_generator.hpp"
 
 /*******************************************************************************
@@ -42,32 +39,37 @@ NS_START(cosm, steer2D);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
- * \class wander_force
+ * \class bias_angle_generator_factory
  * \ingroup steer2D
  *
- * \brief A small random perturbation that can be added to a robot's current
- * velocity in order to make it move randomly throughout the environment. This
- * can be thought of as a directed random walk.
+ * \brief Factory for creating bias angle generators for \ref wander_force.
  */
-class wander_force {
+class bias_angle_generator_factory :
+    public rpfactory::releasing_factory<base_bias_angle_generator,
+                                        std::string, /* key type */
+                                        const csteer2D::config::bias_angle_config*> {
  public:
-  explicit wander_force(const config::wander_force_config* config);
+  /**
+   * \brief Angles will be drawn from a uniform distribution between [-max bias,
+   * max bias].
+   */
+  static inline const std::string kUniform = "uniform";
 
-  rmath::vector2d operator()(const boid& entity, rmath::rng* rng);
+  /**
+   * \brief Angles will be drawn from a normal distribution N(0, max_bias / 3).
+   */
+  static inline const std::string kNormal = "normal";
 
- private:
-  /* clang-format off */
-  const config::wander_force_config          mc_config;
+  /**
+   * \brief Angles will be drawn uniformly from the specified custom
+   * distribution.
+   */
+  static inline const std::string kCustom = "custom";
 
-  int                                        m_count{-1};
-  rmath::radians                             m_last_angle{0};
-  rmath::radians                             m_angle{0};
-  std::unique_ptr<base_bias_angle_generator> m_bias_generator;
-  /* clang-format on */
+  bias_angle_generator_factory(void);
 };
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_WANDER_FORCE_HPP_ */
+#endif /* INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_ */

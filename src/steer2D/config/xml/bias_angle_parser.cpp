@@ -1,7 +1,7 @@
 /**
- * \file diff_drive_parser.cpp
+ * \file bias_angle_parser.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,34 +21,30 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/kin2D/config/xml/diff_drive_parser.hpp"
+#include "cosm/steer2D/config/xml/bias_angle_parser.hpp"
 
-#include "rcppsw/math/angles.hpp"
-#include "rcppsw/math/degrees.hpp"
+#include "rcppsw/utils/line_parser.hpp"
+
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config, xml);
+NS_START(cosm, steer2D, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive_parser::parse(const ticpp::Element& node) {
+void bias_angle_parser::parse(const ticpp::Element& node) {
   ticpp::Element wnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(wnode, m_config, max_speed);
-  XML_PARSE_ATTR(wnode, m_config, soft_turn_max);
+  XML_PARSE_ATTR(wnode, m_config, src);
+  XML_PARSE_ATTR_DFLT(wnode, m_config, max_delta, rmath::radians(-1));
+
+  std::string tmp;
+  node_attr_get(wnode, "angles", tmp, std::string());
+  m_config->angles = rutils::line_parser::as<rmath::radians>(
+      rutils::line_parser(',')(tmp));
 } /* parse() */
 
-bool diff_drive_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->soft_turn_max.v() > 0.0);
-  RCPPSW_CHECK(m_config->max_speed > 0.0);
-  return true;
-
-error:
-  return false;
-} /* validate() */
-
-NS_END(xml, config, kin2D, cosm);
+NS_END(xml, config, steer2D, cosm);
