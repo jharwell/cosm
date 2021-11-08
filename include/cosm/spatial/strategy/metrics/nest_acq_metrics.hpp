@@ -24,7 +24,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/metrics/base_metrics.hpp"
 
 #include "cosm/cosm.hpp"

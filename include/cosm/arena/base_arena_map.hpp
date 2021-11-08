@@ -180,7 +180,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * Calls \ref spatial::conflict_checker internally to do the actual checking.
    */
-  virtual bool placement_conflict(const crepr::base_block3D* const block,
+  virtual bool placement_conflict(const crepr::base_block3D* block,
                                   const rmath::vector2d& loc) const;
 
   /**

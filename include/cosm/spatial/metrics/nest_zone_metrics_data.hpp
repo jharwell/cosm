@@ -1,5 +1,5 @@
 /**
- * \file base_nest_acq.hpp
+ * \file nest_zone_metrics_data.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,47 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_DATA_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_DATA_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/base_strategy.hpp"
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics.hpp"
+#include <atomic>
+
+#include "rcppsw/metrics/base_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest_acq);
+NS_START(cosm, spatial, metrics, detail);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class base_nest_acq
- * \ingroup spatial strategy nest_acq
- *
- * \brief Base class for nest acquisition strategies, to make collecting metrics
- * and usage of the strategy pattern easier.
+ * \brief Container for holding collected statistics. Must be atomic so counts
+ * are valid in parallel metric collection contexts.
  */
-
-class base_nest_acq : public csstrategy::base_strategy,
-                      public cssmetrics::nest_acq_metrics {
- public:
-  base_nest_acq(const csfsm::fsm_params* params, rmath::rng* rng);
-
-  /* Not move/copy constructable/assignable by default */
-  base_nest_acq(const base_nest_acq&) = delete;
-  base_nest_acq& operator=(const base_nest_acq&) = delete;
-  base_nest_acq(base_nest_acq&&) = delete;
-  base_nest_acq& operator=(base_nest_acq&&) = delete;
-
-  const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
-    return this;
-  }
+struct nest_zone_metrics_data {
+  std::atomic_size_t n_in_nest{0};
+  std::atomic_size_t n_entered_nest{0};
+  std::atomic_size_t n_exited_nest{0};
+  std::atomic_size_t nest_duration{0};
+  std::atomic_size_t first_nest_entry_time{0};
 };
 
-NS_END(nest_acq, strategy, spatial, cosm);
+NS_END(detail);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_ */
+struct nest_zone_metrics_data : public rmetrics::base_metrics_data {
+  detail::nest_zone_metrics_data interval{};
+  detail::nest_zone_metrics_data cum{};
+};
+
+NS_END(metrics, spatial, cosm);
+
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_DATA_HPP_ */

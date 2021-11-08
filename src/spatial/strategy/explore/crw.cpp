@@ -33,8 +33,8 @@ NS_START(cosm, spatial, strategy, explore);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-    : base_strategy(saa, rng),
+crw::crw(const csfsm::fsm_params* params, rmath::rng* rng)
+    : base_strategy(params, rng),
       ER_CLIENT_INIT("cosm.spatial.strategy.explore.crw") {}
 
 /*******************************************************************************
@@ -43,6 +43,9 @@ crw::crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
 void crw::task_execute(void) {
   /* apply wander force */
   wander();
+
+  /* update nest zone tracking */
+  nz_update();
 
   /* Set LEDs in accordance with obstacle detection */
   if (handle_ca()) {
@@ -63,7 +66,9 @@ void crw::task_reset(void) {
    * come back to CRW again we probably won't be experiencing interference, so
    * we don't want to report that we are.
    */
-  inta_tracker()->inta_reset();
+  inta_tracker()->state_reset();
+
+  nz_tracker()->state_reset();
 } /* task_reset() */
 
 

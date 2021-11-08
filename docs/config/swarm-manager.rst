@@ -5,7 +5,7 @@ Swarm Manager XML Configuration
 The following root XML tags are defined for swarm management:
 
 .. list-table::
-   :widths: 25,50,50
+   :widths: 25,50
    :header-rows: 1
 
    * - Root XML Tag
@@ -85,8 +85,8 @@ XML configuration:
         ...
         <metrics
             output_dir="metrics">
-            <sinks
-               <csv ... />
+            <sinks>
+               ...
             </sinks>
         </metrics>
         ...
@@ -151,16 +151,21 @@ XML configuration:
   ``create``, this defines timestep interval after which metrics will be written
   out to a NEW ``.csv`` file with a unique timestep tag after the provided
   stem. For ``truncate``, this defines the timestep interval after which metrics
-  will be written out to a truncateed ``.csv`` created from the provided stem;
+  will be written out to a truncated ``.csv`` created from the provided stem;
   that is, each time they are output the results of the previously written out
   metrics are lost.
 
 What collectors can be added under what child tag (id,filename) pairs is defined
-in :ref:`ln-metrics-collectors`) . Not defining them disables metric collection
-of the given type for that category.
+in the table below . Not defining them disables metric collection of the given
+type for that category.
+
+.. NOTE:: Enabling metric collection of the given type does not `necessarily`
+          guarantee that those metrics will be collected for a given
+          simulation: the right controller/loop function functionality has to be
+          active/enabled as well.
 
 .. list-table::
-   :widths: 25,50,50
+   :widths: auto
    :header-rows: 1
 
    * - XML Attribute
@@ -171,134 +176,187 @@ of the given type for that category.
 
      - Notes
 
-   * - ``fsm_interference_counts``
+   * - ``spatial_interference_counts``
 
-   - # robots entering, currently encountering, and exiting the inter-robot
-     interference avoidance state.
+     - # robots entering, currently encountering, and exiting the inter-robot
+       interference avoidance state.
 
-   - append
+     - append
 
-   * - ``fsm_interference_locs2D``
+     -
 
-   - Spatial distribution of inter-robot interference locations in 2D in the
-     arena
+   * - ``spatial_interference_locs2D``
 
-   - create,truncate
+     - Spatial distribution of inter-robot interference locations in 2D in the
+       arena
 
-   * - ``fsm_interference_locs3D``
+     - create,truncate
 
-   - Spatial distribution of inter-robot interference locations in a 3D
-     volumetric spaces in the arena.
+     -
 
-   - create,truncate
+   * - ``spatial_interference_locs3D``
+
+     - Spatial distribution of inter-robot interference locations in a 3D
+       volumetric spaces in the arena.
+
+     - create,truncate
+
+     -
 
    * - ``spatial_movement``
 
-   - Swarm average distance traveled/velocity for different types of motion.
+     - Swarm average distance traveled/velocity for different types of motion.
 
-   - append
+     - append
 
-   * - ``block_acq_counts``
+     -
 
-   - Counts of robots exploring for, vectoring to, and acquiring blocks.
 
-   - append
+   * - ``spatial_nest_zone``
 
-   * - ``block_acq_locs2D``
+     - # Robots entering, currently in, and exiting, the nest. Average time
+       spent in the nest and first time a robot enters the nest during
+       simulation (for any reason).
 
-   - 2D spatial distribution of where robots acquire goals.
+     - append
 
-   - create,truncate
+     -
 
-   * - ``block_acq_explore_locs2D``
+   * - ``spatial_dist_pos2D``
 
-   - 2D spatial distribution of where robots exploring for blocks.
+     - Swarm spatial distribution in 2D space.
 
-   - create,truncate
+     - create,truncate
 
-   * - ``block_acq_explore_locs3D``
-
-   - 3D spatial distribution of where robots exploring for blocks.
-
-   - create,truncate
-
-   * - ``block_acq_vector_locs2D``
-
-   - 2D spatial distribution of where robots vector to known blocks.
-
-   - create,truncate
-
-   * - ``block_transportee``
-
-   - Swarm # blocks collected/ # transporters per block.
-
-   - append
-
-   * - ``block_transporter``
-
-   - Swarm block transport (not necessarily to the nest)
-
-   - append
-
-   * - ``task_distribution``
-
-   - TAB task allocation probabilities/counts.
-
-   - append
-
-   * - ``swarm_dist_pos2D``
-
-   - Swarm distribution in 2D space.
-
-   - create,truncate
+     -
 
    * - ``swarm_dist_pos3D``
 
-   - Swarm distribution in 3D space.
+     - Swarm spatial distribution in 3D space.
 
-   - create,truncate
+     - create,truncate
+
+     -
+
+   * - ``block_acq_counts``
+
+     - Counts of robots exploring for, vectoring to, and acquiring blocks.
+
+     - append
+
+     -
+
+   * - ``block_acq_locs2D``
+
+     - 2D spatial distribution of where robots acquire goals.
+
+     - create,truncate
+
+     -
+
+   * - ``block_acq_explore_locs2D``
+
+     - 2D spatial distribution of where robots exploring for blocks.
+
+     - create,truncate
+
+     -
+
+   * - ``block_acq_explore_locs3D``
+
+     - 3D spatial distribution of where robots exploring for blocks.
+
+     - create,truncate
+
+     -
+
+   * - ``block_acq_vector_locs2D``
+
+     - 2D spatial distribution of where robots vector to known blocks.
+
+     - create,truncate
+
+     -
+
+   * - ``block_transportee``
+
+     - Swarm # blocks collected/ # transporters per block.
+
+     - append
+
+     -
+
+   * - ``block_transporter``
+
+     - Swarm block transport (not necessarily to the nest)
+
+     - append
+
+     -
+
+   * - ``task_distribution``
+
+     - TAB task allocation probabilities/counts.
+
+     - append
+
+     -
 
    * - ``swarm_convergence``
 
-   - Results of swarm convergence calculations.
+     - Results of swarm convergence calculations.
 
-   - append
+     - append
+
+     -
 
    * - ``tv_population``
 
-   - Poisson processes for governing population dynamics.
+     - Poisson processes for governing population dynamics.
 
-   - append
+     - append
+
+     -
 
    * - ``oracle_manager``
 
-   - Enable swarms to make decisions based on perfect information.
+     - Enable swarms to make decisions based on perfect information.
 
-   - append
+     - append
+
+     -
 
    * - ``block_distributor``
 
-   - Block distribution.
+     - Block distribution.
 
-   - append
+     - append
+
+     -
 
    * - ``block_motion``
 
-   - Free block motion in the arena.
+     - Free block motion in the arena.
 
-   - append
+     - append
+
+     -
 
    * - ``block_clusters``
 
-   - Size, block count, etc. in block clusters in the arena.
+     - Size, block count, etc. in block clusters in the arena.
 
-   - append
+     - append
+
+     -
 
    * - ``nest_acq_strategy``
 
-   - The strategies robots can use to acquire nests in the arena.
+     - The strategies robots can use to acquire nests in the arena.
 
-   - append
+     - append
+
+     -
 
 ``convergence``
 ===============

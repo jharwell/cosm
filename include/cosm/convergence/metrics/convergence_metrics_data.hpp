@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_CONVERGENCE_METRICS_DATA_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_CONVERGENCE_METRICS_DATA_HPP_
+#ifndef INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_DATA_HPP_
+#define INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_DATA_HPP_
 
 /*******************************************************************************
  * Includes
@@ -44,7 +44,7 @@ NS_START(cosm, convergence, metrics, detail);
 struct convergence_measure_data {
   double raw{0.0};
   double norm{0.0};
-  bool converged{0};
+  bool converged{false};
 };
 
 NS_END(detail);
@@ -60,4 +60,4 @@ struct convergence_metrics_data : public rmetrics::base_metrics_data {
 
 NS_END(metrics, convergence, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_CONVERGENCE_METRICS_DATA_HPP_ */
+#endif /* INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_DATA_HPP_ */

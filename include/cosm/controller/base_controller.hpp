@@ -39,6 +39,8 @@
 #include "cosm/cosm.hpp"
 #include "cosm/pal/pal.hpp"
 #include "cosm/pal/config/output_config.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/spatial/interference_tracker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,7 +52,6 @@ class supervisor_fsm;
 namespace fs = std::filesystem;
 
 NS_START(cosm, controller);
-
 
 /*******************************************************************************
  * Class Definitions
@@ -68,7 +69,8 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class base_controller : public rer::client<base_controller> {
+class base_controller : public rer::client<base_controller>,
+                        public csmetrics::interference_metrics {
  public:
   base_controller(void) RCPPSW_COLD;
   ~base_controller(void) override RCPPSW_COLD;
@@ -180,8 +182,13 @@ class base_controller : public rer::client<base_controller> {
   const cfsm::supervisor_fsm* supervisor(void) const {
     return m_supervisor.get();
   }
+  const cspatial::interference_tracker* inta_tracker(void) const {
+    return m_inta_tracker.get();
+  }
 
  protected:
+  cspatial::interference_tracker* inta_tracker(void) { return m_inta_tracker.get(); }
+
   /**
    * \brief Initialize controller output (i.e. where it will log events of
    * interest).
@@ -208,14 +215,26 @@ class base_controller : public rer::client<base_controller> {
 
   void supervisor(std::unique_ptr<cfsm::supervisor_fsm> fsm);
 
+  void inta_tracker(std::unique_ptr<cspatial::interference_tracker> inta);
+
  private:
   /* clang-format off */
-  bool                                  m_display_id{false};
-  bool                                  m_display_steer2D{false};
-  bool                                  m_display_los{false};
-  rmath::rng*                           m_rng{nullptr};
-  std::unique_ptr<cfsm::supervisor_fsm> m_supervisor;
+  bool                                            m_display_id{false};
+  bool                                            m_display_steer2D{false};
+  bool                                            m_display_los{false};
+  rmath::rng*                                     m_rng{nullptr};
+  std::unique_ptr<cfsm::supervisor_fsm>           m_supervisor{nullptr};
+  std::unique_ptr<cspatial::interference_tracker> m_inta_tracker{nullptr};
   /* clang-format on */
+
+
+ public:
+  /* collision metrics */
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, *m_inta_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, *m_inta_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, *m_inta_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, *m_inta_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, *m_inta_tracker, const);
 };
 
 NS_END(controller, cosm);

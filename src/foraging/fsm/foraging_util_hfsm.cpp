@@ -39,11 +39,11 @@ NS_START(cosm, foraging, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-foraging_util_hfsm::foraging_util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
+foraging_util_hfsm::foraging_util_hfsm(const csfsm::fsm_params* params,
                                        std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
                                        rmath::rng* rng,
                                        uint8_t max_states)
-    : util_hfsm(saa, rng, max_states),
+    : util_hfsm(params, rng, max_states),
       ER_CLIENT_INIT("cosm.foraging.fsm.foraging_util_hfsm"),
       RCPPSW_HFSM_CONSTRUCT_STATE(transport_to_nest, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
@@ -53,13 +53,18 @@ foraging_util_hfsm::foraging_util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
  * States
  ******************************************************************************/
 
-RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm, leaving_nest, rpfsm::event_data* data) {
+RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
+                         leaving_nest,
+                         rpfsm::event_data* data) {
   ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
             "ekST_LEAVING_NEST cannot handle child events");
 
   if (current_state() != last_state()) {
     ER_DEBUG("Executing ekST_LEAVING_NEST");
   }
+  inta_state_update();
+  nz_state_update();
+
   /*
    * We don't want to just apply anti-phototaxis force, because that will make
    * the robot immediately turn around as soon as it has entered the nest and
@@ -67,10 +72,11 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm, leaving_nest, rpfsm::event_data* da
    * nest. Instead, wander about within the nest until you find the edge (either
    * on your own or being pushed out via collision avoidance).
    */
-  ca_state_update();
   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
 
-  if (!saa()->sensing()->ground()->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  /* don't use exited_nest() here--only high for a single timestep */
+  auto ground = saa()->sensing()->ground();
+  if (!ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
     return csfsm::util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
@@ -86,6 +92,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
     ER_ASSERT(nullptr != m_nest_acq, "NULL nest acquisition behavior");
   }
   event_data_hold(true);
+  nz_state_update();
 
   auto* ground = saa()->sensing()->ground();
 
@@ -114,7 +121,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
       }
     }
   } else { /* still outside the nest, just phototaxis + collision avoidance */
-    ca_state_update();
+    inta_state_update();
     auto readings = saa()->sensing()->light()->readings();
     saa()->steer_force2D().accum(saa()->steer_force2D().phototaxis(readings));
   }
@@ -148,13 +155,22 @@ RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void foraging_util_hfsm::ca_state_update(void) {
+void foraging_util_hfsm::inta_state_update(void) {
   if (auto obs = saa()->sensing()->proximity()->avg_prox_obj()) {
-    inta_tracker()->inta_enter();
+    inta_tracker()->state_enter();
     saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
   } else {
-    inta_tracker()->inta_exit();
+    inta_tracker()->state_exit();
   }
-} /* ca_state_update() */
+} /* inta_state_update() */
+
+void foraging_util_hfsm::nz_state_update(void) {
+  auto* ground = saa()->sensing()->ground();
+  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+    nz_tracker()->state_enter();
+  } else {
+    nz_tracker()->state_exit();
+  }
+} /* nz_state_update() */
 
 NS_END(fsm, foraging, cosm);

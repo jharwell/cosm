@@ -50,7 +50,7 @@ NS_START(cosm, spatial, strategy, explore);
 class crw : public csstrategy::base_strategy,
             public rer::client<crw> {
  public:
-  crw(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng);
+  crw(const csfsm::fsm_params*  params, rmath::rng* rng);
 
   ~crw(void) override = default;
   crw(const crw&) = delete;
@@ -72,7 +72,12 @@ class crw : public csstrategy::base_strategy,
 
   /* prototype overrides */
   std::unique_ptr<base_strategy> clone(void) const override {
-    return std::make_unique<crw>(saa(), rng());
+    csfsm::fsm_params params {
+      saa(),
+      inta_tracker(),
+      nz_tracker()
+    };
+    return std::make_unique<crw>(&params, rng());
   }
 
  private:

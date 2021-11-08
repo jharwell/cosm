@@ -36,14 +36,11 @@
 #include "cosm/spatial/metrics/dist3D_metrics.hpp"
 #include "cosm/spatial/metrics/goal_acq_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::subsystem {
-class saa_subsystemQ3D;
-} /* namespace cosm::subsystem */
-
 namespace cosm::tv {
 class irv_manager;
 } /* namespace cosm::tv */

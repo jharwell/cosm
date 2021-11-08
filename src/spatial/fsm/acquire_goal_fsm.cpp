@@ -37,11 +37,11 @@ NS_START(cosm, spatial, fsm);
  * Constructors/Destructors
  ******************************************************************************/
 acquire_goal_fsm::acquire_goal_fsm(
-    subsystem::saa_subsystemQ3D* const saa,
+    const csfsm::fsm_params* params,
     std::unique_ptr<csstrategy::base_strategy> behavior,
     rmath::rng* rng,
     const struct hook_list& hooks)
-    : util_hfsm(saa, rng, ekST_MAX_STATES),
+    : util_hfsm(params, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.acquire_goal_fsm"),
       RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(fsm_acquire_goal, hfsm::top_state()),
@@ -55,8 +55,8 @@ acquire_goal_fsm::acquire_goal_fsm(
                                              &exit_fsm_acquire_goal),
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_hooks(hooks),
-      m_vector_fsm(saa, rng),
-      m_explore_fsm(saa, std::move(behavior), rng, m_hooks.explore_term_cb) {
+      m_vector_fsm(params, rng),
+      m_explore_fsm(params, std::move(behavior), rng, m_hooks.explore_term_cb) {
   m_explore_fsm.change_parent(explore_for_goal_fsm::state::ekST_EXPLORE,
                               &fsm_acquire_goal);
 }

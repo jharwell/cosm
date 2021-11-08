@@ -1,5 +1,5 @@
 /**
- * \file phototaxis_force.hpp
+ * \file nest_zone_metrics_csv_sink.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,58 +18,57 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_PHOTOTAXIS_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_PHOTOTAXIS_FORCE_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_CSV_SINK_HPP_
+#define INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_CSV_SINK_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
+#include <string>
+#include <atomic>
+#include <list>
 
-#include "cosm/hal/sensors/colored_blob_camera_sensor.hpp"
-#include "cosm/hal/sensors/light_sensor.hpp"
-#include "cosm/steer2D/boid.hpp"
+#include "rcppsw/metrics/csv_sink.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * namespaces
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, steer2D);
-namespace config {
-struct phototaxis_force_config;
-}
+NS_START(cosm, spatial, metrics);
+
+class nest_zone_metrics_collector;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-
 /**
- * \class phototaxis_force
- * \ingroup steer2D
+ * \class nest_zone_metrics_csv_sink
+ * \ingroup spatial metrics
  *
- * \brief A force pushing the robot away from light sources.
+ * \brief Sink for \ref nest_zone_metrics and \ref nest_zone_metrics_collector
+ * to output metrics to .csv.
  */
-class phototaxis_force {
+class nest_zone_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
-  using light_sensor_readings = std::vector<hal::sensors::light_sensor::reading>;
-  using camera_sensor_readings =
-      std::vector<hal::sensors::colored_blob_camera_sensor::reading>;
-  explicit phototaxis_force(const config::phototaxis_force_config* config);
-
-  rmath::vector2d operator()(const light_sensor_readings& readings) const;
+  using collector_type = nest_zone_metrics_collector;
 
   /**
-   * \brief Calculate force vector to the average location of objects of the
-   * specified color.
+   * \brief \see rmetrics::csv_sink.
    */
-  rmath::vector2d operator()(const camera_sensor_readings& readings,
-                             const rutils::color& color) const;
+  nest_zone_metrics_csv_sink(fs::path fpath_no_ext,
+                            const rmetrics::output_mode& mode,
+                            const rtypes::timestep& interval);
 
- private:
-  /* clang-format off */
-  const double mc_max;
-  /* clang-format on */
+  /* csv_sink overrides */
+  std::list<std::string> csv_header_cols(
+      const rmetrics::base_metrics_data* data) const override;
+
+  boost::optional<std::string> csv_line_build(
+      const rmetrics::base_metrics_data* data,
+      const rtypes::timestep& t) override;
 };
 
-NS_END(steer2D, cosm);
+NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_PHOTOTAXIS_FORCE_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_METRICS_NEST_ZONE_METRICS_CSV_SINK_HPP_ */

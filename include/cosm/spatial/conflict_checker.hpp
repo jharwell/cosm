@@ -91,7 +91,7 @@ class conflict_checker {
    * - Overlap with all nests.
    */
   static status placement2D(const carena::base_arena_map* map,
-                            const crepr::base_block3D* const block,
+                            const crepr::base_block3D* block,
                             const rmath::vector2d& loc);
 
   /**
@@ -107,7 +107,7 @@ class conflict_checker {
    * - Overlap with all caches.
    */
   static status placement2D(const carena::caching_arena_map* map,
-                            const crepr::base_block3D* const block,
+                            const crepr::base_block3D* block,
                             const rmath::vector2d& loc);
 
   /**
@@ -116,7 +116,7 @@ class conflict_checker {
    */
   static status placement2D(const rmath::vector2d& ent1_anchor,
                             const rmath::vector2d& ent1_dims,
-                            const crepr::entity2D* const ent2);
+                            const crepr::entity2D* ent2);
 
   /**
    * \brief Determine if an entity anchored at \p ent1_anchor with dimensions
@@ -124,7 +124,7 @@ class conflict_checker {
    */
   static status placement2D(const rmath::vector2d& ent1_anchor,
                             const rmath::vector2d& ent1_dims,
-                            const crepr::entity3D* const entity);
+                            const crepr::entity3D* entity);
 };
 
 NS_END(spatial, cosm);

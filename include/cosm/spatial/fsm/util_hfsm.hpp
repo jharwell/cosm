@@ -36,16 +36,14 @@
 #include "cosm/spatial/interference_tracker.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/nest_zone_tracker.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
+#include "cosm/spatial/fsm/fsm_params.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::subsystem {
-class saa_subsystemQ3D;
-class sensing_subsystemQ3D;
-class actuation_subsystem2D;
-} /* namespace cosm::subsystem */
-
 NS_START(cosm, spatial, fsm);
 
 /*******************************************************************************
@@ -63,9 +61,10 @@ NS_START(cosm, spatial, fsm);
  */
 class util_hfsm : public rpfsm::hfsm,
                   public rer::client<util_hfsm>,
-                  public metrics::interference_metrics {
+                  public metrics::interference_metrics,
+                  public metrics::nest_zone_metrics {
  public:
-  util_hfsm(csubsystem::saa_subsystemQ3D* saa,
+  util_hfsm(const fsm_params* params,
             rmath::rng* rng,
             uint8_t max_states);
 
@@ -86,7 +85,14 @@ class util_hfsm : public rpfsm::hfsm,
    * utility to derived classes that do not utilize/wrap a \ref
    * spatial::strategy::base_strategy which has its own tracker.
    */
-  const interference_tracker* inta_tracker(void) const { return &m_tracker; }
+  const interference_tracker* inta_tracker(void) const { return m_inta_tracker; }
+
+  /**
+   * \brief Handle to internal nest zone tracker; provided as a common utility
+   * to derived classes that do not utilize/wrap a \ref
+   * spatial::strategy::base_strategy which has its own tracker.
+   */
+  const nest_zone_tracker* nz_tracker(void) const { return m_nz_tracker; }
 
  protected:
   /**
@@ -99,7 +105,8 @@ class util_hfsm : public rpfsm::hfsm,
 
   const csubsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
   csubsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
-  interference_tracker* inta_tracker(void) { return &m_tracker; }
+  interference_tracker* inta_tracker(void) { return m_inta_tracker; }
+  nest_zone_tracker* nz_tracker(void) { return m_nz_tracker; }
 
   /**
    * \brief Simple state for entry into the "wait for signal" state, used to
@@ -109,18 +116,27 @@ class util_hfsm : public rpfsm::hfsm,
 
  private:
   /* clang-format off */
-  csubsystem::saa_subsystemQ3D* const      m_saa;
-  interference_tracker                     m_tracker;
-  rmath::rng*                              m_rng;
+  csubsystem::saa_subsystemQ3D* const m_saa;
+  interference_tracker*               m_inta_tracker;
+  nest_zone_tracker*                  m_nz_tracker;
+
+  rmath::rng*                         m_rng;
   /* clang-format on */
 
  public:
   /* interference metrics */
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, m_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, m_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, m_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, m_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, m_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, *m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, *m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, *m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, *m_inta_tracker, const)
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, *m_inta_tracker, const)
+
+  /* nest_zone metrics */
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(in_nest, *m_nz_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_nest, *m_nz_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_nest, *m_nz_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(nest_duration, *m_nz_tracker, const);
+  RCPPSW_WRAP_DECLDEF_OVERRIDE(nest_entry_time, *m_nz_tracker, const);
 };
 
 NS_END(fsm, spatial, cosm);

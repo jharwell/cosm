@@ -1,7 +1,7 @@
 ################################################################################
 # Build Environment Configuration Options                                      #
 ################################################################################
-if(NOT COSM_BUILD_ENV)
+if(NOT DEFINED COSM_BUILD_ENV)
   set(COSM_BUILD_ENV "LOCAL")
 endif()
 
@@ -41,7 +41,7 @@ configure_file(${${target}_INC_PATH}/${target}/pal/pal.hpp.in ${${target}_INC_PA
 ################################################################################
 # HAL Configuration Options                                                    #
 ################################################################################
-if(NOT COSM_BUILD_FOR)
+if(NOT DEFINED COSM_BUILD_FOR)
   set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
 endif()
 
@@ -77,11 +77,13 @@ endif()
 # - Qt cmake module is only available on Linux when building for ARGoS, and when
 #   the compiler is not Intel, because the cmake module for Qt does not play
 #   nice with the Intel compiler.
-if ("${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
-    NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
-  set(COSM_WITH_VIS "ON")
-else()
-  set(COSM_WITH_VIS "OFF")
+if (NOT DEFINED COSM_WITH_VIS)
+  if ("${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
+      NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
+    set(COSM_WITH_VIS "ON")
+  else()
+    set(COSM_WITH_VIS "OFF")
+  endif()
 endif()
 
 set(${target}_CHECK_LANGUAGE "CXX")

@@ -125,6 +125,7 @@ class argos_sm_adaptor : public swarm_manager,
   void arena_map_init(const cvconfig::visualization_config* vconfig,
                       const crepr::config::nests_config* nconfig) RCPPSW_COLD;
 
+ private:
   /* clang-format off */
   /**
    * \brief The name of the LED medium in ARGoS, for use in destroying caches.

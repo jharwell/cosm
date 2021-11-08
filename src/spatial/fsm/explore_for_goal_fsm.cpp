@@ -36,11 +36,11 @@ NS_START(cosm, spatial, fsm);
  * Constructors/Destructors
  ******************************************************************************/
 explore_for_goal_fsm::explore_for_goal_fsm(
-    subsystem::saa_subsystemQ3D* const saa,
+    const csfsm::fsm_params* params,
     std::unique_ptr<csstrategy::base_strategy> behavior,
     rmath::rng* rng,
     const std::function<bool(void)>& goal_detect)
-    : util_hfsm(saa, rng, ekST_MAX_STATES),
+    : util_hfsm(params, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.explore_for_goal"),
       RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(explore, hfsm::top_state()),
@@ -90,31 +90,6 @@ RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
 RCPPSW_HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
   actuation()->leds()->set_color(-1, rutils::color::kMAGENTA);
 }
-
-/*******************************************************************************
- * Collision Metrics
- ******************************************************************************/
-RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
-                         exp_interference,
-                         *m_explore_behavior,
-                         const);
-RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
-                         entered_interference,
-                         *m_explore_behavior,
-                         const);
-RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
-                         exited_interference,
-                         *m_explore_behavior,
-                         const);
-RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
-                         interference_duration,
-                         *m_explore_behavior,
-                         const);
-
-RCPPSW_WRAP_DEF_OVERRIDE(explore_for_goal_fsm,
-                         interference_loc3D,
-                         *m_explore_behavior,
-                         const);
 
 /*******************************************************************************
  * Taskable Interface

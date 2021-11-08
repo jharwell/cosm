@@ -114,7 +114,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
   void blocks_map_enable(void);
 
-  bool contains_block(const crepr::base_block3D* const c_block) const RCPPSW_PURE;
+  bool contains_block(const crepr::base_block3D* c_block) const RCPPSW_PURE;
   size_t n_blocks(void) const { return m_blocks_vec.size(); }
 
   /**

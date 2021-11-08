@@ -163,7 +163,7 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
    *              ordr to make use of the general purpose machinery in this
    *              class.
    */
-  acquire_goal_fsm(subsystem::saa_subsystemQ3D* saa,
+  acquire_goal_fsm(const csfsm::fsm_params* params,
                    std::unique_ptr<csstrategy::base_strategy> behavior,
                    rmath::rng* rng,
                    const struct hook_list& hooks);

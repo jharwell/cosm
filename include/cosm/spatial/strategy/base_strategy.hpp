@@ -28,11 +28,12 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/patterns/prototype/clonable.hpp"
 
-#include "cosm/spatial/metrics/interference_metrics.hpp"
-#include "cosm/spatial/interference_tracker.hpp"
 #include "cosm/ta/taskable.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
+#include "cosm/spatial/interference_tracker.hpp"
+#include "cosm/spatial/nest_zone_tracker.hpp"
+#include "cosm/spatial/fsm/fsm_params.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -49,20 +50,15 @@ NS_START(cosm, spatial, strategy);
  * \brief Base class for different strategies that robots can
  * employ when exploring, acquiring goals, etc.
  */
-class base_strategy : public csmetrics::interference_metrics,
-                      public cta::taskable,
+class base_strategy : public cta::taskable,
                       public rpprototype::clonable<base_strategy> {
  public:
-  struct params {
-    params(csubsystem::saa_subsystemQ3D* const saa_in, rmath::rng* rng_in)
-        : saa(saa_in), rng(rng_in) {}
-
-    subsystem::saa_subsystemQ3D* const saa;
-    rmath::rng* rng;
-  };
-
-  explicit base_strategy(params* const p);
-  base_strategy(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng);
+  explicit base_strategy(const csfsm::fsm_params*  params,
+                         rmath::rng* rng);
+  base_strategy(subsystem::saa_subsystemQ3D* const saa,
+                cspatial::interference_tracker* const inta,
+                cspatial::nest_zone_tracker* const nz,
+                rmath::rng* rng);
 
   ~base_strategy(void) override = default;
 
@@ -74,30 +70,25 @@ class base_strategy : public csmetrics::interference_metrics,
   subsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
   rmath::rng* rng(void) { return m_rng; }
   rmath::rng* rng(void) const { return m_rng; }
-  const cspatial::interference_tracker* inta_tracker(void) const {
-    return &m_inta_tracker;
+  cspatial::interference_tracker* inta_tracker(void) { return m_inta_tracker; }
+  cspatial::interference_tracker* inta_tracker(void) const {
+    return m_inta_tracker;
   }
-  cspatial::interference_tracker* inta_tracker(void) {
-    return &m_inta_tracker;
-  }
+  cspatial::nest_zone_tracker* nz_tracker(void) const { return m_nz_tracker; }
+  cspatial::nest_zone_tracker* nz_tracker(void)  { return m_nz_tracker; }
+
   bool handle_ca(void);
   void phototaxis(void);
   void wander(void);
+  bool nz_update(void);
 
  private:
   /* clang-format off */
-  subsystem::saa_subsystemQ3D*   m_saa;
-  rmath::rng*                    m_rng;
-  cspatial::interference_tracker m_inta_tracker;
+  subsystem::saa_subsystemQ3D*    m_saa;
+  cspatial::interference_tracker* m_inta_tracker;
+  cspatial::nest_zone_tracker*    m_nz_tracker;
+  rmath::rng*                     m_rng;
   /* clang-format on */
-
- public:
-  /* collision metrics */
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(exp_interference, m_inta_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(entered_interference, m_inta_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(exited_interference, m_inta_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_duration, m_inta_tracker, const)
-  RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, m_inta_tracker, const)
 };
 
 NS_END(strategy, spatial, cosm);

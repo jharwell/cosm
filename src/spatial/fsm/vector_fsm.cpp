@@ -36,8 +36,8 @@ NS_START(cosm, spatial, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-vector_fsm::vector_fsm(subsystem::saa_subsystemQ3D* const saa, rmath::rng* rng)
-    : util_hfsm(saa, rng, ekST_MAX_STATES),
+vector_fsm::vector_fsm(const csfsm::fsm_params* params, rmath::rng* rng)
+    : util_hfsm(params, rng, ekST_MAX_STATES),
       ER_CLIENT_INIT("cosm.spatial.fsm.vector"),
       RCPPSW_HFSM_CONSTRUCT_STATE(start, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(vector, hfsm::top_state()),
@@ -183,14 +183,14 @@ RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_vector) {
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_avoidance) {
   ER_DEBUG("Entering ekST_INTERFERENCE_AVOIDANCE");
-  inta_tracker()->inta_enter();
+  inta_tracker()->state_enter();
   actuation()->actuator<hal::actuators::led_actuator>()->set_color(
       -1, rutils::color::kRED);
 }
 
 RCPPSW_HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
   ER_DEBUG("Exiting ekST_INTERFERENCE_AVOIDANCE");
-  inta_tracker()->inta_exit();
+  inta_tracker()->state_exit();
 }
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_recovery) {

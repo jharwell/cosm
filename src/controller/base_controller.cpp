@@ -41,7 +41,7 @@ namespace fs = std::filesystem;
  * Constructors/Destructor
  ******************************************************************************/
 base_controller::base_controller(void)
-    : ER_CLIENT_INIT("cosm.controller.base"), m_supervisor(nullptr) {}
+    : ER_CLIENT_INIT("cosm.controller.base") {}
 
 base_controller::~base_controller(void) = default;
 
@@ -90,5 +90,10 @@ void base_controller::rng_init(int seed, const std::string& category) {
 void base_controller::supervisor(std::unique_ptr<cfsm::supervisor_fsm> fsm) {
   m_supervisor = std::move(fsm);
 } /* supervisor() */
+
+void base_controller::inta_tracker(
+    std::unique_ptr<cspatial::interference_tracker> inta) {
+  m_inta_tracker = std::move(inta);
+} /* inta_tracker() */
 
 NS_END(controller, cosm);

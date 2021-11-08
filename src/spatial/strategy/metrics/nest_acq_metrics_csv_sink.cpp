@@ -70,7 +70,8 @@ const rmetrics::base_metrics_data* data,
   line += csv_entry_domavg(d->interval.random_thresh.load(),
                            d->interval.n_random_thresh);
   line += csv_entry_domavg(d->cum.random_thresh.load(),
-                           d->cum.n_random_thresh);
+                           d->cum.n_random_thresh,
+                           true);
 
   return boost::make_optional(line);
 } /* csv_line_build() */

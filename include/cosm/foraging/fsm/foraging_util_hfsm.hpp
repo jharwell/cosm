@@ -52,7 +52,7 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
                            public cssmetrics::nest_acq_metrics,
                            public rer::client<foraging_util_hfsm> {
  public:
-  foraging_util_hfsm(csubsystem::saa_subsystemQ3D* saa,
+  foraging_util_hfsm(const csfsm::fsm_params* params,
                      std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
                      rmath::rng* rng,
                      uint8_t max_states);
@@ -69,8 +69,18 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
     rmath::vector2d nest_loc;
   };
 
-  void ca_state_update(void);
+  /**
+   * \brief Update the \ref interference_tracker state and applies the avoidance
+   * force if obstacles are detected.
+   */
+  void inta_state_update(void);
 
+  /**
+   * \brief Update the \ref nest_zone_tracker state.
+   */
+  void nz_state_update(void);
+
+  /* nest_acq metrics */
   RCPPSW_WRAP_DECL_OVERRIDE(const cssnest_acq::base_nest_acq*,
                             nest_acq_strategy,
                             const);

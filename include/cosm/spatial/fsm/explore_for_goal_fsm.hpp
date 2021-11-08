@@ -76,20 +76,13 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
     ekST_MAX_STATES
   };
 
-  explore_for_goal_fsm(subsystem::saa_subsystemQ3D* saa,
+  explore_for_goal_fsm(const csfsm::fsm_params* params,
                        std::unique_ptr<csstrategy::base_strategy> behavior,
                        rmath::rng* rng,
                        const std::function<bool(void)>& goal_detect);
   ~explore_for_goal_fsm(void) override = default;
   explore_for_goal_fsm& operator=(const explore_for_goal_fsm&) = delete;
   explore_for_goal_fsm(const explore_for_goal_fsm&) = delete;
-
-  /* interference metrics */
-  RCPPSW_WRAP_DECL_OVERRIDE(bool, exp_interference, const);
-  RCPPSW_WRAP_DECL_OVERRIDE(bool, entered_interference, const);
-  RCPPSW_WRAP_DECL_OVERRIDE(bool, exited_interference, const);
-  RCPPSW_WRAP_DECL_OVERRIDE(rtypes::timestep, interference_duration, const);
-  RCPPSW_WRAP_DECL_OVERRIDE(rmath::vector3z, interference_loc3D, const);
 
   /* taskable overrides */
   bool task_finished(void) const override RCPPSW_PURE;
@@ -148,9 +141,9 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   static constexpr const size_t kMIN_EXPLORE_TIME = 50;
 
   /* clang-format off */
-  size_t                                   m_explore_time{0};
+  size_t                                     m_explore_time{0};
   std::unique_ptr<csstrategy::base_strategy> m_explore_behavior;
-  std::function<bool(void)>                m_goal_detect;
+  std::function<bool(void)>                  m_goal_detect;
   /* clang-format on */
 };
 

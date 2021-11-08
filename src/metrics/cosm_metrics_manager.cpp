@@ -76,6 +76,8 @@
 #include "cosm/spatial/metrics/vector_locs2D_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_collector.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_csv_sink.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_collector.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_csv_sink.hpp"
 #include "cosm/spatial/strategy/metrics/nest_acq_metrics_collector.hpp"
 #include "cosm/spatial/strategy/metrics/nest_acq_metrics_csv_sink.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
@@ -114,12 +116,26 @@ void cosm_metrics_manager::collect_from_block(
 
 void cosm_metrics_manager::collect_from_controller(
     const controller::base_controller2D* const controller) {
-  collect("swarm::spatial_dist2D::pos", *controller);
+  collect("spatial::dist::pos2D", *controller);
+  collect("spatial::movement", *controller);
+  collect("spatial::interference::counts", *controller->inta_tracker());
+  collect_if("spatial::interference::locs2D",
+             *controller->inta_tracker(),
+             [&](const rmetrics::base_metrics&) {
+               return controller->inta_tracker()->exp_interference();
+             });
 } /* collect_from_controller() */
 
 void cosm_metrics_manager::collect_from_controller(
     const controller::base_controllerQ3D* const controller) {
-  collect("swarm::spatial_dist3D::pos", *controller);
+  collect("spatial::dist2D::pos3D", *controller);
+  collect("spatial::movement", *controller);
+  collect("spatial::interference::counts", *controller->inta_tracker());
+  collect_if("spatial::interference::locs3D",
+             *controller->inta_tracker(),
+             [&](const rmetrics::base_metrics&) {
+               return controller->inta_tracker()->exp_interference();
+             });
 } /* collect_from_controller() */
 
 void cosm_metrics_manager::collect_from_arena(
@@ -143,7 +159,8 @@ void cosm_metrics_manager::register_standard(
     rmpl::identity<csmetrics::goal_acq_metrics_csv_sink>,
     rmpl::identity<csmetrics::interference_metrics_csv_sink>,
     rmpl::identity<cssmetrics::nest_acq_metrics_csv_sink>,
-    rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>
+    rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>,
+    rmpl::identity<csmetrics::nest_zone_metrics_csv_sink>
     >;
 
   rmetrics::creatable_collector_set creatable_set = {
@@ -155,6 +172,14 @@ void cosm_metrics_manager::register_standard(
       "spatial_movement",
       "spatial::movement",
       rmetrics::output_mode::ekAPPEND },
+    { typeid(csmetrics::interference_metrics_collector),
+      "spatial_interference_counts",
+      "spatial::interference::counts",
+      rmetrics::output_mode::ekAPPEND },
+    {typeid(csmetrics::nest_zone_metrics_collector),
+     "spatial_nest_zone",
+     "spatial::nest_zone",
+     rmetrics::output_mode::ekAPPEND },
     { typeid(cfbd::metrics::distributor_metrics_collector),
       "block_distributor",
       "blocks::distributor",
@@ -173,13 +198,8 @@ void cosm_metrics_manager::register_standard(
       rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::goal_acq_metrics_collector),
       "block_acq_counts",
-      "blocks::acq_counts",
+      "blocks::acq::counts",
       rmetrics::output_mode::ekAPPEND },
-    { typeid(csmetrics::interference_metrics_collector),
-      "fsm_interference_counts",
-      "fsm::interference_counts",
-      rmetrics::output_mode::ekAPPEND },
-
     {typeid(cssmetrics::nest_acq_metrics_collector),
     "nest_acq_strategy",
     "strategy::nest_acq",
@@ -187,7 +207,7 @@ void cosm_metrics_manager::register_standard(
     { typeid(ctvmetrics::population_dynamics_metrics_collector),
       "tv_population",
       "tv::population",
-      rmetrics::output_mode::ekAPPEND }
+      rmetrics::output_mode::ekAPPEND },
   };
 
   rmetrics::register_with_csv_sink csv(&mconfig->csv,
@@ -210,25 +230,24 @@ void cosm_metrics_manager::register_with_arena_dims2D(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist2D_pos_metrics_collector),
-      "swarm_dist2D_pos",
-      "swarm::spatial_dist2D::pos",
+      "spatial_dist_pos2D",
+      "spatial::dist::pos2D",
+      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
+    { typeid(csmetrics::interference_locs2D_metrics_collector),
+      "spatial_interference_locs2D",
+      "spatial::interference::locs2D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::explore_locs2D_metrics_collector),
       "block_acq_explore_locs2D",
-      "blocks::acq_explore_locs2D",
+      "blocks::acq::explore_locs2D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::goal_acq_locs2D_metrics_collector),
       "block_acq_locs2D",
-      "blocks::acq_locs2D",
+      "blocks::acq::locs2D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
-    { typeid(csmetrics::interference_locs2D_metrics_collector),
-      "fsm_interference_locs2D",
-      "fsm::interference_locs2D",
-      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
-
     { typeid(csmetrics::vector_locs2D_metrics_collector),
       "block_acq_vector_locs2D",
-      "blocks::acq_vector_locs2D",
+      "blocks::acq::vector_locs2D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
   };
 
@@ -254,21 +273,21 @@ void cosm_metrics_manager::register_with_arena_dims3D(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist3D_pos_metrics_collector),
-      "swarm_dist3D_pos",
-      "swarm::spatial_dist3D::pos",
+      "spatial_dist_pos3D",
+      "spatial::dist::pos3D",
+      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
+    { typeid(csmetrics::interference_locs3D_metrics_collector),
+      "spatial_interference_locs3D",
+      "spatial::interference::locs3D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::explore_locs3D_metrics_collector),
       "block_acq_explore_locs3D",
-      "blocks::acq_explore_locs3D",
-      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
-    { typeid(csmetrics::interference_locs3D_metrics_collector),
-      "fsm_interference_locs3D",
-      "fsm::interference_locs3D",
+      "blocks::acq::explore_locs3D",
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::vector_locs3D_metrics_collector),
       "block_acq_vector_locs3D",
-      "blocks::acq_vector_locs3D",
-      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE }
+      "blocks::acq::vector_locs3D",
+      rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
   };
 
   auto extra_args = std::make_tuple(dims);

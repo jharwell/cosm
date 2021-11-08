@@ -55,7 +55,7 @@ class vector_fsm final : public csfsm::util_hfsm,
                          public rer::client<vector_fsm>,
                          public cta::taskable {
  public:
-  vector_fsm(subsystem::saa_subsystemQ3D* saa, rmath::rng* rng);
+  vector_fsm(const csfsm::fsm_params* params, rmath::rng* rng);
 
   vector_fsm& operator=(const vector_fsm&) = delete;
   vector_fsm(const vector_fsm&) = delete;

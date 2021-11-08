@@ -1,5 +1,5 @@
 /**
- * \file interference_tracker.hpp
+ * \file nest_zone_tracker.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,14 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
-#define INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_NEST_ZONE_TRACKER_HPP_
+#define INCLUDE_COSM_SPATIAL_NEST_ZONE_TRACKER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include "cosm/fsm/state_tracker.hpp"
-#include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -36,43 +36,45 @@ NS_START(cosm, spatial);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class interference_tracker
+ * \class nest_zone_tracker
  * \ingroup spatial
  *
- * \brief Adapts \ref cfsm::state_tracker to tracking when a robot
- * experiences interference.
+ * \brief Adapts \ref cfsm::state_tracker to tracking when a robot has
+ * entered/exited the nest, and how long they stay in it for. Tracking is
+ * performed regardless of why the robot enters the nest (exploration, homing,
+ * etc.).
  */
-class interference_tracker final : public cfsm::state_tracker,
-                                   public csmetrics::interference_metrics {
+class nest_zone_tracker final : public cfsm::state_tracker,
+                                public csmetrics::nest_zone_metrics {
  public:
-  explicit interference_tracker(
+  explicit nest_zone_tracker(
       const csubsystem::sensing_subsystemQ3D* const sensing)
-      : state_tracker(sensing) {}
+      : cfsm::state_tracker(sensing) {}
+
 
   /* Not move/copy constructable/assignable by default */
-  interference_tracker(const interference_tracker&) = delete;
-  interference_tracker& operator=(const interference_tracker&) = delete;
-  interference_tracker(interference_tracker&&) = delete;
-  interference_tracker& operator=(interference_tracker&&) = delete;
+  nest_zone_tracker(const nest_zone_tracker&) = delete;
+  nest_zone_tracker& operator=(const nest_zone_tracker&) = delete;
+  nest_zone_tracker(nest_zone_tracker&&) = delete;
+  nest_zone_tracker& operator=(nest_zone_tracker&&) = delete;
 
-  /* interference metrics */
-  bool exp_interference(void) const override final {
-    return state_tracker::in_state();
+  bool in_nest(void) const override final {
+    return cfsm::state_tracker::in_state();
   }
-  bool entered_interference(void) const override final {
-    return state_tracker::entered_state();
+  bool entered_nest(void) const override final {
+    return cfsm::state_tracker::entered_state();
   }
-  bool exited_interference(void) const override final {
-    return state_tracker::exited_state();
+  bool exited_nest(void) const override final {
+    return cfsm::state_tracker::exited_state();
   }
-  rtypes::timestep interference_duration(void) const override final {
-    return state_tracker::state_duration();
+  rtypes::timestep nest_duration(void) const override final {
+    return cfsm::state_tracker::state_duration();
   }
-  rmath::vector3z interference_loc3D(void) const override final {
-    return state_tracker::state_loc3D();
+  rtypes::timestep nest_entry_time(void) const override final {
+    return cfsm::state_tracker::state_entry_time();
   }
 };
 
 NS_END(spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_NEST_ZONE_TRACKER_HPP_ */

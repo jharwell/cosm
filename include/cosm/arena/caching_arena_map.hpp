@@ -127,7 +127,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
   cds::block3D_vectorno free_blocks(bool oos_ok) const override;
 
-  bool placement_conflict(const crepr::base_block3D* const block,
+  bool placement_conflict(const crepr::base_block3D* block,
                           const rmath::vector2d& loc) const override;
 
   void bloctree_update(const crepr::base_block3D* block,

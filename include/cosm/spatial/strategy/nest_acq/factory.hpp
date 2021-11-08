@@ -29,15 +29,12 @@
 #include "rcppsw/patterns/factory/factory.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
+#include "cosm/spatial/fsm/fsm_params.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm);
-
-namespace subsystem {
-class saa_subsystemQ3D;
-} /* namespace subsystem */
 
 NS_START(spatial, strategy, nest_acq);
 
@@ -53,7 +50,7 @@ NS_START(spatial, strategy, nest_acq);
 class factory :
     public rpfactory::releasing_factory<csstrategy::nest_acq::base_nest_acq,
                                         std::string, /* key type */
-                                        csubsystem::saa_subsystemQ3D*,
+                                        csfsm::fsm_params*,
                                         rmath::rng*> {
  public:
   static inline const std::string kWander = "wander";

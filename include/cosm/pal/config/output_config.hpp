@@ -65,7 +65,7 @@ struct output_config final : public rconfig::base_config {
 
   rmconfig::metrics_config metrics {};
 
-  static fs::path root_calc(const output_config* const config);
+  static fs::path root_calc(const output_config* config);
 };
 
 NS_END(config, pal, cosm);

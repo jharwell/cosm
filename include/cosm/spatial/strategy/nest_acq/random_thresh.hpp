@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <boost/optional.hpp>
+#include <memory>
 
 #include "rcppsw/types/spatial_dist.hpp"
 
@@ -58,8 +59,8 @@ NS_START(cosm, spatial, strategy, nest_acq);
 
 class random_thresh : public csstrategy::nest_acq::base_nest_acq {
  public:
-  random_thresh(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-      : base_nest_acq(saa, rng) {}
+  random_thresh(const csfsm::fsm_params* params, rmath::rng* rng)
+      : base_nest_acq(params, rng) {}
 
   /* Not move/copy constructable/assignable by default */
   random_thresh(const random_thresh&) = delete;
@@ -82,7 +83,12 @@ class random_thresh : public csstrategy::nest_acq::base_nest_acq {
   void task_execute(void) override;
 
   std::unique_ptr<base_strategy> clone(void) const override {
-    return std::make_unique<random_thresh>(saa(), rng());
+    csfsm::fsm_params params {
+      saa(),
+      inta_tracker(),
+      nz_tracker()
+    };
+    return std::make_unique<random_thresh>(&params, rng());
   }
 
   boost::optional<rtypes::spatial_dist> thresh(void) const {

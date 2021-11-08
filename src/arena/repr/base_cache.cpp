@@ -48,7 +48,7 @@ base_cache::base_cache(const params& p)
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
       mc_resolution(p.resolution),
-      m_blocks_vec(std::move(p.blocks)) {
+      m_blocks_vec(p.blocks) {
   /* /\* build the block map *\/ */
   /* std::transform(p.blocks.begin(), */
   /*                p.blocks.end(), */

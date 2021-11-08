@@ -1,5 +1,5 @@
 /**
- * \file base_nest_acq.hpp
+ * \file fsm_params.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,47 +18,37 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_
+#ifndef INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_
+#define INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/base_strategy.hpp"
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest_acq);
+namespace cosm::spatial {
+class interference_tracker;
+class nest_zone_tracker;
+} /* namespace cosm::spatial */
+
+NS_START(cosm, spatial, fsm);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class base_nest_acq
- * \ingroup spatial strategy nest_acq
- *
- * \brief Base class for nest acquisition strategies, to make collecting metrics
- * and usage of the strategy pattern easier.
+ * \struct fsm_params
+ * \ingroup cosm spatial fsm
  */
-
-class base_nest_acq : public csstrategy::base_strategy,
-                      public cssmetrics::nest_acq_metrics {
- public:
-  base_nest_acq(const csfsm::fsm_params* params, rmath::rng* rng);
-
-  /* Not move/copy constructable/assignable by default */
-  base_nest_acq(const base_nest_acq&) = delete;
-  base_nest_acq& operator=(const base_nest_acq&) = delete;
-  base_nest_acq(base_nest_acq&&) = delete;
-  base_nest_acq& operator=(base_nest_acq&&) = delete;
-
-  const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
-    return this;
-  }
+struct fsm_params {
+  csubsystem::saa_subsystemQ3D* saa;
+  cspatial::interference_tracker* const inta;
+  cspatial::nest_zone_tracker* const nz;
 };
 
-NS_END(nest_acq, strategy, spatial, cosm);
+NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_BASE_NEST_ACQ_HPP_ */
+#endif /* INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_ */

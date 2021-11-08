@@ -1,5 +1,5 @@
 /**
- * \file nest_acq_metrics_collector.cpp
+ * \file nest_zone_metrics_collector.cpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -21,20 +21,19 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics_collector.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_collector.hpp"
 
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics.hpp"
-#include "cosm/spatial/strategy/nest_acq/random_thresh.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, metrics);
+NS_START(cosm, spatial, metrics);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_acq_metrics_collector::nest_acq_metrics_collector(
+nest_zone_metrics_collector::nest_zone_metrics_collector(
     std::unique_ptr<rmetrics::base_metrics_sink> sink)
     : base_metrics_collector(std::move(sink)) {}
 
@@ -42,29 +41,29 @@ nest_acq_metrics_collector::nest_acq_metrics_collector(
  * Member Functions
  ******************************************************************************/
 
-void nest_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
-  auto& m = dynamic_cast<const nest_acq_metrics&>(metrics);
-  auto* thresh = dynamic_cast<const cssnest_acq::random_thresh*>(m.nest_acq_strategy());
-  if (nullptr == thresh) {
-    return;
-  }
+void nest_zone_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
+  auto& m = dynamic_cast<const nest_zone_metrics&>(metrics);
 
-  if (auto current = thresh->thresh()) {
-    ++m_data.interval.n_random_thresh;
-    ++m_data.cum.n_random_thresh;
+  /* metrics common to all zoneuisition strategies */
+  m_data.interval.n_in_nest += m.in_nest();
+  m_data.interval.n_entered_nest += m.entered_nest();
+  m_data.interval.n_exited_nest += m.exited_nest();
+  m_data.interval.nest_duration += m.nest_duration().v();
 
-    auto int_dist = m_data.interval.random_thresh.load();
-    auto cum_dist = m_data.cum.random_thresh.load();
-    m_data.interval.random_thresh.compare_exchange_strong(int_dist,
-                                                     int_dist + current->v());
-    m_data.cum.random_thresh.compare_exchange_strong(cum_dist,
-                                                cum_dist + current->v());
+  if (m.in_nest() && m_data.cum.n_in_nest == 0) {
+    m_data.cum.first_nest_entry_time = m.nest_entry_time().v();
   }
+  m_data.cum.n_in_nest += m.in_nest();
+  m_data.cum.n_entered_nest += m.entered_nest();
+  m_data.cum.n_exited_nest += m.exited_nest();
+  m_data.cum.nest_duration += m.nest_duration().v();
 } /* collect() */
 
-void nest_acq_metrics_collector::reset_after_interval(void) {
-  m_data.interval.random_thresh = 0.0;
-  m_data.interval.n_random_thresh = 0;
+void nest_zone_metrics_collector::reset_after_interval(void) {
+  m_data.interval.n_in_nest = 0;
+  m_data.interval.n_entered_nest = 0;
+  m_data.interval.n_exited_nest = 0;
+  m_data.interval.nest_duration = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, strategy, spatial, cosm);
+NS_END(metrics, spatial, cosm);

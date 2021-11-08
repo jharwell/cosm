@@ -108,7 +108,8 @@ class proximity_sensor_impl final : public rer::client<proximity_sensor_impl<TSe
 
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_proximity_sensor<U>::value)>
-   proximity_sensor_impl(const config::proximity_sensor_config* const config)
+  explicit proximity_sensor_impl(
+      const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
          rpdecorator::decorator<TSensor*>(nullptr),
          mc_config(*config) {}

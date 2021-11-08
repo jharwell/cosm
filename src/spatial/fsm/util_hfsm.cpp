@@ -38,13 +38,14 @@ NS_START(cosm, spatial, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-util_hfsm::util_hfsm(csubsystem::saa_subsystemQ3D* const saa,
+util_hfsm::util_hfsm(const fsm_params* const params,
                      rmath::rng* rng,
                      uint8_t max_states)
     : rpfsm::hfsm(max_states),
       ER_CLIENT_INIT("cosm.spatial.fsm.util_hfsm"),
-      m_saa(saa),
-      m_tracker(sensing()),
+      m_saa(params->saa),
+      m_inta_tracker(params->inta),
+      m_nz_tracker(params->nz),
       m_rng(rng) {}
 
 /*******************************************************************************
@@ -80,7 +81,8 @@ csubsystem::actuation_subsystem2D* util_hfsm::actuation(void) const {
 
 void util_hfsm::init(void) {
   hfsm::init();
-  m_tracker.inta_reset();
+  m_inta_tracker->state_reset();
+  m_nz_tracker->state_reset();
 } /* init() */
 
 NS_END(fsm, spatial, cosm);

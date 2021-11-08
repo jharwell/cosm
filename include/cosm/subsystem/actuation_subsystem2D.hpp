@@ -43,7 +43,7 @@ NS_START(cosm, subsystem);
  */
 class actuation_subsystem2D : public chsubsystem::actuation_subsystem2D {
  public:
-  actuation_subsystem2D(const actuator_map& actuators)
+  explicit actuation_subsystem2D(const actuator_map& actuators)
       : chsubsystem::actuation_subsystem2D(actuators) {}
 
   /* Not move/copy constructable/assignable by default */

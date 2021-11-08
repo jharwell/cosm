@@ -52,8 +52,9 @@ NS_START(cosm, spatial, strategy, nest_acq);
  */
 class wander : public csstrategy::nest_acq::base_nest_acq {
  public:
-  wander(csubsystem::saa_subsystemQ3D* saa, rmath::rng* rng)
-      : base_nest_acq(saa, rng) {}
+  wander(const csfsm::fsm_params* params,
+         rmath::rng* rng)
+      : base_nest_acq(params, rng) {}
 
   /* Not move/copy constructable/assignable by default */
   wander(const wander&) = delete;
@@ -77,7 +78,12 @@ class wander : public csstrategy::nest_acq::base_nest_acq {
   void task_execute(void) override final;
 
   std::unique_ptr<base_strategy> clone(void) const override {
-    return std::make_unique<wander>(saa(), rng());
+    csfsm::fsm_params params {
+      saa(),
+      inta_tracker(),
+      nz_tracker()
+    };
+    return std::make_unique<wander>(&params, rng());
   }
 
  private:

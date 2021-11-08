@@ -1,7 +1,7 @@
 /**
- * \file utilization_metrics_csv_sink.cpp
+ * \file nest_zone_metrics_csv_sink.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,67 +21,71 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/arena/metrics/caches/utilization_metrics_csv_sink.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_csv_sink.hpp"
 
-#include "cosm/arena/metrics/caches/utilization_metrics_data.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+NS_START(cosm, spatial, metrics);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-utilization_metrics_csv_sink::utilization_metrics_csv_sink(
-    fs::path fpath_no_ext,
+nest_zone_metrics_csv_sink::nest_zone_metrics_csv_sink(
+        fs::path fpath_no_ext,
     const rmetrics::output_mode& mode,
     const rtypes::timestep& interval)
-    : csv_sink(std::move(fpath_no_ext), mode, interval) {}
+    : csv_sink(fpath_no_ext, mode, interval) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-utilization_metrics_csv_sink::csv_header_cols(
-    const rmetrics::base_metrics_data* ) const {
+std::list<std::string> nest_zone_metrics_csv_sink::csv_header_cols(
+    const rmetrics::base_metrics_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
-    "int_avg_blocks",
-    "cum_avg_blocks",
-    "int_avg_pickups",
-    "cum_avg_pickups",
-    "int_avg_drops" ,
-    "cum_avg_drops" ,
-    "int_avg_caches",
-    "cum_avg_caches"
+    "int_avg_in_nest",
+    "int_avg_entered_nest",
+    "int_avg_exited_nest",
+    "int_avg_nest_duration",
+    "cum_avg_in_nest",
+    "cum_avg_entered_nest",
+    "cum_avg_exited_nest",
+    "cum_avg_nest_duration",
+    "first_entry_time"
     /* clang-format on */
   };
   merged.splice(merged.end(), cols);
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string> utilization_metrics_csv_sink::csv_line_build(
+boost::optional<std::string> nest_zone_metrics_csv_sink::csv_line_build(
 const rmetrics::base_metrics_data* data,
       const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }
+
+  auto* d = static_cast<const nest_zone_metrics_data*>(data);
+
   std::string line;
 
-  auto* d = static_cast<const utilization_metrics_data*>(data);
+  line += csv_entry_intavg(d->interval.n_in_nest);
+  line += csv_entry_intavg(d->interval.n_entered_nest);
+  line += csv_entry_intavg(d->interval.n_exited_nest);
+  line += csv_entry_intavg(d->interval.nest_duration);
 
-  line += csv_entry_domavg(d->interval.n_blocks, d->interval.cache_count);
-  line += csv_entry_domavg(d->cum.n_blocks, d->cum.cache_count);
-  line += csv_entry_domavg(d->interval.n_pickups, d->interval.cache_count);
-  line += csv_entry_domavg(d->cum.n_pickups, d->cum.cache_count);
-  line += csv_entry_domavg(d->interval.n_drops, d->interval.cache_count);
-  line += csv_entry_domavg(d->cum.n_drops, d->cum.cache_count);
-  line += csv_entry_intavg(d->interval.cache_count);
-  line += csv_entry_tsavg(d->cum.cache_count, t, true);
+  line += csv_entry_tsavg(d->cum.n_in_nest, t);
+  line += csv_entry_tsavg(d->cum.n_entered_nest, t);
+  line += csv_entry_tsavg(d->cum.n_exited_nest, t);
+  line += csv_entry_tsavg(d->cum.nest_duration, t);
+  line += std::to_string(d->cum.first_nest_entry_time);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(caches, metrics, arena, cosm);
+
+NS_END(metrics, spatial, cosm);

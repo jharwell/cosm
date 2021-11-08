@@ -1,5 +1,5 @@
 Welcome to COSM's documentation!
-===================================
+================================
 
 .. toctree::
    :maxdepth: 2
@@ -7,6 +7,8 @@ Welcome to COSM's documentation!
 
    config/index.rst
    build.rst
+
+   api/index.rst
 
 Other Projects (in descending probability of interest)
 ------------------------------------------------------

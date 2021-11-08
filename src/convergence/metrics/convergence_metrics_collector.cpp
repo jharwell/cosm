@@ -76,11 +76,11 @@ void convergence_metrics_collector::collect(
 } /* collect() */
 
 void convergence_metrics_collector::reset_after_interval(void) {
-  m_data.interact = { 0.0, 0.0, 0 };
-  m_data.order = { 0.0, 0.0, 0 };
-  m_data.pos_ent = { 0.0, 0.0, 0 };
-  m_data.tdist_ent = { 0.0, 0.0, 0 };
-  m_data.velocity = { 0.0, 0.0, 0 };
+  m_data.interact = { 0.0, 0.0, false };
+  m_data.order = { 0.0, 0.0, false };
+  m_data.pos_ent = { 0.0, 0.0, false };
+  m_data.tdist_ent = { 0.0, 0.0, false };
+  m_data.velocity = { 0.0, 0.0, false };
 } /* reset_after_interval() */
 
 NS_END(metrics, convergence, cosm);
