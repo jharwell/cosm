@@ -83,7 +83,9 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    *                apply to which wheel, so that the proper turn direction is
    *                executed.
    */
-  void set_wheel_speeds(double speed1, double speed2, rmath::radians heading);
+  void set_wheel_speeds(double speed1,
+                        double speed2,
+                        const rmath::radians& heading);
 
   /**
    * \brief Clamp the desired speed to a maximum (maximum will be either the

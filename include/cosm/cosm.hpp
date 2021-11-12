@@ -72,10 +72,9 @@ namespace metrics {}
  * actuation, and their configuration. Not tied to a specific robot.
  */
 namespace subsystem {
+namespace config {}
 namespace perception {
-namespace config {
-namespace xml {}
-} /* namespace config */
+namespace config {}
 } /* namespace perception */
 } /* namespace subsystem */
 
@@ -89,7 +88,14 @@ namespace xml {}
  * COSM is targeting.
  */
 namespace hal {
-namespace subsystem {}
+namespace argos {
+namespace sensors {}
+namespace actuators {}
+namespace config {}
+} /* namespace argos */
+namespace subsystem {
+namespace config {}
+} /* namespace subsystem */
 namespace sensors {}
 namespace actuators {}
 } /* namespace hal */
@@ -207,8 +213,10 @@ namespace pal {
 namespace config {
 namespace xml{}
 }
+namespace argos {
 namespace operations {}
 namespace tv {}
+} /* namespace argos */
 } /* namespace pal */
 
 /**
@@ -303,9 +311,9 @@ namespace interactors {}
 } /* namespace cosm */
 
 namespace csubsystem = cosm::subsystem;
+namespace csconfig = csubsystem::config;
 namespace csperception = csubsystem::perception;
 namespace cspconfig = csperception::config;
-namespace cspcxml = cspconfig::xml;
 
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
@@ -355,10 +363,11 @@ namespace cdconfig = cds::config;
 namespace cdops = cds::operations;
 
 namespace cpal = cosm::pal;
-namespace cpops = cpal::operations;
 namespace cpconfig = cpal::config;
 namespace cpcxml = cpconfig::xml;
-namespace cptv = cpal::tv;
+namespace cpargos = cpal::argos;
+namespace cpaops = cpargos::operations;
+namespace cpatv = cpargos::tv;
 
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
@@ -367,7 +376,12 @@ namespace crepr = cosm::repr;
 namespace crops = crepr::operations;
 
 namespace chal = cosm::hal;
+namespace chargos = chal::argos;
+namespace chasensors = chargos::sensors;
+namespace chaactuators = chargos::actuators;
+namespace chaconfig = chargos::config;
 namespace chsubsystem = chal::subsystem;
+namespace chsconfig = chsubsystem::config;
 namespace chsensors = chal::sensors;
 namespace chactuators = chal::actuators;
 

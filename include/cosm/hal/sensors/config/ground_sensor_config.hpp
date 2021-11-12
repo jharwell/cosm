@@ -1,7 +1,7 @@
 /**
  * \file ground_sensor_config.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,34 +24,24 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <map>
-#include <string>
-#include <utility>
+#include "cosm/cosm.hpp"
+#include "cosm/hal/hal.hpp"
 
-#include "rcppsw/config/base_config.hpp"
-#include "cosm/hal/sensors/config/ground_sensor_detection_config.hpp"
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+#include "cosm/hal/argos/sensors/config/ground_sensor_config.hpp"
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, hal, sensors, config);
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
-/**
- * \struct ground_sensor_config
- * \ingroup hal sensors config
- *
- * \brief Configuration for ground sensors, for robots that have them.
- *
- * Robots are:
- *
- * - ARGoS footbot
- */
-struct ground_sensor_config final : public rconfig::base_config {
-  std::map<std::string, ground_sensor_detection_config> detect_map{};
-};
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+using ground_sensor_config = chargos::sensors::config::ground_sensor_config;
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(config, sensors, hal, cosm);
 

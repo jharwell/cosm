@@ -91,8 +91,8 @@ class grid2D_view_entity : public crepr::entity2D,
    * \return A reference to the cell.
    */
   const cell_type& access(size_t i, size_t j) const {
-    ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
-    ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %lu", j, ydsize());
+    ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %zu", i, xdsize());
+    ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %zu", j, ydsize());
     return view()[i][j];
   }
 

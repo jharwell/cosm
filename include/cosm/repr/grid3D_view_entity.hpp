@@ -82,9 +82,9 @@ class grid3D_view_entity : public crepr::entity3D,
   ~grid3D_view_entity(void) override = default;
 
   const cell_type& access(size_t i, size_t j, size_t k) const {
-    ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %lu", i, xdsize());
-    ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %lu", j, ydsize());
-    ER_ASSERT(k < ydsize(), "Out of bounds Z access: %zu >= %lu", k, zdsize());
+    ER_ASSERT(i < xdsize(), "Out of bounds X access: %zu >= %zu", i, xdsize());
+    ER_ASSERT(j < ydsize(), "Out of bounds Y access: %zu >= %zu", j, ydsize());
+    ER_ASSERT(k < ydsize(), "Out of bounds Z access: %zu >= %zu", k, zdsize());
     return view()[i][j][k];
   }
 

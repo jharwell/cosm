@@ -32,12 +32,10 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/subsystem/base_subsystem.hpp"
 
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include "cosm/kin2D/diff_drive.hpp"
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/hal/actuators/led_actuator.hpp"
 #include "cosm/hal/actuators/wifi_actuator.hpp"
-#endif
 
 /*******************************************************************************
  * Macros
@@ -47,24 +45,29 @@
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
 #define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
-  hal::actuators::led_actuator,                 \
-    hal::actuators::wifi_actuator,              \
+  chargos::actuators::led_actuator,          \
+    chargos::actuators::wifi_actuator,       \
     kin2D::diff_drive,                          \
     kin2D::governed_diff_drive,                 \
-    hal::actuators::diff_drive_actuator
+    chal::actuators::diff_drive_actuator
 
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
 #define COSM_HAL_ROBOT_ACTUATOR_TYPES              \
-  hal::actuators::led_actuator,                    \
+  chal::actuators::led_actuator,                    \
     kin2D::diff_drive,                             \
     kin2D::governed_diff_drive,                    \
-    hal::actuators::diff_drive_actuator
+    chal::actuators::diff_drive_actuator
+
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
 #define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
-  hal::actuators::led_actuator,                 \
+  chal::actuators::led_actuator,                 \
     kin2D::diff_drive,                          \
     kin2D::governed_diff_drive,                 \
-    hal::actuators::diff_drive_actuator
+    chal::actuators::diff_drive_actuator
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3
+#define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
+    kin2D::diff_drive,                          \
+    kin2D::governed_diff_drive
 #endif
 
 /*******************************************************************************
@@ -125,18 +128,18 @@ class actuation_subsystem2D : private chsubsystem::base_subsystem {
                              const);
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             hal::actuators::led_actuator,
+                             chal::actuators::led_actuator,
                              leds);
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             hal::actuators::led_actuator,
+                             chal::actuators::led_actuator,
                              leds,
                              const);
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             hal::actuators::wifi_actuator,
+                             chal::actuators::wifi_actuator,
                              rab);
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             hal::actuators::wifi_actuator,
+                             chal::actuators::wifi_actuator,
                              rab,
                              const);
 

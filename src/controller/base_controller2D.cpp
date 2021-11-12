@@ -29,9 +29,6 @@
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rngm.hpp"
 
-#include "cosm/steer2D/config/force_calculator_config.hpp"
-#include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
-#include "cosm/subsystem/config/sensing_subsystemQ3D_config.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
@@ -61,7 +58,7 @@ void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
 #if (LIBRA_ER >= LIBRA_ER_ALL)
 void base_controller2D::ndc_pusht(void) const {
   ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +
-              std::string("] [") + cpal::kARGoSRobotNamePrefix + rcppsw::to_string(entity_id()) +
+              std::string("] [") + cpal::kRobotNamePrefix + rcppsw::to_string(entity_id()) +
               std::string("]"));
 }
 #endif

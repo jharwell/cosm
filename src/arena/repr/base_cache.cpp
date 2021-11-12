@@ -102,7 +102,7 @@ bool base_cache::contains_block(const crepr::base_block3D* const c_block) const 
 crepr::base_block3D* base_cache::block_select(rmath::rng* rng) {
   ER_ASSERT(m_blocks_vec.size() > 0, "Cannot select from empty block vector");
   if (nullptr != rng) {
-    size_t dist = rng->uniform(0UL, m_blocks_vec.size() - 1);
+    size_t dist = rng->uniform(rmath::rangez(0, m_blocks_vec.size() - 1));
     return m_blocks_vec[dist];
     /* auto it = m_blocks_vec.begin(); */
     /* std::advance(it, dist); */

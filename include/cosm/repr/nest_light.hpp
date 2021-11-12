@@ -37,8 +37,8 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm::pal {
-class argos_sm_adaptor;
+namespace cosm::pal::argos {
+class sm_adaptor;
 } /* namespace cosm::pal */
 
 NS_START(cosm, repr);
@@ -71,7 +71,7 @@ class nest_light final : public repr::colored_entity {
   nest_light(nest_light&&) = delete;
   nest_light& operator=(nest_light&&) = delete;
 
-  void initialize(pal::argos_sm_adaptor* sm);
+  void initialize(cpargos::sm_adaptor* sm);
 
  private:
   /* clang-format off */

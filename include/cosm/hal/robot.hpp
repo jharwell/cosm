@@ -42,11 +42,11 @@
 NS_START(cosm, hal);
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
-using robot = argos::CFootBotEntity;
+using robot = ::argos::CFootBotEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-using robot = argos::CEPuckEntity;
+using robot = ::argos::CEPuckEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
-using robot = argos::CPiPuckEntity;
+using robot = ::argos::CPiPuckEntity;
 #endif /* COSM_HAL_TARGET */
 
 NS_END(hal, cosm);

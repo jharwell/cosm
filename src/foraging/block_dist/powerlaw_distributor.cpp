@@ -56,7 +56,7 @@ dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block) {
    * Try to find a block cluster to distribute to, starting from a random
    * cluster size.
    */
-  size_t start = rng()->uniform(0UL, m_dists.size() - 1);
+  size_t start = rng()->uniform(rmath::rangez(0, m_dists.size() - 1));
   for (size_t i = 0; i < m_dists.size(); ++i) {
     auto* mclust = m_dists[(start + i) % m_dists.size()].get();
 
@@ -88,7 +88,8 @@ void powerlaw_distributor::initialize(
   /* First, calc cluster sizes, and sort */
   for (size_t i = 0; i < m_config_clusters; ++i) {
     /* can't have a cluster of size 0 */
-    auto index = static_cast<size_t>(std::max(1UL, m_pwrdist(rng())));
+    auto index = std::max(static_cast<decltype(m_pwrdist(rng()))>(1),
+                          m_pwrdist(rng()));
     clust_sizes.push_back(index);
   } /* for(i..) */
   std::sort(clust_sizes.begin(), clust_sizes.end(), std::greater<>());

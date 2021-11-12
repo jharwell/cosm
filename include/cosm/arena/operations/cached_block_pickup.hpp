@@ -47,8 +47,8 @@ namespace cosm::arena {
 class caching_arena_map;
 } /* namespace cosm::arena */
 
-namespace cosm::pal {
-class argos_sm_adaptor;
+namespace cosm::pal::argos {
+class sm_adaptor;
 } /* namespace cosm::pal */
 
 NS_START(cosm, arena, operations, detail);
@@ -86,7 +86,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
    */
   cached_block_pickup(carepr::arena_cache* cache,
                       crepr::base_block3D* pickup_block,
-                      cpal::argos_sm_adaptor* sm,
+                      cpargos::sm_adaptor* sm,
                       const rtypes::type_uuid& robot_id,
                       const rtypes::timestep& t,
                       const locking& locking);
@@ -114,7 +114,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   const locking              mc_locking;
 
   carepr::arena_cache*       m_real_cache;
-  cpal::argos_sm_adaptor*    m_sm;
+  cpargos::sm_adaptor*    m_sm;
 
   crepr::base_block3D*       m_pickup_block;
   /* clang-format on */

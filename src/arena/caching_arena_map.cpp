@@ -30,7 +30,7 @@
 #include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
-#include "cosm/pal/argos_sm_adaptor.hpp"
+#include "cosm/pal/argos/sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
@@ -55,7 +55,7 @@ caching_arena_map::~caching_arena_map(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool caching_arena_map::initialize(pal::argos_sm_adaptor* sm,
+bool caching_arena_map::initialize(cpargos::sm_adaptor* sm,
                                    const crepr::config::nests_config* nests) {
   bool ret = initialize_shared(sm, nests);
   ret |= initialize_private();
@@ -94,7 +94,7 @@ bool caching_arena_map::initialize_private(void) {
 } /* initialize_private() */
 
 void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
-                                   cpal::argos_sm_adaptor* sm) {
+                                   cpargos::sm_adaptor* sm) {
   auto& medium =
       sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
 
@@ -122,7 +122,7 @@ void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
 } /* caches_add() */
 
 void caching_arena_map::cache_remove(repr::arena_cache* victim,
-                                     pal::argos_sm_adaptor* sm) {
+                                     cpargos::sm_adaptor* sm) {
   ER_ASSERT(m_cachesno.size() == m_cacheso.size(),
             "Owned and access cache vectors have different sizes: %zu != %zu",
             m_cacheso.size(),

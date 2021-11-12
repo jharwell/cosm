@@ -1,7 +1,7 @@
 /**
  * \file light_sensor.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,174 +24,24 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
-
-#include "rcppsw/types/spatial_dist.hpp"
-#include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
-
 #include "cosm/hal/hal.hpp"
+#include "cosm/cosm.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
-#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_light_sensor.h>
-#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-#include <argos3/plugins/robots/e-puck/control_interface/ci_epuck_light_sensor.h>
-#endif /* COSM_HAL_TARGET */
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+#include "cosm/hal/argos/sensors/light_sensor.hpp"
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_FootBotLightSensor;
-class CCI_EPuckLightSensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_argos_footbot_light_sensor = std::is_same<TSensor,
-                                                   argos::CCI_FootBotLightSensor>;
-
-template<typename TSensor>
-using is_argos_epuck_light_sensor = std::is_same<TSensor,
-                                                   argos::CCI_EPuckLightSensor>;
-
-template<typename TSensor>
-using is_argos_pipuck_light_sensor = std::is_same<TSensor,
-                                                 std::false_type>;
-
-NS_END(detail);
+NS_START(cosm, hal, sensors);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class light_sensor_impl
- * \ingroup hal sensors
- *
- * \brief Light sensor wrapper.
- *
- * Supports the following robots:
- *
- * - ARGoS footbot^
- * - ARGoS epuck^
- * - ARGoS pipuck (stub only)
- *
- * ^The simulated sensor is expensive to update each timestep, AND is not
- *  necessarily needed each timestep, so it is disabled upon creation, so robots
- *  can selectively enable/disable it as needed for maximum computational
- *  efficiency.
- *
- * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                  HAL. If nullptr, then that effectively disables the sensor
- *                  at compile time, and SFINAE ensures no member functions can
- *                  be called.
- */
-template <typename TSensor>
-class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
-                                private rpdecorator::decorator<TSensor*> {
- private:
-  using rpdecorator::decorator<TSensor*>::decoratee;
-
- public:
-  using impl_type = TSensor;
-
-  /**
-   * \brief A light sensor reading (value, angle) pair.
-   *
-   * The first argument is the value of the sensor, and the
-   * second argument is the angle of the sensor on the robot in relation to the
-   * positive x axis.
-   */
-  struct reading {
-    double intensity;
-    double angle;
-
-    reading(double _intensity, double _angle)
-        : intensity(_intensity),
-          angle(_angle) {}
-  };
-
-  explicit light_sensor_impl(TSensor * const sensor)
-      : ER_CLIENT_INIT("cosm.hal.sensors.light"),
-        rpdecorator::decorator<TSensor*>(sensor) {
-    disable();
-  }
-
-  const light_sensor_impl& operator=(const light_sensor_impl&) = delete;
-  light_sensor_impl(const light_sensor_impl&) = default;
-
-  /**
-   * \brief Get the current light sensor readings for the footbot/epuck robots.
-   *
-   * \return A vector of \ref reading.
-   */
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
-                                  detail::is_argos_epuck_light_sensor<U>::value)>
-  std::vector<reading>  readings(void) const {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-
-    std::vector<reading> ret;
-    for (auto &r : decoratee()->GetReadings()) {
-      ret.push_back({r.Value, r.Angle.GetValue()});
-    } /* for(&r..) */
-
-    return ret;
-  }
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
-                                  detail::is_argos_epuck_light_sensor<U>::value)>
-  void enable(void) const {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Enable();
-  }
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
-                                  detail::is_argos_epuck_light_sensor<U>::value)>
-  void disable(void) const {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Disable();
-  }
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
-  void enable(void) {}
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
-  void disable(void) {}
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_pipuck_light_sensor<U>::value)>
-  std::vector<reading>  readings(void) const { return {}; }
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_footbot_light_sensor<U>::value ||
-                                  detail::is_argos_epuck_light_sensor<U>::value)>
-  void reset(void) { decoratee()->Reset(); }
-};
-
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
-using light_sensor = light_sensor_impl<argos::CCI_FootBotLightSensor>;
-#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-using light_sensor = light_sensor_impl<argos::CCI_EPuckLightSensor>;
-#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
-using light_sensor = light_sensor_impl<std::false_type>;
-#else
-class light_sensor{};
-#endif /* COSM_HAL_TARGET */
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+using light_sensor = chargos::sensors::light_sensor;
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);
 

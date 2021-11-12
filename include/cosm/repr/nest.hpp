@@ -73,7 +73,7 @@ class nest : public repr::unicell_immovable_entity2D,
    *
    * \param light_color The color to make the lights above the nest.
    */
-  void initialize(pal::argos_sm_adaptor* sm,
+  void initialize(cpargos::sm_adaptor* sm,
                   const rutils::color& light_color);
 
  private:

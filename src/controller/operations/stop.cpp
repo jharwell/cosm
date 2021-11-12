@@ -24,8 +24,7 @@
 #include "cosm/controller/operations/stop.hpp"
 
 #include "cosm/fsm/supervisor_fsm.hpp"
-#include "cosm/pal/argos_controller2D_adaptor.hpp"
-#include "cosm/pal/argos_controllerQ3D_adaptor.hpp"
+#include "cosm/controller/base_controller.hpp"
 
 /*******************************************************************************
  * Namespaces

@@ -64,7 +64,7 @@ dist_status multi_cluster_distributor::distribute_block(crepr::base_block3D* blo
           size());
 
   /* -1 because we are working with array indices */
-  size_t start = rng()->uniform(0UL, m_dists.size() - 1);
+  size_t start = rng()->uniform(rmath::rangez(0, m_dists.size() - 1));
 
   for (size_t i = 0; i < m_dists.size(); ++i) {
     cluster_distributor& dist = m_dists[(start + i) % m_dists.size()];

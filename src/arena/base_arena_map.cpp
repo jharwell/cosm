@@ -37,7 +37,7 @@
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
-#include "cosm/pal/argos_sm_adaptor.hpp"
+#include "cosm/pal/argos/sm_adaptor.hpp"
 #include "cosm/repr/base_block3D.hpp"
 #include "cosm/repr/operations/nest_extent.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
@@ -96,14 +96,14 @@ base_arena_map::~base_arena_map(void) = default;
 /*******************************************************************************
  * Initialization Functions
  ******************************************************************************/
-bool base_arena_map::initialize(pal::argos_sm_adaptor* sm,
+bool base_arena_map::initialize(cpargos::sm_adaptor* sm,
                                 const crepr::config::nests_config* nests) {
   bool ret = initialize_shared(sm, nests);
   ret |= initialize_private();
   return ret;
 } /* initialize */
 
-bool base_arena_map::initialize_shared(pal::argos_sm_adaptor* sm,
+bool base_arena_map::initialize_shared(cpargos::sm_adaptor* sm,
                                        const crepr::config::nests_config* nests) {
   /* compute block bounding box */
   auto* block = *std::max_element(
@@ -151,7 +151,7 @@ bool base_arena_map::initialize_private(void) {
 } /* initialize_private() */
 
 void base_arena_map::initialize_nests(const crepr::config::nests_config* nests,
-                                      pal::argos_sm_adaptor* sm,
+                                      cpargos::sm_adaptor* sm,
                                       const rtypes::discretize_ratio& resolution) {
   if (nullptr != nests) {
     ER_INFO("Initialize %zu nests", nests->nests.size());

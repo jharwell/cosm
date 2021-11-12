@@ -19,6 +19,34 @@ else()
 endif()
 
 ################################################################################
+# HAL Configuration Options                                                    #
+################################################################################
+if(NOT DEFINED COSM_BUILD_FOR)
+  set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
+endif()
+
+if("${COSM_BUILD_FOR}" MATCHES "ARGOS_FOOTBOT")
+  message(STATUS "Building for ARGoS footbot")
+  set(COSM_HAL_TARGET "argos-footbot")
+elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
+  message(STATUS "Building for ARGoS eepuck3D")
+  set(COSM_HAL_TARGET "argos-eepuck3D")
+elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
+  message(STATUS "Building for ARGoS pipuck")
+  set(COSM_HAL_TARGET "argos-pipuck")
+elseif("${COSM_BUILD_FOR}" MATCHES "ROS_TURTLEBOT3")
+  message(STATUS "Building for ROS Turtlebot3")
+  set(COSM_HAL_TARGET "ros-turtlebot3")
+else()
+  message(FATAL_ERROR
+    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [ARGOS_FOOTBOT,ARGOS_EEPUCK3D,ARGOS_PIPUCK,ROS_TURTLEBOT3]")
+endif()
+
+if (NOT DEFINED COSM_HAL_TARGET)
+  message(FATAL_ERROR "COSM_HAL_TARGET not defined")
+endif()
+
+################################################################################
 # PAL Configuration Options                                                    #
 ################################################################################
 if("${COSM_BUILD_FOR}" MATCHES "ARGOS")
@@ -35,33 +63,24 @@ if("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   if(NOT DEFINED COSM_ARGOS_CONTROLLER_XML_ID)
     message(WARNING "COSM_ARGOS_CONTROLLER_XML_ID not defined")
   endif()
+
+elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
+  set(COSM_PAL_TARGET "ros")
+  message(STATUS "Building for platorm ROS")
+  if(NOT DEFINED COSM_ROS_ROBOT_TYPE)
+    message(WARNING "COSM_ROS_ROBOT_TYPE not defined")
+  endif()
+
+  if(NOT DEFINED COSM_ROS_ROBOT_NAME_PREFIX)
+    message(WARNING "COSM_ROS_ROBOT_NAME_PREFIX not defined")
+  endif()
+
+  if(NOT DEFINED COSM_ROS_CONTROLLER_XML_ID)
+    message(WARNING "COSM_ROS_CONTROLLER_XML_ID not defined")
+  endif()
+
 endif()
 configure_file(${${target}_INC_PATH}/${target}/pal/pal.hpp.in ${${target}_INC_PATH}/${target}/pal/pal.hpp @ONLY)
-
-################################################################################
-# HAL Configuration Options                                                    #
-################################################################################
-if(NOT DEFINED COSM_BUILD_FOR)
-  set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
-endif()
-
-if("${COSM_BUILD_FOR}" MATCHES "ARGOS_FOOTBOT")
-  message(STATUS "Building for ARGoS footbot")
-  set(COSM_HAL_TARGET "argos-footbot")
-elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
-  message(STATUS "Building for ARGoS eepuck3D")
-  set(COSM_HAL_TARGET "argos-eepuck3D")
-elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
-  message(STATUS "Building for ARGoS pipuck")
-  set(COSM_HAL_TARGET "argos-pipuck")
-else()
-  message(FATAL_ERROR
-    "Unknown build target '${COSM_BUILD_FOR}'. Must be: [ARGOS_FOOTBOT,ARGOS_EEPUCK3D,ARGOS_PIPUCK]")
-endif()
-
-if (NOT DEFINED COSM_HAL_TARGET)
-  message(WARNING "COSM_HAL_TARGET not defined")
-endif()
 
 ################################################################################
 # Qt Configuration Options                                                     #
@@ -78,7 +97,8 @@ endif()
 #   the compiler is not Intel, because the cmake module for Qt does not play
 #   nice with the Intel compiler.
 if (NOT DEFINED COSM_WITH_VIS)
-  if ("${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
+  if ("${COSM_BUILD_FOR}" MATCHES "x86_64" AND
+    "${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
       NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     set(COSM_WITH_VIS "ON")
   else()
@@ -137,7 +157,7 @@ endif()
 # Libraries                                                                    #
 ################################################################################
 set(${target}_LIBRARIES
-  rcppsw
+  ${rcppsw_LIBRARY_NAME}
   )
 if (${COSM_WITH_VIS})
   set(${target}_LIBRARIES ${${target}_LIBRARIES}
@@ -156,29 +176,43 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
 endif()
 
 # Define the COSM library
-if (NOT TARGET ${target}-${COSM_HAL_TARGET})
-  add_library(${target}-${COSM_HAL_TARGET} STATIC ${${target}_SRC})
-  target_link_libraries(${target}-${COSM_HAL_TARGET} ${${target}_LIBRARIES})
-  target_link_directories(${target}-${COSM_HAL_TARGET} PUBLIC ${${target}_LIBRARY_DIRS})
-  target_include_directories(${target}-${COSM_HAL_TARGET} PUBLIC ${${target}_INCLUDE_DIRS})
-  target_include_directories(${target}-${COSM_HAL_TARGET} SYSTEM PRIVATE "${${target}_SYS_INCLUDE_DIRS}")
+set(COSM_LIBRARY_NAME ${target}-${COSM_HAL_TARGET}-${CMAKE_SYSTEM_PROCESSOR})
+if (NOT TARGET ${COSM_LIBRARY_NAME})
+  add_library(${COSM_LIBRARY_NAME} STATIC ${${target}_SRC})
+
+  # Alias so we plug into the LIBRA framework properly
+  add_library(${target} ALIAS ${COSM_LIBRARY_NAME})
+
+  target_link_libraries(${COSM_LIBRARY_NAME} ${${target}_LIBRARIES})
+  target_link_directories(${COSM_LIBRARY_NAME} PUBLIC ${${target}_LIBRARY_DIRS})
+  target_include_directories(${COSM_LIBRARY_NAME} PUBLIC ${${target}_INCLUDE_DIRS})
+  target_include_directories(${COSM_LIBRARY_NAME} SYSTEM PRIVATE "${${target}_SYS_INCLUDE_DIRS}")
 
   # This is needed for HAL SAA sensing/actuator access with boost::variant
-  target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
+  target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
 
+  # Spurious warning, since LIBRA already requires a GCC > 7.1
+  if ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm")
+    target_compile_options(${COSM_LIBRARY_NAME} PUBLIC -Wno-psabi)
+  endif()
+  
   if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
-    target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
   elseif("${COSM_HAL_TARGET}" MATCHES "argos-eepuck3D")
-    target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
   elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
-    target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
+  elseif("${COSM_HAL_TARGET}" MATCHES "ros-turtlebot3")
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_HAL_TARGET=COSM_HAL_TARGET_ROS_TURTLEBOT3)
   endif()
 
   if("${COSM_PAL_TARGET}" MATCHES "argos")
-    target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
+  elseif("${COSM_PAL_TARGET}" MATCHES "ros")
+    target_compile_definitions(${COSM_LIBRARY_NAME} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ROS)
   endif()
 
-  set_property(GLOBAL PROPERTY EXPORT_NAME ${target}-${COSM_HAL_TARGET} ${target})
+  set_property(GLOBAL PROPERTY EXPORT_NAME ${COSM_LIBRARY_NAME} ${target})
 endif()
 
 ################################################################################
@@ -189,7 +223,10 @@ if (NOT IS_ROOT_PROJECT)
   set(${target}_SYS_INCLUDE_DIRS "${${target}_SYS_INCLUDE_DIRS}" PARENT_SCOPE)
   set(${target}_LIBRARIES "${${target}_LIBRARIES}" PARENT_SCOPE)
   set(${target}_LIBRARY_DIRS "${${target}_LIBRARY_DIRS}" PARENT_SCOPE)
+  set(${target}_LIBRARY_NAME ${COSM_LIBRARY_NAME} PARENT_SCOPE)
   set(COSM_WITH_VIS ${COSM_WITH_VIS} PARENT_SCOPE)
   set(COSM_DEPS_PREFIX ${COSM_DEPS_PREFIX} PARENT_SCOPE)
   set(COSM_HAL_TARGET ${COSM_HAL_TARGET} PARENT_SCOPE)
+  set(COSM_PAL_TARGET ${COSM_PAL_TARGET} PARENT_SCOPE)
+  
 endif()

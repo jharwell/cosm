@@ -45,8 +45,8 @@ NS_START(cosm, subsystem, config);
  * operate in two dimensions.
  */
 struct actuation_subsystem2D_config final : public rconfig::base_config {
-  kin2D::config::diff_drive_config diff_drive{};
-  steer2D::config::force_calculator_config steering{};
+  ckin2D::config::diff_drive_config diff_drive{};
+  csteer2D::config::force_calculator_config steering{};
 };
 
 NS_END(config, subsystem, cosm);

@@ -1,7 +1,7 @@
 /**
  * \file position_sensor.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,125 +24,23 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
-
-#include "rcppsw/math/vector3.hpp"
-#include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
-
-#include "cosm/cosm.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/cosm.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-#include <argos3/plugins/robots/generic/control_interface/ci_positioning_sensor.h>
+#include "cosm/hal/argos/sensors/position_sensor.hpp"
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_argos_position_sensor = std::is_same<TSensor,
-                                           argos::CCI_PositioningSensor>;
-
-NS_END(detail);
+NS_START(cosm, hal, sensors);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class position_sensor_impl
- * \ingroup hal sensors
- *
- * \brief Position sensor wrapper.
- *
- * Supports the following robots:
- *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
- *
- * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                 HAL. If nullptr, then that effectively disables the sensor
- *                 at compile time, and SFINAE ensures no member functions can
- *                 be called.
- */
-template <typename TSensor>
-class position_sensor_impl final : public rer::client<position_sensor_impl<TSensor>>,
-                                   private rpdecorator::decorator<TSensor*> {
- private:
-  using rpdecorator::decorator<TSensor*>::decoratee;
-
- public:
-  using impl_type = TSensor;
-
-  /**
-   * \brief A position sensor reading, given as a 2D position and a triplet of
-   * (X,Y,Z) angles.
-   */
-  struct sensor_reading {
-    rmath::vector3d position{};
-    rmath::radians x_ang{};
-    rmath::radians y_ang{};
-    rmath::radians z_ang{};
-  };
-
-  explicit position_sensor_impl(TSensor * const sensor)
-      : ER_CLIENT_INIT("cosm.hal.sensors.position"),
-        rpdecorator::decorator<TSensor*>(sensor) {}
-
-  const position_sensor_impl& operator=(const position_sensor_impl&) = delete;
-  position_sensor_impl(const position_sensor_impl&) = default;
-
-  /**
-   * \brief Get the current position sensor readings for the footbot robot.
-   *
-   * \return A \ref sensor_reading.
-   */
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
-  sensor_reading reading(void) const {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-
-    auto tmp = decoratee()->GetReading();
-    sensor_reading ret;
-    argos::CRadians x, y, z;
-    tmp.Orientation.ToEulerAngles(z, y, x);
-    ret.x_ang = rmath::radians(x.GetValue());
-    ret.y_ang = rmath::radians(y.GetValue());
-    ret.z_ang = rmath::radians(z.GetValue());
-    ret.position = rmath::vector3d(tmp.Position.GetX(),
-                                   tmp.Position.GetY(),
-                                   tmp.Position.GetZ());
-    return ret;
-  }
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
-  void reset(void) { decoratee()->Reset(); }
-
-template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_argos_position_sensor<U>::value)>
-  void disable(void) {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Disable();
-  }
-
-
-};
-
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-using position_sensor = position_sensor_impl<argos::CCI_PositioningSensor>;
-#else
-class position_sensor{};
+using position_sensor = chargos::sensors::position_sensor;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);

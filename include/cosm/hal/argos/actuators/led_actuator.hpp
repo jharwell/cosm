@@ -1,0 +1,193 @@
+/**
+ * \file led_actuator.hpp
+ *
+ * \copyright 2018 John Harwell, All rights reserved.
+ *
+ * This file is part of COSM.
+ *
+ * COSM is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * COSM.  If not, see <http://www.gnu.org/licenses/
+ */
+
+#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_
+#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_
+
+/*******************************************************************************
+ * Includes
+ ******************************************************************************/
+#include "rcppsw/utils/color.hpp"
+#include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
+#include "cosm/hal/actuators/base_actuator.hpp"
+
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+#include <argos3/plugins/robots/generic/control_interface/ci_directional_leds_actuator.h>
+#endif /* COSM_HAL_TARGET */
+#include <argos3/core/utility/datatypes/color.h>
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+namespace argos {
+class CCI_LEDsActuator;
+class CCI_DirectionalLEDsActuator;
+} /* namespace argos */
+
+NS_START(cosm, hal, argos, actuators, detail);
+
+/*******************************************************************************
+ * Templates
+ ******************************************************************************/
+template<typename TActuator>
+using is_generic_led_actuator = std::is_same<TActuator,
+                                             ::argos::CCI_LEDsActuator>;
+
+template<typename TActuator>
+using is_generic_dirled_actuator = std::is_same<TActuator,
+                                                ::argos::CCI_DirectionalLEDsActuator>;
+
+NS_END(detail);
+
+/*******************************************************************************
+ * Class Definitions
+ ******************************************************************************/
+/**
+ * \class led_actuator_impl
+ * \ingroup hal argos actuators
+ *
+ * \brief LED actuator wrapper.
+ *
+ *  Supports the following robots:
+ *
+ * - ARGoS footbot
+ * - ARGoS epuck
+ * - ARGoS pipuck
+ *
+ * \tparam TActuator The underlying actuator handle type abstracted away by the
+ *                   HAL.
+ */
+template<typename TActuator>
+class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>,
+                                public chal::actuators::base_actuator,
+                                private rpdecorator::decorator<TActuator*> {
+ private:
+  using rpdecorator::decorator<TActuator*>::decoratee;
+
+ public:
+  using impl_type = TActuator;
+
+  explicit led_actuator_impl(TActuator* const leds)
+      : ER_CLIENT_INIT("cosm.hal.argos.actuators.led"),
+        rpdecorator::decorator<TActuator*>(leds) {}
+
+  const led_actuator_impl& operator=(const led_actuator_impl&) = delete;
+  led_actuator_impl(const led_actuator_impl&) = default;
+
+  /**
+   * \brief Reset the LED actuator (turn all LEDs off).
+   */
+  void reset(void) override { set_color(-1, rutils::color::kBLACK); }
+
+  /**
+   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so we
+   * only turn the LEDs off.
+   */
+  void disable(void) override { reset(); }
+
+  /**
+   * \brief Enable the actuator. In ARGoS the LED actuator is always enabled
+   * (not computationally expensive), so this does nothing.
+   */
+  void enable(void) override { }
+
+  /**
+   * \brief Set a single LED on the robot to a specific color (or set all LEDs
+   * to a specific color).
+   *
+   * \param id Which LED to change color. This is application defined. However,
+   * the reserved value of -1 should be interpreted to mean set the color of
+   * \c ALL LEDs on the robot.
+   *
+   * \param color The color to change the LED to. This is application defined.
+   *
+   * \return \c TRUE if successful, and \c FALSE otherwise.
+   */
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_generic_led_actuator<U>::value ||
+                                  detail::is_generic_dirled_actuator<U>::value)>
+  bool set_color(int id, const rutils::color& color) {
+    ER_CHECK(nullptr != decoratee(),
+             "%s called with NULL impl handle!",
+             __FUNCTION__);
+    if (-1 == id) {
+      decoratee()->SetAllColors(::argos::CColor(color.red(),
+                                         color.green(),
+                                         color.blue(),
+                                         color.alpha()));
+    } else {
+      decoratee()->SetSingleColor(id, ::argos::CColor(color.red(),
+                                               color.green(),
+                                               color.blue(),
+                                               color.alpha()));
+    }
+    return true;
+
+ error:
+    return false;
+  }
+
+  /**
+   * \brief Set intensity for a single LED on the robot (or set intensity of all
+   * LEDs).
+   *
+   * \param id Which LED to set intensity for. This is application
+   * defined. However, the reserved value of -1 should be interpreted to mean
+   * set the intensity of \c ALL LEDs on the robot.
+   *
+   * \param intensity In the range [0,255]. Application defined meaning.
+   *
+   * \return \c TRUE if successful, and \c FALSE otherwise.
+   */
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_generic_led_actuator<U>::value ||
+                                  detail::is_generic_dirled_actuator<U>::value)>
+  bool set_intensity(int id, uint8_t intensity) {
+    ER_CHECK(nullptr != decoratee(),
+             "%s called with NULL impl handle!",
+             __FUNCTION__);
+
+    if (-1 == id) {
+      decoratee()->SetAllIntensities(intensity);
+    } else {
+      decoratee()->SetSingleIntensity(id, intensity);
+    }
+    return true;
+
+ error:
+    return false;
+  }
+};
+
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+using led_actuator = led_actuator_impl<::argos::CCI_LEDsActuator>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
+using led_actuator = led_actuator_impl<::argos::CCI_DirectionalLEDsActuator>;
+#else
+class led_actuator {};
+#endif /* COSM_HAL_TARGET */
+
+NS_END(actuators, argos, hal, cosm);
+
+#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_ */

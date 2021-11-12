@@ -231,7 +231,7 @@ random_distributor::coord_search_free_cell(
       }
     } /* for(j..) */
   } /* for(i..) */
-  size_t start = rng()->uniform(0UL, rel_coords.size() - 1);
+  size_t start = rng()->uniform(rmath::rangez(0, rel_coords.size() - 1));
   for (size_t i = 0; i < rel_coords.size(); ++i) {
     auto rel = rel_coords[(start + i) % rel_coords.size()];
     auto abs = mc_origin + rel;
