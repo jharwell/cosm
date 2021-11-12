@@ -178,8 +178,8 @@ type for that category.
 
    * - ``spatial_interference_counts``
 
-     - # robots entering, currently encountering, and exiting the inter-robot
-       interference avoidance state.
+     - Metrics capturing # robots entering, currently encountering, and exiting
+       the inter-robot interference avoidance state.
 
      - append
 
@@ -187,8 +187,8 @@ type for that category.
 
    * - ``spatial_interference_locs2D``
 
-     - Spatial distribution of inter-robot interference locations in 2D in the
-       arena
+     - Metrics capturing the spatial distribution of inter-robot interference
+       locations in 2D in the arena.
 
      - create,truncate
 
@@ -196,8 +196,8 @@ type for that category.
 
    * - ``spatial_interference_locs3D``
 
-     - Spatial distribution of inter-robot interference locations in a 3D
-       volumetric spaces in the arena.
+     - Metrics capturing the spatial distribution of inter-robot interference
+       locations in 3D in the arena.
 
      - create,truncate
 
@@ -205,7 +205,8 @@ type for that category.
 
    * - ``spatial_movement``
 
-     - Swarm average distance traveled/velocity for different types of motion.
+     - Metrics capturing average distance traveled/velocity for different types
+       of robot motion.
 
      - append
 
@@ -214,9 +215,9 @@ type for that category.
 
    * - ``spatial_nest_zone``
 
-     - # Robots entering, currently in, and exiting, the nest. Average time
-       spent in the nest and first time a robot enters the nest during
-       simulation (for any reason).
+     - Metrics capturing # robots entering, currently in, and exiting, the
+       nest. Average time spent in the nest and first time a robot enters the
+       nest during simulation (for any reason).
 
      - append
 
@@ -224,7 +225,7 @@ type for that category.
 
    * - ``spatial_dist_pos2D``
 
-     - Swarm spatial distribution in 2D space.
+     - Metrics capturing the spatial distribution of the swarm in 2D space.
 
      - create,truncate
 
@@ -232,7 +233,7 @@ type for that category.
 
    * - ``swarm_dist_pos3D``
 
-     - Swarm spatial distribution in 3D space.
+     - Metrics capturing the spatial distribution of the swarm in 3D space.
 
      - create,truncate
 
@@ -240,7 +241,8 @@ type for that category.
 
    * - ``block_acq_counts``
 
-     - Counts of robots exploring for, vectoring to, and acquiring blocks.
+     - Metrics capturing the # robots exploring for, vectoring to, and acquiring
+       blocks.
 
      - append
 
@@ -248,7 +250,8 @@ type for that category.
 
    * - ``block_acq_locs2D``
 
-     - 2D spatial distribution of where robots acquire goals.
+     - Metrics capturing the 2D spatial distribution of where robots acquire
+       blocks.
 
      - create,truncate
 
@@ -256,7 +259,8 @@ type for that category.
 
    * - ``block_acq_explore_locs2D``
 
-     - 2D spatial distribution of where robots exploring for blocks.
+     - Metrics capturing the 2D spatial distribution of where robots explore
+       for blocks.
 
      - create,truncate
 
@@ -264,7 +268,8 @@ type for that category.
 
    * - ``block_acq_explore_locs3D``
 
-     - 3D spatial distribution of where robots exploring for blocks.
+     - Metrics capturing the 3D spatial distribution of where robots explore
+       for blocks.
 
      - create,truncate
 
@@ -272,7 +277,8 @@ type for that category.
 
    * - ``block_acq_vector_locs2D``
 
-     - 2D spatial distribution of where robots vector to known blocks.
+     - Metrics capturing the 2D spatial distribution of where robots vector to
+       known blocks.
 
      - create,truncate
 
@@ -280,7 +286,8 @@ type for that category.
 
    * - ``block_transportee``
 
-     - Swarm # blocks collected/ # transporters per block.
+     - Metrics capturing the # blocks collected/ # transporters per block for
+       different block types.
 
      - append
 
@@ -288,7 +295,8 @@ type for that category.
 
    * - ``block_transporter``
 
-     - Swarm block transport (not necessarily to the nest)
+     - Metrics capturing robot behavior when transporting blocks to the nest
+       (e.g., phototaxis).
 
      - append
 
@@ -296,7 +304,7 @@ type for that category.
 
    * - ``task_distribution``
 
-     - TAB task allocation probabilities/counts.
+     - Metrics capturing TAB task allocation probabilities/counts.
 
      - append
 
@@ -304,7 +312,7 @@ type for that category.
 
    * - ``swarm_convergence``
 
-     - Results of swarm convergence calculations.
+     - Metrics capturing the results of swarm convergence calculations.
 
      - append
 
@@ -312,23 +320,18 @@ type for that category.
 
    * - ``tv_population``
 
-     - Poisson processes for governing population dynamics.
+     - Metrics capturing the effect of Poisson processes for governing
+       population dynamics (e.g., robot malfunction/repair).
 
      - append
 
      -
 
-   * - ``oracle_manager``
-
-     - Enable swarms to make decisions based on perfect information.
-
-     - append
-
-     -
 
    * - ``block_distributor``
 
-     - Block distribution.
+     - Metrics capturing different aspects of block distribution in general
+       (e.g., # clusters).
 
      - append
 
@@ -336,7 +339,7 @@ type for that category.
 
    * - ``block_motion``
 
-     - Free block motion in the arena.
+     - Metrics capturing aspects of free block motion in the arena.
 
      - append
 
@@ -344,7 +347,8 @@ type for that category.
 
    * - ``block_clusters``
 
-     - Size, block count, etc. in block clusters in the arena.
+     - Metrics capturing the size, block count, etc. in block clusters in the
+       arena.
 
      - append
 
@@ -352,7 +356,8 @@ type for that category.
 
    * - ``nest_acq_strategy``
 
-     - The strategies robots can use to acquire nests in the arena.
+     - Diagnostic metrics for the strategies robots can use to acquire nests in
+       the arena.
 
      - append
 

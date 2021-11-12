@@ -177,6 +177,8 @@ if (NOT TARGET ${target}-${COSM_HAL_TARGET})
   if("${COSM_PAL_TARGET}" MATCHES "argos")
     target_compile_definitions(${target}-${COSM_HAL_TARGET} PUBLIC COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
   endif()
+
+  set_property(GLOBAL PROPERTY EXPORT_NAME ${target}-${COSM_HAL_TARGET} ${target})
 endif()
 
 ################################################################################
