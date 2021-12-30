@@ -47,12 +47,11 @@ void random_thresh::task_start(cta::taskable_argument* arg) {
 } /* task_start() */
 
 void random_thresh::task_execute(void) {
-  auto* ground = saa()->sensing()->ground();
   /*
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.
    */
-  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (saa()->sensing()->nest_detect()) {
     auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
     if (dist_to_light <= m_thresh.v()) {
       m_task_running = false;

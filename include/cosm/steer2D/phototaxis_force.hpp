@@ -26,8 +26,8 @@
  ******************************************************************************/
 #include <vector>
 
-#include "cosm/hal/sensors/colored_blob_camera_sensor.hpp"
-#include "cosm/hal/sensors/light_sensor.hpp"
+#include "cosm/hal/sensors/colored_blob_camera_sensor_reading.hpp"
+#include "cosm/hal/sensors/light_sensor_reading.hpp"
 #include "cosm/steer2D/boid.hpp"
 
 /*******************************************************************************
@@ -50,9 +50,9 @@ struct phototaxis_force_config;
  */
 class phototaxis_force {
  public:
-  using light_sensor_readings = std::vector<hal::sensors::light_sensor::reading>;
+  using light_sensor_readings = std::vector<hal::sensors::light_sensor_reading>;
   using camera_sensor_readings =
-      std::vector<hal::sensors::colored_blob_camera_sensor::reading>;
+      std::vector<hal::sensors::colored_blob_camera_sensor_reading>;
   explicit phototaxis_force(const config::phototaxis_force_config* config);
 
   rmath::vector2d operator()(const light_sensor_readings& readings) const;

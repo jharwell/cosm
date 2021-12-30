@@ -26,10 +26,9 @@
 #include <argos3/plugins/robots/generic/control_interface/ci_battery_sensor.h>
 
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/hal/hal.hpp"
-#include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/argos/sensors/argos_sensor.hpp"
 
 /******************************************************************************
  * Namespaces/Decls
@@ -62,21 +61,20 @@ NS_END(detail);
  * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                  HAL. If nullptr, then that effectively disables the sensor
- *                  at compile time, and SFINAE ensures no member functions can
- *                  be called.
+ *                  HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor>>,
-                                  public chal::sensors::base_sensor<TSensor> {
+                                  public chargos::sensors::argos_sensor<TSensor> {
  private:
-  using chal::sensors::base_sensor<TSensor>::decoratee;
+  using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
  public:
   using impl_type = TSensor;
-  using chal::sensors::base_sensor<TSensor>::enable;
-  using chal::sensors::base_sensor<TSensor>::disable;
-  using chal::sensors::base_sensor<TSensor>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::enable;
+  using chargos::sensors::argos_sensor<impl_type>::disable;
+  using chargos::sensors::argos_sensor<impl_type>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
   /**
    * \brief A battery sensor reading.
@@ -92,9 +90,9 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
     double time_left;
   };
 
-  explicit battery_sensor_impl(TSensor * const sensor)
+  explicit battery_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.battery"),
-        rpdecorator::decorator<TSensor*>(sensor) {}
+        chargos::sensors::argos_sensor<impl_type>(sensor) {}
 
   const battery_sensor_impl& operator=(const battery_sensor_impl&) = delete;
   battery_sensor_impl(const battery_sensor_impl&) = default;
@@ -102,12 +100,16 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
   /**
    * \brief Get the current battery sensor reading for the footbot robot.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_battery_sensor<U>::value)>
   sensor_reading reading(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
+
     auto temp = decoratee()->GetReading();
     return {temp.AvailableCharge, temp.TimeLeft};
   }

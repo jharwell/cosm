@@ -53,7 +53,7 @@ util_hfsm::util_hfsm(const fsm_params* const params,
  ******************************************************************************/
 RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
   actuation()->governed_diff_drive()->reset();
-  actuation()->leds()->set_color(-1, rutils::color::kWHITE);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekWAIT_FOR_SIGNAL);
 }
 
 /*******************************************************************************

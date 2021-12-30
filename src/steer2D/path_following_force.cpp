@@ -45,7 +45,8 @@ rmath::vector2d
 path_following_force::operator()(const boid& entity,
                                  csteer2D::ds::path_state* state) const {
   auto next_point = state->next_point();
-  if ((entity.pos2D() - next_point).length() <= mc_radius) {
+  auto odom = entity.odometry();
+  if ((odom.pose.position.to_2D() - next_point).length() <= mc_radius) {
     state->mark_progress(1);
   }
   if (state->is_complete()) {

@@ -133,8 +133,8 @@ class random_distributor : public rer::client<random_distributor>,
 
   /* clang-format off */
   const rmath::vector2z                         mc_origin;
-  const rmath::rangeu                           mc_xspan;
-  const rmath::rangeu                           mc_yspan;
+  const rmath::rangez                           mc_xspan;
+  const rmath::rangez                           mc_yspan;
   const cspatial::conflict_checker::map_cb_type mc_conflict_check;
   const dist_success_cb_type                    mc_dist_success;
 

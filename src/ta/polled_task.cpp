@@ -36,7 +36,7 @@ polled_task::~polled_task(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void polled_task::exec_estimate_init(const rmath::rangeu& bounds,
+void polled_task::exec_estimate_init(const rmath::rangez& bounds,
                                      rmath::rng* rng) {
   executable_task::exec_estimate_init(rtypes::timestep(rng->uniform(bounds)));
 } /* exec_estimate_init() */

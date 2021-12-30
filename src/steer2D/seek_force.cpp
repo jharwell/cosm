@@ -33,7 +33,8 @@ NS_START(cosm, steer2D);
  ******************************************************************************/
 rmath::vector2d seek_force::operator()(const boid& entity,
                                        const rmath::vector2d& target) const {
-  rmath::vector2d desired = (target - entity.pos2D()).normalize();
+  auto odom = entity.odometry();
+  rmath::vector2d desired = (target - odom.pose.position.to_2D()).normalize();
   /*
    * atan2() is discontinuous at angles ~pi! So we wrap the angle to target
    * into [-pi,pi].
@@ -45,7 +46,7 @@ rmath::vector2d seek_force::operator()(const boid& entity,
    * vector seems to have done the trick, for now. See COSM#39,RCPPSW#232.
    */
   auto angle =
-      (desired.angle() - entity.linear_velocity().angle()).signed_normalize();
+      (desired.angle() - odom.twist.linear.to_2D().angle()).signed_normalize();
   return rmath::vector2d(desired.length(), angle).scale(mc_max);
 } /* operator()() */
 

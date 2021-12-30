@@ -8,6 +8,8 @@
                   (let ((includes-list (list
                                         (substitute-in-file-name "$rcsw/include")
                                         (substitute-in-file-name "$rcppsw/include")
+                                        (substitute-in-file-name "$rcppsw/ext")
+                                        (substitute-in-file-name "/opt/ros/noetic/include")
                                         (concat (projectile-project-root)
                                                 "include")
                                         "/usr/include/lua5.2"

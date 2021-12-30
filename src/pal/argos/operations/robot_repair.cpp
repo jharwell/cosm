@@ -24,8 +24,8 @@
 #include "cosm/pal/argos/operations/robot_repair.hpp"
 
 #include "cosm/fsm/supervisor_fsm.hpp"
-#include "cosm/pal/argos/controller2D_adaptor.hpp"
-#include "cosm/pal/argos/controllerQ3D_adaptor.hpp"
+#include "cosm/pal/argos/controller/adaptor2D.hpp"
+#include "cosm/pal/argos/controller/adaptorQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -35,7 +35,7 @@ NS_START(cosm, pal, argos, operations);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void robot_repair::visit(cpargos::controller2D_adaptor& controller) {
+void robot_repair::visit(cpargos::controller::adaptor2D& controller) {
   controller.ndc_pusht();
 
   visit(*controller.supervisor());
@@ -44,7 +44,7 @@ void robot_repair::visit(cpargos::controller2D_adaptor& controller) {
   controller.ndc_pop();
 } /* visit() */
 
-void robot_repair::visit(cpargos::controllerQ3D_adaptor& controller) {
+void robot_repair::visit(cpargos::controller::adaptorQ3D& controller) {
   controller.ndc_pusht();
 
   visit(*controller.supervisor());

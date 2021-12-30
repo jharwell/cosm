@@ -88,7 +88,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
 }
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(explore_for_goal_fsm, entry_explore) {
-  actuation()->leds()->set_color(-1, rutils::color::kMAGENTA);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekEXPLORE);
 }
 
 /*******************************************************************************

@@ -75,8 +75,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
 
   /* don't use exited_nest() here--only high for a single timestep */
-  auto ground = saa()->sensing()->ground();
-  if (!ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (!saa()->sensing()->nest_detect()) {
     return csfsm::util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
@@ -94,11 +93,9 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   event_data_hold(true);
   nz_state_update();
 
-  auto* ground = saa()->sensing()->ground();
-
   if (!m_nest_acq->task_running()) {
     /* We have entered the nest, so perform our acquisition strategy */
-    if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+    if (saa()->sensing()->nest_detect()) {
       /* tolerance not used at this level */
       csfsm::point_argument arg(-1, data->nest_loc);
       m_nest_acq->task_reset();
@@ -109,7 +106,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   if (m_nest_acq->task_running()) {
     m_nest_acq->task_execute();
     if (m_nest_acq->task_finished()) {
-      if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+      if (saa()->sensing()->nest_detect()) {
         /*
          * We have arrived at the nest so stop moving and signal.
          */
@@ -129,14 +126,12 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
 } /* transport_to_nest() */
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_leaving_nest) {
-  actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kWHITE);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekLEAVING_NEST);
 }
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_transport_to_nest) {
-  sensing()->template sensor<hal::sensors::light_sensor>()->enable();
-  actuation()->template actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kGREEN);
+  sensing()->light()->enable();
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekSUCCESS);
 }
 
 RCPPSW_HFSM_EXIT_DEFINE(foraging_util_hfsm, exit_transport_to_nest) {
@@ -165,8 +160,7 @@ void foraging_util_hfsm::inta_state_update(void) {
 } /* inta_state_update() */
 
 void foraging_util_hfsm::nz_state_update(void) {
-  auto* ground = saa()->sensing()->ground();
-  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (saa()->sensing()->nest_detect()) {
     nz_tracker()->state_enter();
   } else {
     nz_tracker()->state_exit();

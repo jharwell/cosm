@@ -29,8 +29,10 @@
 
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/patterns/fsm/simple_fsm.hpp"
+#include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/kin/twist.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -65,44 +67,53 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    * \brief Gets a direction vector as input and transforms it into wheel
    * speeds internally.
    *
-   * \param speed The new linear speed of the robot.
-   * \param angle The difference from the robot's CURRENT heading (i.e."change
-   *              this much from the direction you are currently going in").
+   * \param old_vel The current speed and direction of the robot.
+   *
+   * \param new_vel The difference from the robot's CURRENT heading (i.e."change
+   *                this much from the direction you are currently going in") is
+   *                computed according to \p old_vel.
    */
-  void change_velocity(double speed, const rmath::radians& angle);
+  void change_velocity(const rmath::vector2d& old_vel,
+                       const rmath::vector2d& new_vel);
 
-  std::pair<double, double> wheel_speeds(void) const { return m_wheel_speeds; }
+  const ckin::twist& configured_twist(void) const { return m_twist; }
 
  private:
   /**
-   * \brief Set the wheel speeds according to the heading.
+   * \brief Output new wheel speeds according to the desired change in velocity.
    *
    * \param speed1 Speed of left wheel.
+   *
    * \param speed2 Speed of right wheel.
-   * \param heading Robot heading, which is used to determine which speed to
-   *                apply to which wheel, so that the proper turn direction is
-   *                executed.
+   *
+   * \param new_heading Robot heading, which is used to determine which speed to
+   *                    apply to which wheel, so that the proper turn direction
+   *                    is executed.
    */
-  void set_wheel_speeds(double speed1,
-                        double speed2,
-                        const rmath::radians& heading);
-
+  void configure_wheel_speeds(double speed1,
+                               double speed2,
+                               const rmath::radians& new_heading);
   /**
-   * \brief Clamp the desired speed to a maximum (maximum will be either the
-   * global maximum or the throttled maximum).
+   * \brief Output new twist according to the desired change in velocity.
    *
-   * \param desired The desired wheel speed.
+   * \param speed Desired speed.
    *
-   * \return The clamped speed.
+   * \param heading Desired robot heading.
    */
-  double clamp_wheel_speed(double desired);
+  void configure_twist(double speed, const rmath::radians& heading);
 
   /*
    * @enum The robot can be in three different turning states.
    */
   enum fsm_states {
-    ekST_SOFT_TURN, /// Both wheels rotating forward at slightly different speeds
-    ekST_HARD_TURN, /// Wheels are turning with opposite & max speeds
+    /**
+     * Both wheels rotating forward at slightly different speeds
+     */
+    ekST_SOFT_TURN,
+    /**
+     * Wheels are turning with opposite & max speeds
+     */
+    ekST_HARD_TURN,
     ekST_MAX_STATES
   };
 
@@ -111,7 +122,7 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    * desired heading change into wheel speeds.
    */
   struct turn_data final : public rpfsm::event_data {
-    turn_data(double speed_in, rmath::radians angle_in)
+    turn_data(double speed_in, const rmath::radians& angle_in)
         : speed(speed_in), angle(angle_in) {}
 
     double speed;
@@ -138,7 +149,7 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
   /* clang-format off */
   const double              mc_max_speed;
   const rmath::radians      mc_soft_turn_max;
-  std::pair<double, double> m_wheel_speeds{};
+  ckin::twist               m_twist{};
 
   RCPPSW_FSM_DECLARE_STATE_MAP(state_map,
                         mc_state_map,

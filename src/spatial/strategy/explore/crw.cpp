@@ -48,10 +48,11 @@ void crw::task_execute(void) {
   nz_update();
 
   /* Set LEDs in accordance with obstacle detection */
+  auto diag = saa()->actuation()->diagnostics();
   if (handle_ca()) {
-    saa()->actuation()->leds()->set_color(-1, rutils::color::kRED);
+    diag->emit(chactuators::diagnostics::ekEXP_INTERFERENCE);
   } else {
-    saa()->actuation()->leds()->set_color(-1, rutils::color::kMAGENTA);
+    diag->emit(chactuators::diagnostics::ekEXPLORE);
   }
 } /* task_execute() */
 

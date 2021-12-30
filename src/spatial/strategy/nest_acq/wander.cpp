@@ -43,15 +43,13 @@ void wander::task_start(cta::taskable_argument*) {
 } /* task_start() */
 
 void wander::task_execute(void) {
-  auto* ground = saa()->sensing()->ground();
-
   handle_ca();
 
   /*
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.
    */
-  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (saa()->sensing()->nest_detect()) {
     base_strategy::wander();
     m_count++;
     /*

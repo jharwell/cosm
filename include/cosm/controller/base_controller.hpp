@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <ext/ticpp/ticpp.h>
+#include <ticpp/ticpp.h>
 
 #include <memory>
 #include <string>
@@ -104,33 +104,6 @@ class base_controller : public rer::client<base_controller>,
   virtual rtypes::type_uuid entity_id(void) const = 0;
 
   /**
-   * \brief Set whether or not a robot is supposed to display it's ID above its
-   * head during simulation.
-   */
-  void display_id(bool b) { m_display_id = b; }
-
-  /**
-   * \brief If \c TRUE, then the robot should display its ID above its head
-   * during simulation.
-   */
-  bool display_id(void) const { return m_display_id; }
-
-  /**
-   * \brief If \c TRUE, then the robot should display its current LOS during
-   * simulation, if it has one.
-   */
-  bool display_los(void) const { return m_display_los; }
-
-  /**
-   * \brief Set whether or not a robot is supposed to display it's LOS during
-   * simulation.
-   */
-  void display_los(bool b) { m_display_los = b; }
-
-  void display_steer2D(bool b) { m_display_steer2D = b; }
-  bool display_steer2D(void) const { return m_display_steer2D; }
-
-  /**
    * \brief Update the sensing for the robot.
    *
    * - Set the current clock tick.
@@ -187,7 +160,9 @@ class base_controller : public rer::client<base_controller>,
   }
 
  protected:
-  cspatial::interference_tracker* inta_tracker(void) { return m_inta_tracker.get(); }
+  cspatial::interference_tracker* inta_tracker(void) {
+    return m_inta_tracker.get();
+  }
 
   /**
    * \brief Initialize controller output (i.e. where it will log events of
@@ -219,14 +194,10 @@ class base_controller : public rer::client<base_controller>,
 
  private:
   /* clang-format off */
-  bool                                            m_display_id{false};
-  bool                                            m_display_steer2D{false};
-  bool                                            m_display_los{false};
   rmath::rng*                                     m_rng{nullptr};
   std::unique_ptr<cfsm::supervisor_fsm>           m_supervisor{nullptr};
   std::unique_ptr<cspatial::interference_tracker> m_inta_tracker{nullptr};
   /* clang-format on */
-
 
  public:
   /* collision metrics */

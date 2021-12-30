@@ -26,9 +26,8 @@
  ******************************************************************************/
 #include "rcppsw/utils/color.hpp"
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
 
-#include "cosm/hal/actuators/base_actuator.hpp"
+#include "cosm/hal/argos/actuators/argos_actuator.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
@@ -79,18 +78,20 @@ NS_END(detail);
  *                   HAL.
  */
 template<typename TActuator>
-class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>,
-                                public chal::actuators::base_actuator,
-                                private rpdecorator::decorator<TActuator*> {
- private:
-  using rpdecorator::decorator<TActuator*>::decoratee;
+class led_actuator_impl : public rer::client<led_actuator_impl<TActuator>>,
+                          public chargos::actuators::argos_actuator<TActuator> {
+   private:
+  using chargos::actuators::argos_actuator<TActuator>::decoratee;
 
  public:
   using impl_type = TActuator;
+  using chargos::actuators::argos_actuator<impl_type>::enable;
+  using chargos::actuators::argos_actuator<impl_type>::disable;
+  using chargos::actuators::argos_actuator<impl_type>::is_enabled;
 
   explicit led_actuator_impl(TActuator* const leds)
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.led"),
-        rpdecorator::decorator<TActuator*>(leds) {}
+        chargos::actuators::argos_actuator<TActuator>(leds) {}
 
   const led_actuator_impl& operator=(const led_actuator_impl&) = delete;
   led_actuator_impl(const led_actuator_impl&) = default;
@@ -98,19 +99,10 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
   /**
    * \brief Reset the LED actuator (turn all LEDs off).
    */
-  void reset(void) override { set_color(-1, rutils::color::kBLACK); }
-
-  /**
-   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so we
-   * only turn the LEDs off.
-   */
-  void disable(void) override { reset(); }
-
-  /**
-   * \brief Enable the actuator. In ARGoS the LED actuator is always enabled
-   * (not computationally expensive), so this does nothing.
-   */
-  void enable(void) override { }
+  void reset(void) override {
+    set_color(-1, rutils::color::kBLACK);
+    argos_actuator<TActuator>::reset();
+  }
 
   /**
    * \brief Set a single LED on the robot to a specific color (or set all LEDs
@@ -131,6 +123,10 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
     ER_CHECK(nullptr != decoratee(),
              "%s called with NULL impl handle!",
              __FUNCTION__);
+    ER_CHECK(is_enabled(),
+             "%s called when disabled",
+             __FUNCTION__);
+
     if (-1 == id) {
       decoratee()->SetAllColors(::argos::CColor(color.red(),
                                          color.green(),
@@ -166,6 +162,9 @@ class led_actuator_impl final : public rer::client<led_actuator_impl<TActuator>>
   bool set_intensity(int id, uint8_t intensity) {
     ER_CHECK(nullptr != decoratee(),
              "%s called with NULL impl handle!",
+             __FUNCTION__);
+    ER_CHECK(is_enabled(),
+             "%s called when disabled",
              __FUNCTION__);
 
     if (-1 == id) {

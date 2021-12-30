@@ -24,10 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/rcppsw.hpp"
-
 #include "cosm/cosm.hpp"
+#include "cosm/kin/odometry.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -51,26 +49,15 @@ class boid {
   virtual ~boid(void) = default;
 
   /**
-   * \brief Should return the current linear velocity of the entity.
+   * \brief Should return the odometry of the entity.
    */
-  virtual rmath::vector2d linear_velocity(void) const = 0;
-
-  /**
-   * \brief Should return the current angular velocity of the entity.
-   */
-  virtual double angular_velocity(void) const = 0;
+  virtual ckin::odometry odometry(void) const = 0;
 
   /**
    * \brief Should return the maximum speed of the entity. This can vary in
    * time, if desired.
    */
   virtual double max_speed(void) const = 0;
-
-  /**
-   * \brief Return the current position of the entity. Hopefully, this DOES vary
-   * with time otherwise your entity is very uninteresting.
-   */
-  virtual rmath::vector2d pos2D(void) const = 0;
 };
 
 NS_END(steer2D, cosm);

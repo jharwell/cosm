@@ -55,7 +55,7 @@ class random_allocator : public rer::client<random_allocator> {
   const random_allocator& operator=(const random_allocator&) = delete;
 
   polled_task* operator()(const std::vector<polled_task*>& tasks) const {
-    return tasks[m_rng->uniform(rmath::rangeu(0, tasks.size() - 1))];
+    return tasks[m_rng->uniform(rmath::rangez(0, tasks.size() - 1))];
   }
 
  private:

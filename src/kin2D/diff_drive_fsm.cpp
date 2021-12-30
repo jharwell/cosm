@@ -54,20 +54,21 @@ diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
 /*******************************************************************************
  * Events
  ******************************************************************************/
-void diff_drive_fsm::change_velocity(double speed, const rmath::radians& angle) {
+void diff_drive_fsm::change_velocity(const rmath::vector2d& old_vel,
+                                     const rmath::vector2d& new_vel) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
     ekST_SOFT_TURN, /* slow turn */
     ekST_HARD_TURN, /* hard turn */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
-                 std::make_unique<turn_data>(speed, angle));
+                 std::make_unique<turn_data>(new_vel.length(),
+                                             (old_vel - new_vel).angle()));
 } /* set_rel_heading() */
 
 /*******************************************************************************
  * States
  ******************************************************************************/
-
 RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
   rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
 
@@ -78,13 +79,9 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
     return rpfsm::event_signal::ekHANDLED;
   }
 
-  /* Both wheels go straight, but one is faster than the other */
-  double speed_factor = std::fabs(
-      (mc_soft_turn_max - rmath::abs(data->angle)) / mc_soft_turn_max);
-  double base_speed = std::min(data->speed, mc_max_speed);
-  double speed1 = base_speed - base_speed * (1.0 - speed_factor);
-  double speed2 = base_speed + base_speed * (1.0 - speed_factor);
-  set_wheel_speeds(speed1, speed2, data->angle);
+  double clamped = std::min(data->speed, mc_max_speed);
+  configure_twist(clamped, data->angle);
+
   return rpfsm::event_signal::ekHANDLED;
 }
 RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
@@ -95,24 +92,19 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
     internal_event(ekST_SOFT_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
-  set_wheel_speeds(-mc_max_speed, mc_max_speed, data->angle);
+  /* configure_wheel_speeds(-mc_max_speed, mc_max_speed, data->angle); */
+  configure_twist(mc_max_speed, data->angle);
+
   return rpfsm::event_signal::ekHANDLED;
 }
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive_fsm::set_wheel_speeds(double speed1,
-                                      double speed2,
-                                      const rmath::radians& heading) {
-  if (heading > rmath::radians::kZERO) {
-    /* Turn Left */
-    m_wheel_speeds.first = speed1;
-    m_wheel_speeds.second = speed2;
-  } else {
-    /* Turn Right */
-    m_wheel_speeds.first = speed2;
-    m_wheel_speeds.second = speed1;
-  }
-}
+void diff_drive_fsm::configure_twist(double speed,
+                                     const rmath::radians& heading) {
+  m_twist.linear = rmath::vector3d::X * speed;
+  m_twist.angular = rmath::vector3d::Z * heading.v();
+} /* configure_twist() */
+
 NS_END(kin2D, cosm);

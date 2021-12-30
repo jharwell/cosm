@@ -36,7 +36,8 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
-#include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/light_sensor_reading.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -85,67 +86,57 @@ NS_END(detail);
  *  efficiency.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                  HAL. If nullptr, then that effectively disables the sensor
- *                  at compile time, and SFINAE ensures no member functions can
- *                  be called.
+ *                  HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
-                                public chal::sensors::base_sensor<TSensor> {
+                                  public chargos::sensors::argos_sensor<TSensor> {
  private:
-  using chal::sensors::base_sensor<TSensor>::decoratee;
+  using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
  public:
   using impl_type = TSensor;
-  using chal::sensors::base_sensor<TSensor>::enable;
-  using chal::sensors::base_sensor<TSensor>::disable;
-  using chal::sensors::base_sensor<TSensor>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::enable;
+  using chargos::sensors::argos_sensor<impl_type>::disable;
+  using chargos::sensors::argos_sensor<impl_type>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  /**
-   * \brief A light sensor reading (value, angle) pair.
-   *
-   * The first argument is the value of the sensor, and the
-   * second argument is the angle of the sensor on the robot in relation to the
-   * positive x axis.
-   */
-  struct reading {
-    double intensity;
-    double angle;
+  using reading_type = chal::sensors::light_sensor_reading;
 
-    reading(double _intensity, double _angle)
-        : intensity(_intensity),
-          angle(_angle) {}
-  };
-
-  explicit light_sensor_impl(TSensor * const sensor)
+  explicit light_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.light"),
-        chal::sensors::base_sensor<TSensor>(sensor) {
+        chargos::sensors::argos_sensor<impl_type>(sensor) {
     disable();
   }
 
   const light_sensor_impl& operator=(const light_sensor_impl&) = delete;
   light_sensor_impl(const light_sensor_impl&) = default;
 
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_light_sensor<U>::value)>
-  std::vector<reading>  readings(void) const { return {}; }
+  std::vector<reading_type>  readings(void) const {
+    return {};
+  }
 
   /**
    * \brief Get the current light sensor readings for the footbot/epuck robots.
    *
    * \return A vector of \ref reading.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_footbot_light_sensor<U>::value ||
                                   detail::is_epuck_light_sensor<U>::value)>
-  std::vector<reading>  readings(void) const {
+  std::vector<reading_type>  readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
 
-    std::vector<reading> ret;
+    std::vector<reading_type> ret;
     for (auto &r : decoratee()->GetReadings()) {
-      ret.push_back({r.Value, r.Angle.GetValue()});
+      ret.push_back({r.Value, rmath::radians(r.Angle.GetValue())});
     } /* for(&r..) */
 
     return ret;

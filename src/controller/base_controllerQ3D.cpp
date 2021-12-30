@@ -83,8 +83,7 @@ rmath::vector3d base_controllerQ3D::ts_velocity_impl(void) const {
    * because of the prev/current location not being set up properly yet.
    */
   if (RCPPSW_LIKELY(saa()->sensing()->tick() > 1U)) {
-    auto vel = saa()->linear_velocity();
-    return { vel.x(), vel.y(), 0.0 };
+    return saa()->odometry().twist.linear;
   }
   return { 0.0, 0.0, 0.0 };
 } /* ts_velocity_impl() */

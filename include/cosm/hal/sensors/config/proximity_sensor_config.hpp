@@ -1,7 +1,7 @@
 /**
  * \file proximity_sensor_config.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,24 +24,36 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/math/range.hpp"
+#include "rcppsw/math/radians.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/hal/hal.hpp"
-
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-#include "cosm/hal/argos/sensors/config/proximity_sensor_config.hpp"
-#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
 NS_START(cosm, hal, sensors, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-using proximity_sensor_config = chargos::sensors::config::proximity_sensor_config;
-#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
+/**
+ * \struct proximity_sensor_config
+ * \ingroup hal sensors config
+ *
+ * \brief Configuration for proximity sensors, for robots which have a sensor
+ * which can be used for proximity.
+ */
+struct proximity_sensor_config final : public rconfig::base_config {
+  /*
+   * Maximum tolerance for the proximity reading between the robot and the
+   * closest obstacle.  The proximity reading is 0 when nothing is detected and
+   * grows exponentially to 1 when the obstacle is touching the robot.
+   */
+  double delta{0.0};
+
+  rmath::range<rmath::radians> fov{rmath::radians(-1.0), rmath::radians(1.0)};
+};
 
 NS_END(config, sensors, hal, cosm);
 

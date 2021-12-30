@@ -88,9 +88,10 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
      * velocity, and that does not play well with the arrival force
      * calculations. To fix this, add a bit of wander force.
      */
-    if (saa()->linear_velocity().length() <= 0.1) {
-      saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
-    }
+    auto odom = saa()->sensing()->odometry()->reading();
+    /* if (odom.twist.linear.to_2D().length() <= 0.1) { */
+    /*   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng())); */
+    /* } */
   } else {
     internal_event(ekST_INTERFERENCE_RECOVERY);
   }
@@ -158,8 +159,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
     internal_event(ekST_INTERFERENCE_AVOIDANCE);
   } else {
     saa()->steer_force2D().accum(saa()->steer_force2D().seek_to(m_goal.point()));
-    saa()->actuation()->actuator<hal::actuators::led_actuator>()->set_color(
-        -1, rutils::color::kBLUE);
+    actuation()->diagnostics()->emit(chactuators::diagnostics::ekVECTOR_TO_GOAL);
   }
   return util_signal::ekHANDLED;
 }
@@ -177,15 +177,13 @@ RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE(vector_fsm,
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_vector) {
   ER_DEBUG("Entering ekST_VECTOR");
-  actuation()->actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kBLUE);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekVECTOR_TO_GOAL);
 }
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_avoidance) {
   ER_DEBUG("Entering ekST_INTERFERENCE_AVOIDANCE");
   inta_tracker()->state_enter();
-  actuation()->actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kRED);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekEXP_INTERFERENCE);
 }
 
 RCPPSW_HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
@@ -195,8 +193,7 @@ RCPPSW_HFSM_EXIT_DEFINE(vector_fsm, exit_interference_avoidance) {
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(vector_fsm, entry_interference_recovery) {
   ER_DEBUG("Entering ekST_INTERFERENCE_RECOVERY");
-  actuation()->actuator<hal::actuators::led_actuator>()->set_color(
-      -1, rutils::color::kYELLOW);
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekEXP_INTERFERENCE);
 }
 
 /*******************************************************************************

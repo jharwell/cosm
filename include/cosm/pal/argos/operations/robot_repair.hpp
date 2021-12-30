@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_REPAIR_HPP_
-#define INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_REPAIR_HPP_
+#ifndef INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_
+#define INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -38,9 +38,9 @@ namespace cosm::fsm {
 class supervisor_fsm;
 } /* namespace fsm */
 
-namespace cosm::pal::argos {
-class controller2D_adaptor;
-class controllerQ3D_adaptor;
+namespace cosm::pal::argos::controller {
+class adaptor2D;
+class adaptorQ3D;
 } /* namespace cosm::pal */
 
 NS_START(cosm, pal, argos, operations);
@@ -70,10 +70,10 @@ class robot_repair : public rer::client<robot_repair> {
   robot_repair& operator=(const robot_repair& op) = delete;
 
   void visit(cfsm::supervisor_fsm& fsm);
-  void visit(cpargos::controller2D_adaptor& controller);
-  void visit(cpargos::controllerQ3D_adaptor& controller);
+  void visit(cpargos::controller::adaptor2D& controller);
+  void visit(cpargos::controller::adaptorQ3D& controller);
 };
 
 NS_END(operations, argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_REPAIR_HPP_ */
+#endif /* INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_ */

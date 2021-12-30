@@ -43,10 +43,13 @@ class block_carrying_controller;
 } /* namespace cosm::controller */
 
 namespace cosm::pal::argos {
-class controller2D_adaptor;
-class controllerQ3D_adaptor;
 class sm_adaptor;
 } /* namespace cosm::pal::argos */
+
+namespace cosm::pal::argos::controller {
+class adaptor2D;
+class adaptorQ3D;
+} /* namespace cosm::pal */
 
 NS_START(cosm, pal, argos, tv);
 
@@ -69,10 +72,10 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
  public:
   using env_dynamics_type = ctv::env_dynamics<TController>;
   template<typename T>
-  using is2D = std::is_base_of<controller2D_adaptor, T>;
+  using is2D = std::is_base_of<cpargos::controller::adaptor2D, T>;
 
   template<typename T>
-  using isQ3D = std::is_base_of<controllerQ3D_adaptor, T>;
+  using isQ3D = std::is_base_of<cpargos::controller::adaptorQ3D, T>;
 
   static_assert(is2D<TController>::value || isQ3D<TController>::value,
                 "TControllerType not derived from ARGoS 2D/Q3D adaptor");

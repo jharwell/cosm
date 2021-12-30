@@ -44,63 +44,40 @@ saa_subsystemQ3D::saa_subsystemQ3D(
  * Member Functions
  ******************************************************************************/
 void saa_subsystemQ3D::steer_force2D_apply(void) {
+  auto odom = odometry();
   ER_DEBUG("position=%s azimuth=%s zenith=%s",
-           sensing()->rpos3D().to_str().c_str(),
-           sensing()->azimuth().to_str().c_str(),
-           sensing()->zenith().to_str().c_str());
-  ER_DEBUG("linear_vel=%s@%s [%f] angular_vel=%f",
-           linear_velocity().to_str().c_str(),
-           linear_velocity().angle().to_str().c_str(),
-           linear_velocity().length(),
-           angular_velocity());
-  ER_DEBUG("steering_force=%s@%s [%f]",
-           steer_force2D().value().to_str().c_str(),
-           steer_force2D().value().angle().to_str().c_str(),
-           steer_force2D().value().length());
+           rcppsw::to_string(odom.pose.position).c_str(),
+           rcppsw::to_string(odom.pose.orientation.z()).c_str(),
+           rcppsw::to_string(odom.pose.orientation.y()).c_str());
+  ER_DEBUG("twist.linear=%s@%s [%s] twist.angular=%s [%s]",
+           rcppsw::to_string(odom.twist.linear).c_str(),
+           rcppsw::to_string(odom.twist.linear.to_2D().angle()).c_str(),
+           rcppsw::to_string(odom.twist.linear.length()).c_str(),
+           rcppsw::to_string(odom.twist.angular).c_str(),
+           rcppsw::to_string(odom.twist.angular.length()).c_str());
+
+  ER_DEBUG("steering_force=%s@%s [%s]",
+           rcppsw::to_string(steer_force2D().value()).c_str(),
+           rcppsw::to_string(steer_force2D().value().angle()).c_str(),
+           rcppsw::to_string(steer_force2D().value().length()).c_str());
   RCPPSW_UNUSED double applied =
       actuation()->governed_diff_drive()->applied_throttle();
   double active = actuation()->governed_diff_drive()->active_throttle();
   ER_DEBUG("Applied throttle: %f active throttle: %f", applied, active);
 
-  double desired_speed = steer_force2D().value().length() * (1.0 - active);
-  actuation()->governed_diff_drive()->fsm_drive(desired_speed,
-                                                steer_force2D().value().angle());
+  auto desired = steer_force2D().value();
+  auto current = odometry().twist.linear;
+  actuation()->governed_diff_drive()->fsm_drive(current.to_2D(), desired);
 
   steer_force2D().forces_reset();
 } /* steer_force2D_apply() */
 
-rmath::vector2d saa_subsystemQ3D::linear_velocity(void) const {
-  auto speed = sensing()->diff_drive()->current_speed();
-  auto azimuth = sensing()->azimuth();
-
-  /*
-   * If speed comes back as 0.0, then we are executing a hard turn, probably as
-   * we vector somewhere. In order to have the arrival force work properly, we
-   * need to have a velocity with a non-zero length and the correct heading
-   * angle at all times. So we report that we have velocity even though we do
-   * not, for the purposes of making those calculations work.
-   *
-   * There probably is a better way to do this, but I don't know what it is.
-   */
-  if (speed <= std::numeric_limits<double>::epsilon()) {
-    return { 0.01, azimuth };
-  } else {
-    return { speed, azimuth };
-  }
-} /* linear_velocity() */
-
-double saa_subsystemQ3D::angular_velocity(void) const {
-  auto reading = sensing()->diff_drive()->reading();
-
-  return (reading.vel_right - reading.vel_left) / reading.axle_length;
-} /* angular_velocity() */
+ckin::odometry saa_subsystemQ3D::odometry(void) const {
+  return sensing()->odometry()->reading();
+} /* odometry() */
 
 double saa_subsystemQ3D::max_speed(void) const {
   return actuation()->governed_diff_drive()->max_speed();
 } /* max_speed() */
-
-rmath::vector2d saa_subsystemQ3D::pos2D(void) const {
-  return sensing()->rpos2D();
-} /* pos2D() */
 
 NS_END(subsystem, cosm);

@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/patterns/decorator/decorator.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -42,9 +43,16 @@ NS_START(cosm, hal, actuators);
  *
  * \brief Base actuator class to provide a common interface to all actuators.
  */
-class base_actuator : public rer::client<base_actuator> {
+template <typename TActuator>
+class base_actuator : public rer::client<base_actuator<TActuator>>,
+                      protected rpdecorator::decorator<TActuator> {
  public:
-  base_actuator(void) : ER_CLIENT_INIT("cosm.hal.actuators.base_actuator") {}
+  using rpdecorator::decorator<TActuator>::decoratee;
+
+  explicit base_actuator(TActuator actuator)
+      : ER_CLIENT_INIT("cosm.hal.actuators.base_actuator"),
+        rpdecorator::decorator<TActuator>(actuator) {}
+
   virtual ~base_actuator(void) = default;
 
   base_actuator(const base_actuator&) = default;
@@ -69,6 +77,13 @@ class base_actuator : public rer::client<base_actuator> {
    * enabled.
    */
   virtual void enable(void) = 0;
+
+  /**
+   * \brief Is this actuator currently enabled?
+   */
+  virtual bool is_enabled(void) const = 0;
+
+  bool is_disabled(void) const { return !is_enabled(); }
 };
 
 NS_END(actuators, hal, cosm);

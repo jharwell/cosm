@@ -56,7 +56,7 @@ struct exec_estimates_config final : public rcppsw::config::base_config {
   bool seed_enabled{false};
   rmath::config::ema_config ema{};
 
-  std::map<std::string, rmath::range<uint>> ranges{};
+  std::map<std::string, rmath::rangez> ranges{};
 };
 
 NS_END(config, ta, cosm);

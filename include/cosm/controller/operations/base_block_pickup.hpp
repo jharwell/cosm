@@ -51,23 +51,24 @@ NS_START(cosm, controller, operations);
 class base_block_pickup : public rer::client<base_block_pickup>,
                           public cdops::cell2D_op {
  public:
-  virtual ~base_block_pickup(void) = default;
-
-  /* not copy constructible/assignable by default */
-  base_block_pickup(const base_block_pickup&) = delete;
-  base_block_pickup& operator=(const base_block_pickup&) = delete;
-
- protected:
   /**
    * \param block Non-owning reference to the block to be picked up; block is
    *              owned by arena map.
+   *
    * \param robot_id ID of the robot doing the pickup.
+   *
    * \param t The current timestep.
    */
 
   base_block_pickup(crepr::base_block3D* block,
                     const rtypes::type_uuid& robot_id,
                     const rtypes::timestep& t);
+
+  virtual ~base_block_pickup(void) = default;
+
+  /* not copy constructible/assignable by default */
+  base_block_pickup(const base_block_pickup&) = delete;
+  base_block_pickup& operator=(const base_block_pickup&) = delete;
 
   /**
    * \brief Update the controller with the block it has just picked up, along

@@ -24,7 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
+#include "rcppsw/math/radians.hpp"
+#include "rcppsw/math/vector3.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -34,26 +37,17 @@ NS_START(cosm, kin);
 /*******************************************************************************
  * Struct Definitions
  ******************************************************************************/
-
 /**
  * \struct twist
  * \ingroup kin
  *
- * \brief Representation of the twist of a  robot. ROS already has this, but
+ * \brief Representation of the twist of a robot. ROS already has this, but
  * does not work with all robotic simulators (such as ARGoS)/models, hence the
- * need for me to implement this.
+ * need.
  */
 struct twist {
-  struct {
-    double x{};
-    double y{};
-    double z{};
-  } linear{};
-  struct {
-    double x{};
-    double y{};
-    double z{};
-  } angular{};
+  rmath::vector3d linear{};
+  rmath::vector3d angular{};
 };
 
 NS_END(kin, cosm);

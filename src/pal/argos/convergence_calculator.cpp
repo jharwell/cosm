@@ -27,8 +27,8 @@
 #include "rcppsw/algorithm/closest_pair2D.hpp"
 #include "rcppsw/math/vector2.hpp"
 
-#include "cosm/pal/argos/controller2D_adaptor.hpp"
-#include "cosm/pal/argos/controllerQ3D_adaptor.hpp"
+#include "cosm/pal/argos/controller/adaptor2D.hpp"
+#include "cosm/pal/argos/controller/adaptorQ3D.hpp"
 #include "cosm/pal/argos/swarm_iterator.hpp"
 #include "cosm/hal/robot.hpp"
 
@@ -149,7 +149,7 @@ convergence_calculator<TController>::calc_robot_positions(size_t) const {
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template class convergence_calculator<cpargos::controller2D_adaptor>;
-template class convergence_calculator<cpargos::controllerQ3D_adaptor>;
+template class convergence_calculator<cpargos::controller::adaptor2D>;
+template class convergence_calculator<cpargos::controller::adaptorQ3D>;
 
 NS_END(argos, pal, cosm);

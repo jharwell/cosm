@@ -27,7 +27,6 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/rcppsw.hpp"
 
-#include "cosm/kin/twist.hpp"
 #include "cosm/steer2D/arrival_force.hpp"
 #include "cosm/steer2D/avoidance_force.hpp"
 #include "cosm/steer2D/path_following_force.hpp"
@@ -69,14 +68,6 @@ class force_calculator : public rer::client<force_calculator> {
   class tracker* tracker(void) {
     return &m_tracker;
   }
-
-  /**
-   * \brief Return the current steering force as twist acting on the managed
-   * entity.
-   */
-  kin::twist value_as_twist(void) const { return to_twist(m_force_accum); }
-
-  kin::twist to_twist(const rmath::vector2d& force) const;
 
   /**
    * \brief Reset the sum of forces acting on the entity.

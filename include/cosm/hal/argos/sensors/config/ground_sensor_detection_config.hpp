@@ -41,18 +41,14 @@ NS_START(cosm, hal, argos, sensors, config);
  * \ingroup hal argos sensors config
  *
  * \brief Configuration for ground sensors, for robots which have them.
- *
- * Robots are:
- *
- * - ARGoS footbot
  */
 struct ground_sensor_detection_config final : public rconfig::base_config {
   /* clang-format off */
   rmath::ranged range{};
-  uint         consensus{0};
+  size_t        consensus{0};
   /* clang-format on */
 };
 
 NS_END(config, sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_GROUND_SENSOR_CONFIG_HPP_ */
+#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_GROUND_SENSOR_DETECTION_CONFIG_HPP_ */

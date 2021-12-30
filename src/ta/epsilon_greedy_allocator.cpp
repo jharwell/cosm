@@ -67,7 +67,7 @@ epsilon_greedy_allocator::operator()(const std::vector<polled_task*>& tasks,
     return strict_greedy_allocator(m_rng)(tasks);
   }
   /* otherwise, pick randomly */
-  return tasks[m_rng->uniform(rmath::rangeu(0, tasks.size() - 1))];
+  return tasks[m_rng->uniform(rmath::rangez(0, tasks.size() - 1))];
 } /* operator()() */
 
 NS_END(ta, cosm);

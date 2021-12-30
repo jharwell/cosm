@@ -37,15 +37,15 @@ void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
 
   m_proximity.parse(snode);
   m_config->proximity = *m_proximity.config_get<
-      chal::sensors::config::xml::proximity_sensor_parser::config_type>();
-  m_ground.parse(snode);
-  m_config->ground = *m_ground.config_get<
-      chal::sensors::config::xml::ground_sensor_parser::config_type>();
+      chsensors::config::xml::proximity_sensor_parser::config_type>();
+  m_env.parse(snode);
+  m_config->env = *m_env.config_get<
+      chsensors::config::xml::env_sensor_parser::config_type>();
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {
   RCPPSW_CHECK(m_proximity.validate());
-  RCPPSW_CHECK(m_ground.validate());
+  RCPPSW_CHECK(m_env.validate());
   return true;
 
 error:

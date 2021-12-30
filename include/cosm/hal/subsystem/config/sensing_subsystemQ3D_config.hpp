@@ -27,7 +27,7 @@
 #include "rcppsw/config/base_config.hpp"
 
 #include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
-#include "cosm/hal/sensors/config/ground_sensor_config.hpp"
+#include "cosm/hal/sensors/config/env_sensor_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -44,8 +44,8 @@ NS_START(cosm, hal, subsystem, config);
  * \brief Hardware-agnostic sensing subsystem configuration.
  */
 struct sensing_subsystemQ3D_config final : public rconfig::base_config {
-  chal::sensors::config::proximity_sensor_config proximity {};
-  chal::sensors::config::ground_sensor_config ground {};
+  chsensors::config::proximity_sensor_config proximity {};
+  chsensors::config::env_sensor_config env {};
 };
 
 NS_END(config, subsystem, hal, cosm);

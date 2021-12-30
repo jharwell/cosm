@@ -66,8 +66,7 @@ bool base_strategy::handle_ca(void) {
 } /* handle_ca() */
 
 bool base_strategy::nz_update(void) {
-  auto* ground = m_saa->sensing()->ground();
-  if (ground->detect(hal::sensors::ground_sensor::kNestTarget)) {
+  if (saa()->sensing()->nest_detect()) {
     nz_tracker()->state_enter();
     return true;
   } else {

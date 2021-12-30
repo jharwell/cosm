@@ -31,10 +31,11 @@
 #endif /* COSM_HAL_TARGET */
 
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/math/vector2.hpp"
 
 #include "cosm/hal/hal.hpp"
-#include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/kin/twist.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -74,33 +75,35 @@ NS_END(detail);
  * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                 HAL. If nullptr, then that effectively disables the sensor
- *                 at compile time, and SFINAE ensures no member functions can
- *                 be called.
+ *                 HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<TSensor>>,
-                                     public chal::sensors::base_sensor<TSensor> {
+                                  public chargos::sensors::argos_sensor<TSensor> {
  private:
-  using chal::sensors::base_sensor<TSensor>::decoratee;
+  using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
  public:
   using impl_type = TSensor;
-  using chal::sensors::base_sensor<TSensor>::enable;
-  using chal::sensors::base_sensor<TSensor>::disable;
-  using chal::sensors::base_sensor<TSensor>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::enable;
+  using chargos::sensors::argos_sensor<impl_type>::disable;
+  using chargos::sensors::argos_sensor<impl_type>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  struct sensor_reading {
-    double vel_left;    /* in units of m/s */
-    double vel_right;   /* in units of m/s */
-    double dist_left;   /* in units of m */
-    double dist_right;  /* in units of m */
-    double axle_length; /* in units of m */
+  struct wheel_reading {
+    /* The LINEAR (not angular) velocity of the wheel (m/s) */
+    double vel{};
   };
 
-  explicit diff_drive_sensor_impl(TSensor* const sensor)
+  struct raw_sensor_reading {
+    wheel_reading left{};
+    wheel_reading right{};
+    double axle_length{}; /* in units of m */
+  };
+
+  explicit diff_drive_sensor_impl(impl_type* const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.diff_drive"),
-        chal::sensors::base_sensor<TSensor>(sensor) {}
+        chargos::sensors::argos_sensor<impl_type>(sensor) {}
 
   const diff_drive_sensor_impl& operator=(const diff_drive_sensor_impl&) = delete;
   diff_drive_sensor_impl(const diff_drive_sensor_impl&) = default;
@@ -108,11 +111,14 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   /**
    * \brief Get the current differential drive reading for the robot.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_generic_ds_sensor<U>::value)>
-  sensor_reading reading(void) const {
+  ckin::twist reading(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
 
     auto tmp = decoratee()->GetReading();
@@ -121,37 +127,39 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
      * ARGoS reports the distances and velocities in cm and cm/s for some
      * reason, so put it in SI units (meters), like a sane person.
      */
-    return {tmp.VelocityLeftWheel / 100.0,
-            tmp.VelocityRightWheel / 100.0,
-            tmp.CoveredDistanceLeftWheel / 100.0,
-            tmp.CoveredDistanceRightWheel / 100.0,
-            tmp.WheelAxisLength / 100.0};
+    auto raw = raw_sensor_reading{wheel_reading{tmp.VelocityLeftWheel / 100.0},
+                                  wheel_reading{tmp.VelocityRightWheel / 100.0},
+                                  tmp.WheelAxisLength / 100.0};
+
+    return twist_calc(raw);
   }
 
   /**
    * \brief Get the current differential drive reading for the robot.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_ds_sensor<U>::value)>
-  sensor_reading reading(void) const {
+  ckin::twist reading(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
 
-    return {decoratee()->GetLeftVelocity(),
-            decoratee()->GetRightVelocity(),
-            0.0,
-            0.0,
-            0.0};
+    auto raw = raw_sensor_reading{wheel_reading{decoratee()->GetLeftVelocity()},
+                                  wheel_reading{decoratee()->GetRightVelocity()},
+                                  0.0};
+
+    return twist_calc(raw);
   }
 
-  /**
-   * \brief Return the current speed of the robot (average of the 2 wheel
-   * speeds).
-   */
-  double current_speed(void) const {
-    auto tmp = reading();
-    return (tmp.vel_left + tmp.vel_right) / 2.0;
+ private:
+  static ckin::twist twist_calc(const raw_sensor_reading& raw) {
+    ckin::twist ret;
+    ret.angular = rmath::vector3d::Z * (raw.left.vel - raw.right.vel) / raw.axle_length;
+    ret.linear = rmath::vector3d::X * (raw.left.vel + raw.right.vel) / 2.0;
+    return ret;
   }
 };
 

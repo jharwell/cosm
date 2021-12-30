@@ -1,7 +1,7 @@
 /**
  * \file swarm_manager.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,85 +24,32 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <ext/ticpp/ticpp.h>
-
-#include <memory>
-#include <string>
-
-#include "rcppsw/common/common.hpp"
-#include "rcppsw/er/client.hpp"
-#include "rcppsw/math/config/rng_config.hpp"
-#include "rcppsw/math/rng.hpp"
-#include "rcppsw/types/timestep.hpp"
-
 #include "cosm/cosm.hpp"
-#include "cosm/pal/config/output_config.hpp"
+#include "cosm/hal/hal.hpp"
+#include "cosm/pal/pal.hpp"
+
+#if defined(COSM_PAL_TARGET_ARGOS)
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
+#elif defined(COSM_PAL_TARGET_ROS)
+#include "cosm/pal/swarm_manager_adaptor.hpp"
+#else
+#error Selected platform has no swarm manager
+#endif /* COSM_PAL_TARGET_ARGOS */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace fs = std::filesystem;
-
 NS_START(cosm, pal);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class swarm_manager
- * \ingroup cosm pal
- *
- * \brief Base class for the harness for support functionality that helps to
- * manage the swarm as it runs, including handling things like:
- *
- * - Metric collection
- * - Applications of temporal variance
- * - Computing convergence
- *
- * Only core functionality agnostic to the platform on which the swarm control
- * algorithms are being executed is included here.
- */
-class swarm_manager : public rer::client<swarm_manager> {
- public:
-  swarm_manager(void);
+#if defined(COSM_PAL_TARGET_ARGOS)
+using swarm_manager = cpargos::swarm_manager_adaptor;
+#elif defined(COSM_PAL_TARGET_ROS)
+using swarm_manager = cpros::swarm_manager_adaptor;
+#endif /* COSM_PAL_TARGET_ARGOS */
 
-  virtual void init(ticpp::Element& node) = 0;
-  virtual void reset(void) = 0;
-  virtual void pre_step(void) = 0;
-  virtual void post_step(void) = 0;
-  virtual void destroy(void) = 0;
-
-  /* Not copy constructable/assignable by default */
-  swarm_manager(const swarm_manager&) = delete;
-  const swarm_manager& operator=(const swarm_manager&) = delete;
-
-  rmath::rng* rng(void) { return m_rng; }
-
- protected:
-  /**
-   * \brief Initialize random number generation for loop function use. Currently
-   * *NOT* shared between loop functions and robots.
-   */
-  void rng_init(const rmath::config::rng_config* config) RCPPSW_COLD;
-
-  fs::path output_root(void) const { return m_output_root; }
-
-  /**
-   * \brief Initialize output directories.
-   */
-  virtual void output_init(const cpconfig::output_config* config) RCPPSW_COLD;
-
-  void timestep(const rtypes::timestep& t) { m_timestep = t; }
-  const rtypes::timestep& timestep(void) const { return m_timestep; }
-
- private:
-  /* clang-format off */
-  rtypes::timestep m_timestep{0};
-  fs::path         m_output_root{};
-  rmath::rng*      m_rng{nullptr};
-  /* clang-format on */
-};
-
-NS_END(cosm, pal);
+NS_END(pal, cosm);
 
 #endif /* INCLUDE_COSM_PAL_SWARM_MANAGER_HPP_ */

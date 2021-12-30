@@ -75,7 +75,7 @@ class polled_task : public executable_task, public taskable {
    * \brief Initialize the execution time estimates of the task randomly within
    * the specified range.
    */
-  void exec_estimate_init(const rmath::rangeu& bounds, rmath::rng* rng);
+  void exec_estimate_init(const rmath::rangez& bounds, rmath::rng* rng);
 
  private:
   std::unique_ptr<taskable> m_mechanism;

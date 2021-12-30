@@ -29,14 +29,12 @@
 #include "cosm/cosm.hpp"
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"
 #include "cosm/kin2D/diff_drive_fsm.hpp"
+#include "cosm/kin2D/config/diff_drive_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, kin2D);
-namespace config {
-struct diff_drive_config;
-}
 
 /*******************************************************************************
  * Struct Definitions
@@ -53,69 +51,30 @@ struct diff_drive_config;
  */
 class diff_drive : public rer::client<diff_drive> {
  public:
-  enum class drive_type {
-    /**
-     * \brief Controls like those of a tank
-     */
-    ekTANK_DRIVE,
-
-    /**
-     * \brief Control via soft/hard turn FSM
-     */
-    ekFSM_DRIVE
-  };
-
   /**
    * \param type The drive type; see \ref drive_type
    * \param actuator The underlying differential steering actuator (via HAL)
    * \param config Configuration.
    */
   diff_drive(const config::diff_drive_config* config,
-             const hal::actuators::diff_drive_actuator& actuator,
-             const drive_type& type);
+             const chactuators::diff_drive_actuator& actuator);
 
   const diff_drive& operator=(const diff_drive&) = delete;
   diff_drive(const diff_drive&) = default;
 
-  double max_speed(void) const { return m_max_speed; }
-
-  /*
-   * \brief Gets a new speed/heading angle and transforms it into wheel commands
-   * via an FSM.
-   *
-   * \param desired_speed The new linear speed of the robot. Can be any value,
-   *        but is clamped by internal FSM to the maximum speed set during
-   *        construction.
-   * \param angle_delta The difference from the robot's CURRENT heading
-   *                    (i.e."change this much from the direction you are
-   *                    currently going in").
-   *
-   * \return \ref status_t.
+   /*
+   * \brief Updates the configured twist via an FSM and sends twist to the
+   * actual diff drive actuator for translation into wheel speeds.
    */
-  status_t fsm_drive(double desired_speed, const rmath::radians& angle_delta);
+  void fsm_drive(const rmath::vector2d& old_vel,
+                 const rmath::vector2d& new_vel);
 
-  /**
-   * Tank drive method (i.e. how a tank moves.)
-   *
-   * \param left_speed The robot left side's speed along the X axis
-   *                   [-1.0..1.0]. Forward is positive.
-   * \param right_speed The robot right side's speed along the X axis
-   *                    [-1.0..1.0]. Forward is positive.
-   * \param square_inputs If set, decreases the input sensitivity at low
-   *                      speeds.
-   * \return \ref status_t.
-   */
-  status_t tank_drive(double left_speed, double right_speed, bool square_inputs);
+  double max_speed(void) const { return mc_config.max_speed; }
 
  private:
-  /**
-   * \brief Limit the value to [-1, 1].
-   */
-  double limit(double value) const RCPPSW_PURE;
-
   /* clang-format off */
-  drive_type                          m_drive_type;
-  double                              m_max_speed;
+  const config::diff_drive_config     mc_config;
+
   diff_drive_fsm                      m_fsm;
   hal::actuators::diff_drive_actuator m_actuator;
   /* clang-format on */
@@ -126,6 +85,7 @@ class diff_drive : public rer::client<diff_drive> {
    */
   RCPPSW_WRAP_DECLDEF(reset, m_actuator);
   RCPPSW_WRAP_DECLDEF(disable, m_actuator);
+  RCPPSW_WRAP_DECLDEF(enable, m_actuator);
 };
 
 NS_END(kin2D, cosm);

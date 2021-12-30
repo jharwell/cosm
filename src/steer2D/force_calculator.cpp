@@ -48,19 +48,6 @@ force_calculator::force_calculator(boid& entity,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-kin::twist force_calculator::to_twist(const rmath::vector2d& force) const {
-  kin::twist twist;
-  twist.linear.x = force.length();
-  twist.angular.z = (force - m_entity.linear_velocity()).length() *
-                    std::sin((force - m_entity.linear_velocity()).angle().v());
-  if (m_entity.linear_velocity().length() > 0) {
-    twist.angular.z /= m_entity.linear_velocity().length();
-  } else {
-    twist.angular.z = 0;
-  }
-  return twist;
-} /* to_twist() */
-
 rmath::vector2d force_calculator::seek_to(const rmath::vector2d& target) {
   rmath::vector2d force = m_arrival(m_entity, target);
   m_tracker.force_add("arrival", force); /* accum */

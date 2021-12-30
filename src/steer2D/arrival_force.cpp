@@ -43,7 +43,8 @@ arrival_force::arrival_force(const config::arrival_force_config* const config)
  ******************************************************************************/
 rmath::vector2d arrival_force::operator()(const boid& entity,
                                           const rmath::vector2d& target) {
-  rmath::vector2d desired = target - entity.pos2D();
+  auto odom = entity.odometry();
+  rmath::vector2d desired = target - odom.pose.position.to_2D();
   double distance = desired.length();
 
   desired.normalize();
@@ -65,8 +66,7 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
    * abs() around the angle, and using angle instead of -angle in the return
    * vector seems to have done the trick, for now. See COSM#39,RCPPSW#232.
    */
-  auto angle =
-      (desired.angle() - entity.linear_velocity().angle()).signed_normalize();
+  auto angle = (desired.angle() - odom.twist.linear.to_2D().angle()).signed_normalize();
   return { desired.length(), angle };
 } /* operator()() */
 

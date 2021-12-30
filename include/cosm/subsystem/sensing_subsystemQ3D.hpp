@@ -25,6 +25,9 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/types/timestep.hpp"
+#include "rcppsw/math/vector3.hpp"
+#include "rcppsw/math/vector2.hpp"
+
 #include "cosm/hal/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
@@ -102,21 +105,22 @@ class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
   /**
    * \brief Update the current time and position information for the robot.
    */
-  void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
+  void update(const rtypes::timestep& t,
+              const rtypes::discretize_ratio& ratio) {
     m_tick = t;
-    auto reading = position()->reading();
+    auto odom = odometry()->reading();
 
     /* update 2D position info */
     m_prev_rpos2D = m_rpos2D;
-    m_rpos2D = reading.position.project_on_xy();
+    m_rpos2D = odom.pose.position.project_on_xy();
     m_dpos2D = rmath::dvec2zvec(m_rpos2D, ratio.v());
 
     /* update 3D position info */
     m_prev_rpos3D = m_rpos3D;
-    m_rpos3D = reading.position;
+    m_rpos3D = odom.pose.position;
     m_dpos3D = rmath::dvec2zvec(m_rpos3D, ratio.v());
-    m_azimuth = reading.z_ang;
-    m_zenith = reading.y_ang;
+    m_azimuth = odom.pose.orientation.z();
+    m_zenith = odom.pose.orientation.y();
   }
 
   /**

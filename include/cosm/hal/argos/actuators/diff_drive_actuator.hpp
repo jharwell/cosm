@@ -24,10 +24,15 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/er/client.hpp"
-#include "rcppsw/patterns/decorator/decorator.hpp"
+#include <utility>
 
-#include "cosm/hal/actuators/base_actuator.hpp"
+#include "rcppsw/er/client.hpp"
+#include "rcppsw/math/radians.hpp"
+#include "rcppsw/math/angles.hpp"
+#include "rcppsw/math/range.hpp"
+
+#include "cosm/hal/argos/actuators/argos_actuator.hpp"
+#include "cosm/kin/twist.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
@@ -78,13 +83,16 @@ NS_END(detail);
  */
 template <typename TActuator>
 class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TActuator>>,
-                                 public chal::actuators::base_actuator,
-                                 private rpdecorator::decorator<TActuator*> {
+                                 public chargos::actuators::argos_actuator<TActuator> {
  private:
-  using rpdecorator::decorator<TActuator*>::decoratee;
+  using chargos::actuators::argos_actuator<TActuator>::decoratee;
 
  public:
   using impl_type = TActuator;
+  using chargos::actuators::argos_actuator<impl_type>::enable;
+  using chargos::actuators::argos_actuator<impl_type>::disable;
+  using chargos::actuators::argos_actuator<impl_type>::is_enabled;
+
   /**
    * \brief Construct the wrapper actuator.
    *
@@ -94,7 +102,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
    */
   explicit diff_drive_actuator_impl(TActuator* const wheels)
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.diff_drive"),
-        rpdecorator::decorator<TActuator*>(wheels) {}
+        chargos::actuators::argos_actuator<TActuator>(wheels) {}
 
   const diff_drive_actuator_impl& operator=(const diff_drive_actuator_impl&) = delete;
   diff_drive_actuator_impl(const diff_drive_actuator_impl&) = default;
@@ -103,19 +111,23 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
    * \brief Stop the wheels of a robot. As far as I know, this is an immediate
    * stop (i.e. no rampdown).
    */
-  void reset(void) override { set_wheel_speeds(0.0, 0.0); }
+  void reset(void) override {
+    set_direct(0.0, 0.0);
+    argos_actuator<TActuator>::reset();
+  }
 
-  /**
-   * \brief Disable the actuator. In ARGoS actuators can't be disabled, so this
-   * does nothing.
-   */
-  void disable(void) override { reset();  }
+  void set_from_twist(const ckin::twist& desired,
+                      const rmath::range<rmath::radians>& soft_turn) {
+    ER_ASSERT(nullptr != decoratee(),
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
 
-  /**
-   * \brief Enable the actuator. In ARGoS actuators can't be disabled, so this
-   * does nothing.
-   */
-  void enable(void) override { }
+    auto speeds = to_wheel_speeds(desired, soft_turn);
+    set_direct(speeds.first, speeds.second);
+  }
 
   /**
    * \brief Set the wheel speeds for the current timestep for a footbot/epuck
@@ -126,10 +138,13 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_generic_ds_actuator<U>::value)>
-  void set_wheel_speeds(double left, double right) {
+  void set_direct(double left, double right) {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+             "%s called when disabled",
+             __FUNCTION__);
 
     /*
      * ARGoS expects velocities to be specified in cm/s, so we have to convert
@@ -138,19 +153,52 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
     decoratee()->SetLinearVelocity(left * 100.0, right * 100.0);
   }
 
+
   /**
    * \brief Set the wheel speeds for the current timestep for a pipuck
    * robot. Bounds checking is not performed.
    */
   template <typename U = TActuator,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_ds_actuator<U>::value)>
-  void set_wheel_speeds(double left, double right) {
+  void set_direct(double left, double right) {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
     decoratee()->SetTargetVelocityLeft(left);
     decoratee()->SetTargetVelocityRight(right);
   }
+
+  std::pair<double, double> to_wheel_speeds(
+      const ckin::twist& twist,
+      const rmath::range<rmath::radians>& soft_turn) {
+    double speed1, speed2;
+
+    /* Both wheels go straight, but one is faster than the other */
+    auto angle = twist.linear.to_2D().angle();
+    if (soft_turn.contains(angle.signed_normalize())) {
+      double speed_factor = (soft_turn.span() / 2.0 -
+                             rmath::abs(twist.linear.to_2D().angle())) /
+                            soft_turn.span() / 2.0;
+      speed_factor = std::fabs(speed_factor);
+
+      speed1 = twist.linear.x() - twist.linear.x() * (1.0 - speed_factor);
+      speed2 = twist.linear.x() + twist.linear.x() * (1.0 - speed_factor);
+    } else { /* turn in place */
+      speed1 = -twist.linear.x();
+      speed2 = twist.linear.x();
+    }
+    if (twist.linear.to_2D().angle() > rmath::radians::kZERO) {
+      /* Turn Left */
+      return {speed1, speed2};
+    } else {
+      /* Turn Right */
+      return {speed2, speed1};
+    }
+  } /* to_wheel_speeds() */
+
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

@@ -45,13 +45,14 @@ NS_START(cosm, hal, sensors);
  */
 template <typename TSensor>
 class base_sensor : public rer::client<base_sensor<TSensor>>,
-                    protected rpdecorator::decorator<TSensor*> {
+                    protected rpdecorator::decorator<TSensor> {
  public:
-  using rpdecorator::decorator<TSensor*>::decoratee;
+  using rpdecorator::decorator<TSensor>::decoratee;
+  using impl_type = TSensor;
 
-  explicit base_sensor(TSensor* sensor)
+  explicit base_sensor(TSensor sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.base_sensor"),
-        rpdecorator::decorator<TSensor*>(sensor) {}
+        rpdecorator::decorator<TSensor>(sensor) {}
 
   virtual ~base_sensor(void) = default;
 
@@ -64,35 +65,27 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
    * \brief Enable the sensor. Should do nothing if sensor is already
    * enabled.
    */
-
-  void enable(void) {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Enable();
-  }
+  virtual void enable(void) = 0;
 
   /**
    * \brief Disable the sensor. Future commands to the sensor should either
    * throw an error or do nothing (application dependent) until the sensor is
    * re-enabled.Should do nothing if sensor is already disabled.
    */
-  void disable(void) {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Disable();
-  }
+  virtual void disable(void) = 0;
 
   /**
    * \brief Reset the sensor to its initialized state.
    */
-  void reset(void) {
-    ER_ASSERT(nullptr != decoratee(),
-              "%s called with NULL impl handle!",
-              __FUNCTION__);
-    decoratee()->Reset();
-  }
+  virtual void reset(void) = 0;
+
+
+  /**
+   * \brief Is this sensor currently enabled?
+   */
+  virtual bool is_enabled(void) const = 0;
+
+  bool is_disabled(void) const { return !is_enabled(); }
 };
 
 NS_END(sensors, hal, cosm);

@@ -38,7 +38,8 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/colored_blob_camera_sensor_reading.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -75,33 +76,25 @@ NS_END(detail);
  *  it as needed for maximum speed.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                  HAL. If nullptr, then that effectively disables the sensor
- *                  at compile time, and SFINAE ensures no member functions can
- *                  be called.
+ *                  HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_camera_sensor_impl<TSensor>>,
-                                              public chal::sensors::base_sensor<TSensor> {
+                                              public chargos::sensors::argos_sensor<TSensor> {
  private:
-  using chal::sensors::base_sensor<TSensor>::decoratee;
+  using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
  public:
   using impl_type = TSensor;
-  using chal::sensors::base_sensor<TSensor>::enable;
-  using chal::sensors::base_sensor<TSensor>::disable;
-  using chal::sensors::base_sensor<TSensor>::reset;
+  using reading_type = chsensors::colored_blob_camera_sensor_reading;
+  using chargos::sensors::argos_sensor<impl_type>::enable;
+  using chargos::sensors::argos_sensor<impl_type>::disable;
+  using chargos::sensors::argos_sensor<impl_type>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  /**
-   * \brief A camera sensor reading (color, distance in meters) tuple.
-   */
-  struct reading {
-    rmath::vector2d vec{};
-    rutils::color color{};
-  };
-
-  explicit colored_blob_camera_sensor_impl(TSensor * const sensor)
+  explicit colored_blob_camera_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.colored_blob_camera"),
-        chal::sensors::base_sensor<TSensor>(sensor) {
+        chargos::sensors::argos_sensor<impl_type>(sensor) {
         disable();
   }
 
@@ -114,19 +107,22 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
    * \param ref The angle of the reference frame to use (i.e., the robot's
    *            current heading).
    *
-   * \return A vector of \ref reading.
+   * \return A vector of \ref reading_type.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_blob_camera_sensor<U>::value)>
-  std::vector<reading>  readings(
+  std::vector<reading_type>  readings(
       const rmath::radians& rframe = rmath::radians::kZERO) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
 
-    std::vector<reading> ret;
+    std::vector<reading_type> ret;
     for (auto &r : decoratee()->GetReadings().BlobList) {
-      struct reading s = {
+      reading_type s = {
         /*
          * ARGoS reports the distance in cm for some reason, so put it in SI
          * units (meters), like a sane person.
@@ -151,12 +147,15 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
    * \brief Return the average blob reading within proximity for the
    * robot of the specified color.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_blob_camera_sensor<U>::value)>
   boost::optional<rmath::vector2d> closest_blob(const rutils::color& color,
                                                 const rmath::radians& rframe) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
 
     auto same_color = [&](auto& r) { return color == r.color; };

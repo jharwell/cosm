@@ -1,4 +1,4 @@
-/**
+ /**
  * \file sensing_subsystemQ3D_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
+#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
+#define INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -28,7 +28,7 @@
 #include <string>
 
 #include "cosm/hal/sensors/config/xml/proximity_sensor_parser.hpp"
-#include "cosm/hal/sensors/config/xml/ground_sensor_parser.hpp"
+#include "cosm/hal/sensors/config/xml/env_sensor_parser.hpp"
 #include "cosm/hal/subsystem/config/sensing_subsystemQ3D_config.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
@@ -44,7 +44,7 @@ NS_START(cosm, hal, subsystem, config, xml);
  * \class sensing_subsystemQ3D_parser
  * \ingroup hal subsystem config xml
  *
- * \brief Parses XML parameters relating to sensings into \ref
+ * \brief Parses XML parameters relating to sensing into \ref
  * sensing_subsystemQ3D_config.
  */
 class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser {
@@ -64,8 +64,8 @@ class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser
 
   std::string xml_root(void) const override { return kXMLRoot; }
 
-  void ground_detection_add(const std::string& target) {
-    m_ground.detection_add(target);
+  void env_detection_add(const std::string& target) {
+    m_env.detection_add(target);
   }
 
  private:
@@ -74,12 +74,12 @@ class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser
   }
 
   /* clang-format off */
-  std::unique_ptr<config_type>                        m_config{nullptr};
-  chal::sensors::config::xml::proximity_sensor_parser m_proximity{};
-  chal::sensors::config::xml::ground_sensor_parser    m_ground{};
+  std::unique_ptr<config_type>                    m_config{nullptr};
+  chsensors::config::xml::proximity_sensor_parser m_proximity{};
+  chsensors::config::xml::env_sensor_parser       m_env{};
   /* clang-format on */
 };
 
 NS_END(xml, config, subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_ */
+#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_ */

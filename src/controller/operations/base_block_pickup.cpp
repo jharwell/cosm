@@ -47,8 +47,9 @@ base_block_pickup::base_block_pickup(crepr::base_block3D* block,
  * Member Functions
  ******************************************************************************/
 void base_block_pickup::visit(controller::block_carrying_controller& c) {
-  ER_ASSERT(
-      !c.is_carrying_block(), "Robot%u already carrying block!", mc_robot_id.v());
+  ER_ASSERT(!c.is_carrying_block(),
+            "Robot%u already carrying block!",
+            mc_robot_id.v());
 
   /*
    * Cloning resets robot ID, so we need to set it again in the clone (principle
@@ -57,8 +58,9 @@ void base_block_pickup::visit(controller::block_carrying_controller& c) {
   auto block = m_block->clone();
   block->md()->robot_id(mc_robot_id);
   c.block(std::move(block));
-  ER_INFO(
-      "Block%d is now carried by robot%u", m_block->id().v(), mc_robot_id.v());
+  ER_INFO("Block%d is now carried by robot%u",
+          m_block->id().v(),
+          mc_robot_id.v());
 
   /*
    * We need to visit the cloned controller block, because metrics are collected

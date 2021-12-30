@@ -26,8 +26,8 @@
 #include "cosm/pal/argos/sm_adaptor.hpp"
 #include "cosm/hal/robot.hpp"
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/pal/argos/controller2D_adaptor.hpp"
-#include "cosm/pal/argos/controllerQ3D_adaptor.hpp"
+#include "cosm/pal/argos/controller/adaptor2D.hpp"
+#include "cosm/pal/argos/controller/adaptorQ3D.hpp"
 #include "cosm/pal/argos/operations/robot_malfunction.hpp"
 #include "cosm/pal/argos/operations/robot_repair.hpp"
 #include "cosm/tv/config/population_dynamics_config.hpp"
@@ -285,7 +285,7 @@ bool pd_adaptor<TController>::robot_attempt_add(
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template class pd_adaptor<cpargos::controller2D_adaptor>;
-template class pd_adaptor<cpargos::controllerQ3D_adaptor>;
+template class pd_adaptor<cpargos::controller::adaptor2D>;
+template class pd_adaptor<cpargos::controller::adaptorQ3D>;
 
 NS_END(tv, argos, pal, cosm);

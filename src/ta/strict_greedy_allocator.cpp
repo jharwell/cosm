@@ -59,7 +59,7 @@ polled_task* strict_greedy_allocator::operator()(
    * are OK to allocate, so pick randomly.
    */
   return equiv_min_tasks[m_rng->uniform(
-      rmath::rangeu(0, equiv_min_tasks.size() - 1))];
+      rmath::rangez(0, equiv_min_tasks.size() - 1))];
 } /* alloc_strict_greedy() */
 
 NS_END(ta, cosm);

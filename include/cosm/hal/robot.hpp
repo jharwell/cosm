@@ -47,6 +47,8 @@ using robot = ::argos::CFootBotEntity;
 using robot = ::argos::CEPuckEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 using robot = ::argos::CPiPuckEntity;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+struct robot {};
 #endif /* COSM_HAL_TARGET */
 
 NS_END(hal, cosm);

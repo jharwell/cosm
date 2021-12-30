@@ -55,9 +55,9 @@ template<typename TController>
 class rda_adaptor final : public rer::client<rda_adaptor<TController>>,
                                 public ctv::robot_dynamics_applicator {
  public:
-  static_assert(std::is_base_of<controller::irv_recipient_controller, TController>::value,
+  static_assert(std::is_base_of<ccontroller::irv_recipient_controller, TController>::value,
                 "TControllerType not derived from irv_recipient_controller");
-  static_assert(std::is_base_of<controller::block_carrying_controller,
+  static_assert(std::is_base_of<ccontroller::block_carrying_controller,
                 TController>::value,
                 "TControllerType not derived from block_carrying_controller");
 

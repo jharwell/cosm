@@ -88,17 +88,28 @@ namespace config {}
  * COSM is targeting.
  */
 namespace hal {
+
 namespace argos {
 namespace sensors {}
 namespace actuators {}
 namespace config {}
 } /* namespace argos */
+
+namespace ros {
+namespace sensors {}
+namespace actuators {}
+namespace config {}
+} /* namespace ros */
+
 namespace subsystem {
 namespace config {}
 } /* namespace subsystem */
+
 namespace sensors {}
 namespace actuators {}
 } /* namespace hal */
+
+namespace kin {}
 
 /**
  * \namespace kin2D
@@ -210,13 +221,18 @@ namespace operations {}
  * each platform.
  */
 namespace pal {
+namespace controller {}
 namespace config {
-namespace xml{}
+namespace xml {}
 }
 namespace argos {
 namespace operations {}
 namespace tv {}
+namespace controller {}
 } /* namespace argos */
+namespace ros {
+namespace controller {}
+}
 } /* namespace pal */
 
 /**
@@ -366,8 +382,10 @@ namespace cpal = cosm::pal;
 namespace cpconfig = cpal::config;
 namespace cpcxml = cpconfig::xml;
 namespace cpargos = cpal::argos;
+namespace cpros = cpal::ros;
 namespace cpaops = cpargos::operations;
 namespace cpatv = cpargos::tv;
+namespace cpcontroller = cpal::controller;
 
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
@@ -376,18 +394,22 @@ namespace crepr = cosm::repr;
 namespace crops = crepr::operations;
 
 namespace chal = cosm::hal;
+namespace chsensors = chal::sensors;
+namespace chactuators = chal::actuators;
+
+namespace chros = chal::ros;
+
 namespace chargos = chal::argos;
 namespace chasensors = chargos::sensors;
 namespace chaactuators = chargos::actuators;
 namespace chaconfig = chargos::config;
 namespace chsubsystem = chal::subsystem;
 namespace chsconfig = chsubsystem::config;
-namespace chsensors = chal::sensors;
-namespace chactuators = chal::actuators;
 
 namespace crconfig = crepr::config;
 
 namespace cfsm = cosm::fsm;
+namespace ckin = cosm::kin;
 namespace ckin2D = cosm::kin2D;
 namespace csteer2D = cosm::steer2D;
 

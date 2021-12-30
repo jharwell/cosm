@@ -50,15 +50,14 @@ NS_START(kin2D);
  * \ingroup kin2D
  *
  * \brief A differential drive whose maximum speed can be set in a temporally
- * varyng manner via one or more \ref tv::switchable_tv_generators, if configured
- * to do so. The effect of all configured generators is cumulative.
+ * varyng manner via one or more \ref tv::switchable_tv_generators, if
+ * configured to do so. The effect of all configured generators is cumulative.
  */
 class governed_diff_drive final : public kin2D::diff_drive {
  public:
   governed_diff_drive(const config::diff_drive_config* config,
-                      const hal::actuators::diff_drive_actuator& actuator,
-                      const drive_type& type)
-      : diff_drive(config, actuator, type) {}
+                      const hal::actuators::diff_drive_actuator& actuator)
+      : diff_drive(config, actuator) {}
 
   const governed_diff_drive& operator=(const governed_diff_drive&) = delete;
   governed_diff_drive(const governed_diff_drive&) = default;
@@ -66,7 +65,7 @@ class governed_diff_drive final : public kin2D::diff_drive {
   /**
    * \brief Get the current value of the governor.
    *
-   * \return A percent [0.0,1.0]
+   * \return A percent [0.0,1.0].
    */
   double active_throttle(void) const RCPPSW_PURE;
 
@@ -74,7 +73,7 @@ class governed_diff_drive final : public kin2D::diff_drive {
    * \brief Get the current value of the governor if it was active (it might not
    * be).
    *
-   * \return A percent [0.0,1.0]
+   * \return A percent [0.0,1.0].
    */
   double applied_throttle(void) const RCPPSW_PURE;
 

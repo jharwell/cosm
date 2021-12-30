@@ -95,6 +95,7 @@ function bootstrap_argos() {
     make -j $n_cores
     make doc
 
+    argos_sys_install=$([ "/usr/local" = "$prefix" ] && echo "YES" || echo "NO")
 
     if [ "YES" = "$argos_sys_install" ]; then
         sudo make install;
@@ -103,6 +104,12 @@ function bootstrap_argos() {
     fi;
 
     cd ../../
+
+    # Install extended E-puck ARGoS model
+    if [ "YES" = "$eepuck3D" ]; then
+        bootstrap_eepuck3D
+    fi
+
 }
 
 function bootstrap_eepuck3D() {
@@ -142,14 +149,61 @@ function bootstrap_rcppsw() {
     chmod +x bootstrap-rcppsw.sh
     rcppsw_syspkgs=$([ "YES" = "$install_sys_pkgs" ] && echo "" || echo "--nosyspkgs")
     rcppsw_opt=$([ "OPT" = "$build_type" ] && echo "--opt" || echo "")
+
     ./bootstrap-rcppsw.sh \
-        --rroot $repo_root\
-        --cores $n_cores\
-        --nobuild\
-        $rcppsw_syspkgs\
-        $rcppsw_opt
+        --rroot $repo_root \
+        --cores $n_cores \
+        $rcppsw_syspkgs \
+        $rcppsw_opt \
+        --prefix $prefix \
+        --arch x86_64
+
+    ./bootstrap-rcppsw.sh \
+        --rroot $repo_root \
+        --cores $n_cores \
+        $rcppsw_syspkgs \
+        $rcppsw_opt \
+        --prefix $prefix \
+        --arch armhf
 }
 
+function bootstrap_cosm() {
+    if [ -d cosm ]; then rm -rf cosm; fi
+    git clone https://github.com/swarm-robotics/cosm.git
+    cd cosm
+    git checkout feature/164/base-ros-controller
+    git submodule update --init --recursive --remote
+
+    if [ "OPT" = "$build_type" ]; then
+        er="NONE"
+    else
+        er="ALL"
+    fi
+
+    npm install
+    mkdir -p build && cd build
+    arch=$1
+    
+    if [ "$arch" = "x86_64" ]; then
+        cmake\
+            -DCMAKE_C_COMPILER=gcc-9 \
+            -DCMAKE_CXX_COMPILER=g++-9 \
+            -DCMAKE_INSTALL_PREFIX=$prefix \
+            -DCOSM_BUILD_FOR=ARGOS_FOOTBOT \
+            ..
+    elif [ "$arch" = "armhf" ]; then
+        source /opt/ros/noetic/setup.bash 
+        cmake\
+            -DCMAKE_TOOLCHAIN_FILE=../libra/cmake/arm-linux-gnueabihf-toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=$prefix \
+            -DCOSM_BUILD_FOR=ROS_TURTLEBOT3 \
+            ..
+    fi
+    make -j $n_cores
+    make install
+
+    cd ../..
+}
 ################################################################################
 # Bootstrap main
 ################################################################################
@@ -176,7 +230,10 @@ function bootstrap_main() {
                    freeglut3-dev
                    libeigen3-dev
                    libudev-dev
-                   liblua5.3-dev)
+                   ros-noetic-desktop-full # Not present on rasberry pi
+                   ros-noetic-ros-base
+                   liblua5.3-dev
+                  )
 
         # Install packages (must be loop to ignore ones that don't exist)
         for pkg in "${cosm_pkgs[@]}"
@@ -192,27 +249,13 @@ function bootstrap_main() {
     # requirements).
     set -e
 
-    argos_sys_install=$([ "/usr/local" = "$prefix" ] && echo "YES" || echo "NO")
-
-    # Install ARGoS
-    bootstrap_argos
-
-    # Install extended E-puck ARGoS model
-    if [ "YES" = "$eepuck3D" ]; then
-        bootstrap_eepuck3D
-    fi
+    # Install ARGoS and eepuck (maybe)
+    set -x
+    # bootstrap_argos
 
     # Bootstrap COSM
-    if [ -d cosm ]; then rm -rf cosm; fi
-    git clone https://github.com/swarm-robotics/cosm.git
-    cd cosm
-    git checkout devel
-    git submodule update --init --recursive --remote
-
-    rm -rf ext/rcppsw
-    ln -s $repo_root/rcppsw ext/rcppsw
-
-    cd ..
+    bootstrap_cosm x86_64
+    bootstrap_cosm armhf
 
     # If we installed ARGoS as root, all project repos are also owned by
     # root, so we need to fix that.

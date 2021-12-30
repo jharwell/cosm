@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_MALFUNCTION_HPP_
-#define INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_MALFUNCTION_HPP_
+#ifndef INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_
+#define INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_
 
 /*******************************************************************************
  * Includes
@@ -37,9 +37,9 @@
 namespace cosm::fsm {
 class supervisor_fsm;
 } /* namespace fsm */
-namespace cosm::pal::argos {
-class controller2D_adaptor;
-class controllerQ3D_adaptor;
+namespace cosm::pal::argos::controller {
+class adaptor2D;
+class adaptorQ3D;
 } /* namespace cosm::pal */
 
 NS_START(cosm, pal, argos, operations);
@@ -61,17 +61,18 @@ NS_START(cosm, pal, argos, operations);
  */
 class robot_malfunction : public rer::client<robot_malfunction> {
  public:
-  robot_malfunction(void) : ER_CLIENT_INIT("cosm.pal.argos.operations.robot_malfunction") {}
+  robot_malfunction(void) :
+      ER_CLIENT_INIT("cosm.pal.argos.operations.robot_malfunction") {}
   ~robot_malfunction(void) override = default;
 
   robot_malfunction(const robot_malfunction&) = delete;
   robot_malfunction& operator=(const robot_malfunction&) = delete;
 
   void visit(cfsm::supervisor_fsm& fsm);
-  void visit(cpargos::controller2D_adaptor& controller);
-  void visit(cpargos::controllerQ3D_adaptor& controller);
+  void visit(cpargos::controller::adaptor2D& controller);
+  void visit(cpargos::controller::adaptorQ3D& controller);
 };
 
 NS_END(operations, argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_OPERATIONS_ARGOS_ROBOT_MALFUNCTION_HPP_ */
+#endif /* INCLUDE_COSM_PAL_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_ */

@@ -64,10 +64,8 @@ class saa_subsystemQ3D final : public steer2D::boid,
    * the robot's current Z vector; that is, within the plane defined by the
    * robot's current zenith angle.
    */
-  rmath::vector2d linear_velocity(void) const override;
-  double angular_velocity(void) const override RCPPSW_PURE;
+  ckin::odometry odometry(void) const override;
   double max_speed(void) const override RCPPSW_PURE;
-  rmath::vector2d pos2D(void) const override RCPPSW_PURE;
 
   sensing_type* sensing(void) { return m_sensing.get(); }
   const sensing_type* sensing(void) const { return m_sensing.get(); }

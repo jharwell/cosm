@@ -38,8 +38,8 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
+#include "cosm/hal/argos/sensors/argos_sensor.hpp"
 #include "cosm/hal/argos/sensors/config/ground_sensor_config.hpp"
-#include "cosm/hal/sensors/base_sensor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -83,23 +83,20 @@ NS_END(detail);
  * - ARGoS pipuck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
- *                  HAL. If nullptr, then that effectively disables the sensor
- *                  at compile time, and SFINAE ensures no member functions can
- *                  be called.
+ *                  HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
-class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>,
-                                 public chal::sensors::base_sensor<TSensor> {
+class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
+                           public chargos::sensors::argos_sensor<TSensor> {
  private:
-  using chal::sensors::base_sensor<TSensor>::decoratee;
+  using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
  public:
   using impl_type = TSensor;
-  using chal::sensors::base_sensor<TSensor>::enable;
-  using chal::sensors::base_sensor<TSensor>::disable;
-  using chal::sensors::base_sensor<TSensor>::reset;
-
-  static inline const std::string kNestTarget = "nest";
+  using chargos::sensors::argos_sensor<impl_type>::enable;
+  using chargos::sensors::argos_sensor<impl_type>::disable;
+  using chargos::sensors::argos_sensor<impl_type>::reset;
+  using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
   /**
    * \brief A ground sensor reading (value, distance) pair.
@@ -117,26 +114,33 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
     double distance{-1.0};
   };
 
-  ground_sensor_impl(TSensor * const sensor,
-                     const chal::argos::sensors::config::ground_sensor_config* const config)
+  ground_sensor_impl(impl_type * const sensor,
+                     const chargos::sensors::config::ground_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.ground"),
-        chal::sensors::base_sensor<TSensor>(sensor),
-        mc_config(*config) {}
+        chargos::sensors::argos_sensor<impl_type>(sensor),
+        m_config(*config) {}
   ~ground_sensor_impl(void) override = default;
 
   const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
   ground_sensor_impl(const ground_sensor_impl&) = default;
 
+  void config_update(
+      const chargos::sensors::config::ground_sensor_config* const config) {
+    m_config = *config;
+  }
   /**
    * \brief Get the current ground sensor readings for the footbot robot.
    *
    * \return A vector of \ref reading.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_footbot_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
 
     std::vector<reading> ret;
@@ -152,11 +156,14 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
    *
    * \return A vector of \ref reading.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_epuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
 
     std::vector<reading> ret;
@@ -173,11 +180,14 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
    *
    * \return A vector of \ref reading.
    */
-  template <typename U = TSensor,
+  template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_ground_sensor<U>::value)>
   std::vector<reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
               __FUNCTION__);
 
     reading r;
@@ -195,13 +205,13 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
    *
    * \param name The name of the configured detection to check.
    *
-   * \return \c TRUE iff the condition was detected by the specified # readings.
+   * \return \c TRUE iff the condition was detected.
    */
-  bool detect(const std::string& name) const {
-    ER_ASSERT(mc_config.detect_map.end() != mc_config.detect_map.find(name),
+    bool detect(const std::string& name) const {
+    ER_ASSERT(m_config.detect_map.end() != m_config.detect_map.find(name),
               "Detection %s not found in configured map",
               name.c_str());
-    auto &detection = mc_config.detect_map.find(name)->second;
+    auto &detection = m_config.detect_map.find(name)->second;
 
     size_t sum = 0;
     for (auto &r : readings()) {
@@ -209,10 +219,9 @@ class ground_sensor_impl final : public rer::client<ground_sensor_impl<TSensor>>
     } /* for(&r..) */
     return  sum >= detection.consensus;
   }
-
  private:
   /* clang-format off */
-  const chal::argos::sensors::config::ground_sensor_config mc_config;
+  chargos::sensors::config::ground_sensor_config m_config;
   /* clang-format on */
 };
 
