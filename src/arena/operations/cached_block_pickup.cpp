@@ -47,7 +47,7 @@ using cads::arena_grid;
  ******************************************************************************/
 cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
                                          crepr::base_block3D* pickup_block,
-                                         cpargos::sm_adaptor* sm,
+                                         cpargos::swarm_manager_adaptor* sm,
                                          const rtypes::type_uuid& robot_id,
                                          const rtypes::timestep& t,
                                          const locking& locking)

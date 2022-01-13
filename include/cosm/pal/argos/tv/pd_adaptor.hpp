@@ -43,7 +43,7 @@ class block_carrying_controller;
 } /* namespace cosm::controller */
 
 namespace cosm::pal::argos {
-class sm_adaptor;
+class swarm_manager_adaptor;
 } /* namespace cosm::pal::argos */
 
 namespace cosm::pal::argos::controller {
@@ -86,7 +86,7 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
   static constexpr const size_t kMaxOperationAttempts = 1000;
 
   pd_adaptor(const ctv::config::population_dynamics_config* config,
-             cpargos::sm_adaptor* sm,
+             cpargos::swarm_manager_adaptor* sm,
              env_dynamics_type *envd,
              const rmath::vector2d& arena_dim,
              rmath::rng* rng);
@@ -116,11 +116,11 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
   bool robot_attempt_add(const rtypes::type_uuid& id);
 
   /* clang-format off */
-  const cpargos::sm_adaptor* mc_sm;
+  const cpargos::swarm_manager_adaptor* mc_sm;
 
   /**
    * \brief The arena dimensions. We already have access to the arena via the
-   * \ref cpal::sm_adaptor reference, BUT we don't know what type of arena
+   * \ref cpal::swarm_manager_adaptor reference, BUT we don't know what type of arena
    * it is managing, and there is not a clean way that I can see to allow the
    * caller to communicate that information, and doing a series of if/else to
    * figure it out smells bad. So, just pass in the arena dimensions, which is
@@ -130,7 +130,7 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
 
   env_dynamics_type*         m_envd;
   rmath::rng*                m_rng;
-  cpargos::sm_adaptor*       m_sm;
+  cpargos::swarm_manager_adaptor*       m_sm;
   /* clang-format on */
 };
 

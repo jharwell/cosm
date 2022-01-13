@@ -47,9 +47,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration relating to probabilities built on
  * math::sigmoid to select between things into \ref sigmoid_sel_config.
  */
-class sigmoid_sel_parser : public rcppsw::config::xml::xml_config_parser {
+class sigmoid_sel_parser : public rer::client<sigmoid_sel_parser>,
+                           public rcppsw::config::xml::xml_config_parser {
  public:
   using config_type = sigmoid_sel_config;
+
+  sigmoid_sel_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.sigmoid_sel_parser") {}
 
   /**
    * \brief The root tag that all XML configuration should lie under in the XML

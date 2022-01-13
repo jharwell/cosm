@@ -37,6 +37,10 @@ void grid3D_parser::parse(const ticpp::Element& node) {
    * does not use grids.
    */
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element gnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -46,8 +50,8 @@ void grid3D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool grid3D_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->resolution.v() > 0.0);
-  RCPPSW_CHECK(m_config->dims.is_pd());
+  ER_CHECK(m_config->resolution.v() > 0.0, "Resolution must be > 0");
+  ER_CHECK(m_config->dims.is_pd(), "Dimensions must be positive definite");
   return true;
 
 error:

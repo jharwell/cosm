@@ -47,9 +47,12 @@ NS_START(cosm, hal, subsystem, config, xml);
  * \brief Parses XML parameters relating to sensing into \ref
  * sensing_subsystemQ3D_config.
  */
-class sensing_subsystemQ3D_parser final : public rconfig::xml::xml_config_parser {
+class sensing_subsystemQ3D_parser final : public rer::client<sensing_subsystemQ3D_parser>,
+                                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = sensing_subsystemQ3D_config;
+
+  sensing_subsystemQ3D_parser(void) : ER_CLIENT_INIT("cosm.hal.subsystem.config.xml.sensing_subsystemQ3D_parser") {}
 
   ~sensing_subsystemQ3D_parser(void) override = default;
 

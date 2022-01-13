@@ -47,9 +47,12 @@ NS_START(cosm, subsystem, config, xml);
  * \brief Parses XML parameters for \ref actuation_subsystem2D into
  * \ref actuation_subsystem2D_config.
  */
-class actuation_subsystem2D_parser final : public rconfig::xml::xml_config_parser {
+class actuation_subsystem2D_parser final : public rer::client<actuation_subsystem2D_parser>,
+                                           public rconfig::xml::xml_config_parser {
  public:
   using config_type = actuation_subsystem2D_config;
+
+  actuation_subsystem2D_parser(void) : ER_CLIENT_INIT("cosm.subsystem.config.xml.actuation_subsystem2D_parser") {}
 
   /**
    * \brief The root tag that all 2D actuation subsystem parameters should lie

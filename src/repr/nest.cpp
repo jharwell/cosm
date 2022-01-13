@@ -51,7 +51,7 @@ nest::nest(const config::nest_config* config,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest::initialize(cpargos::sm_adaptor* sm,
+void nest::initialize(cpargos::swarm_manager_adaptor* sm,
                       const rutils::color& light_color) {
   if (m_initialized) {
     return;

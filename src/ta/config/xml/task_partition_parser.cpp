@@ -32,6 +32,10 @@ NS_START(cosm, ta, config, xml);
  * Member Functions
  ******************************************************************************/
 void task_partition_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element pnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -45,9 +49,12 @@ void task_partition_parser::parse(const ticpp::Element& node) {
 
 bool task_partition_parser::validate(void) const {
   if (is_parsed()) {
-    return m_sigmoid.validate();
+    ER_CHECK(m_sigmoid.validate(), "Sigmoid failed validation");
   }
   return true;
+
+error:
+  return false;
 } /* validate() */
 
 NS_END(xml, config, ta, cosm);

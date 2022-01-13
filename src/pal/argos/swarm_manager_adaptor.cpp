@@ -1,5 +1,5 @@
 /**
- * \file sm_adaptor.cpp
+ * \file swarm_manager_adaptor.cpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 
 #include "rcppsw/math/rngm.hpp"
 
@@ -40,21 +40,21 @@ NS_START(cosm, pal, argos);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-sm_adaptor::sm_adaptor(void)
-    : ER_CLIENT_INIT("cosm.pal.argos.sm_adaptor") {}
+swarm_manager_adaptor::swarm_manager_adaptor(void)
+    : ER_CLIENT_INIT("cosm.pal.argos.swarm_manager_adaptor") {}
 
-sm_adaptor::~sm_adaptor(void) = default;
+swarm_manager_adaptor::~swarm_manager_adaptor(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 template <typename TArenaMap>
-void sm_adaptor::arena_map_create(
+void swarm_manager_adaptor::arena_map_create(
     const caconfig::arena_map_config* aconfig) {
   m_arena_map = std::make_unique<TArenaMap>(aconfig, rng());
 } /* arena_map_create() */
 
-void sm_adaptor::arena_map_init(
+void swarm_manager_adaptor::arena_map_init(
     const cvconfig::visualization_config* vconfig,
     const crepr::config::nests_config* nconfig) {
   /*
@@ -72,7 +72,7 @@ void sm_adaptor::arena_map_init(
   }
 } /* arena_map_init() */
 
-::argos::CColor sm_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
+::argos::CColor swarm_manager_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
   rmath::vector2z dpos =
       rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());
@@ -97,20 +97,20 @@ void sm_adaptor::arena_map_init(
 /*******************************************************************************
  * ARGoS Hooks
  ******************************************************************************/
-void sm_adaptor::init(ticpp::Element&) {
+void swarm_manager_adaptor::init(ticpp::Element&) {
   m_floor = &GetSpace().GetFloorEntity();
 } /* Init() */
 
-void sm_adaptor::pre_step(void) {
+void swarm_manager_adaptor::pre_step(void) {
   timestep(rtypes::timestep(GetSpace().GetSimulationClock()));
 } /* pre_step() */
 
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
-template void sm_adaptor::arena_map_create<carena::base_arena_map>(
+template void swarm_manager_adaptor::arena_map_create<carena::base_arena_map>(
     const caconfig::arena_map_config* aconfig);
-template void sm_adaptor::arena_map_create<carena::caching_arena_map>(
+template void swarm_manager_adaptor::arena_map_create<carena::caching_arena_map>(
     const caconfig::arena_map_config* aconfig);
 
 NS_END(argos, pal, cosm);

@@ -32,6 +32,10 @@ NS_START(cosm, ta, config, xml);
  * Member Functions
  ******************************************************************************/
 void src_sigmoid_sel_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element pnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 

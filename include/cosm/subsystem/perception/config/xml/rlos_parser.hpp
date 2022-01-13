@@ -47,9 +47,12 @@ NS_START(cosm, subsystem, perception, config, xml);
  * \brief Parses XML parameters relating to reactive LOS perception
  * subsystems into \ref rlos_config.
  */
-class rlos_parser : public rconfig::xml::xml_config_parser {
+class rlos_parser : public rer::client<rlos_parser>,
+                    public rconfig::xml::xml_config_parser {
  public:
   using config_type = rlos_config;
+
+  rlos_parser(void) : ER_CLIENT_INIT("cosm.subsystem.perception.config.xml.rlos_parser") {}
 
   /**
    * \brief The root tag that all rlos parameters should lie under in the

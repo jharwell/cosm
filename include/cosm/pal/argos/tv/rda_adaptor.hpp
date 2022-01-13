@@ -31,7 +31,7 @@
 #include "cosm/tv/robot_dynamics_applicator.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/hal/robot.hpp"
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/pal/argos/swarm_iterator.hpp"
 #include "cosm/controller/block_carrying_controller.hpp"
 #include "cosm/controller/irv_recipient_controller.hpp"
@@ -63,7 +63,7 @@ class rda_adaptor final : public rer::client<rda_adaptor<TController>>,
 
   rda_adaptor(
       const ctv::config::robot_dynamics_applicator_config* config,
-      const cpargos::sm_adaptor* const sm)
+      const cpargos::swarm_manager_adaptor* const sm)
       : ER_CLIENT_INIT("cosm.pal.argos.rda_adaptor"),
         robot_dynamics_applicator(config),
         mc_sm(sm) {}
@@ -112,7 +112,7 @@ class rda_adaptor final : public rer::client<rda_adaptor<TController>>,
 
  private:
   /* clang-format off */
-  const cpargos::sm_adaptor* const mc_sm;
+  const cpargos::swarm_manager_adaptor* const mc_sm;
   /* clang-format on */
 };
 

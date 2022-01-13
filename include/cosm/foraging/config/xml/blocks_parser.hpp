@@ -50,9 +50,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters related to blocks in the arena into \ref
  * blocks_config.
  */
-class blocks_parser : public rconfig::xml::xml_config_parser {
+class blocks_parser : public rer::client<blocks_parser>,
+                      public rconfig::xml::xml_config_parser {
  public:
   using config_type = blocks_config;
+
+  blocks_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.blocks_parser") {}
 
   /**
    * \brief The root tag that all block parameters should lie under in the

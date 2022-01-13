@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/repr/nest_light.hpp"
 
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,7 +50,7 @@ nest_light::nest_light(const std::string& name,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void nest_light::initialize(cpargos::sm_adaptor* sm) {
+void nest_light::initialize(cpargos::swarm_manager_adaptor* sm) {
   sm->AddEntity(*m_impl);
 } /* initialize() */
 

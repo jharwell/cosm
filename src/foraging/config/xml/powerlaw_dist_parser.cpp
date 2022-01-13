@@ -33,6 +33,10 @@ NS_START(cosm, foraging, config, xml);
  ******************************************************************************/
 void powerlaw_dist_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element bnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -46,9 +50,10 @@ bool powerlaw_dist_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  RCPPSW_CHECK(m_config->pwr_min >= 2);
-  RCPPSW_CHECK(m_config->pwr_max >= m_config->pwr_min);
-  RCPPSW_CHECK(m_config->n_clusters > 0);
+  ER_CHECK(m_config->pwr_min >= 2, "Power must be >= 2");
+  ER_CHECK(m_config->pwr_max >= m_config->pwr_min,
+           "Max power must be >= min power");
+  ER_CHECK(m_config->n_clusters > 0, "# clusters must be > 0");
   return true;
 
 error:

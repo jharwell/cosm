@@ -47,9 +47,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration for \ref base_executive and its derived
  * classes into \ref task_executive_config.
  */
-class task_executive_parser final : public rconfig::xml::xml_config_parser {
+class task_executive_parser final : public rer::client<task_executive_parser>,
+                                    public rconfig::xml::xml_config_parser {
  public:
   using config_type = task_executive_config;
+
+  task_executive_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.task_executive_parser") {}
 
   /**
    * \brief The root tag that all task task_executive parameters should lie

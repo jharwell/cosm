@@ -46,12 +46,14 @@ NS_START(cosm, hal, argos, sensors, config, xml);
  * \brief Parses XML parameters relating to HAL ground sensor into \ref
  * ground_sensor_detection_config.
  */
-class ground_sensor_detection_parser : public rconfig::xml::xml_config_parser {
+class ground_sensor_detection_parser : public rer::client<ground_sensor_detection_parser>,
+                                       public rconfig::xml::xml_config_parser {
  public:
   using config_type = ground_sensor_detection_config;
 
   RCPPSW_COLD explicit ground_sensor_detection_parser(const std::string& name)
-      : m_name(name) {}
+      : ER_CLIENT_INIT("cosm.hal.argos.sensors.config.xml.ground_sensor_detection_parser"),
+        m_name(name) {}
 
   ~ground_sensor_detection_parser(void) override = default;
 

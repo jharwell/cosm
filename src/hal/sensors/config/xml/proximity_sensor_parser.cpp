@@ -33,6 +33,10 @@ NS_START(cosm, hal, sensors, config, xml);
  ******************************************************************************/
 void proximity_sensor_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element pnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -42,8 +46,9 @@ void proximity_sensor_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool proximity_sensor_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->delta > 0.0);
-  RCPPSW_CHECK(m_config->fov.lb() < m_config->fov.ub());
+  ER_CHECK(m_config->delta > 0.0, "Delta must be > 0");
+  ER_CHECK(m_config->fov.lb() < m_config->fov.ub(),
+           "Malformed Field Of View range");
   return true;
 
 error:

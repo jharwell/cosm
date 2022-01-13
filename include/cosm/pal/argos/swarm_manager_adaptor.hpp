@@ -70,7 +70,7 @@ NS_START(cosm, pal, argos);
  * \brief Adaptor for \ref swarm_manager to provide an interface for
  * managing swarms within ARGoS.
  */
-class swarm_manager_adaptor : public cpal::swarm_manager,
+class swarm_manager_adaptor : public cpal::base_swarm_manager,
                               public ::argos::CLoopFunctions,
                               public rer::client<swarm_manager_adaptor> {
  public:

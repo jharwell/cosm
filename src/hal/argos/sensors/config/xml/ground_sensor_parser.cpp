@@ -33,6 +33,10 @@ NS_START(cosm, hal, argos, sensors, config, xml);
  ******************************************************************************/
 void ground_sensor_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element pnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -52,7 +56,12 @@ bool ground_sensor_parser::validate(void) const {
       if (d1.first == d2.first) {
         continue;
       }
-      RCPPSW_CHECK(!d1.second.range.overlaps_with(d2.second.range));
+      ER_CHECK(!d1.second.range.overlaps_with(d2.second.range),
+               "Detection range %s->%s overlaps range %s->%s",
+               d1.first.c_str(),
+               rcppsw::to_string(d1.second.range).c_str(),
+               d2.first.c_str(),
+               rcppsw::to_string(d2.second.range).c_str());
     } /* for(&d2..) */
   } /* for(&d..) */
   return true;

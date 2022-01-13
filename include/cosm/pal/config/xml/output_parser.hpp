@@ -48,9 +48,12 @@ NS_START(cosm, pal, config, xml);
  * \brief Parses XML parameters relating to simulation outputs into
  * \ref output_config.
  */
-class output_parser final : public rconfig::xml::xml_config_parser {
+class output_parser final : public rer::client<output_parser>,
+                            public rconfig::xml::xml_config_parser {
  public:
   using config_type = output_config;
+
+  output_parser(void) : ER_CLIENT_INIT("cosm.pal.config.xml.output_parser") {}
 
   /**
    * \brief The root tag that all output loop functions parameters should lie

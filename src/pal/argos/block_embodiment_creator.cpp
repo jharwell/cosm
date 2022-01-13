@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/pal/argos/block_embodiment_creator.hpp"
 
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/pal/argos/embodied_cube_block.hpp"
 #include "cosm/pal/argos/embodied_ramp_block.hpp"
 

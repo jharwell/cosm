@@ -46,9 +46,12 @@ NS_START(cosm, convergence, config, xml);
  * \brief Parses XML configuration related the calculation of swarm positional
  * entropy into \ref positional_entropy_config.
  */
-class positional_entropy_parser : public rconfig::xml::xml_config_parser {
+class positional_entropy_parser : public rer::client<positional_entropy_parser>,
+                                  public rconfig::xml::xml_config_parser {
  public:
   using config_type = positional_entropy_config;
+
+  positional_entropy_parser(void) : ER_CLIENT_INIT("cosm.convergence.config.xml.positional_entropy_parser") {}
 
   /**
    * \brief The root tag that all loop functions relating to positional_entropy

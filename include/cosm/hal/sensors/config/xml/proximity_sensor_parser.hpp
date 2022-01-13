@@ -45,9 +45,12 @@ NS_START(cosm, hal, sensors, config, xml);
  * \brief Parses XML parameters relating to HAL proximity sensor into \ref
  * proximity_sensor_config.
  */
-class proximity_sensor_parser : public rconfig::xml::xml_config_parser {
+class proximity_sensor_parser : public rer::client<proximity_sensor_parser>,
+                                public rconfig::xml::xml_config_parser {
  public:
   using config_type = proximity_sensor_config;
+
+  proximity_sensor_parser(void) : ER_CLIENT_INIT("cosm.hal.sensors.config.xml.proximity_sensor_parser") {}
 
   ~proximity_sensor_parser(void) override = default;
 

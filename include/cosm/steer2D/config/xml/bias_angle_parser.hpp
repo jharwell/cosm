@@ -48,9 +48,12 @@ NS_START(cosm, steer2D, config, xml);
  * \ref bias_angle_config. Assumes it is handed an XML parent in which its
  * XML root tag is found.
  */
-class bias_angle_parser final : public rconfig::xml::xml_config_parser {
+class bias_angle_parser final : public rer::client<bias_angle_parser>,
+                                public rconfig::xml::xml_config_parser {
  public:
   using config_type = bias_angle_config;
+
+  bias_angle_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.bias_angle_parser") {}
 
   /**
    * \brief The XML root tag that all \ref bias_angle configuration should

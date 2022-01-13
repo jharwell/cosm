@@ -44,7 +44,7 @@ class embodied_ramp_block;
 
 NS_START(cosm, pal, argos);
 
-class sm_adaptor;
+class swarm_manager_adaptor;
 
 /*******************************************************************************
  * Structure Definitions
@@ -60,7 +60,7 @@ class block_embodiment_creator {
  public:
   block_embodiment_creator(const rmath::radians& z_rotation,
                            const rtypes::type_uuid& parent_id,
-                           cpargos::sm_adaptor* sm)
+                           cpargos::swarm_manager_adaptor* sm)
       : mc_z_rot(z_rotation),
         mc_parent_id(parent_id),
         m_sm(sm) {}
@@ -115,7 +115,7 @@ class block_embodiment_creator {
   const rmath::radians    mc_z_rot;
   const rtypes::type_uuid mc_parent_id;
 
-  cpargos::sm_adaptor*    m_sm;
+  cpargos::swarm_manager_adaptor*    m_sm;
   /* clang-format off */
 };
 

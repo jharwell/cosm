@@ -35,7 +35,7 @@
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, pal, argos);
-class sm_adaptor;
+class swarm_manager_adaptor;
 class controller2D_adaptor;
 class controllerQ3D_adaptor;
 
@@ -56,7 +56,7 @@ class convergence_calculator final
       public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
   convergence_calculator(const cconvconfig::convergence_config* config,
-                               cpargos::sm_adaptor* sm) RCPPSW_COLD;
+                               cpargos::swarm_manager_adaptor* sm) RCPPSW_COLD;
   ~convergence_calculator(void) override RCPPSW_COLD = default;
 
   /* Not copy constructible/assignable by default */
@@ -75,7 +75,7 @@ class convergence_calculator final
   std::vector<rmath::vector2d> calc_robot_positions(size_t n_threads) const;
 
   /* clang-format off */
-  cpargos::sm_adaptor* m_sm;
+  cpargos::swarm_manager_adaptor* m_sm;
   /* clang-format on */
 };
 

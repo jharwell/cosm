@@ -46,9 +46,12 @@ NS_START(cosm, repr, config, xml);
  * \brief Parses XML parameters for related to \ref nest objects into
  * \ref nest_config.
  */
-class nest_parser final : public rconfig::xml::xml_config_parser {
+class nest_parser final : public rer::client<nest_parser>,
+                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = nest_config;
+
+  nest_parser(void) : ER_CLIENT_INIT("cosm.repr.config.xml.nest_parser") {}
 
   /**
    * \brief The root tag that all \ref crepr::nest parameters should lie under

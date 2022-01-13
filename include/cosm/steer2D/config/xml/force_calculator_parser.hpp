@@ -54,9 +54,12 @@ NS_START(cosm, steer2D, config, xml);
  * \ref force_calculator_config. Assumes it is handed an XML parent in which the
  * child tag \ref kXMLRoot is found.
  */
-class force_calculator_parser : public rconfig::xml::xml_config_parser {
+class force_calculator_parser : public rer::client<force_calculator_parser>,
+                                public rconfig::xml::xml_config_parser {
  public:
   using config_type = force_calculator_config;
+
+  force_calculator_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.force_calculator_parser") {}
 
   /**
    * \brief The XML root tag that all \ref force_calculator configuration should

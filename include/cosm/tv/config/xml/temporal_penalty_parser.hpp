@@ -53,9 +53,12 @@ NS_START(cosm, tv, config, xml);
  * Parameter tags under the XML root are expected to exactly match the names of
  * the fields in the \ref temporal_penalty_config struct.
  */
-class temporal_penalty_parser final : public rconfig::xml::xml_config_parser {
+class temporal_penalty_parser final : public rer::client<temporal_penalty_parser>,
+                                      public rconfig::xml::xml_config_parser {
  public:
   using config_type = temporal_penalty_config;
+
+  temporal_penalty_parser(void) : ER_CLIENT_INIT("cosm.tv.config.xml.temporal_penalty_parser") {}
 
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;

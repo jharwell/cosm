@@ -47,9 +47,12 @@ NS_START(cosm, kin2D, config, xml);
  * \brief Parses XML configuration relating to the \ref diff_drive into
  * \ref diff_drive_config.
  */
-class diff_drive_parser : public rconfig::xml::xml_config_parser {
+class diff_drive_parser : public rer::client<diff_drive_parser>,
+                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = diff_drive_config;
+
+  diff_drive_parser(void) : ER_CLIENT_INIT("cosm.kin2D.config.xml.diff_drive_parser") {}
 
   /**
    * \brief The root tag that all diff drive configuration values

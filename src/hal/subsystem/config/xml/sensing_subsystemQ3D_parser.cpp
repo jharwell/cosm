@@ -32,7 +32,11 @@ NS_START(cosm, hal, subsystem, config, xml);
  * Member Functions
  ******************************************************************************/
 void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
-  ticpp::Element snode = node_get(node, kXMLRoot);
+    ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
+    ticpp::Element snode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
   m_proximity.parse(snode);
@@ -44,8 +48,8 @@ void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {
-  RCPPSW_CHECK(m_proximity.validate());
-  RCPPSW_CHECK(m_env.validate());
+  ER_CHECK(m_proximity.validate(), "Proximity sensor failed validation");
+  ER_CHECK(m_env.validate(), " Environment sensor failed validation");
   return true;
 
 error:

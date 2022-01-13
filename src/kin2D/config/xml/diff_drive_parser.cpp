@@ -35,6 +35,10 @@ NS_START(cosm, kin2D, config, xml);
  * Member Functions
  ******************************************************************************/
 void diff_drive_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element wnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -43,8 +47,8 @@ void diff_drive_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool diff_drive_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->soft_turn_max.v() > 0.0);
-  RCPPSW_CHECK(m_config->max_speed > 0.0);
+  ER_CHECK(m_config->soft_turn_max.v() > 0.0, "Soft turn max must be > 0");
+  ER_CHECK(m_config->max_speed > 0.0, "Max speed must be > 0");
   return true;
 
 error:

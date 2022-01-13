@@ -43,7 +43,7 @@ NS_START(cosm, pal, argos);
 template <class TController>
 convergence_calculator<TController>::convergence_calculator(
     const cconvconfig::convergence_config* config,
-    cpargos::sm_adaptor* sm)
+    cpargos::swarm_manager_adaptor* sm)
     : ER_CLIENT_INIT("cosm.pal.argos.convergence_calculator"),
       decorator(config),
       m_sm(sm) {

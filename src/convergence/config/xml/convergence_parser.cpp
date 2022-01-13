@@ -36,6 +36,10 @@ void convergence_parser::parse(const ticpp::Element& node) {
     return;
   }
 
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element cnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -74,13 +78,14 @@ bool convergence_parser::validate(void) const {
   if (!is_parsed()) {
     return true;
   }
-  RCPPSW_CHECK(m_config->n_threads > 0);
-  RCPPSW_CHECK(RCPPSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0));
-  RCPPSW_CHECK(m_pos_entropy.validate());
-  RCPPSW_CHECK(m_task_entropy.validate());
-  RCPPSW_CHECK(m_interactivity.validate());
-  RCPPSW_CHECK(m_ang_order.validate());
-  RCPPSW_CHECK(m_velocity.validate());
+  ER_CHECK(m_config->n_threads > 0, "# threads = 0");
+  ER_CHECK(RCPPSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0),
+           "Epsilon must be between 0 and 1");
+  ER_CHECK(m_pos_entropy.validate(), "Positional entropy validation failed");
+  ER_CHECK(m_task_entropy.validate(), "Task entroy validation failed");
+  ER_CHECK(m_interactivity.validate(), "Interactivity validation failed");
+  ER_CHECK(m_ang_order.validate(), "Angular order validation failed");
+  ER_CHECK(m_velocity.validate(), "Velocity validation failed");
   return true;
 
 error:

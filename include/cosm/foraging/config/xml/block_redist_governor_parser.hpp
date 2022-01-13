@@ -47,9 +47,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters related to block redistribution by the \ref
  * redist_governor.
  */
-class block_redist_governor_parser : public rconfig::xml::xml_config_parser {
+class block_redist_governor_parser : public rer::client<block_redist_governor_parser>,
+                                     public rconfig::xml::xml_config_parser {
  public:
   using config_type = block_redist_governor_config;
+
+  block_redist_governor_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.block_redist_governor_parser") {}
 
   /**
    * \brief The root tag that all block redistribution parameters should lie

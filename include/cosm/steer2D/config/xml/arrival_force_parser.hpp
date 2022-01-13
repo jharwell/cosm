@@ -51,9 +51,12 @@ NS_START(cosm, steer2D, config, xml);
  * Parameter tags under the XML root are expected to exactly match the names of
  * the fields in the \ref arrival_force_config struct.
  */
-class arrival_force_parser final : public rconfig::xml::xml_config_parser {
+class arrival_force_parser final : public rer::client<arrival_force_parser>,
+                                   public rconfig::xml::xml_config_parser {
  public:
   using config_type = arrival_force_config;
+
+  arrival_force_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.arrival_force_parser") {}
 
   /**
    * \brief The XML root tag that all \ref arrival_force configuration should

@@ -58,7 +58,7 @@ class loctree;
 } /* namespace cosm::arena::ds */
 
 namespace cosm::pal::argos {
-class sm_adaptor;
+class swarm_manager_adaptor;
 }
 namespace cosm::ds {
 class cell2D;
@@ -292,7 +292,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \param sm The swarm manager.
    * \param nests Additional nests to initialize (can be NULL).
    */
-  virtual bool initialize(cpargos::sm_adaptor* sm,
+  virtual bool initialize(cpargos::swarm_manager_adaptor* sm,
                           const crepr::config::nests_config* nests);
 
   std::shared_mutex* grid_mtx(void) { return decoratee().mtx(); }
@@ -325,7 +325,7 @@ class base_arena_map : public rer::client<base_arena_map>,
 
   virtual cds::const_spatial_entity_vector
   initial_dist_precalc(const crepr::base_block3D*) const { return {}; };
-  bool initialize_shared(cpargos::sm_adaptor* sm,
+  bool initialize_shared(cpargos::swarm_manager_adaptor* sm,
                          const crepr::config::nests_config* nests);
 
   /**
@@ -359,7 +359,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * is empty, no action is performed.
    */
   void initialize_nests(const crepr::config::nests_config* nests,
-                        cpargos::sm_adaptor* sm,
+                        cpargos::swarm_manager_adaptor* sm,
                         const rtypes::discretize_ratio& resolution);
 
   /* clang-format off */

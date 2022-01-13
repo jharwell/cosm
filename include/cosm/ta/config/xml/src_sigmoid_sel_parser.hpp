@@ -47,9 +47,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration relating to sourced sigmoid selection of
  * stuff into \ref src_sigmoid_sel_config.
  */
-class src_sigmoid_sel_parser : public rcppsw::config::xml::xml_config_parser {
+class src_sigmoid_sel_parser : public rer::client<src_sigmoid_sel_parser>,
+                               public rcppsw::config::xml::xml_config_parser {
  public:
   using config_type = src_sigmoid_sel_config;
+
+  src_sigmoid_sel_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.src_sigmoid_sel_parser") {}
 
   /**
    * \brief The root tag that all XML configuration should lie under in the XML

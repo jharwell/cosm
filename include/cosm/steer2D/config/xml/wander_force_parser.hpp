@@ -49,9 +49,12 @@ NS_START(cosm, steer2D, config, xml);
  * \ref wander_force_config. Assumes it is handed an XML parent in which the
  * child tag \ref kXMLRoot is found.
  */
-class wander_force_parser final : public rconfig::xml::xml_config_parser {
+class wander_force_parser final : public rer::client<wander_force_parser>,
+                                  public rconfig::xml::xml_config_parser {
  public:
   using config_type = wander_force_config;
+
+  wander_force_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.wander_force_parser") {}
 
   /**
    * \brief The XML root tag that all \ref wander_force configuration should lie

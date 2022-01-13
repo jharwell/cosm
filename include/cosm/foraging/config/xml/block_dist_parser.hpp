@@ -50,9 +50,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters related to block distribution
  * into \ref block_dist_config.
  */
-class block_dist_parser : public rconfig::xml::xml_config_parser {
+class block_dist_parser : public rer::client<block_dist_parser>,
+                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = block_dist_config;
+
+  block_dist_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.block_dist_parser") {}
 
   /**
    * \brief The root tag that all block distribution parameters should lie under

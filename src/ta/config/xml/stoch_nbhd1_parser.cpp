@@ -32,6 +32,10 @@ NS_START(cosm, ta, config, xml);
  * Member Functions
  ******************************************************************************/
 void stoch_nbhd1_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   /* executive or policy not used */
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
     return;

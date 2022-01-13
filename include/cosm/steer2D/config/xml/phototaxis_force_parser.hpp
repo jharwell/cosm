@@ -45,9 +45,12 @@ NS_START(cosm, steer2D, config, xml);
  * \brief Parses XML parameters for related to \ref phototaxis_force objects
  * into \ref phototaxis_force_config.
  */
-class phototaxis_force_parser final : public rconfig::xml::xml_config_parser {
+class phototaxis_force_parser final : public rer::client<phototaxis_force_parser>,
+                                      public rconfig::xml::xml_config_parser {
  public:
   using config_type = phototaxis_force_config;
+
+  phototaxis_force_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.phototaxis_force_parser") {}
 
   /**
    * \brief The root tag that all phototaxis_force parameters should lie under

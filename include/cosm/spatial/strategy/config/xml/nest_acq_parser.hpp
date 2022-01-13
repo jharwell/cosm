@@ -41,14 +41,17 @@ NS_START(cosm, spatial, strategy, config, xml);
  ******************************************************************************/
 /**
  * \class nest_acq_parser
- * \ingroup spatial strategy config
+ * \ingroup spatial strategy config xml
  *
  * \brief Parses XML configuration for how robots should acq nests into \ref
  * nest_acq_config.
  */
-class nest_acq_parser final : public rconfig::xml::xml_config_parser {
+class nest_acq_parser final : public rer::client<nest_acq_parser>,
+                              public rconfig::xml::xml_config_parser {
  public:
   using config_type = nest_acq_config;
+
+  nest_acq_parser(void) : ER_CLIENT_INIT("cosm.spatial.strategy.config.xml.nest_acq_parser") {}
 
   /**
    * \brief The root tag that all XML configuration for nest acq should lie

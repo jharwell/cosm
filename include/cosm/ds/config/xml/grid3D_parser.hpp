@@ -48,9 +48,12 @@ NS_START(cosm, ds, config, xml);
  * grid3D_config.
  */
 
-class grid3D_parser : public rconfig::xml::xml_config_parser {
+class grid3D_parser : public rer::client<grid3D_parser>,
+                      public rconfig::xml::xml_config_parser {
  public:
   using config_type = grid3D_config;
+
+  grid3D_parser(void) : ER_CLIENT_INIT("cosm.ds.config.xml.grid3D_parser") {}
 
   /**
    * \brief The root tag that all grid parameters should lie under in the

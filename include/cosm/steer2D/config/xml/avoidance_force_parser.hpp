@@ -51,9 +51,12 @@ NS_START(cosm, steer2D, config, xml);
  * Parameter tags under the XML root are expected to exactly match the names of
  * the fields in the \ref avoidance_force_config struct.
  */
-class avoidance_force_parser final : public rconfig::xml::xml_config_parser {
+class avoidance_force_parser final : public rer::client<avoidance_force_parser>,
+                                     public rconfig::xml::xml_config_parser {
  public:
   using config_type = avoidance_force_config;
+
+  avoidance_force_parser(void) : ER_CLIENT_INIT("cosm.steer2D.config.xml.avoidance_force_parser") {}
 
   /**
    * \brief The XML root tag that all \ref avoidance_force configuration should

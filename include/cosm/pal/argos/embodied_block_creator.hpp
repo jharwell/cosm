@@ -42,7 +42,7 @@ class ramp_block3D;
 
 NS_START(cosm, pal, argos);
 
-class sm_adaptor;
+class swarm_manager_adaptor;
 
 /*******************************************************************************
  * Structure Definitions
@@ -56,7 +56,7 @@ class sm_adaptor;
  */
 class embodied_block_creator {
  public:
-  explicit embodied_block_creator(cpargos::sm_adaptor* sm) : m_sm(sm) {}
+  explicit embodied_block_creator(cpargos::swarm_manager_adaptor* sm) : m_sm(sm) {}
 
   cpargos::embodied_block_varianto operator()(
       const crepr::cube_block3D* block) const;
@@ -65,7 +65,7 @@ class embodied_block_creator {
 
  private:
   /* clang-format off */
-  cpargos::sm_adaptor* m_sm;
+  cpargos::swarm_manager_adaptor* m_sm;
   /* clang-format on */
 };
 

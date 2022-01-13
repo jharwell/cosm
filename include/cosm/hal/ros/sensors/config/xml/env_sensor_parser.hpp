@@ -45,10 +45,13 @@ NS_START(cosm, hal, ros, sensors, config, xml);
  * \brief Parses XML parameters relating to environmental feature detection into \ref
  * env_sensor_config.
  */
-
-struct env_sensor_parser final : public rconfig::xml::xml_config_parser {
+class env_sensor_parser final : public rer::client<env_sensor_parser>,
+                                public rconfig::xml::xml_config_parser {
  public:
   using config_type = env_sensor_config;
+
+  env_sensor_parser(void) : ER_CLIENT_INIT("cosm.hal.ros.sensors.config.xml.env_sensor_parser") {}
+
   void parse(const ticpp::Element&) override {}
   std::string xml_root(void) const override { return ""; }
   void detection_add(const std::string& target) { }

@@ -49,9 +49,12 @@ NS_START(cosm, arena, config, xml);
  *
  * \brief Parses XML parameters for \ref arena_map into \ref arena_map_config.
  */
-class arena_map_parser final : public rconfig::xml::xml_config_parser {
+class arena_map_parser final : public rer::client<arena_map_parser>,
+                               public rconfig::xml::xml_config_parser {
  public:
   using config_type = arena_map_config;
+
+  arena_map_parser(void) : ER_CLIENT_INIT("cosm.arena.config.xml.arena_map_parser") {}
 
   /**
    * \brief The root tag that all arena map parameters should lie under in the

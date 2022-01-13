@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/pal/argos/tv/pd_adaptor.hpp"
 
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/hal/robot.hpp"
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/pal/argos/controller/adaptor2D.hpp"
@@ -45,7 +45,7 @@ using op_result = ctv::population_dynamics::op_result;
 template <typename TController>
 pd_adaptor<TController>::pd_adaptor(
     const ctv::config::population_dynamics_config* config,
-    cpargos::sm_adaptor* const sm,
+    cpargos::swarm_manager_adaptor* const sm,
     env_dynamics_type* envd,
     const rmath::vector2d& arena_dim,
     rmath::rng* rng)

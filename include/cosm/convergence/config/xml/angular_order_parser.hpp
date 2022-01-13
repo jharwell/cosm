@@ -46,9 +46,12 @@ NS_START(cosm, convergence, config, xml);
  * \brief Parses XML configuration related to the calculation of swarm angular
  * order into \ref angular_order_config.
  */
-class angular_order_parser : public rconfig::xml::xml_config_parser {
+class angular_order_parser : public rer::client<angular_order_parser>,
+                             public rconfig::xml::xml_config_parser {
  public:
   using config_type = angular_order_config;
+
+  angular_order_parser(void) : ER_CLIENT_INIT("cosm.convergence.config.xml.angular_order_parser") {}
 
   /**
    * \brief The root tag that all XML configuration for angular order objects

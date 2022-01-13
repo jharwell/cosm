@@ -42,13 +42,16 @@ NS_START(cosm, oracle, config, xml);
  ******************************************************************************/
 /**
  * \class aggregate_oracle_parser
- * \ingroup aggregate oracle config xml
+ * \ingroup oracle config xml
  *
  * \brief Parses XML parameters used for oracles at the start of simulation.
  */
-class aggregate_oracle_parser final : public rconfig::xml::xml_config_parser {
+class aggregate_oracle_parser final : public rer::client<aggregate_oracle_parser>,
+                                      public rconfig::xml::xml_config_parser {
  public:
   using config_type = aggregate_oracle_config;
+
+  aggregate_oracle_parser(void) : ER_CLIENT_INIT("cosm.oracle.config.xml.aggregate_oracle_parser") {}
 
   /**
    * \brief The root tag that all cache parameters should lie under in the

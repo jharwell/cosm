@@ -35,6 +35,11 @@ void block_motion_parser::parse(const ticpp::Element& node) {
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
     return;
   }
+
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   m_config = std::make_unique<config_type>();
   ticpp::Element lnode = node_get(node, kXMLRoot);
 
@@ -44,7 +49,8 @@ void block_motion_parser::parse(const ticpp::Element& node) {
 
 bool block_motion_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(RCPPSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0));
+    ER_CHECK(RCPPSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0),
+             "Probability must be between 0 and 1");
   }
   return true;
 

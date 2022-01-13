@@ -51,9 +51,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration used for task allocation into \ref
  * task_alloc_config.
  */
-class task_alloc_parser final : public rconfig::xml::xml_config_parser {
+class task_alloc_parser final : public rer::client<task_alloc_parser>,
+                                public rconfig::xml::xml_config_parser {
  public:
   using config_type = task_alloc_config;
+
+  task_alloc_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.task_alloc_parser") {}
 
   /**
    * \brief The root tag that all task allocation XML configuration should lie

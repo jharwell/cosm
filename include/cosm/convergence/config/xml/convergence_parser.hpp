@@ -46,14 +46,17 @@ NS_START(cosm, convergence, config, xml);
  ******************************************************************************/
 /**
  * \class convergence_parser
- * \ingroup convergence config
+ * \ingroup convergence config xml
  *
  * \brief Parses XML configuration related to calculating swarm convergence into
  * \ref convergence_config.
  */
-class convergence_parser final : public rconfig::xml::xml_config_parser {
+class convergence_parser final : public rer::client<convergence_parser>,
+                                 public rconfig::xml::xml_config_parser {
  public:
   using config_type = convergence_config;
+
+  convergence_parser(void) : ER_CLIENT_INIT("cosm.convergence.config.xml.convergence_parser") {}
 
   ~convergence_parser(void) override = default;
 

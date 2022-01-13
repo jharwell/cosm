@@ -47,9 +47,12 @@ NS_START(cosm, hal, argos, sensors, config, xml);
  * \brief Parses XML parameters relating to HAL ground sensor into \ref
  * ground_sensor_config.
  */
-class ground_sensor_parser : public rconfig::xml::xml_config_parser {
+class ground_sensor_parser : public rer::client<ground_sensor_parser>,
+                             public rconfig::xml::xml_config_parser {
  public:
   using config_type = ground_sensor_config;
+
+  ground_sensor_parser(void) : ER_CLIENT_INIT("cosm.hal.argos.sensors.config.xml.ground_sensor_parser") {}
 
   ~ground_sensor_parser(void) override = default;
 

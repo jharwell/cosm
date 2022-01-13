@@ -46,9 +46,12 @@ NS_START(cosm, convergence, config, xml);
  * \brief Parses XML configuration related to the calculation of swarm angular
  * order into \ref velocity_config.
  */
-class velocity_parser : public rconfig::xml::xml_config_parser {
+class velocity_parser : public rer::client<velocity_parser>,
+                        public rconfig::xml::xml_config_parser {
  public:
   using config_type = velocity_config;
+
+  velocity_parser(void) : ER_CLIENT_INIT("cosm.convergence.config.xml.velocity_parser") {}
 
   /**
    * \brief The root tag that all XML configuration should lie under in the XML

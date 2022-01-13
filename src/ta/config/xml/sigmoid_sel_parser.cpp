@@ -33,6 +33,10 @@ namespace mxml = rmath::config::xml;
  * Member Functions
  ******************************************************************************/
 void sigmoid_sel_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element snode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -42,8 +46,8 @@ void sigmoid_sel_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool sigmoid_sel_parser::validate(void) const {
-  RCPPSW_CHECK(m_sigmoid.validate());
-  RCPPSW_CHECK(!m_config->method.empty());
+  ER_CHECK(m_sigmoid.validate(), "Sigmoid failed validation");
+  ER_CHECK(!m_config->method.empty(), "Method cannot be empty");
   return true;
 
 error:

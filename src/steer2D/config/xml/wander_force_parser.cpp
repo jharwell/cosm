@@ -33,6 +33,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void wander_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element wnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -48,11 +52,11 @@ void wander_force_parser::parse(const ticpp::Element& node) {
 
 bool wander_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(m_config->circle_distance > 0.0);
-    RCPPSW_CHECK(m_config->circle_radius > 0.0);
-    RCPPSW_CHECK(m_config->interval > 0);
-    RCPPSW_CHECK(m_config->max > 0);
-    RCPPSW_CHECK(m_bias.validate());
+    ER_CHECK(m_config->circle_distance > 0.0, "Circle distance must be > 0");
+    ER_CHECK(m_config->circle_radius > 0.0, "Circle radius must be > 0");
+    ER_CHECK(m_config->interval > 0, "Interval must be > 0");
+    ER_CHECK(m_config->max > 0, "Max force must be > 0");
+    ER_CHECK(m_bias.validate(), "Bias angle failed validation");
   }
   return true;
 

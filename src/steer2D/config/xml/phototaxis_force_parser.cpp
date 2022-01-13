@@ -35,6 +35,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void phototaxis_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element pnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -44,9 +48,12 @@ void phototaxis_force_parser::parse(const ticpp::Element& node) {
 
 bool phototaxis_force_parser::validate(void) const {
   if (is_parsed()) {
-    return m_config->max >= 0;
+    ER_CHECK(m_config->max >= 0, "Max force must be >= 0");
   }
   return true;
+
+error:
+  return false;
 } /* validate() */
 
 NS_END(xml, config, steer2D, cosm);

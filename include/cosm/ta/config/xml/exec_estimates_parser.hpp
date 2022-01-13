@@ -56,7 +56,7 @@ class exec_estimates_parser final : public rconfig::xml::xml_config_parser,
 
   explicit exec_estimates_parser(
       std::list<std::string> task_names = std::list<std::string>()) noexcept
-      : ER_CLIENT_INIT("cosm.ta.exec_estimates_parser"),
+      : ER_CLIENT_INIT("cosm.ta.config.xml.exec_estimates_parser"),
         m_task_names(std::move(task_names)) {}
 
   /**

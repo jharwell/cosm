@@ -33,6 +33,9 @@ NS_START(cosm, repr, config, xml);
  ******************************************************************************/
 void nest_parser::parse(const ticpp::Element& node) {
   ticpp::Element nnode;
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
 
   /* we were called as part of arena configuration */
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
@@ -47,7 +50,12 @@ void nest_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool nest_parser::validate(void) const {
-  return validate(m_config.get());
+  ER_CHECK(validate(m_config.get()), "Nest failed validation");
+
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
 /*******************************************************************************

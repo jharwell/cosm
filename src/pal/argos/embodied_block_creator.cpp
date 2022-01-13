@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/pal/argos/embodied_block_creator.hpp"
 
-#include "cosm/pal/argos/sm_adaptor.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/repr/cube_block3D.hpp"
 #include "cosm/repr/ramp_block3D.hpp"
 #include "cosm/pal/argos/block_embodiment_creator.hpp"
@@ -41,7 +41,7 @@ cpargos::embodied_block_varianto
 embodied_block_creator::operator()(const crepr::cube_block3D* block) const {
   auto embodied = std::make_unique<embodied_cube_block>(block->id(),
                                                         block->rdims3D(),
-                                                        const_cast<const cpargos::sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
+                                                        const_cast<const cpargos::swarm_manager_adaptor*>(m_sm)->arena_map()->grid_resolution(),
                                                         nullptr);
   return {std::move(embodied)};
 }
@@ -50,7 +50,7 @@ cpargos::embodied_block_varianto
 embodied_block_creator::operator()(const crepr::ramp_block3D* block) const {
   auto embodied = std::make_unique<embodied_ramp_block>(block->id(),
                                                         block->rdims3D(),
-                                                        const_cast<const cpargos::sm_adaptor*>(m_sm)->arena_map()->grid_resolution(),
+                                                        const_cast<const cpargos::swarm_manager_adaptor*>(m_sm)->arena_map()->grid_resolution(),
                                                         nullptr);
   return {std::move(embodied)};
 

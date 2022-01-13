@@ -47,9 +47,12 @@ NS_START(cosm, vis, config, xml);
  * \brief Parses XML parameters relating to visualization in loop functions into
  * \ref visualization_config.
  */
-class visualization_parser final : public rconfig::xml::xml_config_parser {
+class visualization_parser final : public rer::client<visualization_parser>,
+                                   public rconfig::xml::xml_config_parser {
  public:
   using config_type = visualization_config;
+
+  visualization_parser(void) : ER_CLIENT_INIT("cosm.vis.config.xml.visualization_parser") {}
 
   /**
    * \brief The root tag that all visualization loop functions parameters should

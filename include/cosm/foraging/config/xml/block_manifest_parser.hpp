@@ -47,9 +47,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters related to block distribution into \ref
  * block_manifest.
  */
-class block_manifest_parser : public rconfig::xml::xml_config_parser {
+class block_manifest_parser : public rer::client<block_manifest_parser>,
+                              public rconfig::xml::xml_config_parser {
  public:
   using config_type = block_manifest;
+
+  block_manifest_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.block_manifest_parser") {}
   /**
    * \brief The root tag that all block manifest parameters should lie under
    * in the XML tree.

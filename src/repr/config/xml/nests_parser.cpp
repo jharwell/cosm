@@ -41,6 +41,10 @@ void nests_parser::parse(const ticpp::Element& node) {
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
     return;
   }
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element nnode = node_get(node, kXMLRoot);
   ticpp::Iterator<ticpp::Element> node_it;
 
@@ -57,7 +61,7 @@ bool nests_parser::validate(void) const {
     return true;
   }
   for (auto& nest : m_config->nests) {
-    RCPPSW_CHECK(nest_parser::validate(&nest));
+    ER_CHECK(nest_parser::validate(&nest), "Nest validation failed");
   } /* for(&nest..) */
 
   return true;

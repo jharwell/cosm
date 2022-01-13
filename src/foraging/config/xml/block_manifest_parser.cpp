@@ -32,6 +32,10 @@ NS_START(cosm, foraging, config, xml);
  * Member Functions
  ******************************************************************************/
 void block_manifest_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element bnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -47,8 +51,9 @@ void block_manifest_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool block_manifest_parser::validate(void) const {
-  RCPPSW_CHECK(m_config->unit_dim > 0);
-  RCPPSW_CHECK(m_config->n_cube > 0 || m_config->n_ramp > 0);
+  ER_CHECK(m_config->unit_dim > 0, "Block dimension must be > 0");
+  ER_CHECK(m_config->n_cube > 0 || m_config->n_ramp > 0,
+           "Cannot have 0 blocks in manifest");
   return true;
 
 error:

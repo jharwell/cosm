@@ -33,6 +33,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void arrival_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element anode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -44,9 +48,10 @@ void arrival_force_parser::parse(const ticpp::Element& node) {
 
 bool arrival_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(m_config->slowing_radius > 0.0);
-    RCPPSW_CHECK(m_config->slowing_speed_min > 0.0);
-    RCPPSW_CHECK(m_config->max > m_config->slowing_speed_min);
+    ER_CHECK(m_config->slowing_radius > 0.0, "Slowing radius must be > 0");
+    ER_CHECK(m_config->slowing_speed_min > 0.0, "Slowing min speed must be > 0");
+    ER_CHECK(m_config->max > m_config->slowing_speed_min,
+             "Max speed must be greater than min slowing speed");
   }
   return true;
 

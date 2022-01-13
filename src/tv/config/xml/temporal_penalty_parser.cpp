@@ -33,6 +33,10 @@ NS_START(cosm, tv, config, xml);
  ******************************************************************************/
 void temporal_penalty_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(m_xml_root, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             xml_root().c_str());
+
     ticpp::Element anode = node_get(node, m_xml_root);
     m_config = std::make_unique<config_type>();
 
@@ -48,7 +52,7 @@ void temporal_penalty_parser::parse(const ticpp::Element& node) {
 
 bool temporal_penalty_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(m_waveform.validate());
+    ER_CHECK(m_waveform.validate(), "Waveform failed validation");
   }
   return true;
 

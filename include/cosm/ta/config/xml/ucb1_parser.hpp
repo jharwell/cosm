@@ -46,9 +46,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration used for epsilon greedy task allocation
  * policy into \ref ucb1_config.
  */
-class ucb1_parser final : public rconfig::xml::xml_config_parser {
+class ucb1_parser final : public rer::client<ucb1_parser>,
+                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = ucb1_config;
+
+  ucb1_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.ucb1_parser") {}
 
   /**
    * \brief The root tag that all task allocation XML configuration should lie

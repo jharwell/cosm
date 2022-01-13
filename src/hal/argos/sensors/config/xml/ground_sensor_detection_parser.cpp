@@ -32,6 +32,10 @@ NS_START(cosm, hal, argos, sensors, config, xml);
  * Member Functions
  ******************************************************************************/
 void ground_sensor_detection_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           m_name.c_str());
+
   ticpp::Element pnode = node_get(node, m_name);
   m_config = std::make_unique<config_type>();
   XML_PARSE_ATTR(pnode, m_config, consensus);

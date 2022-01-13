@@ -45,9 +45,12 @@ NS_START(cosm, oracle, config, xml);
  * \brief Parses XML parameters used for \ref tasking_oracle at the start of
  * simulation.
  */
-class tasking_oracle_parser : public rconfig::xml::xml_config_parser {
+class tasking_oracle_parser : public rer::client<tasking_oracle_parser>,
+                              public rconfig::xml::xml_config_parser {
  public:
   using config_type = tasking_oracle_config;
+
+  tasking_oracle_parser(void) : ER_CLIENT_INIT("cosm.oracle.config.xml.tasking_oracle_parser") {}
 
   /**
    * \brief The root tag that all cache parameters should lie under in the

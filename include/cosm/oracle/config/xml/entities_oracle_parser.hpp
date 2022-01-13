@@ -45,9 +45,12 @@ NS_START(cosm, oracle, config, xml);
  * \brief Parses XML parameters used for the \ref entities_oracle at the start
  * of simulation.
  */
-class entities_oracle_parser : public rconfig::xml::xml_config_parser {
+class entities_oracle_parser : public rer::client<entities_oracle_parser>,
+                               public rconfig::xml::xml_config_parser {
  public:
   using config_type = entities_oracle_config;
+
+  entities_oracle_parser(void) : ER_CLIENT_INIT("cosm.oracle.config.xml.entities_oracle_parser") {}
 
   /**
    * \brief The root tag that all entity oracle parameters should lie under in

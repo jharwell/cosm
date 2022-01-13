@@ -47,9 +47,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters related to block redistribution by the \ref
  * block_motion.
  */
-class block_motion_parser : public rconfig::xml::xml_config_parser {
+class block_motion_parser : public rer::client<block_motion_parser>,
+                            public rconfig::xml::xml_config_parser {
  public:
   using config_type = block_motion_config;
+
+  block_motion_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.block_motion_parser") {}
 
   /**
    * \brief The root tag that all block motion parameters should lie

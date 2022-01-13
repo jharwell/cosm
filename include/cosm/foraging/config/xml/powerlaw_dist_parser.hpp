@@ -46,9 +46,12 @@ NS_START(cosm, foraging, config, xml);
  * \brief Parses XML parameters for related to \ref powerlaw_distributor
  * objects into \ref powerlaw_dist_config.
  */
-class powerlaw_dist_parser final : public rconfig::xml::xml_config_parser {
+class powerlaw_dist_parser final : public rer::client<powerlaw_dist_parser>,
+                                   public rconfig::xml::xml_config_parser {
  public:
   using config_type = powerlaw_dist_config;
+
+  powerlaw_dist_parser(void) : ER_CLIENT_INIT("cosm.foraging.config.xml.powerlaw_dist_parser") {}
 
   /**
    * \brief The root tag that all powerlaw dist parameters should lie

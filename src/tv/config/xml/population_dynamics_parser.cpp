@@ -33,6 +33,10 @@ NS_START(cosm, tv, config, xml);
  ******************************************************************************/
 void population_dynamics_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element anode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -46,10 +50,11 @@ void population_dynamics_parser::parse(const ticpp::Element& node) {
 
 bool population_dynamics_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(m_config->birth_mu >= 0.0);
-    RCPPSW_CHECK(m_config->death_lambda >= 0.0);
-    RCPPSW_CHECK(m_config->malfunction_lambda >= 0.0);
-    RCPPSW_CHECK(m_config->repair_mu >= 0.0);
+    ER_CHECK(m_config->birth_mu >= 0.0, "Birth mu must be >= 0");
+    ER_CHECK(m_config->death_lambda >= 0.0, "Death lambda must be >= 0");
+    ER_CHECK(m_config->malfunction_lambda >= 0.0,
+             "Malfunction lambda must be >= 0");
+    ER_CHECK(m_config->repair_mu >= 0.0, "Repair mu must be >= 0");
   }
   return true;
 

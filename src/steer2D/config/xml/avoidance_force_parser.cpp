@@ -33,6 +33,10 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void avoidance_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
+    ER_DEBUG("Parent node=%s: search for child=%s",
+             node.Value().c_str(),
+             kXMLRoot.c_str());
+
     ticpp::Element anode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
@@ -42,7 +46,7 @@ void avoidance_force_parser::parse(const ticpp::Element& node) {
 
 bool avoidance_force_parser::validate(void) const {
   if (is_parsed()) {
-    RCPPSW_CHECK(m_config->max > 0.0);
+    ER_CHECK(m_config->max > 0.0, "Max force must be > 0");
   }
   return true;
 

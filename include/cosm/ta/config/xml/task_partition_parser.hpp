@@ -47,9 +47,12 @@ NS_START(cosm, ta, config, xml);
  * \brief Parses XML configuration for relating to task partitioning into \ref
  * task_partition_config.
  */
-class task_partition_parser final : public rconfig::xml::xml_config_parser {
+class task_partition_parser final : public rer::client<task_partition_parser>,
+                                    public rconfig::xml::xml_config_parser {
  public:
   using config_type = task_partition_config;
+
+  task_partition_parser(void) : ER_CLIENT_INIT("cosm.ta.config.xml.task_partition_parser") {}
 
   /**
    * \brief The root tag that all task task_partition parameters should lie

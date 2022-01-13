@@ -32,6 +32,10 @@ NS_START(cosm, subsystem, config, xml);
  * Member Functions
  ******************************************************************************/
 void actuation_subsystem2D_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element anode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
@@ -45,7 +49,13 @@ void actuation_subsystem2D_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool actuation_subsystem2D_parser::validate(void) const {
-  return m_diff_drive.validate() && m_steering.validate();
+  ER_CHECK(m_diff_drive.validate(), "Diff drive failed validation");
+  ER_CHECK(m_steering.validate(), "Steering failed validation");
+
+  return true;
+
+error:
+  return false;
 } /* validate() */
 
 NS_END(xml, config, subsystem, cosm);

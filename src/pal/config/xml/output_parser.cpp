@@ -32,6 +32,10 @@ NS_START(cosm, pal, config, xml);
  * Member Functions
  ******************************************************************************/
 void output_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: search for child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
   ticpp::Element onode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 

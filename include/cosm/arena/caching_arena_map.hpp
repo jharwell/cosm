@@ -69,11 +69,11 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    * in the arena to the current set of active caches.
    *
    * \param caches The caches to add.
-   * \param sm The \ref cpargos::sm_adaptor.
+   * \param sm The \ref cpargos::swarm_manager_adaptor.
    *
    * \note Cache mutex assumed to be held by the caller for writing.
    */
-  void caches_add(const cads::acache_vectoro& caches, cpargos::sm_adaptor* sm);
+  void caches_add(const cads::acache_vectoro& caches, cpargos::swarm_manager_adaptor* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -83,7 +83,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    *
    * \note Cache mutex assumed to be held by the caller for writing.
    */
-  void cache_remove(repr::arena_cache* victim, cpargos::sm_adaptor* sm);
+  void cache_remove(repr::arena_cache* victim, cpargos::swarm_manager_adaptor* sm);
 
   const cads::loctree* cloctree(void) const { return m_cloctree.get(); }
 
@@ -122,7 +122,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   robot_on_block(const rmath::vector2d& pos,
                  const rtypes::type_uuid& ent_id) const override;
 
-  bool initialize(cpargos::sm_adaptor* sm,
+  bool initialize(cpargos::swarm_manager_adaptor* sm,
                   const crepr::config::nests_config* nests) override;
 
   cds::block3D_vectorno free_blocks(bool oos_ok) const override;
