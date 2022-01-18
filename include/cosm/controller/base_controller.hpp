@@ -121,29 +121,22 @@ class base_controller : public rer::client<base_controller>,
   virtual void sensing_update(const rtypes::timestep& tick,
                               const rtypes::discretize_ratio& ratio) = 0;
 
-#if (LIBRA_ER >= LIBRA_ER_ALL)
   /**
    * \brief Convenience function to add footbot ID to salient messages during
    * loop function execution (timestep is already there).
    */
-  void ndc_push(void) const {
-    ER_NDC_PUSH("[ent" + rcppsw::to_string(entity_id().v()) + "]");
+  void ndc_uuid_push(void) const {
+    ER_NDC_PUSH("[" +
+                cpal::kRobotNamePrefix +
+                rcppsw::to_string(entity_id().v()) +
+                "]");
   }
+  void ndc_uuid_pop(void) const { ER_NDC_POP(); }
   /**
-   * \brief Convenience function to add robot ID+timestep to messages during
-   * the control step, if derived classes want to. By default this function does
-   * nothing.
+   * \brief Convenience function to add timestamp to messages during
+   * the control step.
    */
-  virtual void ndc_pusht(void) const {}
-
-  void ndc_pop(void) const { ER_NDC_POP(); }
-
-#else
-  void ndc_push(void) const {}
-  void ndc_pop(void) const {}
-  virtual void ndc_pusht(void) const {}
-
-#endif
+  virtual void mdc_ts_update(void) const = 0;
 
   /**
    * \brief Return a handle to the \ref rmath::rng used for random

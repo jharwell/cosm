@@ -34,7 +34,7 @@
                     (add-to-list 'flycheck-gcc-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-gcc-definitions "BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
-                                                                        "$localroot/include/system")))
+                                                                        "$localroot/system/include")))
 
                     (let ((cc-search-dirs (list (concat (projectile-project-root) "include/cosm/*/*")
                                                 (concat (projectile-project-root) "src/*/*")

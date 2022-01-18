@@ -56,7 +56,6 @@ fs::path base_controller::output_init(
     fs::create_directories(path);
   }
 
-#if (LIBRA_ER == LIBRA_ER_ALL)
   /*
    * Each file appender is attached to a root category in the COSM
    * namespace. If you give different file appenders the same file, then the
@@ -70,8 +69,6 @@ fs::path base_controller::output_init(
                  path / "saa.log");
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
                  path / "saa.log");
-#endif
-
   return path;
 } /* output_init() */
 

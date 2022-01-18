@@ -58,9 +58,7 @@ void base_block_pickup::visit(controller::block_carrying_controller& c) {
   auto block = m_block->clone();
   block->md()->robot_id(mc_robot_id);
   c.block(std::move(block));
-  ER_INFO("Block%d is now carried by robot%u",
-          m_block->id().v(),
-          mc_robot_id.v());
+  ER_INFO("Block%d", m_block->id().v());
 
   /*
    * We need to visit the cloned controller block, because metrics are collected

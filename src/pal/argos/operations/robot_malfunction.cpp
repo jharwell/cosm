@@ -36,21 +36,21 @@ NS_START(cosm, pal, argos, operations);
  * Depth0 Foraging
  ******************************************************************************/
 void robot_malfunction::visit(cpargos::controller::adaptor2D& controller) {
-  controller.ndc_pusht();
+  controller.ndc_uuid_push();
 
   visit(*controller.supervisor());
 
   ER_INFO("Robot %s malfunctioned", controller.GetId().c_str());
-  controller.ndc_pop();
+  controller.ndc_uuid_pop();
 } /* visit() */
 
 void robot_malfunction::visit(cpargos::controller::adaptorQ3D& controller) {
-  controller.ndc_pusht();
+  controller.ndc_uuid_push();
 
   visit(*controller.supervisor());
 
   ER_INFO("Robot %s malfunctioned", controller.GetId().c_str());
-  controller.ndc_pop();
+  controller.ndc_uuid_pop();
 } /* visit() */
 
 void robot_malfunction::visit(cfsm::supervisor_fsm& fsm) {

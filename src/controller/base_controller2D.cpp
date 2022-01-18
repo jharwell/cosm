@@ -55,13 +55,16 @@ void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
   m_saa = std::move(saa);
 } /* saa() */
 
-#if (LIBRA_ER >= LIBRA_ER_ALL)
-void base_controller2D::ndc_pusht(void) const {
-  ER_NDC_PUSH("[t=" + rcppsw::to_string(m_saa->sensing()->tick()) +
-              std::string("] [") + cpal::kRobotNamePrefix + rcppsw::to_string(entity_id()) +
-              std::string("]"));
+void base_controller2D::mdc_ts_update(void) const {
+  ER_MDC_RM("time");
+
+  auto tick = RCPPSW_LIKELY(nullptr != m_saa && nullptr != m_saa->sensing()) ?
+              m_saa->sensing()->tick() : rtypes::timestep(0);
+  ER_MDC_ADD("time",
+             "[t=" +
+             rcppsw::to_string(tick) +
+             std::string("]"));
 }
-#endif
 
 /*******************************************************************************
  * Movement

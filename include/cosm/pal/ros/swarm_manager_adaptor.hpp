@@ -62,14 +62,19 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
-  void ndc_push(void) const override final {
-    auto diff = ::ros::Time::now().sec - m_start.sec;
-    ER_NDC_PUSH("[t=" + rcppsw::to_string(diff) +"." "]");
+  void ndc_uuid_push(void) const override final {
+    ER_NDC_PUSH("[ros_sm]");
   }
-  void ndc_pop(void) const override final { ER_NDC_POP(); }
+  void ndc_uuid_pop(void) const override final { ER_NDC_POP(); }
+  void mdc_ts_update(void) const override final {
+    auto diff = ::ros::Time::now().sec - m_start.sec;
+    ER_MDC_RM("time");
+    ER_MDC_ADD("time", "[t=" + rcppsw::to_string(diff) + "]");
+  }
 #else
-  void ndc_push(void) const override final {}
-  void ndc_pop(void) const override final {}
+  void ndc_uuid_push(void) const override final {}
+  void ndc_uuid_pop(void) const override final {}
+  void mdc_ts_update(void) const override final {}
 #endif
 
  private:

@@ -36,21 +36,21 @@ NS_START(cosm, pal, argos, operations);
  * Member Functions
  ******************************************************************************/
 void robot_repair::visit(cpargos::controller::adaptor2D& controller) {
-  controller.ndc_pusht();
+  controller.ndc_uuid_push();
 
   visit(*controller.supervisor());
 
   ER_INFO("Robot %s repaired", controller.GetId().c_str());
-  controller.ndc_pop();
+  controller.ndc_uuid_pop();
 } /* visit() */
 
 void robot_repair::visit(cpargos::controller::adaptorQ3D& controller) {
-  controller.ndc_pusht();
+  controller.ndc_uuid_push();
 
   visit(*controller.supervisor());
 
   ER_INFO("Robot %s repaired", controller.GetId().c_str());
-  controller.ndc_pop();
+  controller.ndc_uuid_pop();
 } /* visit() */
 
 void robot_repair::visit(cfsm::supervisor_fsm& fsm) {

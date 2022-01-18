@@ -35,12 +35,12 @@ NS_START(cosm, controller, operations);
  * Depth0 Foraging
  ******************************************************************************/
 void stop::visit(ccontroller::base_controller& controller) {
-  controller.ndc_pusht();
+  controller.ndc_uuid_push();
 
   visit(*controller.supervisor());
 
   ER_INFO("Robot%d stopped", controller.entity_id().v());
-  controller.ndc_pop();
+  controller.ndc_uuid_pop();
 } /* visit() */
 
 void stop::visit(cfsm::supervisor_fsm& fsm) {

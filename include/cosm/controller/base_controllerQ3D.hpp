@@ -97,15 +97,7 @@ class base_controllerQ3D : public base_controller,
    */
   rmath::radians heading2D(void) const RCPPSW_PURE;
 
-#if (LIBRA_ER >= LIBRA_ER_ALL)
-  /**
-   * \brief Convenience function to add robot ID+timestep to messages during
-   * the control step.
-   */
-  void ndc_pusht(void) const override final;
-#else
-  void ndc_pusht(void) const override final {}
-#endif
+  void mdc_ts_update(void) const override final;
 
  protected:
   class subsystem::saa_subsystemQ3D* saa(void) {

@@ -26,6 +26,7 @@
  ******************************************************************************/
 #include <memory>
 #include <string>
+#include <ticpp/ticpp.h>
 
 #include <argos3/core/simulator/entity/floor_entity.h>
 #include <argos3/core/simulator/loop_functions.h>
@@ -104,13 +105,20 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
-  void ndc_push(void) const override final {
-    ER_NDC_PUSH("[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) + "]");
+  void ndc_uuid_push(void) const override final {
+    ER_NDC_PUSH("[argos_sm]");
   }
-  void ndc_pop(void) const override final { ER_NDC_POP(); }
+  void ndc_uuid_pop(void) const override final { ER_NDC_POP(); }
+
+  void mdc_ts_update(void) const override final {
+    ER_MDC_RM("time");
+    ER_MDC_ADD("time",
+               "[t=" + rcppsw::to_string(GetSpace().GetSimulationClock()) + "]");
+  }
 #else
-  void ndc_push(void) const override final {}
-  void ndc_pop(void) const override final {}
+  void ndc_uuid_push(void) const override {}
+  void ndc_uuid_pop(void) const override {}
+  void mdc_ts_update(void) const override {}
 #endif
 
   void led_medium(const std::string& s) { m_led_medium = s; }
