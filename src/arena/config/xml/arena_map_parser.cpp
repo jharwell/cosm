@@ -32,7 +32,7 @@ NS_START(cosm, arena, config, xml);
  * Member Functions
  ******************************************************************************/
 void arena_map_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: search for child=%s",
+  ER_DEBUG("Parent node=%s: child=%s",
            node.Value().c_str(),
            kXMLRoot.c_str());
 

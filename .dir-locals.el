@@ -8,7 +8,6 @@
                   (let ((includes-list (list
                                         (substitute-in-file-name "$rcsw/include")
                                         (substitute-in-file-name "$rcppsw/include")
-                                        (substitute-in-file-name "$rcppsw/ext")
                                         (substitute-in-file-name "/opt/ros/noetic/include")
                                         (concat (projectile-project-root)
                                                 "include")
@@ -25,9 +24,7 @@
                     (add-to-list 'flycheck-clang-definitions "COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT")
                     (add-to-list 'flycheck-clang-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
-                                                                          "$localroot/include")))
-                    (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
-                                                                          "$cosm")))
+                                                                          "$localroot/system/include")))
 
 
                     (setq flycheck-gcc-include-path includes-list)
@@ -37,9 +34,7 @@
                     (add-to-list 'flycheck-gcc-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-gcc-definitions "BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
-                                                                        "$localroot/include")))
-                    (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
-                                                                          "$cosm")))
+                                                                        "$localroot/include/system")))
 
                     (let ((cc-search-dirs (list (concat (projectile-project-root) "include/cosm/*/*")
                                                 (concat (projectile-project-root) "src/*/*")

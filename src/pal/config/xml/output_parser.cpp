@@ -32,7 +32,7 @@ NS_START(cosm, pal, config, xml);
  * Member Functions
  ******************************************************************************/
 void output_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: search for child=%s",
+  ER_DEBUG("Parent node=%s: child=%s",
            node.Value().c_str(),
            kXMLRoot.c_str());
 

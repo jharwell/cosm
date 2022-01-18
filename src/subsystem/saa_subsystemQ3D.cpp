@@ -65,9 +65,12 @@ void saa_subsystemQ3D::steer_force2D_apply(void) {
   double active = actuation()->governed_diff_drive()->active_throttle();
   ER_DEBUG("Applied throttle: %f active throttle: %f", applied, active);
 
-  auto desired = steer_force2D().value();
-  auto current = odometry().twist.linear;
-  actuation()->governed_diff_drive()->fsm_drive(current.to_2D(), desired);
+  auto force = steer_force2D().value();
+  auto desired_speed = force.length() * (1.0 - active);
+  ckin::twist delta;
+  delta.linear = rmath::vector3d::X * desired_speed;
+  delta.angular = rmath::vector3d::Z * force.angle().v();
+  actuation()->governed_diff_drive()->fsm_drive(delta);
 
   steer_force2D().forces_reset();
 } /* steer_force2D_apply() */

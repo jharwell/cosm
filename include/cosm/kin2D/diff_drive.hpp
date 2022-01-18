@@ -66,8 +66,7 @@ class diff_drive : public rer::client<diff_drive> {
    * \brief Updates the configured twist via an FSM and sends twist to the
    * actual diff drive actuator for translation into wheel speeds.
    */
-  void fsm_drive(const rmath::vector2d& old_vel,
-                 const rmath::vector2d& new_vel);
+  void fsm_drive(const ckin::twist& delta);
 
   double max_speed(void) const { return mc_config.max_speed; }
 

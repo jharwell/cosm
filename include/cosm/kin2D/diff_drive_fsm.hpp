@@ -67,14 +67,11 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    * \brief Gets a direction vector as input and transforms it into wheel
    * speeds internally.
    *
-   * \param old_vel The current speed and direction of the robot.
-   *
-   * \param new_vel The difference from the robot's CURRENT heading (i.e."change
-   *                this much from the direction you are currently going in") is
-   *                computed according to \p old_vel.
+   * \param delta_vel The difference from the robot's CURRENT heading
+   *                  (i.e."change this much from the direction you are
+   *                  currently going in") is computed according to \p old_vel.
    */
-  void change_velocity(const rmath::vector2d& old_vel,
-                       const rmath::vector2d& new_vel);
+  void change_velocity(const ckin::twist& delta);
 
   const ckin::twist& configured_twist(void) const { return m_twist; }
 

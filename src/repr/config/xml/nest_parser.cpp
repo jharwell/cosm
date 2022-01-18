@@ -33,7 +33,7 @@ NS_START(cosm, repr, config, xml);
  ******************************************************************************/
 void nest_parser::parse(const ticpp::Element& node) {
   ticpp::Element nnode;
-  ER_DEBUG("Parent node=%s: search for child=%s",
+  ER_DEBUG("Parent node=%s: child=%s",
            node.Value().c_str(),
            kXMLRoot.c_str());
 

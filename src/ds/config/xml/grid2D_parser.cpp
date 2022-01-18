@@ -37,7 +37,7 @@ void grid2D_parser::parse(const ticpp::Element& node) {
    * does not use grids.
    */
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: search for child=%s",
+    ER_DEBUG("Parent node=%s: child=%s",
              node.Value().c_str(),
              kXMLRoot.c_str());
 

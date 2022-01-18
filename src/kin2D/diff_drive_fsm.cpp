@@ -54,16 +54,15 @@ diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
 /*******************************************************************************
  * Events
  ******************************************************************************/
-void diff_drive_fsm::change_velocity(const rmath::vector2d& old_vel,
-                                     const rmath::vector2d& new_vel) {
+void diff_drive_fsm::change_velocity(const ckin::twist& delta) {
   RCPPSW_FSM_DEFINE_TRANSITION_MAP(kTRANSITIONS){
     ekST_SOFT_TURN, /* slow turn */
     ekST_HARD_TURN, /* hard turn */
   };
   RCPPSW_FSM_VERIFY_TRANSITION_MAP(kTRANSITIONS, ekST_MAX_STATES);
   external_event(kTRANSITIONS[current_state()],
-                 std::make_unique<turn_data>(new_vel.length(),
-                                             (old_vel - new_vel).angle()));
+                 std::make_unique<turn_data>(delta.linear.x(),
+                                             rmath::radians(delta.angular.z())));
 } /* set_rel_heading() */
 
 /*******************************************************************************

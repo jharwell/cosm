@@ -177,11 +177,15 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
     double speed1, speed2;
 
     /* Both wheels go straight, but one is faster than the other */
-    auto angle = twist.linear.to_2D().angle();
+    auto angle = rmath::radians(twist.angular.z());
+    ER_TRACE("linear_x=%f, angular_z=%f, soft_turn=%s",
+             twist.linear.x(),
+             twist.angular.z(),
+             rcppsw::to_string(soft_turn).c_str());
     if (soft_turn.contains(angle.signed_normalize())) {
-      double speed_factor = (soft_turn.span() / 2.0 -
-                             rmath::abs(twist.linear.to_2D().angle())) /
-                            soft_turn.span() / 2.0;
+      auto soft_turn_max = soft_turn.span() / 2.0;
+      double speed_factor = (soft_turn_max.v() - std::fabs(twist.angular.z()) /
+                             soft_turn_max.v());
       speed_factor = std::fabs(speed_factor);
 
       speed1 = twist.linear.x() - twist.linear.x() * (1.0 - speed_factor);
@@ -190,7 +194,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       speed1 = -twist.linear.x();
       speed2 = twist.linear.x();
     }
-    if (twist.linear.to_2D().angle() > rmath::radians::kZERO) {
+    if (rmath::radians(twist.angular.z()) > rmath::radians::kZERO) {
       /* Turn Left */
       return {speed1, speed2};
     } else {
@@ -198,7 +202,6 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       return {speed2, speed1};
     }
   } /* to_wheel_speeds() */
-
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)

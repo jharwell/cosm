@@ -74,11 +74,15 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
                     const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
          proximity_sensor_impl(sensor),
-         mc_config(*config) {}
+         mc_config(*config) {
+    enable();
+  }
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
    explicit proximity_sensor(const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-         mc_config(*config) {}
+         mc_config(*config) {
+     enable();
+   }
 #endif
 
   const proximity_sensor& operator=(const proximity_sensor&) = delete;

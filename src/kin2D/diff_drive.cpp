@@ -43,9 +43,8 @@ diff_drive::diff_drive(const config::diff_drive_config* const config,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive::fsm_drive(const rmath::vector2d& old_vel,
-                           const rmath::vector2d& new_vel) {
-  m_fsm.change_velocity(old_vel, new_vel);
+void diff_drive::fsm_drive(const ckin::twist& delta) {
+  m_fsm.change_velocity(delta);
 
   /* don't need to normalize--done by fsm internally */
   rmath::range<rmath::radians> range(-mc_config.soft_turn_max,

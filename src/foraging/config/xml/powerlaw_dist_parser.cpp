@@ -33,7 +33,7 @@ NS_START(cosm, foraging, config, xml);
  ******************************************************************************/
 void powerlaw_dist_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: search for child=%s",
+    ER_DEBUG("Parent node=%s: child=%s",
              node.Value().c_str(),
              kXMLRoot.c_str());
 

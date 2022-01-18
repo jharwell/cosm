@@ -33,7 +33,7 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void arrival_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: search for child=%s",
+    ER_DEBUG("Parent node=%s: child=%s",
              node.Value().c_str(),
              kXMLRoot.c_str());
 

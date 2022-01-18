@@ -189,9 +189,13 @@ class base_nest_block_process
   }
 
   bool pre_process_check(const TController& controller) const {
-    ER_CHECK(rtypes::constants::kNoUUID !=
+    /*
+     * Can't be an assert(), because sometimes robots wander out of the nest
+     * after entering depending on the nest acquisition strategy.
+     */
+    ER_CONDW(rtypes::constants::kNoUUID !=
                  m_map->robot_in_nest(controller.rpos2D()),
-             "Robot%d@%s/%s not in a nest",
+             "Robot%d@%s/%s not in a nest--continuing with nest processing",
              controller.entity_id().v(),
              rcppsw::to_string(controller.rpos2D()).c_str(),
              rcppsw::to_string(controller.dpos2D()).c_str());

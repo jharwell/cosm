@@ -263,6 +263,7 @@ target_include_directories(
   PUBLIC
   $<BUILD_INTERFACE:${cosm_DIR}/include>
   $<BUILD_INTERFACE:${rcppsw_INCLUDE_DIRS}>
+  $<INSTALL_INTERFACE:include>
   )
 
 target_include_directories(

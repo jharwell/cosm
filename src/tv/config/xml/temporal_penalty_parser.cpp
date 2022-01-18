@@ -33,7 +33,7 @@ NS_START(cosm, tv, config, xml);
  ******************************************************************************/
 void temporal_penalty_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(m_xml_root, false)) {
-    ER_DEBUG("Parent node=%s: search for child=%s",
+    ER_DEBUG("Parent node=%s: child=%s",
              node.Value().c_str(),
              xml_root().c_str());
 

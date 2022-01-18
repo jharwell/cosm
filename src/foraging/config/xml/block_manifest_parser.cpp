@@ -32,7 +32,7 @@ NS_START(cosm, foraging, config, xml);
  * Member Functions
  ******************************************************************************/
 void block_manifest_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: search for child=%s",
+  ER_DEBUG("Parent node=%s: child=%s",
            node.Value().c_str(),
            kXMLRoot.c_str());
 

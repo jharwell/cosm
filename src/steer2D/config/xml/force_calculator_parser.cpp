@@ -32,7 +32,7 @@ NS_START(cosm, steer2D, config, xml);
  * Member Functions
  ******************************************************************************/
 void force_calculator_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: search for child=%s",
+  ER_DEBUG("Parent node=%s: child=%s",
            node.Value().c_str(),
            kXMLRoot.c_str());
 
