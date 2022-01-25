@@ -177,12 +177,12 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
     double speed1, speed2;
 
     /* Both wheels go straight, but one is faster than the other */
-    auto angle = rmath::radians(twist.angular.z());
+    auto angle = rmath::radians(twist.angular.z()).signed_normalize();
     ER_TRACE("linear_x=%f, angular_z=%f, soft_turn=%s",
              twist.linear.x(),
-             twist.angular.z(),
+             angle.v(),
              rcppsw::to_string(soft_turn).c_str());
-    if (soft_turn.contains(angle.signed_normalize())) {
+    if (soft_turn.contains(angle)) {
       auto soft_turn_max = soft_turn.span() / 2.0;
       double speed_factor = (soft_turn_max.v() - std::fabs(twist.angular.z()) /
                              soft_turn_max.v());

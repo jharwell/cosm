@@ -63,7 +63,8 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
 
   rmath::vector2z dcenter2D(void) const {
     ER_ASSERT(RCPPSW_IS_ODD(dbb().xsize()) && RCPPSW_IS_ODD(dbb().ysize()),
-              "dcenter3D() called on entity without defined center");
+              "%s called on entity without defined center",
+              __FUNCTION__);
     return entity2D::dcenter2D();
   }
 

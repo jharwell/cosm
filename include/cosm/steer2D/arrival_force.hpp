@@ -25,6 +25,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/rcppsw.hpp"
+#include "rcppsw/er/client.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/steer2D/boid.hpp"
@@ -50,7 +51,7 @@ struct arrival_force_config;
  * speed is ramped down linearly from its current speed to the specified minimal
  * slowing speed.
  */
-class arrival_force {
+class arrival_force : public rer::client<arrival_force> {
  public:
   explicit arrival_force(const config::arrival_force_config* config);
 

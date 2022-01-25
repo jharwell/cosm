@@ -45,11 +45,11 @@ saa_subsystemQ3D::saa_subsystemQ3D(
  ******************************************************************************/
 void saa_subsystemQ3D::steer_force2D_apply(void) {
   auto odom = odometry();
-  ER_DEBUG("position=%s azimuth=%s zenith=%s",
+  ER_DEBUG("odom.position=%s azimuth=%s zenith=%s",
            rcppsw::to_string(odom.pose.position).c_str(),
            rcppsw::to_string(odom.pose.orientation.z()).c_str(),
            rcppsw::to_string(odom.pose.orientation.y()).c_str());
-  ER_DEBUG("twist.linear=%s@%s [%s] twist.angular=%s [%s]",
+  ER_DEBUG("odom.twist.linear=%s@%s [%s] odom.twist.angular=%s [%s]",
            rcppsw::to_string(odom.twist.linear).c_str(),
            rcppsw::to_string(odom.twist.linear.to_2D().angle()).c_str(),
            rcppsw::to_string(odom.twist.linear.length()).c_str(),

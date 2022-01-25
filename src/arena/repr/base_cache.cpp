@@ -43,17 +43,26 @@ base_cache::base_cache(const params& p)
           rtypes::constants::kNoUUID == p.id ? rtypes::type_uuid(m_next_id++)
                                              : p.id,
           rmath::vector2d(p.dimension.v(), p.dimension.v()),
-          p.center - rmath::vector2d(p.dimension.v(), p.dimension.v()) / 2.0,
+          p.center - rmath::vector2d(p.dimension.v(), p.dimension.v()) / 2.0 +
+          rmath::vector2d(rmath::kDOUBLE_EPSILON, rmath::kDOUBLE_EPSILON),
           p.resolution),
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
       mc_resolution(p.resolution),
       m_blocks_vec(p.blocks) {
-  /* /\* build the block map *\/ */
-  /* std::transform(p.blocks.begin(), */
-  /*                p.blocks.end(), */
-  /*                std::inserter(m_blocks, m_blocks.end()), */
-  /*                [&](auto* b) { return std::make_pair(b->id(), b); }); */
+  auto dims = rmath::vector2d(p.dimension.v(), p.dimension.v());
+  auto anchor = p.center - dims / 2.0;
+  ER_DEBUG("Configured center=%s/%s,anchor=%s/%s dims=%s",
+           rcppsw::to_string(p.center).c_str(),
+           rcppsw::to_string(p.center).c_str(),
+           rcppsw::to_string(anchor).c_str(),
+           rcppsw::to_string(rmath::dvec2zvec(anchor, p.resolution.v())).c_str(),
+           rcppsw::to_string(dims).c_str());
+  ER_DEBUG("Actual center=%s/%s,dims=%s/%s",
+           rcppsw::to_string(rcenter2D()).c_str(),
+           rcppsw::to_string(dcenter2D()).c_str(),
+           rcppsw::to_string(rdims2D()).c_str(),
+           rcppsw::to_string(ddims2D()).c_str());
 }
 
 /*******************************************************************************

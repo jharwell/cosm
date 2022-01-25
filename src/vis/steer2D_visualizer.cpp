@@ -40,12 +40,13 @@ NS_START(cosm, vis);
  ******************************************************************************/
 void steer2D_visualizer::operator()(const rmath::vector3d& pos,
                                     const argos::CQuaternion& orientation,
-                                    const steer2D::tracker* tracker) {
+                                    const steer2D::tracker* tracker,
+                                    bool with_labels) {
   /* visualize path */
   path_draw(pos, orientation, tracker);
 
   /* visualize steering forces */
-  forces_draw(tracker);
+  forces_draw(tracker, with_labels);
 } /* operator()() */
 
 void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
@@ -86,37 +87,47 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
   }
 } /* path_draw() */
 
-void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker) {
+void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker,
+                                     bool labels) {
   /* each force gets a ray and a label */
+  rmath::vector2d accum;
   for (auto& force : tracker->forces()) {
+    if (force.second.force.length() <= 0.0) {
+      continue;
+    }
     auto start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
-    auto end =
-        start + argos::CVector3(force.second.x(), force.second.y(), kDRAW_OFFSET);
-    m_qt->DrawRay(argos::CRay3(start, end), argos::CColor::MAGENTA, 5.0);
-    m_qt->DrawText(argos::CVector3(start.GetX() + end.GetX() / 2.0,
-                                   start.GetY() + end.GetY() / 2.0,
-                                   start.GetZ() + m_text_vis_offset),
-                   force.first,
-                   argos::CColor::BLACK);
+
+    accum += force.second.force * kVIS_MULTIPLIER;
+    auto end = start + argos::CVector3(force.second.force.x() * kVIS_MULTIPLIER,
+                                       force.second.force.y() * kVIS_MULTIPLIER,
+                                       kDRAW_OFFSET);
+    m_qt->DrawRay(argos::CRay3(start, end),
+                  argos::CColor(force.second.color.red(),
+                                force.second.color.green(),
+                                force.second.color.blue()), 5.0);
+    if (labels) {
+      m_qt->DrawText(argos::CVector3(start.GetX() + end.GetX() / 2.0,
+                                     start.GetY() + end.GetY() / 2.0,
+                                     start.GetZ() + m_text_vis_offset),
+                     force.first,
+                     argos::CColor::BLACK);
+    }
+
   } /* for(&force..) */
 
   /* also draw the accumulated force vector, but in a different color */
-  auto accum = std::accumulate(std::begin(tracker->forces()),
-                               std::end(tracker->forces()),
-                               rmath::vector2d(),
-                               [&](const rmath::vector2d& sum, auto& pair) {
-                                 return sum + pair.second;
-                               });
-
-  auto accum_start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET);
-  auto accum_end =
-      accum_start + argos::CVector3(accum.x(), accum.y(), kDRAW_OFFSET);
-  m_qt->DrawRay(argos::CRay3(accum_start, accum_end), argos::CColor::PURPLE, 5.0);
-  m_qt->DrawText(argos::CVector3(accum_start.GetX() + accum_end.GetX() / 2.0,
-                                 accum_start.GetY() + accum_end.GetY() / 2.0,
-                                 accum_start.GetZ() + m_text_vis_offset),
-                 "accum",
-                 argos::CColor::BLACK);
+  /* auto accum_start = argos::CVector3(0.0, 0.0, kDRAW_OFFSET); */
+  /* auto accum_end = accum_start + argos::CVector3(accum.x(), */
+  /*                                                accum.y(), */
+  /*                                                kDRAW_OFFSET); */
+  /* m_qt->DrawRay(argos::CRay3(accum_start, accum_end), */
+  /*               argos::CColor::PURPLE, */
+  /*               5.0); */
+  /* m_qt->DrawText(argos::CVector3(accum_start.GetX() + accum_end.GetX() / 2.0, */
+  /*                                accum_start.GetY() + accum_end.GetY() / 2.0, */
+  /*                                accum_start.GetZ() + m_text_vis_offset), */
+  /*                "accum", */
+  /*                argos::CColor::BLACK); */
 } /* forces_draw() */
 
 NS_END(vis, cosm);

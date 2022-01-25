@@ -71,18 +71,27 @@ class steer2D_visualizer : public rer::client<steer2D_visualizer> {
 
   void operator()(const rmath::vector3d& pos,
                   const argos::CQuaternion& orientation,
-                  const steer2D::tracker* tracker);
+                  const steer2D::tracker* tracker,
+                  bool with_labels);
 
  private:
   /* draw a little off the ground so it renders better */
   static constexpr const double kDRAW_OFFSET = 0.05;
 
+  /*
+   * Multiply visualized force by a constant so the visualizations can more
+   * easily be seen (they are usually pretty small).
+   */
+  static constexpr const double kVIS_MULTIPLIER = 10.0;
+
   /**
    * \brief Draw 2D steering force visualizations
    *
    * \param tracker The 2D steering force tracker.
+   * \param labels Include textual labels for what the forces are?
    */
-  void forces_draw(const steer2D::tracker* tracker);
+  void forces_draw(const steer2D::tracker* tracker,
+                   bool labels);
 
   /**
    * \brief Draw path visualizations

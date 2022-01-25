@@ -36,17 +36,20 @@ bool tracker::path_add(const ds::path_state& path) {
   return true;
 } /* path_add() */
 
-bool tracker::force_add(const std::string& name, const rmath::vector2d& force) {
-  m_forces[name] += force;
+bool tracker::force_add(const std::string& name,
+                        const rutils::color& color,
+                        const rmath::vector2d& force) {
+
+  m_forces[name] += map_value_type{force, color};
+  m_forces[name].color = color;
   return true;
 } /* force_add() */
 
-rmath::vector2d tracker::force_accum(const std::string& name) const {
-  auto it = m_forces.find(name);
-  if (m_forces.end() == it) {
-    return {};
-  }
-  return it->second;
-} /* force_accum() */
+void tracker::reset(void) {
+  m_path = boost::none;
+  for (auto &f : m_forces) {
+    f.second = {};
+  } /* for(&f..) */
+}
 
 NS_END(steer2D, cosm);

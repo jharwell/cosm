@@ -71,6 +71,7 @@ enum class diagnostics {
    */
   ekEXP_INTERFERENCE,
 };
+
 NS_END(actuators, hal, cosm);
 
 #endif /* INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTICS_HPP_ */
