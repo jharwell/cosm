@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -53,7 +53,7 @@ NS_START(cosm, spatial, metrics, detail);
 
 NS_END(detail);
 
-struct interference_metrics_data : public rmetrics::base_metrics_data {
+struct interference_metrics_data : public rmetrics::base_data {
   detail::interference_metrics_data interval{};
   detail::interference_metrics_data cum{};
 };

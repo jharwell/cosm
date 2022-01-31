@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 
 /*******************************************************************************
@@ -68,7 +68,7 @@ struct distributor_metrics_data  {
 
 NS_END(detail);
 
-struct distributor_metrics_data : public rmetrics::base_metrics_data {
+struct distributor_metrics_data : public rmetrics::base_data {
   detail::distributor_metrics_data cum{};
   detail::distributor_metrics_data interval{};
 };

@@ -34,8 +34,8 @@ NS_START(cosm, foraging, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_transportee_metrics_collector::block_transportee_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions
@@ -44,20 +44,20 @@ void block_transportee_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = static_cast<const block_transportee_metrics&>(metrics);
 
-  ++m_data.interval.transported;
-  m_data.interval.cube_transported +=
+  ++m_data.interval.n_transported;
+  m_data.interval.n_cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());
-  m_data.interval.ramp_transported +=
+  m_data.interval.n_ramp_transported +=
       static_cast<size_t>(crepr::block_type::ekRAMP == m.type());
 
-  ++m_data.cum.transported;
-  m_data.cum.cube_transported +=
+  ++m_data.cum.n_transported;
+  m_data.cum.n_cube_transported +=
       static_cast<size_t>(crepr::block_type::ekCUBE == m.type());
-  m_data.cum.ramp_transported +=
+  m_data.cum.n_ramp_transported +=
       static_cast<size_t>(crepr::block_type::ekRAMP == m.type());
 
-  m_data.interval.transporters += m.total_transporters();
-  m_data.cum.transporters += m.total_transporters();
+  m_data.interval.n_transporters += m.total_transporters();
+  m_data.cum.n_transporters += m.total_transporters();
 
   m_data.interval.transport_time += m.total_transport_time().v();
   m_data.cum.transport_time += m.total_transport_time().v();
@@ -67,10 +67,10 @@ void block_transportee_metrics_collector::collect(
 } /* collect() */
 
 void block_transportee_metrics_collector::reset_after_interval(void) {
-  m_data.interval.transported = 0;
-  m_data.interval.cube_transported = 0;
-  m_data.interval.ramp_transported = 0;
-  m_data.interval.transporters = 0;
+  m_data.interval.n_transported = 0;
+  m_data.interval.n_cube_transported = 0;
+  m_data.interval.n_ramp_transported = 0;
+  m_data.interval.n_transporters = 0;
   m_data.interval.transport_time = 0;
   m_data.interval.initial_wait_time = 0;
 } /* reset_after_interval() */

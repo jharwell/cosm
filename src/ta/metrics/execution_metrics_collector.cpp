@@ -34,8 +34,8 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 execution_metrics_collector::execution_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)),
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)),
       ER_CLIENT_INIT("cosm.metrics.tasks.execution_metrics_collector") {}
 
 /*******************************************************************************

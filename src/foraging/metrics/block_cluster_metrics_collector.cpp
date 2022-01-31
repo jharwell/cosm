@@ -34,9 +34,9 @@ NS_START(cosm, foraging, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_cluster_metrics_collector::block_cluster_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink,
+    std::unique_ptr<rmetrics::base_sink> sink,
     size_t n_clusters) :
-    base_metrics_collector(std::move(sink)),
+    base_collector(std::move(sink)),
     m_data(n_clusters) {}
 
 /*******************************************************************************

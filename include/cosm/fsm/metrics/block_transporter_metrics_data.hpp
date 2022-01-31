@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,7 +50,7 @@ struct block_transporter_metrics_data {
 
 NS_END(detail);
 
-struct block_transporter_metrics_data : public rmetrics::base_metrics_data {
+struct block_transporter_metrics_data : public rmetrics::base_data {
   detail::block_transporter_metrics_data interval{};
   detail::block_transporter_metrics_data cum{};
 };

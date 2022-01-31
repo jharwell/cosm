@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/spatial/metrics/dist3D_pos_metrics_collector.hpp"
 
-#include "rcppsw/metrics/base_metrics_sink.hpp"
+#include "rcppsw/metrics/base_sink.hpp"
 
 #include "cosm/spatial/metrics/dist3D_metrics.hpp"
 
@@ -36,7 +36,7 @@ NS_START(cosm, spatial, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 dist3D_pos_metrics_collector::dist3D_pos_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink,
+    std::unique_ptr<rmetrics::base_sink> sink,
     const rmath::vector3z& dims)
     : grid3D_metrics_collector(std::move(sink), dims) {}
 

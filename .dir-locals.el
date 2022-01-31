@@ -23,6 +23,7 @@
                     (add-to-list 'flycheck-clang-args "-std=c++17")
                     (add-to-list 'flycheck-clang-definitions "COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT")
                     (add-to-list 'flycheck-clang-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
+                    (add-to-list 'flycheck-clang-definitions "LIBRA_ER=LIBRA_ER_ALL")
                     (add-to-list 'flycheck-clang-args (concat "-isystem" (substitute-in-file-name
                                                                           "$localroot/system/include")))
 
@@ -33,6 +34,8 @@
                     (add-to-list 'flycheck-gcc-definitions "COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT")
                     (add-to-list 'flycheck-gcc-definitions "COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS")
                     (add-to-list 'flycheck-gcc-definitions "BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT")
+                    (add-to-list 'flycheck-gcc-definitions "LIBRA_ER=LIBRA_ER_ALL")
+
                     (add-to-list 'flycheck-gcc-args (concat "-isystem" (substitute-in-file-name
                                                                         "$localroot/system/include")))
 

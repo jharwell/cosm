@@ -43,7 +43,7 @@ bi_tdgraph_metrics_csv_sink::bi_tdgraph_metrics_csv_sink(
  * Member Functions
  ******************************************************************************/
 std::list<std::string> bi_tdgraph_metrics_csv_sink::csv_header_cols(
-    const rmetrics::base_metrics_data* data) const {
+    const rmetrics::base_data* data) const {
   std::list<std::string> cols = dflt_csv_header_cols();
 
   auto* d = static_cast<const bi_tdgraph_metrics_data*>(data);
@@ -75,7 +75,7 @@ std::list<std::string> bi_tdgraph_metrics_csv_sink::csv_header_cols(
 } /* csv_header_cols() */
 
 boost::optional<std::string> bi_tdgraph_metrics_csv_sink::csv_line_build(
-const rmetrics::base_metrics_data* data,
+const rmetrics::base_data* data,
       const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;

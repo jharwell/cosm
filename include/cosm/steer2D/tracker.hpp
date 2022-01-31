@@ -54,8 +54,8 @@ NS_START(cosm, steer2D);
 class tracker {
  public:
   struct map_value_type {
-    rmath::vector2d force;
-    rutils::color color;
+    rmath::vector2d force{};
+    rutils::color color{};
     map_value_type operator+=(const map_value_type& rhs) {
       force += rhs.force;
       return *this;

@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,7 +47,7 @@ struct nest_acq_metrics_data {
 
 NS_END(detail);
 
-struct nest_acq_metrics_data : public rmetrics::base_metrics_data {
+struct nest_acq_metrics_data : public rmetrics::base_data {
   detail::nest_acq_metrics_data interval{};
   detail::nest_acq_metrics_data cum{};
 };

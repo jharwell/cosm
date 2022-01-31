@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -69,7 +69,7 @@ struct population_dynamics_metrics_data {
 
 NS_END(detail);
 
-struct population_dynamics_metrics_data : public rmetrics::base_metrics_data {
+struct population_dynamics_metrics_data : public rmetrics::base_data {
   detail::population_dynamics_metrics_data interval{};
   detail::population_dynamics_metrics_data cum{};
 };

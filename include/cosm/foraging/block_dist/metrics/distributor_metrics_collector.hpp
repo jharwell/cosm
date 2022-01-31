@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <memory>
 
-#include "rcppsw/metrics/base_metrics_collector.hpp"
+#include "rcppsw/metrics/base_collector.hpp"
 
 #include "cosm/foraging/block_dist/metrics/distributor_metrics_data.hpp"
 
@@ -44,18 +44,18 @@ NS_START(cosm, foraging, block_dist, metrics);
  *
  * \brief Collector for \ref distributor_metrics.
  */
-class distributor_metrics_collector final : public rmetrics::base_metrics_collector {
+class distributor_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
   * \param sink The metrics sink to use.
   */
   explicit distributor_metrics_collector(
-      std::unique_ptr<rmetrics::base_metrics_sink> sink);
+      std::unique_ptr<rmetrics::base_sink> sink);
 
-  /* base_metrics_collector overrides */
+  /* base_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
-  const rmetrics::base_metrics_data* data(void) const override { return &m_data; }
+  const rmetrics::base_data* data(void) const override { return &m_data; }
 
  private:
   /* clang-format off */

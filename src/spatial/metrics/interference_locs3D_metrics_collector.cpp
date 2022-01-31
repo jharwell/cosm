@@ -34,7 +34,7 @@ NS_START(cosm, spatial, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 interference_locs3D_metrics_collector::interference_locs3D_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink,
+    std::unique_ptr<rmetrics::base_sink> sink,
     const rmath::vector3z& dims)
     : grid3D_metrics_collector(std::move(sink), dims) {}
 

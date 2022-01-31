@@ -62,7 +62,7 @@ class utilization_metrics : virtual public rmetrics::base_metrics {
    * This currently has a max of 1, due to limitations/shortcuts taken with the
    * block pickup events.
    */
-  virtual uint total_block_pickups(void) const = 0;
+  virtual size_t total_block_pickups(void) const = 0;
 
   /**
    * \brief Should return the # of blocks a given cache has had dropped in it
@@ -71,7 +71,7 @@ class utilization_metrics : virtual public rmetrics::base_metrics {
    * This is currently has a max of 1, due to limitations/shortcuts taken with
    * the block drop events.
    */
-  virtual uint total_block_drops(void) const = 0;
+  virtual size_t total_block_drops(void) const = 0;
 };
 
 NS_END(caches, metrics, arena, cosm);

@@ -28,7 +28,7 @@
 #include <vector>
 #include <cmath>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -54,7 +54,7 @@ struct bi_tdgraph_metrics_data {
 
 NS_END(detail);
 
-struct bi_tdgraph_metrics_data : public rmetrics::base_metrics_data {
+struct bi_tdgraph_metrics_data : public rmetrics::base_data {
   explicit bi_tdgraph_metrics_data(size_t decomposition_depth)
       : interval(decomposition_depth),
         cum(decomposition_depth) {}

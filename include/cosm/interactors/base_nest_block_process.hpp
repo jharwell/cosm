@@ -64,7 +64,7 @@ class base_nest_block_process
 
   base_nest_block_process(arena_map_type* const map,
                           metrics_manager_type* const metrics_manager,
-                          argos::CFloorEntity* const floor,
+                          ::argos::CFloorEntity* const floor,
                           penalty_handler_type* handler)
       : ER_CLIENT_INIT("cosm.interactors.base_nest_block_process"),
         m_floor(floor),
@@ -232,10 +232,10 @@ class base_nest_block_process
   }
 
   /* clang-format off */
-  argos::CFloorEntity* const  m_floor;
-  metrics_manager_type* const m_metrics_manager;
-  arena_map_type* const       m_map;
-  penalty_handler_type* const m_penalty_handler;
+  ::argos::CFloorEntity* const m_floor;
+  metrics_manager_type* const  m_metrics_manager;
+  arena_map_type* const        m_map;
+  penalty_handler_type* const  m_penalty_handler;
   /* clang-format on */
 };
 

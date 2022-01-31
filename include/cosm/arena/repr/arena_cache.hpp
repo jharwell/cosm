@@ -66,8 +66,8 @@ class arena_cache final : public base_cache,
 
   /* metrics */
   size_t n_blocks(void) const override { return base_cache::n_blocks(); }
-  uint total_block_pickups(void) const override { return m_block_pickups; }
-  uint total_block_drops(void) const override { return m_block_drops; }
+  size_t total_block_pickups(void) const override { return m_block_pickups; }
+  size_t total_block_drops(void) const override { return m_block_drops; }
   void reset_metrics(void) override;
   rmath::vector2z location(void) const override { return dcenter2D(); }
 
@@ -90,14 +90,14 @@ class arena_cache final : public base_cache,
     m_penalty_count += duration;
   }
 
-  argos::CLightEntity* light(void) const { return m_light; }
+  ::argos::CLightEntity* light(void) const { return m_light; }
 
  private:
   /* clang-format off */
-  uint                 m_block_pickups{0};
-  uint                 m_block_drops{0};
-  rtypes::timestep     m_penalty_count{0};
-  argos::CLightEntity* m_light;
+  size_t                 m_block_pickups{0};
+  size_t                 m_block_drops{0};
+  rtypes::timestep       m_penalty_count{0};
+  ::argos::CLightEntity* m_light;
   /* clang-format on */
 };
 

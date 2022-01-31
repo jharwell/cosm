@@ -81,7 +81,7 @@ class nest_light final : public repr::colored_entity {
    * after the experiment has ended the arena has already been deconstructed and
    * the nest lights along with them, and an exception is thrown.
    */
-  argos::CLightEntity* m_impl;
+  ::argos::CLightEntity* m_impl;
   /* clang-format on */
 };
 

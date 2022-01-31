@@ -44,7 +44,7 @@ block_transportee_metrics_csv_sink::block_transportee_metrics_csv_sink(
  ******************************************************************************/
 std::list<std::string>
 block_transportee_metrics_csv_sink::csv_header_cols(
-    const rmetrics::base_metrics_data*) const {
+    const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
@@ -71,7 +71,7 @@ block_transportee_metrics_csv_sink::csv_header_cols(
 
 boost::optional<std::string>
 block_transportee_metrics_csv_sink::csv_line_build(
-    const rmetrics::base_metrics_data* data,
+    const rmetrics::base_data* data,
     const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
@@ -81,22 +81,22 @@ block_transportee_metrics_csv_sink::csv_line_build(
 
   std::string line;
 
-  line += rcppsw::to_string(d->cum.transported) + separator();
-  line += rcppsw::to_string(d->cum.ramp_transported) + separator();
-  line += rcppsw::to_string(d->cum.cube_transported) + separator();
+  line += rcppsw::to_string(d->cum.n_transported) + separator();
+  line += rcppsw::to_string(d->cum.n_ramp_transported) + separator();
+  line += rcppsw::to_string(d->cum.n_cube_transported) + separator();
 
-  line += csv_entry_intavg(d->interval.transported);
-  line += csv_entry_tsavg(d->cum.transported, t);
+  line += csv_entry_intavg(d->interval.n_transported);
+  line += csv_entry_tsavg(d->cum.n_transported, t);
 
-  line += csv_entry_intavg(d->interval.cube_transported);
-  line += csv_entry_tsavg(d->cum.cube_transported, t);
-  line += csv_entry_intavg(d->interval.ramp_transported);
-  line += csv_entry_tsavg(d->cum.ramp_transported, t);
-  line += csv_entry_domavg(d->interval.transporters, d->interval.transported);
-  line += csv_entry_domavg(d->cum.transporters, d->cum.transported);
+  line += csv_entry_intavg(d->interval.n_cube_transported);
+  line += csv_entry_tsavg(d->cum.n_cube_transported, t);
+  line += csv_entry_intavg(d->interval.n_ramp_transported);
+  line += csv_entry_tsavg(d->cum.n_ramp_transported, t);
+  line += csv_entry_domavg(d->interval.n_transporters, d->interval.n_transported);
+  line += csv_entry_domavg(d->cum.n_transporters, d->cum.n_transported);
 
-  line += csv_entry_domavg(d->interval.transport_time, d->interval.transported);
-  line += csv_entry_domavg(d->cum.transport_time, d->cum.transported);
+  line += csv_entry_domavg(d->interval.transport_time, d->interval.n_transported);
+  line += csv_entry_domavg(d->cum.transport_time, d->cum.n_transported);
 
   /*
    * If it is 0, then no blocks were collected this interval, so the initial
@@ -104,7 +104,7 @@ block_transportee_metrics_csv_sink::csv_line_build(
    */
   if (d->interval.initial_wait_time > 0) {
     line += csv_entry_domavg(d->interval.initial_wait_time,
-                             d->interval.transported);
+                             d->interval.n_transported);
   } else {
     line += "inf" + separator();
   }
@@ -114,7 +114,7 @@ block_transportee_metrics_csv_sink::csv_line_build(
    * infinite.
    */
   if (d->cum.initial_wait_time > 0) {
-    line += csv_entry_domavg(d->cum.initial_wait_time, d->cum.transported, true);
+    line += csv_entry_domavg(d->cum.initial_wait_time, d->cum.n_transported, true);
   } else {
     line += "inf";
   }

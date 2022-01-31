@@ -55,7 +55,7 @@ class location_metrics_collector final :
    * \param dims Dimensions of arena.
    */
   location_metrics_collector(
-      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      std::unique_ptr<rmetrics::base_sink> sink,
       const rmath::vector2z& dims)
       : grid2D_metrics_collector(std::move(sink), dims) {}
 

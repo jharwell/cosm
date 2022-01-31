@@ -38,7 +38,7 @@
 #include "cosm/hal/hal.hpp"
 #include "cosm/pal/base_swarm_manager.hpp"
 #include "cosm/repr/block_variant.hpp"
-#include "cosm/pal/argos/block_embodiment_variant.hpp"
+#include "cosm/argos/block_embodiment_variant.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -55,7 +55,7 @@ class base_arena_map;
 class caching_arena_map;
 } // namespace cosm::arena
 
-namespace cosm::vis::config {
+namespace cosm::argos::vis::config {
 struct visualization_config;
 } // namespace cosm::vis::config
 
@@ -130,7 +130,7 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
   /**
    * \brief Initialize the arena contents.
    */
-  void arena_map_init(const cvconfig::visualization_config* vconfig,
+  void arena_map_init(const cavis::config::visualization_config* vconfig,
                       const crepr::config::nests_config* nconfig) RCPPSW_COLD;
 
  private:

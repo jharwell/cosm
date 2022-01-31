@@ -27,7 +27,7 @@
 #include <atomic>
 #include <vector>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 #include "cosm/spatial/metrics/movement_category.hpp"
 
@@ -57,7 +57,7 @@ struct movement_metrics_data_data {
 
 NS_END(detail);
 
-struct movement_metrics_data : public rmetrics::base_metrics_data {
+struct movement_metrics_data : public rmetrics::base_data {
   std::vector<detail::movement_metrics_data_data> interval{rcppsw::as_underlying(movement_category::ekMAX)};
   std::vector<detail::movement_metrics_data_data> cum{rcppsw::as_underlying(movement_category::ekMAX)};
 };

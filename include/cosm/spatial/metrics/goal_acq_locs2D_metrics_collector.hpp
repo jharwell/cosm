@@ -56,7 +56,7 @@ class goal_acq_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics
    * \param dims Dimensions of arena.
    */
   goal_acq_locs2D_metrics_collector(
-      std::unique_ptr<rmetrics::base_metrics_sink> sink,
+      std::unique_ptr<rmetrics::base_sink> sink,
       const rmath::vector2z& dims);
 
   void collect(const rmetrics::base_metrics& metrics) override;

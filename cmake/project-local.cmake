@@ -119,7 +119,8 @@ string(CONCAT common_regex
   "src/pal/base_swarm_manager|"
   "src/controller|"
   "src/subsystem|"
-  "src/steer2D"
+  "src/steer2D|"
+  "src/metrics"
   )
 
 component_register_as_src(
@@ -142,7 +143,8 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
     "src/pal/argos|"
     "src/repr|"
     "src/spatial|"
-    "src/tv"
+    "src/tv|"
+    "src/argos"
     )
   component_register_as_src(
     cosm_argos_SRC
@@ -157,7 +159,7 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
       cosm
       "${cosm_SRC}"
       argos_vis
-      "src/vis")
+      "src/argos/vis")
   endif()
 
   # Root project (not used in find_package())
@@ -172,6 +174,7 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
 elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
   string(CONCAT ros_regex
     "src/ds|"
+    "src/ros|"
     "src/hal/ros|"
     "src/pal/ros|"
     "src/fsm|"

@@ -61,7 +61,7 @@ class base_task_abort
 
   base_task_abort(arena_map_type* const map,
                   envd_type* const envd,
-                  argos::CFloorEntity* const floor)
+                  ::argos::CFloorEntity* const floor)
       : ER_CLIENT_INIT("cosm.interactors.base_task_abort"),
         m_map(map),
         m_envd(envd),
@@ -138,9 +138,9 @@ class base_task_abort
   } /* perform_block_drop() */
 
   /* clang-format off */
-  arena_map_type* const      m_map;
-  envd_type* const           m_envd;
-  argos::CFloorEntity* const m_floor;
+  arena_map_type* const        m_map;
+  envd_type* const             m_envd;
+  ::argos::CFloorEntity* const m_floor;
   /* clang-format on */
 };
 

@@ -34,8 +34,8 @@ NS_START(cosm, fsm, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 block_transporter_metrics_collector::block_transporter_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions

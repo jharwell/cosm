@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -49,7 +49,7 @@ struct goal_acq_data {
 
 NS_END(detail);
 
-struct goal_acq_metrics_data : public rmetrics::base_metrics_data {
+struct goal_acq_metrics_data : public rmetrics::base_data {
   detail::goal_acq_data interval{};
   detail::goal_acq_data cum{};
 };

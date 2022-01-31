@@ -35,8 +35,8 @@ NS_START(cosm, spatial, strategy, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 nest_acq_metrics_collector::nest_acq_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions

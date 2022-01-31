@@ -35,8 +35,8 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 bi_tab_metrics_collector::bi_tab_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions

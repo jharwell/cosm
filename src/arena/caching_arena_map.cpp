@@ -96,7 +96,7 @@ bool caching_arena_map::initialize_private(void) {
 void caching_arena_map::caches_add(const cads::acache_vectoro& caches,
                                    cpargos::swarm_manager_adaptor* sm) {
   auto& medium =
-      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
+      sm->GetSimulator().GetMedium<::argos::CLEDMedium>(sm->led_medium());
 
   for (auto& c : caches) {
     /*
@@ -151,7 +151,7 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
 
   /* Remove light for cache from ARGoS */
   auto& medium =
-      sm->GetSimulator().GetMedium<argos::CLEDMedium>(sm->led_medium());
+      sm->GetSimulator().GetMedium<::argos::CLEDMedium>(sm->led_medium());
   medium.RemoveEntity(*(*victim_oit)->light());
   /* sm->RemoveEntity(*(*victim_oit)->light()); */
 

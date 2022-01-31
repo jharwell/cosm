@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -48,7 +48,7 @@ struct utilization_metrics_data {
 
 NS_END(detail);
 
-struct utilization_metrics_data : public rmetrics::base_metrics_data {
+struct utilization_metrics_data : public rmetrics::base_data {
   detail::utilization_metrics_data interval{};
   detail::utilization_metrics_data cum{};
 };

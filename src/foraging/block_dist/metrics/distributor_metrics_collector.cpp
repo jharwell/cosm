@@ -34,8 +34,8 @@ NS_START(cosm, foraging, block_dist, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 distributor_metrics_collector::distributor_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions

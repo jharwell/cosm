@@ -34,8 +34,8 @@ NS_START(cosm, tv, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 population_dynamics_metrics_collector::population_dynamics_metrics_collector(
-    std::unique_ptr<rmetrics::base_metrics_sink> sink)
-    : base_metrics_collector(std::move(sink)) {}
+    std::unique_ptr<rmetrics::base_sink> sink)
+    : base_collector(std::move(sink)) {}
 
 /*******************************************************************************
  * Member Functions

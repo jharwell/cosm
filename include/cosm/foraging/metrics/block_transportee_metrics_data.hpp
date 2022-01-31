@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 
 /*******************************************************************************
@@ -47,22 +47,22 @@ struct block_transportee_metrics_data {
   /**
    * \brief  Total # blocks transported.
    */
-  std::atomic_size_t transported{0};
+  std::atomic_size_t n_transported{0};
 
   /**
    * \brief  Total # cube blocks transported.
    */
-  std::atomic_size_t cube_transported{0};
+  std::atomic_size_t n_cube_transported{0};
 
   /**
    * \brief  Total # ramp blocks transported in interval.
    */
-  std::atomic_size_t ramp_transported{0};
+  std::atomic_size_t n_ramp_transported{0};
 
   /**
    * \brief Total # transporters for transported blocks in interval.
    */
-  std::atomic_size_t transporters{0};
+  std::atomic_size_t n_transporters{0};
 
   /**
    * \brief Total amount of time taken for all transported blocks to be
@@ -80,7 +80,7 @@ struct block_transportee_metrics_data {
 
 NS_END(detail);
 
-struct block_transportee_metrics_data : public rmetrics::base_metrics_data {
+struct block_transportee_metrics_data : public rmetrics::base_data {
   detail::block_transportee_metrics_data interval{};
   detail::block_transportee_metrics_data cum{};
 };

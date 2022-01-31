@@ -79,7 +79,7 @@ class base_arena_block_pickup
       typename controller_spec::robot_block_pickup_visitor_type;
 
   base_arena_block_pickup(arena_map_type* const map,
-                          argos::CFloorEntity* const floor,
+                          ::argos::CFloorEntity* const floor,
                           penalty_handler_type* const penalty_handler)
       : ER_CLIENT_INIT("cosm.interactors.base_arena_block_pickup"),
         m_floor(floor),
@@ -288,7 +288,7 @@ class base_arena_block_pickup
   }
 
   /* clang-format off */
-  argos::CFloorEntity*const   m_floor;
+  ::argos::CFloorEntity*const m_floor;
   arena_map_type* const       m_map;
   penalty_handler_type* const m_penalty_handler;
   /* clang-format on */

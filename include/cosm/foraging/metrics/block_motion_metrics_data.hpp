@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <atomic>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -52,7 +52,7 @@ struct block_motion_metrics_data_impl  {
 
 NS_END(detail);
 
-struct block_motion_metrics_data : public rmetrics::base_metrics_data {
+struct block_motion_metrics_data : public rmetrics::base_data {
   detail::block_motion_metrics_data_impl interval{};
   detail::block_motion_metrics_data_impl cum{};
 };

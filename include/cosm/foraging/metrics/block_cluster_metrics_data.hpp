@@ -27,7 +27,7 @@
 #include <atomic>
 #include <vector>
 
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -60,7 +60,7 @@ struct block_cluster_metrics_data  {
 
 NS_END(detail);
 
-struct block_cluster_metrics_data : public rmetrics::base_metrics_data {
+struct block_cluster_metrics_data : public rmetrics::base_data {
   explicit block_cluster_metrics_data(size_t n_clusters)
       : interval{n_clusters},
         cum{n_clusters},

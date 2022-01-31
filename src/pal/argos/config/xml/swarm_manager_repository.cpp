@@ -27,7 +27,7 @@
 #include "cosm/convergence/config/xml/convergence_parser.hpp"
 #include "cosm/oracle/config/xml/aggregate_oracle_parser.hpp"
 #include "cosm/tv/config/xml/population_dynamics_parser.hpp"
-#include "cosm/vis/config/xml/visualization_parser.hpp"
+#include "cosm/argos/vis/config/xml/visualization_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,9 +40,9 @@ NS_START(cosm, pal, argos, config, xml);
 swarm_manager_repository::swarm_manager_repository(void) noexcept {
   parser_register<caconfig::xml::arena_map_parser, caconfig::arena_map_config>(
       caconfig::xml::arena_map_parser::kXMLRoot);
-  parser_register<cvconfig::xml::visualization_parser,
-                  cvconfig::visualization_config>(
-      cvconfig::xml::visualization_parser::kXMLRoot);
+  parser_register<cavis::config::xml::visualization_parser,
+                  cavis::config::visualization_config>(
+                      cavis::config::xml::visualization_parser::kXMLRoot);
 
   parser_register<coconfig::xml::aggregate_oracle_parser,
                   coconfig::aggregate_oracle_config>(

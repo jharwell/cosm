@@ -65,6 +65,20 @@ namespace tv {
 namespace metrics {}
 } /* namespace tv */
 
+namespace argos {
+namespace operations {}
+namespace tv {}
+/**
+ * \namespace vis vis
+ * \brief Qt visualization bindings.
+ */
+namespace vis {
+namespace config {}
+} /* namespace vis */
+
+} /* namespace argos */
+namespace ros {}
+
 /**
  * \namespace subsystem
  *
@@ -134,7 +148,8 @@ namespace steer2D {}
  * velocity congruence, interactivity, etc., and their configuration.
  */
 namespace convergence {
-namespace metrics {}
+namespace metrics {
+}
 namespace config {}
 }
 
@@ -145,6 +160,7 @@ namespace config {}
  * types of metrics that can be collected from COSM and their configuration.
  */
 namespace metrics {
+namespace specs {}
 namespace config {}
 } /* namespace metrics */
 
@@ -193,14 +209,6 @@ namespace metrics {}
 namespace fsm {}
 
 /**
- * \namespace vis vis
- * \brief Qt visualization bindings.
- */
-namespace vis {
-namespace config {}
-} /* namespace vis */
-
-/**
  * \namespace ds
  *
  * \brief Data structures used throughout COSM, and their associated
@@ -222,12 +230,11 @@ namespace operations {}
  */
 namespace pal {
 namespace controller {}
+namespace metrics {}
 namespace config {
 namespace xml {}
 }
 namespace argos {
-namespace operations {}
-namespace tv {}
 namespace controller {}
 } /* namespace argos */
 namespace ros {
@@ -369,10 +376,8 @@ namespace ctv = cosm::tv;
 namespace ctvmetrics = ctv::metrics;
 
 namespace cmetrics = cosm::metrics;
+namespace cmspecs = cmetrics::specs;
 namespace cmconfig = cmetrics::config;
-
-namespace cvis = cosm::vis;
-namespace cvconfig = cvis::config;
 
 namespace cds = cosm::ds;
 namespace cdconfig = cds::config;
@@ -380,12 +385,17 @@ namespace cdops = cds::operations;
 
 namespace cpal = cosm::pal;
 namespace cpconfig = cpal::config;
+namespace cpmetrics = cpal::metrics;
 namespace cpcxml = cpconfig::xml;
 namespace cpargos = cpal::argos;
 namespace cpros = cpal::ros;
-namespace cpaops = cpargos::operations;
-namespace cpatv = cpargos::tv;
 namespace cpcontroller = cpal::controller;
+
+namespace cargos = cosm::argos;
+namespace catv = cargos::tv;
+namespace cavis = cargos::vis;
+
+namespace cros = cosm::ros;
 
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;

@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/metrics/base_metrics_data.hpp"
+#include "rcppsw/metrics/base_data.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -49,7 +49,7 @@ struct convergence_measure_data {
 
 NS_END(detail);
 
-struct convergence_metrics_data : public rmetrics::base_metrics_data {
+struct convergence_metrics_data : public rmetrics::base_data {
   double                           conv_epsilon{0.0};
   detail::convergence_measure_data interact{};
   detail::convergence_measure_data order{};

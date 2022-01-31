@@ -385,7 +385,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   std::unique_ptr<cfbd::dispatcher>      m_block_dispatcher;
   cfbd::redist_governor                  m_redist_governor;
   cforaging::block_motion_handler        m_bm_handler;
-  mutable std::unique_ptr<nest_map_type>         m_nests;
+  mutable std::unique_ptr<nest_map_type> m_nests;
   std::unique_ptr<cads::loctree>         m_bloctree;
   std::unique_ptr<cads::loctree>         m_nloctree;
   /* clang-format on */

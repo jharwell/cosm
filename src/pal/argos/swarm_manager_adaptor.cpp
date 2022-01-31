@@ -28,9 +28,9 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
-#include "cosm/pal/argos/block_embodiment_creator.hpp"
+#include "cosm/argos/block_embodiment_creator.hpp"
 #include "cosm/repr/base_block3D.hpp"
-#include "cosm/vis/config/visualization_config.hpp"
+#include "cosm/argos/vis/config/visualization_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -55,7 +55,7 @@ void swarm_manager_adaptor::arena_map_create(
 } /* arena_map_create() */
 
 void swarm_manager_adaptor::arena_map_init(
-    const cvconfig::visualization_config* vconfig,
+    const cavis::config::visualization_config* vconfig,
     const crepr::config::nests_config* nconfig) {
   /*
    * If null, visualization has been disabled.
