@@ -1,5 +1,5 @@
 /**
- * \file topic_output_manager.hpp
+ * \file swarm_metrics_manager.hpp
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
@@ -18,52 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_METRICS_TOPIC_OUTPUT_MANAGER_HPP_
-#define INCLUDE_COSM_PAL_ROS_METRICS_TOPIC_OUTPUT_MANAGER_HPP_
+#ifndef INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_
+#define INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/math/vector2.hpp"
-#include "rcppsw/math/vector3.hpp"
 
 #include "rcppsw/metrics/config/metrics_config.hpp"
-#include "rcppsw/metrics/network_output_manager.hpp"
+#include "rcppsw/metrics/fs_output_manager.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/ros/topic.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm::repr {
-class base_block3D;
-} /* namespace cosm::repr */
-
-namespace cosm::controller {
-class base_controller2D;
-class base_controllerQ3D;
-} /* namespace cosm::controller */
-
-NS_START(cosm, pal, ros, metrics);
+NS_START(cosm, ros, metrics);
+namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class topic_output_manager
- * \ingroup pal ros metrics
+ * \class swarm_metrics_manager
+ * \ingroup ros metrics
  *
  * \brief Manager class for handling all of the metrics which can be generated
- * by COSM on robots running ROS.
+ * by COSM on robots running ROS. Runs on the ROS master to gather metrics from
+ * all robots and write them out to the file system.
  */
-class topic_output_manager : public rmetrics::network_output_manager,
-                          public rer::client<topic_output_manager> {
+class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
+                          public rmetrics::fs_output_manager {
  public:
-  explicit topic_output_manager(const rmconfig::metrics_config* mconfig);
-  ~topic_output_manager(void) override = default;
+  swarm_metrics_manager(const rmconfig::metrics_config* mconfig,
+                    const fs::path& root);
+  ~swarm_metrics_manager(void) override = default;
 
   /**
    * \brief Collect metrics from a 3D block right before it is dropped in the
@@ -71,7 +62,7 @@ class topic_output_manager : public rmetrics::network_output_manager,
    *
    * - \ref cmspecs::blocks::kTransportee
    */
-  void collect_from_block(const crepr::base_block3D* block);
+  void collect_from_block(cros::topic robot_ns);
 
   /**
    * \brief Collect metrics from 2D controllers. Currently this includes:
@@ -79,15 +70,7 @@ class topic_output_manager : public rmetrics::network_output_manager,
    * - \ref cmspecs::spatial::kMovement
    * - \ref cmspecs::spatial::kInterferenceCounts
    */
-  void collect_from_controller(const ccontroller::base_controller2D* controller);
-
-  /**
-   * \brief Collect metrics from Q3D controllers. Currently this includes:
-   *
-   * - \ref cmspecs::spatial::kMovement
-   * - \ref cmspecs::spatial::kInterferenceCounts
-   */
-  void collect_from_controller(const ccontroller::base_controllerQ3D* controller);
+  void collect_from_controller(cros::topic robot_ns);
 
  protected:
   /**
@@ -98,8 +81,6 @@ class topic_output_manager : public rmetrics::network_output_manager,
    */
   void register_with_n_block_clusters(const rmconfig::metrics_config* mconfig,
                                       size_t n_block_clusters);
-
- private:
   /**
    * \brief Register metrics collectors that do not require extra arguments.
    *
@@ -115,6 +96,6 @@ class topic_output_manager : public rmetrics::network_output_manager,
   void register_standard(const rmconfig::metrics_config* mconfig);
 };
 
-NS_END(metrics, ros, pal, cosm);
+NS_END(metrics, ros, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ROS_METRICS_TOPIC_OUTPUT_MANAGER_HPP_ */
+#endif /* INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_ */

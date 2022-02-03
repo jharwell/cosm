@@ -1,5 +1,5 @@
 /**
- * \file base_arena_block_pickup.hpp
+ * \file free_block_pickup.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_INTERACTORS_BASE_ARENA_BLOCK_PICKUP_HPP_
-#define INCLUDE_COSM_INTERACTORS_BASE_ARENA_BLOCK_PICKUP_HPP_
+#ifndef INCLUDE_COSM_ARGOS_INTERACTORS_FREE_BLOCK_PICKUP_HPP_
+#define INCLUDE_COSM_ARGOS_INTERACTORS_FREE_BLOCK_PICKUP_HPP_
 
 /*******************************************************************************
  * Includes
@@ -35,14 +35,14 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, interactors);
+NS_START(cosm, argos, interactors);
 
 /*******************************************************************************
  * Classes
  ******************************************************************************/
 /**
- * \class base_arena_block_pickup
- * \ingroup interactors
+ * \class free_block_pickup
+ * \ingroup argos interactors
  *
  * \brief Handle's (possible) free block pickup event on a given timestep,
  * updating the robot and the arena map state as needed if the conditions for
@@ -64,8 +64,8 @@ NS_START(cosm, interactors);
  *            already generic).
  */
 template <typename TController, typename TControllerSpecMap>
-class base_arena_block_pickup
-    : public rer::client<base_arena_block_pickup<TController, TControllerSpecMap>> {
+class free_block_pickup
+    : public rer::client<free_block_pickup<TController, TControllerSpecMap>> {
  public:
   using controller_spec =
       typename boost::mpl::at<TControllerSpecMap, TController>::type;
@@ -78,20 +78,20 @@ class base_arena_block_pickup
   using robot_block_pickup_visitor_type =
       typename controller_spec::robot_block_pickup_visitor_type;
 
-  base_arena_block_pickup(arena_map_type* const map,
+  free_block_pickup(arena_map_type* const map,
                           ::argos::CFloorEntity* const floor,
                           penalty_handler_type* const penalty_handler)
-      : ER_CLIENT_INIT("cosm.interactors.base_arena_block_pickup"),
+      : ER_CLIENT_INIT("cosm.interactors.argos.free_block_pickup"),
         m_floor(floor),
         m_map(map),
         m_penalty_handler(penalty_handler) {}
-  ~base_arena_block_pickup(void) override = default;
+  ~free_block_pickup(void) override = default;
 
-  base_arena_block_pickup(base_arena_block_pickup&&) = default;
+  free_block_pickup(free_block_pickup&&) = default;
 
   /* Not copy-constructible/assignable by default. */
-  base_arena_block_pickup(const base_arena_block_pickup&) = delete;
-  base_arena_block_pickup& operator=(const base_arena_block_pickup&) = delete;
+  free_block_pickup(const free_block_pickup&) = delete;
+  free_block_pickup& operator=(const free_block_pickup&) = delete;
 
   /**
    * \brief If the robot is not currently serving a penalty, then this callback
@@ -294,6 +294,6 @@ class base_arena_block_pickup
   /* clang-format on */
 };
 
-NS_END(interactors, cosm);
+NS_END(interactors, argos, cosm);
 
-#endif /* INCLUDE_COSM_INTERACTORS_BASE_ARENA_BLOCK_PICKUP_HANDLER_HPP_ */
+#endif /* INCLUDE_COSM_ARGOS_INTERACTORS_FREE_BLOCK_PICKUP_HANDLER_HPP_ */

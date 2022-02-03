@@ -75,9 +75,14 @@ namespace tv {}
 namespace vis {
 namespace config {}
 } /* namespace vis */
-
+namespace interactors {}
 } /* namespace argos */
-namespace ros {}
+
+namespace ros {
+namespace metrics {}
+namespace interactors {}
+namespace config {}
+} /* namespace ros */
 
 /**
  * \namespace subsystem
@@ -239,6 +244,7 @@ namespace controller {}
 } /* namespace argos */
 namespace ros {
 namespace controller {}
+
 }
 } /* namespace pal */
 
@@ -394,8 +400,11 @@ namespace cpcontroller = cpal::controller;
 namespace cargos = cosm::argos;
 namespace catv = cargos::tv;
 namespace cavis = cargos::vis;
+namespace cainteractors = cargos::interactors;
 
 namespace cros = cosm::ros;
+namespace crmetrics = cros::metrics;
+namespace crinteractors = cros::interactors;
 
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;

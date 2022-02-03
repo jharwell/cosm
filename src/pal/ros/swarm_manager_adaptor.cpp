@@ -1,5 +1,5 @@
 /**
- * \file fs_output_manager.hpp
+ * \file swarm_manager_adaptor.cpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,38 +18,25 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_METRICS_FS_OUTPUT_MANAGER_HPP_
-#define INCLUDE_COSM_PAL_METRICS_FS_OUTPUT_MANAGER_HPP_
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/cosm.hpp"
-#include "cosm/hal/hal.hpp"
-#include "cosm/pal/pal.hpp"
-
-#if defined(COSM_PAL_TARGET_ARGOS)
-#include "cosm/pal/argos/metrics/fs_output_manager.hpp"
-#elif defined(COSM_PAL_TARGET_ROS)
-#include "cosm/pal/ros/metrics/fs_output_manager.hpp"
-#else
-#error Selected platform does not support metrics output to filesystem
-#endif /* COSM_PAL_TARGET_ARGOS */
+#include "cosm/pal/ros/swarm_manager_adaptor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, metrics);
+NS_START(cosm, pal, ros);
 
 /*******************************************************************************
- * Class Definitions
+ * Constructors/Destructors
  ******************************************************************************/
-#if defined(COSM_PAL_TARGET_ARGOS)
-using fs_output_manager = cpargos::metrics::fs_output_manager;
-#elif defined(COSM_PAL_TARGET_ROS)
-using fs_output_manager = cpros::metrics::fs_output_manager;
-#endif /* COSM_PAL_TARGET_ARGOS */
 
-NS_END(metrics, pal, cosm);
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void swarm_manager_adaptor::init(ticpp::Element& node) {
+  /* parse configuration */
+} /* init() */
 
-#endif /* INCLUDE_COSM_PAL_METRICS_FS_OUTPUT_MANAGER_HPP_ */
+NS_END(ros, pal, cosm);

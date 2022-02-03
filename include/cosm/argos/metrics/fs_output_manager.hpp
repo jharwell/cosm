@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
+#ifndef INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
+#define INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
 
 /*******************************************************************************
  * Includes
@@ -51,7 +51,7 @@ class base_controller2D;
 class base_controllerQ3D;
 } /* namespace cosm::controller */
 
-NS_START(cosm, pal, argos, metrics);
+NS_START(cosm, argos, metrics);
 namespace fs = std::filesystem;
 
 /*******************************************************************************
@@ -59,7 +59,7 @@ namespace fs = std::filesystem;
  ******************************************************************************/
 /**
  * \class fs_output_manager
- * \ingroup pal argos metrics
+ * \ingroup argos metrics
  *
  * \brief Manager class for handling all of the metrics which can be generated
  * by COSM on the ARGoS platform.
@@ -162,6 +162,6 @@ class fs_output_manager : public rmetrics::fs_output_manager,
   void register_standard(const rmconfig::metrics_config* mconfig);
 };
 
-NS_END(metrics, argos, pal, cosm);
+NS_END(metrics, argos, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_ */
+#endif /* INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_ */

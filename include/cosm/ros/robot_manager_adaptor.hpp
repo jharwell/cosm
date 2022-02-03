@@ -1,5 +1,5 @@
 /**
- * \file swarm_manager_adaptor.hpp
+ * \file robot_manager_adaptor.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,8 +18,8 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_
+#ifndef INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_
+#define INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_
 
 /*******************************************************************************
  * Includes
@@ -31,41 +31,39 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, ros);
+NS_START(cosm, ros);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class swarm_manager_adaptor
- * \ingroup pal ros
+ * \class robot_manager_adaptor
+ * \ingroup ros
  *
  * \brief Adaptor for \ref base_swarm_manager to provide an interface for
- * managing swarms within ROS.
+ * managing a single robot within a swarm using ROS.
  */
-class swarm_manager_adaptor : public cpal::base_swarm_manager,
-                              public rer::client<swarm_manager_adaptor> {
+class robot_manager_adaptor : public cpal::base_swarm_manager,
+                              public rer::client<robot_manager_adaptor> {
  public:
-  swarm_manager_adaptor(void);
-  ~swarm_manager_adaptor(void) override;
+  robot_manager_adaptor(void);
+  ~robot_manager_adaptor(void) override;
 
   /* Not copy constructable/assignable by default */
-  swarm_manager_adaptor(const swarm_manager_adaptor&) = delete;
-  const swarm_manager_adaptor& operator=(const swarm_manager_adaptor&) = delete;
+  robot_manager_adaptor(const robot_manager_adaptor&) = delete;
+  const robot_manager_adaptor& operator=(const robot_manager_adaptor&) = delete;
 
-  /* swarm_manager overrides */
+  /* robot_manager overrides */
   void init(ticpp::Element&) override;
   void pre_step(void) override {}
   void reset(void) override {}
   void post_step(void) override {}
   void destroy(void) override {}
 
-  size_t swarm_size(void) const { return m_n_robots; }
-
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   void ndc_uuid_push(void) const override final {
-    ER_NDC_PUSH("[ros_sm]");
+    ER_NDC_PUSH("[ros_rb]");
   }
   void ndc_uuid_pop(void) const override final { ER_NDC_POP(); }
   void mdc_ts_update(void) const override final {
@@ -80,13 +78,11 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 #endif
 
  private:
-  size_t m_n_robots{0};
-
   /* clang-format off */
   ::ros::Time m_start{::ros::Time::now()};
   /* clang-format on */
 };
 
-NS_END(ros, pal, cosm);
+NS_END(ros, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_ */
+#endif /* INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_ */

@@ -29,7 +29,6 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/controller/block_carrying_controller.hpp"
-#include "cosm/ds/operations/cell2D_op.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -48,8 +47,7 @@ NS_START(cosm, controller, operations);
  * functions for updating the FSM attached to a controller, which is necessary
  * for it to be reused as-is, hence it is therefore a base class.
  */
-class base_block_pickup : public rer::client<base_block_pickup>,
-                          public cdops::cell2D_op {
+class base_block_pickup : public rer::client<base_block_pickup> {
  public:
   /**
    * \param block Non-owning reference to the block to be picked up; block is

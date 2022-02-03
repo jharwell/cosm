@@ -38,7 +38,6 @@ base_block_pickup::base_block_pickup(crepr::base_block3D* block,
                                      const rtypes::type_uuid& robot_id,
                                      const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.controller.operations.base_block_pickup"),
-      cell2D_op(block->danchor2D()),
       mc_timestep(t),
       mc_robot_id(robot_id),
       m_block(block) {}

@@ -1,7 +1,9 @@
 /**
- * \file cube_block3D.hpp
+ * \file robot_manager_repository.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * Handles parsing of all XML parameters at runtime.
+ *
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +20,31 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
-#define INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_
+#ifndef INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_
+#define INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
-#include "cosm/repr/sim_block3D.hpp"
+#include "cosm/pal/config/xml/base_swarm_manager_repository.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+NS_START(cosm, ros, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class cube_block3D
- * \ingroup cosm repr
+ * \class robot_manager_repository
+ * \ingroup ros config xml
  *
- * \brief A 3D representation of a cubical block within the arena. Bounding box
- * for cube blocks is 1x1x1 cells in 3D.
+ * \brief Collection of all XML parsers and parse results common to all \ref
+ * base_robot_manager derived classes for the ROS platform.
  */
-class cube_block3D : public sim_block3D {
- public:
-  cube_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res) noexcept
-      : sim_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
+class robot_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
 
-  std::unique_ptr<base_block3D> clone(void) const override {
-    auto tmp = std::make_unique<cube_block3D>(id(), rdims3D(), arena_res());
-    this->sim_block3D::clone_impl(tmp.get());
-    return tmp;
-  } /* clone() */
-};
-NS_END(repr, cosm);
+NS_END(xml, config, ros, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CUBE_BLOCK3D_HPP_ */
+#endif /* INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_ */

@@ -32,6 +32,7 @@
 #include "cosm/repr/operations/block_pickup.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
