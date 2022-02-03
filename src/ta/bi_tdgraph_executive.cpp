@@ -47,11 +47,11 @@ bi_tdgraph_executive::bi_tdgraph_executive(
  * Member Functions
  ******************************************************************************/
 ds::bi_tdgraph* bi_tdgraph_executive::graph(void) {
-  return boost::get<ds::bi_tdgraph>(ds());
+  return &std::get<ds::bi_tdgraph>(*ds());
 } /* graph() */
 
 const ds::bi_tdgraph* bi_tdgraph_executive::graph(void) const {
-  return boost::get<const ds::bi_tdgraph>(ds());
+  return &std::get<ds::bi_tdgraph>(*ds());
 } /* graph() */
 
 const ds::bi_tab* bi_tdgraph_executive::active_tab(void) const {
@@ -128,7 +128,7 @@ polled_task* bi_tdgraph_executive::task_allocate(const polled_task* last_task) {
         std::forward<decltype(v)>(v), last_task, task_alloc_count());
   };
 
-  auto ret = boost::apply_visitor(visitor, *ds());
+  auto ret = std::visit(visitor, *ds());
 
   ER_ASSERT(!ret->task_aborted(),
             "Task '%s' marked as aborted during allocation",

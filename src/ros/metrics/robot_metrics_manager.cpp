@@ -34,8 +34,8 @@
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
 #include "cosm/metrics/specs.hpp"
-#include "cosm/repr/base_block3D.hpp"
 #include "cosm/ros/metrics/registrable.hpp"
+#include "cosm/repr/base_block3D.hpp"
 
 #include "cosm/ros/foraging/metrics/block_cluster_metrics_topic_sink.hpp"
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_topic_sink.hpp"

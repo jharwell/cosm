@@ -42,7 +42,7 @@ class arena_grid;
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
@@ -67,12 +67,12 @@ class free_block_pickup : public rer::client<free_block_pickup>,
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  static free_block_pickup by_robot(crepr::base_block3D* block,
+  static free_block_pickup by_robot(crepr::sim_block3D* block,
                                     const rtypes::type_uuid& robot_id,
                                     const rtypes::timestep& t,
                                     const locking& locking);
 
-  static free_block_pickup by_arena(crepr::base_block3D* block);
+  static free_block_pickup by_arena(crepr::sim_block3D* block);
 
   ~free_block_pickup(void) override = default;
 
@@ -88,7 +88,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   void visit(base_arena_map& map);
 
  private:
-  free_block_pickup(crepr::base_block3D* block,
+  free_block_pickup(crepr::sim_block3D* block,
                     const rtypes::type_uuid& robot_id,
                     const rtypes::timestep& t,
                     const locking& locking);
@@ -100,7 +100,7 @@ class free_block_pickup : public rer::client<free_block_pickup>,
   const rtypes::timestep  mc_timestep;
   const locking           mc_locking;
 
-  crepr::base_block3D*    m_block;
+  crepr::sim_block3D*    m_block;
   /* clang-format on */
 };
 

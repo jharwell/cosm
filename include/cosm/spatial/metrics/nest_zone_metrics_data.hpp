@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,11 +40,11 @@ NS_START(cosm, spatial, metrics, detail);
  * are valid in parallel metric collection contexts.
  */
 struct nest_zone_metrics_data {
-  std::atomic_size_t n_in_nest{0};
-  std::atomic_size_t n_entered_nest{0};
-  std::atomic_size_t n_exited_nest{0};
-  std::atomic_size_t nest_duration{0};
-  std::atomic_size_t first_nest_entry_time{0};
+  ral::mt_size_t n_in_nest{0};
+  ral::mt_size_t n_entered_nest{0};
+  ral::mt_size_t n_exited_nest{0};
+  ral::mt_size_t nest_duration{0};
+  ral::mt_size_t first_nest_entry_time{0};
 };
 
 NS_END(detail);

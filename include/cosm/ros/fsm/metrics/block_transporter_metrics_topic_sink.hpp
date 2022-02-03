@@ -29,58 +29,7 @@
 #include "cosm/ros/metrics/topic_sink.hpp"
 #include "cosm/fsm/metrics/block_transporter_metrics_data.hpp"
 #include "cosm/cosm.hpp"
-
-/*******************************************************************************
- * ROS Message Traits
- ******************************************************************************/
-NS_START(ros, message_traits);
-
-template<>
-struct MD5Sum<cfsm::metrics::block_transporter_metrics_data> {
-  static const char* value() {
-    return MD5Sum<cfsm::metrics::block_transporter_metrics_data>::value();
-  }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return MD5Sum<cfsm::metrics::block_transporter_metrics_data>::value(m);
-  }
-};
-template <>
-struct DataType<cfsm::metrics::block_transporter_metrics_data> {
-  static const char* value() {
-    return DataType<cfsm::metrics::block_transporter_metrics_data>::value();
-  }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return DataType<cfsm::metrics::block_transporter_metrics_data>::value(m);
-  }
-};
-
-template<>
-struct Definition<cfsm::metrics::block_transporter_metrics_data> {
-  static const char* value() {
-    return Definition<cfsm::metrics::block_transporter_metrics_data>::value();
-  }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return Definition<cfsm::metrics::block_transporter_metrics_data>::value(m);
-  }
-};
-NS_END(message_traits);
-
-NS_START(serialization);
-
-template<>
-struct Serializer<cfsm::metrics::block_transporter_metrics_data> {
-  template<typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T t) {
-    stream.next(t.interval.n_phototaxiing_to_goal_including_ca.load());
-    stream.next(t.interval.n_phototaxiing_to_goal_no_ca.load());
-
-    stream.next(t.cum.n_phototaxiing_to_goal_including_ca.load());
-    stream.next(t.cum.n_phototaxiing_to_goal_no_ca.load());
-  }
-  ROS_DECLARE_ALLINONE_SERIALIZER;
-};
-
-NS_END(serialization, ros);
+#include "cosm/ros/fsm/metrics/block_transporter_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

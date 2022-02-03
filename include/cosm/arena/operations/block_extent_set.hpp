@@ -35,7 +35,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 }
 
 namespace cosm::arena::ds {
@@ -66,7 +66,7 @@ class block_extent_set : public rer::client<block_extent_set> {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  explicit block_extent_set(crepr::base_block3D* block);
+  explicit block_extent_set(crepr::sim_block3D* block);
   block_extent_set& operator=(const block_extent_set&) = delete;
   block_extent_set(const block_extent_set&) = delete;
 
@@ -74,7 +74,7 @@ class block_extent_set : public rer::client<block_extent_set> {
 
  private:
   /* clang-format off */
-  crepr::base_block3D* m_block;
+  crepr::sim_block3D* m_block;
   /* clang-format on */
 };
 

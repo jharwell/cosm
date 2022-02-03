@@ -180,7 +180,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    *
    * Calls \ref spatial::conflict_checker internally to do the actual checking.
    */
-  virtual bool placement_conflict(const crepr::base_block3D* block,
+  virtual bool placement_conflict(const crepr::sim_block3D* block,
                                   const rmath::vector2d& loc) const;
 
   /**
@@ -234,7 +234,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * This operation requires holding the block mutex in multithreaded contexts
    * for writing, and takes it internally if not held.
    */
-  virtual void bloctree_update(const crepr::base_block3D* block,
+  virtual void bloctree_update(const crepr::sim_block3D* block,
                                const locking& locking);
 
   /**
@@ -253,7 +253,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \note This operation requires holding the block and grid mutexes for
    * writing, and takes them internally if they are not held.
    */
-  void distribute_single_block(crepr::base_block3D* block,
+  void distribute_single_block(crepr::sim_block3D* block,
                                const locking& locking);
 
   /**
@@ -324,7 +324,7 @@ class base_arena_map : public rer::client<base_arena_map>,
   ds::loctree* bloctree(void) { return m_bloctree.get(); }
 
   virtual cds::const_spatial_entity_vector
-  initial_dist_precalc(const crepr::base_block3D*) const { return {}; };
+  initial_dist_precalc(const crepr::sim_block3D*) const { return {}; };
   bool initialize_shared(cpargos::swarm_manager_adaptor* sm,
                          const crepr::config::nests_config* nests);
 
@@ -342,7 +342,7 @@ class base_arena_map : public rer::client<base_arena_map>,
  private:
   using nest_map_type = std::map<rtypes::type_uuid, crepr::nest>;
   struct pending_dist_type {
-    crepr::base_block3D* block;
+    crepr::sim_block3D* block;
     size_t fail_count;
   };
 

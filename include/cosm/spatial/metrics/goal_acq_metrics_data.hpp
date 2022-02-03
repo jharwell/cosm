@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,10 +40,10 @@ NS_START(cosm, spatial, metrics, detail);
  * are valid in parallel metric collection contexts.
  */
 struct goal_acq_data {
-  std::atomic_size_t n_true_exploring_for_goal{0};
-  std::atomic_size_t n_false_exploring_for_goal{0};
-  std::atomic_size_t n_vectoring_to_goal{0};
-  std::atomic_size_t n_acquiring_goal{0};
+  ral::mt_size_t n_true_exploring_for_goal{0};
+  ral::mt_size_t n_false_exploring_for_goal{0};
+  ral::mt_size_t n_vectoring_to_goal{0};
+  ral::mt_size_t n_acquiring_goal{0};
 };
 
 NS_END(detail);

@@ -36,7 +36,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::foraging::repr {

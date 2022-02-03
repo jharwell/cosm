@@ -24,7 +24,7 @@
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 
 #include "cosm/foraging/repr/block_cluster.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -44,7 +44,7 @@ void base_distributor::clusters_update(void) {
   } /* for(*clust..) */
 }
 
-void base_distributor::cluster_update_after_pickup(const crepr::base_block3D* const block,
+void base_distributor::cluster_update_after_pickup(const crepr::sim_block3D* const block,
                                                    const rmath::vector2z& old_loc) {
   auto clusters = block_clustersno();
   for (auto *clust : clusters) {
@@ -55,7 +55,7 @@ void base_distributor::cluster_update_after_pickup(const crepr::base_block3D* co
   } /* for(*clust..) */
 } /* cluster_update_after_pickup() */
 
-void base_distributor::cluster_update_after_drop(const crepr::base_block3D* const block) {
+void base_distributor::cluster_update_after_drop(const crepr::sim_block3D* const block) {
   auto clusters = block_clustersno();
   for (auto *clust : clusters) {
     if (clust->contains_abs(block->danchor2D())) {

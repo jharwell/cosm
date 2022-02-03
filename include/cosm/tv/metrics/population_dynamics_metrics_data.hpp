@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,26 +42,26 @@ NS_START(cosm, tv, metrics, detail);
  */
 struct population_dynamics_metrics_data {
   /* clang-format off */
-  std::atomic_size_t  n_births{0};
-  std::atomic_size_t  birth_interval{0};
-  std::atomic<double> birth_mu{0};
+  ral::mt_size_t  n_births{0};
+  ral::mt_size_t  birth_interval{0};
+  ral::mt_double_t birth_mu{0};
 
-  std::atomic_size_t  n_deaths{0};
-  std::atomic_size_t  death_interval{0};
-  std::atomic<double> death_lambda{0};
+  ral::mt_size_t  n_deaths{0};
+  ral::mt_size_t  death_interval{0};
+  ral::mt_double_t death_lambda{0};
 
-  std::atomic_size_t  repair_queue_size{0};
-  std::atomic_size_t  n_malfunctions{0};
-  std::atomic_size_t  malfunction_interval{0};
-  std::atomic<double> malfunction_lambda{0};
+  ral::mt_size_t  repair_queue_size{0};
+  ral::mt_size_t  n_malfunctions{0};
+  ral::mt_size_t  malfunction_interval{0};
+  ral::mt_double_t malfunction_lambda{0};
 
-  std::atomic_size_t  n_repairs{0};
-  std::atomic_size_t  repair_interval{0};
-  std::atomic<double> repair_mu{0};
+  ral::mt_size_t  n_repairs{0};
+  ral::mt_size_t  repair_interval{0};
+  ral::mt_double_t repair_mu{0};
 
-  std::atomic_size_t  total_population{0};
-  std::atomic_size_t  active_population{0};
-  std::atomic_size_t  max_population{0};
+  ral::mt_size_t  total_population{0};
+  ral::mt_size_t  active_population{0};
+  ral::mt_size_t  max_population{0};
   /* clang-format on */
 };
 

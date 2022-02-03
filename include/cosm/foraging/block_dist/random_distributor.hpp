@@ -88,7 +88,7 @@ class random_distributor : public rer::client<random_distributor>,
    *
    * \return \c TRUE if the distribution was successful, \c FALSE otherwise.
    */
-   dist_status distribute_block(crepr::base_block3D* block) override;
+   dist_status distribute_block(crepr::sim_block3D* block) override;
 
   cfds::block3D_cluster_vectorno block_clustersno(void) override { return {}; }
 
@@ -104,7 +104,7 @@ class random_distributor : public rer::client<random_distributor>,
    * \brief Find coordinates for distribution that are outside the extent of the
    * all specified entities, while also accounting for block size.
    */
-  boost::optional<coord_search_res_t> coord_search(const crepr::base_block3D* block);
+  boost::optional<coord_search_res_t> coord_search(const crepr::sim_block3D* block);
 
   /**
    * \brief Once a block has been distributed, perform distribution sanity
@@ -114,21 +114,21 @@ class random_distributor : public rer::client<random_distributor>,
    * - The cell it was distributed into should refer to it.
    * - No entity should overlap with the block after distribution.
    */
-  bool verify_block_dist(const crepr::base_block3D* block,
+  bool verify_block_dist(const crepr::sim_block3D* block,
                          const cds::cell2D* cell) RCPPSW_PURE;
 
   boost::optional<coord_search_res_t> coord_search_random(
       const rmath::rangez& c_xrange,
       const rmath::rangez& c_yrange,
-      const crepr::base_block3D* block);
+      const crepr::sim_block3D* block);
 
 
   boost::optional<coord_search_res_t> coord_search_free_cell(
       const rmath::rangez& c_xrange,
       const rmath::rangez& c_yrange,
-      const crepr::base_block3D* block);
+      const crepr::sim_block3D* block);
 
-  bool coord_conflict_check(const crepr::base_block3D* block,
+  bool coord_conflict_check(const crepr::sim_block3D* block,
                             const rmath::vector2d& drop_loc) const;
 
   /* clang-format off */

@@ -32,7 +32,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } // namespace repr
 
 namespace cosm::arena::ds {
@@ -64,7 +64,7 @@ class cell2D_block_extent : public cdops::cell2D_op {
  public:
   using visit_typelist = visit_typelist_impl::value;
 
-  cell2D_block_extent(const rmath::vector2z& coord, crepr::base_block3D* block);
+  cell2D_block_extent(const rmath::vector2z& coord, crepr::sim_block3D* block);
   cell2D_block_extent& operator=(const cell2D_block_extent&) = delete;
   cell2D_block_extent(const cell2D_block_extent&) = delete;
 
@@ -75,7 +75,7 @@ class cell2D_block_extent : public cdops::cell2D_op {
   void visit(fsm::cell2D_fsm& fsm);
 
   /* clang-format off */
-  crepr::base_block3D* m_block;
+  crepr::sim_block3D* m_block;
   /* clang-format on */
 };
 

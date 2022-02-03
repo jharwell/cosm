@@ -37,7 +37,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 class cube_block3D;
 class ramp_block3D;
 class entity3D;
@@ -89,8 +89,8 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   void loc(const rmath::vector3z& loc) { m_loc = loc; }
   const rmath::vector3z& loc(void) const { return m_loc; }
 
-  crepr::base_block3D* block(void) const RCPPSW_PURE;
-  crepr::base_block3D* block(void) RCPPSW_PURE;
+  crepr::sim_block3D* block(void) const RCPPSW_PURE;
+  crepr::sim_block3D* block(void) RCPPSW_PURE;
 
  private:
   /* clang-format off */

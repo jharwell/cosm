@@ -25,7 +25,6 @@
  * Includes
  ******************************************************************************/
 #include <string>
-#include <atomic>
 #include <vector>
 #include <list>
 

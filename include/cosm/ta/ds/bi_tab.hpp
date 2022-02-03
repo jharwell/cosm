@@ -78,7 +78,7 @@ class bi_tab final : public metrics::bi_tab_metrics,
 
   ~bi_tab(void) override = default;
 
-  /* Necessary for use in boost::variant */
+  /* Necessary for use in std::variant */
   bi_tab(const bi_tab& other) = default;
   bi_tab& operator=(const bi_tab&) = delete;
 

@@ -113,13 +113,15 @@ population_dynamics_metrics_csv_sink::csv_line_build(
   line += rcppsw::to_string(d->interval.birth_mu) + separator();
 
   /* death queue */
-  line += csv_entry_intavg(d->interval.n_deaths.load());
-  line += csv_entry_domavg(d->interval.death_interval.load(),
-                           d->interval.n_deaths.load());
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_deaths));
+  line += csv_entry_domavg(ral::mt_load(d->interval.death_interval),
+                           ral::mt_load(d->interval.n_deaths));
 
-  line += csv_entry_tsavg(d->cum.n_deaths.load(), t);
-  line += csv_entry_domavg(d->cum.death_interval.load(), d->cum.n_deaths.load());
-  line += rcppsw::to_string(d->interval.death_lambda) + separator();
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_deaths), t);
+  line += csv_entry_domavg(ral::mt_load(d->cum.death_interval),
+                           ral::mt_load(d->cum.n_deaths));
+  line += rcppsw::to_string(ral::mt_load(d->interval.death_lambda)) +
+          separator();
 
   /* repair queue */
   line += csv_entry_intavg(d->interval.repair_queue_size);

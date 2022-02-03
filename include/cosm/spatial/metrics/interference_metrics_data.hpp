@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,11 +42,11 @@ NS_START(cosm, spatial, metrics, detail);
    * std::atomic requirements.
    */
   struct interference_metrics_data {
-    std::atomic_size_t n_exp_interference{0};
-    std::atomic_size_t n_episodes{0};
-    std::atomic_size_t n_entered_interference{0};
-    std::atomic_size_t n_exited_interference{0};
-    std::atomic_size_t interference_duration{0};
+    ral::mt_size_t n_exp_interference{0};
+    ral::mt_size_t n_episodes{0};
+    ral::mt_size_t n_entered_interference{0};
+    ral::mt_size_t n_exited_interference{0};
+    ral::mt_size_t interference_duration{0};
   };
 
 

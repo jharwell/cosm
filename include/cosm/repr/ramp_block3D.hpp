@@ -26,7 +26,7 @@
  ******************************************************************************/
 #include <memory>
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,12 +42,12 @@ NS_START(cosm, repr);
  * \brief A 3D representation of a ramp block within the arena. The bounding box
  * for ramp blocks is 2x1x1 cells in 3D.
  */
-class ramp_block3D : public base_block3D {
+class ramp_block3D : public sim_block3D {
  public:
   ramp_block3D(const rtypes::type_uuid& id,
                const rmath::vector3d& dim,
                const rtypes::discretize_ratio& arena_res)
-      : base_block3D(id,
+      : sim_block3D(id,
                      dim,
                      arena_res,
                      rutils::color::kBLACK,
@@ -55,7 +55,7 @@ class ramp_block3D : public base_block3D {
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<ramp_block3D>(id(), rdims3D(), arena_res());
-    this->base_block3D::clone_impl(tmp.get());
+    this->sim_block3D::clone_impl(tmp.get());
     return tmp;
   } /* clone() */
 };

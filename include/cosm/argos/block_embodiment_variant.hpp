@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <variant>
 #include <memory>
 
 #include "cosm/cosm.hpp"
@@ -40,7 +40,7 @@ struct cube_block_embodiment;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using block_embodiment_variant = boost::variant<
+using block_embodiment_variant = std::variant<
   std::unique_ptr<ramp_block_embodiment>,
   std::unique_ptr<cube_block_embodiment>
   >;

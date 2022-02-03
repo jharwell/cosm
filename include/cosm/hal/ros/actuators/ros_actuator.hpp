@@ -29,6 +29,7 @@
 #include <ros/ros.h>
 
 #include "cosm/hal/actuators/base_actuator.hpp"
+#include "cosm/ros/topic.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -45,7 +46,8 @@ NS_START(cosm, hal, ros, actuators);
  * \brief Base actuator class to provide a common interface to all ROS
  *        actuators.
  */
-class ros_actuator : public chactuators::base_actuator<::ros::Publisher> {
+class ros_actuator : public rer::client<ros_actuator>,
+                     public chactuators::base_actuator<::ros::Publisher> {
 public:
   using impl_type = ::ros::Publisher;
   using chactuators::base_actuator<impl_type>::decoratee;
@@ -56,26 +58,20 @@ public:
    */
   static constexpr const size_t kQueueBufferSize = 1000;
 
-  explicit ros_actuator(const impl_type& actuator)
-      : chactuators::base_actuator<impl_type>(actuator) {}
+  ros_actuator(const cros::topic& robot_ns);
 
   virtual ~ros_actuator(void) = default;
 
-  ros_actuator(const ros_actuator&) = default;
-  ros_actuator& operator=(const ros_actuator&) = default;
   ros_actuator(ros_actuator&&) = default;
   ros_actuator& operator=(ros_actuator&&) = default;
+  ros_actuator(const ros_actuator&) = delete;
+  ros_actuator& operator=(const ros_actuator&) = delete;
 
   /**
    * \brief To disable an actuator, you stop advertising the topic, which (I
    * think) only happens when your handle goes out of scope.
    */
-  void disable(void) override {
-    if (m_publishing) {
-      decoratee().~impl_type();
-      m_publishing = false;
-    }
-  }
+  void disable(void) override;
 
   bool is_enabled(void) const override { return m_publishing; }
 
@@ -83,13 +79,24 @@ protected:
   template <typename TMsg>
       void advertise(const std::string& topic) {
     ::ros::NodeHandle nh;
+    auto n_subs_old = decoratee().getNumSubscribers();
     redecorate(nh.advertise<TMsg>(topic, kQueueBufferSize));
     m_publishing = true;
-  }
 
+    while(::ros::ok() && decoratee().getNumSubscribers() == n_subs_old) {
+      ::ros::Duration(0.2).sleep();
+      ER_DEBUG("Wait for subscriber connection on topic '%s'",
+               topic.c_str());
+    }
+    m_publishing = true;
+    ER_INFO("Topic '%s' publishing active",
+            topic.c_str());
+  }
+  cros::topic robot_ns(void) const { return m_robot_ns; }
 private:
   /* clang-format off */
-  bool m_publishing{true};
+  cros::topic m_robot_ns;
+  bool        m_publishing{false};
   /* clang-format on */
 };
 

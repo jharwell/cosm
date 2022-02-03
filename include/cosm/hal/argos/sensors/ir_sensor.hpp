@@ -129,7 +129,13 @@ class ir_sensor_impl : public rer::client<ir_sensor_impl<TSensor>>,
 
     std::vector<rmath::vector2d> ret;
     for (auto &r : decoratee()->GetReadings()) {
-      ret.emplace_back(r.Value, rmath::radians(r.Angle.GetValue()));
+      /*
+       * Value of 0 means nothing in range, don't include it for further
+       * processing--small optimization.
+       */
+      if (r.Value > 0) {
+        ret.emplace_back(r.Value, rmath::radians(r.Angle.GetValue()));
+      }
     } /* for(&r..) */
 
     return ret;

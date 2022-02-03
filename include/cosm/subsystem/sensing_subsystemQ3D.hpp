@@ -56,8 +56,8 @@ class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
    * \param pos Position sensor.
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
-  explicit sensing_subsystemQ3D(const sensor_map& sensors)
-      : chsubsystem::sensing_subsystemQ3D(sensors) {}
+  explicit sensing_subsystemQ3D(sensor_map&& sensors)
+      : chsubsystem::sensing_subsystemQ3D(std::move(sensors)) {}
 
   virtual ~sensing_subsystemQ3D(void) = default;
 

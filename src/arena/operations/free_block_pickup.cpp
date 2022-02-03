@@ -28,11 +28,11 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/operations/block_extent_clear.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,14 +42,14 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_pickup free_block_pickup::by_robot(crepr::base_block3D* block,
+free_block_pickup free_block_pickup::by_robot(crepr::sim_block3D* block,
                                               const rtypes::type_uuid& robot_id,
                                               const rtypes::timestep& t,
                                               const locking& locking) {
   return free_block_pickup(block, robot_id, t, locking);
 } /* by_robot() */
 
-free_block_pickup free_block_pickup::by_arena(crepr::base_block3D* block) {
+free_block_pickup free_block_pickup::by_arena(crepr::sim_block3D* block) {
   /*
    * Passing "NO UUID" as the ID of the robot which picked up the arena map's
    * copy of a block works fine, as long as it is a robot which triggers the
@@ -65,7 +65,7 @@ free_block_pickup free_block_pickup::by_arena(crepr::base_block3D* block) {
                            locking::ekALL_HELD);
 } /* by_arena() */
 
-free_block_pickup::free_block_pickup(crepr::base_block3D* block,
+free_block_pickup::free_block_pickup(crepr::sim_block3D* block,
                                      const rtypes::type_uuid& robot_id,
                                      const rtypes::timestep& t,
                                      const locking& locking)

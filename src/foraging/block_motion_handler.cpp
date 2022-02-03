@@ -26,7 +26,7 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/operations/free_block_pickup.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -96,7 +96,7 @@ void block_motion_handler::random_walk(carena::base_arena_map* map) {
 } /* random_walk() */
 
 boost::optional<rmath::vector2z>
-block_motion_handler::free_adjacent_coord(const crepr::base_block3D* block,
+block_motion_handler::free_adjacent_coord(const crepr::sim_block3D* block,
                                           const carena::base_arena_map* map) {
   for (size_t i = 0; i < kMAX_TRIES; ++i) {
     rmath::vector2z step(m_rng->uniform(-1, 1), m_rng->uniform(-1, 1));

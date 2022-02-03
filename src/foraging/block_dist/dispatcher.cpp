@@ -166,7 +166,7 @@ bool dispatcher::initialize(carena::base_arena_map* map,
 } /* initialize() */
 
 dist_status
-dispatcher::distribute_block(crepr::base_block3D* block) {
+dispatcher::distribute_block(crepr::sim_block3D* block) {
   return m_dist->distribute_block(block);
 } /* distribute_block() */
 

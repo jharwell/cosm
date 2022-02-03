@@ -78,7 +78,7 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   size_t size(void) const override RCPPSW_PURE;
 
   cfds::block3D_cluster_vectorno block_clustersno(void) override;
-  dist_status distribute_block(crepr::base_block3D* block) override;
+  dist_status distribute_block(crepr::sim_block3D* block) override;
   /**
    * \brief Computer cluster locations such that no two clusters overlap, and
    * map locations and compositional block distributors into internal data

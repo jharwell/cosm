@@ -45,6 +45,7 @@ void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
   m_env.parse(snode);
   m_config->env = *m_env.config_get<
       chsensors::config::xml::env_sensor_parser::config_type>();
+  ER_DEBUG("Finished");
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {

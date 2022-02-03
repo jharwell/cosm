@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,7 +46,7 @@ struct block_motion_metrics_data_impl  {
   /**
    * \brief  Total # blocks moved.
    */
-  std::atomic_size_t n_moved{0};
+  ral::mt_size_t n_moved{0};
 };
 
 NS_END(detail);

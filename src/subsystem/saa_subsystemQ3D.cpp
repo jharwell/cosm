@@ -32,12 +32,12 @@ NS_START(cosm, subsystem);
  * Constructors/Destructors
  ******************************************************************************/
 saa_subsystemQ3D::saa_subsystemQ3D(
-    const chsubsystem::sensing_subsystemQ3D::sensor_map& sensors,
-    const chsubsystem::actuation_subsystem2D::actuator_map& actuators,
+    sensing_type::sensor_map&& sensors,
+     actuation_type::actuator_map&& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
     : ER_CLIENT_INIT("cosm.subsystem.saa_subsystemQ3D"),
-      m_actuation(std::make_unique<actuation_type>(actuators)),
-      m_sensing(std::make_unique<sensing_type>(sensors)),
+      m_actuation(std::make_unique<actuation_type>(std::move(actuators))),
+      m_sensing(std::make_unique<sensing_type>(std::move(sensors))),
       m_steer2D_calc(*this, steer_config) {}
 
 /*******************************************************************************

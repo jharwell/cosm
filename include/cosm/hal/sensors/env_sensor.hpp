@@ -72,12 +72,17 @@ class env_sensor final : public rer::client<env_sensor>,
        : ER_CLIENT_INIT("cosm.hal.sensors.env"),
          env_sensor_impl(sensor, config) {}
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-  explicit env_sensor(const config::env_sensor_config* const config)
-       : ER_CLIENT_INIT("cosm.hal.sensors.env") {}
+  explicit env_sensor(const cros::topic& robot_ns,
+                      const config::env_sensor_config* const config)
+      : ER_CLIENT_INIT("cosm.hal.sensors.env"),
+        env_sensor_impl(robot_ns) {}
 #endif
 
-  const env_sensor& operator=(const env_sensor&) = delete;
-  env_sensor(const env_sensor&) = default;
+  /* move only constructible/assignable to work with the saa subsystem */
+  env_sensor(env_sensor&&) = default;
+  env_sensor& operator=(env_sensor&&) = default;
+  env_sensor(env_sensor&) = delete;
+  env_sensor& operator=(env_sensor&) = delete;
 };
 
 NS_END(sensors, hal, cosm);

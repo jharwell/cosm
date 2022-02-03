@@ -49,6 +49,9 @@ class base_actuator : public rer::client<base_actuator<TActuator>>,
  public:
   using rpdecorator::decorator<TActuator>::decoratee;
 
+  base_actuator(void) :
+      ER_CLIENT_INIT("cosm.hal.sensors.base_actuator") {}
+
   explicit base_actuator(TActuator actuator)
       : ER_CLIENT_INIT("cosm.hal.actuators.base_actuator"),
         rpdecorator::decorator<TActuator>(actuator) {}

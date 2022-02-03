@@ -73,7 +73,7 @@ RCPPSW_CONST RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, finished) {
 
 RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   if (ekST_EXPLORE != last_state()) {
-    ER_DEBUG("Executing ekST_EXPLORE\n");
+    ER_DEBUG("Executing ekST_EXPLORE");
   }
 
   if (m_explore_time >= kMIN_EXPLORE_TIME && m_goal_detect()) {

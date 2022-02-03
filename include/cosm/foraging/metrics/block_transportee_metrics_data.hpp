@@ -24,10 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
-
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,35 +45,35 @@ struct block_transportee_metrics_data {
   /**
    * \brief  Total # blocks transported.
    */
-  std::atomic_size_t n_transported{0};
+  ral::mt_size_t n_transported{0};
 
   /**
    * \brief  Total # cube blocks transported.
    */
-  std::atomic_size_t n_cube_transported{0};
+  ral::mt_size_t n_cube_transported{0};
 
   /**
    * \brief  Total # ramp blocks transported in interval.
    */
-  std::atomic_size_t n_ramp_transported{0};
+  ral::mt_size_t n_ramp_transported{0};
 
   /**
    * \brief Total # transporters for transported blocks in interval.
    */
-  std::atomic_size_t n_transporters{0};
+  ral::mt_size_t n_transporters{0};
 
   /**
    * \brief Total amount of time taken for all transported blocks to be
    * transported from original distribution locations to the nest within an
    * interval.
    */
-  std::atomic_size_t transport_time{0};
+  ral::mt_size_t transport_time{0};
 
   /**
    * \brief Total amount of time between original arena distribution and first
    * pickup for all transported blocks in interval.
    */
-  std::atomic_size_t initial_wait_time{0};
+  ral::mt_size_t initial_wait_time{0};
 };
 
 NS_END(detail);

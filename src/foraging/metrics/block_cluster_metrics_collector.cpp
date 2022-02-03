@@ -49,26 +49,20 @@ void block_cluster_metrics_collector::collect(
   m_data.interval.block_counts[m.id().v()] += m.n_blocks();
   m_data.cum.block_counts[m.id().v()] += m.n_blocks();
 
-  auto xmin = m_data.extents[m.id().v()].xmin.load();
-  auto xmax = m_data.extents[m.id().v()].xmax.load();
-  auto ymin = m_data.extents[m.id().v()].ymin.load();
-  auto ymax = m_data.extents[m.id().v()].ymax.load();
-  auto area = m_data.extents[m.id().v()].area.load();
+  ral::mt_set(m_data.extents[m.id().v()].xmin, m.ranchor2D().x());
+  ral::mt_set(m_data.extents[m.id().v()].xmax,
+               m.ranchor2D().x() + m.xrspan().span());
+  ral::mt_set(m_data.extents[m.id().v()].ymin, m.ranchor2D().y());
+  ral::mt_set(m_data.extents[m.id().v()].ymax,
+               m.ranchor2D().y() + m.yrspan().span());
 
-  m_data.extents[m.id().v()].xmin.compare_exchange_strong(xmin, m.ranchor2D().x());
-  m_data.extents[m.id().v()].xmax.compare_exchange_strong(
-      xmax, m.ranchor2D().x() + m.xrspan().span());
-
-  m_data.extents[m.id().v()].ymin.compare_exchange_strong(ymin, m.ranchor2D().y());
-  m_data.extents[m.id().v()].ymax.compare_exchange_strong(
-      ymax, m.ranchor2D().y() + m.yrspan().span());
-  m_data.extents[m.id().v()].area.compare_exchange_strong(
-      area, m.xrspan().span() * m.yrspan().span());
+  ral::mt_set(m_data.extents[m.id().v()].area,
+               m.xrspan().span() * m.yrspan().span());
 } /* collect() */
 
 void block_cluster_metrics_collector::reset_after_interval(void) {
   for (size_t i = 0; i < m_data.interval.block_counts.size(); ++i) {
-    std::atomic_init(&m_data.interval.block_counts[i], 0U);
+    ral::mt_init(&m_data.interval.block_counts[i], 0U);
   } /* for(i..) */
 } /* reset_after_interval() */
 

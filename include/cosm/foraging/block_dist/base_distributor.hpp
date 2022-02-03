@@ -56,7 +56,7 @@ NS_START(cosm, foraging, block_dist);
  */
 class base_distributor : public cfbd::metrics::distributor_metrics {
  public:
-  using dist_success_cb_type = std::function<void(const crepr::base_block3D*)>;
+  using dist_success_cb_type = std::function<void(const crepr::sim_block3D*)>;
 
   /**
    * \brief How many times to attempt to distribute all blocks before giving up,
@@ -84,7 +84,7 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    * \return \c TRUE if the block distribution was successful, \c FALSE
    * otherwise.
    */
-  virtual dist_status distribute_block(crepr::base_block3D* block) = 0;
+  virtual dist_status distribute_block(crepr::sim_block3D* block) = 0;
 
   /**
    * \brief Return a read-only list of \ref block_clusters for capacity checking
@@ -121,9 +121,9 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
 
   void clusters_update(void);
 
-  void cluster_update_after_pickup(const crepr::base_block3D* block,
+  void cluster_update_after_pickup(const crepr::sim_block3D* block,
                                    const rmath::vector2z& old_loc);
-  void cluster_update_after_drop(const crepr::base_block3D* block);
+  void cluster_update_after_drop(const crepr::sim_block3D* block);
 
  protected:
   rmath::rng* rng(void) { return m_rng; }

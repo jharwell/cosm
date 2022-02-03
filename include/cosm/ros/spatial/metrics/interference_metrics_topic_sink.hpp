@@ -29,64 +29,7 @@
 #include "cosm/ros/metrics/topic_sink.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/metrics/interference_metrics_data.hpp"
-
-/*******************************************************************************
- * ROS Message Traits
- ******************************************************************************/
-NS_START(ros, message_traits);
-
-template<>
-struct MD5Sum<csmetrics::interference_metrics_data> {
-  static const char* value() {
-    return MD5Sum<csmetrics::interference_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return MD5Sum<csmetrics::interference_metrics_data>::value(m);
-  }
-};
-template <>
-struct DataType<csmetrics::interference_metrics_data> {
-  static const char* value() {
-    return DataType<csmetrics::interference_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return DataType<csmetrics::interference_metrics_data>::value(m);
-  }
-};
-
-template<>
-struct Definition<csmetrics::interference_metrics_data> {
-  static const char* value() {
-    return Definition<csmetrics::interference_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return Definition<csmetrics::interference_metrics_data>::value(m);
-  }
-};
-NS_END(message_traits);
-
-NS_START(serialization);
-
-template<>
-struct Serializer<csmetrics::interference_metrics_data> {
-  template<typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T t) {
-    stream.next(t.interval.n_exp_interference.load());
-    stream.next(t.interval.n_episodes.load());
-    stream.next(t.interval.n_entered_interference.load());
-    stream.next(t.interval.n_exited_interference.load());
-    stream.next(t.interval.interference_duration.load());
-
-    stream.next(t.cum.n_exp_interference.load());
-    stream.next(t.cum.n_episodes.load());
-    stream.next(t.cum.n_entered_interference.load());
-    stream.next(t.cum.n_exited_interference.load());
-    stream.next(t.cum.interference_duration.load());
-  }
-  ROS_DECLARE_ALLINONE_SERIALIZER;
-};
-
-NS_END(serialization, ros);
+#include "cosm/ros/spatial/metrics/interference_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

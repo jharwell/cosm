@@ -77,36 +77,36 @@ boost::optional<std::string> movement_metrics_csv_sink::csv_line_build(
 
   std::string line;
   /* homing motion */
-  line += csv_entry_domavg(d->interval[movement_category::ekHOMING].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekHOMING].distance),
                            d->interval[movement_category::ekHOMING].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekHOMING].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekHOMING].distance),
                            d->cum[movement_category::ekHOMING].n_robots);
 
-  line += csv_entry_domavg(d->interval[movement_category::ekHOMING].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekHOMING].velocity),
                            d->interval[movement_category::ekHOMING].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekHOMING].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekHOMING].velocity),
                            d->cum[movement_category::ekHOMING].n_robots);
 
   /* exploring motion */
-  line += csv_entry_domavg(d->interval[movement_category::ekEXPLORING].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekEXPLORING].distance),
                            d->interval[movement_category::ekEXPLORING].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekEXPLORING].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekEXPLORING].distance),
                            d->cum[movement_category::ekEXPLORING].n_robots);
 
-  line += csv_entry_domavg(d->interval[movement_category::ekEXPLORING].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekEXPLORING].velocity),
                            d->interval[movement_category::ekEXPLORING].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekEXPLORING].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekEXPLORING].velocity),
                            d->cum[movement_category::ekEXPLORING].n_robots);
 
   /* all motion */
-  line += csv_entry_domavg(d->interval[movement_category::ekALL].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekALL].distance),
                            d->interval[movement_category::ekALL].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekALL].distance.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekALL].distance),
                            d->cum[movement_category::ekALL].n_robots);
 
-  line += csv_entry_domavg(d->interval[movement_category::ekALL].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval[movement_category::ekALL].velocity),
                            d->interval[movement_category::ekALL].n_robots);
-  line += csv_entry_domavg(d->cum[movement_category::ekALL].velocity.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum[movement_category::ekALL].velocity),
                            d->cum[movement_category::ekALL].n_robots,
                            true);
 

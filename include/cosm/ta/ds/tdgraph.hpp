@@ -86,7 +86,7 @@ class tdgraph : public rer::client<tdgraph> {
   tdgraph(void);
   ~tdgraph(void) override = default;
 
-  /* Necessary for use in boost::variant */
+  /* Necessary for use in std::variant */
   tdgraph(const tdgraph&) = default;
   tdgraph& operator=(const tdgraph&) = delete;
 

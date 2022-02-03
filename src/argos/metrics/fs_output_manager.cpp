@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/pal/argos/metrics/fs_output_manager.hpp"
+#include "cosm/argos/metrics/fs_output_manager.hpp"
 
 #include <boost/mpl/for_each.hpp>
 
@@ -36,7 +36,7 @@
 #include "cosm/convergence/convergence_calculator.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/metrics/specs.hpp"
 
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
@@ -90,7 +90,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, argos, metrics);
+NS_START(cosm, argos, metrics);
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -99,7 +99,7 @@ fs_output_manager::fs_output_manager(
     const rmconfig::metrics_config* const mconfig,
     const fs::path& output_root)
     : rmetrics::fs_output_manager(mconfig, output_root),
-      ER_CLIENT_INIT("cosm.pal.argos.metrics.fs_output_manager") {
+      ER_CLIENT_INIT("cosm.argos.metrics.fs_output_manager") {
   /*
    * Register all standard metrics which don't require additional parameters,
    * and can by done by default.
@@ -114,7 +114,7 @@ fs_output_manager::fs_output_manager(
  * Member Functions
  ******************************************************************************/
 void fs_output_manager::collect_from_block(
-    const crepr::base_block3D* const block) {
+    const crepr::sim_block3D* const block) {
   collect(cmspecs::blocks::kTransportee.scoped, *block->md());
 } /* collect_from_block() */
 
@@ -216,7 +216,7 @@ void fs_output_manager::register_standard(
       rmetrics::output_mode::ekAPPEND },
   };
 
-  rmetrics::register_with_sink<cpargos::metrics::fs_output_manager,
+  rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                               rmetrics::file_sink_registerer> csv(this,
                                                                   creatable_set);
   rmetrics::register_using_config<decltype(csv),
@@ -261,7 +261,7 @@ void fs_output_manager::register_with_arena_dims2D(
   };
 
   auto extra_args = std::make_tuple(dims);
-  rmetrics::register_with_sink<cpargos::metrics::fs_output_manager,
+  rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
                                                          creatable_set);
@@ -303,7 +303,7 @@ void fs_output_manager::register_with_arena_dims3D(
   };
 
   auto extra_args = std::make_tuple(dims);
-  rmetrics::register_with_sink<cpargos::metrics::fs_output_manager,
+  rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
                                                          creatable_set);
@@ -329,7 +329,7 @@ void fs_output_manager::register_with_n_block_clusters(
       rmetrics::output_mode::ekAPPEND }
   };
   auto extra_args = std::make_tuple(n_clusters);
-  rmetrics::register_with_sink<cpargos::metrics::fs_output_manager,
+  rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
                                                          creatable_set);
@@ -341,4 +341,4 @@ void fs_output_manager::register_with_n_block_clusters(
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_n_block_clusters() */
 
-NS_END(metrics, argos, metrics, cosm);
+NS_END(metrics, argos, cosm);

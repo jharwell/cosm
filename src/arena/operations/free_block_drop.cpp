@@ -31,7 +31,7 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 
@@ -56,7 +56,7 @@ free_block_drop::for_block(const rmath::vector2z& coord,
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-free_block_drop::free_block_drop(crepr::base_block3D* block,
+free_block_drop::free_block_drop(crepr::sim_block3D* block,
                                  const rmath::vector2z& coord,
                                  const rtypes::discretize_ratio& resolution,
                                  const locking& locking)
@@ -86,7 +86,7 @@ void free_block_drop::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_block_drop();
 } /* visit() */
 
-void free_block_drop::visit(crepr::base_block3D& block) {
+void free_block_drop::visit(crepr::sim_block3D& block) {
   /* block is no longer carried by a robot */
   block.md()->robot_id_reset();
 

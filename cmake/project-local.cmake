@@ -45,7 +45,7 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
 elseif("${COSM_BUILD_FOR}" MATCHES "ROS_TURTLEBOT3")
   set(COSM_HAL_TARGET "ros-turtlebot3")
   set(COSM_ROS_ROBOT_TYPE "turtlebot3")
-  set(COSM_ROS_ROBOT_NAME_PREFIX "tb")
+  set(COSM_ROS_ROBOT_NAME_PREFIX "tb3_")
 else()
   set(COSM_BUILD_TARGETS
     ARGOS_FOOTBOT
@@ -180,6 +180,7 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
     "src/fsm|"
     "src/foraging/fsm|"
     "src/kin2D|"
+    "src/foraging/metrics|"
     "src/spatial/fsm|"
     "src/spatial/metrics|"
     "src/spatial/strategy|"
@@ -315,9 +316,9 @@ if ("${COSM_BUILD_FOR}" MATCHES "ROS")
 endif()
 
 # This is needed for HAL SAA sensing/actuator access with boost::variant
-target_compile_definitions(${cosm_LIBRARY_NAME}
-  PUBLIC
-  BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
+# target_compile_definitions(${cosm_LIBRARY_NAME}
+#   PUBLIC
+#   BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
 
 if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
   target_compile_definitions(${cosm_LIBRARY_NAME}

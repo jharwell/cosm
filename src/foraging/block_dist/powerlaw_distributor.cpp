@@ -28,7 +28,7 @@
 #include "cosm/foraging/block_dist/multi_cluster_distributor.hpp"
 #include "cosm/foraging/block_dist/powerlaw_cluster_placer.hpp"
 #include "cosm/foraging/config/block_dist_config.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -51,7 +51,7 @@ powerlaw_distributor::powerlaw_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status powerlaw_distributor::distribute_block(crepr::base_block3D* block) {
+dist_status powerlaw_distributor::distribute_block(crepr::sim_block3D* block) {
   /*
    * Try to find a block cluster to distribute to, starting from a random
    * cluster size.

@@ -24,6 +24,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <vector>
+#include <ros/ros.h>
+
 #include "rcppsw/er/client.hpp"
 
 #include "rcppsw/metrics/config/metrics_config.hpp"
@@ -31,6 +34,12 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/ros/topic.hpp"
+
+#include "cosm/spatial/metrics/movement_metrics_data.hpp"
+#include "cosm/spatial/metrics/interference_metrics_data.hpp"
+#include "cosm/fsm/metrics/block_transporter_metrics_data.hpp"
+#include "cosm/foraging/metrics/block_transportee_metrics_data.hpp"
+#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -48,39 +57,24 @@ namespace fs = std::filesystem;
  * \brief Manager class for handling all of the metrics which can be generated
  * by COSM on robots running ROS. Runs on the ROS master to gather metrics from
  * all robots and write them out to the file system.
+ *
+ * To transfer custom classes via ROS messages, you can't have any std::atomic
+ * bits in the classes, because they aren't copyable or movable, which is
+ * needed. But that's OK because ROS (apparently) calls all subscribed callbacks
+ * serially rather than in threads, so there is no possibility of race
+ * conditions.
  */
 class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
-                          public rmetrics::fs_output_manager {
+                              public rmetrics::fs_output_manager {
  public:
+  static constexpr const size_t kQueueBufferSize = 1000;
+
   swarm_metrics_manager(const rmconfig::metrics_config* mconfig,
-                    const fs::path& root);
+                        const fs::path& root,
+                        size_t n_robots);
   ~swarm_metrics_manager(void) override = default;
 
-  /**
-   * \brief Collect metrics from a 3D block right before it is dropped in the
-   * nest. Currently this includes:
-   *
-   * - \ref cmspecs::blocks::kTransportee
-   */
-  void collect_from_block(cros::topic robot_ns);
-
-  /**
-   * \brief Collect metrics from 2D controllers. Currently this includes:
-   *
-   * - \ref cmspecs::spatial::kMovement
-   * - \ref cmspecs::spatial::kInterferenceCounts
-   */
-  void collect_from_controller(cros::topic robot_ns);
-
  protected:
-  /**
-   * \brief Register metrics collectors that require the # of block clusters in
-   * the arena.
-   *
-   * - \ref cmspecs::blocks::kClusters -> \ref cfmetrics::block_cluster_metrics
-   */
-  void register_with_n_block_clusters(const rmconfig::metrics_config* mconfig,
-                                      size_t n_block_clusters);
   /**
    * \brief Register metrics collectors that do not require extra arguments.
    *
@@ -93,7 +87,29 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
    *  cfmetrics::block_transportee_metrics
    * - \ref cmspecs::blocks::kAcqCounts -> \ref csmetrics::goal_acq_metrics
    */
-  void register_standard(const rmconfig::metrics_config* mconfig);
+  void register_standard(const rmconfig::metrics_config* mconfig,
+                         size_t n_robots);
+
+  /**
+   * \brief Register metrics collectors that require the # of block clusters in
+   * the arena.
+   *
+   * - \ref cmspecs::blocks::kClusters -> \ref cfmetrics::block_cluster_metrics
+   */
+  void register_with_n_block_clusters(const rmconfig::metrics_config* mconfig,
+                                      size_t n_robots,
+                                      size_t n_block_clusters);
+
+ private:
+  void collect(const boost::shared_ptr<const csmetrics::movement_metrics_data>& data);
+  void collect(const boost::shared_ptr<const csmetrics::interference_metrics_data>& data);
+  void collect(const boost::shared_ptr<const cfsm::metrics::block_transporter_metrics_data>& data);
+  void collect(const boost::shared_ptr<const cforaging::metrics::block_transportee_metrics_data>& data);
+  void collect(const boost::shared_ptr<const cforaging::metrics::block_cluster_metrics_data>& data);
+
+  /* clang-format off */
+  std::vector<::ros::Subscriber> m_subs{};
+  /* clang-format on */
 };
 
 NS_END(metrics, ros, cosm);

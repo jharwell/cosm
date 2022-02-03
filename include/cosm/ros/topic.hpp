@@ -26,7 +26,10 @@
  ******************************************************************************/
 #include <filesystem>
 
+#include "rcppsw/types/type_uuid.hpp"
+
 #include "cosm/cosm.hpp"
+#include "cosm/pal/pal.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -37,6 +40,15 @@ NS_START(cosm, ros);
  * Class Definitions
  ******************************************************************************/
 using topic = std::filesystem::path;
+
+/*******************************************************************************
+ * Free Functions
+ ******************************************************************************/
+static inline topic to_ns(const rtypes::type_uuid& robot_id) {
+  return cros::topic("/" +
+                     cpal::kRobotNamePrefix +
+                     rcppsw::to_string(robot_id));
+} /* to_ns() */
 
 NS_END(ros, cosm);
 

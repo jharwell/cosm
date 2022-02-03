@@ -47,7 +47,7 @@ class caching_arena_map;
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
@@ -69,7 +69,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<caching_arena_map, crepr::base_block3D>;
+    using others = rmpl::typelist<caching_arena_map, crepr::sim_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -97,7 +97,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
    * \param resolution Arena resolution.
    * \param locking Is locking needed around block accesses?
    */
-  cache_block_drop(crepr::base_block3D* arena_block,
+  cache_block_drop(crepr::sim_block3D* arena_block,
                    carepr::arena_cache* cache,
                    const rtypes::discretize_ratio& resolution,
                    const locking& locking);
@@ -105,14 +105,14 @@ class cache_block_drop : public rer::client<cache_block_drop>,
  private:
   void visit(cds::cell2D& cell);
   void visit(fsm::cell2D_fsm& fsm);
-  void visit(crepr::base_block3D& block);
+  void visit(crepr::sim_block3D& block);
   void visit(carepr::arena_cache& cache);
 
   /* clang-format off */
   const locking                  mc_locking;
   const rtypes::discretize_ratio mc_resolution;
 
-  crepr::base_block3D*           m_arena_block;
+  crepr::sim_block3D*           m_arena_block;
   carepr::arena_cache*           m_cache;
   /* clang-format on */
 };

@@ -24,7 +24,7 @@
 #include "cosm/foraging/block_dist/multi_cluster_distributor.hpp"
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -56,7 +56,7 @@ multi_cluster_distributor::multi_cluster_distributor(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status multi_cluster_distributor::distribute_block(crepr::base_block3D* block) {
+dist_status multi_cluster_distributor::distribute_block(crepr::sim_block3D* block) {
   ER_INFO("Distribute block%d: n_clusts=%zu,total_capacity=%zu,total_size=%zu",
           block->id().v(),
           m_dists.size(),

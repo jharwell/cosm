@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <variant>
 
 #include "cosm/cosm.hpp"
 
@@ -38,7 +38,7 @@ NS_START(cosm, hal, subsystem);
  ******************************************************************************/
 struct reset_visitor {
   template <typename TSAA>
-  void operator()(TSAA& saa) const { saa.reset(); }
+  void operator()(TSAA& saa) const noexcept { saa.reset(); }
 };
 
 struct disable_visitor {
@@ -64,15 +64,15 @@ class base_subsystem {
   template<typename TCollection>
   void reset(TCollection& collection) {
     for (auto& a : collection) {
-      boost::apply_visitor(reset_visitor(), a.second);
+      std::visit(reset_visitor(), a.second);
     } /* for(&a..) */
   }
 
   template<typename TCollection>
   void disable(TCollection& collection) {
     for (auto& a : collection) {
-      boost::apply_visitor(reset_visitor(), a.second);
-      boost::apply_visitor(disable_visitor(), a.second);
+      std::visit(reset_visitor(), a.second);
+      std::visit(disable_visitor(), a.second);
     } /* for(&a..) */
   }
 };

@@ -57,22 +57,23 @@ class diff_drive : public rer::client<diff_drive> {
    * \param config Configuration.
    */
   diff_drive(const config::diff_drive_config* config,
-             const chactuators::diff_drive_actuator& actuator);
+             chactuators::diff_drive_actuator&& actuator);
 
-  const diff_drive& operator=(const diff_drive&) = delete;
-  diff_drive(const diff_drive&) = default;
+  /* move only constructible/assignable to work with the saa subsystem */
+  diff_drive(diff_drive&&) = default;
+  diff_drive& operator=(diff_drive&&) = default;
 
-   /*
+  /*
    * \brief Updates the configured twist via an FSM and sends twist to the
    * actual diff drive actuator for translation into wheel speeds.
    */
   void fsm_drive(const ckin::twist& delta);
 
-  double max_speed(void) const { return mc_config.max_speed; }
+  double max_speed(void) const { return m_config.max_speed; }
 
  private:
   /* clang-format off */
-  const config::diff_drive_config     mc_config;
+  config::diff_drive_config           m_config;
 
   diff_drive_fsm                      m_fsm;
   hal::actuators::diff_drive_actuator m_actuator;

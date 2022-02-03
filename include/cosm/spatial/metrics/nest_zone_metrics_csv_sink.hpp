@@ -25,7 +25,6 @@
  * Includes
  ******************************************************************************/
 #include <string>
-#include <atomic>
 #include <list>
 
 #include "rcppsw/metrics/csv_sink.hpp"

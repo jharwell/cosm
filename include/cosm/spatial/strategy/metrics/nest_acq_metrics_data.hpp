@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,8 +40,8 @@ NS_START(cosm, spatial, strategy, metrics, detail);
  * are valid in parallel metric collection contexts.
  */
 struct nest_acq_metrics_data {
-  std::atomic<double> random_thresh{0.0};
-  std::atomic_size_t  n_random_thresh{0};
+  ral::mt_double_t random_thresh{0.0};
+  ral::mt_size_t  n_random_thresh{0};
 };
 
 NS_END(detail);

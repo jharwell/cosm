@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -40,30 +39,30 @@ struct execution_metrics_data {
   /**
    * \brief # Times the task has been completed.
    */
-  std::atomic_size_t complete_count{0};
+  ral::mt_size_t complete_count{0};
 
   /**
    * \brief # Times the task has been aborted.
    */
-  std::atomic_size_t abort_count{0};
+  ral::mt_size_t abort_count{0};
 
   /**
    * \brief # Times at their interface.
    */
-  std::atomic_size_t interface_count{0};
+  ral::mt_size_t interface_count{0};
 
   /**
    * \brief Execution times of the task.
    */
-  std::atomic_size_t exec_time{};
+  ral::mt_size_t exec_time{};
 
   /**
    * \brief Interface time of the task.
    */
-  std::atomic_size_t interface_time{0};
+  ral::mt_size_t interface_time{0};
 
-  std::atomic_size_t exec_estimate{0};
-  std::atomic_size_t interface_estimate{0};
+  ral::mt_size_t exec_estimate{0};
+  ral::mt_size_t interface_estimate{0};
 };
 
 NS_END(detail);

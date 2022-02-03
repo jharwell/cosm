@@ -35,7 +35,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+NS_START(cosm, ros, metrics, registrable);
 
 /*******************************************************************************
  * Global Variables
@@ -44,26 +44,26 @@ rmetrics::creatable_collector_set kStandard = {
   { typeid(csmetrics::movement_metrics_collector),
     cmspecs::spatial::kMovement.xml,
     cmspecs::spatial::kMovement.scoped,
-    rmetrics::output_mode::ekAPPEND },
+    rmetrics::output_mode::ekSTREAM },
   { typeid(csmetrics::interference_metrics_collector),
     cmspecs::spatial::kInterferenceCounts.xml,
     cmspecs::spatial::kInterferenceCounts.scoped,
-    rmetrics::output_mode::ekAPPEND },
+    rmetrics::output_mode::ekSTREAM },
   { typeid(cfsm::metrics::block_transporter_metrics_collector),
     cmspecs::blocks::kTransporter.xml,
     cmspecs::blocks::kTransporter.scoped,
-    rmetrics::output_mode::ekAPPEND },
+    rmetrics::output_mode::ekSTREAM },
   { typeid(cfmetrics::block_transportee_metrics_collector),
     cmspecs::blocks::kTransportee.xml,
     cmspecs::blocks::kTransportee.scoped,
-    rmetrics::output_mode::ekAPPEND },
+    rmetrics::output_mode::ekSTREAM },
 };
 
 rmetrics::creatable_collector_set kWithNBlockClusters = {
   { typeid(cfmetrics::block_cluster_metrics_collector),
     cmspecs::blocks::kClusters.xml,
     cmspecs::blocks::kClusters.scoped,
-    rmetrics::output_mode::ekAPPEND }
+    rmetrics::output_mode::ekSTREAM }
 };
 
-NS_END(metrics, ros, cosm);
+NS_END(registrable, metrics, ros, cosm);

@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/ds/block3D_vector.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/ds/utils.hpp"
 
 /*******************************************************************************

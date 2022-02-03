@@ -26,7 +26,7 @@
 #include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -36,7 +36,7 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-block_extent_set::block_extent_set(crepr::base_block3D* block)
+block_extent_set::block_extent_set(crepr::sim_block3D* block)
     : ER_CLIENT_INIT("cosm.arena.operations.block_extent_set"), m_block(block) {}
 
 /*******************************************************************************

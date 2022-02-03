@@ -73,7 +73,7 @@ RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
 }
 
 RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
-  boost::apply_visitor(normal_op_visitor(), m_supervisee);
+  std::visit(normal_op_visitor(), m_supervisee);
   m_saa->steer_force2D_apply();
   return rpfsm::event_signal::ekHANDLED;
 }

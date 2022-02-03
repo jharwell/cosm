@@ -35,8 +35,8 @@
 NS_START(cosm, hal, ros, subsystem);
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3
-#define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
-  kin2D::governed_diff_drive,                   \
+#define COSM_HAL_ROBOT_ACTUATOR_TYPES            \
+  ckin2D::governed_diff_drive,                   \
     chactuators::diagnostic_actuator
 #endif
 
@@ -53,14 +53,14 @@ NS_START(cosm, hal, ros, subsystem);
 class actuation_subsystem2D :
     public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_ACTUATOR_TYPES> {
  public:
-  explicit actuation_subsystem2D(const actuator_map& actuators)
-      : base_actuation_subsystem2D(actuators) {}
+  explicit actuation_subsystem2D(actuator_map&& actuators)
+      : base_actuation_subsystem2D(std::move(actuators)) {}
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             kin2D::governed_diff_drive,
+                             ckin2D::governed_diff_drive,
                              governed_diff_drive);
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             kin2D::governed_diff_drive,
+                             ckin2D::governed_diff_drive,
                              governed_diff_drive,
                              const);
 

@@ -29,66 +29,7 @@
 #include "cosm/ros/metrics/topic_sink.hpp"
 #include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 #include "cosm/cosm.hpp"
-
-/*******************************************************************************
- * ROS Message Traits
- ******************************************************************************/
-NS_START(ros, message_traits);
-
-template<>
-struct MD5Sum<cforaging::metrics::block_cluster_metrics_data> {
-  static const char* value() {
-    return MD5Sum<cforaging::metrics::block_cluster_metrics_data>::value();
-  }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return MD5Sum<cforaging::metrics::block_cluster_metrics_data>::value(m);
-  }
-};
-template <>
-struct DataType<cforaging::metrics::block_cluster_metrics_data> {
-  static const char* value() {
-    return DataType<cforaging::metrics::block_cluster_metrics_data>::value();
-  }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return DataType<cforaging::metrics::block_cluster_metrics_data>::value(m);
-  }
-};
-
-template<>
-struct Definition<cforaging::metrics::block_cluster_metrics_data> {
-  static const char* value() {
-    return Definition<cforaging::metrics::block_cluster_metrics_data>::value();
-  }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return Definition<cforaging::metrics::block_cluster_metrics_data>::value(m);
-  }
-};
-NS_END(message_traits);
-
-NS_START(serialization);
-
-template<>
-struct Serializer<cforaging::metrics::block_cluster_metrics_data> {
-  template<typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T t) {
-    for (auto &count : t.interval.block_counts) {
-      stream.next(count.load());
-    } /* for(&c..) */
-    for (auto &count : t.cum.block_counts) {
-      stream.next(count.load());
-    } /* for(&c..) */
-    for (auto &ext : t.extents) {
-      stream.next(ext.area.load());
-      stream.next(ext.xmin.load());
-      stream.next(ext.xmax.load());
-      stream.next(ext.ymin.load());
-      stream.next(ext.ymax.load());
-    } /* for(&c..) */
-  }
-  ROS_DECLARE_ALLINONE_SERIALIZER;
-};
-
-NS_END(serialization, ros);
+#include "cosm/ros/foraging/metrics/block_cluster_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

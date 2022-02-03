@@ -43,7 +43,7 @@ diff_drive_fsm::diff_drive_fsm(double max_speed,
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
-diff_drive_fsm::diff_drive_fsm(const diff_drive_fsm& other)
+diff_drive_fsm::diff_drive_fsm(diff_drive_fsm&& other)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
       mc_max_speed(other.mc_max_speed),
       mc_soft_turn_max(other.mc_soft_turn_max),

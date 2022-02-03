@@ -33,6 +33,7 @@
 
 #include "cosm/hal/ros/actuators/ros_actuator.hpp"
 #include "cosm/kin/twist.hpp"
+#include "cosm/hal/hal.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,40 +58,25 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
  public:
   /**
    * \brief Construct the wrapper actuator.
-   *
-   * \param handle Handle to the ROS node.
    */
-  diff_drive_actuator(void)
-      : ER_CLIENT_INIT("cosm.hal.ros.actuators.diff_drive"),
-        chros::actuators::ros_actuator(
-            ::ros::NodeHandle().advertise<geometry_msgs::Twist>(kCmdVelTopic,
-                                                                kQueueBufferSize)) {}
+  diff_drive_actuator(const cros::topic& robot_ns);
 
-  const diff_drive_actuator& operator=(const diff_drive_actuator&) = delete;
-  diff_drive_actuator(const diff_drive_actuator&) = default;
+  /* move constructible/assignable to work with the saa subsystem */
+  diff_drive_actuator(diff_drive_actuator&&) = default;
+  diff_drive_actuator& operator=(diff_drive_actuator&&) = default;
+  diff_drive_actuator(const diff_drive_actuator&) = delete;
+  diff_drive_actuator& operator=(const diff_drive_actuator&) = delete;
 
   /**
    * \brief Stop the wheels of a robot. As far as I know, this is an immediate
    * stop (i.e. no rampdown).
    */
-  void reset(void) override { set_from_twist({}, {}); }
+  void reset(void) override;
 
-  void enable(void) override {
-    advertise<geometry_msgs::Twist>(kCmdVelTopic);
-  }
+  void enable(void) override;
 
   void set_from_twist(const ckin::twist& desired,
-                      const rmath::range<rmath::radians>&) {
-    ER_ASSERT(is_enabled(),
-              "%s called when disabled",
-              __FUNCTION__);
-
-    geometry_msgs::Twist t;
-    t.linear.x = desired.linear.x();
-    t.angular.z = desired.angular.z();
-
-    decoratee().publish(t);
-  }
+                      const rmath::range<rmath::radians>&);
 
  private:
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)

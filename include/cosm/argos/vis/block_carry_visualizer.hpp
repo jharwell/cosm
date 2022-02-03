@@ -36,7 +36,7 @@ namespace argos {
 class CQTOpenGLUserFunctions;
 }
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, argos, vis);
@@ -74,7 +74,7 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
    * \param id_len Length of the robot ID string (to ensure the block ID does
    *               not overlap with it, if it is visualized).
    */
-  void draw(const crepr::base_block3D* block, uint id_len);
+  void draw(const crepr::sim_block3D* block, uint id_len);
 
  private:
   /* clang-format off */

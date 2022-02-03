@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <variant>
 #include <memory>
 
 #include "cosm/cosm.hpp"
@@ -33,7 +33,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, argos);
@@ -44,10 +44,10 @@ class embodied_cube_block;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using embodied_block_varianto = boost::variant<std::unique_ptr<embodied_ramp_block>,
+using embodied_block_varianto = std::variant<std::unique_ptr<embodied_ramp_block>,
                                               std::unique_ptr<embodied_cube_block>>;
 
-using embodied_block_variantno = boost::variant<embodied_ramp_block*,
+using embodied_block_variantno = std::variant<embodied_ramp_block*,
                                                 embodied_cube_block*>;
 
 NS_END(argos, cosm);

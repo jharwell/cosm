@@ -58,15 +58,15 @@ void bi_tdgraph_metrics_collector::collect(const rmetrics::base_metrics& metrics
 
 void bi_tdgraph_metrics_collector::reset_after_interval(void) {
   for (size_t i = 0; i < m_data.interval.depth_counts.size(); ++i) {
-    std::atomic_init(&m_data.interval.depth_counts[i], 0U);
+    ral::mt_init(&m_data.interval.depth_counts[i], 0U);
   } /* for(i..) */
 
   for (size_t i = 0; i < m_data.interval.task_counts.size(); ++i) {
-    std::atomic_init(&m_data.interval.task_counts[i], 0U);
+    ral::mt_init(&m_data.interval.task_counts[i], 0U);
   } /* for(i..) */
 
   for (size_t i = 0; i < m_data.interval.tab_counts.size(); ++i) {
-    std::atomic_init(&m_data.interval.tab_counts[i], 0U);
+    ral::mt_init(&m_data.interval.tab_counts[i], 0U);
   } /* for(i..) */
 } /* reset_after_interval() */
 

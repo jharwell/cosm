@@ -40,7 +40,7 @@ NS_START(cosm, foraging, metrics);
  * \class block_transportee_metrics
  * \ingroup cosm foraging metrics
  *
- * \brief Defines the metrics to be collected from \ref base_block3D objects and
+ * \brief Defines the metrics to be collected from \ref sim_block3D objects and
  * their derived classes about the process of transportation from their original
  * location in the arena after distribution to their final destination (nest,
  * structure, etc).

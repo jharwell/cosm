@@ -25,10 +25,9 @@
  * Includes
  ******************************************************************************/
 #include <vector>
-#include <limits>
-#include <boost/optional.hpp>
 
-#include "rcppsw/math/range.hpp"
+#include <sensor_msgs/LaserScan.h>
+
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/er/client.hpp"
@@ -58,16 +57,16 @@ NS_START(cosm, hal, ros, sensors);
 class lidar_sensor : public rer::client<lidar_sensor>,
                      public chros::sensors::ros_sensor {
  public:
-lidar_sensor(void)
-    : ER_CLIENT_INIT("cosm.hal.ros.sensors.lidar"),
-      chros::sensors::ros_sensor({}) {}
+  lidar_sensor(const cros::topic& robot_ns);
 
-  const lidar_sensor& operator=(const lidar_sensor&) = delete;
-  lidar_sensor(const lidar_sensor&) = default;
+  /* move constructible/assignable to work with the saa subsystem */
+  lidar_sensor(lidar_sensor&& other);
+  lidar_sensor& operator=(lidar_sensor&& rhs);
+  lidar_sensor(const lidar_sensor&) = delete;
+  lidar_sensor& operator=(const lidar_sensor&) = delete;
 
-  void reset(void) override { }
-
-  void enable(void) override { }
+  void reset(void) override;
+  void enable(void) override;
 
   /**
    * \brief Get the current lidar sensor readings for the robot.
@@ -75,15 +74,20 @@ lidar_sensor(void)
    * \return A vector of (X,Y) pairs of sensor readings corresponding to
    * object distances.
    */
-  std::vector<rmath::vector2d> readings(void) const {
-    ER_ASSERT(is_enabled(),
-              "%s called when disabled",
-              __FUNCTION__);
+  std::vector<rmath::vector2d> readings(void) const;
 
-    std::vector<rmath::vector2d> ret;
+ private:
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+  static inline const cros::topic kScanTopic = "scan";
+#endif /* COSM_HAL_TARGET */
 
-    return ret;
+  void callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
+    m_scan = *msg;
   }
+
+  /* clang-format off */
+  sensor_msgs::LaserScan m_scan{};
+  /* clang-format off */
 };
 
 NS_END(sensors, ros, hal, cosm);

@@ -43,7 +43,7 @@ class caching_arena_map;
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
@@ -66,7 +66,7 @@ class nest_block_process : public rer::client<nest_block_process> {
   struct visit_typelist_impl {
     using value = rmpl::typelist<base_arena_map,
                                  caching_arena_map,
-                                 crepr::base_block3D>;
+                                 crepr::sim_block3D>;
   };
 
  public:
@@ -79,7 +79,7 @@ class nest_block_process : public rer::client<nest_block_process> {
    *                    the robot released for this processing event.
    * \param t Current timestep.
    */
-  nest_block_process(crepr::base_block3D* arena_block,
+  nest_block_process(crepr::sim_block3D* arena_block,
                      const rtypes::timestep& t);
 
   ~nest_block_process(void) override = default;
@@ -98,14 +98,14 @@ class nest_block_process : public rer::client<nest_block_process> {
   void visit(base_arena_map& map);
 
  private:
-  void visit(crepr::base_block3D& block);
+  void visit(crepr::sim_block3D& block);
 
   template <typename TArenaMap>
   void do_visit(TArenaMap& map);
 
   /* clang-format off */
   const rtypes::timestep               mc_timestep;
-  crepr::base_block3D*                 m_arena_block;
+  crepr::sim_block3D*                 m_arena_block;
   /* clang-format on */
 };
 

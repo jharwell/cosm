@@ -41,7 +41,7 @@ class base_cache;
 } /* namespace cosm::arena::repr */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 class spatial_entity;
 } /* namespace cosm::repr */
 
@@ -112,8 +112,8 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
    * Will be NULL unless it contains a block, so check the cell's state before
    * calling this function.
    */
-  crepr::base_block3D* block3D(void) const RCPPSW_PURE;
-  crepr::base_block3D* block3D(void) RCPPSW_PURE;
+  crepr::sim_block3D* block3D(void) const RCPPSW_PURE;
+  crepr::sim_block3D* block3D(void) RCPPSW_PURE;
 
   /**
    * \brief Get the cache entity associated with this cell.

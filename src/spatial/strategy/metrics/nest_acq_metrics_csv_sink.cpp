@@ -67,9 +67,9 @@ const rmetrics::base_data* data,
 
   std::string line;
 
-  line += csv_entry_domavg(d->interval.random_thresh.load(),
+  line += csv_entry_domavg(ral::mt_load(d->interval.random_thresh),
                            d->interval.n_random_thresh);
-  line += csv_entry_domavg(d->cum.random_thresh.load(),
+  line += csv_entry_domavg(ral::mt_load(d->cum.random_thresh),
                            d->cum.n_random_thresh,
                            true);
 

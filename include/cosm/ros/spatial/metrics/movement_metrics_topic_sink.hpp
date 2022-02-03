@@ -28,64 +28,7 @@
 
 #include "cosm/ros/metrics/topic_sink.hpp"
 #include "cosm/spatial/metrics/movement_metrics_data.hpp"
-#include "cosm/cosm.hpp"
-
-/*******************************************************************************
- * ROS Message Traits
- ******************************************************************************/
-NS_START(ros, message_traits);
-
-template<>
-struct MD5Sum<csmetrics::movement_metrics_data> {
-  static const char* value() {
-    return MD5Sum<csmetrics::movement_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return MD5Sum<csmetrics::movement_metrics_data>::value(m);
-  }
-};
-template <>
-struct DataType<csmetrics::movement_metrics_data> {
-  static const char* value() {
-    return DataType<csmetrics::movement_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return DataType<csmetrics::movement_metrics_data>::value(m);
-  }
-};
-
-template<>
-struct Definition<csmetrics::movement_metrics_data> {
-  static const char* value() {
-    return Definition<csmetrics::movement_metrics_data>::value();
-  }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return Definition<csmetrics::movement_metrics_data>::value(m);
-  }
-};
-NS_END(message_traits);
-
-NS_START(serialization);
-
-template<>
-struct Serializer<csmetrics::movement_metrics_data> {
-  template<typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T t) {
-    for (auto &m : t.interval) {
-      stream.next(m.distance.load());
-      stream.next(m.n_robots.load());
-      stream.next(m.velocity.load());
-    } /* for(&m..) */
-    for (auto &m : t.cum) {
-      stream.next(m.distance.load());
-      stream.next(m.n_robots.load());
-      stream.next(m.velocity.load());
-    } /* for(&m..) */
-  }
-  ROS_DECLARE_ALLINONE_SERIALIZER;
-};
-
-NS_END(serialization, ros);
+#include "cosm/ros/spatial/metrics/movement_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

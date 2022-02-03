@@ -40,7 +40,7 @@ namespace cosm::arena::repr {
 class arena_cache;
 }
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::arena {
@@ -70,7 +70,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;
-    using others = rmpl::typelist<caching_arena_map, crepr::base_block3D>;
+    using others = rmpl::typelist<caching_arena_map, crepr::sim_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -85,7 +85,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
    * \param t The current timestep.
    */
   cached_block_pickup(carepr::arena_cache* cache,
-                      crepr::base_block3D* pickup_block,
+                      crepr::sim_block3D* pickup_block,
                       cpargos::swarm_manager_adaptor* sm,
                       const rtypes::type_uuid& robot_id,
                       const rtypes::timestep& t,
@@ -105,7 +105,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   void visit(cds::cell2D& cell);
   void visit(cfsm::cell2D_fsm& fsm);
   void visit(carepr::arena_cache& cache);
-  void visit(crepr::base_block3D& block);
+  void visit(crepr::sim_block3D& block);
 
 
   /* clang-format off */
@@ -116,7 +116,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   carepr::arena_cache*       m_real_cache;
   cpargos::swarm_manager_adaptor*    m_sm;
 
-  crepr::base_block3D*       m_pickup_block;
+  crepr::sim_block3D*       m_pickup_block;
   /* clang-format on */
 };
 

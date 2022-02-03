@@ -31,6 +31,8 @@ NS_START(cosm, pal, ros);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
+swarm_manager_adaptor::swarm_manager_adaptor(void)
+    : ER_CLIENT_INIT("cosm.pal.ros.swarm_manager_adaptor") {}
 
 /*******************************************************************************
  * Member Functions

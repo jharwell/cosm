@@ -28,7 +28,7 @@
 #include <argos3/core/utility/math/vector3.h>
 #include <argos3/plugins/simulator/visualizations/qt-opengl/qtopengl_user_functions.h>
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -38,7 +38,7 @@ NS_START(cosm, argos, vis);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_carry_visualizer::draw(const crepr::base_block3D* const block,
+void block_carry_visualizer::draw(const crepr::sim_block3D* const block,
                                   uint id_len) {
   switch (block->md()->type()) {
     case repr::block_type::ekCUBE:

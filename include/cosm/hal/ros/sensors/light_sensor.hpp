@@ -54,14 +54,18 @@ class light_sensor : public rer::client<light_sensor>,
                      public chros::sensors::ros_sensor {
  public:
   using reading_type = chal::sensors::light_sensor_reading;
-  light_sensor(void)
+
+  light_sensor(const cros::topic& robot_ns)
       : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"),
-      ros_sensor({}) {
+        ros_sensor(robot_ns) {
     disable();
   }
 
-  const light_sensor& operator=(const light_sensor&) = delete;
-  light_sensor(const light_sensor&) = default;
+  /* move only constructible/assignable to work with the saa subsystem */
+  light_sensor& operator=(const light_sensor&) = delete;
+  light_sensor(const light_sensor&) = delete;
+  light_sensor& operator=(light_sensor&&) = default;
+  light_sensor(light_sensor&&) = default;
 
   /**
    * \brief Get the current light sensor readings for the footbot/epuck robots.

@@ -50,6 +50,9 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
   using rpdecorator::decorator<TSensor>::decoratee;
   using impl_type = TSensor;
 
+  base_sensor(void) :
+      ER_CLIENT_INIT("cosm.hal.sensors.base_sensor") {}
+
   explicit base_sensor(TSensor sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.base_sensor"),
         rpdecorator::decorator<TSensor>(sensor) {}

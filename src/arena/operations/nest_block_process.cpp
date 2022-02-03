@@ -24,7 +24,7 @@
 #include "cosm/arena/operations/nest_block_process.hpp"
 
 #include "cosm/arena/caching_arena_map.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -34,7 +34,7 @@ NS_START(cosm, arena, operations, detail);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-nest_block_process::nest_block_process(crepr::base_block3D* arena_block,
+nest_block_process::nest_block_process(crepr::sim_block3D* arena_block,
                                        const rtypes::timestep& t)
     : ER_CLIENT_INIT("cosm.arena.operations.nest_block_process"),
       mc_timestep(t),
@@ -70,7 +70,7 @@ void nest_block_process::do_visit(TArenaMap& map) {
   map.distribute_single_block(m_arena_block, locking::ekALL_HELD);
 } /* do_visit() */
 
-void nest_block_process::visit(crepr::base_block3D& block) {
+void nest_block_process::visit(crepr::sim_block3D& block) {
   block.md()->reset_metrics();
   block.md()->distribution_time(mc_timestep);
 } /* visit() */

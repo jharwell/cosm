@@ -28,7 +28,7 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/arena/repr/arena_cache.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

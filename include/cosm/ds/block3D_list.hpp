@@ -37,12 +37,12 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, ds);
 
-using block3D_listno_type = crepr::base_block3D*;
+using block3D_listno_type = crepr::sim_block3D*;
 
 /*******************************************************************************
  * Type Definitions

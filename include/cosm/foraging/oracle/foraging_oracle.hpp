@@ -51,7 +51,7 @@ class base_cache;
 } /* namespace cosm::arena::repr */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::oracle {
@@ -60,7 +60,7 @@ class tasking_oracle;
 
 NS_START(cosm, foraging, oracle, detail);
 
-using entity_types = rmpl::typelist<crepr::base_block3D, carepr::base_cache>;
+using entity_types = rmpl::typelist<crepr::sim_block3D, carepr::base_cache>;
 using entity_oracle_types = rmpl::typelist_wrap_apply<entity_types,
                                                       coracle::entities_oracle>;
 using tasking_oracle_types = rmpl::typelist<coracle::tasking_oracle>;
@@ -90,7 +90,7 @@ NS_END(detail);
  */
 class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
  public:
-  using blocks_oracle_type = coracle::entities_oracle<crepr::base_block3D>;
+  using blocks_oracle_type = coracle::entities_oracle<crepr::sim_block3D>;
   using caches_oracle_type = coracle::entities_oracle<carepr::base_cache>;
   using tasking_oracle_type = coracle::tasking_oracle;
 

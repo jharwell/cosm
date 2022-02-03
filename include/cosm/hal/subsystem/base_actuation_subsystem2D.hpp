@@ -26,7 +26,8 @@
  ******************************************************************************/
 #include <typeindex>
 #include <unordered_map>
-#include <boost/variant.hpp>
+#include <variant>
+#include <utility>
 
 #include "rcppsw/mpl/typelist.hpp"
 #include "rcppsw/types/timestep.hpp"
@@ -58,7 +59,7 @@ NS_START(cosm, hal, subsystem);
 template <typename ...TActuatorTypes>
 class base_actuation_subsystem2D : private chsubsystem::base_subsystem {
  public:
-  using variant_type = boost::variant<TActuatorTypes...>;
+  using variant_type = std::variant<TActuatorTypes...>;
   using actuator_map = std::unordered_map<std::type_index, variant_type>;
 
   /**
@@ -67,15 +68,15 @@ class base_actuation_subsystem2D : private chsubsystem::base_subsystem {
    */
   template <typename TActuator>
   static typename actuator_map::value_type map_entry_create(
-      const TActuator& actuator) {
-    return { typeid(TActuator), variant_type(actuator) };
+      TActuator&& actuator) {
+    return { typeid(TActuator), variant_type(std::move(actuator)) };
   }
 
   /**
    * \param actuators Map of handles to actuation devices, indexed by typeid.
    */
-  explicit base_actuation_subsystem2D(const actuator_map& actuators)
-      : m_actuators(actuators) {}
+  explicit base_actuation_subsystem2D(actuator_map&& actuators)
+      : m_actuators(std::move(actuators)) {}
 
   virtual ~base_actuation_subsystem2D(void) = default;
 
@@ -100,12 +101,12 @@ class base_actuation_subsystem2D : private chsubsystem::base_subsystem {
 
   template <typename T>
   const T* actuator(void) const {
-    return &boost::get<T>(m_actuators.find(typeid(T))->second);
+    return &std::get<T>(m_actuators.find(typeid(T))->second);
   }
 
   template <typename T>
   T* actuator(void) {
-    return &boost::get<T>(m_actuators.find(typeid(T))->second);
+    return &std::get<T>(m_actuators.find(typeid(T))->second);
   }
 
  private:

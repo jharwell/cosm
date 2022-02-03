@@ -37,16 +37,16 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, ds);
 
 using block3D_ht_key_type = rtypes::type_uuid;
 
-using block3D_hto_value_type = std::shared_ptr<crepr::base_block3D>;
-using block3D_htno_value_type = crepr::base_block3D*;
-using block3D_htro_value_type = const crepr::base_block3D*;
+using block3D_hto_value_type = std::shared_ptr<crepr::sim_block3D>;
+using block3D_htno_value_type = crepr::sim_block3D*;
+using block3D_htro_value_type = const crepr::sim_block3D*;
 
 /*******************************************************************************
  * Type Definitions

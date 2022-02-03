@@ -75,20 +75,21 @@ interference_metrics_csv_sink::csv_line_build(
   auto* d = static_cast<const interference_metrics_data*>(data);
 
   std::string line;
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_exp_interference));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exp_interference), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_entered_interference));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_entered_interference), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_exited_interference));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exited_interference), t);
 
-  line += csv_entry_intavg(d->interval.n_exp_interference.load());
-  line += csv_entry_tsavg(d->cum.n_exp_interference.load(), t);
-  line += csv_entry_intavg(d->interval.n_entered_interference.load());
-  line += csv_entry_tsavg(d->cum.n_entered_interference.load(), t);
-  line += csv_entry_intavg(d->interval.n_exited_interference.load());
-  line += csv_entry_tsavg(d->cum.n_exited_interference.load(), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_episodes));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_episodes), t);
+  line += csv_entry_domavg(ral::mt_load(d->interval.interference_duration),
+                           ral::mt_load(d->interval.n_episodes));
+  line += csv_entry_domavg(ral::mt_load(d->cum.interference_duration),
+                           ral::mt_load(d->cum.n_episodes),
+                           true);
 
-  line += csv_entry_intavg(d->interval.n_episodes.load());
-  line += csv_entry_tsavg(d->cum.n_episodes.load(), t);
-  line += csv_entry_domavg(d->interval.interference_duration.load(),
-                           d->interval.n_episodes.load());
-  line += csv_entry_domavg(
-      d->cum.interference_duration.load(), d->cum.n_episodes.load(), true);
   return boost::make_optional(line);
 } /* csv_line_build() */
 

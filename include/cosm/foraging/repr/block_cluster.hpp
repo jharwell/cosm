@@ -87,7 +87,7 @@ class block_cluster final : public crepr::grid2D_view_entity<cads::arena_grid,
   size_t capacity(void) const { return m_capacity; }
   const cds::block3D_vectorro& blocks(void) const { return m_blocks; }
   void blocks_recalc(void);
-  void update_after_drop(const crepr::base_block3D* dropped);
+  void update_after_drop(const crepr::sim_block3D* dropped);
   void update_after_pickup(const rtypes::type_uuid& pickup_id);
 
  private:

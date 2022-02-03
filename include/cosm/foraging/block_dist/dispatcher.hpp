@@ -110,7 +110,7 @@ class  dispatcher final : public rer::client<dispatcher> {
    *
    * \return \c TRUE iff distribution was successful, \c FALSE otherwise.
    */
-  dist_status distribute_block(crepr::base_block3D* block);
+  dist_status distribute_block(crepr::sim_block3D* block);
 
   /**
    * \brief Distribute all blocks in the arena.

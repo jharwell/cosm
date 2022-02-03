@@ -26,7 +26,7 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/ds/loctree.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/nest.hpp"
 
 /*******************************************************************************
@@ -35,17 +35,17 @@
 NS_START(cosm, spatial);
 
 static conflict_checker::status
-nest_conflict(const crepr::base_block3D* const block,
+nest_conflict(const crepr::sim_block3D* const block,
               const crepr::nest& nest,
               const rmath::vector2d& drop_loc);
 static conflict_checker::status
-cache_conflict(const crepr::base_block3D* const block,
+cache_conflict(const crepr::sim_block3D* const block,
                const carepr::arena_cache* const cache,
                const rmath::vector2d& drop_loc);
 
 static conflict_checker::status
-block_conflict(const crepr::base_block3D* const block1,
-               const crepr::base_block3D* const block2,
+block_conflict(const crepr::sim_block3D* const block1,
+               const crepr::sim_block3D* const block2,
                const rmath::vector2d& drop_loc);
 
 /*******************************************************************************
@@ -53,7 +53,7 @@ block_conflict(const crepr::base_block3D* const block1,
  ******************************************************************************/
 conflict_checker::status
 conflict_checker::placement2D(const carena::base_arena_map* map,
-                              const crepr::base_block3D* const block,
+                              const crepr::sim_block3D* const block,
                               const rmath::vector2d& loc) {
   /*
    * If the robot is really close to a wall, then dropping a block may make it
@@ -113,7 +113,7 @@ error:
 
 conflict_checker::status
 conflict_checker::placement2D(const carena::caching_arena_map* map,
-                              const crepr::base_block3D* const block,
+                              const crepr::sim_block3D* const block,
                               const rmath::vector2d& loc) {
   status conflict =placement2D(static_cast<const carena::base_arena_map*>(map),
                                block,
@@ -177,7 +177,7 @@ conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
 /*******************************************************************************
  * Free Functions
  ******************************************************************************/
-conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
+conflict_checker::status nest_conflict(const crepr::sim_block3D* const block,
                                        const crepr::nest& nest,
                                        const rmath::vector2d& drop_loc) {
   auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());
@@ -187,8 +187,8 @@ conflict_checker::status nest_conflict(const crepr::base_block3D* const block,
            nest.yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_nest() */
 
-conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
-                                        const crepr::base_block3D* const block2,
+conflict_checker::status block_conflict(const crepr::sim_block3D* const block1,
+                                        const crepr::sim_block3D* const block2,
                                         const rmath::vector2d& drop_loc) {
   auto drop_xspan = rmath::xspan(drop_loc, block1->xrsize().v());
   auto drop_yspan = rmath::yspan(drop_loc, block1->yrsize().v());
@@ -196,7 +196,7 @@ conflict_checker::status block_conflict(const crepr::base_block3D* const block1,
            block2->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_block() */
 
-conflict_checker::status cache_conflict(const crepr::base_block3D* const block,
+conflict_checker::status cache_conflict(const crepr::sim_block3D* const block,
                                         const carepr::arena_cache* const cache,
                                         const rmath::vector2d& drop_loc) {
   auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());

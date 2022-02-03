@@ -74,19 +74,24 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
                     const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
          proximity_sensor_impl(sensor),
-         mc_config(*config) {
+         m_config(*config) {
     enable();
   }
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-   explicit proximity_sensor(const config::proximity_sensor_config* const config)
+  explicit proximity_sensor(const cros::topic& robot_ns,
+                            const config::proximity_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-         mc_config(*config) {
+         proximity_sensor_impl(robot_ns),
+         m_config(*config) {
      enable();
    }
 #endif
 
-  const proximity_sensor& operator=(const proximity_sensor&) = delete;
-  proximity_sensor(const proximity_sensor&) = default;
+  /* move only constructible/assignable to work with the saa subsystem */
+  proximity_sensor(proximity_sensor&&) = default;
+  proximity_sensor& operator=(proximity_sensor&&) = default;
+  proximity_sensor(const proximity_sensor&) = delete;
+  proximity_sensor& operator=(const proximity_sensor&) = delete;
 
   /**
    * \brief Return the average object reading within proximity for the
@@ -108,6 +113,8 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 
     /* constructed, not returned, so we need a copy to iterate over */
     auto readings = this->readings();
+    ER_TRACE("Processing %zu readings", readings.size());
+
     for (auto& r : readings) {
       accum += r;
       ++count;
@@ -119,8 +126,8 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 
     accum /= count;
 
-    if (mc_config.fov.contains(accum.angle()) &&
-        accum.length() <= mc_config.delta) {
+    if (m_config.fov.contains(accum.angle()) &&
+        accum.length() <= m_config.delta) {
       return boost::none;
     } else {
       return boost::make_optional(accum);
@@ -128,9 +135,11 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
   }
  private:
   /* clang-format off */
-  const config::proximity_sensor_config mc_config;
+  config::proximity_sensor_config m_config;
   /* clang-format on */
 };
+
+/* static_assert(std::is_nothrow_move_constructible<proximity_sensor>::value, "ERROR"); */
 
 NS_END(sensors, hal, cosm);
 

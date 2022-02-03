@@ -29,6 +29,7 @@
 #include <ros/ros.h>
 
 #include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/ros/topic.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -44,7 +45,8 @@ NS_START(cosm, hal, ros, sensors);
  *
  * \brief Base sensor class to provide a common interface to all ROS sensors.
  */
-class ros_sensor : public chsensors::base_sensor<::ros::Subscriber> {
+class ros_sensor : public rer::client<ros_sensor>,
+                   public chsensors::base_sensor<::ros::Subscriber> {
 public:
   using impl_type = ::ros::Subscriber;
   using chsensors::base_sensor<impl_type>::decoratee;
@@ -55,13 +57,12 @@ public:
    */
   static constexpr const size_t kQueueBufferSize = 1000;
 
-  explicit ros_sensor(const impl_type& sensor)
-      : chsensors::base_sensor<impl_type>(sensor) {}
+  explicit ros_sensor(const cros::topic& robot_ns);
 
   virtual ~ros_sensor(void) = default;
 
-  ros_sensor(const ros_sensor&) = default;
-  ros_sensor& operator=(const ros_sensor&) = default;
+  ros_sensor(const ros_sensor&) = delete;
+  ros_sensor& operator=(const ros_sensor&) = delete;
   ros_sensor(ros_sensor&&) = default;
   ros_sensor& operator=(ros_sensor&&) = default;
 
@@ -69,26 +70,33 @@ public:
    * \brief To disable a sensor, you unsubscribe from the topic, which (I think)
    * only happens when your handle goes out of scope.
    */
-  void disable(void) override {
-    if (m_subscribed) {
-      decoratee().~impl_type();
-      m_subscribed = false;
-    }
-  }
+  void disable(void) override;
 
   bool is_enabled(void) const override { return m_subscribed; }
 
 protected:
   template <typename TCallback, typename TClass>
-      void subscribe(const std::string& topic, TCallback cb, TClass* inst) {
+      void subscribe(const cros::topic& topic, TCallback cb, TClass* inst) {
     ::ros::NodeHandle nh;
+    auto n_pubs_old = decoratee().getNumPublishers();
     redecorate(nh.subscribe(topic, kQueueBufferSize, cb, inst));
+
+    while(::ros::ok() && decoratee().getNumPublishers() == n_pubs_old) {
+      ::ros::Duration(0.2).sleep();
+      ER_DEBUG("Wait for topic '%s' subscription to activate",
+               topic.c_str());
+    }
     m_subscribed = true;
+    ER_INFO("Topic '%s' subscription active",
+             topic.c_str());
   }
+  cros::topic robot_ns(void) const { return m_robot_ns; }
+
 
 private:
   /* clang-format off */
-  bool m_subscribed{true};
+  cros::topic m_robot_ns;
+  bool        m_subscribed{false};
   /* clang-format on */
 };
 

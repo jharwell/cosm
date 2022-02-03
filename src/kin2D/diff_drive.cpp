@@ -34,11 +34,11 @@ NS_START(cosm, kin2D);
  * Constructors/Destructor
  ******************************************************************************/
 diff_drive::diff_drive(const config::diff_drive_config* const config,
-                       const chactuators::diff_drive_actuator& actuator)
+                       chactuators::diff_drive_actuator&& actuator)
     : ER_CLIENT_INIT("cosm.kin2D.diff_drive"),
-      mc_config(*config),
+      m_config(*config),
       m_fsm(config->max_speed, config->soft_turn_max),
-      m_actuator(actuator) {}
+      m_actuator(std::move(actuator)) {}
 
 /*******************************************************************************
  * Member Functions
@@ -47,8 +47,8 @@ void diff_drive::fsm_drive(const ckin::twist& delta) {
   m_fsm.change_velocity(delta);
 
   /* don't need to normalize--done by fsm internally */
-  rmath::range<rmath::radians> range(-mc_config.soft_turn_max,
-                                     mc_config.soft_turn_max);
+  rmath::range<rmath::radians> range(-m_config.soft_turn_max,
+                                     m_config.soft_turn_max);
 
   m_actuator.set_from_twist(m_fsm.configured_twist(), range);
 } /* fsm_drive() */

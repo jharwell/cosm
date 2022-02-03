@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/foraging/repr/block_cluster.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -53,7 +53,7 @@ void block_cluster::blocks_recalc(void) {
   } /* for(i..) */
 } /* blocks_recalc() */
 
-void block_cluster::update_after_drop(const crepr::base_block3D* dropped) {
+void block_cluster::update_after_drop(const crepr::sim_block3D* dropped) {
   ER_ASSERT(contains_abs(dropped->danchor2D()),
             "Block%s@%s not contained in cluster%s extent: xspan=%s,yspan=%s",
             rcppsw::to_string(dropped->id()).c_str(),

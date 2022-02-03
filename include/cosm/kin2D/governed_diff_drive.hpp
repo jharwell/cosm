@@ -56,11 +56,14 @@ NS_START(kin2D);
 class governed_diff_drive final : public kin2D::diff_drive {
  public:
   governed_diff_drive(const config::diff_drive_config* config,
-                      const hal::actuators::diff_drive_actuator& actuator)
-      : diff_drive(config, actuator) {}
+                      hal::actuators::diff_drive_actuator&& actuator)
+      : diff_drive(config, std::move(actuator)) {}
 
-  const governed_diff_drive& operator=(const governed_diff_drive&) = delete;
-  governed_diff_drive(const governed_diff_drive&) = default;
+  /* move only constructible/assignable to work with the saa subsystem */
+  governed_diff_drive(governed_diff_drive&&) = default;
+  governed_diff_drive& operator=(governed_diff_drive&&) = default;
+  governed_diff_drive(const governed_diff_drive&) = delete;
+  governed_diff_drive& operator=(const governed_diff_drive&) = delete;
 
   /**
    * \brief Get the current value of the governor.

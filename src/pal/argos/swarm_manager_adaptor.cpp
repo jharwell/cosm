@@ -29,7 +29,7 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/argos/block_embodiment_creator.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/argos/vis/config/visualization_config.hpp"
 
 /*******************************************************************************

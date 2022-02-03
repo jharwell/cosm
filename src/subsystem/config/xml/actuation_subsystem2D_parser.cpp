@@ -46,6 +46,7 @@ void actuation_subsystem2D_parser::parse(const ticpp::Element& node) {
            .config_get<kin2D::config::xml::diff_drive_parser::config_type>();
   m_config->steering = *m_steering.config_get<
       steer2D::config::xml::force_calculator_parser::config_type>();
+  ER_DEBUG("Finished");
 } /* parse() */
 
 bool actuation_subsystem2D_parser::validate(void) const {

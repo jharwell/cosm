@@ -26,7 +26,8 @@
  ******************************************************************************/
 #include <typeindex>
 #include <unordered_map>
-#include <boost/variant.hpp>
+#include <variant>
+#include <utility>
 
 #include "rcppsw/mpl/typelist.hpp"
 #include "rcppsw/types/timestep.hpp"
@@ -58,7 +59,7 @@ NS_START(cosm, hal, subsystem);
 template <typename ...TSensorTypes>
 class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
  public:
-  using variant_type = boost::variant<TSensorTypes...>;
+  using variant_type = std::variant<TSensorTypes...>;
   using sensor_map = std::unordered_map<std::type_index, variant_type>;
 
   /**
@@ -67,15 +68,15 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
    */
   template <typename TSensor>
   static typename sensor_map::value_type map_entry_create(
-      const TSensor& sensor) {
-    return { typeid(TSensor), variant_type(sensor) };
+      TSensor&& sensor) {
+    return {typeid(TSensor), variant_type(std::move(sensor))};
   }
 
   /**
    * \param sensors Map of handles to sensing devices, indexed by typeid.
    */
-  explicit base_sensing_subsystemQ3D(const sensor_map& sensors)
-      : m_sensors(sensors) {}
+  explicit base_sensing_subsystemQ3D(sensor_map&& sensors)
+      : m_sensors(std::move(sensors)) {}
 
   virtual ~base_sensing_subsystemQ3D(void) = default;
 
@@ -109,12 +110,12 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
 
   template <typename T>
   const T* sensor(void) const {
-    return &boost::get<T>(m_sensors.find(typeid(T))->second);
+    return &std::get<T>(m_sensors.find(typeid(T))->second);
   }
 
   template <typename T>
   T* sensor(void) {
-    return &boost::get<T>(m_sensors.find(typeid(T))->second);
+    return &std::get<T>(m_sensors.find(typeid(T))->second);
   }
 
  private:

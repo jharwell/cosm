@@ -40,7 +40,7 @@ class caching_arena_map;
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 class entity2D;
 class entity3D;
 } /* namespace cosm::repr */
@@ -70,7 +70,7 @@ class conflict_checker {
       return *this;
     }
   };
-  using map_cb_type = std::function<status(const crepr::base_block3D* const block,
+  using map_cb_type = std::function<status(const crepr::sim_block3D* const block,
                                            const rmath::vector2d& loc)>;
 
   /* Not move/copy constructable/assignable by default */
@@ -91,7 +91,7 @@ class conflict_checker {
    * - Overlap with all nests.
    */
   static status placement2D(const carena::base_arena_map* map,
-                            const crepr::base_block3D* block,
+                            const crepr::sim_block3D* block,
                             const rmath::vector2d& loc);
 
   /**
@@ -107,7 +107,7 @@ class conflict_checker {
    * - Overlap with all caches.
    */
   static status placement2D(const carena::caching_arena_map* map,
-                            const crepr::base_block3D* block,
+                            const crepr::sim_block3D* block,
                             const rmath::vector2d& loc);
 
   /**

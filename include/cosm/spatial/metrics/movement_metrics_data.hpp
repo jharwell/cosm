@@ -24,10 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
 #include <vector>
 
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 #include "cosm/spatial/metrics/movement_category.hpp"
 
@@ -50,9 +50,9 @@ NS_START(cosm, spatial, metrics, detail);
  * requirements.
  */
 struct movement_metrics_data_data {
-  std::atomic<double> distance{0.0};
-  std::atomic_size_t  n_robots{0};
-  std::atomic<double> velocity{0.0};
+  ral::mt_double_t distance{0.0};
+  ral::mt_size_t  n_robots{0};
+  ral::mt_double_t velocity{0.0};
 };
 
 NS_END(detail);

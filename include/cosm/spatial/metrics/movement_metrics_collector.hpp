@@ -62,7 +62,9 @@ class movement_metrics_collector final : public rmetrics::base_collector {
   void reset_after_interval(void) override;
   const rmetrics::base_data* data(void) const override { return &m_data; }
 
-
+#if !defined(RCPPSW_AL_MT_SAFE_TYPES)
+  void data(const movement_metrics_data& data) { m_data = data; }
+#endif
  private:
   /* clang-format off */
   movement_metrics_data m_data{};

@@ -24,10 +24,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
 #include <vector>
 
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -38,11 +38,11 @@ NS_START(cosm, foraging, metrics, detail);
  * Class Definitions
  ******************************************************************************/
 struct cluster_extent {
-  std::atomic<double> area;
-  std::atomic<double> xmin;
-  std::atomic<double> xmax;
-  std::atomic<double> ymin;
-  std::atomic<double> ymax;
+  ral::mt_double_t area;
+  ral::mt_double_t xmin;
+  ral::mt_double_t xmax;
+  ral::mt_double_t ymin;
+  ral::mt_double_t ymax;
 };
 /**
  * \struct block_cluster_metrics_data
@@ -55,7 +55,7 @@ struct block_cluster_metrics_data  {
   explicit block_cluster_metrics_data(size_t n_clusters)
       : block_counts(n_clusters) {}
 
-  std::vector<std::atomic_size_t> block_counts;
+  std::vector<ral::mt_size_t> block_counts;
 };
 
 NS_END(detail);

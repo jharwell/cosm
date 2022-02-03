@@ -25,7 +25,7 @@
  * Includes
  ******************************************************************************/
 #include <boost/optional.hpp>
-#include <boost/variant.hpp>
+#include <variant>
 #include <map>
 #include <string>
 
@@ -67,7 +67,7 @@ class tasking_oracle final : public rer::client<tasking_oracle> {
   static inline const std::string kExecEstPrefix = "exec_est";
   static inline const std::string kInterfaceEstPrefix = "interface_est";
 
-  using variant_type = boost::variant<cta::time_estimate>;
+  using variant_type = std::variant<cta::time_estimate>;
 
   tasking_oracle(const coconfig::tasking_oracle_config* config,
                  const cta::ds::bi_tdgraph* graph);

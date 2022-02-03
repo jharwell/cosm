@@ -24,11 +24,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
 #include <vector>
 #include <cmath>
 
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,9 +47,9 @@ struct bi_tdgraph_metrics_data {
           static_cast<size_t>(std::pow(2, decomposition_depth - 1) + 1))
   {}
 
-  std::vector<std::atomic_size_t> depth_counts;
-  std::vector<std::atomic_size_t> task_counts;
-  std::vector<std::atomic_size_t> tab_counts;
+  std::vector<ral::mt_size_t> depth_counts;
+  std::vector<ral::mt_size_t> task_counts;
+  std::vector<ral::mt_size_t> tab_counts;
 };
 
 NS_END(detail);

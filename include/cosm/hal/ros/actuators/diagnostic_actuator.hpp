@@ -54,10 +54,13 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
 
   explicit diagnostic_actuator(bool enable)
       : ER_CLIENT_INIT("cosm.hal.ros.actuators.diagnostic"),
-        ros_actuator({}) {}
+        ros_actuator(cros::topic()) {}
 
-  const diagnostic_actuator& operator=(const diagnostic_actuator&) = delete;
-  diagnostic_actuator(const diagnostic_actuator&) = default;
+  /* copy constructible/assignable to work with the saa subsystem */
+  diagnostic_actuator(const diagnostic_actuator&) = delete;
+  diagnostic_actuator& operator=(const diagnostic_actuator&)= delete;
+  diagnostic_actuator(diagnostic_actuator&&) = default;
+  diagnostic_actuator& operator=(diagnostic_actuator&&)= default;
 
   void reset(void) override {}
   void enable(void) override {}

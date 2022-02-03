@@ -32,7 +32,7 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
 
 /*******************************************************************************
@@ -46,7 +46,7 @@ using cads::arena_grid;
  * Constructors/Destructor
  ******************************************************************************/
 cached_block_pickup::cached_block_pickup(carepr::arena_cache* cache,
-                                         crepr::base_block3D* pickup_block,
+                                         crepr::sim_block3D* pickup_block,
                                          cpargos::swarm_manager_adaptor* sm,
                                          const rtypes::type_uuid& robot_id,
                                          const rtypes::timestep& t,
@@ -212,7 +212,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
                       !(mc_locking & locking::ekCACHES_HELD));
 } /* visit() */
 
-void cached_block_pickup::visit(crepr::base_block3D& block) {
+void cached_block_pickup::visit(crepr::sim_block3D& block) {
   crops::block_pickup op(mc_robot_id, mc_timestep);
   op.visit(block, crops::block_pickup_owner::ekARENA_MAP);
 } /* visit() */

@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <variant>
 
 #include "rcppsw/common/common.hpp"
 
@@ -38,10 +38,10 @@ class bi_tdgraph;
  * Class Definitions
  ******************************************************************************/
 /**
- * \brief boost::variant containing one of the possible datastructures that the
+ * \brief std::variant containing one of the possible data structures that the
  * \ref base_executive and its derived classes can operate on.
  */
-using ds_variant = boost::variant<bi_tdgraph>;
+using ds_variant = std::variant<bi_tdgraph>;
 
 NS_END(ds, ta, cosm);
 

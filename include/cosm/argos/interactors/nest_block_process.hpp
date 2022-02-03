@@ -33,6 +33,7 @@
 
 #include "cosm/arena/operations/nest_block_process.hpp"
 #include "cosm/tv/temporal_penalty.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -154,7 +155,8 @@ class nest_block_process
      * the nest block drop event resets block metrics.
      */
     controller.block()->md()->dest_drop_time(t);
-    m_metrics_manager->collect_from_block(controller.block());
+    m_metrics_manager->collect_from_block(
+        static_cast<crepr::sim_block3D*>(controller.block()));
 
     auto to_drop = controller.block_release();
 

@@ -47,7 +47,7 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
                               public rer::client<swarm_manager_adaptor> {
  public:
   swarm_manager_adaptor(void);
-  ~swarm_manager_adaptor(void) override;
+  ~swarm_manager_adaptor(void) override = default;
 
   /* Not copy constructable/assignable by default */
   swarm_manager_adaptor(const swarm_manager_adaptor&) = delete;

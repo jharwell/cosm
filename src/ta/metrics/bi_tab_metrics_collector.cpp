@@ -51,19 +51,11 @@ void bi_tab_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
     m_data.interval.subtask2_count += static_cast<size_t>(m.subtask2_active());
     m_data.cum.subtask2_count += static_cast<size_t>(m.subtask2_active());
 
-    auto int_partition_prob = m_data.interval.partition_prob.load();
-    auto int_subtask_sel_prob = m_data.interval.subtask_sel_prob.load();
-    m_data.interval.partition_prob.compare_exchange_strong(
-        int_partition_prob, int_partition_prob + m.partition_prob());
-    m_data.interval.subtask_sel_prob.compare_exchange_strong(
-        int_subtask_sel_prob, int_subtask_sel_prob + m.subtask_selection_prob());
+    ral::mt_add(m_data.interval.partition_prob, m.partition_prob());
+    ral::mt_add(m_data.interval.subtask_sel_prob, m.subtask_selection_prob());
 
-    auto cum_partition_prob = m_data.cum.partition_prob.load();
-    auto cum_subtask_sel_prob = m_data.cum.subtask_sel_prob.load();
-    m_data.cum.partition_prob.compare_exchange_strong(
-        cum_partition_prob, cum_partition_prob + m.partition_prob());
-    m_data.cum.subtask_sel_prob.compare_exchange_strong(
-        cum_subtask_sel_prob, cum_subtask_sel_prob + m.subtask_selection_prob());
+    ral::mt_add(m_data.cum.partition_prob, m.partition_prob());
+    ral::mt_add(m_data.cum.subtask_sel_prob, m.subtask_selection_prob());
   } else {
     ++m_data.interval.no_partition_count;
     ++m_data.cum.no_partition_count;

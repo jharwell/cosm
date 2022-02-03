@@ -26,7 +26,6 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
 
 #include "rcppsw/metrics/base_collector.hpp"
 
@@ -61,6 +60,10 @@ class interference_metrics_collector final : public rmetrics::base_collector {
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
   const rmetrics::base_data* data(void) const override { return &m_data; }
+
+#if !defined(RCPPSW_AL_MT_SAFE_TYPES)
+  void data(const interference_metrics_data& data) { m_data = data; }
+#endif
 
  private:
   /* clang-format off */

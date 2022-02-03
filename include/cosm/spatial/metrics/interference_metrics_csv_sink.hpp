@@ -26,7 +26,6 @@
  ******************************************************************************/
 #include <string>
 #include <list>
-#include <atomic>
 
 #include "rcppsw/metrics/csv_sink.hpp"
 #include "cosm/cosm.hpp"

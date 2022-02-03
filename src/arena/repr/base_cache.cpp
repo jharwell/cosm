@@ -23,7 +23,7 @@
  ******************************************************************************/
 #include "cosm/arena/repr/base_cache.hpp"
 
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -68,13 +68,13 @@ base_cache::base_cache(const params& p)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_cache::block_add(crepr::base_block3D* block) {
+void base_cache::block_add(crepr::sim_block3D* block) {
   m_blocks_vec.push_back(block);
   if (m_map_en) {
     m_blocks_map.insert(std::make_pair(block->id(), block));
   }
 }
-void base_cache::block_remove(const crepr::base_block3D* const victim) {
+void base_cache::block_remove(const crepr::sim_block3D* const victim) {
   if (m_map_en) {
     m_blocks_map.erase(m_blocks_map.find(victim->id()));
   }
@@ -99,7 +99,7 @@ std::unique_ptr<base_cache> base_cache::clone(void) const {
   return std::make_unique<base_cache>(p);
 } /* clone() */
 
-bool base_cache::contains_block(const crepr::base_block3D* const c_block) const {
+bool base_cache::contains_block(const crepr::sim_block3D* const c_block) const {
   if (m_map_en) {
     return m_blocks_map.end() != m_blocks_map.find(c_block->id());
   } else {
@@ -108,7 +108,7 @@ bool base_cache::contains_block(const crepr::base_block3D* const c_block) const 
                                               [&](const auto*b) { return b->id() == c_block->id(); });
   }
 }
-crepr::base_block3D* base_cache::block_select(rmath::rng* rng) {
+crepr::sim_block3D* base_cache::block_select(rmath::rng* rng) {
   ER_ASSERT(m_blocks_vec.size() > 0, "Cannot select from empty block vector");
   if (nullptr != rng) {
     size_t dist = rng->uniform(rmath::rangez(0, m_blocks_vec.size() - 1));

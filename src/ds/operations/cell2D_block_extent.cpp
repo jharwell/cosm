@@ -25,7 +25,7 @@
 
 #include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -37,7 +37,7 @@ using cads::arena_grid;
  * Constructors/Destructor
  ******************************************************************************/
 cell2D_block_extent::cell2D_block_extent(const rmath::vector2z& coord,
-                                         crepr::base_block3D* block)
+                                         crepr::sim_block3D* block)
     : cell2D_op(coord), m_block(block) {}
 
 /*******************************************************************************

@@ -1,5 +1,5 @@
 /**
- * \file base_block3D.cpp
+ * \file sim_block3D.cpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -31,7 +31,7 @@ NS_START(cosm, repr);
 /*******************************************************************************
  * Class Constants
  ******************************************************************************/
-const base_block3D::out_of_sight3D base_block3D::kOutOfSight{};
+const sim_block3D::out_of_sight3D sim_block3D::kOutOfSight{};
 
 /*******************************************************************************
  * Member Functions

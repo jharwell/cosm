@@ -55,8 +55,8 @@ class saa_subsystemQ3D final : public steer2D::boid,
   using actuation_type = csubsystem::actuation_subsystem2D;
 
   saa_subsystemQ3D(
-      const chsubsystem::sensing_subsystemQ3D::sensor_map& sensors,
-      const chsubsystem::actuation_subsystem2D::actuator_map& actuators,
+      sensing_type::sensor_map&& sensors,
+      actuation_type::actuator_map&& actuators,
       const steer2D::config::force_calculator_config* const steer_config);
 
   /*

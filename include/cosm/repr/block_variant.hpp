@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <boost/variant.hpp>
+#include <variant>
 
 #include "cosm/cosm.hpp"
 
@@ -40,8 +40,8 @@ class base_block3D;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using block3D_variantno = boost::variant<cube_block3D*, ramp_block3D*>;
-using block3D_variantro = boost::variant<const cube_block3D*,
+using block3D_variantno = std::variant<cube_block3D*, ramp_block3D*>;
+using block3D_variantro = std::variant<const cube_block3D*,
                                          const ramp_block3D*>;
 
 /*******************************************************************************

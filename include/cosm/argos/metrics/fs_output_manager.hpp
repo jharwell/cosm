@@ -39,7 +39,7 @@
  * Namespaces
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::arena {
@@ -86,7 +86,7 @@ class fs_output_manager : public rmetrics::fs_output_manager,
    *
    * - \ref specs::blocks::kTransportee
    */
-  void collect_from_block(const crepr::base_block3D* block);
+  void collect_from_block(const crepr::sim_block3D* block);
 
   /**
    * \brief Collect metrics from 2D controllers. Currently this includes:

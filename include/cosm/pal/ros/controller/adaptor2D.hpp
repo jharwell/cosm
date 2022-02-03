@@ -45,10 +45,22 @@ NS_START(cosm, pal, ros, controller);
 class adaptor2D : public ccontroller::base_controller2D,
                   public cpros::controller::base_adaptor {
  public:
+  void entity_id(const rtypes::type_uuid& entity_id) {
+    m_entity_id = entity_id;
+  }
+
   /* base_controller2D overrides */
   rtypes::type_uuid entity_id(void) const override {
-    return rtypes::type_uuid(0); /* TBD */
+    return m_entity_id;
   }
+
+  /* clang-format off */
+  /**
+   * \brief We use a mutator rather than making this a constructor argument so
+   * that we have the same interface as ARGoS.
+   */
+  rtypes::type_uuid m_entity_id{rtypes::type_uuid(rtypes::constants::kNoUUID)};
+  /* clang-format on */
 };
 
 NS_END(controller, ros, pal, cosm);

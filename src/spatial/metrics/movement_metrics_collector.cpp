@@ -59,15 +59,10 @@ void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
     }
     ++m_data.interval[i].n_robots;
     ++m_data.cum[i].n_robots;
-    auto cum_dist = m_data.cum[i].distance.load();
-    auto int_dist = m_data.interval[i].distance.load();
-    auto cum_vel = m_data.cum[i].velocity.load();
-    auto int_vel = m_data.interval[i].velocity.load();
-
-    m_data.cum[i].distance.compare_exchange_strong(cum_dist, cum_dist + ts_dist);
-    m_data.interval[i].distance.compare_exchange_strong(int_dist, int_dist + ts_dist);
-    m_data.cum[i].velocity.compare_exchange_strong(cum_vel, cum_vel + ts_vel);
-    m_data.interval[i].velocity.compare_exchange_strong(int_vel, int_vel + ts_vel);
+    ral::mt_add(m_data.cum[i].distance, ts_dist);
+    ral::mt_add(m_data.interval[i].distance, ts_dist);
+    ral::mt_add(m_data.cum[i].velocity, ts_vel);
+    ral::mt_add(m_data.interval[i].velocity, ts_vel);
   } /* for(i..) */
 } /* collect() */
 

@@ -26,7 +26,7 @@
 #include <algorithm>
 
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,7 +52,7 @@ cluster_distributor::cluster_distributor(const rtypes::type_uuid& id,
  * Member Functions
  ******************************************************************************/
 dist_status cluster_distributor::distribute_block(
-    crepr::base_block3D* block) {
+    crepr::sim_block3D* block) {
   if (m_clust.capacity() == m_clust.n_blocks()) {
     ER_DEBUG("Could not distribute block%d: Cluster capacity (%zu) reached",
              block->id().v(),

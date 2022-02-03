@@ -114,7 +114,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
   void blocks_map_enable(void);
 
-  bool contains_block(const crepr::base_block3D* c_block) const RCPPSW_PURE;
+  bool contains_block(const crepr::sim_block3D* c_block) const RCPPSW_PURE;
   size_t n_blocks(void) const { return m_blocks_vec.size(); }
 
   /**
@@ -129,18 +129,18 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    *
    * Does not update the block's location.
    */
-  void block_add(crepr::base_block3D* block);
+  void block_add(crepr::sim_block3D* block);
 
   /**
    * \brief Remove a block from the cache's list of blocks, without modifying
    * it.
    */
-  void block_remove(const crepr::base_block3D* victim);
+  void block_remove(const crepr::sim_block3D* victim);
 
   /**
    * \brief Get a random block from the cache.
    */
-  crepr::base_block3D* block_select(rmath::rng* rng);
+  crepr::sim_block3D* block_select(rmath::rng* rng);
 
   std::unique_ptr<base_cache> clone(void) const override final;
 

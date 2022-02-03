@@ -58,7 +58,7 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
 
   explicit bi_tdgraph(const config::task_alloc_config* config);
 
-  /* Necessary for use in boost::variant */
+  /* Necessary for use in std::variant */
   bi_tdgraph(const bi_tdgraph&) = default;
   bi_tdgraph& operator=(const bi_tdgraph&) = delete;
 

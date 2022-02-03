@@ -28,7 +28,7 @@
 #include "cosm/oracle/config/aggregate_oracle_config.hpp"
 #include "cosm/oracle/entities_oracle.hpp"
 #include "cosm/oracle/tasking_oracle.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,7 +41,7 @@ NS_START(cosm, foraging, oracle);
 foraging_oracle::foraging_oracle(const coconfig::aggregate_oracle_config* config)
     : aggregate_oracle(config) {
   oracle_add(kBlocks,
-             std::make_unique<coracle::entities_oracle<crepr::base_block3D>>());
+             std::make_unique<coracle::entities_oracle<crepr::sim_block3D>>());
   oracle_add(kCaches,
              std::make_unique<coracle::entities_oracle<carepr::base_cache>>());
 }
@@ -56,7 +56,7 @@ void foraging_oracle::tasking_oracle(std::unique_ptr<coracle::tasking_oracle> o)
 void foraging_oracle::update(carena::base_arena_map* const map) {
   auto blocks_it = config()->entities.types.find("blocks");
   if (config()->entities.types.end() != blocks_it && blocks_it->second) {
-    coracle::entities_oracle<crepr::base_block3D>::knowledge_type v;
+    coracle::entities_oracle<crepr::sim_block3D>::knowledge_type v;
     /*
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
@@ -70,7 +70,7 @@ void foraging_oracle::update(carena::base_arena_map* const map) {
                    /* don't include blocks robot's are carrying */
                    return rtypes::constants::kNoUUID == b->md()->robot_id();
                  });
-    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)
+    oracle_get<coracle::entities_oracle<crepr::sim_block3D>>(kBlocks)
         ->set_knowledge(v);
   }
 } /* update() */
@@ -78,7 +78,7 @@ void foraging_oracle::update(carena::base_arena_map* const map) {
 void foraging_oracle::update(carena::caching_arena_map* const map) {
   auto blocks_it = config()->entities.types.find("blocks");
   if (config()->entities.types.end() != blocks_it && blocks_it->second) {
-    coracle::entities_oracle<crepr::base_block3D>::knowledge_type v;
+    coracle::entities_oracle<crepr::sim_block3D>::knowledge_type v;
     /*
      * Updates to oracle manager can happen in parallel, so we want to make sure
      * we don't get a set of blocks in a partially updated state. See #594.
@@ -102,7 +102,7 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
                                          return c->contains_block(b);
                                        });
                  });
-    oracle_get<coracle::entities_oracle<crepr::base_block3D>>(kBlocks)
+    oracle_get<coracle::entities_oracle<crepr::sim_block3D>>(kBlocks)
         ->set_knowledge(v);
   }
 

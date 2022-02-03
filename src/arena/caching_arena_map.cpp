@@ -31,7 +31,7 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/pal/argos/swarm_manager_adaptor.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/foraging/block_dist/dispatcher.hpp"
@@ -66,13 +66,13 @@ bool caching_arena_map::initialize_private(void) {
   /* distribute blocks */
   auto avoid_ents = initial_dist_precalc(nullptr);
 
-  auto conflict_check = [&](const crepr::base_block3D* block,
+  auto conflict_check = [&](const crepr::sim_block3D* block,
                             const rmath::vector2d& loc) {
                           return cspatial::conflict_checker::placement2D(this,
                                                                          block,
                                                                          loc);
                         };
-  auto dist_success = [&](const crepr::base_block3D* distributed) {
+  auto dist_success = [&](const crepr::sim_block3D* distributed) {
                         /*
                          * Update block location query tree. This is called from
                          * inside a block distributor, and therefore inside a
@@ -239,7 +239,7 @@ cds::block3D_vectorno caching_arena_map::free_blocks(bool oos_ok) const {
 } /* free_blocks() */
 
 cds::const_spatial_entity_vector
-caching_arena_map::initial_dist_precalc(const crepr::base_block3D* block) const {
+caching_arena_map::initial_dist_precalc(const crepr::sim_block3D* block) const {
   auto ret = base_arena_map::initial_dist_precalc(block);
 
   /*
@@ -254,7 +254,7 @@ caching_arena_map::initial_dist_precalc(const crepr::base_block3D* block) const 
   return ret;
 } /* initial_dist_precalc() */
 
-bool caching_arena_map::placement_conflict(const crepr::base_block3D* const block,
+bool caching_arena_map::placement_conflict(const crepr::sim_block3D* const block,
                                            const rmath::vector2d& loc) const {
   auto status = cspatial::conflict_checker::placement2D(this, block, loc);
   return status.x && status.y;
@@ -306,7 +306,7 @@ error:
   return false;
 } /* cloctree_verify() */
 
-void caching_arena_map::bloctree_update(const crepr::base_block3D* block,
+void caching_arena_map::bloctree_update(const crepr::sim_block3D* block,
                                         const locking& locking) {
   maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 

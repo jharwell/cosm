@@ -68,7 +68,7 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   size_t capacity(void) const override { return m_clust.capacity(); }
   size_t size(void) const override { return m_clust.n_blocks(); }
 
-  dist_status distribute_block(crepr::base_block3D* block) override;
+  dist_status distribute_block(crepr::sim_block3D* block) override;
   dist_status distribute_blocks(cds::block3D_vectorno& blocks,
                                 bool strict_success) override;
   cfds::block3D_cluster_vectorno block_clustersno(void) override;

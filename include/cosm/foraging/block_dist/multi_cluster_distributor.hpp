@@ -77,7 +77,7 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   }
   size_t size(void) const override RCSW_PURE;
 
-  dist_status distribute_block(crepr::base_block3D* block) override;
+  dist_status distribute_block(crepr::sim_block3D* block) override;
 
  private:
   /* clang-format off */

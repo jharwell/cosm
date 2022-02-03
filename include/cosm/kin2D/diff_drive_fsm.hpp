@@ -60,8 +60,10 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    *                      heading that will not trigger a hard (in place) turn.
    */
   diff_drive_fsm(double max_speed, const rmath::radians& soft_turn_max);
-  diff_drive_fsm(const diff_drive_fsm& other);
-  diff_drive_fsm& operator=(const diff_drive_fsm&) = delete;
+
+  /* move only constructible/assignable to work with the saa subsystem */
+  diff_drive_fsm(diff_drive_fsm&&);
+  diff_drive_fsm& operator=(diff_drive_fsm&&);
 
   /*
    * \brief Gets a direction vector as input and transforms it into wheel

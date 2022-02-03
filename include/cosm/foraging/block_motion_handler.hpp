@@ -38,7 +38,7 @@
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 namespace cosm::arena {
@@ -93,7 +93,7 @@ class block_motion_handler : public rer::client<block_motion_handler>,
   void random_walk(carena::base_arena_map* map);
 
   boost::optional<rmath::vector2z>
-  free_adjacent_coord(const crepr::base_block3D* block,
+  free_adjacent_coord(const crepr::sim_block3D* block,
                       const carena::base_arena_map* map);
 
   /* clang-format off */

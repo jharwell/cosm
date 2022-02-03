@@ -70,16 +70,14 @@ boost::optional<std::string> goal_acq_metrics_csv_sink::csv_line_build(
 
   auto* d = static_cast<const goal_acq_metrics_data*>(data);
   std::string line;
-
-  line += csv_entry_intavg(d->interval.n_acquiring_goal.load());
-  line += csv_entry_tsavg(d->cum.n_acquiring_goal.load(), t);
-  line += csv_entry_intavg(d->interval.n_vectoring_to_goal.load());
-  line += csv_entry_tsavg(d->cum.n_vectoring_to_goal.load(), t);
-  line += csv_entry_intavg(d->interval.n_true_exploring_for_goal.load());
-  line += csv_entry_tsavg(d->cum.n_true_exploring_for_goal.load(), t);
-  line += csv_entry_intavg(d->interval.n_false_exploring_for_goal.load());
-  line += csv_entry_tsavg(d->cum.n_false_exploring_for_goal.load(), t, true);
-
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_acquiring_goal));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_acquiring_goal), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_vectoring_to_goal));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_vectoring_to_goal), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_true_exploring_for_goal));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_true_exploring_for_goal), t);
+  line += csv_entry_intavg(ral::mt_load(d->interval.n_false_exploring_for_goal));
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_false_exploring_for_goal), t, true);
   return boost::make_optional(line);
 } /* csv_line_build() */
 

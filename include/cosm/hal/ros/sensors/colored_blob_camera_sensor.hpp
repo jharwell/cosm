@@ -60,14 +60,16 @@ class colored_blob_camera_sensor final : public rer::client<colored_blob_camera_
                                          public chros::sensors::ros_sensor {
  public:
   using reading_type = chsensors::colored_blob_camera_sensor_reading;
-  colored_blob_camera_sensor(void)
+  colored_blob_camera_sensor(const cros::topic& robot_ns)
       : ER_CLIENT_INIT("cosm.hal.sensors.colored_blob_camera"),
-        ros_sensor({}) {
+        ros_sensor(robot_ns) {
     disable();
   }
 
   const colored_blob_camera_sensor& operator=(const colored_blob_camera_sensor&) = delete;
-  colored_blob_camera_sensor(const colored_blob_camera_sensor&) = default;
+  colored_blob_camera_sensor(const colored_blob_camera_sensor&) = delete;
+  colored_blob_camera_sensor& operator=(colored_blob_camera_sensor&&) = default;
+  colored_blob_camera_sensor(colored_blob_camera_sensor&&) = default;
 
   /**
    * \brief Get the sensor readings for the robot.

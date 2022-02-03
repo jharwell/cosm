@@ -127,10 +127,10 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
   cds::block3D_vectorno free_blocks(bool oos_ok) const override;
 
-  bool placement_conflict(const crepr::base_block3D* block,
+  bool placement_conflict(const crepr::sim_block3D* block,
                           const rmath::vector2d& loc) const override;
 
-  void bloctree_update(const crepr::base_block3D* block,
+  void bloctree_update(const crepr::sim_block3D* block,
                        const locking& locking) override;
   void cloctree_update(const carepr::arena_cache* cache);
   /**
@@ -157,7 +157,7 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   void created_caches_clear(void) { m_created_caches.clear(); }
 
   cds::const_spatial_entity_vector
-  initial_dist_precalc(const crepr::base_block3D* block) const override;
+  initial_dist_precalc(const crepr::sim_block3D* block) const override;
 
 
   void ordered_lock(const locking& locking) override;

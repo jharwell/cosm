@@ -61,6 +61,10 @@ class block_transporter_metrics_collector final : public rmetrics::base_collecto
   void reset_after_interval(void) override;
   const rmetrics::base_data* data(void) const override { return &m_data; }
 
+#if !defined(RCPPSW_AL_MT_SAFE_TYPES)
+  void data(const block_transporter_metrics_data& data) { m_data = data; }
+#endif
+
  private:
   /* clang-format off */
   block_transporter_metrics_data m_data{};

@@ -42,7 +42,7 @@ class base_arena_map;
 } /* namespace cosm::arena */
 
 namespace cosm::repr {
-class base_block3D;
+class sim_block3D;
 } /* namespace cosm::repr */
 
 NS_START(cosm, arena, operations, detail);
@@ -75,7 +75,7 @@ class free_block_drop : public rer::client<free_block_drop>,
     using inherited = cell2D_op::visit_typelist;
     using others = rmpl::typelist<base_arena_map,
                                   caching_arena_map,
-                                  crepr::base_block3D>;
+                                  crepr::sim_block3D>;
     using value = boost::mpl::joint_view<inherited::type, others::type>;
   };
 
@@ -120,7 +120,7 @@ class free_block_drop : public rer::client<free_block_drop>,
    * both when a robot drops a block AND when a block distribution happens, and
    * the currentl time is very difficult to access in the second case.
    */
-  void visit(crepr::base_block3D& block);
+  void visit(crepr::sim_block3D& block);
 
  protected:
   /**
@@ -130,7 +130,7 @@ class free_block_drop : public rer::client<free_block_drop>,
    * \param resolution The resolution of the arena map.
    * \param locking What locks are currently held by the caller?
    */
-  free_block_drop(crepr::base_block3D* block,
+  free_block_drop(crepr::sim_block3D* block,
                   const rmath::vector2z& coord,
                   const rtypes::discretize_ratio& resolution,
                   const locking& locking);
@@ -145,7 +145,7 @@ class free_block_drop : public rer::client<free_block_drop>,
   const rtypes::discretize_ratio mc_resolution;
   const locking                  mc_locking;
 
-  crepr::base_block3D*           m_block;
+  crepr::sim_block3D*           m_block;
   /* clang-format on */
 };
 

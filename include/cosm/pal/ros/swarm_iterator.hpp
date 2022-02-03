@@ -56,9 +56,9 @@ struct swarm_iterator {
    * \param cb Function to run on each robot in the swarm.
    */
   template <typename TFunction>
-  static void robots(const cpros::swarm_manager_adaptor* const sm,
+  static void robots(size_t n_robots,
                      const TFunction& cb) {
-    for (size_t i = 0; i < sm->swarm_size(); ++i) {
+    for (size_t i = 0; i < n_robots; ++i) {
       auto robot_ns = cros::topic("/") /
                       cpal::kRobotNamePrefix /
                       std::to_string(i);

@@ -29,7 +29,7 @@
 #include "cosm/arena/operations/free_block_drop.hpp"
 #include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
 
 /*******************************************************************************
@@ -63,7 +63,7 @@ random_distributor::random_distributor(const cads::arena_grid::view& area,
  * Member Functions
  ******************************************************************************/
 dist_status
-random_distributor::distribute_block(crepr::base_block3D* block) {
+random_distributor::distribute_block(crepr::sim_block3D* block) {
   cds::cell2D* cell = nullptr;
   auto coords = coord_search(block);
   if (!coords) {
@@ -135,7 +135,7 @@ random_distributor::distribute_block(crepr::base_block3D* block) {
 } /* distribute_block() */
 
 bool random_distributor::verify_block_dist(
-    const crepr::base_block3D* const block,
+    const crepr::sim_block3D* const block,
     RCPPSW_UNUSED const cds::cell2D* const cell) {
   /* blocks should not be out of sight after distribution... */
   ER_CHECK(!block->is_out_of_sight(),
@@ -171,7 +171,7 @@ error:
 } /* verify_block_dist() */
 
 boost::optional<typename random_distributor::coord_search_res_t>
-random_distributor::coord_search(const crepr::base_block3D* block) {
+random_distributor::coord_search(const crepr::sim_block3D* block) {
   /* -1 because we are working with array indices */
   rmath::rangez area_xrange(m_area.index_bases()[0], m_area.shape()[0] - 1);
   rmath::rangez area_yrange(m_area.index_bases()[1], m_area.shape()[1] - 1);
@@ -196,7 +196,7 @@ boost::optional<random_distributor::coord_search_res_t>
 random_distributor::coord_search_random(
     const rmath::rangez& c_xrange,
     const rmath::rangez& c_yrange,
-    const crepr::base_block3D* block) {
+    const crepr::sim_block3D* block) {
   /*
    * Try to find an available set of relative+absolute coordinates such that if
    * the entity is placed there it will not overlap any other entities in the
@@ -221,7 +221,7 @@ boost::optional<random_distributor::coord_search_res_t>
 random_distributor::coord_search_free_cell(
     const rmath::rangez& c_xrange,
     const rmath::rangez& c_yrange,
-    const crepr::base_block3D* block) {
+    const crepr::sim_block3D* block) {
   std::vector<rmath::vector2z> rel_coords;
   for (size_t i = c_xrange.lb(); i <= c_xrange.ub(); ++i) {
     for (size_t j = c_yrange.lb(); j <= c_yrange.ub(); ++j) {
@@ -245,7 +245,7 @@ random_distributor::coord_search_free_cell(
 } /* coord_search_free_cell() */
 
 bool random_distributor::coord_conflict_check(
-    const crepr::base_block3D* block,
+    const crepr::sim_block3D* block,
     const rmath::vector2d& drop_loc) const {
   /*
    * If this distributor is part of a powerlaw distributor, blocks will not be

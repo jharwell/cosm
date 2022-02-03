@@ -24,9 +24,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <atomic>
-
 #include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -44,8 +43,8 @@ NS_START(cosm, fsm, metrics, detail);
  * be atomic so counts are valid in parallel metric collection contexts.
  */
 struct block_transporter_metrics_data {
-  std::atomic_size_t n_phototaxiing_to_goal_including_ca{0};
-  std::atomic_size_t n_phototaxiing_to_goal_no_ca{0};
+  ral::mt_size_t n_phototaxiing_to_goal_including_ca{0};
+  ral::mt_size_t n_phototaxiing_to_goal_no_ca{0};
 };
 
 NS_END(detail);

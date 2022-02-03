@@ -46,15 +46,16 @@ NS_START(cosm, ros);
 class robot_manager_adaptor : public cpal::base_swarm_manager,
                               public rer::client<robot_manager_adaptor> {
  public:
-  robot_manager_adaptor(void);
-  ~robot_manager_adaptor(void) override;
+  robot_manager_adaptor(void)
+      : ER_CLIENT_INIT("cosm.ros.robot_manager_adaptor") {}
+  ~robot_manager_adaptor(void) override = default;
 
   /* Not copy constructable/assignable by default */
   robot_manager_adaptor(const robot_manager_adaptor&) = delete;
   const robot_manager_adaptor& operator=(const robot_manager_adaptor&) = delete;
 
   /* robot_manager overrides */
-  void init(ticpp::Element&) override;
+  void init(ticpp::Element&) override {}
   void pre_step(void) override {}
   void reset(void) override {}
   void post_step(void) override {}
