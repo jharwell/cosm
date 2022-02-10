@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_
-#define INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -95,4 +94,3 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRIDQ3D_VIEW_ENTITY_HPP_ */

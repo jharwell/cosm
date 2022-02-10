@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_DIST_STATUS_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_DIST_STATUS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -54,4 +53,3 @@ enum class dist_status {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_DIST_STATUS_HPP_ */

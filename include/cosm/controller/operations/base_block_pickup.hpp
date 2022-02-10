@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_OPERATIONS_BASE_BLOCK_PICKUP_HPP_
-#define INCLUDE_COSM_CONTROLLER_OPERATIONS_BASE_BLOCK_PICKUP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -89,4 +88,3 @@ class base_block_pickup : public rer::client<base_block_pickup> {
 
 NS_END(operations, controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_OPERATIONS_BASE_BLOCK_PICKUP_HPP_ */

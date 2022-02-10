@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_FREE_BLOCK_PICKUP_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_FREE_BLOCK_PICKUP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -124,4 +123,3 @@ class free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl 
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_FREE_BLOCK_PICKUP_HPP_ */

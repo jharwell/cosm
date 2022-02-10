@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_FSM_ACQUIRE_GOAL_FSM_HPP_
-#define INCLUDE_COSM_SPATIAL_FSM_ACQUIRE_GOAL_FSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -295,4 +294,3 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
 
 NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_FSM_ACQUIRE_GOAL_FSM_HPP_ */

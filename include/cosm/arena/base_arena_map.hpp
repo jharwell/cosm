@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_BASE_ARENA_MAP_HPP_
-#define INCLUDE_COSM_ARENA_BASE_ARENA_MAP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -400,4 +399,3 @@ class base_arena_map : public rer::client<base_arena_map>,
 
 NS_END(arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_BASE_ARENA_MAP_HPP_ */

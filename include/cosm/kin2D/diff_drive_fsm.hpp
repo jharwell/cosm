@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_KIN2D_DIFF_DRIVE_FSM_HPP_
-#define INCLUDE_COSM_KIN2D_DIFF_DRIVE_FSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -158,4 +157,3 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
 
 NS_END(kin2D, cosm);
 
-#endif /* INCLUDE_COSM_KIN2D_DIFF_DRIVE_FSM_HPP_ */

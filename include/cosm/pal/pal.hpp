@@ -1,5 +1,5 @@
 /**
- * \file pal.hpp.in
+ * \file pal.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,8 +18,6 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_PAL_HPP_
-#define INCLUDE_COSM_PAL_PAL_HPP_
 
 /*******************************************************************************
  * Includes
@@ -31,11 +29,13 @@
 /*******************************************************************************
  * Macros
  ******************************************************************************/
-
+#if defined(COSM_ENABLE_PAL_TARGET_ARGOS)
 /**
  * \brief The configuration definition to compile for the ARGoS simulator.
  */
 #define COSM_PAL_TARGET_ARGOS 1
+
+#elif defined(COSM_ENABLE_PAL_TARGET_ROS)
 
 /**
  * \brief The configuration definition to compile for deploying ROS to a REAL
@@ -43,52 +43,38 @@
  */
 #define COSM_PAL_TARGET_ROS 2
 
+#endif
+
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, pal);
 
-#if (COSM_PAL_TARGET == COSM_PAL_TARGET_ARGOS)
-
-#undef COSM_PAL_TARGET_ROS
+/**
+ * \brief The name of the type robots within the swarm from the POV of
+ * ARGoS/ROS.
+ */
+extern const std::string kRobotType;
 
 /**
- * \brief The name of the type robots within the swarm from the POV of ARGoS.
+ * \brief The prefix that all robot unique IDs have within ARGoS/ROS.
  */
-static inline const std::string kRobotType = "@COSM_ARGOS_ROBOT_TYPE@";
-
-/**
- * \brief The prefix that all robot unique IDs have within ARGoS.
- */
-static inline const std::string kRobotNamePrefix = "@COSM_ARGOS_ROBOT_NAME_PREFIX@";
+extern const std::string kRobotNamePrefix;
 
 /**
  * \brief The unique name attached to the controller of the desired type in the
  * XML input file.
  */
-static inline const std::string kControllerXMLId = "@COSM_ARGOS_CONTROLLER_XML_ID@";
-#elif (COSM_PAL_TARGET == COSM_PAL_TARGET_ROS)
+extern const std::string kControllerXMLId;
 
-#undef COSM_PAL_TARGET_ARGOS
-
-/**
- * \brief The name of the type robots within the swarm from the POV of ROS.
- */
-static inline const std::string kRobotType = "@COSM_ROS_ROBOT_TYPE@";
+#if defined(COSM_PAL_TARGET_ROS)
 
 /**
- * \brief The prefix that all robot unique IDs have within ROS.
+ * \brief A hash of the current git HEAD for use in version matching messages
+ * using message_traits.
  */
-static inline const std::string kRobotNamePrefix = "@COSM_ROS_ROBOT_NAME_PREFIX@";
+extern const std::string kMsgTraitsMD5;
 
-/**
- * \brief The unique name attached to the controller of the desired type in the
- * XML input file.
- */
-static inline const std::string kControllerXMLId = "@COSM_ROS_CONTROLLER_XML_ID@";
-
-#endif /* COSM_PAL_TARGET */
+#endif
 
 NS_END(pal, cosm)
-
-#endif /* INCLUDE_COSM_CONFIG_HPP_ */

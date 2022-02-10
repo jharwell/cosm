@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_OPERATIONS_TASK_ID_EXTRACT_HPP_
-#define INCLUDE_COSM_CONTROLLER_OPERATIONS_TASK_ID_EXTRACT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ struct task_id_extract {
 
 NS_END(operations, controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_OPERATIONS_TASK_ID_EXTRACT_HPP_ */

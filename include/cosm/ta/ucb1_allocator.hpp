@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_UCB1_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_UCB1_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -74,4 +73,3 @@ class ucb1_allocator : public rer::client<ucb1_allocator> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_UCB1_ALLOCATOR_HPP_ */

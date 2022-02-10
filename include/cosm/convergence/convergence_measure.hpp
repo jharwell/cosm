@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_CONVERGENCE_MEASURE_HPP_
-#define INCLUDE_COSM_CONVERGENCE_CONVERGENCE_MEASURE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -122,4 +121,3 @@ class convergence_measure : public rmath::expression<double> {
 
 NS_END(convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_CONVERGENCE_MEASURE_HPP_ */

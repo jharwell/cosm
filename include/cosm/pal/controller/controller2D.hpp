@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_CONTROLLER_CONTROLLER2D_HPP_
-#define INCLUDE_COSM_PAL_CONTROLLER_CONTROLLER2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ using controller2D = cpros::controller::adaptor2D;
 
 NS_END(controller, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_CONTROLLER_CONTROLLER2D_HPP_ */

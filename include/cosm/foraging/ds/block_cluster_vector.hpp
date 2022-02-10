@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_DS_BLOCK_CLUSTER_VECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -119,4 +118,3 @@ class block3D_cluster_vectorno : public rpdecorator::decorator<std::vector<block
 
 NS_END(ds, foraging, cosm);
 
-#endif /* INCLUDE_COSM_DS_BLOCK_CLUSTER_VECTOR_HPP_ */

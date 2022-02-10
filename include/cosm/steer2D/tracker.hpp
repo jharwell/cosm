@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_TRACKER_HPP_
-#define INCLUDE_COSM_STEER2D_TRACKER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -99,4 +98,3 @@ class tracker {
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_TRACKER_HPP_ */

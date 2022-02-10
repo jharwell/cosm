@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_DS_DS_VARIANT_HPP_
-#define INCLUDE_COSM_TA_DS_DS_VARIANT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -45,4 +44,3 @@ using ds_variant = std::variant<bi_tdgraph>;
 
 NS_END(ds, ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_DS_DS_VARIANT_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CONFIG_GRID2D_CONFIG_HPP_
-#define INCLUDE_COSM_DS_CONFIG_GRID2D_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ struct grid2D_config final : public rconfig::base_config {
 
 NS_END(config, ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_CONFIG_GRID2D_CONFIG_HPP_ */

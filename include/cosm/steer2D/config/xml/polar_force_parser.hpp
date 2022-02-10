@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_CONFIG_XML_POLAR_FORCE_PARSER_HPP_
-#define INCLUDE_COSM_STEER2D_CONFIG_XML_POLAR_FORCE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -78,4 +77,3 @@ class polar_force_parser final : public rer::client<polar_force_parser>,
 
 NS_END(xml, config, steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_CONFIG_XML_POLAR_FORCE_PARSER_HPP_ */

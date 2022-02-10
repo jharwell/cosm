@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_BLOCK_EMBODIMENT_VARIANT_HPP_
-#define INCLUDE_COSM_ARGOS_BLOCK_EMBODIMENT_VARIANT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -47,4 +46,3 @@ using block_embodiment_variant = std::variant<
 
 NS_END(argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_BLOCK_EMBODIMENT_VARIANT_HPP_ */

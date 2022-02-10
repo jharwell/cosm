@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -88,4 +87,3 @@ class crw : public csstrategy::base_strategy,
 
 NS_END(explore, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_EXPLORE_CRW_HPP_ */

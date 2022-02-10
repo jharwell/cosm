@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_XML_NEST_ACQ_PARSER_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_XML_NEST_ACQ_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -74,4 +73,3 @@ class nest_acq_parser final : public rer::client<nest_acq_parser>,
 
 NS_END(xml, config, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_XML_NEST_ACQ_PARSER_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_METRICS_BI_TDGRAPH_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_TA_METRICS_BI_TDGRAPH_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -77,4 +76,3 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_collector {
 NS_END(metrics, ta, cosm);
 
 
-#endif /* INCLUDE_COSM_TA_METRICS_BI_TDGRAPH_METRICS_COLLECTOR_HPP_ */

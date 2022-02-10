@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_NEST_LIGHT_HPP_
-#define INCLUDE_COSM_REPR_NEST_LIGHT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -87,4 +86,3 @@ class nest_light final : public repr::colored_entity {
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_NEST_LIGHT_HPP_ */

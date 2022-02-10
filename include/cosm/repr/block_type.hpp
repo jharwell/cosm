@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_
-#define INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -63,4 +62,3 @@ std::istream& operator>>(std::istream& in, block_type& b);
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_BLOCK_TYPE_HPP_ */

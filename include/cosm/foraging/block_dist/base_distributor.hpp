@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_BASE_DISTRIBUTOR_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_BASE_DISTRIBUTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -138,4 +137,3 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_BASE_DISTRIBUTOR_HPP_ */

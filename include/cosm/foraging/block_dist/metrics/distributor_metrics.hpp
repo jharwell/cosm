@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_METRICS_DISTRIBUTOR_METRICS_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_METRICS_DISTRIBUTOR_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -80,4 +79,3 @@ class distributor_metrics : public rmetrics::base_metrics {
 
 NS_END(metrics, block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_METRICS_DISTRIBUTOR_METRICS_HPP_ */

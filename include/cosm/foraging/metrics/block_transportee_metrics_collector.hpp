@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -60,14 +59,14 @@ class block_transportee_metrics_collector final : public rmetrics::base_collecto
   /* base_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
   void reset_after_interval(void) override;
-  const block_transportee_metrics_data* data(void) const override {
+  const rmetrics::base_data* data(void) const override {
     return &m_data;
   }
-  size_t cum_transported(void) const { return m_data.cum.n_transported; }
-
-#if !defined(RCPPSW_AL_MT_SAFE_TYPES)
-  void data(const block_transportee_metrics_data& data) { m_data = data; }
+#if defined(COSM_PAL_TARGET_ROS)
+  void collect(const block_transportee_metrics_data& data) { m_data += data; }
 #endif
+
+  size_t cum_transported(void) const { return m_data.cum.n_transported; }
 
  private:
   /* clang-format off */
@@ -76,5 +75,3 @@ class block_transportee_metrics_collector final : public rmetrics::base_collecto
 };
 
 NS_END(metrics, foraging, cosm);
-
-#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_COLLECTOR_HPP_ */

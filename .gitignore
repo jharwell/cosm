@@ -48,8 +48,6 @@ compile_options.json
 # Build process
 build
 node_modules
-include/cosm/pal/pal.hpp
-ext/rcppsw
 
 # Sphinx
 docs/_build/

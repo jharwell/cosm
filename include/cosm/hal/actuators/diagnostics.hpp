@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTICS_HPP_
-#define INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -74,4 +73,3 @@ enum class diagnostics {
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTICS_HPP_ */

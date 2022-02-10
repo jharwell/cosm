@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_TASKING_ORACLE_HPP_
-#define INCLUDE_COSM_ORACLE_TASKING_ORACLE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -111,4 +110,3 @@ class tasking_oracle final : public rer::client<tasking_oracle> {
 
 NS_END(oracle, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_TASKING_ORACLE_HPP_ */

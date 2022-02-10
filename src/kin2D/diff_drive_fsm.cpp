@@ -87,12 +87,13 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
   rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
 
   /* too little of a direction change for hard turn--go to soft turn */
-  if (range.contains(data->angle.signed_normalize())) {
+  rmath::radians angle = data->angle;
+  if (range.contains(angle.signed_normalize())) {
     internal_event(ekST_SOFT_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
-  /* configure_wheel_speeds(-mc_max_speed, mc_max_speed, data->angle); */
-  configure_twist(mc_max_speed, data->angle);
+  /* hard turn=spin in place */
+  configure_twist(0, data->angle);
 
   return rpfsm::event_signal::ekHANDLED;
 }

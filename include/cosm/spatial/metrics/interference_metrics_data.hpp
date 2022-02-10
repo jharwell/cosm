@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_DATA_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -55,8 +54,20 @@ NS_END(detail);
 struct interference_metrics_data : public rmetrics::base_data {
   detail::interference_metrics_data interval{};
   detail::interference_metrics_data cum{};
+
+  interference_metrics_data& operator+=(const interference_metrics_data& rhs) {
+    ral::mt_accum(this->interval.n_exp_interference, rhs.interval.n_exp_interference);
+    ral::mt_accum(this->interval.n_episodes, rhs.interval.n_episodes);
+    ral::mt_accum(this->interval.n_entered_interference, rhs.interval.n_entered_interference);
+    ral::mt_accum(this->interval.n_exited_interference, rhs.interval.n_exited_interference);
+    ral::mt_accum(this->interval.interference_duration, rhs.interval.interference_duration);
+    ral::mt_accum(this->cum.n_exp_interference, rhs.cum.n_exp_interference);
+    ral::mt_accum(this->cum.n_episodes, rhs.cum.n_episodes);
+    ral::mt_accum(this->cum.n_entered_interference, rhs.cum.n_entered_interference);
+    ral::mt_accum(this->cum.n_exited_interference, rhs.cum.n_exited_interference);
+    ral::mt_accum(this->cum.interference_duration, rhs.cum.interference_duration);
+    return *this;
+  }
 };
 
 NS_END(metrics, spatial, cosm);
-
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_DATA_HPP_ */

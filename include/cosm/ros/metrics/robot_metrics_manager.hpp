@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_METRICS_ROBOT_METRICS_MANAGER_HPP_
-#define INCLUDE_COSM_ROS_METRICS_ROBOT_METRICS_MANAGER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -32,6 +31,7 @@
 #include "rcppsw/metrics/network_output_manager.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/ros/topic.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -57,10 +57,11 @@ NS_START(cosm, ros, metrics);
  * \brief Manager class for handling all of the metrics which can be generated
  * by COSM on robots running ROS.
  */
-class robot_metrics_manager : public rmetrics::network_output_manager,
-                             public rer::client<robot_metrics_manager> {
+class robot_metrics_manager :public rer::client<robot_metrics_manager>,
+                             public rmetrics::network_output_manager {
  public:
-  explicit robot_metrics_manager(const rmconfig::metrics_config* mconfig);
+  robot_metrics_manager(const cros::topic& robot_ns,
+                        const rmconfig::metrics_config* mconfig);
   ~robot_metrics_manager(void) override = default;
 
   /**
@@ -105,4 +106,3 @@ class robot_metrics_manager : public rmetrics::network_output_manager,
 
 NS_END(metrics, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_METRICS_ROBOT_METRICS_MANAGER_HPP_ */

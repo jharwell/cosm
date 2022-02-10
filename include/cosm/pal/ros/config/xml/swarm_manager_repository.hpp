@@ -20,8 +20,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_CONFIG_XML_SWARM_MANAGER_REPOSITORY_HPP_
-#define INCLUDE_COSM_PAL_ROS_CONFIG_XML_SWARM_MANAGER_REPOSITORY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -47,4 +46,3 @@ class swarm_manager_repository : public cpconfig::xml::base_swarm_manager_reposi
 
 NS_END(xml, config, ros, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ROS_CONFIG_XML_SWARM_MANAGER_REPOSITORY_HPP_ */

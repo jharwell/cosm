@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_CELL3D_FSM_HPP_
-#define INCLUDE_COSM_FSM_CELL3D_FSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -101,4 +100,3 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
 
 NS_END(fsm, cosm);
 
-#endif /* INCLUDE_COSM_FSM_CELL3D_FSM_HPP_ */

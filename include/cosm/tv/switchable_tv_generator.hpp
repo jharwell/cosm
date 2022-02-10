@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_SWITCHABLE_TV_GENERATOR_HPP_
-#define INCLUDE_COSM_TV_SWITCHABLE_TV_GENERATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -87,4 +86,3 @@ class switchable_tv_generator {
 
 NS_END(tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_SWITCHABLE_TV_GENERATOR_HPP_ */

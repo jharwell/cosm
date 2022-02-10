@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_LOCS2D_METRICS_CSV_SINK_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_LOCS2D_METRICS_CSV_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -44,4 +43,3 @@ class goal_acq_locs2D_metrics_csv_sink final:
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_LOCS2D_METRICS_CSV_SINK_HPP_ */

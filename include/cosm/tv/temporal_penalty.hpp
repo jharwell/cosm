@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_TEMPORAL_PENALTY_HPP_
-#define INCLUDE_COSM_TV_TEMPORAL_PENALTY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -105,4 +104,3 @@ class temporal_penalty {
 
 NS_END(tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_TEMPORAL_PENALTY_HPP_ */

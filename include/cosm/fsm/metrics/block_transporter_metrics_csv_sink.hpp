@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_CSV_SINK_HPP_
-#define INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_CSV_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -48,7 +47,9 @@ class block_transporter_metrics_collector;
  * \brief Sink for \ref block_transporter_metrics and \ref
  * block_transporter_metrics_collector to output metrics to .csv.
  */
-class block_transporter_metrics_csv_sink final : public rmetrics::csv_sink {
+class block_transporter_metrics_csv_sink final
+    : public rer::client<block_transporter_metrics_csv_sink>,
+      public rmetrics::csv_sink {
  public:
   using collector_type = block_transporter_metrics_collector;
 
@@ -69,5 +70,3 @@ class block_transporter_metrics_csv_sink final : public rmetrics::csv_sink {
 };
 
 NS_END(metrics, fsm, cosm);
-
-#endif /* INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_CSV_SINK_HPP_ */

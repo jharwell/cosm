@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_RANDOM_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_RANDOM_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -66,4 +65,3 @@ class random_allocator : public rer::client<random_allocator> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_RANDOM_ALLOCATOR_HPP_ */

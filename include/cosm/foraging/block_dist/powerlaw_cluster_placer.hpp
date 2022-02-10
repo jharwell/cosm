@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_POWERLAW_CLUSTER_PLACER_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_POWERLAW_CLUSTER_PLACER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -130,4 +129,3 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_POWERLAW_CLUSTER_PLACER_HPP_ */

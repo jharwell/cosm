@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_DISPATCHER_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_DISPATCHER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -143,4 +142,3 @@ class  dispatcher final : public rer::client<dispatcher> {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_DISPATCHER_HPP_ */

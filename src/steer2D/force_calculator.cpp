@@ -65,10 +65,9 @@ rmath::vector2d force_calculator::wander(rmath::rng* rng) {
                       rutils::color::kMAGENTA,
                       force); /* accum */
 
-  ER_DEBUG("Wander force: (%f, %f)@%f [%f]",
-           force.x(),
-           force.y(),
-           force.angle().v(),
+  ER_DEBUG("Wander force: %s@%s [%f]",
+           rcppsw::to_string(force).c_str(),
+           rcppsw::to_string(force.angle()).c_str(),
            force.length());
   return force;
 } /* wander() */
@@ -82,8 +81,8 @@ force_calculator::avoidance(const rmath::vector2d& closest_obstacle) {
                       force); /* accum */
 
   ER_DEBUG("Avoidance force: %s@%s [%f]",
-           force.to_str().c_str(),
-           force.angle().to_str().c_str(),
+           rcppsw::to_string(force).c_str(),
+           rcppsw::to_string(force.angle()).c_str(),
            force.length());
   return force;
 } /* avoidance() */

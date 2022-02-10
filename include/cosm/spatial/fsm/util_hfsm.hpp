@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_FSM_UTIL_HFSM_HPP_
-#define INCLUDE_COSM_SPATIAL_FSM_UTIL_HFSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -141,4 +140,3 @@ class util_hfsm : public rpfsm::hfsm,
 
 NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_FSM_UTIL_HFSM_HPP_ */

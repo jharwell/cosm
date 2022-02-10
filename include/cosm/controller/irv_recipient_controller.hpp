@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_IRV_RECIPIENT_CONTROLLER_HPP_
-#define INCLUDE_COSM_CONTROLLER_IRV_RECIPIENT_CONTROLLER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -70,4 +69,3 @@ class irv_recipient_controller {
 
 NS_END(controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_IRV_RECIPIENT_CONTROLLER_HPP_ */

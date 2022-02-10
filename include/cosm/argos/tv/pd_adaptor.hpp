@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_TV_PD_ADAPTOR_HPP_
-#define INCLUDE_COSM_ARGOS_TV_PD_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -136,4 +135,3 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
 
 NS_END(tv, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_TV_PD_ADAPTOR_HPP_ */

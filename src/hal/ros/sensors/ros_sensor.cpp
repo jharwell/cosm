@@ -39,9 +39,10 @@ ros_sensor::ros_sensor(const cros::topic& robot_ns)
  * Member Functions
  ******************************************************************************/
 void ros_sensor::disable(void) {
-  if (m_subscribed) {
+  if (is_enabled()) {
+    ER_DEBUG("Remove subscription to '%s'", m_topic.c_str());
     decoratee().~impl_type();
-    m_subscribed = false;
+    m_topic = "";
   }
 }
 

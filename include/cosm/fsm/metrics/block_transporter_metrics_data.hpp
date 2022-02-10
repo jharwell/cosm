@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_DATA_HPP_
-#define INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,8 +51,14 @@ NS_END(detail);
 struct block_transporter_metrics_data : public rmetrics::base_data {
   detail::block_transporter_metrics_data interval{};
   detail::block_transporter_metrics_data cum{};
+  block_transporter_metrics_data&  operator+=(const  block_transporter_metrics_data &rhs) {
+    ral::mt_accum(this->interval.n_phototaxiing_to_goal_including_ca, rhs.interval.n_phototaxiing_to_goal_including_ca);
+    ral::mt_accum(this->interval.n_phototaxiing_to_goal_no_ca, rhs.interval.n_phototaxiing_to_goal_no_ca);
+
+    ral::mt_accum(this->cum.n_phototaxiing_to_goal_including_ca, rhs.cum.n_phototaxiing_to_goal_including_ca);
+    ral::mt_accum(this->cum.n_phototaxiing_to_goal_no_ca, rhs.cum.n_phototaxiing_to_goal_no_ca);
+    return *this;
+  }
 };
 
 NS_END(metrics, fsm, cosm);
-
-#endif /* INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_DATA_HPP_ */

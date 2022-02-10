@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_
-#define INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -54,6 +53,11 @@ class robot_manager_adaptor : public cpal::base_swarm_manager,
   robot_manager_adaptor(const robot_manager_adaptor&) = delete;
   const robot_manager_adaptor& operator=(const robot_manager_adaptor&) = delete;
 
+  /**
+   * \brief Is it time for the experiment to end?
+   */
+  virtual bool experiment_finished(void) const = 0;
+
   /* robot_manager overrides */
   void init(ticpp::Element&) override {}
   void pre_step(void) override {}
@@ -85,5 +89,3 @@ class robot_manager_adaptor : public cpal::base_swarm_manager,
 };
 
 NS_END(ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_ROBOT_MANAGER_ADAPTOR_HPP_ */

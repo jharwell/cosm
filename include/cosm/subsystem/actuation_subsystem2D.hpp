@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -55,4 +54,3 @@ class actuation_subsystem2D : public chsubsystem::actuation_subsystem2D {
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_ */

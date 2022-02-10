@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -94,4 +93,3 @@ using cache_extent_set_visitor = rpvisitor::filtered_visitor<detail::cache_exten
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_CACHE_EXTENT_SET_HPP_ */

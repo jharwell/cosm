@@ -71,10 +71,10 @@ void base_controller2D::mdc_ts_update(void) const {
  ******************************************************************************/
 rtypes::spatial_dist base_controller2D::ts_distance_impl(void) const {
   /*
-   * If you allow distance gathering at timesteps < 1, you get a big jump
+   * If you allow distance gathering at timesteps < 2, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
-  if (saa()->sensing()->tick() > 1U) {
+  if (saa()->sensing()->tick() > 2U) {
     return rtypes::spatial_dist(saa()->sensing()->tick_travel2D().length());
   }
   return rtypes::spatial_dist(0.0);
@@ -82,10 +82,10 @@ rtypes::spatial_dist base_controller2D::ts_distance_impl(void) const {
 
 rmath::vector3d base_controller2D::ts_velocity_impl(void) const {
   /*
-   * If you allow distance gathering at timesteps < 1, you get a big jump
+   * If you allow distance gathering at timesteps < 2, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
-  if (RCPPSW_LIKELY(saa()->sensing()->tick() > 1U)) {
+  if (RCPPSW_LIKELY(saa()->sensing()->tick() > 2U)) {
     return saa()->odometry().twist.linear;
   }
   return { 0.0, 0.0, 0.0 };

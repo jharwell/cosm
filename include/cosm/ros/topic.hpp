@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_TOPIC_HPP_
-#define INCLUDE_COSM_ROS_TOPIC_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -44,12 +43,6 @@ using topic = std::filesystem::path;
 /*******************************************************************************
  * Free Functions
  ******************************************************************************/
-static inline topic to_ns(const rtypes::type_uuid& robot_id) {
-  return cros::topic("/" +
-                     cpal::kRobotNamePrefix +
-                     rcppsw::to_string(robot_id));
-} /* to_ns() */
+topic to_ns(const rtypes::type_uuid& robot_id);
 
 NS_END(ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_TOPIC_HPP_ */

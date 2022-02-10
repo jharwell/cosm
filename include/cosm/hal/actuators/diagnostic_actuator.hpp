@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ using diagnostic_actuator = chros::actuators::diagnostic_actuator;
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_ */

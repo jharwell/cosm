@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_EPSILON_GREEDY_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_EPSILON_GREEDY_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -93,4 +92,3 @@ class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_EPSILON_GREEDY_ALLOCATOR_HPP_ */

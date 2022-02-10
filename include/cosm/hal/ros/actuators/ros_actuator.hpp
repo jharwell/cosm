@@ -18,14 +18,11 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ROS_ACTUATORS_ROS_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ROS_ACTUATORS_ROS_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-
 #include <ros/ros.h>
 
 #include "cosm/hal/actuators/base_actuator.hpp"
@@ -77,14 +74,16 @@ public:
 
 protected:
   template <typename TMsg>
-      void advertise(const std::string& topic) {
+      void advertise(const cros::topic& topic) {
     ::ros::NodeHandle nh;
     auto n_subs_old = decoratee().getNumSubscribers();
     redecorate(nh.advertise<TMsg>(topic, kQueueBufferSize));
     m_publishing = true;
 
     while(::ros::ok() && decoratee().getNumSubscribers() == n_subs_old) {
-      ::ros::Duration(0.2).sleep();
+      /* For real robots, things take a while to come up so we have to wait */
+      ::ros::Duration(1.0).sleep();
+
       ER_DEBUG("Wait for subscriber connection on topic '%s'",
                topic.c_str());
     }
@@ -93,6 +92,7 @@ protected:
             topic.c_str());
   }
   cros::topic robot_ns(void) const { return m_robot_ns; }
+
 private:
   /* clang-format off */
   cros::topic m_robot_ns;
@@ -102,4 +102,3 @@ private:
 
 NS_END(actuators, ros, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ROS_ACTUATORS_ROS_ACTUATOR_HPP_ */

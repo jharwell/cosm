@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_EMBODIED_BLOCK_CREATOR_HPP_
-#define INCLUDE_COSM_ARGOS_EMBODIED_BLOCK_CREATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -74,4 +73,3 @@ class embodied_block_creator {
 
 NS_END(argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_EMBODIED_BLOCK_CREATOR_HPP_ */

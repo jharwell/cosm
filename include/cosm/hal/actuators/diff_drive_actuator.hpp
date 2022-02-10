@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ using diff_drive_actuator = chros::actuators::diff_drive_actuator;
 
 NS_END(actuators, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_ */

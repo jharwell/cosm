@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_CSV_SINK_HPP_
-#define INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_CSV_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -69,4 +68,3 @@ class convergence_metrics_csv_sink final : public rmetrics::csv_sink {
 
 NS_END(convergence, metrics, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_CSV_SINK_HPP_ */

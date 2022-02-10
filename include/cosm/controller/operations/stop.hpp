@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_
-#define INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -68,4 +67,3 @@ class stop : public rer::client<stop> {
 
 NS_END(operations, controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_OPERATIONS_STOP_HPP_ */

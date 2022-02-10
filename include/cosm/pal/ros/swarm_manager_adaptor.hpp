@@ -18,13 +18,12 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <ros/time.h>
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/pal/base_swarm_manager.hpp"
 
@@ -46,32 +45,36 @@ NS_START(cosm, pal, ros);
 class swarm_manager_adaptor : public cpal::base_swarm_manager,
                               public rer::client<swarm_manager_adaptor> {
  public:
-  swarm_manager_adaptor(void);
+  swarm_manager_adaptor(size_t n_robots);
   ~swarm_manager_adaptor(void) override = default;
 
   /* Not copy constructable/assignable by default */
   swarm_manager_adaptor(const swarm_manager_adaptor&) = delete;
   const swarm_manager_adaptor& operator=(const swarm_manager_adaptor&) = delete;
 
+  /**
+   * \brief Is it time for the experiment to end?
+   */
+  virtual bool experiment_finished(void) const = 0;
+
   /* swarm_manager overrides */
-  void init(ticpp::Element&) override;
+  void init(ticpp::Element&) override {}
   void pre_step(void) override {}
   void reset(void) override {}
   void post_step(void) override {}
   void destroy(void) override {}
 
-  size_t swarm_size(void) const { return m_n_robots; }
-
  protected:
+  size_t swarm_size(void) const { return mc_n_robots; }
+
 #if (LIBRA_ER >= LIBRA_ER_ALL)
   void ndc_uuid_push(void) const override final {
     ER_NDC_PUSH("[ros_sm]");
   }
   void ndc_uuid_pop(void) const override final { ER_NDC_POP(); }
   void mdc_ts_update(void) const override final {
-    auto diff = ::ros::Time::now().sec - m_start.sec;
     ER_MDC_RM("time");
-    ER_MDC_ADD("time", "[t=" + rcppsw::to_string(diff) + "]");
+    ER_MDC_ADD("time", "[t=" + rcppsw::to_string(timestep()) + "]");
   }
 #else
   void ndc_uuid_push(void) const override final {}
@@ -80,13 +83,9 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 #endif
 
  private:
-  size_t m_n_robots{0};
-
   /* clang-format off */
-  ::ros::Time m_start{::ros::Time::now()};
+  const size_t mc_n_robots;
   /* clang-format on */
 };
 
 NS_END(ros, pal, cosm);
-
-#endif /* INCLUDE_COSM_PAL_ROS_SWARM_MANAGER_ADAPTOR_HPP_ */

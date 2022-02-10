@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
-#define INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -75,4 +74,3 @@ class interference_tracker final : public cfsm::state_tracker,
 
 NS_END(spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_INTERFERENCE_TRACKER_HPP_ */

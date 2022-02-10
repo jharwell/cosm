@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ROS_SENSORS_ROS_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ROS_SENSORS_ROS_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,34 +71,33 @@ public:
    */
   void disable(void) override;
 
-  bool is_enabled(void) const override { return m_subscribed; }
+  bool is_enabled(void) const override { return m_topic != ""; }
 
 protected:
   template <typename TCallback, typename TClass>
       void subscribe(const cros::topic& topic, TCallback cb, TClass* inst) {
     ::ros::NodeHandle nh;
     auto n_pubs_old = decoratee().getNumPublishers();
-    redecorate(nh.subscribe(topic, kQueueBufferSize, cb, inst));
+    m_topic = topic;
+    redecorate(nh.subscribe(m_topic, kQueueBufferSize, cb, inst));
 
     while(::ros::ok() && decoratee().getNumPublishers() == n_pubs_old) {
-      ::ros::Duration(0.2).sleep();
+      /* For real robots, things take a while to come up so we have to wait */
+      ::ros::Duration(1.0).sleep();
+
       ER_DEBUG("Wait for topic '%s' subscription to activate",
-               topic.c_str());
+               m_topic.c_str());
     }
-    m_subscribed = true;
     ER_INFO("Topic '%s' subscription active",
-             topic.c_str());
+            m_topic.c_str());
   }
   cros::topic robot_ns(void) const { return m_robot_ns; }
-
 
 private:
   /* clang-format off */
   cros::topic m_robot_ns;
-  bool        m_subscribed{false};
+  cros::topic m_topic{};
   /* clang-format on */
 };
 
 NS_END(sensors, ros, hal, cosm);
-
-#endif /* INCLUDE_COSM_HAL_ROS_SENSORS_ROS_SENSOR_HPP_ */

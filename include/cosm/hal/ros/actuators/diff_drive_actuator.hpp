@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ROS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ROS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,7 +75,7 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
   void enable(void) override;
 
   void set_from_twist(const ckin::twist& desired,
-                      const rmath::range<rmath::radians>&);
+                      const rmath::range<rmath::radians>& soft_turn);
 
  private:
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
@@ -86,4 +85,3 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
 
 NS_END(actuators, ros, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ROS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_ */

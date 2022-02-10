@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_TOPIC_SINK_HPP_
-#define INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_TOPIC_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -28,7 +27,6 @@
 
 #include "cosm/ros/metrics/topic_sink.hpp"
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/metrics/interference_metrics_data.hpp"
 #include "cosm/ros/spatial/metrics/interference_metrics_glue.hpp"
 
 /*******************************************************************************
@@ -51,7 +49,7 @@ NS_START(cosm, ros, spatial, metrics);
  * csmetrics::interference_metrics_collector to output metrics to a ROS topic.
  */
 class interference_metrics_topic_sink final
-    : public cros::metrics::topic_sink<csmetrics::interference_metrics_data> {
+    : public cros::metrics::topic_sink<crsmetrics::interference_metrics_msg> {
  public:
   using collector_type = csmetrics::interference_metrics_collector;
 
@@ -62,5 +60,3 @@ class interference_metrics_topic_sink final
 };
 
 NS_END(metrics, spatial, ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_TOPIC_SINK_HPP_ */

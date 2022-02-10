@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_TASKABLE_ARGUMENT_HPP_
-#define INCLUDE_COSM_TA_TASKABLE_ARGUMENT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ class taskable_argument {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_TASKABLE_ARGUMENT_HPP_ */

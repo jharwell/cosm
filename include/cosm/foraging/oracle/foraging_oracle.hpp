@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_ORACLE_FORAGING_ORACLE_HPP_
-#define INCLUDE_COSM_FORAGING_ORACLE_FORAGING_ORACLE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -129,4 +128,3 @@ class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
 
 NS_END(oracle, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_ORACLE_FORAGING_ORACLE_HPP_ */

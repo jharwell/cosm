@@ -17,8 +17,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_BATTERY_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_BATTERY_SENSOR_HPP_
+#pragma once
 
 /******************************************************************************
  * Includes
@@ -94,8 +93,11 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.battery"),
         chargos::sensors::argos_sensor<impl_type>(sensor) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const battery_sensor_impl& operator=(const battery_sensor_impl&) = delete;
-  battery_sensor_impl(const battery_sensor_impl&) = default;
+  battery_sensor_impl(const battery_sensor_impl&) = delete;
+  battery_sensor_impl& operator=(battery_sensor_impl&&) = default;
+  battery_sensor_impl(battery_sensor_impl&&) = default;
 
   /**
    * \brief Get the current battery sensor reading for the footbot robot.
@@ -119,4 +121,3 @@ using battery_sensor = battery_sensor_impl<::argos::CCI_BatterySensor>;
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_BATTERY_SENSOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_METRICS_CACHES_UTILIZATION_METRICS_DATA_HPP_
-#define INCLUDE_COSM_ARENA_METRICS_CACHES_UTILIZATION_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -53,4 +52,3 @@ struct utilization_metrics_data : public rmetrics::base_data {
 
 NS_END(caches, metrics, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_METRICS_CACHES_UTILIZATION_METRICS_DATA_HPP_ */

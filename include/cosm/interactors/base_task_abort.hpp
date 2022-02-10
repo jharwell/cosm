@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_INTERACTORS_BASE_TASK_ABORT_HPP_
-#define INCLUDE_COSM_INTERACTORS_BASE_TASK_ABORT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -146,4 +145,3 @@ class base_task_abort
 
 NS_END(interactors, cosm);
 
-#endif /* INCLUDE_COSM_INTERACTORS_BASE_TASK_ABORT_HPP_ */

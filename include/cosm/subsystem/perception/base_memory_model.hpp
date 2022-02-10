@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_MEMORY_MODEL_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_MEMORY_MODEL_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -54,4 +53,3 @@ class base_memory_model {
 
 NS_END(perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_BASE_MEMORY_MODEL_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_METRICS_TOPIC_SINK_HPP_
-#define INCLUDE_COSM_ROS_METRICS_TOPIC_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -29,6 +28,8 @@
 #include <ros/ros.h>
 
 #include "rcppsw/metrics/network_sink.hpp"
+
+#include "cosm/ros/metrics/msg_traits.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -46,9 +47,9 @@ NS_START(cosm, ros, metrics);
  * topic. Metrics are written every timestep so they are available for the
  * central swarm manager node to collect and process.
  */
-template<typename TMsgData>
+template<typename TMsg>
 class topic_sink : public rmetrics::network_sink,
-                   public rer::client<topic_sink<TMsgData>> {
+                   public rer::client<topic_sink<TMsg>> {
  public:
   topic_sink(const std::string& topic,
              const rmetrics::output_mode& mode,
@@ -60,14 +61,22 @@ class topic_sink : public rmetrics::network_sink,
 
   /* network_sink overrides */
   void initialize(const rmetrics::base_data*) override {
-    m_pub = ::ros::NodeHandle().advertise<TMsgData>(topic(),
-                                                    kQueueBufferSize);
+    m_pub = ::ros::NodeHandle().advertise<TMsg>(topic(),
+                                                kQueueBufferSize);
   }
 
 
   rmetrics::write_status flush(const rmetrics::base_data* data,
                                const rtypes::timestep&) override {
-    m_pub.publish(*(static_cast<const TMsgData*>(data)));
+    static_assert(rmpl::is_complete_type<
+                  msg_traits::payload_type<TMsg>>::value,
+                  "payload_type<> must be specialized for TMsg");
+
+    using payload_type = typename msg_traits::payload_type<TMsg>::type;
+    TMsg msg;
+    msg.data = *(static_cast<const payload_type*>(data));
+    m_pub.publish(msg);
+    ER_DEBUG("Published '%s' metrics data", topic().c_str());
     return rmetrics::write_status::ekSUCCESS;
   } /* flush() */
 
@@ -93,5 +102,3 @@ class topic_sink : public rmetrics::network_sink,
 };
 
 NS_END(metrics, ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_METRICS_TOPIC_SINK_HPP_ */

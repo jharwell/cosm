@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -104,8 +103,11 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.diff_drive"),
         chargos::actuators::argos_actuator<TActuator>(wheels) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const diff_drive_actuator_impl& operator=(const diff_drive_actuator_impl&) = delete;
-  diff_drive_actuator_impl(const diff_drive_actuator_impl&) = default;
+  diff_drive_actuator_impl(const diff_drive_actuator_impl&) = delete;
+  diff_drive_actuator_impl& operator=(diff_drive_actuator_impl&&) = default;
+  diff_drive_actuator_impl(diff_drive_actuator_impl&&) = default;
 
   /**
    * \brief Stop the wheels of a robot. As far as I know, this is an immediate
@@ -178,7 +180,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
 
     /* Both wheels go straight, but one is faster than the other */
     auto angle = rmath::radians(twist.angular.z()).signed_normalize();
-    ER_TRACE("linear_x=%f, angular_z=%f, soft_turn=%s",
+    ER_TRACE("Linear_x=%f, angular_z=%f, soft_turn=%s",
              twist.linear.x(),
              angle.v(),
              rcppsw::to_string(soft_turn).c_str());
@@ -212,4 +214,3 @@ using diff_drive_actuator = diff_drive_actuator_impl<::argos::CCI_PiPuckDifferen
 
 NS_END(actuators, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_ */

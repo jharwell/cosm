@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_INTERACTORS_NEST_BLOCK_PROCESS_HPP_
-#define INCLUDE_COSM_ROS_INTERACTORS_NEST_BLOCK_PROCESS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -150,4 +149,3 @@ class nest_block_process
 
 NS_END(interactors, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_INTERACTORS_NEST_BLOCK_PROCESS_HPP_ */

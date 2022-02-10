@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_RANDOM_THRESH_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_RANDOM_THRESH_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -110,4 +109,3 @@ class random_thresh : public csstrategy::nest_acq::base_nest_acq {
 
 NS_END(nest_acq, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_RANDOM_THRESH_HPP_ */

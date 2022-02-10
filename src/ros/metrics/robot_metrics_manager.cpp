@@ -58,8 +58,11 @@ NS_START(cosm, ros, metrics);
  * Constructors/Destructors
  ******************************************************************************/
 robot_metrics_manager::robot_metrics_manager(
+    const cros::topic& robot_ns,
     const rmconfig::metrics_config* const mconfig)
-    : ER_CLIENT_INIT("cosm.ros.metrics.robot_metrics_manager") {
+    : ER_CLIENT_INIT("cosm.ros.metrics.robot_metrics_manager"),
+      network_output_manager(robot_ns.string() + "/") {
+  ER_INFO("cosm_msgs/* MD5: %s", cpal::kMsgTraitsMD5.c_str());
   /*
    * Register all standard metrics which don't require additional parameters,
    * and can by done by default.
@@ -93,7 +96,7 @@ void robot_metrics_manager::register_standard(
     rmpl::identity<cros::foraging::metrics::block_transportee_metrics_topic_sink>,
     rmpl::identity<cros::spatial::metrics::interference_metrics_topic_sink>
     >;
-
+  ER_DEBUG("Register standard metric collectors");
 
   rmetrics::register_with_sink<cros::metrics::robot_metrics_manager,
                                rmetrics::network_sink_registerer> net(this,
@@ -111,6 +114,8 @@ void robot_metrics_manager::register_standard(
 void robot_metrics_manager::register_with_n_block_clusters(
     const rmconfig::metrics_config* mconfig,
     size_t n_clusters) {
+  ER_DEBUG("Register metric collectors with block clusters: n_clusters=%zu",
+           n_clusters);
   using sink_typelist = rmpl::typelist<
     rmpl::identity<cros::foraging::metrics::block_cluster_metrics_topic_sink>
     >;

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_KIN_POSE_HPP_
-#define INCLUDE_COSM_KIN_POSE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ struct pose {
 
 NS_END(kin, cosm);
 
-#endif /* INCLUDE_COSM_KIN_POSE_HPP_ */

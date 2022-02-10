@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_ENV_SENSOR_PARSER_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_ENV_SENSOR_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ using env_sensor_parser = chros::sensors::config::xml::env_sensor_parser;
 
 NS_END(xml, config, sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_ENV_SENSOR_PARSER_HPP_ */

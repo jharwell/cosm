@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_LOSQ3D_HPP_
-#define INCLUDE_COSM_REPR_LOSQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,4 +71,3 @@ class gridQ3D_los : public crepr::base_grid_los<
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_LOSQ3D_HPP_ */

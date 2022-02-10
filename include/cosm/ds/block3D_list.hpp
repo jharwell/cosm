@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_
-#define INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -70,4 +69,3 @@ class block3D_listno : public rpdecorator::decorator<std::list<block3D_listno_ty
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_BLOCK3D_LIST_HPP_ */

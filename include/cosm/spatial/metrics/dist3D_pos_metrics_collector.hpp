@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_DIST3D_POS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_DIST3D_POS_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -63,4 +62,3 @@ class dist3D_pos_metrics_collector final : public rdmetrics::grid3D_metrics_coll
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_DIST3D_POS_METRICS_COLLECTOR_HPP_ */

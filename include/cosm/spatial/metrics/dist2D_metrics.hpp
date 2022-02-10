@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_DIST2D_METRICS_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_DIST2D_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -68,4 +67,3 @@ class dist2D_metrics : public virtual rmetrics::base_metrics {
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_spatial_metrics_DIST2D_METRICS_HPP_ */

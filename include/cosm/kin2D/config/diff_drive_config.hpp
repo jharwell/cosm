@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_KIN2D_CONFIG_DIFF_DRIVE_CONFIG_HPP_
-#define INCLUDE_COSM_KIN2D_CONFIG_DIFF_DRIVE_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -57,4 +56,3 @@ struct diff_drive_config final : public rconfig::base_config {
 
 NS_END(config, kin2D, cosm);
 
-#endif /* INCLUDE_COSM_KIN2D_CONFIG_DIFF_DRIVE_CONFIG_HPP_ */

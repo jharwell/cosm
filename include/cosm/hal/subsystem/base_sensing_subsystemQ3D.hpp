@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SENSING_SUBSYSTEMQ3D_HPP_
-#define INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SENSING_SUBSYSTEMQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -126,4 +125,3 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
 
 NS_END(subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SENSING_SUBSYSTEMQ3D _HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CONFIG_XML_GRID3D_PARSER_HPP_
-#define INCLUDE_COSM_DS_CONFIG_XML_GRID3D_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -78,4 +77,3 @@ class grid3D_parser : public rer::client<grid3D_parser>,
 
 NS_END(xml, config, ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_CONFIG_XML_GRID3D_PARSER_HPP_ */

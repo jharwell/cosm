@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_CONFIG_XML_TASKING_ORACLE_PARSER_HPP_
-#define INCLUDE_COSM_ORACLE_CONFIG_XML_TASKING_ORACLE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,4 +71,3 @@ class tasking_oracle_parser : public rer::client<tasking_oracle_parser>,
 
 NS_END(xml, config, oracle, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_CONFIG_XML_TASKING_ORACLE_PARSER_HPP_ */

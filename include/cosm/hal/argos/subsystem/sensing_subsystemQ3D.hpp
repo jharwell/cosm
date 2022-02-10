@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -152,4 +151,3 @@ class sensing_subsystemQ3D :
 
 NS_END(subsystem, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_SENSING_SUBSYSTEMQ3D _HPP_ */

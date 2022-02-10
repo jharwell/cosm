@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_INTERACTORS_FREE_BLOCK_PICKUP_HPP_
-#define INCLUDE_COSM_ROS_INTERACTORS_FREE_BLOCK_PICKUP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -161,4 +160,3 @@ class free_block_pickup
 
 NS_END(interactors, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_INTERACTORS_FREE_BLOCK_PICKUP_HANDLER_HPP_ */

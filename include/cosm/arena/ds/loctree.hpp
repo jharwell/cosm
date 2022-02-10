@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_DS_LOCTREE_HPP_
-#define INCLUDE_COSM_ARENA_DS_LOCTREE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -92,4 +91,3 @@ class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spe
 
 NS_END(ds, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_DS_LOCTREE_HPP_ */

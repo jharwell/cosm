@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -62,4 +61,3 @@ class factory :
 
 NS_END(nest_acq, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_NEST_ACQ_FACTORY_HPP_ */

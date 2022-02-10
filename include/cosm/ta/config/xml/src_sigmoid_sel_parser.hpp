@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_CONFIG_XML_SRC_SIGMOID_SEL_PARSER_HPP_
-#define INCLUDE_COSM_TA_CONFIG_XML_SRC_SIGMOID_SEL_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -77,4 +76,3 @@ class src_sigmoid_sel_parser : public rer::client<src_sigmoid_sel_parser>,
 
 NS_END(xml, config, ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_CONFIG_XML_SRC_SIGMOID_SEL_PARSER_HPP_ */

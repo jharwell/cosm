@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_REDIST_GOVERNOR_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_REDIST_GOVERNOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -89,4 +88,3 @@ class redist_governor : public rer::client<redist_governor> {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_REDIST_GOVERNOR_HPP_ */

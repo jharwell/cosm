@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_METRICS_REGISTRABLE_HPP_
-#define INCLUDE_COSM_ROS_METRICS_REGISTRABLE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -39,4 +38,3 @@ extern rmetrics::creatable_collector_set kWithNBlockClusters;
 
 NS_END(registrable, metrics, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_METRICS_REGISTRABLE_HPP_ */

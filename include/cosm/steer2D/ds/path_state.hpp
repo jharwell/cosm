@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_DS_PATH_STATE_HPP_
-#define INCLUDE_COSM_STEER2D_DS_PATH_STATE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -84,4 +83,3 @@ class path_state : public rpfsm::event_data {
 
 NS_END(ds, steer2D, cosm);
 
-#endif /* INCLUDE_STEER2D_DS_COSM_PATH_STATE_HPP_ */

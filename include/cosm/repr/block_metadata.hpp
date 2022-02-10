@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_BLOCK_METADATA_HPP_
-#define INCLUDE_COSM_REPR_BLOCK_METADATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -168,4 +167,3 @@ class block_metadata final : public cfmetrics::block_transportee_metrics,
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_BLOCK_METADATA_HPP_ */

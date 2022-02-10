@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_
-#define INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -73,4 +72,3 @@ using const_spatial_entity_vector = std::vector<const_spatial_entity_vector_type
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_ENTITY_VECTOR_HPP_ */

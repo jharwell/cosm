@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -69,4 +68,3 @@ class population_dynamics_metrics_collector final : public rmetrics::base_collec
 
 NS_END(metrics, tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_COLLECTOR_HPP_ */

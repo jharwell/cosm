@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_CONFIG_XML_ARENA_MAP_PARSER_HPP_
-#define INCLUDE_COSM_ARENA_CONFIG_XML_ARENA_MAP_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -82,4 +81,3 @@ class arena_map_parser final : public rer::client<arena_map_parser>,
 
 NS_END(xml, config, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_CONFIG_ML_ARENA_MAP_PARSER_HPP_ */

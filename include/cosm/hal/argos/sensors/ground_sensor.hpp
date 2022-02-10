@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_GROUND_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_GROUND_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -121,8 +120,11 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
         m_config(*config) {}
   ~ground_sensor_impl(void) override = default;
 
+  /* move only constructible/assignable for use with saa subsystem */
   const ground_sensor_impl& operator=(const ground_sensor_impl&) = delete;
-  ground_sensor_impl(const ground_sensor_impl&) = default;
+  ground_sensor_impl(const ground_sensor_impl&) = delete;
+  ground_sensor_impl& operator=(ground_sensor_impl&&) = default;
+  ground_sensor_impl(ground_sensor_impl&&) = default;
 
   void config_update(
       const chargos::sensors::config::ground_sensor_config* const config) {
@@ -237,4 +239,3 @@ class ground_sensor{};
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_GROUND_SENSOR_HPP_ */

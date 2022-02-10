@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_CELL2D_FSM_HPP_
-#define INCLUDE_COSM_FSM_CELL2D_FSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -132,4 +131,3 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
 
 NS_END(fsm, forydca);
 
-#endif /* INCLUDE_COSM_FSM_CELL2D_FSM_HPP_ */

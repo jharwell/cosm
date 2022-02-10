@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_LIGHT_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_LIGHT_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -109,8 +108,11 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
     disable();
   }
 
+  /* move only constructible/assignable for use with saa subsystem */
   const light_sensor_impl& operator=(const light_sensor_impl&) = delete;
-  light_sensor_impl(const light_sensor_impl&) = default;
+  light_sensor_impl(const light_sensor_impl&) = delete;
+  light_sensor_impl& operator=(light_sensor_impl&&) = default;
+  light_sensor_impl(light_sensor_impl&&) = default;
 
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_light_sensor<U>::value)>
@@ -155,4 +157,3 @@ using light_sensor = light_sensor_impl<std::false_type>;
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_LIGHT_SENSOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -93,8 +92,11 @@ class led_actuator_impl : public rer::client<led_actuator_impl<TActuator>>,
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.led"),
         chargos::actuators::argos_actuator<TActuator>(leds) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const led_actuator_impl& operator=(const led_actuator_impl&) = delete;
-  led_actuator_impl(const led_actuator_impl&) = default;
+  led_actuator_impl(const led_actuator_impl&) = delete;
+  led_actuator_impl& operator=(led_actuator_impl&&) = default;
+  led_actuator_impl(led_actuator_impl&&) = default;
 
   /**
    * \brief Reset the LED actuator (turn all LEDs off).
@@ -189,4 +191,3 @@ class led_actuator {};
 
 NS_END(actuators, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_LED_ACTUATOR_HPP_ */

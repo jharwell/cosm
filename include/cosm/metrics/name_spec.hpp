@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_NAME_SPEC_HPP_
-#define INCLUDE_COSM_METRICS_NAME_SPEC_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -43,4 +42,3 @@ struct name_spec {
 
 NS_END(specs, metrics, cosm);
 
-#endif /* INCLUDE_COSM_METRICS_NAME_SPEC_HPP_ */

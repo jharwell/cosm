@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_CSV_SINK_HPP_
-#define INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_CSV_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -44,4 +43,3 @@ class location_metrics_csv_sink final :
 
 NS_END(metrics, caches, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_METRICS_CACHES_LOCATION_METRICS_CSV_SINK_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_KIN2D_CONFIG_XML_DIFF_DRIVE_PARSER_HPP_
-#define INCLUDE_COSM_KIN2D_CONFIG_XML_DIFF_DRIVE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -77,4 +76,3 @@ class diff_drive_parser : public rer::client<diff_drive_parser>,
 
 NS_END(xml, config, kin2D, cosm);
 
-#endif /* INCLUDE_COSM_KIN2D_CONFIG_XML_DIFF_DRIVE_PARSER_HPP_ */

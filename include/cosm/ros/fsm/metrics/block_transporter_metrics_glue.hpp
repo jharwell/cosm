@@ -18,16 +18,29 @@ p * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FO
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_GLUE_HPP_
-#define INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_GLUE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <ros/ros.h>
 
-#include "cosm/fsm/metrics/block_transporter_metrics_data.hpp"
-#include "cosm/cosm.hpp"
+#include "cosm/ros/fsm/metrics/block_transporter_metrics_msg.hpp"
+#include "cosm/pal/pal.hpp"
+#include "cosm/ros/metrics/msg_traits.hpp"
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+NS_START(cosm, ros, metrics, msg_traits);
+
+template<>
+struct payload_type<crfsm::metrics::block_transporter_metrics_msg> {
+  using type = cfsm::metrics::block_transporter_metrics_data;
+};
+
+NS_END(msg_traits, metrics, ros, cosm);
+
 
 /*******************************************************************************
  * ROS Message Traits
@@ -35,50 +48,54 @@ p * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FO
 NS_START(ros, message_traits);
 
 template<>
-struct MD5Sum<cfsm::metrics::block_transporter_metrics_data> {
+struct MD5Sum<crfsm::metrics::block_transporter_metrics_msg> {
   static const char* value() {
-    return MD5Sum<cfsm::metrics::block_transporter_metrics_data>::value();
+    return cpal::kMsgTraitsMD5.c_str();
   }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return MD5Sum<cfsm::metrics::block_transporter_metrics_data>::value(m);
+  static const char* value(const crfsm::metrics::block_transporter_metrics_msg&) {
+    return value();
   }
 };
 template <>
-struct DataType<cfsm::metrics::block_transporter_metrics_data> {
+struct DataType<crfsm::metrics::block_transporter_metrics_msg> {
   static const char* value() {
-    return DataType<cfsm::metrics::block_transporter_metrics_data>::value();
+    return "cosm_msgs/block_transporter_metrics_data";
   }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return DataType<cfsm::metrics::block_transporter_metrics_data>::value(m);
+  static const char* value(const crfsm::metrics::block_transporter_metrics_msg&) {
+    return value();
   }
 };
 
 template<>
-struct Definition<cfsm::metrics::block_transporter_metrics_data> {
+struct Definition<crfsm::metrics::block_transporter_metrics_msg> {
   static const char* value() {
-    return Definition<cfsm::metrics::block_transporter_metrics_data>::value();
+    return "See COSM docs for documentation.";
   }
-  static const char* value(const cfsm::metrics::block_transporter_metrics_data& m) {
-    return Definition<cfsm::metrics::block_transporter_metrics_data>::value(m);
+  static const char* value(const crfsm::metrics::block_transporter_metrics_msg&) {
+    return value();
   }
 };
+
+template<>
+struct HasHeader<crfsm::metrics::block_transporter_metrics_msg> : TrueType {};
+
 NS_END(message_traits);
 
 NS_START(serialization);
 
 template<>
-struct Serializer<cfsm::metrics::block_transporter_metrics_data> {
+struct Serializer<crfsm::metrics::block_transporter_metrics_msg> {
   template<typename Stream, typename T>
   inline static void allInOne(Stream& stream, T t) {
-    stream.next(t.interval.n_phototaxiing_to_goal_including_ca);
-    stream.next(t.interval.n_phototaxiing_to_goal_no_ca);
+    stream.next(t.header);
 
-    stream.next(t.cum.n_phototaxiing_to_goal_including_ca);
-    stream.next(t.cum.n_phototaxiing_to_goal_no_ca);
+    stream.next(t.data.interval.n_phototaxiing_to_goal_including_ca);
+    stream.next(t.data.interval.n_phototaxiing_to_goal_no_ca);
+
+    stream.next(t.data.cum.n_phototaxiing_to_goal_including_ca);
+    stream.next(t.data.cum.n_phototaxiing_to_goal_no_ca);
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
 NS_END(serialization, ros);
-
-#endif /* INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_GLUE_HPP_ */

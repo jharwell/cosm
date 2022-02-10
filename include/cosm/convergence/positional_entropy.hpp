@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_POSITIONAL_ENTROPY_HPP_
-#define INCLUDE_COSM_CONVERGENCE_POSITIONAL_ENTROPY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -83,4 +82,3 @@ class positional_entropy final
 
 NS_END(convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_POSITIONAL_ENTROPY_HPP_ */

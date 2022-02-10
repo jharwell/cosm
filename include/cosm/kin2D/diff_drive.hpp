@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_KIN2D_DIFF_DRIVE_HPP_
-#define INCLUDE_COSM_KIN2D_DIFF_DRIVE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -90,4 +89,3 @@ class diff_drive : public rer::client<diff_drive> {
 
 NS_END(kin2D, cosm);
 
-#endif /* INCLUDE_COSM_KIN2D_DIFF_DRIVE_HPP_ */

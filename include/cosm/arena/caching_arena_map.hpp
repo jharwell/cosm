@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_CACHING_ARENA_MAP_HPP_
-#define INCLUDE_COSM_ARENA_CACHING_ARENA_MAP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -193,4 +192,3 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 
 NS_END(arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_CACHING_ARENA_MAP_HPP_ */

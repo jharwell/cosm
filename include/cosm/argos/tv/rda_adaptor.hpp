@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_TV_RDA_ADAPTOR_HPP_
-#define INCLUDE_COSM_ARGOS_TV_RDA_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -118,4 +117,3 @@ class rda_adaptor final : public rer::client<rda_adaptor<TController>>,
 
 NS_END(tv, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_TV_RDA_ADAPTOR_HPP_ */

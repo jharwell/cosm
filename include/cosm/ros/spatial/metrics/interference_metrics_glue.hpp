@@ -18,16 +18,29 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_GLUE_HPP_
-#define INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_GLUE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <ros/ros.h>
 
-#include "cosm/spatial/metrics/interference_metrics_data.hpp"
+#include "cosm/ros/spatial/metrics/interference_metrics_msg.hpp"
 #include "cosm/cosm.hpp"
+#include "cosm/pal/pal.hpp"
+#include "cosm/ros/metrics/msg_traits.hpp"
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+NS_START(cosm, ros, metrics, msg_traits);
+
+template<>
+struct payload_type<crsmetrics::interference_metrics_msg> {
+  using type = csmetrics::interference_metrics_data;
+};
+
+NS_END(msg_traits, metrics, ros, cosm);
 
 /*******************************************************************************
  * ROS Message Traits
@@ -35,56 +48,60 @@
 NS_START(ros, message_traits);
 
 template<>
-struct MD5Sum<csmetrics::interference_metrics_data> {
+struct MD5Sum<crsmetrics::interference_metrics_msg> {
   static const char* value() {
-    return MD5Sum<csmetrics::interference_metrics_data>::value();
+    return cpal::kMsgTraitsMD5.c_str();
   }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return MD5Sum<csmetrics::interference_metrics_data>::value(m);
+  static const char* value(const crsmetrics::interference_metrics_msg&) {
+    return value();
   }
 };
 template <>
-struct DataType<csmetrics::interference_metrics_data> {
+struct DataType<crsmetrics::interference_metrics_msg> {
   static const char* value() {
-    return DataType<csmetrics::interference_metrics_data>::value();
+    return "cosm_msgs/interference_metrics_data";
   }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return DataType<csmetrics::interference_metrics_data>::value(m);
+  static const char* value(const crsmetrics::interference_metrics_msg&) {
+    return value();
   }
 };
 
 template<>
-struct Definition<csmetrics::interference_metrics_data> {
+struct Definition<crsmetrics::interference_metrics_msg> {
   static const char* value() {
-    return Definition<csmetrics::interference_metrics_data>::value();
+    return "See COSM docs for documentation.";
   }
-  static const char* value(const csmetrics::interference_metrics_data& m) {
-    return Definition<csmetrics::interference_metrics_data>::value(m);
+  static const char* value(const crsmetrics::interference_metrics_msg&) {
+    return value();
   }
 };
+
+template<>
+struct HasHeader<crsmetrics::interference_metrics_msg> : TrueType {};
+
 NS_END(message_traits);
 
 NS_START(serialization);
 
 template<>
-struct Serializer<csmetrics::interference_metrics_data> {
+struct Serializer<crsmetrics::interference_metrics_msg> {
   template<typename Stream, typename T>
   inline static void allInOne(Stream& stream, T t) {
-    stream.next(t.interval.n_exp_interference);
-    stream.next(t.interval.n_episodes);
-    stream.next(t.interval.n_entered_interference);
-    stream.next(t.interval.n_exited_interference);
-    stream.next(t.interval.interference_duration);
+    stream.next(t.header);
 
-    stream.next(t.cum.n_exp_interference);
-    stream.next(t.cum.n_episodes);
-    stream.next(t.cum.n_entered_interference);
-    stream.next(t.cum.n_exited_interference);
-    stream.next(t.cum.interference_duration);
+    stream.next(t.data.interval.n_exp_interference);
+    stream.next(t.data.interval.n_episodes);
+    stream.next(t.data.interval.n_entered_interference);
+    stream.next(t.data.interval.n_exited_interference);
+    stream.next(t.data.interval.interference_duration);
+
+    stream.next(t.data.cum.n_exp_interference);
+    stream.next(t.data.cum.n_episodes);
+    stream.next(t.data.cum.n_entered_interference);
+    stream.next(t.data.cum.n_exited_interference);
+    stream.next(t.data.cum.interference_duration);
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
 NS_END(serialization, ros);
-
-#endif /* INCLUDE_COSM_ROS_SPATIAL_METRICS_INTERFERENCE_METRICS_GLUE_HPP_ */

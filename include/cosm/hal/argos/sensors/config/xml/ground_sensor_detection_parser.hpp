@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_XML_GROUND_SENSOR_DETECTION_PARSER_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_XML_GROUND_SENSOR_DETECTION_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class ground_sensor_detection_parser : public rer::client<ground_sensor_detectio
 
 NS_END(xml, config, sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_XML_GROUND_SENSOR_DETECTION_PARSER_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
-#define INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ enum update_status {
 
 NS_END(arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_UPDATE_STATUS_HPP_ */

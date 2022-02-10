@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_VECTOR_LOCS2D_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_VECTOR_LOCS2D_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -64,4 +63,3 @@ class vector_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics_c
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_VECTOR_LOCS2D_METRICS_COLLECTOR_HPP_ */

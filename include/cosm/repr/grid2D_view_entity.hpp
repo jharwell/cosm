@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_
-#define INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -114,4 +113,3 @@ class grid2D_view_entity : public crepr::entity2D,
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRID2D_VIEW_ENTITY_HPP_ */

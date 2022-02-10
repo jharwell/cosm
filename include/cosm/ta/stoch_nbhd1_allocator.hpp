@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_STOCH_NBHD1_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_STOCH_NBHD1_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -73,4 +72,3 @@ class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_STOCH_NBHD1_ALLOCATOR_HPP_ */

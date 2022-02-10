@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_AGGREGATE_ORACLE_HPP_
-#define INCLUDE_COSM_ORACLE_AGGREGATE_ORACLE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -100,4 +99,3 @@ class aggregate_oracle {
 
 NS_END(oracle, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_AGGREGATE_ORACLE_HPP_ */
