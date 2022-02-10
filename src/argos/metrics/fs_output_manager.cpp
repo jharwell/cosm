@@ -264,7 +264,8 @@ void fs_output_manager::register_with_arena_dims2D(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
-                                                         creatable_set);
+                                                         creatable_set,
+                                                         extra_args);
   rmetrics::register_using_config<decltype(csv),
                                   rmconfig::file_sink_config> registerer(
                                       std::move(csv),
@@ -306,7 +307,8 @@ void fs_output_manager::register_with_arena_dims3D(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
-                                                         creatable_set);
+                                                         creatable_set,
+                                                         extra_args);
   rmetrics::register_using_config<decltype(csv),
                                   rmconfig::file_sink_config> registerer(
                                       std::move(csv),
@@ -332,7 +334,8 @@ void fs_output_manager::register_with_n_block_clusters(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)> csv(this,
-                                                         creatable_set);
+                                                         creatable_set,
+                                                         extra_args);
   rmetrics::register_using_config<decltype(csv),
                                   rmconfig::file_sink_config> registerer(
                                       std::move(csv),

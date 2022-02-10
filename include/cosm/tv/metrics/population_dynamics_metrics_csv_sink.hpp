@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_CSV_SINK_HPP_
-#define INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_CSV_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -68,4 +67,3 @@ class population_dynamics_metrics_csv_sink final : public rmetrics::csv_sink {
 
 NS_END(metrics, tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_METRICS_POPULATION_DYNAMICS_METRICS_CSV_SINK_HPP_ */

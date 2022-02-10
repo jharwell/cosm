@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_
-#define INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -51,4 +50,3 @@ struct fsm_params {
 
 NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_FSM_PARAMS_HPP_ */

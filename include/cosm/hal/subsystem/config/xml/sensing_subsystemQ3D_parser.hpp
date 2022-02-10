@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
-#define INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -85,4 +84,3 @@ class sensing_subsystemQ3D_parser final : public rer::client<sensing_subsystemQ3
 
 NS_END(xml, config, subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_XML_SENSING_SUBSYSTEMQ3D_PARSER_HPP_ */

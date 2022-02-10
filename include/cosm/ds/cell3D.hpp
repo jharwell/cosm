@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CELL3D_HPP_
-#define INCLUDE_COSM_DS_CELL3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -101,4 +100,3 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_CELL3D_HPP_ */

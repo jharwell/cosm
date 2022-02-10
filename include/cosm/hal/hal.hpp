@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_HAL_HPP_
-#define INCLUDE_COSM_HAL_HAL_HPP_
+#pragma once
 
 /*******************************************************************************
  * Constant Definitions
@@ -59,4 +58,3 @@
 #define COSM_HAL_TARGET_ROS_ROBOT
 #endif
 
-#endif /* INCLUDE_COSM_HAL_HAL_HPP_ */

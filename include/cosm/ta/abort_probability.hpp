@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_ABORT_PROBABILITY_HPP_
-#define INCLUDE_COSM_TA_ABORT_PROBABILITY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -112,4 +111,3 @@ class abort_probability : public rmath::sigmoid {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_ABORT_PROBABILITY_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -121,4 +120,3 @@ using nest_block_process_visitor = rpvisitor::filtered_visitor<detail::nest_bloc
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_NEST_BLOCK_PROCESS_HPP_ */

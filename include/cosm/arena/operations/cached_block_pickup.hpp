@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_OPERATIONS_CACHED_BLOCK_PICKUP_HPP_
-#define INCLUDE_COSM_ARENA_OPERATIONS_CACHED_BLOCK_PICKUP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -132,4 +131,3 @@ using cached_block_pickup_visitor = rpvisitor::filtered_visitor<detail::cached_b
 
 NS_END(operations, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_OPERATIONS_CACHED_BLOCK_PICKUP_HPP_ */

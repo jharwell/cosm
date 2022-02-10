@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
-#define INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ struct base_env_dynamics_config : public rconfig::base_config {
 
 NS_END(tv, config, cosm);
 
-#endif /* INCLUDE_COSM_TV_CONFIG_BASE_ENV_DYNAMICS_CONFIG_HPP_ */

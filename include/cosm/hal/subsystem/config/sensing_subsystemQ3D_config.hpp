@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEMQ3D_CONFIG_HPP_
-#define INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEMQ3D_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -50,4 +49,3 @@ struct sensing_subsystemQ3D_config final : public rconfig::base_config {
 
 NS_END(config, subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_CONFIG_SENSING_SUBSYSTEMQ3D_CONFIG_HPP_ */

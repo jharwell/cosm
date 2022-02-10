@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_BLOCK3D_HT_HPP_
-#define INCLUDE_COSM_DS_BLOCK3D_HT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -154,4 +153,3 @@ class block3D_htro : public rpdecorator::decorator<std::unordered_map<block3D_ht
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_BLOCK3D_HT_HPP_ */

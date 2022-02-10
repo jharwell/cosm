@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_BASE_CONTROLLER2D_HPP_
-#define INCLUDE_COSM_CONTROLLER_BASE_CONTROLLER2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -97,4 +96,3 @@ class base_controller2D : public base_controller,
 
 NS_END(controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_BASE_CONTROLLER2D_HPP_ */

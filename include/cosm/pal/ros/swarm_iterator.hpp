@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_SWARM_ITERATOR_HPP_
-#define INCLUDE_COSM_PAL_ROS_SWARM_ITERATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -59,14 +58,10 @@ struct swarm_iterator {
   static void robots(size_t n_robots,
                      const TFunction& cb) {
     for (size_t i = 0; i < n_robots; ++i) {
-      auto robot_ns = cros::topic("/") /
-                      cpal::kRobotNamePrefix /
-                      std::to_string(i);
+      auto robot_ns = cros::to_ns(rtypes::type_uuid(i));
       cb(robot_ns);
     } /* for(i..) */
   }
 };
 
 NS_END(ros, pal, cosm);
-
-#endif /* INCLUDE_COSM_PAL_ROS_SWARM_ITERATOR_HPP_ */

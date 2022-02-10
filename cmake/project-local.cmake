@@ -70,13 +70,17 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
   else()
     set(COSM_PAL_NATIVE_BUILD OFF)
   endif()
+  execute_process(COMMAND git rev-parse HEAD
+    OUTPUT_VARIABLE COSM_ROS_MD5
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/cosm/pal/pal.hpp.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/cosm/pal/pal.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
   @ONLY
   )
+list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp")
 
 ################################################################################
 # Qt Configuration Options                                                     #
@@ -114,10 +118,10 @@ string(CONCAT common_regex
   "src/hal/sensors|"
   "src/hal/actuators|"
   "src/kin2D|"
-  "src/ta|"
   "src/pal/config|"
   "src/pal/base_swarm_manager|"
   "src/controller|"
+  "src/ta|"
   "src/subsystem|"
   "src/steer2D|"
   "src/metrics"
@@ -295,7 +299,7 @@ target_link_libraries(${cosm_LIBRARY_NAME} rcppsw::rcppsw)
 if("${COSM_BUILD_FOR}" MATCHES "ROS")
   target_link_libraries(${cosm_LIBRARY_NAME} ${catkin_LIBRARIES})
 endif()
-message("${rcppsw_LIBRARIES}")
+
 if (${COSM_WITH_VIS})
   target_link_libraries(${cosm_LIBRARY_NAME} Qt5::Widgets Qt5::Core Qt5::Gui GL)
 endif()
@@ -314,11 +318,6 @@ if ("${COSM_BUILD_FOR}" MATCHES "ROS")
     PUBLIC
     -Wno-psabi)
 endif()
-
-# This is needed for HAL SAA sensing/actuator access with boost::variant
-# target_compile_definitions(${cosm_LIBRARY_NAME}
-#   PUBLIC
-#   BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT)
 
 if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
   target_compile_definitions(${cosm_LIBRARY_NAME}
@@ -341,17 +340,17 @@ endif()
 if("${COSM_PAL_TARGET}" MATCHES "ARGOS")
   target_compile_definitions(${cosm_LIBRARY_NAME}
     PUBLIC
-    COSM_PAL_TARGET=COSM_PAL_TARGET_ARGOS)
+    COSM_ENABLE_PAL_TARGET_ARGOS)
 elseif("${COSM_PAL_TARGET}" MATCHES "ROS")
   target_compile_definitions(${cosm_LIBRARY_NAME}
     PUBLIC
-    COSM_PAL_TARGET=COSM_PAL_TARGET_ROS)
+    COSM_ENABLE_PAL_TARGET_ROS)
 endif()
 
 ################################################################################
 # Installation                                                                 #
 ################################################################################
-configure_exports_as(${cosm_LIBRARY_NAME})
+configure_exports_as(${cosm_LIBRARY_NAME} ${CMAKE_INSTALL_PREFIX})
 
 # Install cosm
 register_target_for_install(${cosm_LIBRARY_NAME} ${CMAKE_INSTALL_PREFIX})

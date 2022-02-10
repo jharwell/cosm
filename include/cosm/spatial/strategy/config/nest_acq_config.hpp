@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_NEST_ACQ_CONFIG_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_NEST_ACQ_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
   * Includes
@@ -51,4 +50,3 @@ struct nest_acq_config final : public rconfig::base_config {
 
 NS_END(config, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_CONFIG_NEST_ACQ_CONFIG_HPP_ */

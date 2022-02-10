@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_WIFI_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_WIFI_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -83,8 +82,11 @@ private:
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.wifi"),
         chargos::sensors::argos_sensor<impl_type>(sensor) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const wifi_sensor_impl& operator=(const wifi_sensor_impl&) = delete;
-  wifi_sensor_impl(const wifi_sensor_impl&) = default;
+  wifi_sensor_impl(const wifi_sensor_impl&) = delete;
+  wifi_sensor_impl& operator=(wifi_sensor_impl&&) = default;
+  wifi_sensor_impl(wifi_sensor_impl&&) = default;
 
   /**
    * \brief Get the current rab wifi sensor readings for the footbot robot.
@@ -121,4 +123,3 @@ struct wifi_sensor{};
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_WIFI_SENSOR_HPP_ */

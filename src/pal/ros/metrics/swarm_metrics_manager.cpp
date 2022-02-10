@@ -24,6 +24,7 @@
 #include "cosm/ros/metrics/swarm_metrics_manager.hpp"
 
 #include <boost/mpl/for_each.hpp>
+#include <boost/range/adaptor/map.hpp>
 
 #include "rcppsw/metrics/register_with_sink.hpp"
 #include "rcppsw/metrics/register_using_config.hpp"
@@ -66,27 +67,49 @@ swarm_metrics_manager::swarm_metrics_manager(
     const fs::path& output_root,
     size_t n_robots)
     : ER_CLIENT_INIT("cosm.ros.metrics.swarm_metrics_manager"),
-      fs_output_manager(mconfig, output_root) {
+      fs_output_manager(mconfig, output_root),
+      mc_expected_counts({
+          {rmetrics::output_mode::ekAPPEND,
+           mconfig->csv.append.output_interval.v()},
+          {rmetrics::output_mode::ekTRUNCATE,
+           mconfig->csv.truncate.output_interval.v()},
+          {rmetrics::output_mode::ekCREATE,
+           mconfig->csv.create.output_interval.v()}
+        }) {
+  ER_INFO("cosm_msgs/* MD5: %s", cpal::kMsgTraitsMD5.c_str());
+
   /*
    * Register all standard metrics which don't require additional parameters,
    * and can by done by default.
    */
   register_standard(mconfig, n_robots);
+
+  /*
+   * Because each robot has their own topic for all metrics, we can wait for all
+   * connections to become active before continuing (correctness by
+   * construction).
+   */
+  std::all_of(std::begin(m_subs),
+              std::end(m_subs),
+              [&](auto& sub) {
+                return wait_for_connection(sub);
+              });
 }
 
 /*******************************************************************************
- * Member Functions
+ * Initialization Functions
  ******************************************************************************/
 void swarm_metrics_manager::register_standard(
     const rmconfig::metrics_config* mconfig,
     size_t n_robots) {
+  ER_INFO("Register standard collectors: swarm_size=%zu", n_robots);
+
   using sink_list = rmpl::typelist<
     rmpl::identity<cspatial::metrics::movement_metrics_csv_sink>,
     rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
     rmpl::identity<cforaging::metrics::block_transportee_metrics_csv_sink>,
     rmpl::identity<cspatial::metrics::interference_metrics_csv_sink>
     >;
-
 
   rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
                                rmetrics::file_sink_registerer> file(this,
@@ -98,25 +121,31 @@ void swarm_metrics_manager::register_standard(
 
   boost::mpl::for_each<sink_list>(registerer);
 
+  /* initialize counting map to track received metrics */
+  m_tracking.init(cmspecs::spatial::kMovement.scoped);
+  m_tracking.init(cmspecs::spatial::kInterferenceCounts.scoped);
+  m_tracking.init(cmspecs::blocks::kTransporter.scoped);
+  m_tracking.init(cmspecs::blocks::kTransportee.scoped);
+
   /* set ROS callbacks for metric collection */
   ::ros::NodeHandle n;
   auto cb = [&](cros::topic robot_ns) {
-              m_subs.push_back(n.subscribe<cspatial::metrics::movement_metrics_data>(
+              m_subs.push_back(n.subscribe<crsmetrics::movement_metrics_msg>(
                   robot_ns / cmspecs::spatial::kMovement.scoped,
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
-              m_subs.push_back(n.subscribe<cspatial::metrics::interference_metrics_data>(
+              m_subs.push_back(n.subscribe<crsmetrics::interference_metrics_msg>(
                   robot_ns / cmspecs::spatial::kInterferenceCounts.scoped,
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
-              m_subs.push_back(n.subscribe<cfsm::metrics::block_transporter_metrics_data>(
+              m_subs.push_back(n.subscribe<crfsm::metrics::block_transporter_metrics_msg>(
                   robot_ns / cmspecs::blocks::kTransporter.scoped,
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
-              m_subs.push_back(n.subscribe<cforaging::metrics::block_transportee_metrics_data>(
+              m_subs.push_back(n.subscribe<crfmetrics::block_transportee_metrics_msg>(
                   robot_ns / cmspecs::blocks::kTransportee.scoped,
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
@@ -129,6 +158,9 @@ void swarm_metrics_manager::register_with_n_block_clusters(
     const rmconfig::metrics_config* mconfig,
     size_t n_robots,
     size_t n_clusters) {
+  ER_INFO("Register block cluster collectors: swarm_size=%zu, n_clusters=%zu",
+          n_robots,
+          n_clusters);
   using sink_typelist = rmpl::typelist<
     rmpl::identity<cforaging::metrics::block_cluster_metrics_csv_sink>
     >;
@@ -149,13 +181,18 @@ void swarm_metrics_manager::register_with_n_block_clusters(
   ::ros::NodeHandle n;
   auto cb = [&](cros::topic robot_ns) {
   ::ros::SubscribeOptions opts;
-  using metrics_data = cforaging::metrics::block_cluster_metrics_data;
+  using metrics_msg = crfmetrics::block_cluster_metrics_msg;
 
-  auto factory = [&](){ return boost::make_shared<metrics_data>(n_clusters); };
-  auto collect_cb = std::bind(static_cast<void(swarm_metrics_manager::*)(const boost::shared_ptr<const metrics_data>&)>(&swarm_metrics_manager::collect),
+  /* initialize counting map to track received metrics */
+  m_tracking.init(cmspecs::blocks::kClusters.scoped);
+
+  auto factory = [&](){
+                   return boost::make_shared<metrics_msg>(n_clusters);
+                 };
+  auto collect_cb = std::bind(static_cast<void(swarm_metrics_manager::*)(const boost::shared_ptr<const metrics_msg>&)>(&swarm_metrics_manager::collect),
                                 this,
                                 std::placeholders::_1);
-  opts.template init<metrics_data>(robot_ns / cmspecs::blocks::kClusters.scoped,
+  opts.template init<metrics_msg>(robot_ns / cmspecs::blocks::kClusters.scoped,
                                    kQueueBufferSize,
                                    collect_cb,
                                    factory);
@@ -164,43 +201,107 @@ void swarm_metrics_manager::register_with_n_block_clusters(
   cpros::swarm_iterator::robots(n_robots, cb);
 } /* register_with_n_block_clusters() */
 
+bool swarm_metrics_manager::wait_for_connection(const ::ros::Subscriber& sub) {
+  while (::ros::ok() && sub.getNumPublishers() == 0) {
+    /* For real robots, things take a while to come up so we have to wait */
+    ::ros::Duration(1.0).sleep();
+
+    ER_DEBUG("Wait for topic '%s' subscription to activate",
+             sub.getTopic().c_str());
+  } /* for(&sub..) */
+
+  return true;
+} /* wait_for_connection() */
+
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+bool swarm_metrics_manager::flush(const rmetrics::output_mode& mode,
+                                  const rtypes::timestep&) {
+  for (auto &key : *collector_map() | boost::adaptors::map_keys) {
+    auto* collector = get(key);
+    if (collector->output_mode() != mode) {
+      continue;
+    }
+    auto& tracking = m_tracking[key];
+    if (!tracking.missing.empty()) {
+      ER_WARN("Collector '%s' missing %zu packets",
+              key.c_str(),
+              tracking.missing.size());
+    }
+    if (tracking.n_received == mc_expected_counts.at(mode)) {
+      ER_DEBUG("Collector '%s' ready to flush: received=%zu,expected=%zu",
+               key.c_str(),
+               tracking.n_received,
+               mc_expected_counts.at(mode));
+      if (tracking.n_received > mc_expected_counts.at(mode)) {
+        ER_WARN("Collector '%s' received counts overflow: received=%zu,expected=%zu",
+                key.c_str(),
+                tracking.n_received,
+                mc_expected_counts.at(mode));
+      }
+      auto ts = rtypes::timestep((tracking.interval_index + 1) *
+                                 mc_expected_counts.at(mode));
+      ER_ASSERT(collector->flush(ts),
+                "Collector '%s' did not flush when ready",
+                key.c_str());
+      m_tracking.reset(key);
+    } else {
+      ER_DEBUG("Collector '%s' not ready to flush: received=%zu,expected=%zu",
+               key.c_str(),
+               tracking.n_received,
+               mc_expected_counts.at(mode));
+    }
+  } /* for(&key..) */
+  return true;
+} /* flush() */
+
 /*******************************************************************************
  * ROS Callbacks
  ******************************************************************************/
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const cforaging::metrics::block_transportee_metrics_data>& in) {
+    const boost::shared_ptr<const crfmetrics::block_transportee_metrics_msg>& msg) {
   auto* collector = get<cforaging::metrics::block_transportee_metrics_collector>(
       cmspecs::blocks::kTransportee.scoped);
-  collector->data(*in);
+  m_tracking.update_on_receive(cmspecs::blocks::kTransportee.scoped,
+                               msg->header.seq);
+
+  collector->collect(msg->data);
 } /* collect() */
 
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const cfsm::metrics::block_transporter_metrics_data>& in) {
+    const boost::shared_ptr<const crfsm::metrics::block_transporter_metrics_msg>& msg) {
   auto* collector = get<cfsm::metrics::block_transporter_metrics_collector>(
       cmspecs::blocks::kTransporter.scoped);
-  collector->data(*in);
+  m_tracking.update_on_receive(cmspecs::blocks::kTransporter.scoped,
+                               msg->header.seq);
+  collector->collect(msg->data);
 } /* collect() */
 
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const cforaging::metrics::block_cluster_metrics_data>& in) {
+    const boost::shared_ptr<const crfmetrics::block_cluster_metrics_msg>& msg) {
   auto* collector = get<cforaging::metrics::block_cluster_metrics_collector>(
       cmspecs::blocks::kClusters.scoped);
-  collector->data(*in);
+  m_tracking.update_on_receive(cmspecs::blocks::kClusters.scoped,
+                               msg->header.seq);
+  collector->collect(msg->data);
 } /* collect() */
 
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const csmetrics::movement_metrics_data>& in) {
+    const boost::shared_ptr<const crsmetrics::movement_metrics_msg>& msg) {
   auto* collector = get<csmetrics::movement_metrics_collector>(
       cmspecs::spatial::kMovement.scoped);
-  collector->data(*in);
+  m_tracking.update_on_receive(cmspecs::spatial::kMovement.scoped,
+                               msg->header.seq);
+  collector->collect(msg->data);
 } /* collect() */
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const csmetrics::interference_metrics_data>& in) {
+    const boost::shared_ptr<const crsmetrics::interference_metrics_msg>& msg) {
   auto* collector = get<csmetrics::interference_metrics_collector>(
-      cmspecs::spatial::kMovement.scoped);
-  collector->data(*in);
+      cmspecs::spatial::kInterferenceCounts.scoped);
+  m_tracking.update_on_receive(cmspecs::spatial::kInterferenceCounts.scoped,
+                               msg->header.seq);
+  collector->collect(msg->data);
 } /* collect() */
-
-
 
 NS_END(metrics, ros, cosm);

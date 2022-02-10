@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_OPERATIONS_NEST_EXTENT_HPP_
-#define INCLUDE_COSM_REPR_OPERATIONS_NEST_EXTENT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -90,4 +89,3 @@ using nest_extent_visitor = rpvisitor::filtered_visitor<detail::nest_extent>;
 
 NS_END(operations, repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_OPERATIONS_NEST_EXTENT_HPP_ */

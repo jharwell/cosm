@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRID2D_LOS_HPP_
-#define INCLUDE_COSM_REPR_GRID2D_LOS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -70,4 +69,3 @@ class grid2D_los : public crepr::base_grid_los<
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRID2D_LOS_HPP_ */

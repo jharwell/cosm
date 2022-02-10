@@ -18,16 +18,30 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_GLUE_HPP_
-#define INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_GLUE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <ros/ros.h>
+#include <std_msgs/Header.h>
 
 #include "cosm/cosm.hpp"
-#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
+#include "cosm/ros/foraging/metrics/block_cluster_metrics_msg.hpp"
+#include "cosm/pal/pal.hpp"
+#include "cosm/ros/metrics/msg_traits.hpp"
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+NS_START(cosm, ros, metrics, msg_traits);
+
+template<>
+struct payload_type<crfmetrics::block_cluster_metrics_msg> {
+  using type = cfmetrics::block_cluster_metrics_data;
+};
+
+NS_END(msg_traits, metrics, ros, cosm);
 
 /*******************************************************************************
  * ROS Message Traits
@@ -35,48 +49,54 @@
 NS_START(ros, message_traits);
 
 template<>
-struct MD5Sum<cforaging::metrics::block_cluster_metrics_data> {
+struct MD5Sum<crfmetrics::block_cluster_metrics_msg> {
   static const char* value() {
-    return MD5Sum<cforaging::metrics::block_cluster_metrics_data>::value();
+    return cpal::kMsgTraitsMD5.c_str();
   }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return MD5Sum<cforaging::metrics::block_cluster_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_cluster_metrics_msg&) {
+    return value();
   }
 };
 template <>
-struct DataType<cforaging::metrics::block_cluster_metrics_data> {
+struct DataType<crfmetrics::block_cluster_metrics_msg> {
   static const char* value() {
-    return DataType<cforaging::metrics::block_cluster_metrics_data>::value();
+    return "cosm_msgs/block_cluster_metrics_data";
   }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return DataType<cforaging::metrics::block_cluster_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_cluster_metrics_msg&) {
+    return value();
   }
 };
 
 template<>
-struct Definition<cforaging::metrics::block_cluster_metrics_data> {
+struct Definition<crfmetrics::block_cluster_metrics_msg> {
   static const char* value() {
-    return Definition<cforaging::metrics::block_cluster_metrics_data>::value();
+    return "See COSM docs for documentation.";
   }
-  static const char* value(const cforaging::metrics::block_cluster_metrics_data& m) {
-    return Definition<cforaging::metrics::block_cluster_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_cluster_metrics_msg&) {
+    return value();
   }
 };
+
+template<>
+struct HasHeader<crfmetrics::block_cluster_metrics_msg> : TrueType {};
+
 NS_END(message_traits);
 
 NS_START(serialization);
 
 template<>
-struct Serializer<cforaging::metrics::block_cluster_metrics_data> {
+struct Serializer<crfmetrics::block_cluster_metrics_msg> {
   template<typename Stream, typename T>
   inline static void allInOne(Stream& stream, T t) {
-    for (auto &count : t.interval.block_counts) {
+    stream.next(t.header);
+
+    for (auto &count : t.data.interval.block_counts) {
       stream.next(count);
     } /* for(&c..) */
-    for (auto &count : t.cum.block_counts) {
+    for (auto &count : t.data.cum.block_counts) {
       stream.next(count);
     } /* for(&c..) */
-    for (auto &ext : t.extents) {
+    for (auto &ext : t.data.extents) {
       stream.next(ext.area);
       stream.next(ext.xmin);
       stream.next(ext.xmax);
@@ -88,5 +108,3 @@ struct Serializer<cforaging::metrics::block_cluster_metrics_data> {
 };
 
 NS_END(serialization, ros);
-
-#endif /* INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_GLUE_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_SUBTASK_SEL_PROBABILITY_HPP_
-#define INCLUDE_COSM_TA_SUBTASK_SEL_PROBABILITY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -163,4 +162,3 @@ class subtask_sel_probability : public rer::client<subtask_sel_probability>,
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_SUBTASK_SEL_PROBABILITY_HPP_ */

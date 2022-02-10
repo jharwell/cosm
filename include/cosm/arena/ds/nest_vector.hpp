@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_DS_NEST_VECTOR_HPP_
-#define INCLUDE_COSM_ARENA_DS_NEST_VECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -86,4 +85,3 @@ class nest_vectorro : public std::vector<nest_vectorro_type> {
 
 NS_END(ds, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_DS_NEST_VECTOR_HPP_ */

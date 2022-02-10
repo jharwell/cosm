@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_UNICELL_ENTITY3D_HPP_
-#define INCLUDE_COSM_REPR_UNICELL_ENTITY3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -134,4 +133,3 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_UNICELL_ENTITY3D_HPP_ */

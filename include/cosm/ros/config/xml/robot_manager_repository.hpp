@@ -20,8 +20,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_
-#define INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -46,5 +45,3 @@ NS_START(cosm, ros, config, xml);
 class robot_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
 
 NS_END(xml, config, ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_CONFIG_XML_ROBOT_MANAGER_REPOSITORY_HPP_ */

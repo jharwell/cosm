@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_CONFIG_XML_PATH_FOLLOWING_FORCE_PARSER_HPP_
-#define INCLUDE_COSM_STEER2D_CONFIG_XML_PATH_FOLLOWING_FORCE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -81,4 +80,3 @@ class path_following_force_parser final : public rer::client<path_following_forc
 
 NS_END(xml, config, steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_CONFIG_XML_PATH_FOLLOWING_FORCE_PARSER_HPP_ */

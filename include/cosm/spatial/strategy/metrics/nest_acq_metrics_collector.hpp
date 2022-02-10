@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -70,4 +69,3 @@ class nest_acq_metrics_collector final : public rmetrics::base_collector {
 
 NS_END(metrics, strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_METRICS_NEST_ACQ_METRICS_COLLECTOR_HPP_ */

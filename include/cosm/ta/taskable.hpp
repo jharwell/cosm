@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_TASKABLE_HPP_
-#define INCLUDE_COSM_TA_TASKABLE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -88,4 +87,3 @@ class taskable : public virtual rmetrics::base_metrics {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_TASKABLE_HPP_ */

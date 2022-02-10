@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_CONFLICT_CHECKER_HPP_
-#define INCLUDE_COSM_SPATIAL_CONFLICT_CHECKER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -129,4 +128,3 @@ class conflict_checker {
 
 NS_END(spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_CONFLICT_CHECKER_HPP_ */

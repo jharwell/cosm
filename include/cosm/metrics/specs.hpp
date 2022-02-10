@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_METRICS_SPECS_HPP_
-#define INCLUDE_COSM_METRICS_SPECS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -55,7 +54,6 @@ extern name_spec kMotion;
 extern name_spec kClusters;
 extern name_spec kTransporter;
 extern name_spec kTransportee;
-extern name_spec kManipulation;
 extern name_spec kAcqCounts;
 extern name_spec kAcqExploreLocs2D;
 extern name_spec kAcqLocs2D;
@@ -85,5 +83,3 @@ extern name_spec kDistribution;
 NS_END(tasks);
 
 NS_END(specs, metrics, cosm);
-
-#endif /* INCLUDE_COSM_METRICS_SPECS_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -75,4 +74,3 @@ class movement_metrics : virtual public rmetrics::base_metrics {
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_HPP_ */

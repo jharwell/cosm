@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_COSM_HPP_
-#define INCLUDE_COSM_COSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -82,6 +81,17 @@ namespace ros {
 namespace metrics {}
 namespace interactors {}
 namespace config {}
+namespace foraging {
+namespace metrics {}
+} /* namespace foraging */
+namespace fsm {
+namespace metrics {}
+} /* namespace fsm */
+
+namespace spatial {
+namespace metrics {}
+} /* namespace spatial */
+
 } /* namespace ros */
 
 /**
@@ -405,6 +415,11 @@ namespace cainteractors = cargos::interactors;
 namespace cros = cosm::ros;
 namespace crmetrics = cros::metrics;
 namespace crinteractors = cros::interactors;
+namespace crforaging = cros::foraging;
+namespace crfmetrics = crforaging::metrics;
+namespace crfsm = cros::fsm;
+namespace crspatial = cros::spatial;
+namespace crsmetrics = crspatial::metrics;
 
 namespace coracle = cosm::oracle;
 namespace coconfig = coracle::config;
@@ -431,5 +446,3 @@ namespace cfsm = cosm::fsm;
 namespace ckin = cosm::kin;
 namespace ckin2D = cosm::kin2D;
 namespace csteer2D = cosm::steer2D;
-
-#endif /* INCLUDE_COSM_COSM_HPP_ */

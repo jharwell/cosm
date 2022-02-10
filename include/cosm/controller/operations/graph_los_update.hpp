@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONTROLLER_OPERATIONS_GRAPH_LOS_UPDATE_HPP_
-#define INCLUDE_COSM_CONTROLLER_OPERATIONS_GRAPH_LOS_UPDATE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -111,4 +110,3 @@ class graph_los_update final
 
 NS_END(operations, controller, cosm);
 
-#endif /* INCLUDE_COSM_CONTROLLER_OPERATIONS_GRAPH_LOS_UPDATE_HPP_ */

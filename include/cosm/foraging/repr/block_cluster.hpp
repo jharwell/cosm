@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_HPP_
-#define INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -107,4 +106,3 @@ class block_cluster final : public crepr::grid2D_view_entity<cads::arena_grid,
 
 NS_END(repr, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_REPR_BLOCK_CLUSTER_HPP_ */

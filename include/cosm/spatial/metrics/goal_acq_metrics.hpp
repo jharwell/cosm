@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -151,4 +150,3 @@ bool operator!=(const TInt& other, const goal_acq_metrics::goal_type& goal) {
 
 NS_END(metrics, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_GOAL_ACQ_METRICS_HPP_ */

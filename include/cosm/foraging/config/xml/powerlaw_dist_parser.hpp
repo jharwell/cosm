@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_POWERLAW_DIST_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_XML_POWERLAW_DIST_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class powerlaw_dist_parser final : public rer::client<powerlaw_dist_parser>,
 
 NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_POWERLAW_DIST_PARSER_HPP_ */

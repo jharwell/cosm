@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_
-#define INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -93,4 +92,3 @@ class base_strategy : public cta::taskable,
 
 NS_END(strategy, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_STRATEGY_BASE_STRATEGY_HPP_ */

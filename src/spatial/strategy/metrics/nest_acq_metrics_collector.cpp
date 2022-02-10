@@ -53,8 +53,8 @@ void nest_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
     ++m_data.interval.n_random_thresh;
     ++m_data.cum.n_random_thresh;
 
-    ral::mt_add(m_data.interval.random_thresh, current->v());
-    ral::mt_add(m_data.cum.random_thresh, current->v());
+    ral::mt_accum(m_data.interval.random_thresh, current->v());
+    ral::mt_accum(m_data.cum.random_thresh, current->v());
   }
 } /* collect() */
 

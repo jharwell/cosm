@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -95,4 +94,3 @@ class saa_subsystemQ3D final : public steer2D::boid,
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_SAA_SUBSYSTEMQ3D_HPP_ */

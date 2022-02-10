@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_DIFF_DRIVE_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_DIFF_DRIVE_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -105,8 +104,11 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
       : ER_CLIENT_INIT("cosm.hal.sensors.diff_drive"),
         chargos::sensors::argos_sensor<impl_type>(sensor) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const diff_drive_sensor_impl& operator=(const diff_drive_sensor_impl&) = delete;
-  diff_drive_sensor_impl(const diff_drive_sensor_impl&) = default;
+  diff_drive_sensor_impl(const diff_drive_sensor_impl&) = delete;
+   diff_drive_sensor_impl& operator=(diff_drive_sensor_impl&&) = default;
+  diff_drive_sensor_impl(diff_drive_sensor_impl&&) = default;
 
   /**
    * \brief Get the current differential drive reading for the robot.
@@ -173,4 +175,3 @@ class diff_drive_sensor{};
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_DIFF_DRIVE_SENSOR_HPP_ */

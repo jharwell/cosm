@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER_ADAPTORQ3D_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER_ADAPTORQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -59,4 +58,3 @@ class adaptorQ3D : public ccontroller::base_controllerQ3D,
 
 NS_END(controller, argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER_ADAPTORQ3D_HPP_ */

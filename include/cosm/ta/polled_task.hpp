@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_POLLED_TASK_HPP_
-#define INCLUDE_COSM_TA_POLLED_TASK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -83,4 +82,3 @@ class polled_task : public executable_task, public taskable {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_POLLED_TASK_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_MLOS_PERCEPTION_SUBSYSTEM_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_MLOS_PERCEPTION_SUBSYSTEM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,4 +71,3 @@ class mlos_perception_subsystem : public rlos_perception_subsystem<TLOS> {
 
 NS_END(perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_MLOS_PERCEPTION_SUBSYSTEM_HPP_ */

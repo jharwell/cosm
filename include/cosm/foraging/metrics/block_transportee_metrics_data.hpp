@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_DATA_HPP_
-#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -81,8 +80,24 @@ NS_END(detail);
 struct block_transportee_metrics_data : public rmetrics::base_data {
   detail::block_transportee_metrics_data interval{};
   detail::block_transportee_metrics_data cum{};
+
+  block_transportee_metrics_data& operator+=(const  block_transportee_metrics_data& rhs) {
+    ral::mt_accum(this->interval.n_transported, rhs.interval.n_transported);
+    ral::mt_accum(this->interval.n_cube_transported, rhs.interval.n_cube_transported);
+    ral::mt_accum(this->interval.n_ramp_transported, rhs.interval.n_ramp_transported);
+    ral::mt_accum(this->interval.n_transporters, rhs.interval.n_transporters);
+    ral::mt_accum(this->interval.transport_time, rhs.interval.transport_time);
+    ral::mt_accum(this->interval.initial_wait_time, rhs.interval.initial_wait_time);
+
+    ral::mt_accum(this->cum.n_transported, rhs.cum.n_transported);
+    ral::mt_accum(this->cum.n_cube_transported, rhs.cum.n_cube_transported);
+    ral::mt_accum(this->cum.n_ramp_transported, rhs.cum.n_ramp_transported);
+    ral::mt_accum(this->cum.n_transporters, rhs.cum.n_transporters);
+    ral::mt_accum(this->cum.transport_time, rhs.cum.transport_time);
+    ral::mt_accum(this->cum.initial_wait_time, rhs.cum.initial_wait_time);
+
+    return *this;
+  }
 };
 
 NS_END(metrics, foraging, cosm);
-
-#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_DATA_HPP_ */

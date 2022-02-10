@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_ARGOS_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_ARGOS_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -48,12 +47,12 @@ class argos_sensor : public rer::client<argos_sensor<TSensor>>,
 
   explicit argos_sensor(TSensor* sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.argos_sensor"),
-        chsensors::base_sensor<TSensor*>(sensor) {}
+        chsensors::base_sensor<TSensor*>(std::move(sensor)) {}
 
   virtual ~argos_sensor(void) = default;
 
-  argos_sensor(const argos_sensor&) = default;
-  argos_sensor& operator=(const argos_sensor&) = default;
+  argos_sensor(const argos_sensor&) = delete;
+  argos_sensor& operator=(const argos_sensor&) = delete;
   argos_sensor(argos_sensor&&) = default;
   argos_sensor& operator=(argos_sensor&&) = default;
 
@@ -84,4 +83,3 @@ class argos_sensor : public rer::client<argos_sensor<TSensor>>,
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_ARGOS_SENSOR_HPP_ */

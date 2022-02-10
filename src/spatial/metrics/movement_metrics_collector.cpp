@@ -58,11 +58,12 @@ void movement_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
       continue;
     }
     ++m_data.interval[i].n_robots;
+    ral::mt_accum(m_data.interval[i].distance, ts_dist);
+    ral::mt_accum(m_data.interval[i].velocity, ts_vel);
+
     ++m_data.cum[i].n_robots;
-    ral::mt_add(m_data.cum[i].distance, ts_dist);
-    ral::mt_add(m_data.interval[i].distance, ts_dist);
-    ral::mt_add(m_data.cum[i].velocity, ts_vel);
-    ral::mt_add(m_data.interval[i].velocity, ts_vel);
+    ral::mt_accum(m_data.cum[i].distance, ts_dist);
+    ral::mt_accum(m_data.cum[i].velocity, ts_vel);
   } /* for(i..) */
 } /* collect() */
 

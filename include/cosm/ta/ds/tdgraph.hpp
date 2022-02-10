@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_DS_TDGRAPH_HPP_
-#define INCLUDE_COSM_TA_DS_TDGRAPH_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -216,4 +215,3 @@ class tdgraph : public rer::client<tdgraph> {
 
 NS_END(ds, ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_DS_TDGRAPH_HPP_ */

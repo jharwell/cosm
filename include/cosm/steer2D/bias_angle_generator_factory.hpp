@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_
-#define INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,4 +71,3 @@ class bias_angle_generator_factory :
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_ANGLE_GENERATOR_FACTORY_HPP_ */

@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License along with
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
-#ifndef INCLUDE_COSM_ARGOS_VIS_TASK_VISUALIZER_HPP_
-#define INCLUDE_COSM_ARGOS_VIS_TASK_VISUALIZER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -79,4 +78,3 @@ class task_visualizer : public rer::client<task_visualizer> {
 
 NS_END(vis, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_VIS_TASK_VISUALIZER_HPP_ */

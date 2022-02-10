@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_CONFIG_XML_SAA_NAMES_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_CONFIG_XML_SAA_NAMES_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -72,4 +71,3 @@ struct saa_names {
 
 NS_END(xml, config, subsystem, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_CONFIG_XML_SAA_NAMES_HPP_ */

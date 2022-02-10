@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_ARGOS_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_ARGOS_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,12 +51,12 @@ class argos_actuator : public rer::client<argos_actuator<TActuator>>,
 
   explicit argos_actuator(TActuator* actuator)
       : ER_CLIENT_INIT("cosm.hal.actuator.argos_actuator"),
-        chactuators::base_actuator<TActuator*>(actuator) {}
+        chactuators::base_actuator<TActuator*>(std::move(actuator)) {}
 
   virtual ~argos_actuator(void) = default;
 
-  argos_actuator(const argos_actuator&) = default;
-  argos_actuator& operator=(const argos_actuator&) = default;
+  argos_actuator(const argos_actuator&) = delete;
+  argos_actuator& operator=(const argos_actuator&) = delete;
   argos_actuator(argos_actuator&&) = default;
   argos_actuator& operator=(argos_actuator&&) = default;
 
@@ -93,4 +92,3 @@ class argos_actuator : public rer::client<argos_actuator<TActuator>>,
 
 NS_END(actuators, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_ARGOS_ACTUATOR_HPP_ */

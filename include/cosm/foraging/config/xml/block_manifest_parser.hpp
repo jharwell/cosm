@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MANIFEST_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MANIFEST_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -75,4 +74,3 @@ class block_manifest_parser : public rer::client<block_manifest_parser>,
 
 NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_MANIFEST_PARSER_HPP_ */

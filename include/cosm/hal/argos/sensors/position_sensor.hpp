@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_POSITION_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_POSITION_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -85,8 +84,11 @@ class position_sensor_impl final : public rer::client<position_sensor_impl<TSens
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.position"),
         chargos::sensors::argos_sensor<TSensor>(sensor) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const position_sensor_impl& operator=(const position_sensor_impl&) = delete;
-  position_sensor_impl(const position_sensor_impl&) = default;
+  position_sensor_impl(const position_sensor_impl&) = delete;
+  position_sensor_impl& operator=(position_sensor_impl&&) = default;
+  position_sensor_impl(position_sensor_impl&&) = default;
 
   /**
    * \brief Get the current position sensor readings for the footbot robot.
@@ -121,4 +123,3 @@ using position_sensor = position_sensor_impl<::argos::CCI_PositioningSensor>;
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_POSITION_SENSOR_HPP_ */

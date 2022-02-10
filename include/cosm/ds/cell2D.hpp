@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_CELL2D_HPP_
-#define INCLUDE_COSM_DS_CELL2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -134,4 +133,3 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_CELL2D_HPP_ */

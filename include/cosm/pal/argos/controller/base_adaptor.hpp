@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_CONTROLLER_BASE_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_CONTROLLER_BASE_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -82,4 +81,3 @@ class base_adaptor : public ::argos::CCI_Controller,
 
 NS_END(controller, argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_CONTROLLER_BASE_ADAPTOR_HPP_ */

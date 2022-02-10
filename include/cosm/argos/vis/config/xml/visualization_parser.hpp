@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_VIS_CONFIG_XML_VISUALIZATION_PARSER_HPP_
-#define INCLUDE_COSM_ARGOS_VIS_CONFIG_XML_VISUALIZATION_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class visualization_parser final : public rer::client<visualization_parser>,
 
 NS_END(xml, config, vis, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_VIS_CONFIG_XML_VISUALIZATION_PARSER_HPP_ */

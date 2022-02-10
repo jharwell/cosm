@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License along with
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
-#ifndef INCLUDE_COSM_ARGOS_VIS_BLOCK_CARRY_VISUALIZER_HPP_
-#define INCLUDE_COSM_ARGOS_VIS_BLOCK_CARRY_VISUALIZER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -86,4 +85,3 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
 
 NS_END(vis, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_VIS_BLOCK_CARRY_VISUALIZER_HPP_ */

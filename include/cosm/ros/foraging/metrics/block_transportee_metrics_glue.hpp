@@ -18,16 +18,32 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_GLUE_HPP_
-#define INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_GLUE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <ros/ros.h>
 
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
 #include "cosm/cosm.hpp"
-#include "cosm/foraging/metrics/block_transportee_metrics_data.hpp"
+#include "cosm/pal/pal.hpp"
+#include "cosm/ros/foraging/metrics/block_transportee_metrics_msg.hpp"
+#include "cosm/ros/metrics/msg_traits.hpp"
+#include "cosm/foraging/metrics/block_transportee_metrics.hpp"
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+NS_START(cosm, ros, metrics, msg_traits);
+
+template<>
+struct payload_type<crfmetrics::block_transportee_metrics_msg> {
+  using type = cfmetrics::block_transportee_metrics_data;
+};
+
+NS_END(msg_traits, metrics, ros, cosm);
 
 /*******************************************************************************
  * ROS Message Traits
@@ -35,58 +51,61 @@
 NS_START(ros, message_traits);
 
 template<>
-struct MD5Sum<cforaging::metrics::block_transportee_metrics_data> {
+struct MD5Sum<crfmetrics::block_transportee_metrics_msg> {
   static const char* value() {
-    return MD5Sum<cforaging::metrics::block_transportee_metrics_data>::value();
+    return cpal::kMsgTraitsMD5.c_str();
   }
-  static const char* value(const cforaging::metrics::block_transportee_metrics_data& m) {
-    return MD5Sum<cforaging::metrics::block_transportee_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_transportee_metrics_msg& ) {
+    return value();
   }
 };
 template <>
-struct DataType<cforaging::metrics::block_transportee_metrics_data> {
+struct DataType<crfmetrics::block_transportee_metrics_msg> {
   static const char* value() {
-    return DataType<cforaging::metrics::block_transportee_metrics_data>::value();
+    return "cosm_msgs/block_transportee_metrics_data";
   }
-  static const char* value(const cforaging::metrics::block_transportee_metrics_data& m) {
-    return DataType<cforaging::metrics::block_transportee_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_transportee_metrics_msg&) {
+    return value();
   }
 };
 
 template<>
-struct Definition<cforaging::metrics::block_transportee_metrics_data> {
+struct Definition<crfmetrics::block_transportee_metrics_msg> {
   static const char* value() {
-    return Definition<cforaging::metrics::block_transportee_metrics_data>::value();
+    return "See COSM docs for documentation.";
   }
-  static const char* value(const cforaging::metrics::block_transportee_metrics_data& m) {
-    return Definition<cforaging::metrics::block_transportee_metrics_data>::value(m);
+  static const char* value(const crfmetrics::block_transportee_metrics_msg&) {
+    return value();
   }
 };
+template<>
+struct HasHeader<crfmetrics::block_transportee_metrics_msg> : TrueType {};
+
 NS_END(message_traits);
 
 NS_START(serialization);
 
 template<>
-struct Serializer<cforaging::metrics::block_transportee_metrics_data> {
+struct Serializer<crfmetrics::block_transportee_metrics_msg> {
   template<typename Stream, typename T>
   inline static void allInOne(Stream& stream, T t) {
-    stream.next(t.interval.n_transported);
-    stream.next(t.interval.n_cube_transported);
-    stream.next(t.interval.n_ramp_transported);
-    stream.next(t.interval.n_transporters);
-    stream.next(t.interval.transport_time);
-    stream.next(t.interval.initial_wait_time);
+    stream.next(t.header);
 
-    stream.next(t.cum.n_transported);
-    stream.next(t.cum.n_cube_transported);
-    stream.next(t.cum.n_ramp_transported);
-    stream.next(t.cum.n_transporters);
-    stream.next(t.cum.transport_time);
-    stream.next(t.cum.initial_wait_time);
+    stream.next(t.data.interval.n_transported);
+    stream.next(t.data.interval.n_cube_transported);
+    stream.next(t.data.interval.n_ramp_transported);
+    stream.next(t.data.interval.n_transporters);
+    stream.next(t.data.interval.transport_time);
+    stream.next(t.data.interval.initial_wait_time);
+
+    stream.next(t.data.cum.n_transported);
+    stream.next(t.data.cum.n_cube_transported);
+    stream.next(t.data.cum.n_ramp_transported);
+    stream.next(t.data.cum.n_transporters);
+    stream.next(t.data.cum.transport_time);
+    stream.next(t.data.cum.initial_wait_time);
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
 NS_END(serialization, ros);
-
-#endif /* INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_TRANSPORTEE_METRICS_GLUE_HPP_ */

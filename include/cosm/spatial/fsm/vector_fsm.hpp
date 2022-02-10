@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_FSM_VECTOR_FSM_HPP_
-#define INCLUDE_COSM_SPATIAL_FSM_VECTOR_FSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -164,4 +163,3 @@ class vector_fsm final : public csfsm::util_hfsm,
 
 NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_FSM_VECTOR_FSM_HPP_ */

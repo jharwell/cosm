@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -67,4 +66,3 @@ class convergence_metrics_collector final : public rmetrics::base_collector {
 
 NS_END(convergence, metrics, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_METRICS_CONVERGENCE_METRICS_COLLECTOR_HPP_ */

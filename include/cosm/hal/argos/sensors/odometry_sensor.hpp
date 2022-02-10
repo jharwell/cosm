@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_ODOMETRY_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_ODOMETRY_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -57,7 +56,9 @@ NS_START(cosm, hal, argos, sensors);
 */
 class odometry_sensor final
     : public rer::client<odometry_sensor>,
-      public chal::sensors::base_sensor<std::pair<position_sensor, diff_drive_sensor>> {
+      public chal::sensors::base_sensor<std::pair<position_sensor,
+                                                  diff_drive_sensor>
+                                        > {
  public:
   using decoratee_type = std::pair<position_sensor, diff_drive_sensor>;
 
@@ -70,14 +71,18 @@ class odometry_sensor final
   using chal::sensors::base_sensor<decoratee_type>::reset;
   using chal::sensors::base_sensor<decoratee_type>::is_enabled;
 
-  explicit odometry_sensor(const position_sensor& position,
-                           const diff_drive_sensor& steering)
+  explicit odometry_sensor(position_sensor&& position,
+                           diff_drive_sensor&& steering)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.odometry"),
-        chal::sensors::base_sensor<decoratee_type>(std::make_pair(position,
-                                                                  steering)) {}
+        chal::sensors::base_sensor<decoratee_type>(
+            std::make_pair(std::move(position),
+                           std::move(steering))) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const odometry_sensor& operator=(const odometry_sensor&) = delete;
-  odometry_sensor(const odometry_sensor&) = default;
+  odometry_sensor(const odometry_sensor&) = delete;
+  odometry_sensor& operator=(odometry_sensor&&) = default;
+  odometry_sensor(odometry_sensor&&) = default;
 
   /**
    * \brief Get the current odometry sensor readings for the robot.
@@ -131,5 +136,3 @@ class odometry_sensor final
 };
 
 NS_END(sensors, argos, hal, cosm);
-
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_ODOMETRY_SENSOR_HPP_ */

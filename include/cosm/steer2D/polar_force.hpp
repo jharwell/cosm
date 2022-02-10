@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_POLAR_FORCE_HPP_
-#define INCLUDE_COSM_STEER2D_POLAR_FORCE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -61,4 +60,3 @@ class polar_force {
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_POLAR_FORCE_HPP_ */

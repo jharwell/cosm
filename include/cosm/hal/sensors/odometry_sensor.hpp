@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_ODOMETRY_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_ODOMETRY_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ using odometry_sensor = chros::sensors::odometry_sensor;
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_ODOMETRY_SENSOR_HPP_ */

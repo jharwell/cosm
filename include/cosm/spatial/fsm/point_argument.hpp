@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_FSM_POINT_ARGUMENT_HPP_
-#define INCLUDE_COSM_SPATIAL_FSM_POINT_ARGUMENT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -67,4 +66,3 @@ class point_argument final : public ta::taskable_argument,
 
 NS_END(fsm, spatial, cosm);
 
-#endif /* INCLUDE_COSM_SPATIAL_FSM_POINT_ARGUMENT_HPP_ */

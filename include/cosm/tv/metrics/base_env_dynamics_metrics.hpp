@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_ENV_DYNAMICS_METRICS_HPP_
-#define INCLUDE_COSM_TV_ENV_DYNAMICS_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -71,4 +70,3 @@ class base_env_dynamics_metrics : public virtual rmetrics::base_metrics {
 
 NS_END(metrics, tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_ENV_DYNAMICS_METRICS_HPP_ */

@@ -61,7 +61,7 @@ free_block_pickup free_block_pickup::by_arena(crepr::sim_block3D* block) {
    */
   return free_block_pickup(block,
                            rtypes::constants::kNoUUID,
-                           rtypes::timestep(-1),
+                           rtypes::constants::kNoTime,
                            locking::ekALL_HELD);
 } /* by_arena() */
 

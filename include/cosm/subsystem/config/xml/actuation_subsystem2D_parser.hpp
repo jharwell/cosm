@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_ACTUATION_SUBSYSTEM2D_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_ACTUATION_SUBSYSTEM2D_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -79,4 +78,3 @@ class actuation_subsystem2D_parser final : public rer::client<actuation_subsyste
 
 NS_END(xml, config, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_CONFIG_XML_ACTUATION_SUBSYSTEM2D_PARSER_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_
-#define INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class robot_repair : public rer::client<robot_repair> {
 
 NS_END(operations, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_REPAIR_HPP_ */

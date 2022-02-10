@@ -35,6 +35,12 @@ lidar_sensor::lidar_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.lidar"),
       ros_sensor(robot_ns) {
   enable();
+  auto n_publishers = decoratee().getNumPublishers();
+
+  ER_ASSERT(1 == n_publishers,
+            "Expected 1 publisher of lidar data for %s, got %d",
+            cpal::kRobotType.c_str(),
+            n_publishers);
 }
 
 lidar_sensor::lidar_sensor(lidar_sensor&& other)
@@ -77,17 +83,32 @@ std::vector<rmath::vector2d> lidar_sensor::readings(void) const {
 
   std::vector<rmath::vector2d> ret;
 
+  /*
+   * Even though we get way more readings than from the IR sensors for the ARGoS
+   * foot-bot, we don't want to downsample, because that will leave blindspots
+   * which will make collision detection/obstacle avoidance much less reliable.
+   */
   for (size_t i = 0; i < m_scan.ranges.size(); ++i) {
-    if (RCPPSW_IS_BETWEEN(m_scan.range_min,
-                          m_scan.range_max,
-                          m_scan.ranges[i])) {
+    if (RCPPSW_IS_BETWEEN(m_scan.ranges[i],
+                          m_scan.range_min,
+                          m_scan.range_max)) {
       auto angle = rmath::radians(m_scan.angle_min +
-                                  m_scan.angle_max * m_scan.angle_increment);
-      ret.push_back(rmath::vector2d(m_scan.ranges[i], angle));
+                                  i * m_scan.angle_increment);
+
+      /*
+       * To be consistent with what we have to use with ARGoS. Not ideal, but
+       * it makes the collision avoidance code common between ROS and ARGoS.
+       */
+      auto dist = std::exp(-m_scan.ranges[i]);
+      ret.push_back(rmath::vector2d(dist, angle));
     }
   } /* for(i..) */
 
   return ret;
+}
+
+void lidar_sensor::callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
+  m_scan = *msg;
 }
 
 NS_END(sensors, ros, hal, cosm);

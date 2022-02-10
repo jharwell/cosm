@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_
-#define INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -78,4 +77,3 @@ class aggregate_oracle_parser final : public rer::client<aggregate_oracle_parser
 
 NS_END(xml, config, oracle, cosm);
 
-#endif /* INCLUDE_COSM_ORACLE_CONFIG_XML_AGGREGATE_ORACLE_PARSER_HPP_ */

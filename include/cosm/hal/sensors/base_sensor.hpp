@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_BASE_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_BASE_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -53,9 +52,9 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
   base_sensor(void) :
       ER_CLIENT_INIT("cosm.hal.sensors.base_sensor") {}
 
-  explicit base_sensor(TSensor sensor)
+  explicit base_sensor(TSensor&& sensor)
       : ER_CLIENT_INIT("cosm.hal.sensors.base_sensor"),
-        rpdecorator::decorator<TSensor>(sensor) {}
+        rpdecorator::decorator<TSensor>(std::move(sensor)) {}
 
   virtual ~base_sensor(void) = default;
 
@@ -93,4 +92,3 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_BASE_SENSOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_BI_TDGRAPH_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_BI_TDGRAPH_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -118,4 +117,3 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_BI_TDGRAPH_ALLOCATOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_TOPIC_SINK_HPP_
-#define INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_TOPIC_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -27,7 +26,6 @@
 #include <string>
 
 #include "cosm/ros/metrics/topic_sink.hpp"
-#include "cosm/fsm/metrics/block_transporter_metrics_data.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_glue.hpp"
 
@@ -52,7 +50,7 @@ NS_START(cosm, ros, fsm, metrics);
  * topic.
  */
 class block_transporter_metrics_topic_sink final
-    : public cros::metrics::topic_sink<cfsm::metrics::block_transporter_metrics_data> {
+    : public cros::metrics::topic_sink<crfsm::metrics::block_transporter_metrics_msg> {
  public:
   using collector_type = cfsm::metrics::block_transporter_metrics_collector;
 
@@ -64,4 +62,3 @@ class block_transporter_metrics_topic_sink final
 
 NS_END(metrics, fsm, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_TOPIC_SINK_HPP_ */

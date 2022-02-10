@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -37,4 +36,3 @@ class sensing_subsystemQ3D;
 
 NS_END(subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_SUBSYSTEM_FWD_HPP_ */

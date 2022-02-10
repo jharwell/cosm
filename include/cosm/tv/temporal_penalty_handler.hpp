@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_TEMPORAL_PENALTY_HANDLER_HPP_
-#define INCLUDE_COSM_TV_TEMPORAL_PENALTY_HANDLER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -176,4 +175,3 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
 
 NS_END(tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_TEMPORAL_PENALTY_HANDLER_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_ANGULAR_ORDER_HPP_
-#define INCLUDE_COSM_CONVERGENCE_ANGULAR_ORDER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -75,4 +74,3 @@ class angular_order final : public convergence_measure {
 
 NS_END(convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_ANGULAR_ORDER_HPP_ */

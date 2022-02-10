@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_REPR_BASE_CACHE_HPP_
-#define INCLUDE_COSM_ARENA_REPR_BASE_CACHE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -173,4 +172,3 @@ class base_cache : public crepr::unicell_immovable_entity2D,
 
 NS_END(repr, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_REPR_BASE_CACHE_HPP_ */

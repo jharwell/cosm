@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_
-#define INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ struct robot_dynamics_applicator_config final : public rconfig::base_config {
 
 NS_END(config, tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_CONFIG_ROBOT_DYNAMICS_APPLICATOR_CONFIG_HPP_ */

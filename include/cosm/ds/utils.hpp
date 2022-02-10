@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_UTILS_HPP_
-#define INCLUDE_COSM_DS_UTILS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -83,4 +82,3 @@ std::string to_string(const TMap& table, const std::string& prefix) {
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_UTILS_HPP_ */

@@ -18,13 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_
-#define INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <vector>
+#include <map>
+#include <string>
 #include <ros/ros.h>
 
 #include "rcppsw/er/client.hpp"
@@ -34,12 +35,12 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/ros/topic.hpp"
-
-#include "cosm/spatial/metrics/movement_metrics_data.hpp"
-#include "cosm/spatial/metrics/interference_metrics_data.hpp"
-#include "cosm/fsm/metrics/block_transporter_metrics_data.hpp"
-#include "cosm/foraging/metrics/block_transportee_metrics_data.hpp"
-#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
+#include "cosm/ros/spatial/metrics/movement_metrics_msg.hpp"
+#include "cosm/ros/spatial/metrics/interference_metrics_msg.hpp"
+#include "cosm/ros/fsm/metrics/block_transporter_metrics_msg.hpp"
+#include "cosm/ros/foraging/metrics/block_transportee_metrics_msg.hpp"
+#include "cosm/ros/foraging/metrics/block_cluster_metrics_msg.hpp"
+#include "cosm/ros/metrics/msg_tracking_map.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -74,6 +75,16 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
                         size_t n_robots);
   ~swarm_metrics_manager(void) override = default;
 
+  /* fs_output_manager overrides */
+  bool flush(const rmetrics::output_mode& mode,
+             const rtypes::timestep&) override;
+
+  /**
+   * \brief We can't reset metric collectors according to the current timestep,
+   * because we may receive packets from robots asynchronously.
+   */
+  void interval_reset(const rtypes::timestep&) override {}
+
  protected:
   /**
    * \brief Register metrics collectors that do not require extra arguments.
@@ -100,18 +111,33 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
                                       size_t n_robots,
                                       size_t n_block_clusters);
 
+  /**
+   * After subscribing to a metric data topic, verify connection.
+   */
+  bool wait_for_connection(const ::ros::Subscriber& sub);
+
+  msg_tracking_map* msg_tracking(void) { return &m_tracking; }
+
  private:
-  void collect(const boost::shared_ptr<const csmetrics::movement_metrics_data>& data);
-  void collect(const boost::shared_ptr<const csmetrics::interference_metrics_data>& data);
-  void collect(const boost::shared_ptr<const cfsm::metrics::block_transporter_metrics_data>& data);
-  void collect(const boost::shared_ptr<const cforaging::metrics::block_transportee_metrics_data>& data);
-  void collect(const boost::shared_ptr<const cforaging::metrics::block_cluster_metrics_data>& data);
+  void collect(const boost::shared_ptr<const crsmetrics::movement_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const crsmetrics::interference_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const crfsm::metrics::block_transporter_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const crfmetrics::block_transportee_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const crfmetrics::block_cluster_metrics_msg>& msg);
+
 
   /* clang-format off */
+  /**
+   * \brief Maps an output mode to the expected # of metric packets that should
+   * be received via subscription during a given interval.
+   */
+  using expected_counts_map_type = std::map<rmetrics::output_mode, size_t>;
+
+  const expected_counts_map_type mc_expected_counts{};
+
+  msg_tracking_map               m_tracking{};
   std::vector<::ros::Subscriber> m_subs{};
   /* clang-format on */
 };
 
 NS_END(metrics, ros, cosm);
-
-#endif /* INCLUDE_COSM_ROS_METRICS_SWARM_METRICS_MANAGER_HPP_ */

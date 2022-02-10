@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_TIME_ESTIMATE_HPP_
-#define INCLUDE_COSM_TA_TIME_ESTIMATE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -43,4 +42,3 @@ using time_estimate = rmath::ema<int>;
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_TIME_ESTIMATE_HPP_ */

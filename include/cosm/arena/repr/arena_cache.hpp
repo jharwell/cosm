@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_REPR_ARENA_CACHE_HPP_
-#define INCLUDE_COSM_ARENA_REPR_ARENA_CACHE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -103,4 +102,3 @@ class arena_cache final : public base_cache,
 
 NS_END(repr, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_REPR_ARENA_CACHE_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_BLOCK3D_VECTOR_HPP_
-#define INCLUDE_COSM_DS_BLOCK3D_VECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -144,4 +143,3 @@ class block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vecto
 
 NS_END(ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_BLOCK3D_VECTOR_HPP_ */

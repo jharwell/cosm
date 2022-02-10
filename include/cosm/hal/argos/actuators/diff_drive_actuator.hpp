@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -104,8 +103,11 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.diff_drive"),
         chargos::actuators::argos_actuator<TActuator>(wheels) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const diff_drive_actuator_impl& operator=(const diff_drive_actuator_impl&) = delete;
-  diff_drive_actuator_impl(const diff_drive_actuator_impl&) = default;
+  diff_drive_actuator_impl(const diff_drive_actuator_impl&) = delete;
+  diff_drive_actuator_impl& operator=(diff_drive_actuator_impl&&) = default;
+  diff_drive_actuator_impl(diff_drive_actuator_impl&&) = default;
 
   /**
    * \brief Stop the wheels of a robot. As far as I know, this is an immediate
@@ -117,7 +119,8 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
   }
 
   void set_from_twist(const ckin::twist& desired,
-                      const rmath::range<rmath::radians>& soft_turn) {
+                      const rmath::range<rmath::radians>& soft_turn,
+                      double max_speed) {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -125,7 +128,7 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
               "%s called when disabled",
               __FUNCTION__);
 
-    auto speeds = to_wheel_speeds(desired, soft_turn);
+    auto speeds = to_wheel_speeds(desired, soft_turn, max_speed);
     set_direct(speeds.first, speeds.second);
   }
 
@@ -173,12 +176,13 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
 
   std::pair<double, double> to_wheel_speeds(
       const ckin::twist& twist,
-      const rmath::range<rmath::radians>& soft_turn) {
+      const rmath::range<rmath::radians>& soft_turn,
+      double max_speed) {
     double speed1, speed2;
 
     /* Both wheels go straight, but one is faster than the other */
     auto angle = rmath::radians(twist.angular.z()).signed_normalize();
-    ER_TRACE("linear_x=%f, angular_z=%f, soft_turn=%s",
+    ER_TRACE("Linear_x=%f, angular_z=%f, soft_turn=%s",
              twist.linear.x(),
              angle.v(),
              rcppsw::to_string(soft_turn).c_str());
@@ -191,8 +195,8 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       speed1 = twist.linear.x() - twist.linear.x() * (1.0 - speed_factor);
       speed2 = twist.linear.x() + twist.linear.x() * (1.0 - speed_factor);
     } else { /* turn in place */
-      speed1 = -twist.linear.x();
-      speed2 = twist.linear.x();
+      speed1 = -max_speed;
+      speed2 = max_speed;
     }
     if (rmath::radians(twist.angular.z()) > rmath::radians::kZERO) {
       /* Turn Left */
@@ -212,4 +216,3 @@ using diff_drive_actuator = diff_drive_actuator_impl<::argos::CCI_PiPuckDifferen
 
 NS_END(actuators, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIFF_DRIVE_ACTUATOR_HPP_ */

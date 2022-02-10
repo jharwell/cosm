@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_REDIST_GOVERNOR_PARSER_HPP_
-#define INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_REDIST_GOVERNOR_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class block_redist_governor_parser : public rer::client<block_redist_governor_pa
 
 NS_END(xml, config, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_CONFIG_XML_BLOCK_REDIST_GOVERNOR_PARSER_HPP_ */

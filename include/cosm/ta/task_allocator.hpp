@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_TASK_ALLOCATOR_HPP_
-#define INCLUDE_COSM_TA_TASK_ALLOCATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -71,4 +70,3 @@ class task_allocator : public boost::static_visitor<polled_task*> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_RCPPSW_TA_TASK_ALLOCATOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_PROXIMITY_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_PROXIMITY_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -113,7 +112,6 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 
     /* constructed, not returned, so we need a copy to iterate over */
     auto readings = this->readings();
-    ER_TRACE("Processing %zu readings", readings.size());
 
     for (auto& r : readings) {
       accum += r;
@@ -123,6 +121,10 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
     if (count == 0) {
       return boost::none;
     }
+    ER_TRACE("Processed %zu non-zero readings", count);
+    ER_TRACE("Accum: %s@%s",
+             rcppsw::to_string(accum).c_str(),
+              rcppsw::to_string(accum.angle()).c_str());
 
     accum /= count;
 
@@ -143,4 +145,3 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 
 NS_END(sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_PROXIMITY_SENSOR_HPP_ */

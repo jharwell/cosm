@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PALARGOS_EMBODIED_CUBE_BLOCK_HPP_
-#define INCLUDE_COSM_PALARGOS_EMBODIED_CUBE_BLOCK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -62,4 +61,3 @@ class embodied_cube_block final : public crepr::cube_block3D,
 
 NS_END(argos, cosm);
 
-#endif /* INCLUDE_COSM_PALARGOS_EMBODIED_CUBE_BLOCK_HPP_ */

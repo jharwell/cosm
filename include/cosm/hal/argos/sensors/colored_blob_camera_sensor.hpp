@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -98,8 +97,11 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
         disable();
   }
 
+  /* move only constructible/assignable for use with saa subsystem */
   const colored_blob_camera_sensor_impl& operator=(const colored_blob_camera_sensor_impl&) = delete;
-  colored_blob_camera_sensor_impl(const colored_blob_camera_sensor_impl&) = default;
+  colored_blob_camera_sensor_impl(const colored_blob_camera_sensor_impl&) = delete;
+   colored_blob_camera_sensor_impl& operator=(colored_blob_camera_sensor_impl&&) = default;
+  colored_blob_camera_sensor_impl(colored_blob_camera_sensor_impl&&) = default;
 
   /**
    * \brief Get the sensor readings for the robot.
@@ -182,4 +184,3 @@ using colored_blob_camera_sensor =
 
 NS_END(sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_ */

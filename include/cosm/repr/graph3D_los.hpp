@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_GRAPH3D_LOS_HPP_
-#define INCLUDE_COSM_REPR_GRAPH3D_LOS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -67,4 +66,3 @@ class graph3D_los : public crepr::base_graph_los<
 
 NS_END(repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_GRAPH3D_LOS_HPP_ */

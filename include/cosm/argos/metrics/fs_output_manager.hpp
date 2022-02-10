@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
-#define INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -164,4 +163,3 @@ class fs_output_manager : public rmetrics::fs_output_manager,
 
 NS_END(metrics, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_METRICS_FS_OUTPUT_MANAGER_HPP_ */

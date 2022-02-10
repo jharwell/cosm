@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_SWARM_ITERATOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_SWARM_ITERATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -142,4 +141,3 @@ struct swarm_iterator {
 
 NS_END(argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_SWARM_ITERATOR_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_FSM_FORAGING_UTIL_HFSM_HPP_
-#define INCLUDE_COSM_FORAGING_FSM_FORAGING_UTIL_HFSM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -146,4 +145,3 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
 
 NS_END(fsm, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_FSM_FORAGING_UTIL_HFSM_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_CONFIG_XML_TEMPORAL_PENALTY_PARSER_HPP_
-#define INCLUDE_COSM_TV_CONFIG_XML_TEMPORAL_PENALTY_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -85,4 +84,3 @@ class temporal_penalty_parser final : public rer::client<temporal_penalty_parser
 
 NS_END(xml, config, tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_CONFIG_XML_TEMPORAL_PENALTY_PARSER_HPP_ */

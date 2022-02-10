@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_BASE_SWARM_MANAGER_HPP_
-#define INCLUDE_COSM_PAL_BASE_SWARM_MANAGER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -119,4 +118,3 @@ class base_swarm_manager : public rer::client<base_swarm_manager> {
 
 NS_END(cosm, pal);
 
-#endif /* INCLUDE_COSM_PAL_BASE_SWARM_MANAGER_HPP_ */

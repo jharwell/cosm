@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_EXECUTABLE_TASK_HPP_
-#define INCLUDE_COSM_TA_EXECUTABLE_TASK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -376,4 +375,3 @@ class executable_task : public logical_task,
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_EXECUTABLE_TASK_HPP_ */

@@ -53,20 +53,25 @@ void diff_drive_actuator::enable(void) {
           kCmdVelTopic.c_str(),
           topic.c_str());
 
-  advertise<geometry_msgs::Twist>(kCmdVelTopic);
+  advertise<geometry_msgs::Twist>(topic);
 }
 
 void diff_drive_actuator::set_from_twist(const ckin::twist& desired,
-                                         const rmath::range<rmath::radians>&) {
+                                         const rmath::range<rmath::radians>& soft_turn,
+                                         double) {
   ER_ASSERT(is_enabled(),
             "%s called when disabled",
             __FUNCTION__);
 
   geometry_msgs::Twist t;
+  auto angle = rmath::radians(desired.angular.z()).signed_normalize();
   t.linear.x = desired.linear.x();
-  t.angular.z = desired.angular.z();
+  t.angular.z = angle.v();
 
-  ER_DEBUG("Linear=%f, angular=%f", t.linear.x, t.angular.z);
+  ER_DEBUG("Linear_x=%f, angular_z=%f, soft_turn=%s",
+           t.linear.x,
+           angle.v(),
+           rcppsw::to_string(soft_turn).c_str());
   decoratee().publish(t);
 }
 

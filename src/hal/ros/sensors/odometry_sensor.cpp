@@ -63,7 +63,6 @@ ckin::odometry odometry_sensor::reading(void) const {
               "%s called when disabled",
               __FUNCTION__);
     ckin::odometry ret;
-
     ret.twist.linear = rmath::vector3d(m_odom.twist.twist.linear.x,
                                        m_odom.twist.twist.linear.y,
                                        m_odom.twist.twist.linear.z);
@@ -108,6 +107,10 @@ void odometry_sensor::enable(void) {
           topic.c_str());
 
   subscribe(topic, &odometry_sensor::callback, this);
+}
+
+void odometry_sensor::callback(const nav_msgs::Odometry::ConstPtr& msg) {
+  m_odom = *msg;
 }
 
 NS_END(sensors, ros, hal, cosm);

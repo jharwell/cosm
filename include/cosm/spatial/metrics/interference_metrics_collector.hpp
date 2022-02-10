@@ -18,14 +18,14 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <string>
 #include <list>
+#include <memory>
 
 #include "rcppsw/metrics/base_collector.hpp"
 
@@ -61,8 +61,8 @@ class interference_metrics_collector final : public rmetrics::base_collector {
   void reset_after_interval(void) override;
   const rmetrics::base_data* data(void) const override { return &m_data; }
 
-#if !defined(RCPPSW_AL_MT_SAFE_TYPES)
-  void data(const interference_metrics_data& data) { m_data = data; }
+#if defined(COSM_PAL_TARGET_ROS)
+  void collect(const interference_metrics_data& data) { m_data += data; }
 #endif
 
  private:
@@ -72,5 +72,3 @@ class interference_metrics_collector final : public rmetrics::base_collector {
 };
 
 NS_END(metrics, spatial, cosm);
-
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_INTERFERENCE_METRICS_COLLECTOR_HPP_ */

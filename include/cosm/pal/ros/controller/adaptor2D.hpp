@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ROS_CONTROLLER_ADAPTOR2D_HPP_
-#define INCLUDE_COSM_PAL_ROS_CONTROLLER_ADAPTOR2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -65,4 +64,3 @@ class adaptor2D : public ccontroller::base_controller2D,
 
 NS_END(controller, ros, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ROS_CONTROLLER_ADAPTOR2D_HPP_ */

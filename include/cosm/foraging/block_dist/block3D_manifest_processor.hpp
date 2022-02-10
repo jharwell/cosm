@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK3D_MANIFEST_PROCESSOR_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK3D_MANIFEST_PROCESSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -73,4 +72,3 @@ class block3D_manifest_processor
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_BLOCK_DIST_BLOCK3D_MANIFEST_PROCESSOR_HPP_ */

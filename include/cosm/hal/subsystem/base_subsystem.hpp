@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SUBSYSTEM_HPP_
-#define INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SUBSYSTEM_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -95,4 +94,3 @@ class base_subsystem {
 
 NS_END(subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_BASE_SUBSYSTEM_HPP_ */

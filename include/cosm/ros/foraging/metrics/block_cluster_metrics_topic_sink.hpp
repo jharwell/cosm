@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_TOPIC_SINK_HPP_
-#define INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_TOPIC_SINK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -27,7 +26,6 @@
 #include <string>
 
 #include "cosm/ros/metrics/topic_sink.hpp"
-#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/ros/foraging/metrics/block_cluster_metrics_glue.hpp"
 
@@ -52,7 +50,7 @@ NS_START(cosm, ros, foraging, metrics);
  * topic.
  */
 class block_cluster_metrics_topic_sink final
-    : public cros::metrics::topic_sink<cforaging::metrics::block_cluster_metrics_data> {
+    : public cros::metrics::topic_sink<crfmetrics::block_cluster_metrics_msg> {
  public:
   using collector_type = cforaging::metrics::block_cluster_metrics_collector;
 
@@ -64,4 +62,3 @@ class block_cluster_metrics_topic_sink final
 
 NS_END(metrics, foraging, ros, cosm);
 
-#endif /* INCLUDE_COSM_ROS_FORAGING_METRICS_BLOCK_CLUSTER_METRICS_TOPIC_SINK_HPP_ */

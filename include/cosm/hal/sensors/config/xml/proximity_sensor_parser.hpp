@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_PROXIMITY_SENSOR_PARSER_HPP_
-#define INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_PROXIMITY_SENSOR_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -77,4 +76,3 @@ class proximity_sensor_parser : public rer::client<proximity_sensor_parser>,
 
 NS_END(xml, config, sensors, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SENSORS_CONFIG_XML_PROXIMITY_SENSOR_PARSER_HPP_ */

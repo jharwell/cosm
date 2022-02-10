@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_GROUND_SENSOR_DETECTION_CONFIG_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_GROUND_SENSOR_DETECTION_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -51,4 +50,3 @@ struct ground_sensor_detection_config final : public rconfig::base_config {
 
 NS_END(config, sensors, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SENSORS_CONFIG_GROUND_SENSOR_DETECTION_CONFIG_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TA_BASE_EXECUTIVE_HPP_
-#define INCLUDE_COSM_TA_BASE_EXECUTIVE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -231,4 +230,3 @@ class base_executive : public rer::client<base_executive> {
 
 NS_END(ta, cosm);
 
-#endif /* INCLUDE_COSM_TA_BASE_EXECUTIVE_HPP_ */

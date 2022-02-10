@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_BASE_EMBODIED_BLOCK_HPP_
-#define INCLUDE_COSM_PAL_BASE_EMBODIED_BLOCK_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -53,4 +52,3 @@ class base_embodied_block : public crepr::embodied_entity {
 
 NS_END(pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_BASE_EMBODIED_BLOCK_HPP_ */

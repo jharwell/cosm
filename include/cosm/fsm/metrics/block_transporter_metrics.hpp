@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_HPP_
-#define INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -66,4 +65,3 @@ class block_transporter_metrics : public virtual rmetrics::base_metrics {
 
 NS_END(metrics, fsm, cosm);
 
-#endif /* INCLUDE_COSM_FSM_METRICS_BLOCK_TRANSPORTER_METRICS_HPP_ */

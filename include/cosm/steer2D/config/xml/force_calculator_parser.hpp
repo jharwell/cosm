@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_CONFIG_XML_FORCE_CALCULATOR_PARSER_HPP_
-#define INCLUDE_COSM_STEER2D_CONFIG_XML_FORCE_CALCULATOR_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -90,4 +89,3 @@ class force_calculator_parser : public rer::client<force_calculator_parser>,
 
 NS_END(xml, config, steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_CONFIG_XML_FORCE_CALCULATOR_PARSER_HPP_ */

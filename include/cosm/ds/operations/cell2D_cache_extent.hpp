@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL2D_CACHE_EXTENT_HPP_
-#define INCLUDE_COSM_DS_OPERATIONS_CELL2D_CACHE_EXTENT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -92,4 +91,3 @@ using cell2D_cache_extent_visitor = rpvisitor::filtered_visitor<detail::cell2D_c
 
 NS_END(operations, ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_CACHE_EXTENT_HPP_ */

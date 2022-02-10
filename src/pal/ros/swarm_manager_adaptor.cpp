@@ -31,14 +31,12 @@ NS_START(cosm, pal, ros);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-swarm_manager_adaptor::swarm_manager_adaptor(void)
-    : ER_CLIENT_INIT("cosm.pal.ros.swarm_manager_adaptor") {}
+swarm_manager_adaptor::swarm_manager_adaptor(size_t n_robots)
+    : ER_CLIENT_INIT("cosm.pal.ros.swarm_manager_adaptor"),
+      mc_n_robots(n_robots) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void swarm_manager_adaptor::init(ticpp::Element& node) {
-  /* parse configuration */
-} /* init() */
 
 NS_END(ros, pal, cosm);

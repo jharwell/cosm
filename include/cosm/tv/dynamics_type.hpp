@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_TV_DYNAMICS_TYPE_HPP_
-#define INCLUDE_COSM_TV_DYNAMICS_TYPE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -42,4 +41,3 @@ enum class dynamics_type { ekPOPULATION, ekENVIRONMENT };
 
 NS_END(tv, cosm);
 
-#endif /* INCLUDE_COSM_TV_DYNAMICS_TYPE_HPP_ */

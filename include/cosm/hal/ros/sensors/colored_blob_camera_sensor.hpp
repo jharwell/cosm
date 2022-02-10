@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ROS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ROS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -100,4 +99,3 @@ class colored_blob_camera_sensor final : public rer::client<colored_blob_camera_
 
 NS_END(sensors, ros, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ROS_SENSORS_COLORED_BLOB_CAMERA_SENSOR_HPP_ */

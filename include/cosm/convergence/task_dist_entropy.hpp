@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_TASK_DIST_ENTROPY_HPP_
-#define INCLUDE_COSM_CONVERGENCE_TASK_DIST_ENTROPY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -90,4 +89,3 @@ class task_dist_entropy final : public convergence_measure {
 
 NS_END(convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_TASK_DIST_ENTROPY_HPP_ */

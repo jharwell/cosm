@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_
-#define INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -75,4 +74,3 @@ class robot_malfunction : public rer::client<robot_malfunction> {
 
 NS_END(operations, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_OPERATIONS_ROBOT_MALFUNCTION_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -62,8 +61,11 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.diagnostic"),
         chargos::actuators::led_actuator(leds) {}
 
+  /* move only constructible/assignable for use with saa subsystem */
   const diagnostic_actuator& operator=(const diagnostic_actuator&) = delete;
-  diagnostic_actuator(const diagnostic_actuator&) = default;
+  diagnostic_actuator(const diagnostic_actuator&) = delete;
+  diagnostic_actuator& operator=(diagnostic_actuator&&) = default;
+  diagnostic_actuator(diagnostic_actuator&&) = default;
 
   void emit(const chactuators::diagnostics& type) {
     switch (type) {
@@ -94,4 +96,3 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
 
 NS_END(actuators, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_ACTUATORS_DIAGNOSTIC_ACTUATOR_HPP_ */

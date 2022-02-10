@@ -89,10 +89,6 @@ name_spec kTransportee = {
   "block_transportee",
   "blocks/transportee"
 };
-name_spec kManipulation = {
-  "block_manipulation",
-  "blocks/manipulation"
-};
 name_spec kAcqCounts = {
   "block_acq_counts",
   "blocks/acq/counts"

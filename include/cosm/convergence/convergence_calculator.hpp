@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_CONVERGENCE_CONVERGENCE_CALCULATOR_HPP_
-#define INCLUDE_COSM_CONVERGENCE_CONVERGENCE_CALCULATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -180,4 +179,3 @@ class convergence_calculator final : public metrics::convergence_metrics,
 
 NS_END(convergence, cosm);
 
-#endif /* INCLUDE_COSM_CONVERGENCE_CONVERGENCE_CALCULATOR_HPP_ */

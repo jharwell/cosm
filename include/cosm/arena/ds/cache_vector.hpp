@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_DS_CACHE_VECTOR_HPP_
-#define INCLUDE_COSM_ARENA_DS_CACHE_VECTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -206,4 +205,3 @@ class bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorr
 
 NS_END(ds, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_DS_CACHE_VECTOR_HPP_ */

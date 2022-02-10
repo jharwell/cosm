@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_CATEGORY_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_CATEGORY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -57,5 +56,3 @@ enum movement_category {
 };
 
 NS_END(metrics, spatial, cosm);
-
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_CATEGORY_HPP_ */

@@ -37,7 +37,8 @@ block_transporter_metrics_csv_sink::block_transporter_metrics_csv_sink(
     fs::path fpath_no_ext,
     const rmetrics::output_mode& mode,
     const rtypes::timestep& interval)
-    : csv_sink(fpath_no_ext, mode, interval) {}
+    : ER_CLIENT_INIT("cosm.fsm.metrics.block_transporter_metrics_csv_sink"),
+      csv_sink(fpath_no_ext, mode, interval) {}
 
 /*******************************************************************************
  * Member Functions

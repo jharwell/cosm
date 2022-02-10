@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
-#define INCLUDE_COSM_ARGOS_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -52,4 +51,3 @@ struct visualization_config : public rconfig::base_config {
 
 NS_END(config, vis, argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_VIS_CONFIG_VISUALIZATION_CONFIG_HPP_ */

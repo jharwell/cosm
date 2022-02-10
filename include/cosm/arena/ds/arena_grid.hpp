@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARENA_DS_ARENA_GRID_HPP_
-#define INCLUDE_COSM_ARENA_DS_ARENA_GRID_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -100,4 +99,3 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
 
 NS_END(ds, arena, cosm);
 
-#endif /* INCLUDE_COSM_ARENA_DS_ARENA_GRID_HPP_ */

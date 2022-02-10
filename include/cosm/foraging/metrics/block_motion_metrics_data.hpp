@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_DATA_HPP_
-#define INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -58,4 +57,3 @@ struct block_motion_metrics_data : public rmetrics::base_data {
 
 NS_END(metrics, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_METRICS_BLOCK_MOTION_METRICS_DATA_HPP_ */

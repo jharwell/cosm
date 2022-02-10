@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
-#define INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -68,8 +67,8 @@ NS_START(cosm, hal, argos, subsystem);
 class actuation_subsystem2D :
     public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_ACTUATOR_TYPES> {
  public:
-  explicit actuation_subsystem2D(const actuator_map& actuators)
-      : base_actuation_subsystem2D(actuators) {}
+  explicit actuation_subsystem2D(actuator_map&& actuators)
+      : base_actuation_subsystem2D(std::move(actuators)) {}
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
                              kin2D::governed_diff_drive,
@@ -98,4 +97,3 @@ class actuation_subsystem2D :
 
 NS_END(subsystem, argos, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_ARGOS_SUBSYSTEM_ACTUATION_SUBSYSTEM2D_HPP_ */

@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_
-#define INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -88,4 +87,3 @@ using cell2D_op_visitor = rpvisitor::filtered_visitor<cell2D_op>;
 
 NS_END(operations, ds, cosm);
 
-#endif /* INCLUDE_COSM_DS_OPERATIONS_CELL2D_OP_HPP_ */

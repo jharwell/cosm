@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_
-#define INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -76,4 +75,3 @@ class pheromone_parser : public rer::client<pheromone_parser>,
 
 NS_END(xml, config, perception, subsystem, cosm);
 
-#endif /* INCLUDE_COSM_SUBSYSTEM_PERCEPTION_CONFIG_XML_PHEROMONE_PARSER_HPP_ */

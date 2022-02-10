@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_ROS_SENSORS_LIDAR_SENSOR_HPP_
-#define INCLUDE_COSM_HAL_ROS_SENSORS_LIDAR_SENSOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -57,7 +56,7 @@ NS_START(cosm, hal, ros, sensors);
 class lidar_sensor : public rer::client<lidar_sensor>,
                      public chros::sensors::ros_sensor {
  public:
-  lidar_sensor(const cros::topic& robot_ns);
+  explicit lidar_sensor(const cros::topic& robot_ns);
 
   /* move constructible/assignable to work with the saa subsystem */
   lidar_sensor(lidar_sensor&& other);
@@ -81,9 +80,7 @@ class lidar_sensor : public rer::client<lidar_sensor>,
   static inline const cros::topic kScanTopic = "scan";
 #endif /* COSM_HAL_TARGET */
 
-  void callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
-    m_scan = *msg;
-  }
+  void callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 
   /* clang-format off */
   sensor_msgs::LaserScan m_scan{};
@@ -91,5 +88,3 @@ class lidar_sensor : public rer::client<lidar_sensor>,
 };
 
 NS_END(sensors, ros, hal, cosm);
-
-#endif /* INCLUDE_COSM_HAL_ROS_SENSORS_LIDAR_SENSOR_HPP_ */

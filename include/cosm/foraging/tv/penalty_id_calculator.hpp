@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_
-#define INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -89,4 +88,3 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
 
 NS_END(tv, foraging, cosm);
 
-#endif /* INCLUDE_COSM_FORAGING_TV_PENALTY_ID_CALCULATOR_HPP_ */

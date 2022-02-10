@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_CONVERGENCE_CALCULATOR_HPP_
-#define INCLUDE_COSM_ARGOS_CONVERGENCE_CALCULATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -84,4 +83,3 @@ class convergence_calculator final
 
 NS_END(argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_CONVERGENCE_CALCULATOR_HPP_ */

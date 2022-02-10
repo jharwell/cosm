@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_STEER2D_CUSTOM_BIAS_ANGLE_GENERATOR_HPP_
-#define INCLUDE_COSM_STEER2D_CUSTOM_BIAS_ANGLE_GENERATOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -59,4 +58,3 @@ class custom_bias_angle_generator : public csteer2D::base_bias_angle_generator {
 
 NS_END(steer2D, cosm);
 
-#endif /* INCLUDE_COSM_STEER2D_CUSTOM_BIAS_ANGLE_GENERATOR_HPP_ */

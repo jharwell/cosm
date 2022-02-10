@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_DATA_HPP_
-#define INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_DATA_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,7 +48,7 @@ NS_START(cosm, spatial, metrics, detail);
  * rtypes::spatial_dist, but that type does not meet the std::atomic
  * requirements.
  */
-struct movement_metrics_data_data {
+struct movement_metrics_data {
   ral::mt_double_t distance{0.0};
   ral::mt_size_t  n_robots{0};
   ral::mt_double_t velocity{0.0};
@@ -58,10 +57,21 @@ struct movement_metrics_data_data {
 NS_END(detail);
 
 struct movement_metrics_data : public rmetrics::base_data {
-  std::vector<detail::movement_metrics_data_data> interval{rcppsw::as_underlying(movement_category::ekMAX)};
-  std::vector<detail::movement_metrics_data_data> cum{rcppsw::as_underlying(movement_category::ekMAX)};
+  std::vector<detail::movement_metrics_data> interval{rcppsw::as_underlying(movement_category::ekMAX)};
+  std::vector<detail::movement_metrics_data> cum{rcppsw::as_underlying(movement_category::ekMAX)};
+
+  movement_metrics_data& operator+=(const movement_metrics_data& rhs) {
+    for (size_t i = 0; i < movement_category::ekMAX; ++i) {
+      ral::mt_accum(this->interval[i].distance, rhs.interval[i].distance);
+      ral::mt_accum(this->interval[i].n_robots, rhs.interval[i].n_robots);
+      ral::mt_accum(this->interval[i].velocity, rhs.interval[i].velocity);
+
+      ral::mt_accum(this->cum[i].distance, rhs.cum[i].distance);
+      ral::mt_accum(this->cum[i].n_robots, rhs.cum[i].n_robots);
+      ral::mt_accum(this->cum[i].velocity, rhs.cum[i].velocity);
+    } /* for(i..) */
+    return *this;
+  }
 };
 
 NS_END(metrics, spatial, cosm);
-
-#endif /* INCLUDE_COSM_SPATIAL_METRICS_MOVEMENT_METRICS_DATA_HPP_ */

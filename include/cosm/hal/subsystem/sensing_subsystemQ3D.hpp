@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_HAL_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
-#define INCLUDE_COSM_HAL_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -49,4 +48,3 @@ using sensing_subsystemQ3D = chros::subsystem::sensing_subsystemQ3D;
 
 NS_END(subsystem, hal, cosm);
 
-#endif /* INCLUDE_COSM_HAL_SUBSYSTEM_SENSING_SUBSYSTEMQ3D_HPP_ */

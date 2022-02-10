@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_FORAGING_BLOCK_DIST_COORD_SEARCH_POLICY_HPP_
-#define INCLUDE_COSM_FORAGING_BLOCK_DIST_COORD_SEARCH_POLICY_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -54,4 +53,3 @@ enum coord_search_policy {
 
 NS_END(block_dist, foraging, cosm);
 
-#endif /* INCLUDE_FORAGING_BLOCK_DIST_COSM_COORD_SEARCH_POLICY_HPP_ */

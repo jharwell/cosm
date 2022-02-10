@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ARGOS_CUBE_BLOCK_EMBODIMENT_HPP_
-#define INCLUDE_COSM_ARGOS_CUBE_BLOCK_EMBODIMENT_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -53,4 +52,3 @@ struct cube_block_embodiment : public crepr::base_embodiment {
 
 NS_END(argos, cosm);
 
-#endif /* INCLUDE_COSM_ARGOS_CUBE_BLOCK_EMBODIMENT_HPP_ */

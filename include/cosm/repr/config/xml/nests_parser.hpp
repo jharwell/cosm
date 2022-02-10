@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_REPR_CONFIG_XML_NESTS_PARSER_HPP_
-#define INCLUDE_COSM_REPR_CONFIG_XML_NESTS_PARSER_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -78,4 +77,3 @@ class nests_parser : public rer::client<nests_parser>,
 
 NS_END(xml, config, repr, cosm);
 
-#endif /* INCLUDE_COSM_REPR_CONFIG_XML_NESTS_PARSER_HPP_ */

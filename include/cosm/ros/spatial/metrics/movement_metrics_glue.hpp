@@ -18,20 +18,28 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_ROS_SPATIAL_METRICS_MOVEMENT_METRICS_GLUE_HPP_
-#define INCLUDE_COSM_ROS_SPATIAL_METRICS_MOVEMENT_METRICS_GLUE_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
  ******************************************************************************/
 #include <ros/ros.h>
 
-#include "cosm/spatial/metrics/movement_metrics_data.hpp"
-#include "cosm/cosm.hpp"
+#include "cosm/ros/spatial/metrics/movement_metrics_msg.hpp"
+#include "cosm/pal/pal.hpp"
+#include "cosm/ros/metrics/msg_traits.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+NS_START(cosm, ros, metrics, msg_traits);
+
+template<>
+struct payload_type<crsmetrics::movement_metrics_msg> {
+  using type = csmetrics::movement_metrics_data;
+};
+
+NS_END(msg_traits, metrics, ros, cosm);
 
 /*******************************************************************************
  * ROS Message Traits
@@ -39,55 +47,58 @@
 NS_START(ros, message_traits);
 
 template<>
-struct MD5Sum<csmetrics::movement_metrics_data> {
+struct MD5Sum<crsmetrics::movement_metrics_msg> {
   static const char* value() {
-    return MD5Sum<csmetrics::movement_metrics_data>::value();
+    return cpal::kMsgTraitsMD5.c_str();
   }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return MD5Sum<csmetrics::movement_metrics_data>::value(m);
+  static const char* value(const crsmetrics::movement_metrics_msg&) {
+    return value();
   }
 };
 template <>
-struct DataType<csmetrics::movement_metrics_data> {
+struct DataType<crsmetrics::movement_metrics_msg> {
   static const char* value() {
-    return DataType<csmetrics::movement_metrics_data>::value();
+    return "cosm_msgs/movement_metrics_data";
   }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return DataType<csmetrics::movement_metrics_data>::value(m);
+  static const char* value(const crsmetrics::movement_metrics_msg&) {
+    return value();
   }
 };
 
 template<>
-struct Definition<csmetrics::movement_metrics_data> {
+struct Definition<crsmetrics::movement_metrics_msg> {
   static const char* value() {
-    return Definition<csmetrics::movement_metrics_data>::value();
+    return "See COSM docs for documentation.";
   }
-  static const char* value(const csmetrics::movement_metrics_data& m) {
-    return Definition<csmetrics::movement_metrics_data>::value(m);
+  static const char* value(const crsmetrics::movement_metrics_msg&) {
+    return value();
   }
 };
+
+template<>
+struct HasHeader<crsmetrics::movement_metrics_msg> : TrueType {};
+
 NS_END(message_traits);
 
 NS_START(serialization);
 
 template<>
-struct Serializer<csmetrics::movement_metrics_data> {
+struct Serializer<crsmetrics::movement_metrics_msg> {
   template<typename Stream, typename T>
   inline static void allInOne(Stream& stream, T t) {
-    for (auto &m : t.interval) {
-      stream.next(m.distance);
-      stream.next(m.n_robots);
-      stream.next(m.velocity);
-    } /* for(&m..) */
-    for (auto &m : t.cum) {
-      stream.next(m.distance);
-      stream.next(m.n_robots);
-      stream.next(m.velocity);
+    stream.next(t.header);
+
+    for (size_t i = 0; i < csmetrics::movement_category::ekMAX; ++i) {
+      stream.next(t.data.interval[i].distance);
+      stream.next(t.data.interval[i].n_robots);
+      stream.next(t.data.interval[i].velocity);
+
+      stream.next(t.data.cum[i].distance);
+      stream.next(t.data.cum[i].n_robots);
+      stream.next(t.data.cum[i].velocity);
     } /* for(&m..) */
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
 NS_END(serialization, ros);
-
-#endif /* INCLUDE_COSM_ROS_SPATIAL_METRICS_MOVEMENT_METRICS_GLUE_HPP_ */

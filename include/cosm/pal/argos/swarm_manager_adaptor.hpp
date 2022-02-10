@@ -18,8 +18,7 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#ifndef INCLUDE_COSM_PAL_ARGOS_SWARM_MANAGER_ADAPTOR_HPP_
-#define INCLUDE_COSM_PAL_ARGOS_SWARM_MANAGER_ADAPTOR_HPP_
+#pragma once
 
 /*******************************************************************************
  * Includes
@@ -146,4 +145,3 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 
 NS_END(argos, pal, cosm);
 
-#endif /* INCLUDE_COSM_PAL_ARGOS_SWARM_MANAGER_ADAPTOR_HPP_ */
