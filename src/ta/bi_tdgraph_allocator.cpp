@@ -44,7 +44,7 @@ NS_START(cosm, ta);
  * Member Functions
  ******************************************************************************/
 polled_task* bi_tdgraph_allocator::operator()(const polled_task* current_task,
-                                              uint alloc_count) const {
+                                              size_t alloc_count) const {
   std::vector<polled_task*> tasks(m_graph->n_vertices());
   m_graph->walk(
       [&](polled_task* task) { tasks[m_graph->vertex_id(task)] = task; });

@@ -57,7 +57,7 @@ NS_START(cosm, argos, vis);
  * - Relative to a robot's current location
  * - Specified in absolute coordinates.
  */
-class polygon2D_visualizer {
+class RCPPSW_EXPORT polygon2D_visualizer {
  public:
   explicit polygon2D_visualizer(::argos::CQTOpenGLUserFunctions* qt) : m_qt(qt) {}
 

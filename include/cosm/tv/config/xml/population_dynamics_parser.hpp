@@ -50,7 +50,7 @@ NS_START(cosm, tv, config, xml);
  * Parameter tags under the XML root are expected to exactly match the names of
  * the fields in the \ref population_dynamics_config struct.
  */
-class population_dynamics_parser final : public rer::client<population_dynamics_parser>,
+class RCPPSW_EXPORT population_dynamics_parser final : public rer::client<population_dynamics_parser>,
                                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = population_dynamics_config;

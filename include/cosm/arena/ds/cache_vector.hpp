@@ -67,7 +67,7 @@ using bcache_vectorro_type = const carepr::base_cache*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectoro : public rpdecorator::decorator<std::vector<acache_vectoro_type>>,
+class RCPPSW_EXPORT acache_vectoro : public rpdecorator::decorator<std::vector<acache_vectoro_type>>,
                        public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -84,7 +84,7 @@ class acache_vectoro : public rpdecorator::decorator<std::vector<acache_vectoro_
   RCPPSW_DECORATE_DECLDEF(clear);
   RCPPSW_DECORATE_DECLDEF(empty);
 
-  std::string to_str(void) const override;
+  std::string to_str(void) const override final;
 };
 
 /**
@@ -96,7 +96,7 @@ class acache_vectoro : public rpdecorator::decorator<std::vector<acache_vectoro_
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectorno : public rpdecorator::decorator<std::vector<acache_vectorno_type>>,
+class RCPPSW_EXPORT acache_vectorno : public rpdecorator::decorator<std::vector<acache_vectorno_type>>,
                         public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -113,7 +113,7 @@ class acache_vectorno : public rpdecorator::decorator<std::vector<acache_vectorn
   RCPPSW_DECORATE_DECLDEF(clear);
   RCPPSW_DECORATE_DECLDEF(empty);
 
-  std::string to_str(void) const override;
+  std::string to_str(void) const override final;
 };
 
 /**
@@ -125,7 +125,7 @@ class acache_vectorno : public rpdecorator::decorator<std::vector<acache_vectorn
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class acache_vectorro : public rpdecorator::decorator<std::vector<acache_vectorro_type>>,
+class RCPPSW_EXPORT acache_vectorro : public rpdecorator::decorator<std::vector<acache_vectorro_type>>,
                         public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -154,7 +154,7 @@ class acache_vectorro : public rpdecorator::decorator<std::vector<acache_vectorr
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class bcache_vectorno : public rpdecorator::decorator<std::vector<bcache_vectorno_type>>,
+class RCPPSW_EXPORT bcache_vectorno : public rpdecorator::decorator<std::vector<bcache_vectorno_type>>,
                         public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -183,7 +183,7 @@ class bcache_vectorno : public rpdecorator::decorator<std::vector<bcache_vectorn
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorro_type>>,
+class RCPPSW_EXPORT bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorro_type>>,
                         public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);

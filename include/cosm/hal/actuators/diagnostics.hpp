@@ -51,7 +51,11 @@ enum class diagnostics {
    */
   ekSUCCESS,
 
+  /**
+   * \brief A robot is taxiing somewhere.
+   */
   ekTAXIS,
+
   /**
    * \brief A robot is leaving the nest.
    */

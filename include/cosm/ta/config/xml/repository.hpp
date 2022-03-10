@@ -1,7 +1,7 @@
 /**
- * \file ground_sensor_config.hpp
+ * \file repository.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,30 +23,28 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <map>
-#include <string>
-#include <utility>
+#include "rcppsw/config/xml/xml_config_repository.hpp"
 
-#include "rcppsw/config/base_config.hpp"
-#include "cosm/hal/argos/sensors/config/ground_sensor_detection_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, config);
+NS_START(cosm, ta, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
 /**
- * \struct ground_sensor_config
- * \ingroup hal argos sensors config
+ * \class repository
+ * \ingroup ta config xml
  *
- * \brief Configuration for ground sensors, for robots that have them.
+ * \brief Collection of all parameter parsers and parse results needed by
+ * task allocation algorithms
  */
-struct ground_sensor_config final : public rconfig::base_config {
-  std::map<std::string, ground_sensor_detection_config> detect_map{};
+class RCPPSW_EXPORT repository : public virtual rconfig::xml::xml_config_repository {
+ public:
+  repository(void) RCPPSW_COLD;
 };
 
-NS_END(config, sensors, argos, hal, cosm);
-
+NS_END(xml, config, ta, cosm);

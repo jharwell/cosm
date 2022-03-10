@@ -60,7 +60,7 @@ NS_START(fsm);
  * normal operation can be replaced by something else (e.g., stopping all robot
  * motion if a robot malfunction event is received).
  */
-class supervisor_fsm final : public rpfsm::simple_fsm,
+class RCPPSW_EXPORT supervisor_fsm final : public rpfsm::simple_fsm,
                              public rer::client<supervisor_fsm> {
   using supervisee_variant_type =
       std::variant<ta::taskable*, ta::base_executive*>;

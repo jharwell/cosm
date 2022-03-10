@@ -23,14 +23,16 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <utility>
+
 #include "cosm/hal/subsystem/base_sensing_subsystemQ3D.hpp"
 
-#include "cosm/hal/ros/sensors/light_sensor.hpp"
 #include "cosm/hal/ros/sensors/lidar_sensor.hpp"
-#include "cosm/hal/ros/sensors/colored_blob_camera_sensor.hpp"
 #include "cosm/hal/ros/sensors/odometry_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/env_sensor.hpp"
+#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
+#include "cosm/hal/ros/sensors/light_sensor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -41,14 +43,14 @@ NS_START(cosm, hal, ros, subsystem);
  * Macros
  ******************************************************************************/
 
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3
-#define COSM_HAL_ROBOT_SENSOR_TYPES               \
-  chros::sensors::light_sensor,                   \
-    chros::sensors::lidar_sensor,                 \
-    chros::sensors::colored_blob_camera_sensor,   \
-    chros::sensors::odometry_sensor,              \
-    chsensors::proximity_sensor,                  \
-    chsensors::env_sensor
+#if(COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
+#define COSM_HAL_ROBOT_SENSOR_TYPES             \
+  chros::sensors::light_sensor,                 \
+  chros::sensors::lidar_sensor,                 \
+  chros::sensors::sonar_sensor,                 \
+  chros::sensors::odometry_sensor,              \
+  chsensors::proximity_sensor,                  \
+  chsensors::env_sensor
 #endif
 
 /*******************************************************************************
@@ -63,8 +65,8 @@ NS_START(cosm, hal, ros, subsystem);
  * an arbitrary number of sensors, depending on which robot the HAL is built
  * for:
  *
- * - \ref chros::sensors::colored_blob_camera_sensor
  * - \ref chros::sensors::light_sensor
+ * - \ref chros::sensors::sonar_sensor
  * - \ref chros::sensors::lidar_sensor
  * - \ref chros::sensors::odometry_sensor
  * - \ref chal::sensors::proximity_sensor
@@ -78,13 +80,6 @@ class sensing_subsystemQ3D :
 
   bool nest_detect(void) const override { return false; }
 
-  COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chros::sensors::colored_blob_camera_sensor,
-                           blobs);
-  COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chros::sensors::colored_blob_camera_sensor,
-                           blobs,
-                           const);
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
                            chros::sensors::light_sensor,
@@ -92,6 +87,14 @@ class sensing_subsystemQ3D :
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
                            chros::sensors::light_sensor,
                            light,
+                           const);
+
+  COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
+                           chros::sensors::sonar_sensor,
+                           sonar);
+  COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
+                           chros::sensors::sonar_sensor,
+                           sonar,
                            const);
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
@@ -128,4 +131,3 @@ class sensing_subsystemQ3D :
 };
 
 NS_END(subsystem, ros, hal, cosm);
-

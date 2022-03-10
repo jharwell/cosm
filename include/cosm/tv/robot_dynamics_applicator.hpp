@@ -69,7 +69,7 @@ struct robot_dynamics_applicator_config;
  * specifying how information about the state of the variance at the swarm level
  * can be extracted.
  */
-class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> {
+class RCPPSW_EXPORT robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> {
  public:
   explicit robot_dynamics_applicator(
       const config::robot_dynamics_applicator_config* config);

@@ -38,7 +38,6 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
-#include "cosm/hal/argos/sensors/config/ground_sensor_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -113,11 +112,9 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
     double distance{-1.0};
   };
 
-  ground_sensor_impl(impl_type * const sensor,
-                     const chargos::sensors::config::ground_sensor_config* const config)
+  explicit ground_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.ground"),
-        chargos::sensors::argos_sensor<impl_type>(sensor),
-        m_config(*config) {}
+        chargos::sensors::argos_sensor<impl_type>(sensor) {}
   ~ground_sensor_impl(void) override = default;
 
   /* move only constructible/assignable for use with saa subsystem */
@@ -126,10 +123,6 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
   ground_sensor_impl& operator=(ground_sensor_impl&&) = default;
   ground_sensor_impl(ground_sensor_impl&&) = default;
 
-  void config_update(
-      const chargos::sensors::config::ground_sensor_config* const config) {
-    m_config = *config;
-  }
   /**
    * \brief Get the current ground sensor readings for the footbot robot.
    *
@@ -200,31 +193,6 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
     decoratee()->Visit(cb);
     return {r};
   }
-
-  /**
-   * \brief Detect if a certain condition is met by examining ground sensor
-   * readings.
-   *
-   * \param name The name of the configured detection to check.
-   *
-   * \return \c TRUE iff the condition was detected.
-   */
-    bool detect(const std::string& name) const {
-    ER_ASSERT(m_config.detect_map.end() != m_config.detect_map.find(name),
-              "Detection %s not found in configured map",
-              name.c_str());
-    auto &detection = m_config.detect_map.find(name)->second;
-
-    size_t sum = 0;
-    for (auto &r : readings()) {
-      sum += static_cast<size_t>(detection.range.contains(r.value));
-    } /* for(&r..) */
-    return  sum >= detection.consensus;
-  }
- private:
-  /* clang-format off */
-  chargos::sensors::config::ground_sensor_config m_config;
-  /* clang-format on */
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
@@ -238,4 +206,3 @@ class ground_sensor{};
 #endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, argos, hal, cosm);
-

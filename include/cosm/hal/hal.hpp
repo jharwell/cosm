@@ -47,14 +47,13 @@
 
 /**
  * \brief The configuration definition to compile for the real Turtlebot3 robot
- * for ROS.
+ * for ROS with some additional sensors.
  */
-#define COSM_HAL_TARGET_ROS_TURTLEBOT3 4
+#define COSM_HAL_TARGET_ROS_ETURTLEBOT3 5
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 #define COSM_HAL_TARGET_ARGOS_ROBOT
 #endif
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 #define COSM_HAL_TARGET_ROS_ROBOT
 #endif
-

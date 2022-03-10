@@ -81,7 +81,7 @@ class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
    * \param alloc_count The total number of allocations so far.
    */
   polled_task* operator()(const std::vector<polled_task*>& tasks,
-                          uint alloc_count) const;
+                          size_t alloc_count) const;
 
  private:
   /* clang-format off */

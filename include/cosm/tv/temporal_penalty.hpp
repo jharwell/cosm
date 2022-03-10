@@ -47,7 +47,7 @@ NS_START(cosm, tv);
  * \brief Handles subjecting a robot to a penalty when doing something via a
  * timeout in which the robot will sit still.
  */
-class temporal_penalty {
+class RCPPSW_EXPORT temporal_penalty {
  public:
   /**
    * \brief Initialize the penalty.

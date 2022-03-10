@@ -1,7 +1,7 @@
 /**
  * \file light_sensor.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2022 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -26,10 +26,13 @@
 #include <vector>
 #include <string>
 
+#include <std_msgs/Float32.h>
+
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/ros/sensors/ros_sensor.hpp"
 #include "cosm/hal/sensors/light_sensor_reading.hpp"
+#include "cosm/hal/hal.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,63 +46,44 @@ NS_START(cosm, hal, ros, sensors);
  * \class light_sensor
  * \ingroup hal ros sensors
  *
- * \brief Light sensor wrapper (stub for the moment).
+ * \brief Light sensor wrapper.
  *
  * Supports the following robots:
  *
- * - ROS turtlebot3
+ * - ROS turtlebot3 (extended)
  */
 class light_sensor : public rer::client<light_sensor>,
                      public chros::sensors::ros_sensor {
  public:
-  using reading_type = chal::sensors::light_sensor_reading;
+  using reading_type = chsensors::light_sensor_reading;
 
-  light_sensor(const cros::topic& robot_ns)
-      : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"),
-        ros_sensor(robot_ns) {
-    disable();
-  }
+  explicit light_sensor(const cros::topic& robot_ns);
 
   /* move only constructible/assignable to work with the saa subsystem */
   light_sensor& operator=(const light_sensor&) = delete;
   light_sensor(const light_sensor&) = delete;
-  light_sensor& operator=(light_sensor&&) = default;
-  light_sensor(light_sensor&&) = default;
+  light_sensor& operator=(light_sensor&& rhs);
+  light_sensor(light_sensor&& other);
+
+  void reset(void) override;
+  void enable(void) override;
 
   /**
    * \brief Get the current light sensor readings for the footbot/epuck robots.
    *
-   * \return A vector of \ref reading.
+   * \return A vector of \ref reading_type.
    */
-  std::vector<reading_type>  readings(void) const {
-    ER_ASSERT(is_enabled(),
-              "%s called when disabled",
-              __FUNCTION__);
+  std::vector<reading_type> readings(void) const;
 
-    std::vector<reading_type> ret;
-    return ret;
-  }
+ private:
+  static inline const cros::topic kLightTopic = "light";
 
-  /**
-   * \brief Detect if a certain condition is met by examining light sensor
-   * readings.
-   *
-   * \param name The name of the configured detection to check.
-   *
-   * \return \c TRUE iff the condition was detected.
-   */
-  bool detect(const std::string& name) const {
-    return false;
-  }
+  void callback(const std_msgs::Float32::ConstPtr& msg);
 
-  void reset(void) override {
-    /* TBD */
-  }
-
-  void enable(void) override {
-    /* TBD */
-  }
+  /* clang-format off */
+  std_msgs::Float32 m_light{};
+  /* clang-format off */
 };
 
-NS_END(sensors, ros, hal, cosm);
 
+NS_END(sensors, ros, hal, cosm);

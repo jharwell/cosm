@@ -44,7 +44,7 @@ NS_START(cosm, repr);
  *
  * \brief A repr of the robot's current line-of-sight in 2D.
  */
-class grid2D_los : public crepr::base_grid_los<
+class RCPPSW_EXPORT grid2D_los : public crepr::base_grid_los<
   grid2D_view_entity<rds::grid2D<cds::cell2D>,
                      rds::grid2D<cds::cell2D>::const_grid_view>,
   rmath::vector2d>,

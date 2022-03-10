@@ -41,7 +41,7 @@ NS_START(cosm, pal, argos, controller);
  * \brief Adaptor for \ref controller::base_controller2D to provide an interface
  * for creating controllers within ARGoS.
  */
-class adaptor2D : public ccontroller::base_controller2D,
+class RCPPSW_EXPORT adaptor2D : public ccontroller::base_controller2D,
                              public cpargos::controller::base_adaptor {
  public:
   /* ARGoS hook overrides */

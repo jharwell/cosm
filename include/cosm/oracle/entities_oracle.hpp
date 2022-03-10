@@ -45,7 +45,7 @@ NS_START(cosm, oracle);
  * (blocks, caches, etc).
  */
 template <class TEntity>
-class entities_oracle {
+class RCPPSW_EXPORT entities_oracle {
  public:
   using knowledge_type = std::vector<TEntity*>;
 

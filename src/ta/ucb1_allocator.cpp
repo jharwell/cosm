@@ -36,8 +36,8 @@ NS_START(cosm, ta);
  * Member Functions
  ******************************************************************************/
 polled_task* ucb1_allocator::operator()(const std::vector<polled_task*>& tasks,
-                                        uint alloc_count) const {
-  ER_INFO("UCB1: n_tasks=%zu, n_allocs=%u", tasks.size(), alloc_count);
+                                        size_t alloc_count) const {
+  ER_INFO("n_tasks=%zu, n_allocs=%zu", tasks.size(), alloc_count);
 
   auto min_cost = [&](const auto* t1, const auto* t2) {
     ta::time_estimate cost1 =

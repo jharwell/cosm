@@ -44,7 +44,7 @@ NS_START(cosm, pal, ros, controller);
  * \brief Stub adaptor class to provide an interface for creating controllers
  * within ROS.
  */
-class base_adaptor : public rmpl::reflectable {
+class RCPPSW_EXPORT base_adaptor : public rmpl::reflectable {
  protected:
   const ::ros::NodeHandle* node_handle(void) const { return &m_nh; }
   ::ros::NodeHandle* node_handle(void) { return &m_nh; }
@@ -56,4 +56,3 @@ class base_adaptor : public rmpl::reflectable {
 };
 
 NS_END(controller, ros, pal, cosm);
-

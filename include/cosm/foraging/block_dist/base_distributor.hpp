@@ -53,7 +53,7 @@ NS_START(cosm, foraging, block_dist);
  *
  * \brief Base class for block distributors to enable use of strategy pattern.
  */
-class base_distributor : public cfbd::metrics::distributor_metrics {
+class RCPPSW_EXPORT base_distributor : public cfbd::metrics::distributor_metrics {
  public:
   using dist_success_cb_type = std::function<void(const crepr::sim_block3D*)>;
 
@@ -61,7 +61,7 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
    * \brief How many times to attempt to distribute all blocks before giving up,
    * (possibly) causing an assertion failure on distribution.
    */
-  static constexpr const uint kMAX_DIST_TRIES = 100;
+  static constexpr const size_t kMAX_DIST_TRIES = 100;
 
   base_distributor(cads::arena_grid* arena_grid,
                    rmath::rng* const rng)

@@ -42,16 +42,16 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
   set(COSM_ARGOS_ROBOT_TYPE "pipuck")
   set(COSM_ARGOS_ROBOT_NAME_PREFIX "pp")
   set(COSM_ARGOS_CONTROLLER_XML_ID "ppc")
-elseif("${COSM_BUILD_FOR}" MATCHES "ROS_TURTLEBOT3")
-  set(COSM_HAL_TARGET "ros-turtlebot3")
-  set(COSM_ROS_ROBOT_TYPE "turtlebot3")
-  set(COSM_ROS_ROBOT_NAME_PREFIX "tb3_")
+elseif("${COSM_BUILD_FOR}" MATCHES "ROS_ETURTLEBOT3")
+  set(COSM_HAL_TARGET "ros-eturtlebot3")
+  set(COSM_ROS_ROBOT_TYPE "eturtlebot3")
+  set(COSM_ROS_ROBOT_NAME_PREFIX "etb3_")
 else()
   set(COSM_BUILD_TARGETS
     ARGOS_FOOTBOT
     ARGOS_EEPUCK3D
     ARGOS_PIPUCK
-    ROS_TURTLEBOT3
+    ROS_ETURTLEBOT3
     )
   message(FATAL_ERROR "Build target must be one of ${COSM_BUILD_TARGETS}")
 endif()
@@ -255,7 +255,7 @@ endforeach()
 # Define the COSM library
 add_library(
   cosm-${COSM_HAL_TARGET}
-  STATIC
+  SHARED
   ${cosm_components_SRC}
   )
 set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET})
@@ -331,10 +331,10 @@ elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
   target_compile_definitions(${cosm_LIBRARY_NAME}
     PUBLIC
     COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
-elseif("${COSM_HAL_TARGET}" MATCHES "ros-turtlebot3")
+elseif("${COSM_HAL_TARGET}" MATCHES "ros-eturtlebot3")
   target_compile_definitions(${cosm_LIBRARY_NAME}
     PUBLIC
-    COSM_HAL_TARGET=COSM_HAL_TARGET_ROS_TURTLEBOT3)
+    COSM_HAL_TARGET=COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 endif()
 
 if("${COSM_PAL_TARGET}" MATCHES "ARGOS")

@@ -53,7 +53,7 @@ NS_START(cosm, spatial, fsm);
  * falls back on this FSM when no known candidates of the goal type are
  * currently known.
  */
-class explore_for_goal_fsm final : public csfsm::util_hfsm,
+class RCPPSW_EXPORT explore_for_goal_fsm final : public csfsm::util_hfsm,
                                    public cta::taskable,
                                    public rer::client<explore_for_goal_fsm> {
  public:

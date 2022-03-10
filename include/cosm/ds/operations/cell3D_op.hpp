@@ -65,9 +65,9 @@ class cell3D_op {
 
   virtual ~cell3D_op(void) = default;
 
-  uint x(void) const { return m_coord.x(); }
-  uint y(void) const { return m_coord.y(); }
-  uint z(void) const { return m_coord.y(); }
+  size_t x(void) const { return m_coord.x(); }
+  size_t y(void) const { return m_coord.y(); }
+  size_t z(void) const { return m_coord.y(); }
 
   const rmath::vector3z& coord(void) const { return m_coord; }
 

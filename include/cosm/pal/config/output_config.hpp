@@ -68,4 +68,3 @@ struct output_config final : public rconfig::base_config {
 };
 
 NS_END(config, pal, cosm);
-

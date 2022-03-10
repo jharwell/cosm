@@ -75,6 +75,9 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
       case chactuators::diagnostics::ekSUCCESS:
         set_color(-1, rutils::color::kGREEN);
         break;
+      case chactuators::diagnostics::ekTAXIS:
+        set_color(-1, rutils::color::kYELLOW);
+        break;
       case chactuators::diagnostics::ekLEAVING_NEST:
         set_color(-1, rutils::color::kGRAY50);
         break;
@@ -95,4 +98,3 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
 };
 
 NS_END(actuators, argos, hal, cosm);
-

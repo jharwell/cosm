@@ -49,7 +49,7 @@ class argos_sensor : public rer::client<argos_sensor<TSensor>>,
       : ER_CLIENT_INIT("cosm.hal.sensors.argos_sensor"),
         chsensors::base_sensor<TSensor*>(std::move(sensor)) {}
 
-  virtual ~argos_sensor(void) = default;
+  ~argos_sensor(void) override = default;
 
   argos_sensor(const argos_sensor&) = delete;
   argos_sensor& operator=(const argos_sensor&) = delete;

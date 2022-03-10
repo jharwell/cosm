@@ -58,7 +58,7 @@ NS_START(cosm, argos, vis);
  *
  * - The path the robot is currently following, if applicable.
  */
-class steer2D_visualizer : public rer::client<steer2D_visualizer> {
+class RCPPSW_EXPORT steer2D_visualizer : public rer::client<steer2D_visualizer> {
  public:
   steer2D_visualizer(::argos::CQTOpenGLUserFunctions* qt, double text_vis_offset)
       : ER_CLIENT_INIT("cosm.vis.steer2D_visualizer"),

@@ -45,8 +45,8 @@ NS_START(cosm, arena);
  *
  * \brief Decorates \ref base_arena_map to add the ability to manage caches.
  */
-class caching_arena_map final : public rer::client<caching_arena_map>,
-                                public base_arena_map {
+class RCPPSW_EXPORT caching_arena_map final : public rer::client<caching_arena_map>,
+                                              public base_arena_map {
  public:
   caching_arena_map(const caconfig::arena_map_config* config, rmath::rng* rng);
   ~caching_arena_map(void) override;

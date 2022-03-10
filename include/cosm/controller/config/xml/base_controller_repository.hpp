@@ -1,7 +1,7 @@
 /**
- * \file ground_sensor_detection_config.hpp
+ * \file base_controller_repository.hpp
  *
- * \copyright 2019 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,30 +23,29 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-#include "rcppsw/math/range.hpp"
+#include "rcppsw/config/xml/xml_config_repository.hpp"
+
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, config);
+NS_START(cosm, controller, config, xml);
 
 /*******************************************************************************
- * Structure Definitions
+ * Class Definitions
  ******************************************************************************/
 /**
- * \struct ground_sensor_detection_config
- * \ingroup hal argos sensors config
+ * \class base_controller_repository
+ * \ingroup controller config xml
  *
- * \brief Configuration for ground sensors, for robots which have them.
+ * \brief Collection of all parameter parsers and parse results needed by
+ * all controllers.
  */
-struct ground_sensor_detection_config final : public rconfig::base_config {
-  /* clang-format off */
-  rmath::ranged range{};
-  size_t        consensus{0};
-  /* clang-format on */
+class RCPPSW_EXPORT base_controller_repository
+    : public virtual rconfig::xml::xml_config_repository {
+ public:
+  base_controller_repository(void) RCPPSW_COLD;
 };
 
-NS_END(config, sensors, argos, hal, cosm);
-
+NS_END(xml, config, controller, cosm);

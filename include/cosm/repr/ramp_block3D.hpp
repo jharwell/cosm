@@ -60,4 +60,3 @@ class ramp_block3D : public sim_block3D {
 };
 
 NS_END(repr, cosm);
-

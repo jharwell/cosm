@@ -47,7 +47,7 @@ NS_START(cosm, subsystem);
  * set of sensors/actuators abstracted away at a lower level, so that this class
  * can be used for any robot.
  */
-class saa_subsystemQ3D final : public steer2D::boid,
+class RCPPSW_EXPORT saa_subsystemQ3D final : public steer2D::boid,
                                public rer::client<saa_subsystemQ3D> {
  public:
   using sensing_type = csubsystem::sensing_subsystemQ3D;

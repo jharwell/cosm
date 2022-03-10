@@ -60,4 +60,3 @@ class cube_block3D : public sim_block3D {
   } /* clone() */
 };
 NS_END(repr, cosm);
-

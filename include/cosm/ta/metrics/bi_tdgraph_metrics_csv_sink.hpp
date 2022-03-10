@@ -44,7 +44,7 @@ class bi_tdgraph_metrics_collector;
  * \brief Sink for \ref bi_tdgraph_metrics and \ref bi_tdgraph_metrics_collector to
  * output metrics to .csv.
  */
-class bi_tdgraph_metrics_csv_sink final : public rmetrics::csv_sink {
+class RCPPSW_EXPORT bi_tdgraph_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = bi_tdgraph_metrics_collector;
 

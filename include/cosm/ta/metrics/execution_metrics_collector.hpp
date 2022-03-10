@@ -48,7 +48,7 @@ NS_START(cosm, ta, metrics);
  * Metrics CAN be collected in parallel from robots; concurrent updates to the
  * gathered stats are supported. Metrics are output at the specified interval
  */
-class execution_metrics_collector final : public rmetrics::base_collector,
+class RCPPSW_EXPORT execution_metrics_collector final : public rmetrics::base_collector,
                                           public rer::client<execution_metrics_collector> {
  public:
   /**

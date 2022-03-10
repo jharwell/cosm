@@ -1,5 +1,5 @@
 /**
- * \file ground_sensor_parser.cpp
+ * \file env_sensor_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,17 +21,17 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/argos/sensors/config/xml/ground_sensor_parser.hpp"
+#include "cosm/hal/sensors/config/xml/env_sensor_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, config, xml);
+NS_START(cosm, hal, sensors, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void ground_sensor_parser::parse(const ticpp::Element& node) {
+void env_sensor_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
     ER_DEBUG("Parent node=%s: child=%s",
              node.Value().c_str(),
@@ -41,16 +41,16 @@ void ground_sensor_parser::parse(const ticpp::Element& node) {
     m_config = std::make_unique<config_type>();
 
     for (auto& t : m_targets) {
-      ground_sensor_detection_parser detection(t);
+      env_sensor_detection_parser detection(t);
       detection.parse(pnode);
       auto d =
-          detection.config_get<ground_sensor_detection_parser::config_type>();
+          detection.config_get<env_sensor_detection_parser::config_type>();
       m_config->detect_map[t] = *d;
     } /* for(&t..) */
   }
 } /* parse() */
 
-bool ground_sensor_parser::validate(void) const {
+bool env_sensor_parser::validate(void) const {
   for (auto& d1 : m_config->detect_map) {
     for (auto& d2 : m_config->detect_map) {
       if (d1.first == d2.first) {
@@ -70,4 +70,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, sensors, argos, hal, cosm);
+NS_END(xml, config, sensors, hal, cosm);

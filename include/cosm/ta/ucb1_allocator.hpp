@@ -63,7 +63,7 @@ class ucb1_allocator : public rer::client<ucb1_allocator> {
    * \param alloc_count The total # of task allocations so far.
    */
   polled_task* operator()(const std::vector<polled_task*>& tasks,
-                          uint alloc_count) const;
+                          size_t alloc_count) const;
 
  private:
   /* clang-format off */
@@ -72,4 +72,3 @@ class ucb1_allocator : public rer::client<ucb1_allocator> {
 };
 
 NS_END(ta, cosm);
-

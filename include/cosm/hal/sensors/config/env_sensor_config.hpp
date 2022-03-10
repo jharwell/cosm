@@ -1,7 +1,7 @@
 /**
  * \file env_sensor_config.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,29 +23,29 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
+#include <map>
+#include <string>
+#include <utility>
 
-#include "cosm/cosm.hpp"
-#include "cosm/hal/hal.hpp"
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-#include "cosm/hal/argos/sensors/config/ground_sensor_config.hpp"
-#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-#include "cosm/hal/ros/sensors/config/env_sensor_config.hpp"
-#endif
+#include "rcppsw/config/base_config.hpp"
+#include "cosm/hal/sensors/config/env_sensor_detection_config.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
 NS_START(cosm, hal, sensors, config);
 
 /*******************************************************************************
- * Class Definitions
+ * Structure Definitions
  ******************************************************************************/
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-using env_sensor_config = chargos::sensors::config::ground_sensor_config;
-#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-using env_sensor_config = chros::sensors::config::env_sensor_config;
-#endif /* COSM_HAL_TARGET */
+/**
+ * \struct env_sensor_config
+ * \ingroup hal sensors config
+ *
+ * \brief Configuration for env sensors, for robots that have them.
+ */
+struct env_sensor_config final : public rconfig::base_config {
+  std::map<std::string, env_sensor_detection_config> detect_map{};
+};
 
 NS_END(config, sensors, hal, cosm);
-

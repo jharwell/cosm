@@ -49,7 +49,7 @@ NS_START(cosm, kin2D);
  * of how quickly/how much to change wheel speeds. Does NOT actually change the
  * wheel speeds.
  */
-class diff_drive_fsm final : public rpfsm::simple_fsm {
+class RCPPSW_EXPORT diff_drive_fsm final : public rpfsm::simple_fsm {
  public:
   /**
    * \brief Initialize the FSM.

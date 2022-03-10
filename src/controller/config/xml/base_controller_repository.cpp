@@ -1,7 +1,7 @@
 /**
- * \file env_sensor_parser.hpp
+ * \file base_controller_repository.cpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,47 +18,32 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
+#include "cosm/controller/config/xml/base_controller_repository.hpp"
 
-#include "rcppsw/config/xml/xml_config_parser.hpp"
-
-#include "cosm/hal/ros/sensors/config/env_sensor_config.hpp"
-
-/*******************************************************************************
- * Namespaces/Decls
- ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, config, xml);
+#include "cosm/subsystem/config/xml/actuation_subsystem2D_parser.hpp"
+#include "cosm/hal/subsystem/config/xml/sensing_subsystemQ3D_parser.hpp"
+#include "cosm/pal/config/xml/output_parser.hpp"
 
 /*******************************************************************************
- * Class Definitions
+ * Namespaces
  ******************************************************************************/
-/**
- * \class env_sensor_parser
- * \ingroup hal ros sensors config xml
- *
- * \brief Parses XML parameters relating to environmental feature detection into \ref
- * env_sensor_config.
- */
-class env_sensor_parser final : public rer::client<env_sensor_parser>,
-                                public rconfig::xml::xml_config_parser {
- public:
-  using config_type = env_sensor_config;
+NS_START(cosm, controller, config, xml);
 
-  env_sensor_parser(void) : ER_CLIENT_INIT("cosm.hal.ros.sensors.config.xml.env_sensor_parser") {}
+/*******************************************************************************
+ * Constructors/Destructor
+ ******************************************************************************/
+base_controller_repository::base_controller_repository(void) {
+  parser_register<csconfig::xml::actuation_subsystem2D_parser,
+                  csconfig::actuation_subsystem2D_config>(
+                      csconfig::xml::actuation_subsystem2D_parser::kXMLRoot);
+  parser_register<chsubsystem::config::xml::sensing_subsystemQ3D_parser,
+                  chsubsystem::config::sensing_subsystemQ3D_config>(
+                      chsubsystem::config::xml::sensing_subsystemQ3D_parser::kXMLRoot);
+  parser_register<cpcxml::output_parser, cpconfig::output_config>(
+      cpcxml::output_parser::kXMLRoot);
+}
 
-  void parse(const ticpp::Element&) override {}
-  std::string xml_root(void) const override { return ""; }
-  void detection_add(const std::string& target) { }
- private:
-  const rconfig::base_config* config_get_impl(void) const override {
-    return nullptr;
-  }
-};
-
-NS_END(xml, config, sensors, ros, hal, cosm);
-
+NS_END(xml, config, controller, cosm);

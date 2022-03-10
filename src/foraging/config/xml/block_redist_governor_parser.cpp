@@ -45,7 +45,7 @@ void block_redist_governor_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR(lnode, m_config, trigger);
   XML_PARSE_ATTR(lnode, m_config, recurrence_policy);
   XML_PARSE_ATTR_DFLT(lnode, m_config, timestep, rtypes::timestep(0));
-  XML_PARSE_ATTR_DFLT(lnode, m_config, block_count, 0U);
+  XML_PARSE_ATTR_DFLT(lnode, m_config, block_count, 0UL);
 } /* parse() */
 
 NS_END(xml, config, foraging, cosm);

@@ -29,6 +29,8 @@
 #include "cosm/ta/config/task_partition_config.hpp"
 #include "cosm/ta/ds/bi_tdgraph.hpp"
 #include "cosm/ta/polled_task.hpp"
+#include "cosm/ta/subtask_sel_probability.hpp"
+#include "cosm/ta/partition_probability.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,8 +52,8 @@ bi_tab::bi_tab(const struct elements* elts,
       m_root(elts->root),
       m_child1(elts->child1),
       m_child2(elts->child2),
-      m_sel_prob(&subtask_sel->sigmoid),
-      m_partition_prob(&partitioning->src_sigmoid.sigmoid) {
+      m_sel_prob(std::make_unique<subtask_sel_probability>(&subtask_sel->sigmoid)),
+      m_partition_prob(std::make_unique<partition_probability>(&partitioning->src_sigmoid.sigmoid)) {
   ER_ASSERT(m_root->is_partitionable(),
             "Root task '%s' not partitionable",
             m_root->name().c_str());
@@ -66,9 +68,19 @@ bi_tab::bi_tab(const struct elements* elts,
             m_child2->name().c_str());
 }
 
+bi_tab::~bi_tab(void) = default;
+
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
+double bi_tab::partition_prob(void) const {
+  return m_partition_prob->v();
+}
+
+double bi_tab::subtask_selection_prob(void) const {
+  return m_sel_prob->v();
+}
+
 void bi_tab::task_abort_update(polled_task* const aborted, rmath::rng* rng) {
   ER_ASSERT(contains_task(aborted),
             "Aborted task '%s' not in TAB",
@@ -107,7 +119,7 @@ bool bi_tab::task_is_child(const polled_task* const task) const {
 
 void bi_tab::partition_prob_update(rmath::rng* rng) {
   if (kPartitionSrcExec == mc_partition_input) {
-    m_partition_prob(m_root->task_exec_estimate(),
+    m_partition_prob->operator()(m_root->task_exec_estimate(),
                      m_child1->task_exec_estimate(),
                      m_child2->task_exec_estimate(),
                      rng);
@@ -116,7 +128,7 @@ void bi_tab::partition_prob_update(rmath::rng* rng) {
     int child1_id = m_child1->task_last_active_interface();
     int child2_id = m_child2->task_last_active_interface();
     if (root_id >= 0 && child1_id >= 0 && child2_id >= 0) {
-      m_partition_prob(m_root->task_interface_estimate(root_id),
+      m_partition_prob->operator()(m_root->task_interface_estimate(root_id),
                        m_child1->task_interface_estimate(child1_id),
                        m_child2->task_interface_estimate(child2_id),
                        rng);
@@ -143,10 +155,10 @@ polled_task* bi_tab::task_allocate(rmath::rng* rng) {
   } else if (mc_never_partition) {
     partition_prob = 0.0;
   } else {
-    partition_prob = m_partition_prob.v();
+    partition_prob = m_partition_prob->v();
     ER_INFO("TAB root='%s': partition_method=%s partition_prob=%f",
             m_root->name().c_str(),
-            m_partition_prob.method().c_str(),
+            m_partition_prob->method().c_str(),
             partition_prob);
   }
 
@@ -171,7 +183,7 @@ std::pair<double, double> bi_tab::subtask_sw_calc(rmath::rng* rng) {
   const time_estimate* task1 = nullptr;
   const time_estimate* task2 = nullptr;
 
-  if (subtask_sel_probability::kMethodHarwell2018 == m_sel_prob.method()) {
+  if (subtask_sel_probability::kMethodHarwell2018 == m_sel_prob->method()) {
     if (kSubtaskSelSrcExec == mc_subtask_sel_input) {
       task1 = &m_child1->task_exec_estimate();
       task2 = &m_child2->task_exec_estimate();
@@ -189,7 +201,7 @@ std::pair<double, double> bi_tab::subtask_sw_calc(rmath::rng* rng) {
       }
     }
   } else if (subtask_sel_probability::kMethodBrutschy2014 ==
-             m_sel_prob.method()) {
+             m_sel_prob->method()) {
     /*
      * \todo: This will have to be updated if I ever want to use this method
      * with task with more than 1 interface. Brutschy2014 only ever used tasks
@@ -199,15 +211,15 @@ std::pair<double, double> bi_tab::subtask_sw_calc(rmath::rng* rng) {
     task2 = &m_child2->task_interface_estimate(0);
   } else { /* fall through (random) */
   }
-  prob_12 = m_sel_prob(task1, task2, rng);
-  prob_21 = m_sel_prob(task2, task1, rng);
+  prob_12 = m_sel_prob->operator()(task1, task2, rng);
+  prob_21 = m_sel_prob->operator()(task2, task1, rng);
   return std::make_pair(prob_12, prob_21);
 } /* subtask_sw_calc() */
 
 polled_task* bi_tab::subtask_allocate(rmath::rng* rng) {
   ER_INFO("Employing partitioning at task '%s': sel_method=%s, last_subtask=%s",
           m_root->name().c_str(),
-          m_sel_prob.method().c_str(),
+          m_sel_prob->method().c_str(),
           (nullptr != m_last_subtask) ? m_last_subtask->name().c_str() : "None");
 
   auto probs = subtask_sw_calc(rng);

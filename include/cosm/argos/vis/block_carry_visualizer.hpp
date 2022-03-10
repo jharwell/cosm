@@ -50,7 +50,7 @@ NS_START(cosm, argos, vis);
  * \brief Renders a block in 3D that the robot is carrying for
  * visualization/debugging purposes.
  */
-class block_carry_visualizer : public rer::client<block_carry_visualizer> {
+class RCPPSW_EXPORT block_carry_visualizer : public rer::client<block_carry_visualizer> {
  public:
   block_carry_visualizer(::argos::CQTOpenGLUserFunctions* qt,
                          double block_vis_offset,
@@ -73,7 +73,7 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
    * \param id_len Length of the robot ID string (to ensure the block ID does
    *               not overlap with it, if it is visualized).
    */
-  void draw(const crepr::sim_block3D* block, uint id_len);
+  void draw(const crepr::sim_block3D* block, size_t id_len);
 
  private:
   /* clang-format off */
@@ -84,4 +84,3 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
 };
 
 NS_END(vis, argos, cosm);
-

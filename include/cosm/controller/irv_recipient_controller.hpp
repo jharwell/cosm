@@ -48,7 +48,7 @@ NS_START(controller);
  * as distinct from the variance that can be applied when the robot interacts
  * with the environment.
  */
-class irv_recipient_controller {
+class RCPPSW_EXPORT irv_recipient_controller {
  public:
   irv_recipient_controller(void) = default;
   virtual ~irv_recipient_controller(void) = default;

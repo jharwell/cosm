@@ -231,7 +231,7 @@ const bi_tab* bi_tdgraph::tab_parent(const bi_tab* const tab) const {
 } /* tab_parent() */
 
 bool bi_tdgraph::tab_parent_verify(const bi_tab* const tab) const {
-  uint count = 0;
+  size_t count = 0;
   for (auto& t : m_tabs) {
     if (tab == &t) { /* self */
       continue;

@@ -49,7 +49,7 @@ NS_START(cosm, arena);
  * (pending verification after creation). A double-dispatch approach via this
  * class works for all cases.
  */
-class free_blocks_calculator {
+class RCPPSW_EXPORT free_blocks_calculator {
  public:
   explicit free_blocks_calculator(bool oos_ok) : mc_oos_ok(oos_ok) {}
 

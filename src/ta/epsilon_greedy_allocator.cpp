@@ -37,7 +37,7 @@ NS_START(cosm, ta);
  ******************************************************************************/
 polled_task*
 epsilon_greedy_allocator::operator()(const std::vector<polled_task*>& tasks,
-                                     uint alloc_count) const {
+                                     size_t alloc_count) const {
   double epsilon = 0;
 
   if (kRegretBoundLinear == mc_config->regret_bound) {
@@ -48,7 +48,7 @@ epsilon_greedy_allocator::operator()(const std::vector<polled_task*>& tasks,
     double term2 =
         (kC * tasks.size()) / (std::pow(mc_config->epsilon, 2) * alloc_count);
     epsilon = std::min(term1, term2);
-    ER_INFO("Epsilon N-greedy: n_tasks=%zu,alloc_count=%u,epsilon=%f",
+    ER_INFO("Epsilon N-greedy: n_tasks=%zu,alloc_count=%zu,epsilon=%f",
             tasks.size(),
             alloc_count,
             epsilon);

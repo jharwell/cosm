@@ -47,11 +47,11 @@ NS_START(cosm, hal, ros, sensors);
  * \class lidar_sensor
  * \ingroup hal ros sensors
  *
- * \brief Proxmity sensor wrapper.
+ * \brief Lidar sensor wrapper.
  *
  * Supports the following robots:
  *
- * - ROS turtlebot3 (stub for now)
+ * - ROS extended turtlebot3
  */
 class lidar_sensor : public rer::client<lidar_sensor>,
                      public chros::sensors::ros_sensor {
@@ -76,7 +76,7 @@ class lidar_sensor : public rer::client<lidar_sensor>,
   std::vector<rmath::vector2d> readings(void) const;
 
  private:
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
   static inline const cros::topic kScanTopic = "scan";
 #endif /* COSM_HAL_TARGET */
 

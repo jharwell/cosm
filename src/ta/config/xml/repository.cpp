@@ -1,7 +1,7 @@
 /**
- * \file taskable_argument.cpp
+ * \file repository.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,16 +21,26 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/ta/taskable_argument.hpp"
+#include "cosm/ta/config/xml/repository.hpp"
+
+#include "cosm/ta/config/xml/task_alloc_parser.hpp"
+#include "cosm/ta/config/xml/task_executive_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, ta);
+NS_START(cosm, ta, config, xml);
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-taskable_argument::~taskable_argument(void) = default;
+repository::repository(void) {
+  parser_register<cta::config::xml::task_alloc_parser,
+                  cta::config::task_alloc_config>(
+                      cta::config::xml::task_alloc_parser::kXMLRoot);
+  parser_register<cta::config::xml::task_executive_parser,
+                  cta::config::task_executive_config>(
+                      cta::config::xml::task_executive_parser::kXMLRoot);
+}
 
-NS_END(ta, cosm);
+NS_END(xml, config, ta, cosm);

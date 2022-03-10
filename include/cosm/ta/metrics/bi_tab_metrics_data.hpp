@@ -34,7 +34,7 @@ NS_START(cosm, ta, metrics, detail);
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-struct bi_tab_metrics_data {
+struct RCPPSW_EXPORT bi_tab_metrics_data {
   /**
    * \brief # Times subtask 1 was chosen if partitioning was employed.
    */

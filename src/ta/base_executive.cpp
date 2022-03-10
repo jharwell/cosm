@@ -39,7 +39,7 @@ NS_START(cosm, ta);
 base_executive::base_executive(
     const config::task_executive_config* const exec_config,
     const config::task_alloc_config* const alloc_config,
-    std::unique_ptr<ds::ds_variant> ds,
+    ds::ds_variant&& ds,
     rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.ta.base_executive"),
       mc_update_exec_ests(exec_config->update_exec_ests),

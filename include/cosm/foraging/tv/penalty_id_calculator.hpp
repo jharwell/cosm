@@ -54,7 +54,7 @@ NS_START(cosm, foraging, tv);
  * their own additional ID calculation functions/classes to extend the
  * functionality present here.
  */
-class penalty_id_calculator : public rer::client<penalty_id_calculator> {
+class RCPPSW_EXPORT penalty_id_calculator : public rer::client<penalty_id_calculator> {
  public:
   penalty_id_calculator(void)
       : ER_CLIENT_INIT("cosm.tv.penalty_id_calculator") {}

@@ -44,18 +44,17 @@ struct powerlaw_dist_config final : public rconfig::base_config {
   /**
    * \brief Min power of 2 for distribution.
    */
-  uint pwr_min{0};
+  size_t pwr_min{0};
 
   /**
    * \brief Max power of 2 for distribution.
    */
-  uint pwr_max{0};
+  size_t pwr_max{0};
 
   /**
    * \brief How many clusters to allocate in the arena.
    */
-  uint n_clusters{0};
+  size_t n_clusters{0};
 };
 
 NS_END(config, foraging, cosm);
-

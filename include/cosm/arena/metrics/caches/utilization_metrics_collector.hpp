@@ -46,7 +46,7 @@ NS_START(cosm, arena, metrics, caches);
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class utilization_metrics_collector final : public rmetrics::base_collector {
+class RCPPSW_EXPORT utilization_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
    * \param sink The metrics sink to use.

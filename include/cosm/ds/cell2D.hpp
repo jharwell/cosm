@@ -60,7 +60,7 @@ NS_START(cosm, ds);
  * computing floor colors in ARGoS, as you no longer have to potentially query
  * \a all blocks/nests/etc only to find out a given location should be empty.
  */
-class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
+class RCPPSW_EXPORT cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
  public:
   cell2D(void);
 

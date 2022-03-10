@@ -46,7 +46,7 @@ NS_START(cosm, fsm);
  * limited to FSM states. Used to have the logic to track state enter and exit
  * in a single place.
  */
-class state_tracker {
+class RCPPSW_EXPORT state_tracker {
  public:
   explicit state_tracker(const csubsystem::sensing_subsystemQ3D* const sensing)
       : mc_sensing(sensing) {}

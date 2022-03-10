@@ -45,7 +45,7 @@ NS_START(cosm, repr);
  * they actually live in the world) and discretized locations (where they are
  * mapped to within the arena).
  */
-class sim_block3D : public rer::client<sim_block3D>,
+class RCPPSW_EXPORT sim_block3D : public rer::client<sim_block3D>,
                     public crepr::base_block3D {
  public:
   sim_block3D(const rtypes::type_uuid& id,

@@ -57,7 +57,7 @@ class task_allocator : public boost::static_visitor<polled_task*> {
 
   polled_task* operator()(ds::bi_tdgraph& graph,
                           const polled_task* last_task,
-                          uint alloc_count) const {
+                          size_t alloc_count) const {
     return bi_tdgraph_allocator(m_config, &graph, m_rng)(last_task, alloc_count);
   }
 
@@ -69,4 +69,3 @@ class task_allocator : public boost::static_visitor<polled_task*> {
 };
 
 NS_END(ta, cosm);
-

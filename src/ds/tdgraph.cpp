@@ -101,7 +101,7 @@ void tdgraph::walk(const const_walk_cb& f) const {
   } /* while() */
 } /* walk() */
 
-uint tdgraph::vertex_depth_impl(const polled_task* const v, int depth) const {
+size_t tdgraph::vertex_depth_impl(const polled_task* const v, int depth) const {
   /*
    * Only the root's parent is equal to itself.
    */

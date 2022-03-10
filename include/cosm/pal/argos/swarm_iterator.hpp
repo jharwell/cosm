@@ -48,7 +48,7 @@ NS_START(cosm, pal, argos);
  * (single-threaded execution), or in dynamic order (multi-threaded execution)
  * for speed.
  */
-struct swarm_iterator {
+struct RCPPSW_EXPORT swarm_iterator {
   /**
    * \brief Iterate through controllers using static ordering.
    *

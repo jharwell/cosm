@@ -24,6 +24,7 @@
  * Includes
  ******************************************************************************/
 #include <string>
+#include <utility>
 
 #include "cosm/ta/time_estimate.hpp"
 
@@ -42,7 +43,7 @@ NS_START(cosm, ta);
  * \brief Represents the logical concept of a task, which only contains a name
  * right now.
  */
-class logical_task {
+class RCPPSW_EXPORT logical_task {
  public:
   explicit logical_task(std::string name) : m_name(std::move(name)) {}
 

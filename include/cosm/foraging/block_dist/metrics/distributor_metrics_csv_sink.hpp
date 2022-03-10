@@ -47,7 +47,7 @@ class distributor_metrics_collector;
  * \brief Sink for \ref distributor_metrics and \ref
  * distributor_metrics_collector to output metrics to .csv.
  */
-class distributor_metrics_csv_sink final : public rmetrics::csv_sink {
+class RCPPSW_EXPORT distributor_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = distributor_metrics_collector;
 

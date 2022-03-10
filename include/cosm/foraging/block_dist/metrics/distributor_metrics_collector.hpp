@@ -43,7 +43,7 @@ NS_START(cosm, foraging, block_dist, metrics);
  *
  * \brief Collector for \ref distributor_metrics.
  */
-class distributor_metrics_collector final : public rmetrics::base_collector {
+class RCPPSW_EXPORT distributor_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
   * \param sink The metrics sink to use.

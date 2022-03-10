@@ -50,7 +50,7 @@ NS_START(cosm, controller, operations);
 template<class TBaseController,
          template <class TDerivedController, class...> class TOperation,
          class ...Args>
-class applicator {
+class RCPPSW_EXPORT applicator {
  public:
   explicit applicator(TBaseController* const c) : m_controller(c) {}
 

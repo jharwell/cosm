@@ -55,7 +55,7 @@ NS_START(cosm, arena, repr);
  * world) and discretized locations (where they are mapped to within the arena
  * map).
  */
-class base_cache : public crepr::unicell_immovable_entity2D,
+class RCPPSW_EXPORT base_cache : public crepr::unicell_immovable_entity2D,
                    public rer::client<base_cache>,
                    public crepr::colored_entity,
                    public rpprototype::clonable<base_cache> {

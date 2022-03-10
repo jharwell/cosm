@@ -56,7 +56,7 @@ NS_START(cosm, arena, operations, detail);
  * \brief Fired whenever a robot picks up a free block in the arena (i.e. one
  * that is not part of a cache), OR when a block moves within the arena.
  */
-class free_block_pickup : public rer::client<free_block_pickup>,
+class RCPPSW_EXPORT free_block_pickup : public rer::client<free_block_pickup>,
                           public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
@@ -115,7 +115,7 @@ using free_block_pickup_visitor_impl =
 
 NS_END(detail);
 
-class free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl {
+class RCPPSW_EXPORT free_block_pickup_visitor : public detail::free_block_pickup_visitor_impl {
  public:
   using detail::free_block_pickup_visitor_impl::free_block_pickup_visitor_impl;
 };

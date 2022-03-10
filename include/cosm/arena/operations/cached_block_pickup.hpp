@@ -64,7 +64,7 @@ NS_START(cosm, arena, operations, detail);
  * The cache usage penalty, if there is one, is assessed prior to this event
  * being created, at a higher level.
  */
-class cached_block_pickup : public rer::client<cached_block_pickup>,
+class RCPPSW_EXPORT cached_block_pickup : public rer::client<cached_block_pickup>,
                             public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
@@ -130,4 +130,3 @@ NS_END(detail);
 using cached_block_pickup_visitor = rpvisitor::filtered_visitor<detail::cached_block_pickup>;
 
 NS_END(operations, arena, cosm);
-

@@ -67,7 +67,7 @@ NS_START(cosm, foraging, block_dist);
  * - Single and dual source distribution assumes left-right rectangular arena.
  * - Power law, quad source, random distribution assume square arena.
  */
-class  dispatcher final : public rer::client<dispatcher> {
+class dispatcher final : public rer::client<dispatcher> {
  public:
   static inline const std::string kDistSingleSrc = "single_source";
   static inline const std::string kDistRandom = "random";

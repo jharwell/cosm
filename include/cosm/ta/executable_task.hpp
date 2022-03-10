@@ -66,7 +66,7 @@ struct src_sigmoid_sel_config;
  *
  * - Metrics that can be collected on a task as it runs.
  */
-class executable_task : public logical_task,
+class RCPPSW_EXPORT executable_task : public logical_task,
                         public metrics::execution_metrics,
                         public rer::client<executable_task> {
  public:

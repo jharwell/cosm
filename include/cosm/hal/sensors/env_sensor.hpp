@@ -32,7 +32,7 @@
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 #include "cosm/hal/argos/sensors/ground_sensor.hpp"
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-#include "cosm/hal/ros/sensors/light_sensor.hpp"
+#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 
@@ -47,7 +47,7 @@ NS_START(cosm, hal, sensors);
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
 using env_sensor_impl = chargos::sensors::ground_sensor;
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-using env_sensor_impl = chros::sensors::light_sensor;
+using env_sensor_impl = chros::sensors::sonar_sensor;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /**
@@ -69,12 +69,14 @@ class env_sensor final : public rer::client<env_sensor>,
     env_sensor(TSensor * const sensor,
                const chsensors::config::env_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.env"),
-         env_sensor_impl(sensor, config) {}
+         env_sensor_impl(sensor),
+         m_config(*config) {}
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
   explicit env_sensor(const cros::topic& robot_ns,
                       const config::env_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.env"),
-        env_sensor_impl(robot_ns) {}
+        env_sensor_impl(robot_ns),
+        m_config(*config) {}
 #endif
 
   /* move only constructible/assignable to work with the saa subsystem */
@@ -82,7 +84,44 @@ class env_sensor final : public rer::client<env_sensor>,
   env_sensor& operator=(env_sensor&&) = default;
   env_sensor(env_sensor&) = delete;
   env_sensor& operator=(env_sensor&) = delete;
+
+  /**
+   * \brief Detect if a certain condition is met by examining sensor
+   * readings.
+   *
+   * \param name The name of the configured detection to check.
+   *
+   * \return \c TRUE iff the condition was detected.
+   */
+  bool detect(const std::string& name) const {
+    const auto &detection = m_config.detect_map.find(name);
+
+    ER_ASSERT(m_config.detect_map.end() != detection,
+              "Detection %s not found in configured map",
+              name.c_str());
+
+    size_t sum = 0;
+    for (auto &r : readings()) {
+      sum += static_cast<size_t>(detection->second.range.contains(r.value));
+    } /* for(&r..) */
+    return  sum >= detection->second.consensus;
+  }
+
+  void config_update(
+      const chsensors::config::env_sensor_config* const config) {
+    m_config = *config;
+  }
+
+
+ protected:
+  const chsensors::config::env_sensor_config* config(void) const {
+    return &m_config;
+  }
+
+ private:
+  /* clang-format off */
+  chsensors::config::env_sensor_config m_config;
+  /* clang-format on */
 };
 
 NS_END(sensors, hal, cosm);
-

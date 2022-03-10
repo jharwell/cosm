@@ -55,6 +55,11 @@ NS_END(detail);
  * rtypes::type_uuid does not guarantee uniqueness across types (duh).
  */
 class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spec_type>> {
+
+ private:
+  template<typename TEntity>
+  void do_update(const TEntity* ent);
+
  public:
   loctree(void) = default;
 
@@ -83,11 +88,6 @@ class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spe
   RCPPSW_DECORATE_DECLDEF(begin, const);
   RCPPSW_DECORATE_DECLDEF(end, const);
   RCPPSW_DECORATE_DECLDEF(size, const);
-
- private:
-  template<typename TEntity>
-  void do_update(const TEntity* ent);
 };
 
 NS_END(ds, arena, cosm);
-

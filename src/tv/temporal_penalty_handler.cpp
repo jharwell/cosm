@@ -70,7 +70,7 @@ rtypes::timestep temporal_penalty_handler::penalty_calc(
 
   /* can be NULL if penalty handling is disabled */
   if (nullptr != m_waveform) {
-    penalty.set(static_cast<uint>(m_waveform->value(t.v())));
+    penalty.set(static_cast<size_t>(m_waveform->value(t.v())));
   }
   /*
    * If the penalty for the robot was zero, we still need to make the robot
@@ -82,7 +82,7 @@ rtypes::timestep temporal_penalty_handler::penalty_calc(
    * the list the SAME timestep they are added, so the handler incorrectly
    * thinks that there is no conflict.
    */
-  return penalty += static_cast<uint>(penalty == 0UL);
+  return penalty += static_cast<size_t>(penalty == 0UL);
 } /* penalty_calc() */
 
 rtypes::timestep temporal_penalty_handler::penalty_add(

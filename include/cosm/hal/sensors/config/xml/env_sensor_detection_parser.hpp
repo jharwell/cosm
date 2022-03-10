@@ -1,5 +1,5 @@
 /**
- * \file ground_sensor_detection_parser.hpp
+ * \file env_sensor_detection_parser.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -27,40 +27,40 @@
 #include <string>
 #include <list>
 
-#include "cosm/hal/argos/sensors/config/ground_sensor_detection_config.hpp"
+#include "cosm/hal/sensors/config/env_sensor_detection_config.hpp"
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, config, xml);
+NS_START(cosm, hal, sensors, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class ground_sensor_detection_parser
- * \ingroup hal argos sensors config xml
+ * \class env_sensor_detection_parser
+ * \ingroup hal sensors config xml
  *
- * \brief Parses XML parameters relating to HAL ground sensor into \ref
- * ground_sensor_detection_config.
+ * \brief Parses XML parameters relating to HAL env sensor into \ref
+ * env_sensor_detection_config.
  */
-class ground_sensor_detection_parser : public rer::client<ground_sensor_detection_parser>,
+class env_sensor_detection_parser : public rer::client<env_sensor_detection_parser>,
                                        public rconfig::xml::xml_config_parser {
  public:
-  using config_type = ground_sensor_detection_config;
+  using config_type = env_sensor_detection_config;
 
-  RCPPSW_COLD explicit ground_sensor_detection_parser(const std::string& name)
-      : ER_CLIENT_INIT("cosm.hal.argos.sensors.config.xml.ground_sensor_detection_parser"),
+  RCPPSW_COLD explicit env_sensor_detection_parser(const std::string& name)
+      : ER_CLIENT_INIT("cosm.hal.argos.sensors.config.xml.env_sensor_detection_parser"),
         m_name(name) {}
 
-  ~ground_sensor_detection_parser(void) override = default;
+  ~env_sensor_detection_parser(void) override = default;
 
   void parse(const ticpp::Element& node) override RCPPSW_COLD;
 
   RCPPSW_COLD std::string xml_root(void) const override { return m_name; }
 
-  RCPPSW_COLD void set_name(const std::string& name) { m_name = name; }
+  RCPPSW_COLD void xml_name(const std::string& name) { m_name = name; }
 
  private:
   RCPPSW_COLD const rconfig::base_config* config_get_impl(void) const override {
@@ -73,5 +73,4 @@ class ground_sensor_detection_parser : public rer::client<ground_sensor_detectio
   /* clang-format on */
 };
 
-NS_END(xml, config, sensors, argos, hal, cosm);
-
+NS_END(xml, config, sensors, hal, cosm);

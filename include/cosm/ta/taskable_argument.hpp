@@ -43,8 +43,7 @@ NS_START(cosm, ta);
 class taskable_argument {
  public:
   taskable_argument(void) = default;
-  virtual ~taskable_argument(void);
+  virtual ~taskable_argument(void) = default;
 };
 
 NS_END(ta, cosm);
-

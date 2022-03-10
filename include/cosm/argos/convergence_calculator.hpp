@@ -53,7 +53,7 @@ NS_START(cosm, argos);
  * environment.
  */
 template <class TController>
-class convergence_calculator final
+class RCPPSW_EXPORT convergence_calculator final
     : public rer::client<convergence_calculator<TController>>,
       public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
@@ -82,4 +82,3 @@ class convergence_calculator final
 };
 
 NS_END(argos, cosm);
-

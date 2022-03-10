@@ -1,7 +1,7 @@
 /**
- * \file env_sensor_config.hpp
+ * \file env_sensor_detection_parser.cpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2017 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,24 +18,28 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/config/base_config.hpp"
-
-#include "cosm/cosm.hpp"
+#include "cosm/hal/sensors/config/xml/env_sensor_detection_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, config);
+NS_START(cosm, hal, sensors, config, xml);
 
 /*******************************************************************************
- * Class Definitions
+ * Member Functions
  ******************************************************************************/
-struct env_sensor_config final : public rconfig::base_config {};
+void env_sensor_detection_parser::parse(const ticpp::Element& node) {
+  ER_DEBUG("Parent node=%s: child=%s",
+           node.Value().c_str(),
+           m_name.c_str());
 
-NS_END(config, sensors, ros, hal, cosm);
+  ticpp::Element pnode = node_get(node, m_name);
+  m_config = std::make_unique<config_type>();
+  XML_PARSE_ATTR(pnode, m_config, consensus);
+  XML_PARSE_ATTR(pnode, m_config, range);
+} /* parse() */
 
+NS_END(xml, config, sensors, hal, cosm);

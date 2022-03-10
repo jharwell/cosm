@@ -53,7 +53,7 @@ NS_START(cosm, arena, repr);
  * - Can collect metrics about their usage
  * - Have a light/beacon at ground level robots can see.
  */
-class arena_cache final : public base_cache,
+class RCPPSW_EXPORT arena_cache final : public base_cache,
                           public metrics::caches::utilization_metrics,
                           public metrics::caches::location_metrics {
  public:

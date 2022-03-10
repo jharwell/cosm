@@ -144,4 +144,3 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 /* static_assert(std::is_nothrow_move_constructible<proximity_sensor>::value, "ERROR"); */
 
 NS_END(sensors, hal, cosm);
-

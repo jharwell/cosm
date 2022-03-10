@@ -79,7 +79,7 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
                       double);
 
  private:
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
   static inline const std::string kCmdVelTopic = "cmd_vel";
 #endif /* COSM_HAL_TARGET */
 };

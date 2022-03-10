@@ -44,7 +44,7 @@ class execution_metrics_collector;
  * \brief Sink for \ref execution_metrics and \ref
  * execution_metrics_collector to output metrics to .csv.
  */
-class execution_metrics_csv_sink final : public rmetrics::csv_sink {
+class RCPPSW_EXPORT execution_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = execution_metrics_collector;
 

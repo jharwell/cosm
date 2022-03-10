@@ -50,7 +50,7 @@ NS_START(cosm, convergence);
 class convergence_measure_updater : public boost::static_visitor<void> {
  public:
   convergence_measure_updater(
-      uint n,
+      size_t n,
       const boost::optional<convergence_calculator::headings_calc_cb_type>&
           headings_calc,
       const boost::optional<convergence_calculator::nn_calc_cb_type>& nn_calc,
@@ -94,7 +94,7 @@ class convergence_measure_updater : public boost::static_visitor<void> {
 
  private:
   /* clang-format off */
-  uint                                                           m_n_threads;
+  size_t                                                         m_n_threads;
   boost::optional<convergence_calculator::headings_calc_cb_type> m_headings_calc;
   boost::optional<convergence_calculator::nn_calc_cb_type>       m_nn_calc;
   boost::optional<convergence_calculator::pos_calc_cb_type>      m_pos_calc;

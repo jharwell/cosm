@@ -80,4 +80,3 @@ class base_adaptor : public ::argos::CCI_Controller,
 };
 
 NS_END(controller, argos, pal, cosm);
-

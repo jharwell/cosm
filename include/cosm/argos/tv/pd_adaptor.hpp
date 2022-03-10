@@ -66,8 +66,8 @@ NS_START(cosm, argos, tv);
  * also be a block carrying controller.
  */
 template<typename TController>
-class pd_adaptor : public rer::client<pd_adaptor<TController>>,
-                   public ctv::population_dynamics {
+class RCPPSW_EXPORT pd_adaptor : public rer::client<pd_adaptor<TController>>,
+                                 public ctv::population_dynamics {
  public:
   using env_dynamics_type = ctv::env_dynamics<TController>;
   template<typename T>

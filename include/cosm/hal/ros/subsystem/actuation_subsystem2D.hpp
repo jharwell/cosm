@@ -33,7 +33,7 @@
  ******************************************************************************/
 NS_START(cosm, hal, ros, subsystem);
 
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3
 #define COSM_HAL_ROBOT_ACTUATOR_TYPES            \
   ckin2D::governed_diff_drive,                   \
     chactuators::diagnostic_actuator

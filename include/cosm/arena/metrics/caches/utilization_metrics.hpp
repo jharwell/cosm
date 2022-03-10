@@ -41,7 +41,7 @@ NS_START(cosm, arena, metrics, caches);
  * \brief Interface defining utilization metrics that can be collected on \ref
  * arena_cache objects in the arena during their lifetime.
  */
-class utilization_metrics : virtual public rmetrics::base_metrics {
+class RCPPSW_EXPORT utilization_metrics : virtual public rmetrics::base_metrics {
  public:
   utilization_metrics(void) = default;
   ~utilization_metrics(void) override = default;

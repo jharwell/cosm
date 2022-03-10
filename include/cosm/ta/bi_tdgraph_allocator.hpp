@@ -105,7 +105,7 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
    * \param alloc_count The total # of task allocations so far.
    */
   polled_task* operator()(const polled_task* current_task,
-                          uint alloc_count) const;
+                          size_t alloc_count) const;
 
   /* clang-format off */
   const config::task_alloc_config* mc_config;

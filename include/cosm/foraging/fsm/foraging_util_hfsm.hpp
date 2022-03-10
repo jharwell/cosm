@@ -47,9 +47,9 @@ NS_START(cosm, foraging, fsm);
  * This class cannot be instantiated on its own, as does not define an FSM
  * per-se.
  */
-class foraging_util_hfsm : public csfsm::util_hfsm,
-                           public cssmetrics::nest_acq_metrics,
-                           public rer::client<foraging_util_hfsm> {
+class RCPPSW_EXPORT foraging_util_hfsm : public csfsm::util_hfsm,
+                                         public cssmetrics::nest_acq_metrics,
+                                         public rer::client<foraging_util_hfsm> {
  public:
   foraging_util_hfsm(const csfsm::fsm_params* params,
                      std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,

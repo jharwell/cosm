@@ -59,7 +59,7 @@ NS_START(cosm, pal);
  * Only core functionality agnostic to the platform on which the swarm control
  * algorithms are being executed is included here.
  */
-class base_swarm_manager : public rer::client<base_swarm_manager> {
+class RCPPSW_EXPORT base_swarm_manager : public rer::client<base_swarm_manager> {
  public:
   base_swarm_manager(void);
 

@@ -58,7 +58,7 @@ NS_START(cosm, convergence);
  * convergence calculation is enabled, then you obviously need to pass a valid
  * callback to calculate the necessary input data).
  */
-class convergence_calculator final : public metrics::convergence_metrics,
+class RCPPSW_EXPORT convergence_calculator final : public metrics::convergence_metrics,
                                      public rer::client<convergence_calculator> {
  public:
   /**
@@ -68,7 +68,7 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using headings_calc_cb_type = std::function<std::vector<rmath::radians>(uint)>;
+  using headings_calc_cb_type = std::function<std::vector<rmath::radians>(size_t)>;
 
   /**
    * \brief Callback function that returns a vector of nearest neighbor
@@ -77,7 +77,7 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using nn_calc_cb_type = std::function<std::vector<double>(uint)>;
+  using nn_calc_cb_type = std::function<std::vector<double>(size_t)>;
 
   /**
    * \brief Callback function that returns a vector of robot positions (1 per
@@ -89,7 +89,7 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using pos_calc_cb_type = std::function<std::vector<rmath::vector2d>(uint)>;
+  using pos_calc_cb_type = std::function<std::vector<rmath::vector2d>(size_t)>;
 
   /**
    * \brief Callback function that returns a vector of robot tasks (as unique
@@ -99,7 +99,7 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Tasks a single integer argument specifying the # OpenMP threads to be used,
    * per configuration.
    */
-  using tasks_calc_cb_type = std::function<std::vector<int>(uint)>;
+  using tasks_calc_cb_type = std::function<std::vector<int>(size_t)>;
 
   explicit convergence_calculator(const config::convergence_config* config)
       : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),

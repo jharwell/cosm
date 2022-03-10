@@ -45,7 +45,7 @@ NS_START(cosm, subsystem, perception, config, xml);
  * \brief Parses XML parameters relating to pheromones into
  * \ref pheromone_config.
  */
-class pheromone_parser : public rer::client<pheromone_parser>,
+class RCPPSW_EXPORT pheromone_parser : public rer::client<pheromone_parser>,
                          public rconfig::xml::xml_config_parser {
  public:
   using config_type = pheromone_config;

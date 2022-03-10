@@ -46,7 +46,7 @@ NS_START(cosm, controller, operations);
  * functions for updating the FSM attached to a controller, which is necessary
  * for it to be reused as-is, hence it is therefore a base class.
  */
-class base_block_pickup : public rer::client<base_block_pickup> {
+class RCPPSW_EXPORT base_block_pickup : public rer::client<base_block_pickup> {
  public:
   /**
    * \param block Non-owning reference to the block to be picked up; block is

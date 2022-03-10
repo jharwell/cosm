@@ -43,7 +43,7 @@ NS_START(cosm, tv, config);
  * \brief Configuration for various types of temporal penalties which can be
  * applied to aspects of robot behavior.
  */
-struct temporal_penalty_config final : public rconfig::base_config {
+struct RCPPSW_EXPORT temporal_penalty_config final : public rconfig::base_config {
   /**
    * \brief If \c TRUE, then all instances of this penalty class will be
    * adjusted so that at most 1 robot finishes serving a penalty each timestep
@@ -54,4 +54,3 @@ struct temporal_penalty_config final : public rconfig::base_config {
 };
 
 NS_END(tv, config, cosm);
-

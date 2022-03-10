@@ -40,7 +40,7 @@ diff_drive_actuator::diff_drive_actuator(const cros::topic& robot_ns)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive_actuator::reset(void) { set_from_twist({}, {}); }
+void diff_drive_actuator::reset(void) { set_from_twist({}, {}, 0.0); }
 
 void diff_drive_actuator::enable(void) {
   if (is_enabled()) {

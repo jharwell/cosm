@@ -59,7 +59,7 @@ NS_START(cosm, arena, operations, detail);
  * \note This operation requires holding the cache and grid mutexes in
  *       multithreaded contexts.
  */
-class cache_extent_set : public rer::client<cache_extent_set> {
+class RCPPSW_EXPORT cache_extent_set : public rer::client<cache_extent_set> {
  private:
   struct visit_typelist_impl {
     using value = rmpl::typelist<cads::arena_grid>;

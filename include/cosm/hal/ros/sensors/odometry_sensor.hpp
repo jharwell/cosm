@@ -53,6 +53,7 @@ NS_START(cosm, hal, ros, sensors);
  * Supports the following robots:
  *
  * - ROS turtlebot3
+ * - ROS extended turtlebot3
  */
 class odometry_sensor final : public rer::client<odometry_sensor>,
                               public chros::sensors::ros_sensor {
@@ -79,7 +80,7 @@ class odometry_sensor final : public rer::client<odometry_sensor>,
   void enable(void) override;
 
  private:
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_TURTLEBOT3)
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
   static inline const cros::topic kOdometryTopic = "odom";
 #endif /* COSM_HAL_TARGET */
 

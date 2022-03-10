@@ -49,7 +49,7 @@ NS_START(cosm, ta, ds);
  * representing the task decomposition of the root task at different
  * granularities (i.e. tasks of different levels of complexity).
  */
-class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
+class RCPPSW_EXPORT bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
  public:
   static inline const std::string kTABInitRoot = "root";
   static inline const std::string kTABInitRandom = "random";

@@ -46,8 +46,7 @@ NS_START(cosm, ds, config, xml);
  * \brief Parses XML parameters for \ref arena_grid grid structures into \ref
  * grid2D_config.
  */
-
-class grid2D_parser : public rer::client<grid2D_parser>,
+class RCPPSW_EXPORT grid2D_parser : public rer::client<grid2D_parser>,
                       public rconfig::xml::xml_config_parser {
  public:
   using config_type = grid2D_config;

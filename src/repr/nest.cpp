@@ -74,7 +74,7 @@ void nest::initialize(cpargos::swarm_manager_adaptor* sm,
 std::list<nest_light> nest::init_square(const rutils::color& color) {
   return std::list<nest_light>{
     nest_light("nest" + rcppsw::to_string(id()) + "_" + "light0",
-               rmath::vector3(rcenter2D().x(),
+               rmath::vector3d(rcenter2D().x(),
                               rcenter2D().y(),
                               mc_light_height.v()),
                color,

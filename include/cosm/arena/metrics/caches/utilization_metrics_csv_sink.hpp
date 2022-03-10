@@ -46,7 +46,7 @@ class utilization_metrics_collector;
  * \brief Sink for \ref utilization_metrics and \ref utilization_metrics_collector to
  * output metrics to .csv.
  */
-class utilization_metrics_csv_sink final : public rmetrics::csv_sink {
+class RCPPSW_EXPORT utilization_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = utilization_metrics_collector;
 

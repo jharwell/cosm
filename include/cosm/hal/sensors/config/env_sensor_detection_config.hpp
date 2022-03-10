@@ -1,7 +1,7 @@
 /**
- * \file ground_sensor_detection_parser.cpp
+ * \file env_sensor_detection_config.hpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,28 +18,43 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#pragma once
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/argos/sensors/config/xml/ground_sensor_detection_parser.hpp"
+#include "rcppsw/config/base_config.hpp"
+#include "rcppsw/math/range.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, config, xml);
+NS_START(cosm, hal, sensors, config);
 
 /*******************************************************************************
- * Member Functions
+ * Structure Definitions
  ******************************************************************************/
-void ground_sensor_detection_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           m_name.c_str());
+/**
+ * \struct env_sensor_detection_config
+ * \ingroup hal sensors config
+ *
+ * \brief Configuration for robots to detect features of the environment in a
+ * simple way.
+ */
+struct env_sensor_detection_config final : public rconfig::base_config {
+  /**
+   * \brief What is the range of sensor values (assuming some scalar
+   * value/reduction to a scalar) indicating detection of the environmental
+   * feature?
+   */
+  rmath::ranged range{};
 
-  ticpp::Element pnode = node_get(node, m_name);
-  m_config = std::make_unique<config_type>();
-  XML_PARSE_ATTR(pnode, m_config, consensus);
-  XML_PARSE_ATTR(pnode, m_config, range);
-} /* parse() */
+  /**
+   * \brief If the robot has more than 1 of a given sensor, how many sensors
+   * need to agree for successful detection of the environmental feature?
+   */
+  size_t        consensus{0};
+};
 
-NS_END(xml, config, sensors, argos, hal, cosm);
+NS_END(config, sensors, hal, cosm);

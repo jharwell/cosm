@@ -27,17 +27,19 @@
 #include <utility>
 
 #include "rcppsw/er/client.hpp"
-#include "cosm/ta/metrics/bi_tab_metrics.hpp"
-#include "cosm/ta/partition_probability.hpp"
-#include "cosm/ta/subtask_sel_probability.hpp"
-#include "cosm/ta/config/task_partition_config.hpp"
 #include "rcppsw/math/rng.hpp"
+
+#include "cosm/ta/metrics/bi_tab_metrics.hpp"
+#include "cosm/ta/config/task_partition_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, ta);
 class polled_task;
+
+class subtask_sel_probability;
+class partition_probability;
 
 namespace ds {
 class bi_tdgraph;
@@ -57,8 +59,8 @@ NS_START(ds);
  * not be capable of being further decomposed, and therefore the roots of
  * additional TABs.
  */
-class bi_tab final : public metrics::bi_tab_metrics,
-                     public rer::client<bi_tab> {
+class RCPPSW_EXPORT bi_tab final : public metrics::bi_tab_metrics,
+                                   public rer::client<bi_tab> {
  public:
   static inline const std::string kPartitionSrcExec = "exec";
   static inline const std::string kPartitionSrcInterface = "interface";
@@ -75,10 +77,10 @@ class bi_tab final : public metrics::bi_tab_metrics,
          const config::task_partition_config* partitioning,
          const config::src_sigmoid_sel_config* subtask_sel);
 
-  ~bi_tab(void) override = default;
+  ~bi_tab(void) override;
 
   /* Necessary for use in std::variant */
-  bi_tab(const bi_tab& other) = default;
+  bi_tab(const bi_tab& other) = delete;
   bi_tab& operator=(const bi_tab&) = delete;
 
 
@@ -223,37 +225,37 @@ class bi_tab final : public metrics::bi_tab_metrics,
    * \brief Return the current value of the partition probability within the
    * TAB. Does not recompute.
    */
-  double partition_prob(void) const override { return m_partition_prob.v(); }
+  double partition_prob(void) const override RCPPSW_PURE;
 
   /**
    * \brief Return the current value of the subtask selection probability within
    * the TAB. Does not recompute.
    */
-  double subtask_selection_prob(void) const override { return m_sel_prob.v(); }
+  double subtask_selection_prob(void) const override RCPPSW_PURE;
 
  private:
   polled_task* subtask_allocate(rmath::rng* rng);
   std::pair<double, double> subtask_sw_calc(rmath::rng* rng);
 
+
   /* clang-format off */
-  const bool              mc_always_partition;
-  const bool              mc_never_partition;
-  const std::string       mc_partition_input;
-  const std::string       mc_subtask_sel_input;
-  const bi_tdgraph*       mc_graph;
+  const bool                               mc_always_partition;
+  const bool                               mc_never_partition;
+  const std::string                        mc_partition_input;
+  const std::string                        mc_subtask_sel_input;
+  const bi_tdgraph*                        mc_graph;
 
-  polled_task* const         m_root;
-  polled_task* const         m_child1;
-  polled_task* const         m_child2;
-  bool                       m_employed_partitioning{false};
-  const polled_task*         m_last_task{nullptr};
-  const polled_task*         m_last_subtask{nullptr};
-  const polled_task*         m_active_task{nullptr};
+  polled_task* const                       m_root;
+  polled_task* const                       m_child1;
+  polled_task* const                       m_child2;
+  bool                                     m_employed_partitioning{false};
+  const polled_task*                       m_last_task{nullptr};
+  const polled_task*                       m_last_subtask{nullptr};
+  const polled_task*                       m_active_task{nullptr};
 
-  subtask_sel_probability    m_sel_prob;
-  partition_probability      m_partition_prob;
+  std::unique_ptr<subtask_sel_probability> m_sel_prob{nullptr};
+  std::unique_ptr<partition_probability>   m_partition_prob{nullptr};
   /* clang-format on */
 };
 
 NS_END(ds, ta, cosm);
-

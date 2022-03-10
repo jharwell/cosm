@@ -24,6 +24,7 @@
  * Includes
  ******************************************************************************/
 #include <variant>
+#include <memory>
 
 #include "rcppsw/common/common.hpp"
 
@@ -40,7 +41,6 @@ class bi_tdgraph;
  * \brief std::variant containing one of the possible data structures that the
  * \ref base_executive and its derived classes can operate on.
  */
-using ds_variant = std::variant<bi_tdgraph>;
+using ds_variant = std::variant<std::unique_ptr<bi_tdgraph>>;
 
 NS_END(ds, ta, cosm);
-

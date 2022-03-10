@@ -103,7 +103,7 @@ class free_block_pickup
    */
   interactor_status_type operator()(TController& controller,
                                     const rtypes::timestep& t) {
-    if (controller.block_detected()) {
+    if (controller.block_detect()) {
       if (controller.is_carrying_block()) {
         ER_INFO("Ignoring detected block--already carrying block");
       } else {

@@ -47,7 +47,7 @@ class entity2D : public spatial_entity2D {
  public:
   using spatial_entity2D::spatial_entity2D;
 
-  virtual ~entity2D(void) = default;
+  ~entity2D(void) override = default;
 
   /**
    * \brief Return the anchor (LL corner) of the object in real coordinates.

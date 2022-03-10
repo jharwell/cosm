@@ -56,7 +56,7 @@ NS_START(cosm, hal, subsystem);
  * which actuate in 2D, but can sense in 3D (quasi-3D).
  */
 template <typename ...TSensorTypes>
-class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
+class RCPPSW_EXPORT base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
  public:
   using variant_type = std::variant<TSensorTypes...>;
   using sensor_map = std::unordered_map<std::type_index, variant_type>;

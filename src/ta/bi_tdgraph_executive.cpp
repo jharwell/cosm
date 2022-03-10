@@ -38,7 +38,7 @@ NS_START(cosm, ta);
 bi_tdgraph_executive::bi_tdgraph_executive(
     const config::task_executive_config* const exec_config,
     const config::task_alloc_config* const alloc_config,
-    std::unique_ptr<ds::ds_variant> ds,
+    ds::ds_variant&& ds,
     rmath::rng* rng)
     : base_executive(exec_config, alloc_config, std::move(ds), rng),
       ER_CLIENT_INIT("cosm.ta.executive.bi_tdgraph") {}
@@ -47,11 +47,11 @@ bi_tdgraph_executive::bi_tdgraph_executive(
  * Member Functions
  ******************************************************************************/
 ds::bi_tdgraph* bi_tdgraph_executive::graph(void) {
-  return &std::get<ds::bi_tdgraph>(*ds());
+  return std::get<std::unique_ptr<ds::bi_tdgraph>>(*ds()).get();
 } /* graph() */
 
 const ds::bi_tdgraph* bi_tdgraph_executive::graph(void) const {
-  return &std::get<ds::bi_tdgraph>(*ds());
+  return std::get<std::unique_ptr<ds::bi_tdgraph>>(*ds()).get();
 } /* graph() */
 
 const ds::bi_tab* bi_tdgraph_executive::active_tab(void) const {
@@ -125,7 +125,7 @@ polled_task* bi_tdgraph_executive::task_allocate(const polled_task* last_task) {
   /* perfect forwarding from a lambda */
   auto visitor = [&](auto&& v) {
     return task_allocator(alloc_config(), rng())(
-        std::forward<decltype(v)>(v), last_task, task_alloc_count());
+        std::forward<decltype(*v)>(*v), last_task, task_alloc_count());
   };
 
   auto ret = std::visit(visitor, *ds());

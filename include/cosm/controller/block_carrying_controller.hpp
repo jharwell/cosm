@@ -47,7 +47,7 @@ NS_START(cosm, controller);
  * \brief Defines the interface and common functionality for all controllers
  * which are capable of carrying blocks.
  */
-class block_carrying_controller {
+class RCPPSW_EXPORT block_carrying_controller {
  public:
   block_carrying_controller(void) = default;
   virtual ~block_carrying_controller(void);
@@ -93,7 +93,7 @@ class block_carrying_controller {
    * values that are incidentally the same as those that correspond to a block
    * being found.
    */
-  virtual bool block_detected(void) const = 0;
+  virtual bool block_detect(void) const = 0;
 
  private:
   /* clang-format off */
@@ -102,4 +102,3 @@ class block_carrying_controller {
 };
 
 NS_END(controller, cosm);
-

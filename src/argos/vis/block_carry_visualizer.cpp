@@ -39,7 +39,7 @@ NS_START(cosm, argos, vis);
  * Member Functions
  ******************************************************************************/
 void block_carry_visualizer::draw(const crepr::sim_block3D* const block,
-                                  uint id_len) {
+                                  size_t id_len) {
   switch (block->md()->type()) {
     case repr::block_type::ekCUBE:
       m_qt->DrawBox(::argos::CVector3(0.0, 0.0, m_block_vis_offset),

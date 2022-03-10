@@ -48,7 +48,7 @@ class taskable_argument;
  * \brief A class that all classes wishing to be used as the mechanism by which
  * \ref executable_task objects execute themselves must inherit from.
  */
-class taskable : public virtual rmetrics::base_metrics {
+class RCPPSW_EXPORT taskable : public virtual rmetrics::base_metrics {
  public:
   taskable(void) = default;
   ~taskable(void) override;

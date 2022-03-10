@@ -50,7 +50,7 @@ NS_START(cosm, spatial, fsm);
  *
  * Arrival tolerance can be specified differently depending on what the goal is.
  */
-class vector_fsm final : public csfsm::util_hfsm,
+class RCPPSW_EXPORT vector_fsm final : public csfsm::util_hfsm,
                          public rer::client<vector_fsm>,
                          public cta::taskable {
  public:
@@ -116,7 +116,7 @@ class vector_fsm final : public csfsm::util_hfsm,
   };
 
   struct fsm_state {
-    uint m_interference_rec_count{0};
+    size_t m_interference_rec_count{0};
   };
 
   /**
@@ -124,7 +124,7 @@ class vector_fsm final : public csfsm::util_hfsm,
    * to ensure that you do not repeatedly get 2 controller butting heads as they
    * try to travel to opposite goals.
    */
-  static constexpr const uint kINTERFERENCE_RECOVERY_TIME = 10;
+  static constexpr const size_t kINTERFERENCE_RECOVERY_TIME = 10;
 
   /**
    * \brief Calculates the relative vector from the robot to the current goal.

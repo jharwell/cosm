@@ -50,7 +50,7 @@ NS_START(cosm, argos, vis);
  * \brief Renders the task that a robot is currently executing in text above the
  * robot for visualization/debugging purposes.
  */
-class task_visualizer : public rer::client<task_visualizer> {
+class RCPPSW_EXPORT task_visualizer : public rer::client<task_visualizer> {
  public:
   task_visualizer(::argos::CQTOpenGLUserFunctions* qt, double text_vis_offset)
       : ER_CLIENT_INIT("cosm.vis.task_visualizer"),

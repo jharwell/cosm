@@ -70,7 +70,7 @@ NS_END(detail);
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_hto : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+class RCPPSW_EXPORT block3D_hto : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
                                                                      block3D_hto_value_type,
                                                                      detail::hash_function>>,
                     public rer::stringizable {
@@ -99,7 +99,7 @@ class block3D_hto : public rpdecorator::decorator<std::unordered_map<block3D_ht_
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_htno : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+class RCPPSW_EXPORT block3D_htno : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
                                                                       block3D_htno_value_type,
                                                                       detail::hash_function>>,
                      public rer::stringizable {
@@ -128,7 +128,7 @@ class block3D_htno : public rpdecorator::decorator<std::unordered_map<block3D_ht
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_htro : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
+class RCPPSW_EXPORT block3D_htro : public rpdecorator::decorator<std::unordered_map<block3D_ht_key_type,
                                                                       block3D_htro_value_type,
                                                                       detail::hash_function>>,
                      public rer::stringizable {

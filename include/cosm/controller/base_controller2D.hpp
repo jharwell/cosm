@@ -57,7 +57,7 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class base_controller2D : public base_controller,
+class RCPPSW_EXPORT base_controller2D : public base_controller,
                           public csmetrics::movement_metrics,
                           public csmetrics::goal_acq_metrics,
                           public csmetrics::dist2D_metrics {

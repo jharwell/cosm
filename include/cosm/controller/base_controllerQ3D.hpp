@@ -63,10 +63,10 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class base_controllerQ3D : public base_controller,
-                           public csmetrics::movement_metrics,
-                           public csmetrics::goal_acq_metrics,
-                           public csmetrics::dist3D_metrics {
+class RCPPSW_EXPORT base_controllerQ3D : public base_controller,
+                                         public csmetrics::movement_metrics,
+                                         public csmetrics::goal_acq_metrics,
+                                         public csmetrics::dist3D_metrics {
  public:
   base_controllerQ3D(void) RCPPSW_COLD;
   ~base_controllerQ3D(void) override RCPPSW_COLD;

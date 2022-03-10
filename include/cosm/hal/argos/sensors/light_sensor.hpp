@@ -156,4 +156,3 @@ using light_sensor = light_sensor_impl<std::false_type>;
 #endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, argos, hal, cosm);
-

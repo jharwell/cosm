@@ -61,7 +61,7 @@ NS_START(ds);
  * currently work with the boost libraries, and shared_ptr<T> is not right
  * either, because the graph owns the tasks, so raw pointers are used instead.
  */
-class tdgraph : public rer::client<tdgraph> {
+class RCPPSW_EXPORT tdgraph : public rer::client<tdgraph> {
  public:
   /**
    * \brief We want to convey that the graph owns the vertices in it, which we
@@ -205,7 +205,7 @@ class tdgraph : public rer::client<tdgraph> {
    * \param v The current node along trajectory from desired node up to root.
    * \param depth The starting depth (should always be 0).
    */
-  uint vertex_depth_impl(const polled_task* v, int depth) const;
+  size_t vertex_depth_impl(const polled_task* v, int depth) const;
 
   /* clang-format off */
   polled_task*       m_root{nullptr};
@@ -214,4 +214,3 @@ class tdgraph : public rer::client<tdgraph> {
 };
 
 NS_END(ds, ta, cosm);
-

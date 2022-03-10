@@ -56,7 +56,7 @@ struct task_executive_config;
  * relationships among the tasks to be allocated (invalid combinations result in
  * compiler errors).
  */
-class base_executive : public rer::client<base_executive> {
+class RCPPSW_EXPORT base_executive : public rer::client<base_executive> {
  public:
   using abort_notify_cb = std::function<void(polled_task*)>;
   using finish_notify_cb = std::function<void(polled_task*)>;
@@ -72,7 +72,7 @@ class base_executive : public rer::client<base_executive> {
    */
   base_executive(const config::task_executive_config* exec_config,
                  const config::task_alloc_config* alloc_config,
-                 std::unique_ptr<ds::ds_variant> ds,
+                 ds::ds_variant&& ds,
                  rmath::rng* rng);
   ~base_executive(void) override;
 
@@ -138,7 +138,7 @@ class base_executive : public rer::client<base_executive> {
     return m_task_start_notify;
   }
 
-  const ds::ds_variant* ds(void) const { return m_ds.get(); }
+  const ds::ds_variant* ds(void) const { return &m_ds; }
   bool update_exec_ests(void) const { return mc_update_exec_ests; }
   bool update_interface_ests(void) const { return mc_update_interface_ests; }
 
@@ -205,12 +205,12 @@ class base_executive : public rer::client<base_executive> {
 
   void current_task(polled_task* current_task) { m_current_task = current_task; }
 
-  ds::ds_variant* ds(void) { return m_ds.get(); }
+  ds::ds_variant* ds(void) { return &m_ds; }
 
   const rmath::rng* rng(void) const { return m_rng; }
   rmath::rng* rng(void) { return m_rng; }
 
-  uint task_alloc_count(void) const { return m_alloc_count; }
+  size_t task_alloc_count(void) const { return m_alloc_count; }
 
  private:
   /* clang-format off */
@@ -218,15 +218,14 @@ class base_executive : public rer::client<base_executive> {
   const bool                      mc_update_interface_ests;
   const config::task_alloc_config mc_alloc_config;
 
-  uint                            m_alloc_count{0};
+  size_t                          m_alloc_count{0};
   polled_task*                    m_current_task{nullptr};
   std::list<abort_notify_cb>      m_task_abort_notify{};
   std::list<finish_notify_cb>     m_task_finish_notify{};
   std::list<start_notify_cb>      m_task_start_notify{};
-  std::unique_ptr<ds::ds_variant> m_ds;
+  ds::ds_variant                  m_ds;
   rmath::rng*                     m_rng;
   /* clang-format on */
 };
 
 NS_END(ta, cosm);
-

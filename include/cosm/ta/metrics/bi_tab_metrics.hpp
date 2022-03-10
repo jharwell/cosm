@@ -43,7 +43,7 @@ NS_START(cosm, ta, metrics);
  * allocation each robot performs.
  *
  */
-class bi_tab_metrics : public virtual rmetrics::base_metrics {
+class RCPPSW_EXPORT bi_tab_metrics : public virtual rmetrics::base_metrics {
  public:
   bi_tab_metrics(void) = default;
   ~bi_tab_metrics(void) override = default;
