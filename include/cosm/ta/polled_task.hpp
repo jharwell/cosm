@@ -48,7 +48,7 @@ NS_START(cosm, ta);
  * \brief Represents a task whose execution can/should be monitored by the user
  * to determine when it has finished.
  */
-class RCPPSW_EXPORT polled_task : public executable_task, public taskable {
+class polled_task : public executable_task, public taskable {
  public:
   polled_task(const std::string& name,
               const config::src_sigmoid_sel_config* abort,

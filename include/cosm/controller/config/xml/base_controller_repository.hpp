@@ -42,7 +42,7 @@ NS_START(cosm, controller, config, xml);
  * \brief Collection of all parameter parsers and parse results needed by
  * all controllers.
  */
-class RCPPSW_EXPORT base_controller_repository
+class base_controller_repository
     : public virtual rconfig::xml::xml_config_repository {
  public:
   base_controller_repository(void) RCPPSW_COLD;

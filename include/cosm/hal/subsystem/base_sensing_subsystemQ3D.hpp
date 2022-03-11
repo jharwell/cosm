@@ -32,6 +32,7 @@
 #include "rcppsw/types/timestep.hpp"
 
 #include "cosm/hal/subsystem/base_subsystem.hpp"
+#include "cosm/hal/subsystem/sensor_map.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -56,10 +57,10 @@ NS_START(cosm, hal, subsystem);
  * which actuate in 2D, but can sense in 3D (quasi-3D).
  */
 template <typename ...TSensorTypes>
-class RCPPSW_EXPORT base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
+class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
  public:
-  using variant_type = std::variant<TSensorTypes...>;
-  using sensor_map = std::unordered_map<std::type_index, variant_type>;
+  using sensor_map = sensor_map<TSensorTypes...>;
+  using variant_type = sensor_variant<TSensorTypes...>;
 
   /**
    * \brief Convenience function to create a sensor map create for the

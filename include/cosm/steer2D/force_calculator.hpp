@@ -53,7 +53,7 @@ struct force_calculator_config;
  * selectable forces that act on the entity each timestep. To use this class,
  * entities must conform to the \ref boid interface.
  */
-class RCPPSW_EXPORT force_calculator : public rer::client<force_calculator> {
+class force_calculator : public rer::client<force_calculator> {
  public:
   force_calculator(boid& entity, const config::force_calculator_config* config);
 

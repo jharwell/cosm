@@ -61,7 +61,7 @@ NS_START(cosm, oracle);
  * allocation. Used to provide an upper bound on the performance of different
  * allocation methods.
  */
-class RCPPSW_EXPORT tasking_oracle final : public rer::client<tasking_oracle> {
+class tasking_oracle final : public rer::client<tasking_oracle> {
  public:
   static inline const std::string kExecEstPrefix = "exec_est";
   static inline const std::string kInterfaceEstPrefix = "interface_est";

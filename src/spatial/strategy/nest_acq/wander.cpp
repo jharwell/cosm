@@ -24,6 +24,7 @@
 #include "cosm/spatial/strategy/nest_acq/wander.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

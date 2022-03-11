@@ -44,7 +44,7 @@ NS_START(cosm, controller);
  * controller as they manipulate their environment.
  */
 template <size_t MaxEvents>
-class RCPPSW_EXPORT manip_event_recorder : public ccmetrics::manipulation_metrics {
+class manip_event_recorder : public ccmetrics::manipulation_metrics {
  public:
   manip_event_recorder(void) = default;
   ~manip_event_recorder(void) = default;

@@ -57,7 +57,9 @@ void base_block_pickup::visit(controller::block_carrying_controller& c) {
   auto block = m_block->clone();
   block->md()->robot_id(mc_robot_id);
   c.block(std::move(block));
-  ER_INFO("Block%d", m_block->id().v());
+  ER_INFO("Block%d@%s",
+          m_block->id().v(),
+          rcppsw::to_string(m_block->danchor2D()).c_str());
 
   /*
    * We need to visit the cloned controller block, because metrics are collected

@@ -24,6 +24,7 @@
 #include "cosm/spatial/strategy/explore/crw.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem2D.hpp"
 
 /*******************************************************************************
  * Namespaces

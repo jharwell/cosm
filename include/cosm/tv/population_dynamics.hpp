@@ -70,7 +70,7 @@ NS_START(cosm, tv);
  * It also does not track the swarm size directly, as that may also require
  * platform-specific knowledge.
  */
-class RCPPSW_EXPORT population_dynamics : public rer::client<population_dynamics>,
+class population_dynamics : public rer::client<population_dynamics>,
                             public metrics::population_dynamics_metrics {
  public:
   struct op_result {

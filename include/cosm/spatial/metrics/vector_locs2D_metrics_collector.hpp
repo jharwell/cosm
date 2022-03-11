@@ -48,7 +48,7 @@ NS_START(cosm, spatial, metrics);
  * no two robots will have the same discrete location. Otherwise, serial
  * collection is required.
  */
-class RCPPSW_EXPORT vector_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
+class vector_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
  public:
   /**
    * \param sink The metrics sink to use.

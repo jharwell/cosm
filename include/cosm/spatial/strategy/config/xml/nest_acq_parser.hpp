@@ -45,7 +45,7 @@ NS_START(cosm, spatial, strategy, config, xml);
  * \brief Parses XML configuration for how robots should acq nests into \ref
  * nest_acq_config.
  */
-class RCPPSW_EXPORT nest_acq_parser final : public rer::client<nest_acq_parser>,
+class nest_acq_parser final : public rer::client<nest_acq_parser>,
                               public rconfig::xml::xml_config_parser {
  public:
   using config_type = nest_acq_config;

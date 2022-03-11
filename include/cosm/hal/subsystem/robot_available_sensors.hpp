@@ -1,7 +1,7 @@
 /**
- * \file goal_acq_locs2D_metrics_collector.hpp
+ * \file robot_available_sensors.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2019 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,44 +23,22 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <memory>
-
-#include "rcppsw/ds/metrics/grid2D_metrics_collector.hpp"
+#include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
 
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+#include "cosm/hal/argos/subsystem/robot_available_sensors.hpp"
+#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
+#include "cosm/hal/ros/subsystem/robot_available_sensors.hpp"
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
+
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+NS_START(cosm, hal, subsystem);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-/**
- * \class goal_acq_locs2D_metrics_collector
- * \ingroup spatial metrics
- *
- * \brief Collector for \ref goal_acq_metrics goal locations, which is
- * collected as a 2D array, and needs its own collector separate from the \ref
- * goal_acq_metrics_collector (1 .csv per collector).
- *
- * Metrics CAN be collected concurrently if the calling context guarantees that
- * no two robots will have the same discrete location. Otherwise, serial
- * collection is required.
- */
-class goal_acq_locs2D_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
- public:
-  /**
-   * \param sink The metrics sink to use.
-   * \param dims Dimensions of arena.
-   */
-  goal_acq_locs2D_metrics_collector(
-      std::unique_ptr<rmetrics::base_sink> sink,
-      const rmath::vector2z& dims);
 
-  void collect(const rmetrics::base_metrics& metrics) override;
-
-};
-
-NS_END(metrics, spatial, cosm);
-
+NS_END(subsystem, hal, cosm);

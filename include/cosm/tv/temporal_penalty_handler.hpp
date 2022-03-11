@@ -54,7 +54,7 @@ NS_START(cosm, tv);
  * Does not do much more than provide the penalty list, and functions for
  * manipulating it to derived classes.
  */
-class RCPPSW_EXPORT temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
+class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
                                                public rmultithread::lockable {
  public:
   using const_iterator_type =

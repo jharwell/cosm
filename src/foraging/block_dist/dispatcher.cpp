@@ -76,21 +76,34 @@ bool dispatcher::initialize(carena::base_arena_map* map,
                       mc_cells_yrange.lb()),
       rmath::vector2z(mc_cells_xrange.ub(),
                       mc_cells_yrange.ub()));
+  auto cluster_xwidth = static_cast<size_t>(m_grid->xdsize() * 0.25);
+  auto cluster_ywidth = static_cast<size_t>(m_grid->ydsize() * 0.25);
+
+  /*
+   *  +/- 1 is to account for rounding errors when computing the cluster X/Y
+   * width.
+   */
   auto left_ll = rmath::vector2z(mc_cells_xrange.lb(),
                                  mc_cells_yrange.lb());
-  auto left_ur = rmath::vector2z(static_cast<size_t>(mc_cells_xrange.ub() * 0.25 / 0.85),
+  auto left_ur = rmath::vector2z(mc_cells_xrange.lb() + cluster_xwidth - 1,
                                  mc_cells_yrange.ub());
-  auto right_ll = rmath::vector2z(static_cast<size_t>(mc_cells_xrange.ub() * 0.75 / 0.85),
+  auto right_ll = rmath::vector2z(mc_cells_xrange.ub() - cluster_xwidth + 1,
                                   mc_cells_yrange.lb());
   auto right_ur = rmath::vector2z(mc_cells_xrange.ub(),
                                   mc_cells_yrange.ub());
-  auto bottom_ll = rmath::vector2z(mc_cells_xrange.lb(),
+
+  /*
+   * Top and bottom cluster (LL,UR) X coordinates need to account for the width
+   * of the left and right cluster spatial X extents to ensure no nothing
+   * overlaps.
+   */
+  auto bottom_ll = rmath::vector2z(mc_cells_xrange.lb() + cluster_xwidth + 1,
                                    mc_cells_yrange.lb());
-  auto bottom_ur = rmath::vector2z(mc_cells_xrange.ub(),
-                                   static_cast<size_t>(mc_cells_yrange.ub() * 0.25 / 0.85));
-  auto top_ll = rmath::vector2z(mc_cells_xrange.lb(),
-                                static_cast<size_t>(mc_cells_yrange.ub() * 0.75 / 0.85));
-  auto top_ur = rmath::vector2z(mc_cells_xrange.ub(),
+  auto bottom_ur = rmath::vector2z(mc_cells_xrange.ub() - cluster_xwidth - 1,
+                                   mc_cells_yrange.lb() + cluster_ywidth);
+  auto top_ll = rmath::vector2z(mc_cells_xrange.lb() + cluster_xwidth + 1,
+                                mc_cells_yrange.ub() - cluster_ywidth);
+  auto top_ur = rmath::vector2z(mc_cells_xrange.ub() - cluster_xwidth - 1,
                                 mc_cells_yrange.ub());
   if (kDistRandom == mc_dist_type) {
     /*
@@ -145,6 +158,13 @@ bool dispatcher::initialize(carena::base_arena_map* map,
                                                                                bottom_ur);
     cads::arena_grid::view area_u = m_grid->layer<arena_grid::kCell>()->subgrid(top_ll,
                                                                                top_ur);
+
+    ER_ASSERT(!cads::arena_grid::has_overlap(area_l, area_b) &&
+              !cads::arena_grid::has_overlap(area_l, area_u),
+              "Left block cluster overlaps with top or bottom");
+    ER_ASSERT(!cads::arena_grid::has_overlap(area_r, area_b) &&
+              !cads::arena_grid::has_overlap(area_r, area_u),
+              "Right block cluster overlaps with top or bottom");
     std::vector<cads::arena_grid::view> areas{area_l, area_r, area_b, area_u};
     m_dist = std::make_unique<multi_cluster_distributor>(
         areas,

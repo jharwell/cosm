@@ -42,7 +42,7 @@ NS_START(cosm, pal, ros, config, xml);
  * \brief Collection of all XML parsers and parse results common to all \ref
  * base_swarm_manager derived classes for the ROS platform.
  */
-class RCPPSW_EXPORT swarm_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
+class swarm_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
 
 NS_END(xml, config, ros, pal, cosm);
 

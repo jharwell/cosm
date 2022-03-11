@@ -57,7 +57,7 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class RCPPSW_EXPORT base_controller2D : public base_controller,
+class base_controller2D : public base_controller,
                           public csmetrics::movement_metrics,
                           public csmetrics::goal_acq_metrics,
                           public csmetrics::dist2D_metrics {
@@ -90,9 +90,8 @@ class RCPPSW_EXPORT base_controller2D : public base_controller,
 
  private:
   /* clang-format off */
-  std::unique_ptr<subsystem::saa_subsystemQ3D>    m_saa;
+  std::unique_ptr<subsystem::saa_subsystemQ3D>    m_saa{nullptr};
   /* clang-format on */
 };
 
 NS_END(controller, cosm);
-

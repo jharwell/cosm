@@ -45,7 +45,7 @@ NS_START(cosm, repr, config, xml);
  * \brief Parses XML parameters for related to \ref nest objects into
  * \ref nest_config.
  */
-class RCPPSW_EXPORT nest_parser final : public rer::client<nest_parser>,
+class nest_parser final : public rer::client<nest_parser>,
                           public rconfig::xml::xml_config_parser {
  public:
   using config_type = nest_config;

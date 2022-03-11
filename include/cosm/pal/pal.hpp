@@ -54,18 +54,18 @@ NS_START(cosm, pal);
  * \brief The name of the type robots within the swarm from the POV of
  * ARGoS/ROS.
  */
-RCPPSW_EXPORT extern const std::string kRobotType;
+extern const std::string kRobotType;
 
 /**
  * \brief The prefix that all robot unique IDs have within ARGoS/ROS.
  */
-RCPPSW_EXPORT extern const std::string kRobotNamePrefix;
+extern const std::string kRobotNamePrefix;
 
 /**
  * \brief The unique name attached to the controller of the desired type in the
  * XML input file.
  */
-RCPPSW_EXPORT extern const std::string kControllerXMLId;
+extern const std::string kControllerXMLId;
 
 #if defined(COSM_PAL_TARGET_ROS)
 
@@ -73,7 +73,7 @@ RCPPSW_EXPORT extern const std::string kControllerXMLId;
  * \brief A hash of the current git HEAD for use in version matching messages
  * using message_traits.
  */
-RCPPSW_EXPORT extern const std::string kMsgTraitsMD5;
+extern const std::string kMsgTraitsMD5;
 
 #endif
 

@@ -67,7 +67,7 @@ NS_START(cosm, arena, operations, detail);
  * non-controller entities to handle block dropping, use \ref
  * free_block_drop_visitor.
  */
-class RCPPSW_EXPORT free_block_drop : public rer::client<free_block_drop>,
+class free_block_drop : public rer::client<free_block_drop>,
                         public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {
@@ -160,7 +160,7 @@ using free_block_drop_visitor_impl =
 
 NS_END(detail);
 
-class RCPPSW_EXPORT free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
+class free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
  public:
   using detail::free_block_drop_visitor_impl::free_block_drop_visitor_impl;
 };

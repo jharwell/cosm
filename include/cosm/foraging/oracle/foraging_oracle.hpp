@@ -27,7 +27,6 @@
 #include <string>
 #include <memory>
 
-#include <boost/variant.hpp>
 #include <boost/mpl/copy.hpp>
 
 #include "rcppsw/common/common.hpp"
@@ -87,7 +86,7 @@ NS_END(detail);
  * - task execution/interface time estimates (optional; must be adding after
  *   construction)
  */
-class RCPPSW_EXPORT foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
+class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
  public:
   using blocks_oracle_type = coracle::entities_oracle<crepr::sim_block3D>;
   using caches_oracle_type = coracle::entities_oracle<carepr::base_cache>;

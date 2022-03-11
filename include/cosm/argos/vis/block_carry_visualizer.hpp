@@ -50,7 +50,7 @@ NS_START(cosm, argos, vis);
  * \brief Renders a block in 3D that the robot is carrying for
  * visualization/debugging purposes.
  */
-class RCPPSW_EXPORT block_carry_visualizer : public rer::client<block_carry_visualizer> {
+class block_carry_visualizer : public rer::client<block_carry_visualizer> {
  public:
   block_carry_visualizer(::argos::CQTOpenGLUserFunctions* qt,
                          double block_vis_offset,

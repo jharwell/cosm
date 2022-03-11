@@ -25,7 +25,8 @@
  ******************************************************************************/
 #include "cosm/hal/subsystem/base_actuation_subsystem2D.hpp"
 
-#include "cosm/kin2D/governed_diff_drive.hpp"
+#include "cosm/hal/argos/subsystem/robot_available_actuators.hpp"
+
 #include "cosm/hal/actuators/diagnostic_actuator.hpp"
 #include "cosm/hal/argos/actuators/wifi_actuator.hpp"
 
@@ -33,27 +34,6 @@
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, hal, argos, subsystem);
-
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
-#define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
-  chal::actuators::diagnostic_actuator,         \
-    chargos::actuators::wifi_actuator,       \
-    kin2D::governed_diff_drive,                 \
-    chal::actuators::diff_drive_actuator
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
-#define COSM_HAL_ROBOT_ACTUATOR_TYPES              \
-  chal::actuators::diagnostic_actuator,         \
-    kin2D::governed_diff_drive,                    \
-    chal::actuators::diff_drive_actuator
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
-#define COSM_HAL_ROBOT_ACTUATOR_TYPES           \
-  chal::actuators::diagnostic_actuator,                 \
-    kin2D::governed_diff_drive,                 \
-    chal::actuators::diff_drive_actuator
-#endif
-
 
 /*******************************************************************************
  * Class Definitions
@@ -65,16 +45,16 @@ NS_START(cosm, hal, argos, subsystem);
  * \brief The actuation subsystem for any ARGoS robot which operates in 2D.
  */
 class actuation_subsystem2D :
-    public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_ACTUATOR_TYPES> {
+    public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS> {
  public:
   explicit actuation_subsystem2D(actuator_map&& actuators)
       : base_actuation_subsystem2D(std::move(actuators)) {}
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             kin2D::governed_diff_drive,
+                             ckin2D::governed_diff_drive,
                              governed_diff_drive);
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             kin2D::governed_diff_drive,
+                             ckin2D::governed_diff_drive,
                              governed_diff_drive,
                              const);
 
@@ -96,4 +76,3 @@ class actuation_subsystem2D :
 };
 
 NS_END(subsystem, argos, hal, cosm);
-

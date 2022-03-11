@@ -49,7 +49,7 @@ NS_START(cosm, ta, metrics);
  * gathered stats are supported. Metrics are written out at the specified
  * interval.
  */
-class RCPPSW_EXPORT bi_tdgraph_metrics_collector final : public rmetrics::base_collector {
+class bi_tdgraph_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
    * \param sink The metrics sink to use.

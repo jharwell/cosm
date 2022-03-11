@@ -48,7 +48,7 @@ NS_START(cosm, foraging, block_dist, metrics);
  *
  * Metrics should be collected every timestep.
  */
-class RCPPSW_EXPORT distributor_metrics : public rmetrics::base_metrics {
+class distributor_metrics : public rmetrics::base_metrics {
  public:
   distributor_metrics(void) = default;
 

@@ -27,12 +27,19 @@
 #include <utility>
 
 #include "cosm/steer2D/force_calculator.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/hal/subsystem/sensor_map.hpp"
+#include "cosm/hal/subsystem/actuator_map.hpp"
+#include "cosm/hal/subsystem/robot_available_sensors.hpp"
+#include "cosm/hal/subsystem/robot_available_actuators.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::subsystem {
+class sensing_subsystemQ3D;
+class actuation_subsystem2D;
+} /* namespace cosm::subsystem */
+
 NS_START(cosm, subsystem);
 
 /*******************************************************************************
@@ -47,15 +54,15 @@ NS_START(cosm, subsystem);
  * set of sensors/actuators abstracted away at a lower level, so that this class
  * can be used for any robot.
  */
-class RCPPSW_EXPORT saa_subsystemQ3D final : public steer2D::boid,
+class saa_subsystemQ3D final : public steer2D::boid,
                                public rer::client<saa_subsystemQ3D> {
  public:
   using sensing_type = csubsystem::sensing_subsystemQ3D;
   using actuation_type = csubsystem::actuation_subsystem2D;
 
   saa_subsystemQ3D(
-      sensing_type::sensor_map&& sensors,
-      actuation_type::actuator_map&& actuators,
+      chsubsystem::sensor_map<COSM_HAL_ROBOT_AVAILABLE_SENSORS>&& sensors,
+      chsubsystem::actuator_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&& actuators,
       const steer2D::config::force_calculator_config* const steer_config);
 
   /*

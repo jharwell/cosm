@@ -58,7 +58,7 @@ NS_START(cosm, spatial, fsm);
  * This class cannot be instantiated on its own, as does not define an FSM
  * per-se.
  */
-class RCPPSW_EXPORT util_hfsm : public rpfsm::hfsm,
+class util_hfsm : public rpfsm::hfsm,
                                 public rer::client<util_hfsm>,
                                 public metrics::interference_metrics,
                                 public metrics::nest_zone_metrics {

@@ -57,7 +57,7 @@ NS_START(cosm, spatial);
  * creating this class, the checking functions were scattered all over in
  * various \a utils:: namespaces. Much better to have them all centralized.
  */
-class RCPPSW_EXPORT conflict_checker {
+class conflict_checker {
  public:
   struct status {
     bool x{ false };

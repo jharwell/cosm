@@ -49,7 +49,7 @@ NS_START(cosm, spatial, metrics);
  * gathered stats are supported. Metrics are written out at the end of the
  * specified interval.
  */
-class RCPPSW_EXPORT goal_acq_metrics_collector final : public rmetrics::base_collector {
+class goal_acq_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
    * \param sink The metrics sink to use.

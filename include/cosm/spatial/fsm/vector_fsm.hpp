@@ -50,7 +50,7 @@ NS_START(cosm, spatial, fsm);
  *
  * Arrival tolerance can be specified differently depending on what the goal is.
  */
-class RCPPSW_EXPORT vector_fsm final : public csfsm::util_hfsm,
+class vector_fsm final : public csfsm::util_hfsm,
                          public rer::client<vector_fsm>,
                          public cta::taskable {
  public:

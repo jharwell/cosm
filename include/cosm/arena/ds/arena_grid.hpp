@@ -60,6 +60,17 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
 
   static constexpr const size_t kCell = 0;
 
+  static bool has_overlap(const view& v1, const view& v2) {
+    auto v1_xspan = rmath::range(v1.origin()->loc().x(),
+                                 v1.origin()->loc().x() + v1.shape()[0]);
+    auto v1_yspan = rmath::range(v1.origin()->loc().y(),
+                                 v1.origin()->loc().y() + v1.shape()[1]);
+    auto v2_xspan = rmath::range(v2.origin()->loc().x(),
+                                 v2.origin()->loc().x() + v2.shape()[0]);
+    auto v2_yspan = rmath::range(v2.origin()->loc().y(),
+                                 v2.origin()->loc().y() + v2.shape()[1]);
+    return v1_xspan.overlaps_with(v2_xspan) && v1_yspan.overlaps_with(v2_yspan);
+  }
   /**
    * \param dims The dimensions of the arena.
    * \param resolution The arena resolution (i.e. what is the size of 1 cell in
@@ -98,4 +109,3 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
 };
 
 NS_END(ds, arena, cosm);
-

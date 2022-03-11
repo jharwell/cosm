@@ -46,7 +46,7 @@ NS_START(spatial, strategy, nest_acq);
  *
  * \brief Factory for creating nest acquisition strategies.
  */
-class RCPPSW_EXPORT factory :
+class factory :
     public rpfactory::releasing_factory<csstrategy::nest_acq::base_nest_acq,
                                         std::string, /* key type */
                                         csfsm::fsm_params*,

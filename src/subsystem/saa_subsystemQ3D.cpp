@@ -23,6 +23,9 @@
  ******************************************************************************/
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
+#include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
@@ -32,8 +35,8 @@ NS_START(cosm, subsystem);
  * Constructors/Destructors
  ******************************************************************************/
 saa_subsystemQ3D::saa_subsystemQ3D(
-    sensing_type::sensor_map&& sensors,
-     actuation_type::actuator_map&& actuators,
+    chsubsystem::sensor_map<COSM_HAL_ROBOT_AVAILABLE_SENSORS>&& sensors,
+    chsubsystem::actuator_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&& actuators,
     const steer2D::config::force_calculator_config* const steer_config)
     : ER_CLIENT_INIT("cosm.subsystem.saa_subsystemQ3D"),
       m_actuation(std::make_unique<actuation_type>(std::move(actuators))),

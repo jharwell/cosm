@@ -32,6 +32,7 @@
 #include "rcppsw/types/timestep.hpp"
 
 #include "cosm/hal/subsystem/base_subsystem.hpp"
+#include "cosm/hal/subsystem/actuator_map.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -56,10 +57,10 @@ NS_START(cosm, hal, subsystem);
  * controllers which actuate in 2D.
  */
 template <typename ...TActuatorTypes>
-class RCPPSW_EXPORT base_actuation_subsystem2D : private chsubsystem::base_subsystem {
+class base_actuation_subsystem2D : private chsubsystem::base_subsystem {
  public:
-  using variant_type = std::variant<TActuatorTypes...>;
-  using actuator_map = std::unordered_map<std::type_index, variant_type>;
+  using variant_type = actuator_variant<TActuatorTypes...>;
+  using actuator_map = actuator_map<TActuatorTypes...>;
 
   /**
    * \brief Convenience function to create a actuator map create for the

@@ -47,7 +47,7 @@ NS_START(cosm, fsm);
  * \brief Per-cell FSM containing the current state of the cell (empty, has a
  * block, has a cache, unknown, etc.). Used by \ref arena_grid.
  */
-class RCPPSW_EXPORT cell2D_fsm final : public rpfsm::simple_fsm,
+class cell2D_fsm final : public rpfsm::simple_fsm,
                          public rer::client<cell2D_fsm> {
  public:
   using state = cell2D_state;

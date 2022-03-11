@@ -63,7 +63,7 @@ NS_START(cosm, arena, operations, detail);
  * The cache usuage penalty, if there is one, is not assessed during the event,
  * but at a higher level.
  */
-class RCPPSW_EXPORT cache_block_drop : public rer::client<cache_block_drop>,
+class cache_block_drop : public rer::client<cache_block_drop>,
                          public cdops::cell2D_op {
  private:
   struct visit_typelist_impl {

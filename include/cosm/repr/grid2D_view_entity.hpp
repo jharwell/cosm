@@ -112,4 +112,3 @@ class grid2D_view_entity : public crepr::entity2D,
 };
 
 NS_END(repr, cosm);
-

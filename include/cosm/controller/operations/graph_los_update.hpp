@@ -52,7 +52,7 @@ NS_START(cosm, controller, operations);
 template <typename TController,
           typename TSrcGraph,
           typename TLOS>
-class RCPPSW_EXPORT graph_los_update final
+class graph_los_update final
     : public rer::client<graph_los_update<TController,
                                           TSrcGraph,
                                           TLOS>> {

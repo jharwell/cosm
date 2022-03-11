@@ -52,7 +52,7 @@ class bi_tab;
  * \brief A task executive which tasks are run one step at a time and polled
  * until they are finished. Operates on \ref bi_tdgraph.
  */
-class RCPPSW_EXPORT bi_tdgraph_executive final : public base_executive,
+class bi_tdgraph_executive final : public base_executive,
                                    public rer::client<bi_tdgraph_executive> {
  public:
   using start_notify_cb = std::function<void(polled_task*, const ds::bi_tab*)>;

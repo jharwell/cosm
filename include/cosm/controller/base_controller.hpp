@@ -68,7 +68,7 @@ NS_START(cosm, controller);
  * It should never be derived from directly; derive from one of the adaptor
  * controllers in the PAL.
  */
-class RCPPSW_EXPORT base_controller : public rer::client<base_controller>,
+class base_controller : public rer::client<base_controller>,
                         public csmetrics::interference_metrics {
  public:
   base_controller(void) RCPPSW_COLD;

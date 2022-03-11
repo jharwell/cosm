@@ -48,7 +48,7 @@ NS_START(cosm, ta, metrics);
  * completion/abortion of a task. Metrics are written out at the specified
  * interval.
  */
-class RCPPSW_EXPORT bi_tab_metrics_collector final : public rmetrics::base_collector {
+class bi_tab_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
    * \param sink The metrics sink to use.

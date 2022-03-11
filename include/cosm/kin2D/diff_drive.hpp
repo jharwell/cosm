@@ -48,7 +48,7 @@ NS_START(cosm, kin2D);
  * \ref drive_type::kTankDrive
  * \ref drive_type::kFSMDrive
  */
-class RCPPSW_EXPORT diff_drive : public rer::client<diff_drive> {
+class diff_drive : public rer::client<diff_drive> {
  public:
   /**
    * \param type The drive type; see \ref drive_type

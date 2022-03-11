@@ -47,7 +47,7 @@ NS_START(cosm, controller);
  * \brief Defines the interface and common functionality for all controllers
  * which are capable of carrying blocks.
  */
-class RCPPSW_EXPORT block_carrying_controller {
+class block_carrying_controller {
  public:
   block_carrying_controller(void) = default;
   virtual ~block_carrying_controller(void);

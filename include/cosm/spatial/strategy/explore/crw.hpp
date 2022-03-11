@@ -46,7 +46,7 @@ NS_START(cosm, spatial, strategy, explore);
  * \brief Roam around using Correlated Random Walk looking for something until
  * you happen to stumble across it.
  */
-class RCPPSW_EXPORT crw : public csstrategy::base_strategy,
+class crw : public csstrategy::base_strategy,
                           public rer::client<crw> {
  public:
   crw(const csfsm::fsm_params*  params, rmath::rng* rng);

@@ -46,7 +46,7 @@ NS_START(cosm, repr);
  * within the arena). Blocks have both real (where they actually live in the
  * world) and discretized locations (where they are mapped to within the arena).
  */
-class RCPPSW_EXPORT base_block3D : public crepr::unicell_movable_entity3D,
+class base_block3D : public crepr::unicell_movable_entity3D,
                      public rpprototype::clonable<base_block3D> {
  public:
   /**

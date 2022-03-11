@@ -46,7 +46,7 @@ NS_START(cosm, arena, metrics, caches);
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class RCPPSW_EXPORT location_metrics_collector final :
+class location_metrics_collector final :
     public rdmetrics::grid2D_metrics_collector {
  public:
   /**

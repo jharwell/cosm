@@ -53,7 +53,7 @@ NS_START(cosm, controller, operations);
  * We do not use the precise visitor, because) this is a super generic
  * operation. Implicit upcasting is OK is THIS SINGLE CASE.
  */
-class RCPPSW_EXPORT stop : public rer::client<stop> {
+class stop : public rer::client<stop> {
  public:
   stop(void) : ER_CLIENT_INIT("cosm.events.stop") {}
   ~stop(void) override = default;

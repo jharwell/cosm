@@ -54,7 +54,7 @@ NS_START(cosm, controller, operations);
  * the necessary type information in the class template parameters.
  */
 template <class TController, class TAggregator>
-class RCPPSW_EXPORT metrics_extract : public boost::static_visitor<void> {
+class metrics_extract : public boost::static_visitor<void> {
  public:
   explicit metrics_extract(TAggregator* const agg) : m_agg(agg) {}
 

@@ -45,7 +45,7 @@ class bi_tab_metrics_collector;
  * \brief Sink for \ref bi_tab_metrics and \ref bi_tab_metrics_collector to
  * output metrics to .csv.
  */
-class RCPPSW_EXPORT bi_tab_metrics_csv_sink final : public rmetrics::csv_sink {
+class bi_tab_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = bi_tab_metrics_collector;
 

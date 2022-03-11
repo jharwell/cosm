@@ -61,7 +61,7 @@ NS_START(ds);
  * currently work with the boost libraries, and shared_ptr<T> is not right
  * either, because the graph owns the tasks, so raw pointers are used instead.
  */
-class RCPPSW_EXPORT tdgraph : public rer::client<tdgraph> {
+class tdgraph : public rer::client<tdgraph> {
  public:
   /**
    * \brief We want to convey that the graph owns the vertices in it, which we

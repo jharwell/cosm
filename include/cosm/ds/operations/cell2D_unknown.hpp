@@ -59,7 +59,7 @@ NS_START(cosm, ds, operations);
  * This class should never be instantiated, only derived from. To visit \ref
  * cell2D objects, use \ref cell2D_unknown_visitor.
  */
-class RCPPSW_EXPORT cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
+class cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
  private:
   struct visit_typelist_impl {
     using inherited = cell2D_op::visit_typelist;

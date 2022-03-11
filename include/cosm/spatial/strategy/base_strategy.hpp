@@ -49,7 +49,7 @@ NS_START(cosm, spatial, strategy);
  * \brief Base class for different strategies that robots can
  * employ when exploring, acquiring goals, etc.
  */
-class  RCPPSW_EXPORT base_strategy : public cta::taskable,
+class  base_strategy : public cta::taskable,
                                      public rpprototype::clonable<base_strategy> {
  public:
   explicit base_strategy(const csfsm::fsm_params*  params,

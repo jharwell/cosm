@@ -57,7 +57,7 @@ NS_START(cosm, spatial, fsm);
  * known instance or via random exploration). Once the instance has been
  * acquired, it signals that it has completed its task.
  */
-class RCPPSW_EXPORT acquire_goal_fsm : public csfsm::util_hfsm,
+class acquire_goal_fsm : public csfsm::util_hfsm,
                          public rer::client<acquire_goal_fsm>,
                          public cta::taskable,
                          public csmetrics::goal_acq_metrics {

@@ -50,7 +50,7 @@ NS_START(cosm, convergence, metrics);
  *
  * Metrics are collected every timestep.
  */
-class RCPPSW_EXPORT convergence_metrics : public virtual rmetrics::base_metrics {
+class convergence_metrics : public virtual rmetrics::base_metrics {
  public:
   convergence_metrics(void) = default;
   /**

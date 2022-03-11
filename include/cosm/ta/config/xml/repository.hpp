@@ -42,7 +42,7 @@ NS_START(cosm, ta, config, xml);
  * \brief Collection of all parameter parsers and parse results needed by
  * task allocation algorithms
  */
-class RCPPSW_EXPORT repository : public virtual rconfig::xml::xml_config_repository {
+class repository : public virtual rconfig::xml::xml_config_repository {
  public:
   repository(void) RCPPSW_COLD;
 };

@@ -47,4 +47,3 @@ using sensing_subsystemQ3D = chros::subsystem::sensing_subsystemQ3D;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(subsystem, hal, cosm);
-

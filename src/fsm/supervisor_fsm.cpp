@@ -28,6 +28,7 @@
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 #include "cosm/ta/base_executive.hpp"
 
 /*******************************************************************************

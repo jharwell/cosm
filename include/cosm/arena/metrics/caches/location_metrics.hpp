@@ -44,7 +44,7 @@ NS_START(cosm, arena, metrics, caches);
  *
  * Metrics are collected every timestep.
  */
-class RCPPSW_EXPORT location_metrics : public virtual rmetrics::base_metrics {
+class location_metrics : public virtual rmetrics::base_metrics {
  public:
   location_metrics(void) = default;
 

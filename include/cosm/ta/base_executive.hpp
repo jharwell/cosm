@@ -56,7 +56,7 @@ struct task_executive_config;
  * relationships among the tasks to be allocated (invalid combinations result in
  * compiler errors).
  */
-class RCPPSW_EXPORT base_executive : public rer::client<base_executive> {
+class base_executive : public rer::client<base_executive> {
  public:
   using abort_notify_cb = std::function<void(polled_task*)>;
   using finish_notify_cb = std::function<void(polled_task*)>;

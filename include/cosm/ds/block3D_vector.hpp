@@ -57,7 +57,7 @@ using block3D_vectorro_type = const crepr::sim_block3D*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class RCPPSW_EXPORT block3D_vectoro : public rpdecorator::decorator<std::vector<block3D_vectoro_type>>,
+class block3D_vectoro : public rpdecorator::decorator<std::vector<block3D_vectoro_type>>,
                         public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -87,7 +87,7 @@ class RCPPSW_EXPORT block3D_vectoro : public rpdecorator::decorator<std::vector<
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class RCPPSW_EXPORT block3D_vectorno : public rpdecorator::decorator<std::vector<block3D_vectorno_type>>,
+class block3D_vectorno : public rpdecorator::decorator<std::vector<block3D_vectorno_type>>,
                          public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -117,7 +117,7 @@ class RCPPSW_EXPORT block3D_vectorno : public rpdecorator::decorator<std::vector
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class RCPPSW_EXPORT block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vectorro_type>>,
+class block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vectorro_type>>,
                          public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);

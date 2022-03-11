@@ -63,7 +63,7 @@ namespace fs = std::filesystem;
  * \brief Manager class for handling all of the metrics which can be generated
  * by COSM on the ARGoS platform.
  */
-class RCPPSW_EXPORT fs_output_manager : public rmetrics::fs_output_manager,
+class fs_output_manager : public rmetrics::fs_output_manager,
                                         public rer::client<fs_output_manager> {
  public:
   fs_output_manager(const rmconfig::metrics_config* mconfig,

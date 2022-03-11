@@ -54,7 +54,7 @@ class tasking_oracle;
  * more types) into the swarm.
  */
 template <typename TOracleTypes>
-class RCPPSW_EXPORT aggregate_oracle {
+class aggregate_oracle {
  public:
   using oracle_type_variant = typename boost::make_variant_over<
       typename rmpl::typelist_wrap_apply<TOracleTypes, std::unique_ptr>::type>::type;

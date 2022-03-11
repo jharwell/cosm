@@ -59,7 +59,7 @@ NS_START(ds);
  * not be capable of being further decomposed, and therefore the roots of
  * additional TABs.
  */
-class RCPPSW_EXPORT bi_tab final : public metrics::bi_tab_metrics,
+class bi_tab final : public metrics::bi_tab_metrics,
                                    public rer::client<bi_tab> {
  public:
   static inline const std::string kPartitionSrcExec = "exec";

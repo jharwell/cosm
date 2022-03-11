@@ -44,7 +44,7 @@ NS_START(cosm, ds, config);
  * \brief Configuration for the \ref arena_grid used to represent the arena by
  * both loop functions and robots.
  */
-struct RCPPSW_EXPORT grid2D_config final : public rconfig::base_config {
+struct grid2D_config final : public rconfig::base_config {
   rtypes::discretize_ratio resolution{0.0};
   rmath::vector2d dims{};
 };

@@ -53,7 +53,7 @@ NS_START(cosm, arena, repr);
  * - \ref repr::arena_cache
  */
 
-class RCPPSW_EXPORT light_type_index {
+class light_type_index {
  public:
   static inline const std::string kNest = "nest";
   static inline const std::string kCache = "cache";

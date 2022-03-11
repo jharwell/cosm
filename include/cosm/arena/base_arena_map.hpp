@@ -94,7 +94,7 @@ NS_START(cosm, arena);
  * manages. This avoids extensive use of std::shared_ptr, and greatly increases
  * efficiency with large numbers of objects.
  */
-class RCPPSW_EXPORT base_arena_map : public rer::client<base_arena_map>,
+class base_arena_map : public rer::client<base_arena_map>,
                                      public rpdecorator::decorator<ds::arena_grid>,
                                      public rmultithread::lockable {
  public:

@@ -53,7 +53,7 @@ NS_START(cosm, foraging, block_dist);
  *
  * \brief Base class for block distributors to enable use of strategy pattern.
  */
-class RCPPSW_EXPORT base_distributor : public cfbd::metrics::distributor_metrics {
+class base_distributor : public cfbd::metrics::distributor_metrics {
  public:
   using dist_success_cb_type = std::function<void(const crepr::sim_block3D*)>;
 

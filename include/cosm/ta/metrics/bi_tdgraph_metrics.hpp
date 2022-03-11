@@ -42,7 +42,7 @@ NS_START(cosm, ta, metrics);
  * \brief Interface defining metrics that can be collected about the current
  * task dist of a \ref bi_tdgraph.
  */
-class RCPPSW_EXPORT bi_tdgraph_metrics : public virtual rmetrics::base_metrics {
+class bi_tdgraph_metrics : public virtual rmetrics::base_metrics {
  public:
   bi_tdgraph_metrics(void) = default;
   ~bi_tdgraph_metrics(void) override = default;

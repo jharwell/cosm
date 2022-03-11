@@ -42,7 +42,7 @@ NS_START(cosm, pal, argos, config, xml);
  * \brief Collection of all XML parsers and parse results common to all \ref
  * swarm_manager derived classes for the ARGoS platform.
  */
-class RCPPSW_EXPORT swarm_manager_repository : public cpconfig::xml::base_swarm_manager_repository {
+class swarm_manager_repository : public cpconfig::xml::base_swarm_manager_repository {
  public:
   swarm_manager_repository(void) noexcept RCPPSW_COLD;
 };

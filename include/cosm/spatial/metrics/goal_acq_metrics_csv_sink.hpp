@@ -47,7 +47,7 @@ class goal_acq_metrics_collector;
  * \brief Sink for \ref goal_acq_metrics and \ref goal_acq_metrics_collector to
  * output metrics to .csv.
  */
-class RCPPSW_EXPORT goal_acq_metrics_csv_sink final : public rmetrics::csv_sink {
+class goal_acq_metrics_csv_sink final : public rmetrics::csv_sink {
  public:
   using collector_type = goal_acq_metrics_collector;
 

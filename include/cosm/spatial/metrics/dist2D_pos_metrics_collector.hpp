@@ -46,7 +46,7 @@ NS_START(cosm, spatial, metrics);
  * Metrics MUST be collected serially; concurrent updates to the gathered stats
  * are not supported.
  */
-class RCPPSW_EXPORT dist2D_pos_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
+class dist2D_pos_metrics_collector final : public rdmetrics::grid2D_metrics_collector {
 
  public:
   /**

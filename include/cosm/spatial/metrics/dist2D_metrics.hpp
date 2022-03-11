@@ -44,7 +44,7 @@ NS_START(cosm, spatial, metrics);
  * \brief Defines the metrics to be collected from swarms regarding spatial
  * distributions of robots within 2D space.
  */
-class RCPPSW_EXPORT dist2D_metrics : public virtual rmetrics::base_metrics {
+class dist2D_metrics : public virtual rmetrics::base_metrics {
  public:
   dist2D_metrics(void) = default;
 

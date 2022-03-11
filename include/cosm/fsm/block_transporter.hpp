@@ -42,7 +42,7 @@ NS_START(cosm, fsm);
  * functions.
  */
 template <typename TGoal>
-class RCPPSW_EXPORT block_transporter {
+class block_transporter {
  public:
   block_transporter(void) = default;
   virtual ~block_transporter(void) = default;

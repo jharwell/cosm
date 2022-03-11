@@ -25,6 +25,7 @@
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/spatial/fsm/point_argument.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

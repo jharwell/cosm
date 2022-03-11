@@ -30,6 +30,8 @@
 #include "rcppsw/math/rngm.hpp"
 
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -39,7 +41,7 @@ NS_START(cosm, controller);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_controllerQ3D::base_controllerQ3D(void) : m_saa(nullptr) {}
+base_controllerQ3D::base_controllerQ3D(void) = default;
 
 base_controllerQ3D::~base_controllerQ3D(void) = default;
 

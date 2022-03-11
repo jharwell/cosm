@@ -48,7 +48,7 @@ NS_START(cosm, spatial);
  * - Cache placement
  * - Block placement
  */
-class RCPPSW_EXPORT dimension_checker {
+class dimension_checker {
  public:
   /**
    * \brief Check the spatial dimensions that a class wants to use to create

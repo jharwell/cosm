@@ -25,48 +25,12 @@
  ******************************************************************************/
 #include "cosm/hal/subsystem/base_sensing_subsystemQ3D.hpp"
 
-#include "cosm/hal/argos/sensors/light_sensor.hpp"
-#include "cosm/hal/argos/sensors/colored_blob_camera_sensor.hpp"
-#include "cosm/hal/sensors/proximity_sensor.hpp"
-#include "cosm/hal/argos/sensors/battery_sensor.hpp"
-#include "cosm/hal/argos/sensors/wifi_sensor.hpp"
-#include "cosm/hal/sensors/odometry_sensor.hpp"
-#include "cosm/hal/sensors/env_sensor.hpp"
+#include "cosm/hal/argos/subsystem/robot_available_sensors.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, hal, argos, subsystem);
-
-/*******************************************************************************
- * Macros
- ******************************************************************************/
-
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
-#define COSM_HAL_ROBOT_SENSOR_TYPES             \
-  chargos::sensors::battery_sensor,                 \
-    chargos::sensors::wifi_sensor,                  \
-    chargos::sensors::light_sensor,                 \
-    chsensors::proximity_sensor,                    \
-    chargos::sensors::colored_blob_camera_sensor,   \
-    chal::sensors::env_sensor,                      \
-    chal::sensors::odometry_sensor
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
-#define COSM_HAL_ROBOT_SENSOR_TYPES             \
-  chargos::sensors::light_sensor,                   \
-    chsensors::proximity_sensor,                    \
-    chargos::sensors::colored_blob_camera_sensor,   \
-    chal::sensors::env_sensor,                      \
-    chal::sensors::odometry_sensor
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
-#define COSM_HAL_ROBOT_SENSOR_TYPES             \
-      chsensors::proximity_sensor,                  \
-    chargos::sensors::colored_blob_camera_sensor,   \
-    chal::sensors::env_sensor,                \
-    chal::sensors::odometry_sensor
-#endif
 
 /*******************************************************************************
  * Class Definitions
@@ -90,7 +54,7 @@ NS_START(cosm, hal, argos, subsystem);
  * - \ref chal::sensors::env_sensor
  */
 class sensing_subsystemQ3D :
-    public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_SENSOR_TYPES> {
+    public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_AVAILABLE_SENSORS> {
  public:
   explicit sensing_subsystemQ3D(sensor_map&& sensors)
       : base_sensing_subsystemQ3D(std::move(sensors)) {}

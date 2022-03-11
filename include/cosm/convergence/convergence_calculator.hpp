@@ -26,22 +26,29 @@
 #include <boost/optional.hpp>
 #include <vector>
 
-#include "rcppsw/ds/type_map.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/mpl/typelist.hpp"
+#include "rcppsw/math/radians.hpp"
+#include "rcppsw/math/vector2.hpp"
 
-#include "cosm/convergence/angular_order.hpp"
-#include "cosm/convergence/config/convergence_config.hpp"
-#include "cosm/convergence/interactivity.hpp"
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
-#include "cosm/convergence/positional_entropy.hpp"
-#include "cosm/convergence/task_dist_entropy.hpp"
-#include "cosm/convergence/velocity.hpp"
+#include "cosm/convergence/config/convergence_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace rcppsw::ds {
+template<typename Typelist>
+class type_map;
+} /* namespace rcppsw::ds */
+
 NS_START(cosm, convergence);
+
+class angular_order;
+class interactivity;
+class positional_entropy;
+class task_dist_entropy;
+class velocity;
 
 /*******************************************************************************
  * Class Definitions
@@ -58,7 +65,7 @@ NS_START(cosm, convergence);
  * convergence calculation is enabled, then you obviously need to pass a valid
  * callback to calculate the necessary input data).
  */
-class RCPPSW_EXPORT convergence_calculator final : public metrics::convergence_metrics,
+class convergence_calculator final : public metrics::convergence_metrics,
                                      public rer::client<convergence_calculator> {
  public:
   /**
@@ -101,9 +108,8 @@ class RCPPSW_EXPORT convergence_calculator final : public metrics::convergence_m
    */
   using tasks_calc_cb_type = std::function<std::vector<int>(size_t)>;
 
-  explicit convergence_calculator(const config::convergence_config* config)
-      : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
-        mc_config(*config) {}
+  explicit convergence_calculator(const config::convergence_config* config);
+  ~convergence_calculator(void) override;
 
   /* convergence metrics */
   conv_status_t swarm_interactivity(void) const override;
@@ -167,15 +173,14 @@ class RCPPSW_EXPORT convergence_calculator final : public metrics::convergence_m
                                           interactivity,
                                           velocity>;
   /* clang-format off */
-  const config::convergence_config       mc_config;
+  const config::convergence_config                 mc_config;
 
-  rds::type_map<measure_typelist>        m_measures{};
-  boost::optional<headings_calc_cb_type> m_headings_calc{nullptr};
-  boost::optional<nn_calc_cb_type>       m_nn_calc{nullptr};
-  boost::optional<pos_calc_cb_type>      m_pos_calc{nullptr};
-  boost::optional<tasks_calc_cb_type>    m_tasks_calc{nullptr};
+  std::unique_ptr<rds::type_map<measure_typelist>> m_measures{nullptr};
+  boost::optional<headings_calc_cb_type>           m_headings_calc{nullptr};
+  boost::optional<nn_calc_cb_type>                 m_nn_calc{nullptr};
+  boost::optional<pos_calc_cb_type>                m_pos_calc{nullptr};
+  boost::optional<tasks_calc_cb_type>              m_tasks_calc{nullptr};
   /* clang-format on */
 };
 
 NS_END(convergence, cosm);
-

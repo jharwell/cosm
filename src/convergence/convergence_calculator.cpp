@@ -25,6 +25,13 @@
 
 #include <boost/variant.hpp>
 
+#include "rcppsw/ds/type_map.hpp"
+#include "cosm/convergence/angular_order.hpp"
+#include "cosm/convergence/interactivity.hpp"
+#include "cosm/convergence/positional_entropy.hpp"
+#include "cosm/convergence/task_dist_entropy.hpp"
+#include "cosm/convergence/velocity.hpp"
+
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
@@ -117,21 +124,30 @@ struct convergence_status_collator : public boost::static_visitor<bool> {
 };
 
 /*******************************************************************************
+ * Constructors/Destructor
+ ******************************************************************************/
+convergence_calculator::convergence_calculator(
+    const config::convergence_config* config)
+    : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
+      mc_config(*config) {}
+convergence_calculator::~convergence_calculator(void) = default;
+
+/*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void convergence_calculator::angular_order_init(const headings_calc_cb_type& cb) {
   m_headings_calc = boost::make_optional(cb);
-  m_measures.emplace(typeid(angular_order), angular_order(mc_config.epsilon));
+  m_measures->emplace(typeid(angular_order), angular_order(mc_config.epsilon));
 } /* angular_order_init() */
 
 void convergence_calculator::interactivity_init(const nn_calc_cb_type& cb) {
   m_nn_calc = boost::make_optional(cb);
-  m_measures.emplace(typeid(interactivity), interactivity(mc_config.epsilon));
+  m_measures->emplace(typeid(interactivity), interactivity(mc_config.epsilon));
 } /* interactivity_init() */
 
 void convergence_calculator::task_dist_entropy_init(const tasks_calc_cb_type& cb) {
   m_tasks_calc = boost::make_optional(cb);
-  m_measures.emplace(typeid(task_dist_entropy),
+  m_measures->emplace(typeid(task_dist_entropy),
                      task_dist_entropy(mc_config.epsilon));
 } /* task_dist_init() */
 
@@ -140,7 +156,7 @@ void convergence_calculator::positional_entropy_init(const pos_calc_cb_type& cb)
   if (!m_pos_calc) {
     m_pos_calc = boost::make_optional(cb);
   }
-  m_measures.emplace(
+  m_measures->emplace(
       typeid(positional_entropy),
       positional_entropy(
           mc_config.epsilon,
@@ -154,21 +170,21 @@ void convergence_calculator::velocity_init(const pos_calc_cb_type& cb) {
   if (!m_pos_calc) {
     m_pos_calc = boost::make_optional(cb);
   }
-  m_measures.emplace(typeid(velocity), velocity(mc_config.epsilon));
+  m_measures->emplace(typeid(velocity), velocity(mc_config.epsilon));
 } /* velocity_init() */
 
 void convergence_calculator::update(void) {
   convergence_measure_updater u{
     mc_config.n_threads, m_headings_calc, m_nn_calc, m_pos_calc, m_tasks_calc
   };
-  for (auto& m : m_measures) {
+  for (auto& m : *m_measures) {
     boost::apply_visitor(u, m.second);
   } /* for(&m..) */
 } /* update() */
 
 bool convergence_calculator::converged(void) const {
   bool ret = false;
-  for (const auto& m : m_measures) {
+  for (const auto& m : *m_measures) {
     ret |= boost::apply_visitor(convergence_status_collator(), m.second);
   } /* for(&m..) */
   return ret;
@@ -179,7 +195,7 @@ convergence_calculator::swarm_interactivity(void) const {
   if (!mc_config.interactivity.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
-  auto& tmp = boost::get<interactivity>(m_measures.at(typeid(interactivity)));
+  auto& tmp = boost::get<interactivity>(m_measures->at(typeid(interactivity)));
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_interactivity() */
 
@@ -188,7 +204,7 @@ convergence_calculator::swarm_angular_order(void) const {
   if (!mc_config.ang_order.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
-  auto& tmp = boost::get<angular_order>(m_measures.at(typeid(angular_order)));
+  auto& tmp = boost::get<angular_order>(m_measures->at(typeid(angular_order)));
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_angular_order() */
 
@@ -198,7 +214,7 @@ convergence_calculator::swarm_positional_entropy(void) const {
     return std::make_tuple(0.0, 0.0, false);
   }
   auto& tmp =
-      boost::get<positional_entropy>(m_measures.at(typeid(positional_entropy)));
+      boost::get<positional_entropy>(m_measures->at(typeid(positional_entropy)));
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_positional_entropy() */
 
@@ -208,7 +224,7 @@ convergence_calculator::swarm_task_dist_entropy(void) const {
     return std::make_tuple(0.0, 0.0, false);
   }
   auto& tmp =
-      boost::get<task_dist_entropy>(m_measures.at(typeid(task_dist_entropy)));
+      boost::get<task_dist_entropy>(m_measures->at(typeid(task_dist_entropy)));
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_task_dist_entropy() */
 
@@ -217,27 +233,27 @@ convergence_calculator::swarm_velocity(void) const {
   if (!mc_config.velocity.enable) {
     return std::make_tuple(0.0, 0.0, false);
   }
-  auto& tmp = boost::get<velocity>(m_measures.at(typeid(velocity)));
+  auto& tmp = boost::get<velocity>(m_measures->at(typeid(velocity)));
   return std::make_tuple(tmp.raw(), tmp.v(), tmp.converged());
 } /* swarm_positional_entropy() */
 
 void convergence_calculator::reset_metrics(void) {
   if (mc_config.interactivity.enable) {
-    boost::get<interactivity>(m_measures.at(typeid(interactivity))).reset();
+    boost::get<interactivity>(m_measures->at(typeid(interactivity))).reset();
   }
   if (mc_config.ang_order.enable) {
-    boost::get<angular_order>(m_measures.at(typeid(angular_order))).reset();
+    boost::get<angular_order>(m_measures->at(typeid(angular_order))).reset();
   }
   if (mc_config.pos_entropy.enable) {
-    boost::get<positional_entropy>(m_measures.at(typeid(positional_entropy)))
+    boost::get<positional_entropy>(m_measures->at(typeid(positional_entropy)))
         .reset();
   }
   if (mc_config.task_dist_entropy.enable) {
-    boost::get<task_dist_entropy>(m_measures.at(typeid(task_dist_entropy)))
+    boost::get<task_dist_entropy>(m_measures->at(typeid(task_dist_entropy)))
         .reset();
   }
   if (mc_config.velocity.enable) {
-    boost::get<velocity>(m_measures.at(typeid(velocity))).reset();
+    boost::get<velocity>(m_measures->at(typeid(velocity))).reset();
   }
 } /* reset_metrics() */
 

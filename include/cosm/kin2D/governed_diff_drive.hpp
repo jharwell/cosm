@@ -52,7 +52,7 @@ NS_START(kin2D);
  * varyng manner via one or more \ref tv::switchable_tv_generators, if
  * configured to do so. The effect of all configured generators is cumulative.
  */
-class RCPPSW_EXPORT governed_diff_drive final : public kin2D::diff_drive {
+class governed_diff_drive final : public kin2D::diff_drive {
  public:
   governed_diff_drive(const config::diff_drive_config* config,
                       hal::actuators::diff_drive_actuator&& actuator)

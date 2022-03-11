@@ -42,7 +42,7 @@ NS_START(cosm, controller, metrics);
  * \brief Defines the metrics to be collected from controllers as they
  * manipulate their environment ( block pickup, block drop, etc.)
  */
-class RCPPSW_EXPORT manipulation_metrics : public virtual rmetrics::base_metrics {
+class manipulation_metrics : public virtual rmetrics::base_metrics {
  public:
   manipulation_metrics(void) = default;
   ~manipulation_metrics(void) override = default;

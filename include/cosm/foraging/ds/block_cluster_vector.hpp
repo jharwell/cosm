@@ -59,7 +59,7 @@ using block3D_cluster_vectorno_type = cfrepr::block_cluster*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class RCPPSW_EXPORT block3D_cluster_vectorro : public rpdecorator::decorator<std::vector<block3D_cluster_vectorro_type>>,
+class block3D_cluster_vectorro : public rpdecorator::decorator<std::vector<block3D_cluster_vectorro_type>>,
                                  rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
@@ -92,7 +92,7 @@ class RCPPSW_EXPORT block3D_cluster_vectorro : public rpdecorator::decorator<std
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class RCPPSW_EXPORT block3D_cluster_vectorno : public rpdecorator::decorator<std::vector<block3D_cluster_vectorno_type>>,
+class block3D_cluster_vectorno : public rpdecorator::decorator<std::vector<block3D_cluster_vectorno_type>>,
                                  public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);

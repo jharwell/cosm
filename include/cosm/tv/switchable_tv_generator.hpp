@@ -45,7 +45,7 @@ NS_START(cosm, tv);
  * \brief Switchable (on/off) generator to produce a temporally varying signal
  * via a configured waveform.
  */
-class RCPPSW_EXPORT switchable_tv_generator {
+class switchable_tv_generator {
  public:
   explicit switchable_tv_generator(
       const rcontrol::config::waveform_config* config);

@@ -60,7 +60,7 @@ NS_START(cosm, arena, operations, detail);
  *
  * -
  */
-class RCPPSW_EXPORT nest_block_process : public rer::client<nest_block_process> {
+class nest_block_process : public rer::client<nest_block_process> {
  private:
   struct visit_typelist_impl {
     using value = rmpl::typelist<base_arena_map,
