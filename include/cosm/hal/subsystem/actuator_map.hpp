@@ -41,8 +41,8 @@ template<typename ...TActuatorTypes>
 using actuator_variant = std::variant<TActuatorTypes...>;
 
 template<typename ...TActuatorTypes>
-using actuator_map = std::unordered_map<std::type_index,
-                                      actuator_variant<TActuatorTypes...>
-                                      >;
+using actuator_variant_map = std::unordered_map<std::type_index,
+                                                actuator_variant<TActuatorTypes...>
+                                                >;
 
 NS_END(subsystem, hal, cosm);

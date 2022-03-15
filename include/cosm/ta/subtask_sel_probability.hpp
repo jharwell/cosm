@@ -71,8 +71,8 @@ struct sigmoid_sel_config;
  * - 0 < gamma < 1.
  *
  */
-class subtask_sel_probability : public rer::client<subtask_sel_probability>,
-                                public rmath::sigmoid {
+class subtask_sel_probability final : public rer::client<subtask_sel_probability>,
+                                      public rmath::sigmoid {
  public:
   static constexpr const double kHARWELL2018_REACTIVITY = 8.0;
   static constexpr const double kHARWELL2018_OFFSET = 1.25;

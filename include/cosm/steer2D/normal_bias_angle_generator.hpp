@@ -41,7 +41,7 @@ NS_START(cosm, steer2D);
  * \brief Generates bias angles for the \ref wander_force drawn from a normal
  * distribution.
  */
-class normal_bias_angle_generator : public csteer2D::base_bias_angle_generator {
+class normal_bias_angle_generator final : public csteer2D::base_bias_angle_generator {
  public:
   explicit normal_bias_angle_generator(const config::bias_angle_config* config):
       base_bias_angle_generator(config) {}
@@ -57,4 +57,3 @@ class normal_bias_angle_generator : public csteer2D::base_bias_angle_generator {
 };
 
 NS_END(steer2D, cosm);
-

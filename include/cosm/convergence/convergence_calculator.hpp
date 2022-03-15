@@ -25,6 +25,7 @@
  ******************************************************************************/
 #include <boost/optional.hpp>
 #include <vector>
+#include <memory>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/mpl/typelist.hpp"

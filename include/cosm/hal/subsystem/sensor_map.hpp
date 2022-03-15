@@ -41,8 +41,8 @@ template<typename ...TSensorTypes>
 using sensor_variant = std::variant<TSensorTypes...>;
 
 template<typename ...TSensorTypes>
-using sensor_map = std::unordered_map<std::type_index,
-                                      sensor_variant<TSensorTypes...>
-                                      >;
+using sensor_variant_map = std::unordered_map<std::type_index,
+                                              sensor_variant<TSensorTypes...>
+                                              >;
 
 NS_END(subsystem, hal, cosm);

@@ -253,21 +253,32 @@ foreach(component ${cosm_FIND_COMPONENTS})
 endforeach()
 
 # Define the COSM library
+set(cosm_LIBRARY ${target}-${COSM_HAL_TARGET})
+
 add_library(
-  cosm-${COSM_HAL_TARGET}
+  ${cosm_LIBRARY}
   SHARED
   ${cosm_components_SRC}
   )
-set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET})
 
 # Alias so we plug into the LIBRA framework properly
-add_library(cosm ALIAS ${cosm_LIBRARY_NAME})
+add_library(cosm ALIAS ${cosm_LIBRARY})
 
+execute_process(COMMAND git rev-list --count HEAD
+  OUTPUT_VARIABLE COSM_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET}-v${COSM_VERSION})
+
+set_target_properties(${cosm_LIBRARY}
+  PROPERTIES OUTPUT_NAME
+  ${cosm_LIBRARY_NAME}
+  )
 ########################################
 # Include directories
 ########################################
 target_include_directories(
-  ${cosm_LIBRARY_NAME}
+  ${cosm_LIBRARY}
   PUBLIC
   $<BUILD_INTERFACE:${cosm_DIR}/include>
   $<BUILD_INTERFACE:${rcppsw_INCLUDE_DIRS}>
@@ -275,7 +286,7 @@ target_include_directories(
   )
 
 target_include_directories(
-  ${cosm_LIBRARY_NAME}
+  ${cosm_LIBRARY}
   SYSTEM PUBLIC
   ${LIBRA_DEPS_PREFIX}/include
   ${CMAKE_INSTALL_PREFIX}/system/include
@@ -284,7 +295,7 @@ target_include_directories(
 
 if(NOT "${COSM_BUILD_ENV}" MATCHES "MSI" )
   target_include_directories(
-    ${cosm_LIBRARY_NAME}
+    ${cosm_LIBRARY}
     SYSTEM PUBLIC
     # Not needed for compilation, but for rtags
     /usr/include/lua5.3
@@ -294,18 +305,18 @@ endif()
 ########################################
 # Link Libraries
 ########################################
-target_link_libraries(${cosm_LIBRARY_NAME} rcppsw::rcppsw)
+target_link_libraries(${cosm_LIBRARY} rcppsw::rcppsw)
 
 if("${COSM_BUILD_FOR}" MATCHES "ROS")
-  target_link_libraries(${cosm_LIBRARY_NAME} ${catkin_LIBRARIES})
+  target_link_libraries(${cosm_LIBRARY} ${catkin_LIBRARIES})
 endif()
 
 if (${COSM_WITH_VIS})
-  target_link_libraries(${cosm_LIBRARY_NAME} Qt5::Widgets Qt5::Core Qt5::Gui GL)
+  target_link_libraries(${cosm_LIBRARY} Qt5::Widgets Qt5::Core Qt5::Gui GL)
 endif()
 
 if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
-  target_link_directories(${cosm_LIBRARY_NAME}
+  target_link_directories(${cosm_LIBRARY}
     PUBLIC
     ${LIBRA_DEPS_PREFIX}/lib/argos3)
 endif()
@@ -314,35 +325,35 @@ endif()
 # Compile Options/Definitions
 ########################################
 if ("${COSM_BUILD_FOR}" MATCHES "ROS")
-  target_compile_options(${cosm_LIBRARY_NAME}
+  target_compile_options(${cosm_LIBRARY}
     PUBLIC
     -Wno-psabi)
 endif()
 
 if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
 elseif("${COSM_HAL_TARGET}" MATCHES "argos-eepuck3d")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
 elseif("${COSM_HAL_TARGET}" MATCHES "ros-eturtlebot3")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_HAL_TARGET=COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 endif()
 
 if("${COSM_PAL_TARGET}" MATCHES "ARGOS")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_ENABLE_PAL_TARGET_ARGOS)
 elseif("${COSM_PAL_TARGET}" MATCHES "ROS")
-  target_compile_definitions(${cosm_LIBRARY_NAME}
+  target_compile_definitions(${cosm_LIBRARY}
     PUBLIC
     COSM_ENABLE_PAL_TARGET_ROS)
 endif()
@@ -350,12 +361,12 @@ endif()
 ################################################################################
 # Installation                                                                 #
 ################################################################################
-configure_exports_as(${cosm_LIBRARY_NAME} ${CMAKE_INSTALL_PREFIX})
+configure_exports_as(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
 
 # Install cosm
-register_target_for_install(${cosm_LIBRARY_NAME} ${CMAKE_INSTALL_PREFIX})
+register_target_for_install(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
 register_headers_for_install(include/cosm ${CMAKE_INSTALL_PREFIX})
-register_extra_configs_for_install(${cosm_LIBRARY_NAME}
+register_extra_configs_for_install(${cosm_LIBRARY}
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake
   ${CMAKE_INSTALL_PREFIX})
 

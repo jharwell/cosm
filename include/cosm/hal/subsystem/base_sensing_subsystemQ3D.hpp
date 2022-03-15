@@ -59,7 +59,7 @@ NS_START(cosm, hal, subsystem);
 template <typename ...TSensorTypes>
 class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
  public:
-  using sensor_map = sensor_map<TSensorTypes...>;
+  using sensor_map = sensor_variant_map<TSensorTypes...>;
   using variant_type = sensor_variant<TSensorTypes...>;
 
   /**

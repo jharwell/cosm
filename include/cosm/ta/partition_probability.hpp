@@ -63,8 +63,8 @@ struct sigmoid_sel_config;
  * - The reactivity parameter: how sensitive should controller be to abrupt changes
  *   in the estimates?
  */
-class partition_probability : public rmath::sigmoid,
-                              public rer::client<partition_probability> {
+class partition_probability final : public rmath::sigmoid,
+                                    public rer::client<partition_probability> {
  public:
   static inline const std::string kMethodPini2011 = "pini2011";
   static inline const std::string kMethodRandom = "random";

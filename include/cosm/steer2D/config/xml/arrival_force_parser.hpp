@@ -79,4 +79,3 @@ class arrival_force_parser final : public rer::client<arrival_force_parser>,
 };
 
 NS_END(xml, config, psteer2D, cosm);
-

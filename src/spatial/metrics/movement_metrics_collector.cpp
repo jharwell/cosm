@@ -23,6 +23,8 @@
  ******************************************************************************/
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
 
+#include <functional>
+
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 
 /*******************************************************************************

@@ -30,6 +30,7 @@
 #include <csignal>
 
 #include "rcppsw/math/rngm.hpp"
+#include "rcppsw/er/stacktrace.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

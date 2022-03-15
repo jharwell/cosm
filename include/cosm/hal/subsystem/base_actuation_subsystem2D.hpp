@@ -60,7 +60,7 @@ template <typename ...TActuatorTypes>
 class base_actuation_subsystem2D : private chsubsystem::base_subsystem {
  public:
   using variant_type = actuator_variant<TActuatorTypes...>;
-  using actuator_map = actuator_map<TActuatorTypes...>;
+  using actuator_map = actuator_variant_map<TActuatorTypes...>;
 
   /**
    * \brief Convenience function to create a actuator map create for the
