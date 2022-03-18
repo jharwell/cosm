@@ -50,10 +50,11 @@ class aggregate_oracle_parser final : public rer::client<aggregate_oracle_parser
  public:
   using config_type = aggregate_oracle_config;
 
-  aggregate_oracle_parser(void) : ER_CLIENT_INIT("cosm.oracle.config.xml.aggregate_oracle_parser") {}
+  aggregate_oracle_parser(void)
+      : ER_CLIENT_INIT("cosm.oracle.config.xml.aggregate_oracle_parser") {}
 
   /**
-   * \brief The root tag that all cache parameters should lie under in the
+   * \brief The root tag that all oracle parameters should lie under in the
    * XML tree.
    */
   static inline const std::string kXMLRoot = "aggregate_oracle";
@@ -76,4 +77,3 @@ class aggregate_oracle_parser final : public rer::client<aggregate_oracle_parser
 };
 
 NS_END(xml, config, oracle, cosm);
-

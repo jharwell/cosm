@@ -52,10 +52,10 @@ dispatcher::dispatcher(cads::arena_grid* const grid,
        * Y dimension in order to avoid physics engine errors in ARGoS near arena
        * walls. See COSM#34.
        */
-      mc_cells_xrange(static_cast<size_t>(grid->xdsize() * 0.15),
-                      static_cast<size_t>(grid->xdsize() * 0.85)),
-      mc_cells_yrange(static_cast<size_t>(grid->ydsize() * 0.15),
-                      static_cast<size_t>(grid->ydsize() * 0.85)),
+      mc_cells_xrange(static_cast<size_t>(grid->xdsize() * 0.10),
+                      static_cast<size_t>(grid->xdsize() * 0.90)),
+      mc_cells_yrange(static_cast<size_t>(grid->ydsize() * 0.10),
+                      static_cast<size_t>(grid->ydsize() * 0.90)),
       m_grid(grid),
       m_dist(nullptr) {}
 
@@ -76,8 +76,8 @@ bool dispatcher::initialize(carena::base_arena_map* map,
                       mc_cells_yrange.lb()),
       rmath::vector2z(mc_cells_xrange.ub(),
                       mc_cells_yrange.ub()));
-  auto cluster_xwidth = static_cast<size_t>(m_grid->xdsize() * 0.25);
-  auto cluster_ywidth = static_cast<size_t>(m_grid->ydsize() * 0.25);
+  auto cluster_xwidth = static_cast<size_t>(m_grid->xdsize() * 0.15);
+  auto cluster_ywidth = static_cast<size_t>(m_grid->ydsize() * 0.15);
 
   /*
    *  +/- 1 is to account for rounding errors when computing the cluster X/Y

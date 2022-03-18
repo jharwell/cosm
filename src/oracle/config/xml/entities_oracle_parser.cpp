@@ -45,7 +45,7 @@ void entities_oracle_parser::parse(const ticpp::Element& node) {
       std::string name;
       bool value;
       it->GetName(&name);
-      it->GetValue(&value);
+      node_attr_get(cnode, name, value);
       m_config->types.insert({ name, value });
     } /* for(it..) */
   }

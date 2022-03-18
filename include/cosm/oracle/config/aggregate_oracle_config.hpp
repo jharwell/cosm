@@ -24,6 +24,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
+
 #include "cosm/cosm.hpp"
 #include "cosm/oracle/config/tasking_oracle_config.hpp"
 #include "cosm/oracle/config/entities_oracle_config.hpp"
@@ -49,4 +50,3 @@ struct aggregate_oracle_config final : public rconfig::base_config {
 };
 
 NS_END(config, oracle, cosm);
-

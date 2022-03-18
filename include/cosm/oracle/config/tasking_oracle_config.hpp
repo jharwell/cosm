@@ -55,4 +55,3 @@ struct tasking_oracle_config final : public rconfig::base_config {
 };
 
 NS_END(config, oracle, cosm);
-

@@ -47,6 +47,7 @@ swarm_manager_repository::swarm_manager_repository(void) noexcept {
   parser_register<coconfig::xml::aggregate_oracle_parser,
                   coconfig::aggregate_oracle_config>(
       coconfig::xml::aggregate_oracle_parser::kXMLRoot);
+
   parser_register<cconvergence::config::xml::convergence_parser,
                   cconvergence::config::convergence_config>(
       cconvergence::config::xml::convergence_parser::kXMLRoot);
