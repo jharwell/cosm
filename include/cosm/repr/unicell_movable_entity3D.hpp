@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class unicell_movable_entity3D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A class representing 3D objects that reside within a 3D grid whose
  * position CAN change during the lifetime of the object.

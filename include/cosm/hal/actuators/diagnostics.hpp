@@ -40,7 +40,7 @@ NS_START(cosm, hal, actuators);
  * \brief Different types of things that robots can signal in some way (e.g.,
  * via LEDs) to give insight into their internal state when debugging.
  */
-enum class diagnostics {
+enum diagnostics {
   /**
    * \brief A robot is exploring for something.
    */
@@ -73,7 +73,8 @@ enum class diagnostics {
    * \brief A robot is experiencing interference.
    */
   ekEXP_INTERFERENCE,
+
+  ekMAX
 };
 
 NS_END(actuators, hal, cosm);
-

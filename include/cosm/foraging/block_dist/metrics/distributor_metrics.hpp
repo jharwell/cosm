@@ -41,7 +41,7 @@ NS_START(cosm, foraging, block_dist, metrics);
  ******************************************************************************/
 /**
  * \class distributor_metrics
- * \ingroup cosm foraging block_dist metrics
+ * \ingroup foraging block_dist metrics
  *
  * \brief Defines the metrics to be collected from block distributors about
  * block distributor.

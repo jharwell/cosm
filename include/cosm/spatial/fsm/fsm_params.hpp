@@ -40,7 +40,7 @@ NS_START(cosm, spatial, fsm);
  ******************************************************************************/
 /**
  * \struct fsm_params
- * \ingroup cosm spatial fsm
+ * \ingroup spatial fsm
  */
 struct fsm_params {
   csubsystem::saa_subsystemQ3D* saa;
@@ -49,4 +49,3 @@ struct fsm_params {
 };
 
 NS_END(fsm, spatial, cosm);
-

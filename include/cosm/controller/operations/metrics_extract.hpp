@@ -50,7 +50,7 @@ NS_START(cosm, controller, operations);
  * \p TController does not have to be a class template parameter per-se, and
  * could be pushed down to operator(). However, if this is done then the
  * compiler cannot infer the type of the derived controller when trying to apply
- * a specific instantiation of this visitor to a boost::variant. So, we encode
+ * a specific instantiation of this visitor to a std::variant. So, we encode
  * the necessary type information in the class template parameters.
  */
 template <class TController, class TAggregator>
@@ -70,4 +70,3 @@ class metrics_extract : public boost::static_visitor<void> {
 };
 
 NS_END(operations, controller, cosm);
-

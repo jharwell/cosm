@@ -60,8 +60,11 @@ struct sigmoid_sel_config;
  *   subtasks, as well as an estimate of how long it takes to complete the
  *   unpartitioned task.
  *
- * - The reactivity parameter: how sensitive should controller be to abrupt changes
- *   in the estimates?
+ * - The reactivity parameter: how sensitive should controller be to abrupt
+ *   changes in the estimates?
+ *
+ * Used in \cite Harwell2018-partitioning, \cite
+ * Harwell2020a-demystify. Originally inspired by \cite Pini2011.
  */
 class partition_probability final : public rmath::sigmoid,
                                     public rer::client<partition_probability> {

@@ -47,6 +47,8 @@ class polled_task;
  * approach: always taking the task of minimum cost. Provably optimal task
  * allocation policy if the task allocation space is a matroid, (probably)
  * suboptimal otherwise.
+ *
+ * Used in \cite Harwell2020a-demystify.
  */
 class strict_greedy_allocator : public rer::client<strict_greedy_allocator> {
  public:
@@ -72,4 +74,3 @@ class strict_greedy_allocator : public rer::client<strict_greedy_allocator> {
 };
 
 NS_END(ta, cosm);
-

@@ -17,11 +17,12 @@ set(COSM_ROS_CONTROLLER_XML_ID @COSM_ROS_CONTROLLER_XML_ID@)
 set(COSM_ROS_MD5 @COSM_ROS_MD5@)
 
 if(COSM_WITH_VIS)
-  find_package(Qt5 REQUIRED COMPONENTS
-    Core
-    Widgets
-    Gui
-    )
+  set(CMAKE_AUTOMOC ON)
+  find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+  find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Gui REQUIRED)
+  set(CMAKE_AUTOMOC OFF)
+
+  find_package(OpenGL REQUIRED)
 endif()
 
 set(cosm_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})

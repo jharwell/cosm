@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class sim_block3D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Base class for representing blocks (i.e. things that robots carry
  * within the arena) in a simulated environment. Blocks have both real (where

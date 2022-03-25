@@ -115,16 +115,16 @@ fs_output_manager::fs_output_manager(
  ******************************************************************************/
 void fs_output_manager::collect_from_block(
     const crepr::sim_block3D* const block) {
-  collect(cmspecs::blocks::kTransportee.scoped, *block->md());
+  collect(cmspecs::blocks::kTransportee.scoped(), *block->md());
 } /* collect_from_block() */
 
 void fs_output_manager::collect_from_controller(
     const ccontroller::base_controller2D* const controller) {
-  collect(cmspecs::spatial::kDistPosition2D.scoped, *controller);
-  collect(cmspecs::spatial::kMovement.scoped, *controller);
-  collect(cmspecs::spatial::kInterferenceCounts.scoped,
+  collect(cmspecs::spatial::kDistPosition2D.scoped(), *controller);
+  collect(cmspecs::spatial::kMovement.scoped(), *controller);
+  collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
-  collect_if(cmspecs::spatial::kInterferenceLocs2D.scoped,
+  collect_if(cmspecs::spatial::kInterferenceLocs2D.scoped(),
              *controller->inta_tracker(),
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
@@ -133,11 +133,11 @@ void fs_output_manager::collect_from_controller(
 
 void fs_output_manager::collect_from_controller(
     const ccontroller::base_controllerQ3D* const controller) {
-  collect(cmspecs::spatial::kDistPosition3D.scoped, *controller);
-  collect(cmspecs::spatial::kMovement.scoped, *controller);
-  collect(cmspecs::spatial::kInterferenceCounts.scoped,
+  collect(cmspecs::spatial::kDistPosition3D.scoped(), *controller);
+  collect(cmspecs::spatial::kMovement.scoped(), *controller);
+  collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
-  collect_if(cmspecs::spatial::kInterferenceLocs3D.scoped,
+  collect_if(cmspecs::spatial::kInterferenceLocs3D.scoped(),
              *controller->inta_tracker(),
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
@@ -146,10 +146,10 @@ void fs_output_manager::collect_from_controller(
 
 void fs_output_manager::collect_from_arena(
     const carena::base_arena_map* const map) {
-  collect(cmspecs::blocks::kMotion.scoped, *map->block_motion_handler());
-  collect(cmspecs::blocks::kDistributor.scoped, *map->block_distributor());
+  collect(cmspecs::blocks::kMotion.scoped(), *map->block_motion_handler());
+  collect(cmspecs::blocks::kDistributor.scoped(), *map->block_distributor());
   for (auto* cluster : map->block_distributor()->block_clustersro()) {
-    collect(cmspecs::blocks::kClusters.scoped, *cluster);
+    collect(cmspecs::blocks::kClusters.scoped(), *cluster);
   } /* for(&cluster..) */
 } /* collect_from_arena() */
 
@@ -171,48 +171,48 @@ void fs_output_manager::register_standard(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(cconvergence::metrics::convergence_metrics_collector),
-      cmspecs::kConvergence.xml,
-      cmspecs::kConvergence.scoped,
+      cmspecs::kConvergence.xml(),
+      cmspecs::kConvergence.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::movement_metrics_collector),
-      cmspecs::spatial::kMovement.xml,
-      cmspecs::spatial::kMovement.scoped,
+      cmspecs::spatial::kMovement.xml(),
+      cmspecs::spatial::kMovement.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::interference_metrics_collector),
-      cmspecs::spatial::kInterferenceCounts.xml,
-      cmspecs::spatial::kInterferenceCounts.scoped,
+      cmspecs::spatial::kInterferenceCounts.xml(),
+      cmspecs::spatial::kInterferenceCounts.scoped(),
       rmetrics::output_mode::ekAPPEND },
     {typeid(csmetrics::nest_zone_metrics_collector),
-     cmspecs::spatial::kNestZone.xml,
-     cmspecs::spatial::kNestZone.scoped,
+     cmspecs::spatial::kNestZone.xml(),
+     cmspecs::spatial::kNestZone.scoped(),
      rmetrics::output_mode::ekAPPEND },
     { typeid(cfbd::metrics::distributor_metrics_collector),
-      cmspecs::blocks::kDistributor.xml,
-      cmspecs::blocks::kDistributor.scoped,
+      cmspecs::blocks::kDistributor.xml(),
+      cmspecs::blocks::kDistributor.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(cfmetrics::block_motion_metrics_collector),
-      cmspecs::blocks::kMotion.xml,
-      cmspecs::blocks::kMotion.scoped,
+      cmspecs::blocks::kMotion.xml(),
+      cmspecs::blocks::kMotion.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(cfsm::metrics::block_transporter_metrics_collector),
-      cmspecs::blocks::kTransporter.xml,
-      cmspecs::blocks::kTransporter.scoped,
+      cmspecs::blocks::kTransporter.xml(),
+      cmspecs::blocks::kTransporter.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(cfmetrics::block_transportee_metrics_collector),
-      cmspecs::blocks::kTransportee.xml,
-      cmspecs::blocks::kTransportee.scoped,
+      cmspecs::blocks::kTransportee.xml(),
+      cmspecs::blocks::kTransportee.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::goal_acq_metrics_collector),
-      cmspecs::blocks::kAcqCounts.xml,
-      cmspecs::blocks::kAcqCounts.scoped,
+      cmspecs::blocks::kAcqCounts.xml(),
+      cmspecs::blocks::kAcqCounts.scoped(),
       rmetrics::output_mode::ekAPPEND },
     {typeid(cssmetrics::nest_acq_metrics_collector),
-     cmspecs::strategy::kNestAcq.xml,
-     cmspecs::strategy::kNestAcq.scoped,
+     cmspecs::strategy::kNestAcq.xml(),
+     cmspecs::strategy::kNestAcq.scoped(),
     rmetrics::output_mode::ekAPPEND },
     { typeid(ctvmetrics::population_dynamics_metrics_collector),
-      cmspecs::tv::kPopulation.xml,
-      cmspecs::tv::kPopulation.scoped,
+      cmspecs::tv::kPopulation.xml(),
+      cmspecs::tv::kPopulation.scoped(),
       rmetrics::output_mode::ekAPPEND },
   };
 
@@ -239,24 +239,24 @@ void fs_output_manager::register_with_arena_dims2D(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist2D_pos_metrics_collector),
-      cmspecs::spatial::kDistPosition2D.xml,
-      cmspecs::spatial::kDistPosition2D.scoped,
+      cmspecs::spatial::kDistPosition2D.xml(),
+      cmspecs::spatial::kDistPosition2D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::interference_locs2D_metrics_collector),
-      cmspecs::spatial::kInterferenceLocs2D.xml,
-      cmspecs::spatial::kInterferenceLocs2D.scoped,
+      cmspecs::spatial::kInterferenceLocs2D.xml(),
+      cmspecs::spatial::kInterferenceLocs2D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::explore_locs2D_metrics_collector),
-      cmspecs::blocks::kAcqExploreLocs2D.xml,
-      cmspecs::blocks::kAcqExploreLocs2D.scoped,
+      cmspecs::blocks::kAcqExploreLocs2D.xml(),
+      cmspecs::blocks::kAcqExploreLocs2D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::goal_acq_locs2D_metrics_collector),
-      cmspecs::blocks::kAcqLocs2D.xml,
-      cmspecs::blocks::kAcqLocs2D.scoped,
+      cmspecs::blocks::kAcqLocs2D.xml(),
+      cmspecs::blocks::kAcqLocs2D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::vector_locs2D_metrics_collector),
-      cmspecs::blocks::kAcqVectorLocs2D.xml,
-      cmspecs::blocks::kAcqVectorLocs2D.scoped,
+      cmspecs::blocks::kAcqVectorLocs2D.xml(),
+      cmspecs::blocks::kAcqVectorLocs2D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
   };
 
@@ -286,20 +286,20 @@ void fs_output_manager::register_with_arena_dims3D(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist3D_pos_metrics_collector),
-      cmspecs::spatial::kDistPosition3D.xml,
-      cmspecs::spatial::kDistPosition3D.scoped,
+      cmspecs::spatial::kDistPosition3D.xml(),
+      cmspecs::spatial::kDistPosition3D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::interference_locs3D_metrics_collector),
-      cmspecs::spatial::kInterferenceLocs3D.xml,
-      cmspecs::spatial::kInterferenceLocs3D.scoped,
+      cmspecs::spatial::kInterferenceLocs3D.xml(),
+      cmspecs::spatial::kInterferenceLocs3D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::explore_locs3D_metrics_collector),
-      cmspecs::blocks::kAcqExploreLocs3D.xml,
-      cmspecs::blocks::kAcqExploreLocs3D.scoped,
+      cmspecs::blocks::kAcqExploreLocs3D.xml(),
+      cmspecs::blocks::kAcqExploreLocs3D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
     { typeid(csmetrics::vector_locs3D_metrics_collector),
-      cmspecs::blocks::kAcqVectorLocs3D.xml,
-      cmspecs::blocks::kAcqVectorLocs3D.scoped,
+      cmspecs::blocks::kAcqVectorLocs3D.xml(),
+      cmspecs::blocks::kAcqVectorLocs3D.scoped(),
       rmetrics::output_mode::ekTRUNCATE | rmetrics::output_mode::ekCREATE },
   };
 
@@ -326,8 +326,8 @@ void fs_output_manager::register_with_n_block_clusters(
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(cfmetrics::block_cluster_metrics_collector),
-      cmspecs::blocks::kClusters.xml,
-      cmspecs::blocks::kClusters.scoped,
+      cmspecs::blocks::kClusters.xml(),
+      cmspecs::blocks::kClusters.scoped(),
       rmetrics::output_mode::ekAPPEND }
   };
   auto extra_args = std::make_tuple(n_clusters);

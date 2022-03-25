@@ -41,7 +41,7 @@ NS_START(cosm, foraging, metrics);
  ******************************************************************************/
 /**
  * \class block_transportee_metrics_collector
- * \ingroup cosm foraging metrics
+ * \ingroup foraging metrics
  *
  * \brief Collector for \ref block_transportee_metrics.
  *

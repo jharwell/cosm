@@ -50,7 +50,7 @@ class polled_task;
  * \f$\epsilon\f$ based method with either logarithmically or linearly bounded
  * regret.
  *
- * From Auer2002, Pini2012
+ * From \cite Auer2002, \cite Pini2012
  */
 class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
  public:

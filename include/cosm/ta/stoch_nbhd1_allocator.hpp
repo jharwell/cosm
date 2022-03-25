@@ -47,7 +47,7 @@ class bi_tdgraph;
  * \ingroup ta
  *
  * \brief Allocates a task from a \ref bi_tdgraph using the STOCH-NBHD1 method
- * from Harwell2020a.
+ * from \cite Harwell2020a-demystify.
  */
 class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
  public:
@@ -71,4 +71,3 @@ class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
 };
 
 NS_END(ta, cosm);
-

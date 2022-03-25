@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class entity3D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Base class from which all arena spatial entities which can be
  * represented in 3D derive.

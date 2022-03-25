@@ -44,8 +44,8 @@ class polled_task;
  * \ingroup ta
  *
  * \brief Allocates a task from a given set of a tasks, using the UCB1 approach
- * from Pini2012,Auer2002, treating the task allocation problem as a multi-armed
- * bandit and achieving a logarithmic regret bound.
+ * from \cite Pini2012,\cite Auer2002, treating the task allocation problem as a
+ * multi-armed bandit and achieving a logarithmic regret bound.
  */
 class ucb1_allocator : public rer::client<ucb1_allocator> {
  public:

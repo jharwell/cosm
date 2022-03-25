@@ -42,7 +42,7 @@ NS_START(cosm, pal, config, xml);
  ******************************************************************************/
 /**
  * \class output_parser
- * \ingroup cosm pal config xml
+ * \ingroup pal config xml
  *
  * \brief Parses XML parameters relating to simulation outputs into
  * \ref output_config.

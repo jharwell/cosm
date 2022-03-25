@@ -91,4 +91,3 @@ class argos_actuator : public rer::client<argos_actuator<TActuator>>,
 };
 
 NS_END(actuators, argos, hal, cosm);
-

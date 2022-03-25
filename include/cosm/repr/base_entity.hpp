@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class base_entity
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A base class from which all entities that can be represented in the
  * arena derive.

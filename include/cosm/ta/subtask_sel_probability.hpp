@@ -50,10 +50,11 @@ struct sigmoid_sel_config;
  * \brief Calculates the probability that a robot selects subtask 2 when it has
  * most recently executed subtask 1 (assuming partitioning is employed).
  *
- * Taken/adapted from Brutschy2014, harwell2018. Note that Brutschy2014 using
- * the interface wait time for subtask as the input time estimates, and
- * harwell2018 using the estimate of the overall execution time of
- * subtasks. Mixing the two approaches will not give good results.
+ * Taken/adapted from \cite Brutschy2014, \cite Harwell2018. Note that \cite
+ * Brutschy2014 using the interface wait time for subtask as the input time
+ * estimates, and \cite Harwell2018-partitioning using the estimate of the
+ * overall execution time of subtasks. Mixing the two approaches will not give
+ * good results.
  *
  * Depends on:
  *

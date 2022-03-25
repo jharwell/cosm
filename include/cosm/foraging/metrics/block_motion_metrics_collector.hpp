@@ -42,7 +42,7 @@ NS_START(cosm, foraging, metrics);
  ******************************************************************************/
 /**
  * \class block_motion_metrics_collector
- * \ingroup cosm foraging metrics
+ * \ingroup foraging metrics
  *
  * \brief Collector for \ref block_motion_metrics.
  */

@@ -42,7 +42,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class unicell_entity2D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Representation of a 2D entity in the arena in two dimensions.
  *

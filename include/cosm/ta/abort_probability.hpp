@@ -56,6 +56,8 @@ NS_START(cosm, ta);
  *
  * - A time estimate for the task (can execution time thus far, interface time
  *   thus far, etc.).
+ *
+ * Used in \cite Harwell2018-partitioning, \cite Harwell2020a-demystify.
  */
 class abort_probability : public rmath::sigmoid {
  public:

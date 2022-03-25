@@ -49,7 +49,7 @@ NS_START(cosm, pal);
  ******************************************************************************/
 /**
  * \class base_swarm_manager
- * \ingroup cosm pal
+ * \ingroup pal
  *
  * \brief Base class for the harness for support functionality that helps to
  * manage the swarm as it runs, including handling things like:

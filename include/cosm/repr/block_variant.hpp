@@ -41,7 +41,7 @@ class base_block3D;
  ******************************************************************************/
 using block3D_variantno = std::variant<cube_block3D*, ramp_block3D*>;
 using block3D_variantro = std::variant<const cube_block3D*,
-                                         const ramp_block3D*>;
+                                       const ramp_block3D*>;
 
 /*******************************************************************************
  * Free Functions
@@ -50,4 +50,3 @@ crepr::block3D_variantno make_variant(crepr::base_block3D* block);
 crepr::block3D_variantro make_variant(const crepr::base_block3D* block);
 
 NS_END(repr, cosm);
-

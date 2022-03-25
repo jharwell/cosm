@@ -399,7 +399,7 @@ Parameters for the UCB1 method described in :xref:`Auer2002`.
 --------------------------
 
 Parameters for the stochastic task allocation neighborhood  method described in
-:xref:`Harwell2020a`.
+:xref:`Harwell2020a-demystify`.
 
 - Required by: Task based controllers if the selected policy is ``stoch_nbhd1``.
 - Required child attributes if present: all.
@@ -524,7 +524,7 @@ subtask selection if partitioning is employed.
 
 Parameters for Task Allocation Block (TAB) selection in recursive task
 decomposition graphs used in the STOCH-NBHD1 method described in
-:xref:`Harwell2020a`.
+:xref:`Harwell2020a-demystify`.
 
 - Required child attributes if present: ``src_sigmoid_sel``.
 - Required child tags if present: none.

@@ -42,7 +42,7 @@ class block_cluster_metrics_collector;
  ******************************************************************************/
 /**
  * \class block_cluster_metrics_csv_sink
- * \ingroup cosm foraging metrics
+ * \ingroup foraging metrics
  *
  * \brief Sink for \ref block_cluster_metrics and \ref
  * block_cluster_metrics_collector to output metrics to .csv.

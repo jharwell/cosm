@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class entity2D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A base class from which all spatial entities which can be represented
  * in 2D derive.

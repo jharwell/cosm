@@ -47,4 +47,3 @@ using diagnostic_actuator = chros::actuators::diagnostic_actuator;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(actuators, hal, cosm);
-

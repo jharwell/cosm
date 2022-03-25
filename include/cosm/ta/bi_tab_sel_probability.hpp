@@ -73,12 +73,15 @@ struct src_sigmoid_sel_config;
  *
  * - The offset parameter: What is the threshold beneath which differences in
  *   the TAB balance ratios are not considered consequential, and above which
- *   controller should prefer to switch TABs with quickly increasing probability.
+ *   controller should prefer to switch TABs with quickly increasing
+ *   probability.
  *
  * - reactivity > 0.
  * - offset > 1.
  * - 0 < gamma < 1.
-*/
+ *
+ * Used in \cite Harwell2020a-demystify.
+ */
 class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
                                public rmath::sigmoid {
  public:

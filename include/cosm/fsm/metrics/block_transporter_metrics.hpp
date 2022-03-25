@@ -37,7 +37,7 @@ NS_START(cosm, fsm, metrics);
  ******************************************************************************/
 /**
  * \class block_transporter_metrics
- * \ingroup cosm fsm metrics
+ * \ingroup fsm metrics
  *
  * \brief Defines the metrics to be collected from robots as they are
  * transporting blocks around the arena. This cannot be part of \ref

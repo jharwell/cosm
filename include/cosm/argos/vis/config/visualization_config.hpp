@@ -50,4 +50,3 @@ struct visualization_config : public rconfig::base_config {
 };
 
 NS_END(config, vis, argos, cosm);
-

@@ -78,13 +78,13 @@ robot_metrics_manager::robot_metrics_manager(
  ******************************************************************************/
 void robot_metrics_manager::collect_from_block(
     const crepr::base_block3D* const block) {
-  collect(cmspecs::blocks::kTransportee.scoped, *block->md());
+  collect(cmspecs::blocks::kTransportee.scoped(), *block->md());
 } /* collect_from_block() */
 
 void robot_metrics_manager::collect_from_controller(
     const ccontroller::base_controller2D* const controller) {
-  collect(cmspecs::spatial::kMovement.scoped, *controller);
-  collect(cmspecs::spatial::kInterferenceCounts.scoped,
+  collect(cmspecs::spatial::kMovement.scoped(), *controller);
+  collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
 } /* collect_from_controller() */
 

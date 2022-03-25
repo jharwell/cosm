@@ -43,7 +43,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class unicell_entity3D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Representation of a 3D entity in the arena.
  *

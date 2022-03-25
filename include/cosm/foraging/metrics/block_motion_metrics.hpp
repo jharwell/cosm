@@ -37,7 +37,7 @@ NS_START(cosm, foraging, metrics);
  ******************************************************************************/
 /**
  * \class block_motion_metrics
- * \ingroup cosm foraging metrics
+ * \ingroup foraging metrics
  *
  * \brief Defines the metrics to be collected from \ref block_motion_handler
  * about block as they move in the arena after distribution.

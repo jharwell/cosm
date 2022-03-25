@@ -43,7 +43,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class block_metadata
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Metadata for blocks which robots can carry and manipulate within the
  * arena, including implementation of \ref metrics::blocks::transport_metrics

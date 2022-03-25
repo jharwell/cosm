@@ -38,7 +38,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class spatial_entity2D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief Entity class from which all entities that which occupy spatial space
  * in the arena inherit. Note that occupying spatial space does not imply robots

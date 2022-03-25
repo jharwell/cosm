@@ -41,7 +41,7 @@ NS_START(cosm, fsm, metrics);
  ******************************************************************************/
 /**
  * \class block_transporter_metrics_collector
- * \ingroup cosm fsm metrics
+ * \ingroup fsm metrics
  *
  * \brief Collector for \ref block_transporter_metrics.
  *

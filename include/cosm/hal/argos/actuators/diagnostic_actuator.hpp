@@ -23,8 +23,11 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <map>
+
 #include "rcppsw/utils/color.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/hal/argos/actuators/led_actuator.hpp"
 #include "cosm/hal/actuators/diagnostics.hpp"
@@ -56,10 +59,13 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
                                   public chargos::actuators::led_actuator {
  public:
   using chargos::actuators::led_actuator::set_color;
+  using map_type = std::map<uint8_t, rutils::color>;
 
-  explicit diagnostic_actuator(chargos::actuators::led_actuator::impl_type* leds)
+  explicit diagnostic_actuator(chargos::actuators::led_actuator::impl_type* leds,
+                               const map_type& map)
       : ER_CLIENT_INIT("cosm.hal.argos.actuators.diagnostic"),
-        chargos::actuators::led_actuator(leds) {}
+        chargos::actuators::led_actuator(leds),
+        m_map(map) {}
 
   /* move only constructible/assignable for use with saa subsystem */
   const diagnostic_actuator& operator=(const diagnostic_actuator&) = delete;
@@ -67,34 +73,17 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
   diagnostic_actuator& operator=(diagnostic_actuator&&) = default;
   diagnostic_actuator(diagnostic_actuator&&) = default;
 
-  void emit(const chactuators::diagnostics& type) {
-    switch (type) {
-      case chactuators::diagnostics::ekEXPLORE:
-        set_color(-1, rutils::color::kMAGENTA);
-        break;
-      case chactuators::diagnostics::ekSUCCESS:
-        set_color(-1, rutils::color::kGREEN);
-        break;
-      case chactuators::diagnostics::ekTAXIS:
-        set_color(-1, rutils::color::kYELLOW);
-        break;
-      case chactuators::diagnostics::ekLEAVING_NEST:
-        set_color(-1, rutils::color::kGRAY50);
-        break;
-      case chactuators::diagnostics::ekWAIT_FOR_SIGNAL:
-        set_color(-1, rutils::color::kWHITE);
-        break;
-      case chactuators::diagnostics::ekVECTOR_TO_GOAL:
-        set_color(-1, rutils::color::kBLUE);
-        break;
-      case chactuators::diagnostics::ekEXP_INTERFERENCE:
-        set_color(-1, rutils::color::kRED);
-        break;
-      default:
-        ER_FATAL_SENTINEL("Unknown diagnostic category %d",
-                          rcppsw::as_underlying(type));
-    } /* switch() */
+  void emit(uint8_t type) {
+    auto it = m_map.find(type);
+    ER_ASSERT(it != m_map.end(),
+              "Unknown diagnostic category %d",
+              type);
+    set_color(-1, it->second);
   }
+
+  /* clang-format off */
+  map_type m_map;
+  /* clang-format on */
 };
 
 NS_END(actuators, argos, hal, cosm);

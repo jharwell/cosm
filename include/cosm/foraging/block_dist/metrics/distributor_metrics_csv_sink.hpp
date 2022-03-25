@@ -42,7 +42,7 @@ class distributor_metrics_collector;
  ******************************************************************************/
 /**
  * \class distributor_metrics_csv_sink
- * \ingroup cosm foraging block_dist metrics
+ * \ingroup foraging block_dist metrics
  *
  * \brief Sink for \ref distributor_metrics and \ref
  * distributor_metrics_collector to output metrics to .csv.

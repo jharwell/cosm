@@ -40,7 +40,7 @@ NS_START(cosm, foraging, metrics);
  ******************************************************************************/
 /**
  * \class block_cluster_metrics
- * \ingroup cosm foraging metrics
+ * \ingroup foraging metrics
  *
  * \brief Defines the metrics to be collected from \ref block_cluster objects.
  *

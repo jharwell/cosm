@@ -51,7 +51,7 @@ enum class block_type {
    * \brief A ramp block of dimension AxBxA, where A = 2B (shaped like a
    * doorstop).
    */
-  ekRAMP
+  ekRAMP,
 };
 
 /*******************************************************************************
@@ -61,4 +61,3 @@ std::ostream& operator<<(std::ostream& out, const block_type& b);
 std::istream& operator>>(std::istream& in, block_type& b);
 
 NS_END(repr, cosm);
-

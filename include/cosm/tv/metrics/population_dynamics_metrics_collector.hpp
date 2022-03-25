@@ -40,7 +40,7 @@ NS_START(cosm, tv, metrics);
  ******************************************************************************/
 /**
  * \class population_dynamics_metrics_collector
- * \ingroup cosm metrics tv
+ * \ingroup metrics tv
  *
  * \brief Collector for \ref population_dynamics_metrics.
  *

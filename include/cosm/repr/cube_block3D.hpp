@@ -37,7 +37,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class cube_block3D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A 3D representation of a cubical block within the arena. Bounding box
  * for cube blocks is 1x1x1 cells in 3D.

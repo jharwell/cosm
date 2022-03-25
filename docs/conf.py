@@ -136,7 +136,7 @@ xref_links = {
     "Brutschy2014": ("Brutschy2014", "https://link.springer.com/article/10.1007/s10458-012-9212-y"),
     "Arkin1987": ("Arkin1987", "https://ieeexplore.ieee.org/document/1088037"),
     "SteeringTutorial": ("Steering Tutorial", "https://gamedevelopment.tutsplus.com/tutorials/search/Steering+Behaviors"),
-    "Harwell2020a": ("Harwell2020a", "http://ifaamas.org/Proceedings/aamas2020/pdfs/p474.pdf")
+    "Harwell2020a-demystify": ("Harwell2020a", "http://ifaamas.org/Proceedings/aamas2020/pdfs/p474.pdf")
 }
 
 # -- Options for HTML output ----------------------------------------------

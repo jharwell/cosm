@@ -1,7 +1,7 @@
 /**
- * \file unicell_movable_entity2D.hpp
+ * \file name_spec.cpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2022 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,48 +18,45 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector2.hpp"
+#include "cosm/metrics/name_spec.hpp"
 
-#include "cosm/cosm.hpp"
-#include "cosm/repr/unicell_entity2D.hpp"
-
-/*******************************************************************************
- * Namespaces
- ******************************************************************************/
-NS_START(cosm, repr);
+#include <regex>
 
 /*******************************************************************************
- * Class Definitions
+ * Namespaces/Decls
  ******************************************************************************/
-/**
- * \class unicell_movable_entity2D
- * \ingroup repr
- *
- * \brief A class representing 2D objects that reside within one or more squares
- * within a 2D grid whose position CAN change during the lifetime of the object.
- */
-class unicell_movable_entity2D : public unicell_entity2D {
- public:
-  using unicell_entity2D::danchor2D;
-  using unicell_entity2D::ranchor2D;
-  using unicell_entity2D::unicell_entity2D;
+NS_START(cosm, metrics, specs);
 
-  static constexpr bool is_movable(void) { return true; }
+/*******************************************************************************
+ * Constructors/Destructors
+ ******************************************************************************/
+name_spec::name_spec(const std::string& xml,
+                     const std::string& scoped)
+    : m_xml(xml),
+      m_scoped(scoped) {}
 
-  ~unicell_movable_entity2D(void) override = default;
-
-  void ranchor2D(const rmath::vector2d& anchor) {
-    unicell_entity2D::ranchor2D<unicell_movable_entity2D>(anchor);
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+std::string name_spec::xml(const rtypes::type_uuid& id) const {
+  if (rtypes::constants::kNoUUID != id) {
+    return std::regex_replace(m_xml.c_str(),
+                               std::regex("__UUID__"),
+                               rcppsw::to_string(id).c_str());
   }
-  void danchor2D(const rmath::vector2z& anchor) {
-    unicell_entity2D::danchor2D<unicell_movable_entity2D>(anchor);
+  return m_xml;
+} /* xml() */
+
+std::string name_spec::scoped(const rtypes::type_uuid& id) const {
+  if (rtypes::constants::kNoUUID != id) {
+    return std::regex_replace(m_scoped.c_str(),
+                               std::regex("__UUID__"),
+                               rcppsw::to_string(id).c_str());
   }
-};
+  return m_scoped;
+} /* scoped() */
 
-NS_END(repr, cosm);
-
+NS_END(specs, metrics, cosm);

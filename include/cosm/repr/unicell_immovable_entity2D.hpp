@@ -37,7 +37,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class unicell_immovable_entity2D
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A class representing 2D objects that reside within one or more squares
  * within a 2D grid whose position CANNOT change during the lifetime of the

@@ -37,7 +37,7 @@ NS_START(cosm, repr);
  ******************************************************************************/
 /**
  * \class colored_entity
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A mixin class representing cell entities that have a static color.
  */

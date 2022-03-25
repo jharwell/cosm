@@ -10,12 +10,12 @@ if(NOT DEFINED COSM_BUILD_ENV)
   set(COSM_BUILD_ENV "LOCAL")
 endif()
 
-if("${COSM_BUILD_ENV}" MATCHES "LOCAL" )
+if("${COSM_BUILD_ENV}" MATCHES "DEVEL" )
 # Nothing to do for now
 elseif("${COSM_BUILD_ENV}" MATCHES "MSI" )
   set(LIBRA_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSIARCH})
 else()
-  message(FATAL_ERROR "Build environment must be: [LOCAL,MSI]")
+  message(FATAL_ERROR "Build environment must be: [DEVEL,MSI]")
 endif()
 
 ################################################################################
@@ -104,9 +104,16 @@ if (NOT DEFINED COSM_WITH_VIS)
 endif()
 
 if (COSM_WITH_VIS)
+  # ARGoS supports both Qt5 and Qt6, so we test for both. Qt5 only
+  # supports version-less importing since 5.15, so to support earlier
+  # version we explicitly have to use the version variable, which is
+  # always defined by Qt5 and Qt6.
   set(CMAKE_AUTOMOC ON)
-  find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
+  find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+  find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Gui REQUIRED)
   set(CMAKE_AUTOMOC OFF)
+
+  find_package(OpenGL REQUIRED)
 endif()
 
 ################################################################################
@@ -228,6 +235,10 @@ find_package(rcppsw COMPONENTS REQUIRED
   # Needed when cross compiling so we pick up the right package.
   HINTS ${CMAKE_INSTALL_PREFIX}
   )
+
+# Lua (not needed for compilation, but for rtags)
+find_package(Lua REQUIRED)
+
 if("${COSM_BUILD_FOR}" MATCHES "ROS")
   # ROS
   find_package(catkin REQUIRED COMPONENTS
@@ -298,7 +309,7 @@ if(NOT "${COSM_BUILD_ENV}" MATCHES "MSI" )
     ${cosm_LIBRARY}
     SYSTEM PUBLIC
     # Not needed for compilation, but for rtags
-    /usr/include/lua5.3
+    ${LUA_INCLUDE_DIR}
     )
 endif()
 
@@ -312,7 +323,12 @@ if("${COSM_BUILD_FOR}" MATCHES "ROS")
 endif()
 
 if (${COSM_WITH_VIS})
-  target_link_libraries(${cosm_LIBRARY} Qt5::Widgets Qt5::Core Qt5::Gui GL)
+  target_link_libraries(${cosm_LIBRARY}
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::Gui
+    OpenGL::GL
+    )
 endif()
 
 if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")

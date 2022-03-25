@@ -36,7 +36,7 @@ NS_START(cosm, repr);
  * Class Definitions
  ******************************************************************************/
 /**
- * \ingroup cosm repr
+ * \ingroup repr
  *
  * \brief A 3D representation of a ramp block within the arena. The bounding box
  * for ramp blocks is 2x1x1 cells in 3D.
