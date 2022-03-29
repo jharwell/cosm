@@ -7,7 +7,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(cosm_CHECK_LANGUAGE "CXX")
 
 if(NOT DEFINED COSM_BUILD_ENV)
-  set(COSM_BUILD_ENV "LOCAL")
+  set(COSM_BUILD_ENV "DEVEL")
 endif()
 
 if("${COSM_BUILD_ENV}" MATCHES "DEVEL" )
@@ -129,6 +129,7 @@ string(CONCAT common_regex
   "src/pal/base_swarm_manager|"
   "src/controller|"
   "src/ta|"
+  "src/init|"
   "src/subsystem|"
   "src/steer2D|"
   "src/metrics"
@@ -227,6 +228,7 @@ find_package(rcppsw COMPONENTS REQUIRED
   config
   control
   er
+  init
   math
   metrics
   patterns
@@ -263,6 +265,18 @@ foreach(component ${cosm_FIND_COMPONENTS})
   endif()
 endforeach()
 
+# Configure version
+execute_process(COMMAND git rev-list --count HEAD
+  OUTPUT_VARIABLE COSM_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/src/version.cpp
+  @ONLY
+  )
+list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/version.cpp")
+
 # Define the COSM library
 set(cosm_LIBRARY ${target}-${COSM_HAL_TARGET})
 
@@ -275,11 +289,8 @@ add_library(
 # Alias so we plug into the LIBRA framework properly
 add_library(cosm ALIAS ${cosm_LIBRARY})
 
-execute_process(COMMAND git rev-list --count HEAD
-  OUTPUT_VARIABLE COSM_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET}-v${COSM_VERSION})
+set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET})
 
 set_target_properties(${cosm_LIBRARY}
   PROPERTIES OUTPUT_NAME
