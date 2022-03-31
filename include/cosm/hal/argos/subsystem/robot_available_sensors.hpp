@@ -23,8 +23,6 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/mpl/typelist.hpp"
-
 #include "cosm/cosm.hpp"
 #include "cosm/hal/argos/sensors/light_sensor.hpp"
 #include "cosm/hal/argos/sensors/colored_blob_camera_sensor.hpp"

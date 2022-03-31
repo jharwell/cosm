@@ -122,31 +122,31 @@ void swarm_metrics_manager::register_standard(
   boost::mpl::for_each<sink_list>(registerer);
 
   /* initialize counting map to track received metrics */
-  m_tracking.init(cmspecs::spatial::kMovement.scoped);
-  m_tracking.init(cmspecs::spatial::kInterferenceCounts.scoped);
-  m_tracking.init(cmspecs::blocks::kTransporter.scoped);
-  m_tracking.init(cmspecs::blocks::kTransportee.scoped);
+  m_tracking.init(cmspecs::spatial::kMovement.scoped());
+  m_tracking.init(cmspecs::spatial::kInterferenceCounts.scoped());
+  m_tracking.init(cmspecs::blocks::kTransporter.scoped());
+  m_tracking.init(cmspecs::blocks::kTransportee.scoped());
 
   /* set ROS callbacks for metric collection */
   ::ros::NodeHandle n;
   auto cb = [&](cros::topic robot_ns) {
               m_subs.push_back(n.subscribe<crsmetrics::movement_metrics_msg>(
-                  robot_ns / cmspecs::spatial::kMovement.scoped,
+                  robot_ns / cmspecs::spatial::kMovement.scoped(),
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
               m_subs.push_back(n.subscribe<crsmetrics::interference_metrics_msg>(
-                  robot_ns / cmspecs::spatial::kInterferenceCounts.scoped,
+                  robot_ns / cmspecs::spatial::kInterferenceCounts.scoped(),
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
               m_subs.push_back(n.subscribe<crfsm::metrics::block_transporter_metrics_msg>(
-                  robot_ns / cmspecs::blocks::kTransporter.scoped,
+                  robot_ns / cmspecs::blocks::kTransporter.scoped(),
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
               m_subs.push_back(n.subscribe<crfmetrics::block_transportee_metrics_msg>(
-                  robot_ns / cmspecs::blocks::kTransportee.scoped,
+                  robot_ns / cmspecs::blocks::kTransportee.scoped(),
                   kQueueBufferSize,
                   &swarm_metrics_manager::collect,
                   this));
@@ -184,7 +184,7 @@ void swarm_metrics_manager::register_with_n_block_clusters(
   using metrics_msg = crfmetrics::block_cluster_metrics_msg;
 
   /* initialize counting map to track received metrics */
-  m_tracking.init(cmspecs::blocks::kClusters.scoped);
+  m_tracking.init(cmspecs::blocks::kClusters.scoped());
 
   auto factory = [&](){
                    return boost::make_shared<metrics_msg>(n_clusters);
@@ -192,7 +192,7 @@ void swarm_metrics_manager::register_with_n_block_clusters(
   auto collect_cb = std::bind(static_cast<void(swarm_metrics_manager::*)(const boost::shared_ptr<const metrics_msg>&)>(&swarm_metrics_manager::collect),
                                 this,
                                 std::placeholders::_1);
-  opts.template init<metrics_msg>(robot_ns / cmspecs::blocks::kClusters.scoped,
+  opts.template init<metrics_msg>(robot_ns / cmspecs::blocks::kClusters.scoped(),
                                    kQueueBufferSize,
                                    collect_cb,
                                    factory);
@@ -262,8 +262,8 @@ bool swarm_metrics_manager::flush(const rmetrics::output_mode& mode,
 void swarm_metrics_manager::collect(
     const boost::shared_ptr<const crfmetrics::block_transportee_metrics_msg>& msg) {
   auto* collector = get<cforaging::metrics::block_transportee_metrics_collector>(
-      cmspecs::blocks::kTransportee.scoped);
-  m_tracking.update_on_receive(cmspecs::blocks::kTransportee.scoped,
+      cmspecs::blocks::kTransportee.scoped());
+  m_tracking.update_on_receive(cmspecs::blocks::kTransportee.scoped(),
                                msg->header.seq);
 
   collector->collect(msg->data);
@@ -272,8 +272,8 @@ void swarm_metrics_manager::collect(
 void swarm_metrics_manager::collect(
     const boost::shared_ptr<const crfsm::metrics::block_transporter_metrics_msg>& msg) {
   auto* collector = get<cfsm::metrics::block_transporter_metrics_collector>(
-      cmspecs::blocks::kTransporter.scoped);
-  m_tracking.update_on_receive(cmspecs::blocks::kTransporter.scoped,
+      cmspecs::blocks::kTransporter.scoped());
+  m_tracking.update_on_receive(cmspecs::blocks::kTransporter.scoped(),
                                msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
@@ -281,8 +281,8 @@ void swarm_metrics_manager::collect(
 void swarm_metrics_manager::collect(
     const boost::shared_ptr<const crfmetrics::block_cluster_metrics_msg>& msg) {
   auto* collector = get<cforaging::metrics::block_cluster_metrics_collector>(
-      cmspecs::blocks::kClusters.scoped);
-  m_tracking.update_on_receive(cmspecs::blocks::kClusters.scoped,
+      cmspecs::blocks::kClusters.scoped());
+  m_tracking.update_on_receive(cmspecs::blocks::kClusters.scoped(),
                                msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
@@ -290,16 +290,16 @@ void swarm_metrics_manager::collect(
 void swarm_metrics_manager::collect(
     const boost::shared_ptr<const crsmetrics::movement_metrics_msg>& msg) {
   auto* collector = get<csmetrics::movement_metrics_collector>(
-      cmspecs::spatial::kMovement.scoped);
-  m_tracking.update_on_receive(cmspecs::spatial::kMovement.scoped,
+      cmspecs::spatial::kMovement.scoped());
+  m_tracking.update_on_receive(cmspecs::spatial::kMovement.scoped(),
                                msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
 void swarm_metrics_manager::collect(
     const boost::shared_ptr<const crsmetrics::interference_metrics_msg>& msg) {
   auto* collector = get<csmetrics::interference_metrics_collector>(
-      cmspecs::spatial::kInterferenceCounts.scoped);
-  m_tracking.update_on_receive(cmspecs::spatial::kInterferenceCounts.scoped,
+      cmspecs::spatial::kInterferenceCounts.scoped());
+  m_tracking.update_on_receive(cmspecs::spatial::kInterferenceCounts.scoped(),
                                msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */

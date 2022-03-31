@@ -120,7 +120,7 @@ endif()
 # Components                                                                   #
 ################################################################################
 string(CONCAT common_regex
-  "src/ds|"
+  "src/ds/config|"
   "src/hal/subsystem|"
   "src/hal/sensors|"
   "src/hal/actuators|"
@@ -144,6 +144,7 @@ component_register_as_src(
 
 if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   string(CONCAT argos_regex
+    "src/ds|"
     "src/arena|"
     "src/convergence|"
     "src/foraging|"
@@ -185,7 +186,6 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
 
 elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
   string(CONCAT ros_regex
-    "src/ds|"
     "src/ros|"
     "src/hal/ros|"
     "src/pal/ros|"
@@ -347,6 +347,9 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
     PUBLIC
     ${LIBRA_DEPS_PREFIX}/lib/argos3)
 endif()
+
+# Force failures at build time rather than runtime
+target_link_options(${cosm_LIBRARY} PRIVATE -Wl,--no-undefined)
 
 ########################################
 # Compile Options/Definitions

@@ -26,32 +26,17 @@
 #include "cosm/cosm.hpp"
 #include "cosm/kin2D/governed_diff_drive.hpp"
 #include "cosm/hal/actuators/diagnostic_actuator.hpp"
-#include "cosm/hal/argos/actuators/wifi_actuator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, subsystem);
+NS_START(cosm, hal, ros, subsystem);
 
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
+#if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3
 #define COSM_HAL_ROBOT_AVAILABLE_ACTUATORS      \
-  chal::actuators::diagnostic_actuator,         \
-    chargos::actuators::wifi_actuator,          \
-    ckin2D::governed_diff_drive,                 \
-    chal::actuators::diff_drive_actuator
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
-#define COSM_HAL_ROBOT_AVAILABLE_ACTUATORS      \
-  chal::actuators::diagnostic_actuator,         \
-    ckin2D::governed_diff_drive,                 \
-    chal::actuators::diff_drive_actuator
-
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
-#define COSM_HAL_ROBOT_AVAILABLE_ACTUATORS      \
-  chal::actuators::diagnostic_actuator,         \
-    ckin2D::governed_diff_drive,                 \
-    chal::actuators::diff_drive_actuator
+  ckin2D::governed_diff_drive,                  \
+    chactuators::diagnostic_actuator
 #endif
 
 
-NS_END(subsystem, argos, hal, cosm);
+NS_END(subsystem, ros, hal, cosm);

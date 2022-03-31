@@ -24,21 +24,13 @@
  * Includes
  ******************************************************************************/
 #include "cosm/hal/subsystem/base_actuation_subsystem2D.hpp"
+#include "cosm/hal/ros/subsystem/robot_available_actuators.hpp"
 
-#include "cosm/kin2D/governed_diff_drive.hpp"
-#include "cosm/hal/actuators/diagnostic_actuator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 NS_START(cosm, hal, ros, subsystem);
-
-#if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3
-#define COSM_HAL_ROBOT_ACTUATOR_TYPES            \
-  ckin2D::governed_diff_drive,                   \
-    chactuators::diagnostic_actuator
-#endif
-
 
 /*******************************************************************************
  * Class Definitions
@@ -50,7 +42,7 @@ NS_START(cosm, hal, ros, subsystem);
  * \brief The actuation subsystem for any ROS robot which operates in 2D.
  */
 class actuation_subsystem2D :
-    public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_ACTUATOR_TYPES> {
+    public chsubsystem::base_actuation_subsystem2D<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS> {
  public:
   explicit actuation_subsystem2D(actuator_map&& actuators)
       : base_actuation_subsystem2D(std::move(actuators)) {}
@@ -73,4 +65,3 @@ class actuation_subsystem2D :
 };
 
 NS_END(subsystem, ros, hal, cosm);
-

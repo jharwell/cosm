@@ -23,6 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <map>
+
 #include "rcppsw/utils/color.hpp"
 #include "rcppsw/er/client.hpp"
 
@@ -50,10 +52,14 @@ NS_START(cosm, hal, ros, actuators);
 class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
                                   public chros::actuators::ros_actuator {
  public:
+  using map_type = std::map<uint8_t, rutils::color>;
 
-  explicit diagnostic_actuator(bool enable)
+  explicit diagnostic_actuator(bool enable,
+                               const map_type& map)
       : ER_CLIENT_INIT("cosm.hal.ros.actuators.diagnostic"),
-        ros_actuator(cros::topic()) {}
+        ros_actuator(cros::topic()),
+        m_enabled(enable),
+        m_map(map) {}
 
   /* copy constructible/assignable to work with the saa subsystem */
   diagnostic_actuator(const diagnostic_actuator&) = delete;
@@ -61,29 +67,25 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
   diagnostic_actuator(diagnostic_actuator&&) = default;
   diagnostic_actuator& operator=(diagnostic_actuator&&)= default;
 
-  void reset(void) override {}
-  void enable(void) override {}
+  void reset(void) override { disable(); }
+  void enable(void) override { m_enabled = true; }
+  bool is_enabled(void) const override { return m_enabled; }
+  void disable(void) override { m_enabled = false; }
 
-  void emit(const chactuators::diagnostics& type) {
-    switch (type) {
-      case chactuators::diagnostics::ekEXPLORE:
-        break;
-      case chactuators::diagnostics::ekSUCCESS:
-        break;
-      case chactuators::diagnostics::ekLEAVING_NEST:
-        break;
-      case chactuators::diagnostics::ekWAIT_FOR_SIGNAL:
-        break;
-      case chactuators::diagnostics::ekVECTOR_TO_GOAL:
-        break;
-      case chactuators::diagnostics::ekEXP_INTERFERENCE:
-        break;
-      default:
-        ER_FATAL_SENTINEL("Unknown diagnostic category %d",
-                          rcppsw::as_underlying(type));
-    } /* switch() */
+  void emit(uint8_t type) {
+    if (!is_enabled()) {
+      return;
+    }
+    auto it = m_map.find(type);
+    ER_ASSERT(it != m_map.end(),
+              "Unknown diagnostic category %d",
+              type);
   }
+
+  /* clang-format off */
+  bool     m_enabled;
+  map_type m_map;
+  /* clang-format on */
 };
 
 NS_END(actuators, ros, hal, cosm);
-

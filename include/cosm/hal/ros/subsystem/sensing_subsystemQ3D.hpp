@@ -26,32 +26,12 @@
 #include <utility>
 
 #include "cosm/hal/subsystem/base_sensing_subsystemQ3D.hpp"
-
-#include "cosm/hal/ros/sensors/lidar_sensor.hpp"
-#include "cosm/hal/ros/sensors/odometry_sensor.hpp"
-#include "cosm/hal/sensors/proximity_sensor.hpp"
-#include "cosm/hal/sensors/env_sensor.hpp"
-#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
-#include "cosm/hal/ros/sensors/light_sensor.hpp"
+#include "cosm/hal/ros/subsystem/robot_available_sensors.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, hal, ros, subsystem);
-
-/*******************************************************************************
- * Macros
- ******************************************************************************/
-
-#if(COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
-#define COSM_HAL_ROBOT_SENSOR_TYPES             \
-  chros::sensors::light_sensor,                 \
-  chros::sensors::lidar_sensor,                 \
-  chros::sensors::sonar_sensor,                 \
-  chros::sensors::odometry_sensor,              \
-  chsensors::proximity_sensor,                  \
-  chsensors::env_sensor
-#endif
 
 /*******************************************************************************
  * Class Definitions
@@ -73,7 +53,7 @@ NS_START(cosm, hal, ros, subsystem);
  * - \ref chal::sensors::env_sensor
  */
 class sensing_subsystemQ3D :
-    public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_SENSOR_TYPES> {
+    public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_AVAILABLE_SENSORS> {
  public:
   explicit sensing_subsystemQ3D(sensor_map&& sensors)
       : base_sensing_subsystemQ3D(std::move(sensors)) {}

@@ -30,6 +30,7 @@
 
 #include "rcppsw/er/client.hpp"
 
+#include "cosm/hal/hal.hpp"
 #include "cosm/hal/ros/sensors/ros_sensor.hpp"
 
 /*******************************************************************************
