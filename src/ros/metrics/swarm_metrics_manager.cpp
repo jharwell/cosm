@@ -89,11 +89,13 @@ swarm_metrics_manager::swarm_metrics_manager(
    * connections to become active before continuing (correctness by
    * construction).
    */
+  ER_INFO("Waiting for all subscriber connections");
   std::all_of(std::begin(m_subs),
               std::end(m_subs),
               [&](auto& sub) {
                 return wait_for_connection(sub);
               });
+  ER_INFO("All subscribers connected");
 }
 
 /*******************************************************************************
@@ -152,6 +154,7 @@ void swarm_metrics_manager::register_standard(
                   this));
             };
   cpros::swarm_iterator::robots(n_robots, cb);
+  ER_INFO("Finished registering standard collectors");
 } /* register_standard() */
 
 void swarm_metrics_manager::register_with_n_block_clusters(
@@ -202,8 +205,12 @@ void swarm_metrics_manager::register_with_n_block_clusters(
 } /* register_with_n_block_clusters() */
 
 bool swarm_metrics_manager::wait_for_connection(const ::ros::Subscriber& sub) {
-  while (::ros::ok() && sub.getNumPublishers() == 0) {
+  while (sub.getNumPublishers() == 0) {
+    ER_ASSERT(::ros::ok(),
+              "Unable to wait for subscriber connection--ros::ok() failed");
+
     /* For real robots, things take a while to come up so we have to wait */
+    ::ros::spinOnce();
     ::ros::Duration(1.0).sleep();
 
     ER_DEBUG("Wait for topic '%s' subscription to activate",
@@ -229,25 +236,30 @@ bool swarm_metrics_manager::flush(const rmetrics::output_mode& mode,
               key.c_str(),
               tracking.missing.size());
     }
-    if (tracking.n_received == mc_expected_counts.at(mode)) {
-      ER_DEBUG("Collector '%s' ready to flush: received=%zu,expected=%zu",
+    if (tracking.n_received >= mc_expected_counts.at(mode)) {
+      ER_DEBUG("Collector '%s' ready to flush: received=%zu,expecting=%zu",
                key.c_str(),
                tracking.n_received,
                mc_expected_counts.at(mode));
       if (tracking.n_received > mc_expected_counts.at(mode)) {
-        ER_WARN("Collector '%s' received counts overflow: received=%zu,expected=%zu",
+        ER_WARN("Collector '%s' received counts overflow: received=%zu,expecting=%zu",
                 key.c_str(),
                 tracking.n_received,
                 mc_expected_counts.at(mode));
       }
-      auto ts = rtypes::timestep((tracking.interval_index + 1) *
-                                 mc_expected_counts.at(mode));
-      ER_ASSERT(collector->flush(ts),
+      tracking.flush_ts = rtypes::timestep((tracking.interval_index + 1) *
+                                           mc_expected_counts.at(mode));
+      ER_DEBUG("Flushing collector '%s': interval_index=%zu, counts=%zu, ts=%zu",
+               key.c_str(),
+               tracking.interval_index,
+               mc_expected_counts.at(mode),
+               tracking.flush_ts.v());
+      ER_ASSERT(collector->flush(tracking.flush_ts),
                 "Collector '%s' did not flush when ready",
                 key.c_str());
-      m_tracking.reset(key);
+      tracking.flushed_collector = true;
     } else {
-      ER_DEBUG("Collector '%s' not ready to flush: received=%zu,expected=%zu",
+      ER_TRACE("Collector '%s' not ready to flush: received=%zu,expecting=%zu",
                key.c_str(),
                tracking.n_received,
                mc_expected_counts.at(mode));
@@ -255,6 +267,21 @@ bool swarm_metrics_manager::flush(const rmetrics::output_mode& mode,
   } /* for(&key..) */
   return true;
 } /* flush() */
+
+void swarm_metrics_manager::interval_reset(const rtypes::timestep&) {
+  for (auto &key : *collector_map() | boost::adaptors::map_keys) {
+    auto& tracking = m_tracking[key];
+    if (tracking.flushed_collector) {
+      ER_DEBUG("Reseting collector '%s': interval_index=%zu",
+               key.c_str(),
+               tracking.interval_index);
+      auto* collector = get(key);
+      collector->interval_reset(tracking.flush_ts);
+      m_tracking.reset(key);
+    }
+
+  } /* for(&key..) */
+} /* interval_reset() */
 
 /*******************************************************************************
  * ROS Callbacks
@@ -265,7 +292,9 @@ void swarm_metrics_manager::collect(
       cmspecs::blocks::kTransportee.scoped());
   m_tracking.update_on_receive(cmspecs::blocks::kTransportee.scoped(),
                                msg->header.seq);
-
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::blocks::kTransportee.scoped().c_str(),
+           msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
 
@@ -275,6 +304,9 @@ void swarm_metrics_manager::collect(
       cmspecs::blocks::kTransporter.scoped());
   m_tracking.update_on_receive(cmspecs::blocks::kTransporter.scoped(),
                                msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::blocks::kTransporter.scoped().c_str(),
+           msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
 
@@ -284,6 +316,9 @@ void swarm_metrics_manager::collect(
       cmspecs::blocks::kClusters.scoped());
   m_tracking.update_on_receive(cmspecs::blocks::kClusters.scoped(),
                                msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::blocks::kClusters.scoped().c_str(),
+           msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
 
@@ -293,6 +328,9 @@ void swarm_metrics_manager::collect(
       cmspecs::spatial::kMovement.scoped());
   m_tracking.update_on_receive(cmspecs::spatial::kMovement.scoped(),
                                msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::spatial::kMovement.scoped().c_str(),
+           msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */
 void swarm_metrics_manager::collect(
@@ -301,6 +339,11 @@ void swarm_metrics_manager::collect(
       cmspecs::spatial::kInterferenceCounts.scoped());
   m_tracking.update_on_receive(cmspecs::spatial::kInterferenceCounts.scoped(),
                                msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::spatial::kInterferenceCounts.scoped().c_str(),
+           msg->header.seq);
+  printf("RECEIVED: n_exp_interference: %zu\n",
+         msg->data.cum.n_exp_interference);
   collector->collect(msg->data);
 } /* collect() */
 

@@ -32,7 +32,7 @@ NS_START(cosm, hal, ros, sensors);
  * Constructors/Destructors
  ******************************************************************************/
 ros_sensor::ros_sensor(const cros::topic& robot_ns)
-    : ER_CLIENT_INIT("cos.hal.ros.sensors.base_sensor"),
+    : ER_CLIENT_INIT("cos.hal.ros.sensors.ros_sensor"),
       m_robot_ns(robot_ns) {}
 
 /*******************************************************************************

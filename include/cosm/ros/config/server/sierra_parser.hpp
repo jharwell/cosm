@@ -25,7 +25,6 @@
  ******************************************************************************/
 #include <string>
 #include <memory>
-#include <array>
 
 #include "rcppsw/config/server/server_config_parser.hpp"
 #include "rcppsw/er/client.hpp"
@@ -63,10 +62,10 @@ class sierra_parser : public rer::client<sierra_parser>,
   RCPPSW_COLD const rconfig::base_config* config_get_impl(void) const override {
     return m_config.get();
   }
-  void check_for_param(const std::string& name) const;
+
   /* clang-format off */
-  const std::array<std::string, 4> mc_names;
-  std::unique_ptr<config_type>     m_config{nullptr};
+
+  std::unique_ptr<config_type> m_config{nullptr};
   /* clang-format on */
 };
 

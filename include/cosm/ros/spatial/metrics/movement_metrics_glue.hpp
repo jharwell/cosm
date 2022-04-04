@@ -93,9 +93,11 @@ struct Serializer<crsmetrics::movement_metrics_msg> {
       stream.next(t.data.interval[i].n_robots);
       stream.next(t.data.interval[i].velocity);
 
-      stream.next(t.data.cum[i].distance);
-      stream.next(t.data.cum[i].n_robots);
-      stream.next(t.data.cum[i].velocity);
+      /*
+       * Note that we don't send the cumulative data; if we did so and it
+       * accumulated on the other end we would be overcounting, and we HAVE to
+       * accumulate it during collection to maintain good design.
+       */
     } /* for(&m..) */
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;

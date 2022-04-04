@@ -34,25 +34,25 @@ NS_START(cosm, hal, ros, sensors);
 sonar_sensor::sonar_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.sonar"),
       ros_sensor(robot_ns) {
-  enable();
-  auto n_publishers = decoratee().getNumPublishers();
+  /* enable(); */
+  /* auto n_publishers = decoratee().getNumPublishers(); */
 
-  ER_ASSERT(1 == n_publishers,
-            "Expected 1 publisher of sonar data for %s, got %d",
-            cpal::kRobotType.c_str(),
-            n_publishers);
+  /* ER_ASSERT(1 == n_publishers, */
+  /*           "Expected 1 publisher of sonar data for %s, got %d", */
+  /*           cpal::kRobotType.c_str(), */
+  /*           n_publishers); */
 }
 
 sonar_sensor::sonar_sensor(sonar_sensor&& other)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.sonar_sensor"),
       ros_sensor(other.robot_ns()) {
-  enable();
+  /* enable(); */
 }
 
 sonar_sensor& sonar_sensor::operator=(sonar_sensor&& rhs) {
   this->m_sonar = rhs.m_sonar;
   rhs.disable();
-  this->enable();
+  /* this->enable(); */
   return *this;
 }
 
@@ -77,9 +77,9 @@ void sonar_sensor::enable(void) {
 }
 
 std::vector<sonar_sensor::reading_type> sonar_sensor::readings(void) const {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+  /* ER_ASSERT(is_enabled(), */
+  /*           "%s called when disabled", */
+  /*           __FUNCTION__); */
   reading_type r = {m_sonar.data};
   return {r};
 }

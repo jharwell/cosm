@@ -29,6 +29,7 @@
 
 #include "rcppsw/patterns/decorator/decorator.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -45,6 +46,9 @@ struct msg_tracking_map_value {
   size_t n_received{};
   int expected_seq{0};
   size_t interval_index{0};
+
+  bool flushed_collector{false};
+  rtypes::timestep flush_ts{rtypes::constants::kNoTime};
 };
 
 /**

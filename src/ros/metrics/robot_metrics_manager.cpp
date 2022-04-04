@@ -83,6 +83,8 @@ void robot_metrics_manager::collect_from_block(
 
 void robot_metrics_manager::collect_from_controller(
     const ccontroller::base_controller2D* const controller) {
+  ER_DEBUG("Collect metrics from robot%d",
+           controller->entity_id().v());
   collect(cmspecs::spatial::kMovement.scoped(), *controller);
   collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());

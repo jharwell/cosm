@@ -98,12 +98,11 @@ struct Serializer<crfmetrics::block_transportee_metrics_msg> {
     stream.next(t.data.interval.transport_time);
     stream.next(t.data.interval.initial_wait_time);
 
-    stream.next(t.data.cum.n_transported);
-    stream.next(t.data.cum.n_cube_transported);
-    stream.next(t.data.cum.n_ramp_transported);
-    stream.next(t.data.cum.n_transporters);
-    stream.next(t.data.cum.transport_time);
-    stream.next(t.data.cum.initial_wait_time);
+    /*
+     * Note that we don't send the cumulative data; if we did so and it
+     * accumulated on the other end we would be overcounting, and we HAVE to
+     * accumulate it during collection to maintain good design.
+     */
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };

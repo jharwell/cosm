@@ -43,6 +43,7 @@ interference_metrics_collector::interference_metrics_collector(
 void interference_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const interference_metrics&>(metrics);
+
   m_data.interval.n_exp_interference += static_cast<size_t>(m.exp_interference());
   m_data.cum.n_exp_interference += static_cast<size_t>(m.exp_interference());
 

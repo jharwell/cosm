@@ -80,7 +80,10 @@ protected:
     redecorate(nh.advertise<TMsg>(topic, kQueueBufferSize));
     m_publishing = true;
 
-    while (::ros::ok() && decoratee().getNumSubscribers() == n_subs_old) {
+    while (decoratee().getNumSubscribers() == n_subs_old) {
+      ER_ASSERT(::ros::ok(),
+                "Unable to wait for subscriber connection--ros::ok() failed");
+
       /* For real robots, things take a while to come up so we have to wait */
       ::ros::spinOnce();
       ::ros::Duration(1.0).sleep();
@@ -89,9 +92,10 @@ protected:
                topic.c_str());
     }
     m_publishing = true;
-    ER_INFO("Topic '%s' publishing active: %u subscribers",
+    ER_INFO("Topic '%s' publishing active: %u subscribers (old=%u)",
             topic.c_str(),
-            decoratee().getNumSubscribers());
+            decoratee().getNumSubscribers(),
+            n_subs_old);
   }
   cros::topic robot_ns(void) const { return m_robot_ns; }
 

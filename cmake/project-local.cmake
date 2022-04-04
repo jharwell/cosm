@@ -11,11 +11,13 @@ if(NOT DEFINED COSM_BUILD_ENV)
 endif()
 
 if("${COSM_BUILD_ENV}" MATCHES "DEVEL" )
-# Nothing to do for now
+  # Nothing to do for now
+elseif("${COSM_BUILD_ENV}" MATCHES "ROBOT" )
+  # Nothing to do for now
 elseif("${COSM_BUILD_ENV}" MATCHES "MSI" )
   set(LIBRA_DEPS_PREFIX /home/gini/shared/swarm/$ENV{MSIARCH})
 else()
-  message(FATAL_ERROR "Build environment must be: [DEVEL,MSI]")
+  message(FATAL_ERROR "Build environment must be: [DEVEL,ROBOT,MSI]")
 endif()
 
 ################################################################################
@@ -70,16 +72,25 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
   else()
     set(COSM_PAL_NATIVE_BUILD OFF)
   endif()
+
   execute_process(COMMAND git rev-parse HEAD
-    OUTPUT_VARIABLE COSM_ROS_MD5
+    OUTPUT_VARIABLE COSM_ROS_MD5_CURRENT
     OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  if (NOT COSM_ROS_MD5_CURRENT STREQUAL COSM_ROS_MD5)
+    message("ROS Msg MD5 changed ${COSM_ROS_MD5} -> ${COSM_ROS_MD5_CURRENT}")
+    set(COSM_ROS_MD5
+      0 # temporarily to make stuff easier ${COSM_ROS_MD5_CURRENT}
+      CACHE INTERNAL "MD5 hash used for ROS message versioning")
+    configure_file(
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
+      ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
+      @ONLY
+      )
+    endif()
 endif()
 
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
-  @ONLY
-  )
+
 list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp")
 
 ################################################################################

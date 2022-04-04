@@ -95,11 +95,11 @@ struct Serializer<crsmetrics::interference_metrics_msg> {
     stream.next(t.data.interval.n_exited_interference);
     stream.next(t.data.interval.interference_duration);
 
-    stream.next(t.data.cum.n_exp_interference);
-    stream.next(t.data.cum.n_episodes);
-    stream.next(t.data.cum.n_entered_interference);
-    stream.next(t.data.cum.n_exited_interference);
-    stream.next(t.data.cum.interference_duration);
+    /*
+     * Note that we don't send the cumulative data; if we did so and it
+     * accumulated on the other end we would be overcounting, and we HAVE to
+     * accumulate it during collection to maintain good design.
+     */
   }
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };

@@ -42,7 +42,7 @@ struct reset_visitor {
 
 struct disable_visitor {
   template <typename TSAA>
-  void operator()(TSAA& saa) const { saa.disable(); }
+  void operator()(TSAA& saa) const noexcept { saa.disable(); }
 };
 
 /*******************************************************************************
