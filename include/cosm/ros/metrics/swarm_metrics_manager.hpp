@@ -81,9 +81,10 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
 
   /**
    * \brief We can't reset metric collectors according to the current timestep,
-   * because we may receive packets from robots asynchronously.
+   * because we may receive packets from robots asynchronously. Instead, we
+   * maintain internal state and flush the ones that are ready each timestep.
    */
-  void interval_reset(const rtypes::timestep&) override {}
+  void interval_reset(const rtypes::timestep&) override;
 
  protected:
   /**

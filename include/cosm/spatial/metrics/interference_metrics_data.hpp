@@ -55,17 +55,37 @@ struct interference_metrics_data : public rmetrics::base_data {
   detail::interference_metrics_data interval{};
   detail::interference_metrics_data cum{};
 
+  /**
+   * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
+   * into our "cum" field using the "interval" field of \p rhs.
+   *
+   * This is the most meaningful semantics I could come up with; I couldn't find
+   * a way to justify accumulating already cumulative data again (it would have
+   * required some additional changes/contortions elsewhere).
+   */
   interference_metrics_data& operator+=(const interference_metrics_data& rhs) {
-    ral::mt_accum(this->interval.n_exp_interference, rhs.interval.n_exp_interference);
-    ral::mt_accum(this->interval.n_episodes, rhs.interval.n_episodes);
-    ral::mt_accum(this->interval.n_entered_interference, rhs.interval.n_entered_interference);
-    ral::mt_accum(this->interval.n_exited_interference, rhs.interval.n_exited_interference);
-    ral::mt_accum(this->interval.interference_duration, rhs.interval.interference_duration);
-    ral::mt_accum(this->cum.n_exp_interference, rhs.cum.n_exp_interference);
-    ral::mt_accum(this->cum.n_episodes, rhs.cum.n_episodes);
-    ral::mt_accum(this->cum.n_entered_interference, rhs.cum.n_entered_interference);
-    ral::mt_accum(this->cum.n_exited_interference, rhs.cum.n_exited_interference);
-    ral::mt_accum(this->cum.interference_duration, rhs.cum.interference_duration);
+    ral::mt_accum(this->interval.n_exp_interference,
+                  rhs.interval.n_exp_interference);
+    ral::mt_accum(this->interval.n_episodes,
+                  rhs.interval.n_episodes);
+    ral::mt_accum(this->interval.n_entered_interference,
+                  rhs.interval.n_entered_interference);
+    ral::mt_accum(this->interval.n_exited_interference,
+                  rhs.interval.n_exited_interference);
+    ral::mt_accum(this->interval.interference_duration,
+                  rhs.interval.interference_duration);
+
+    ral::mt_accum(this->cum.n_exp_interference,
+                  rhs.interval.n_exp_interference);
+    ral::mt_accum(this->cum.n_episodes,
+                  rhs.interval.n_episodes);
+    ral::mt_accum(this->cum.n_entered_interference,
+                  rhs.interval.n_entered_interference);
+    ral::mt_accum(this->cum.n_exited_interference,
+                  rhs.interval.n_exited_interference);
+    ral::mt_accum(this->cum.interference_duration,
+                  rhs.interval.interference_duration);
+
     return *this;
   }
 };

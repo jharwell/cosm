@@ -81,7 +81,10 @@ protected:
     m_topic = topic;
     redecorate(nh.subscribe(m_topic, kQueueBufferSize, cb, inst));
 
-    while (::ros::ok() && decoratee().getNumPublishers() == n_pubs_old) {
+    while (decoratee().getNumPublishers() == n_pubs_old) {
+      ER_ASSERT(::ros::ok(),
+                "Unable to activate subscription--ros::ok() failed");
+
       /* For real robots, things take a while to come up so we have to wait */
       ::ros::spinOnce();
       ::ros::Duration(1.0).sleep();
@@ -89,9 +92,10 @@ protected:
       ER_DEBUG("Wait for topic '%s' subscription to activate",
                m_topic.c_str());
     }
-    ER_INFO("Topic '%s' subscription active: %u publishers",
+    ER_INFO("Topic '%s' subscription active: %u publishers (old=%u)",
             m_topic.c_str(),
-            decoratee().getNumPublishers());
+            decoratee().getNumPublishers(),
+            n_pubs_old);
   }
   cros::topic robot_ns(void) const { return m_robot_ns; }
 

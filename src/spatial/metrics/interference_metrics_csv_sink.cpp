@@ -49,14 +49,15 @@ interference_metrics_csv_sink::csv_header_cols(
   auto cols = std::list<std::string>{
     /* clang-format off */
     "int_avg_exp_interference",
-    "cum_avg_exp_interference",
     "int_avg_entered_interference",
-    "cum_avg_entered_interference",
     "int_avg_exited_interference",
-    "cum_avg_exited_interference",
     "int_avg_episodes",
-    "cum_avg_episodes",
     "int_avg_interference_duration",
+
+    "cum_avg_exp_interference",
+    "cum_avg_entered_interference",
+    "cum_avg_exited_interference",
+    "cum_avg_episodes",
     "cum_avg_interference_duration"
     /* clang-format on */
   };
@@ -76,16 +77,16 @@ interference_metrics_csv_sink::csv_line_build(
 
   std::string line;
   line += csv_entry_intavg(ral::mt_load(d->interval.n_exp_interference));
-  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exp_interference), t);
   line += csv_entry_intavg(ral::mt_load(d->interval.n_entered_interference));
-  line += csv_entry_tsavg(ral::mt_load(d->cum.n_entered_interference), t);
   line += csv_entry_intavg(ral::mt_load(d->interval.n_exited_interference));
-  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exited_interference), t);
-
   line += csv_entry_intavg(ral::mt_load(d->interval.n_episodes));
-  line += csv_entry_tsavg(ral::mt_load(d->cum.n_episodes), t);
   line += csv_entry_domavg(ral::mt_load(d->interval.interference_duration),
                            ral::mt_load(d->interval.n_episodes));
+
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exp_interference), t);
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_entered_interference), t);
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_exited_interference), t);
+  line += csv_entry_tsavg(ral::mt_load(d->cum.n_episodes), t);
   line += csv_entry_domavg(ral::mt_load(d->cum.interference_duration),
                            ral::mt_load(d->cum.n_episodes),
                            true);

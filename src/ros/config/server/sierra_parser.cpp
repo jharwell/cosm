@@ -34,13 +34,7 @@ NS_START(cosm, ros, config, server);
  * Constructors/Destructor
  ******************************************************************************/
 sierra_parser::sierra_parser(void)
-    : ER_CLIENT_INIT("cosm.ros.config.server.sierra_parser"),
-      mc_names({
-          "/sierra/experiment/length",
-          "/sierra/experiment/param_file",
-          "/sierra/experiment/n_robots",
-          "/sierra/experiment/ticks_per_sec"
-        }) {
+    : ER_CLIENT_INIT("cosm.ros.config.server.sierra_parser") {
   /*
    * This parser can be the FIRST thing to run which uses logging, so make sure
    * it is setup.
@@ -55,23 +49,44 @@ void sierra_parser::parse(void) {
   /* Always parsed */
   m_config = std::make_unique<config_type>();
 
-  ::ros::NodeHandle nh("~");
+  ::ros::NodeHandle nh;
   int tmp;
 
-  check_for_param(mc_names[0]);
-  nh.getParam(mc_names[0], tmp);
+  std::string param;
+  ER_ASSERT(nh.searchParam("sierra/experiment/length", param),
+            "Couldn't resolve parameter 'sierra/experiment/length'");
+  nh.getParam(param, tmp);
   m_config->experiment.length = rtypes::timestep(tmp);
 
-  check_for_param(mc_names[1]);
-  nh.getParam(mc_names[1], m_config->experiment.param_file);
+  ER_ASSERT(nh.searchParam("sierra/experiment/param_file", param),
+            "Couldn't resolve parameter 'sierra/experiment/param_file'");
+  nh.getParam(param, m_config->experiment.param_file);
+
+  ER_ASSERT(nh.searchParam("sierra/experiment/ticks_per_sec", param),
+            "Couldn't resolve parameter 'sierra/experiment/ticks_per_sec'");
+  nh.getParam(param, tmp);
+  m_config->experiment.ticks_per_sec = rtypes::hertz(tmp);
 
   /* n_robots not present on robot configuration */
-  nh.getParam(mc_names[2], tmp);
-  m_config->experiment.n_robots = tmp;
+  if (nh.searchParam("sierra/experiment/n_robots", param)) {
+    nh.getParam(param, tmp);
+    ER_DEBUG("Found n_robots: '%s'=%d", param.c_str(), tmp);
+    m_config->experiment.n_robots = tmp;
+  }
 
-  check_for_param(mc_names[3]);
-  nh.getParam(mc_names[3], tmp);
-  m_config->experiment.ticks_per_sec = rtypes::hertz(tmp);
+  /* barrier_start not required */
+  if (nh.searchParam("sierra/experiment/barrier_start", param)) {
+    bool start;
+    nh.getParam(param, start);
+    ER_DEBUG("Found barrier_start: '%s'=%d", param.c_str(), start);
+    m_config->experiment.barrier_start = start;
+  }
+  ER_INFO("length=%zu,param_file=%s,ticks_per_sec=%d,n_robots=%zu,barrier_start=%d",
+          m_config->experiment.length.v(),
+          m_config->experiment.param_file.c_str(),
+          m_config->experiment.ticks_per_sec.v(),
+          m_config->experiment.n_robots,
+          m_config->experiment.barrier_start);
 } /* parse() */
 
 bool sierra_parser::validate(void) const {
@@ -90,10 +105,5 @@ bool sierra_parser::validate(void) const {
 error:
   return false;
 } /* validate() */
-
-void sierra_parser::check_for_param(const std::string& name) const {
-  ::ros::NodeHandle nh("~");
-  ER_ASSERT(nh.hasParam(name), "Parameter '%s' does not exist", name.c_str());
-} /* check_for_param() */
 
 NS_END(server, config, ros, cosm);

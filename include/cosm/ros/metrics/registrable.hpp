@@ -37,4 +37,3 @@ extern rmetrics::creatable_collector_set kStandard;
 extern rmetrics::creatable_collector_set kWithNBlockClusters;
 
 NS_END(registrable, metrics, ros, cosm);
-

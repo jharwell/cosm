@@ -55,7 +55,7 @@ class topic_sink : public rmetrics::network_sink,
              const rmetrics::output_mode& mode,
              const rtypes::timestep& interval)
       : network_sink(topic, mode, interval),
-        ER_CLIENT_INIT("cosm.pal.ros.metrics.topic_sink") {}
+        ER_CLIENT_INIT("cosm.ros.metrics.topic_sink") {}
 
   virtual ~topic_sink(void) = default;
 

@@ -93,9 +93,11 @@ struct Serializer<crfmetrics::block_cluster_metrics_msg> {
     for (auto &count : t.data.interval.block_counts) {
       stream.next(count);
     } /* for(&c..) */
-    for (auto &count : t.data.cum.block_counts) {
-      stream.next(count);
-    } /* for(&c..) */
+    /*
+     * Note that we don't send the cumulative data; if we did so and it
+     * accumulated on the other end we would be overcounting, and we HAVE to
+     * accumulate it during collection to maintain good design.
+     */
     for (auto &ext : t.data.extents) {
       stream.next(ext.area);
       stream.next(ext.xmin);

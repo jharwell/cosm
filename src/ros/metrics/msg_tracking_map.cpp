@@ -61,6 +61,8 @@ void msg_tracking_map::reset(const std::string& key) {
   tracking.n_received = 0;
   tracking.missing = {};
   ++tracking.interval_index;
+  tracking.flushed_collector = false;
+  tracking.flush_ts = rtypes::constants::kNoTime;
 } /* reset() */
 
 NS_END(metrics, ros, cosm);

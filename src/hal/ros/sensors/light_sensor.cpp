@@ -35,25 +35,25 @@ NS_START(cosm, hal, ros, sensors);
 light_sensor::light_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"),
       ros_sensor(robot_ns) {
-  enable();
-  auto n_publishers = decoratee().getNumPublishers();
+  /* enable(); */
+  /* auto n_publishers = decoratee().getNumPublishers(); */
 
-  ER_ASSERT(1 == n_publishers,
-            "Expected 1 publisher of light data for %s, got %d",
-            cpal::kRobotType.c_str(),
-            n_publishers);
+  /* ER_ASSERT(1 == n_publishers, */
+  /*           "Expected 1 publisher of light data for %s, got %d", */
+  /*           cpal::kRobotType.c_str(), */
+  /*           n_publishers); */
 }
 
 light_sensor::light_sensor(light_sensor&& other)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.light_sensor"),
       ros_sensor(other.robot_ns()) {
-  enable();
+  /* enable(); */
 }
 
 light_sensor& light_sensor::operator=(light_sensor&& rhs) {
   this->m_light = rhs.m_light;
   rhs.disable();
-  this->enable();
+  /* this->enable(); */
   return *this;
 }
 
@@ -78,9 +78,9 @@ void light_sensor::enable(void) {
 }
 
 std::vector<light_sensor::reading_type> light_sensor::readings(void) const {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+  /* ER_ASSERT(is_enabled(), */
+  /*           "%s called when disabled", */
+  /*           __FUNCTION__); */
   return {};
 }
 

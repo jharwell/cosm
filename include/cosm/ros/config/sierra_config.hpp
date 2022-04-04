@@ -43,6 +43,7 @@ struct sierra_experiment_config {
   std::string param_file{};
   size_t n_robots{0};
   rtypes::hertz ticks_per_sec{rtypes::constants::kNoRate};
+  bool barrier_start{false};
 };
 
 /**

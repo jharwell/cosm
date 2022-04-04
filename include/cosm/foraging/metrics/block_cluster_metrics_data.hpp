@@ -69,10 +69,20 @@ struct block_cluster_metrics_data : public rmetrics::base_data {
   detail::block_cluster_metrics_data  cum;
   std::vector<detail::cluster_extent> extents{};
 
+  /**
+   * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
+   * into our "cum" field using the "interval" field of \p rhs.
+   *
+   * This is the most meaningful semantics I could come up with; I couldn't find
+   * a way to justify accumulating already cumulative data again (it would have
+   * required some additional changes/contortions elsewhere).
+   */
   block_cluster_metrics_data& operator+=(const block_cluster_metrics_data& rhs) {
     for (size_t i = 0; i < this->interval.block_counts.size(); ++i) {
-      ral::mt_accum(this->interval.block_counts[i], rhs.interval.block_counts[i]);
-      ral::mt_accum(this->cum.block_counts[i], rhs.cum.block_counts[i]);
+      ral::mt_accum(this->interval.block_counts[i],
+                    rhs.interval.block_counts[i]);
+      ral::mt_accum(this->cum.block_counts[i],
+                    rhs.interval.block_counts[i]);
     } /* for(i..) */
 
     /* no need to accum extents; will always be the same */
