@@ -1,5 +1,5 @@
 /**
- * \file ros_sensor.hpp
+ * \file ros_service_sensor.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -39,31 +39,26 @@ NS_START(cosm, hal, ros, sensors);
  * Class Definitions
  ******************************************************************************/
 /**
- * \class ros_sensor
+ * \class ros_service_sensor
  * \ingroup hal ros sensors
  *
- * \brief Base sensor class to provide a common interface to all ROS sensors.
+ * \brief Base sensor class to provide a common interface to sensors which use
+ * ROS services to function.
  */
-class ros_sensor : public rer::client<ros_sensor>,
-                   public chsensors::base_sensor<::ros::Subscriber> {
+class ros_service_sensor : public rer::client<ros_service_sensor>,
+                           public chsensors::base_sensor<::ros::ServiceClient> {
 public:
-  using impl_type = ::ros::Subscriber;
+  using impl_type = ::ros::ServiceClient;
   using chsensors::base_sensor<impl_type>::decoratee;
 
-  /**
-   * \brief If messages are published more quickly than they can be sent, buffer
-   * up this many messages before throwing some away.
-   */
-  static constexpr const size_t kQueueBufferSize = 1000;
+  explicit ros_service_sensor(const cros::topic& robot_ns);
 
-  explicit ros_sensor(const cros::topic& robot_ns);
+  virtual ~ros_service_sensor(void) = default;
 
-  virtual ~ros_sensor(void) = default;
-
-  ros_sensor(const ros_sensor&) = delete;
-  ros_sensor& operator=(const ros_sensor&) = delete;
-  ros_sensor(ros_sensor&&) = default;
-  ros_sensor& operator=(ros_sensor&&) = default;
+  ros_service_sensor(const ros_service_sensor&) = delete;
+  ros_service_sensor& operator=(const ros_service_sensor&) = delete;
+  ros_service_sensor(ros_service_sensor&&) = default;
+  ros_service_sensor& operator=(ros_service_sensor&&) = default;
 
   /**
    * \brief To disable a sensor, you unsubscribe from the topic, which (I think)
@@ -71,38 +66,34 @@ public:
    */
   void disable(void) override;
 
-  bool is_enabled(void) const override { return m_topic != ""; }
+  bool is_enabled(void) const override { return m_name != ""; }
 
 protected:
-  template <typename TCallback, typename TClass>
-      void subscribe(const cros::topic& topic, TCallback cb, TClass* inst) {
+  template <typename TServiceData>
+      void connect(const cros::topic& name) {
     ::ros::NodeHandle nh;
-    auto n_pubs_old = decoratee().getNumPublishers();
-    m_topic = topic;
-    redecorate(nh.subscribe(m_topic, kQueueBufferSize, cb, inst));
+    m_name = name;
+    redecorate(nh.serviceClient<TServiceData>(m_name));
 
-    while (decoratee().getNumPublishers() == n_pubs_old) {
+    while (!decoratee().waitForExistence(::ros::Duration(1.0))) {
       ER_ASSERT(::ros::ok(),
-                "Unable to activate subscription--ros::ok() failed");
+                "Unable to connect to service--ros::ok() failed");
 
       /* For real robots, things take a while to come up so we have to wait */
       ::ros::spinOnce();
-      ::ros::Duration(1.0).sleep();
 
-      ER_DEBUG("Wait for topic '%s' subscription to activate",
-               m_topic.c_str());
+      ER_DEBUG("Wait for service '%s' to become available",
+               m_name.c_str());
     }
-    ER_INFO("Topic '%s' subscription active: %u publishers (old=%u)",
-            m_topic.c_str(),
-            decoratee().getNumPublishers(),
-            n_pubs_old);
+    ER_INFO("Connected to service '%s'", m_name.c_str())
   }
   cros::topic robot_ns(void) const { return m_robot_ns; }
+  cros::topic service_name(void) const { return m_name; }
 
 private:
   /* clang-format off */
   cros::topic m_robot_ns;
-  cros::topic m_topic{};
+  cros::topic m_name{};
   /* clang-format on */
 };
 

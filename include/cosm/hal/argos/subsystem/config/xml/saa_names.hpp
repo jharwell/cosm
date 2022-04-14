@@ -40,10 +40,9 @@ NS_START(cosm, hal, argos, subsystem, config, xml);
  * \struct saa_names
  * \ingroup hal argos subsystem config xml
  *
- * \brief Collection of names of sensing and actuation component names that
- * ARGoS expects when asking for handles to robot components that can be
- * specified for robots. Collected here in a single place in the interest of
- * DRY.
+ * \brief Collection of sensing and actuation component names that ARGoS expects
+ * when asking for handles to components that can be specified for
+ * robots. Collected here in a single place in the interest of DRY.
  */
 struct saa_names {
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
@@ -70,4 +69,3 @@ struct saa_names {
 };
 
 NS_END(xml, config, subsystem, argos, hal, cosm);
-

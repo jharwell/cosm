@@ -53,4 +53,3 @@ class actuation_subsystem2D : public chsubsystem::actuation_subsystem2D {
 };
 
 NS_END(subsystem, cosm);
-

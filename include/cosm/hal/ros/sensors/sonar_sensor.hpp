@@ -26,12 +26,12 @@
 #include <vector>
 #include <string>
 
-#include <std_msgs/Float32.h>
-
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
-#include "cosm/hal/ros/sensors/ros_sensor.hpp"
+#include "cosm/hal/ros/sensors/ros_service_sensor.hpp"
+#include "cosm/hal/ros/sensors/config/sonar_sensor_config.hpp"
+#include "cosm/hal/sensors/env_sensor_reading.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -45,20 +45,17 @@ NS_START(cosm, hal, ros, sensors);
  * \class sonar_sensor
  * \ingroup hal ros sensors
  *
- * \brief Sonar sensor wrapper.
+ * \brief Ultrasonic sensor wrapper.
  *
  * Supports the following robots:
  *
  * - ROS turtlebot3 (extended)
  */
 class sonar_sensor : public rer::client<sonar_sensor>,
-                     public chros::sensors::ros_sensor {
+                      public chros::sensors::ros_service_sensor {
  public:
-  struct reading_type {
-    float value;
-  };
-
-  explicit sonar_sensor(const cros::topic& robot_ns);
+  sonar_sensor(const cros::topic& robot_ns,
+               const config::sonar_sensor_config* config);
 
   /* move only constructible/assignable to work with the saa subsystem */
   sonar_sensor& operator=(const sonar_sensor&) = delete;
@@ -66,26 +63,20 @@ class sonar_sensor : public rer::client<sonar_sensor>,
   sonar_sensor& operator=(sonar_sensor&& rhs);
   sonar_sensor(sonar_sensor&& other);
 
-  void reset(void) override;
+  void reset(void) override {}
   void enable(void) override;
 
   /**
-   * \brief Get the current sonar sensor readings for the footbot/epuck robots.
+   * \brief Get the current sonar sensor readings.
    *
    * \return A vector of \ref reading.
    */
-  std::vector<reading_type> readings(void) const;
+  std::vector<chsensors::env_sensor_reading> readings(void);
 
  private:
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
-  static inline const cros::topic kSonarTopic = "sonar";
-#endif /* COSM_HAL_TARGET */
-
-  void callback(const std_msgs::Float32::ConstPtr& msg);
-
   /* clang-format off */
-  std_msgs::Float32 m_sonar{};
-  /* clang-format off */
+  chros::sensors::config::sonar_sensor_config m_config;
+  /* clang-format on */
 };
 
 NS_END(sensors, ros, hal, cosm);

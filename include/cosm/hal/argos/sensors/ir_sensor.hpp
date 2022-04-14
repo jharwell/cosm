@@ -155,4 +155,3 @@ class ir_sensor{};
 #endif /* COSM_HAL_TARGET */
 
 NS_END(sensors, argos, hal, cosm);
-

@@ -33,7 +33,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/hal/hal.hpp"
 #include "cosm/kin/odometry.hpp"
-#include "cosm/hal/ros/sensors/ros_sensor.hpp"
+#include "cosm/hal/ros/sensors/ros_subscriber_sensor.hpp"
 #include "cosm/ros/topic.hpp"
 
 /*******************************************************************************
@@ -56,7 +56,7 @@ NS_START(cosm, hal, ros, sensors);
  * - ROS extended turtlebot3
  */
 class odometry_sensor final : public rer::client<odometry_sensor>,
-                              public chros::sensors::ros_sensor {
+                              public chros::sensors::ros_subscriber_sensor {
  public:
   explicit odometry_sensor(const cros::topic& robot_ns);
 

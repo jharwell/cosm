@@ -70,7 +70,7 @@ class wander : public csstrategy::nest_acq::base_nest_acq {
   void task_start(cta::taskable_argument*) override final;
   void task_reset(void) override final {
     m_task_running = false;
-    m_count = 0;
+    m_steps = rtypes::timestep(0);
   }
   bool task_running(void) const override final { return m_task_running; }
   bool task_finished(void) const override final { return !m_task_running; }
@@ -86,16 +86,15 @@ class wander : public csstrategy::nest_acq::base_nest_acq {
   }
 
  private:
-  static constexpr const size_t kMIN_STEPS = 25;
-  static constexpr const size_t kMAX_STEPS = 100;
+  static constexpr const size_t kMIN_DURATION = 25;
+  static constexpr const size_t kMAX_DURATION = 100;
 
   /* clang-format off */
   bool m_task_running{false};
-  size_t m_count{0};
-  size_t m_steps{0};
+  rtypes::timestep m_duration{0};
+  rtypes::timestep m_steps{0};
   /* clang-format on */
 };
 
 
 NS_END(nest_acq, strategy, spatial, cosm);
-

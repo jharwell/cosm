@@ -33,7 +33,7 @@ NS_START(cosm, hal, ros, sensors);
  ******************************************************************************/
 odometry_sensor::odometry_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.odometry"),
-      ros_sensor(robot_ns) {
+      ros_subscriber_sensor(robot_ns) {
   enable();
   auto n_publishers = decoratee().getNumPublishers();
   ER_ASSERT(1 == n_publishers,
@@ -44,7 +44,7 @@ odometry_sensor::odometry_sensor(const cros::topic& robot_ns)
 
 odometry_sensor::odometry_sensor(odometry_sensor&& other)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.odometry_sensor"),
-      ros_sensor(other.robot_ns()) {
+      ros_subscriber_sensor(other.robot_ns()) {
   enable();
 }
 

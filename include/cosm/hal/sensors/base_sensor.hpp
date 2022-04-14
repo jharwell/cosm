@@ -91,4 +91,3 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
 };
 
 NS_END(sensors, hal, cosm);
-

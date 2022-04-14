@@ -33,7 +33,7 @@ NS_START(cosm, hal, ros, sensors);
  ******************************************************************************/
 lidar_sensor::lidar_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.lidar"),
-      ros_sensor(robot_ns) {
+      ros_subscriber_sensor(robot_ns) {
   enable();
   auto n_publishers = decoratee().getNumPublishers();
 
@@ -45,7 +45,7 @@ lidar_sensor::lidar_sensor(const cros::topic& robot_ns)
 
 lidar_sensor::lidar_sensor(lidar_sensor&& other)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.lidar_sensor"),
-      ros_sensor(other.robot_ns()) {
+      ros_subscriber_sensor(other.robot_ns()) {
   enable();
 }
 

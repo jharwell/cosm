@@ -1,7 +1,7 @@
 /**
- * \file ros_sensor.cpp
+ * \file block_drop_parser.cpp
  *
- * \copyright 2022 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,29 +21,30 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/ros/sensors/ros_sensor.hpp"
+#include "cosm/spatial/strategy/config/xml/block_drop_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
-
-/*******************************************************************************
- * Constructors/Destructors
- ******************************************************************************/
-ros_sensor::ros_sensor(const cros::topic& robot_ns)
-    : ER_CLIENT_INIT("cos.hal.ros.sensors.ros_sensor"),
-      m_robot_ns(robot_ns) {}
+NS_START(cosm, spatial, strategy, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void ros_sensor::disable(void) {
-  if (is_enabled()) {
-    ER_DEBUG("Remove subscription to '%s'", m_topic.c_str());
-    decoratee().~impl_type();
-    m_topic = "";
+void block_drop_parser::parse(const ticpp::Element& node) {
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
   }
-}
 
-NS_END(sensors, ros, hal, cosm);
+  ER_DEBUG("Parent node=%s: child=%s",
+           node.Value().c_str(),
+           kXMLRoot.c_str());
+
+  ticpp::Element snode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
+
+  XML_PARSE_ATTR(snode, m_config, strategy);
+  XML_PARSE_ATTR_DFLT(snode, m_config, duration, rtypes::timestep(0));
+} /* parse() */
+
+NS_END(xml, config, strategy, spatial, cosm);

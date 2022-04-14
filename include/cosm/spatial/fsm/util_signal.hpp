@@ -56,6 +56,11 @@ class util_signal : public rpfsm::event_signal {
     ekENTERED_NEST,
 
     /**
+     * Signal sent when a robot has dropped a block it has been carrying.
+     */
+    ekDROPPED_BLOCK,
+
+    /**
      * Signal sent when a robot has mechanically malfunctioned.
      */
     ekMECHANICAL_MALFUNCTION,
@@ -75,4 +80,3 @@ class util_signal : public rpfsm::event_signal {
 };
 
 NS_END(fsm, spatial, cosm);
-

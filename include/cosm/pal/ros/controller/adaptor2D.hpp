@@ -63,4 +63,3 @@ class adaptor2D : public ccontroller::base_controller2D,
 };
 
 NS_END(controller, ros, pal, cosm);
-

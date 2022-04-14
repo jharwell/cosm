@@ -96,4 +96,3 @@ class governed_diff_drive final : public kin2D::diff_drive {
 };
 
 NS_END(kin2D, cosm);
-

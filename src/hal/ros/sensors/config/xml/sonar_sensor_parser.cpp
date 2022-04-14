@@ -1,5 +1,5 @@
 /**
- * \file sensing_subsystemQ3D_parser.cpp
+ * \file sonar_sensor_parser.cpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -21,40 +21,37 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/hal/subsystem/config/xml/sensing_subsystemQ3D_parser.hpp"
+#include "cosm/hal/ros/sensors/config/xml/sonar_sensor_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, subsystem, config, xml);
+NS_START(cosm, hal, ros, sensors, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
+void sonar_sensor_parser::parse(const ticpp::Element& node) {
+  if (nullptr != node.FirstChild(kXMLRoot, false)) {
     ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+             node.Value().c_str(),
+             kXMLRoot.c_str());
 
-    ticpp::Element snode = node_get(node, kXMLRoot);
-  m_config = std::make_unique<config_type>();
+    ticpp::Element pnode = node_get(node, kXMLRoot);
+    m_config = std::make_unique<config_type>();
 
-  m_proximity.parse(snode);
-  m_config->proximity = *m_proximity.config_get<
-      chsensors::config::xml::proximity_sensor_parser::config_type>();
-  m_env.parse(snode);
-  m_config->env = *m_env.config_get<
-      chsensors::config::xml::env_sensor_parser::config_type>();
-  ER_DEBUG("Finished");
+    XML_PARSE_ATTR_DFLT(pnode, m_config, trigger_pin, -1);
+    XML_PARSE_ATTR_DFLT(pnode, m_config, echo_pin, -1);
+  }
 } /* parse() */
 
-bool sensing_subsystemQ3D_parser::validate(void) const {
-  ER_CHECK(m_proximity.validate(), "Proximity sensor failed validation");
-  ER_CHECK(m_env.validate(), " Environment sensor failed validation");
+bool sonar_sensor_parser::validate(void) const {
+  ER_CHECK(m_config->trigger_pin > 0, "Trigger pin must be defined");
+  ER_CHECK(m_config->echo_pin > 0, "Echo pin must be defined");
   return true;
 
 error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, subsystem, hal, cosm);
+NS_END(xml, config, sensors, ros, hal, cosm);

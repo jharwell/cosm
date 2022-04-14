@@ -104,14 +104,17 @@ class free_block_pickup
   interactor_status_type operator()(TController& controller,
                                     const rtypes::timestep& t) {
     if (controller.block_detect()) {
+      ER_INFO("Robot%d detects block", controller.entity_id().v());
       if (controller.is_carrying_block()) {
         ER_INFO("Ignoring detected block--already carrying block");
       } else {
         process_pickup(controller, t);
         return interactor_status_type::ekARENA_FREE_BLOCK_PICKUP;
       }
+    } else {
+      ER_INFO("Robot%d: no block detected", controller.entity_id().v());
+      return interactor_status_type::ekNO_EVENT;
     }
-    return interactor_status_type::ekNO_EVENT;
   }
 
  private:
@@ -159,4 +162,3 @@ class free_block_pickup
 };
 
 NS_END(interactors, ros, cosm);
-

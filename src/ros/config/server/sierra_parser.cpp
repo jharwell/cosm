@@ -69,6 +69,7 @@ void sierra_parser::parse(void) {
 
   /* n_robots not present on robot configuration */
   if (nh.searchParam("sierra/experiment/n_robots", param)) {
+    tmp = -1;
     nh.getParam(param, tmp);
     ER_DEBUG("Found n_robots: '%s'=%d", param.c_str(), tmp);
     m_config->experiment.n_robots = tmp;

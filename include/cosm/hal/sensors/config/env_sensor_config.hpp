@@ -42,9 +42,9 @@ NS_START(cosm, hal, sensors, config);
  * \struct env_sensor_config
  * \ingroup hal sensors config
  *
- * \brief Configuration for env sensors, for robots that have them.
+ * \brief Configuration for environment sensors, for robots that have them.
  */
-struct env_sensor_config final : public rconfig::base_config {
+struct env_sensor_config : public rconfig::base_config {
   std::map<std::string, env_sensor_detection_config> detect_map{};
 };
 

@@ -52,7 +52,8 @@ void random_thresh::task_execute(void) {
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.
    */
-  if (saa()->sensing()->nest_detect()) {
+  auto env = saa()->sensing()->env();
+  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
     auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
     if (dist_to_light <= m_thresh.v()) {
       m_task_running = false;

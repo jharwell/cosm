@@ -38,6 +38,7 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/env_sensor_reading.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -96,22 +97,6 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
   using chargos::sensors::argos_sensor<impl_type>::reset;
   using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  /**
-   * \brief A ground sensor reading (value, distance) pair.
-   *
-   * The first argument is the value of the sensor (a robot can have a variable
-   * number of sensors), and the second
-   * argument is the distance from the sensor on the robot to the robot's center
-   * (this may not be used, depending on the actual hardware mapped to).
-   */
-  struct reading {
-    reading(void) = default;
-    reading(double v, double d) noexcept : value(v), distance(d) {}
-
-    double value{-1.0};
-    double distance{-1.0};
-  };
-
   explicit ground_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.ground"),
         chargos::sensors::argos_sensor<impl_type>(sensor) {}
@@ -130,7 +115,7 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
    */
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_footbot_ground_sensor<U>::value)>
-  std::vector<reading> readings(void) const {
+  std::vector<chsensors::env_sensor_reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -138,9 +123,9 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
               "%s called when disabled",
               __FUNCTION__);
 
-    std::vector<reading> ret;
+    std::vector<chsensors::env_sensor_reading> ret;
     for (auto &r : decoratee()->GetReadings()) {
-      ret.emplace_back(r.Value, -1.0);
+      ret.emplace_back(r.Value);
     } /* for(&r..) */
 
     return ret;
@@ -153,7 +138,7 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
    */
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_epuck_ground_sensor<U>::value)>
-  std::vector<reading> readings(void) const {
+  std::vector<chsensors::env_sensor_reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -161,12 +146,12 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
               "%s called when disabled",
               __FUNCTION__);
 
-    std::vector<reading> ret;
+    std::vector<chsensors::env_sensor_reading> ret;
     double tmp[3];
     decoratee()->GetReadings(tmp);
-    ret.emplace_back(tmp[0], -1.0);
-    ret.emplace_back(tmp[1], -1.0);
-    ret.emplace_back(tmp[2], -1.0);
+    ret.emplace_back(tmp[0]);
+    ret.emplace_back(tmp[1]);
+    ret.emplace_back(tmp[2]);
     return ret;
   }
 
@@ -177,7 +162,7 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
    */
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_ground_sensor<U>::value)>
-  std::vector<reading> readings(void) const {
+  std::vector<chsensors::env_sensor_reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -185,10 +170,9 @@ class ground_sensor_impl : public rer::client<ground_sensor_impl<TSensor>>,
               "%s called when disabled",
               __FUNCTION__);
 
-    reading r;
+    chsensors::env_sensor_reading r;
     auto cb = [&](const auto& interface) {
                 r.value = interface.Reflected;
-                r.distance = -1.0;
               };
     decoratee()->Visit(cb);
     return {r};

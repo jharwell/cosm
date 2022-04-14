@@ -287,6 +287,7 @@ namespace metrics {}
 namespace strategy {
 namespace metrics {}
 namespace nest_acq {}
+namespace block_drop {}
 } /* namespace strategy */
 
 } /* namespace spatial */
@@ -374,6 +375,7 @@ namespace csmetrics = cspatial::metrics;
 namespace csstrategy = cspatial::strategy;
 namespace cssmetrics = csstrategy::metrics;
 namespace cssnest_acq = csstrategy::nest_acq;
+namespace cssblock_drop = csstrategy::block_drop;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;
@@ -432,6 +434,9 @@ namespace chsensors = chal::sensors;
 namespace chactuators = chal::actuators;
 
 namespace chros = chal::ros;
+namespace chrsensors = chros::sensors;
+namespace chractuators = chros::actuators;
+namespace chrconfig = chros::config;
 
 namespace chargos = chal::argos;
 namespace chasensors = chargos::sensors;

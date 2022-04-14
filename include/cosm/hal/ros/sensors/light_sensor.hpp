@@ -30,7 +30,7 @@
 
 #include "rcppsw/er/client.hpp"
 
-#include "cosm/hal/ros/sensors/ros_sensor.hpp"
+#include "cosm/hal/ros/sensors/ros_service_sensor.hpp"
 #include "cosm/hal/sensors/light_sensor_reading.hpp"
 #include "cosm/hal/hal.hpp"
 
@@ -53,7 +53,7 @@ NS_START(cosm, hal, ros, sensors);
  * - ROS turtlebot3 (extended)
  */
 class light_sensor : public rer::client<light_sensor>,
-                     public chros::sensors::ros_sensor {
+                     public chros::sensors::ros_service_sensor {
  public:
   using reading_type = chsensors::light_sensor_reading;
 
@@ -73,12 +73,12 @@ class light_sensor : public rer::client<light_sensor>,
    *
    * \return A vector of \ref reading_type.
    */
-  std::vector<reading_type> readings(void) const;
+  std::vector<reading_type> readings(void);
 
  private:
-  static inline const cros::topic kLightTopic = "light";
-
-  void callback(const std_msgs::Float32::ConstPtr& msg);
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
+  static inline const cros::topic kServiceName = "tsl2591/readings_service";
+#endif
 
   /* clang-format off */
   std_msgs::Float32 m_light{};

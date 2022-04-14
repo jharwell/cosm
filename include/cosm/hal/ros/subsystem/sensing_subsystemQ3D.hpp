@@ -58,8 +58,6 @@ class sensing_subsystemQ3D :
   explicit sensing_subsystemQ3D(sensor_map&& sensors)
       : base_sensing_subsystemQ3D(std::move(sensors)) {}
 
-  bool nest_detect(void) const override { return false; }
-
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
                            chros::sensors::light_sensor,

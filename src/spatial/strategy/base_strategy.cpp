@@ -67,7 +67,9 @@ bool base_strategy::handle_ca(void) {
 } /* handle_ca() */
 
 bool base_strategy::nz_update(void) {
-  if (saa()->sensing()->nest_detect()) {
+  auto env = saa()->sensing()->env();
+
+  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
     nz_tracker()->state_enter();
     return true;
   } else {

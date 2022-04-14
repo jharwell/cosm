@@ -81,15 +81,6 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
   virtual ~base_sensing_subsystemQ3D(void) = default;
 
   /**
-   * \brief Detect if the robot is currently in the nest.
-   *
-   * This is really more of a "sensor-fusion" layer function, but it fits OK
-   * here for now. If I get more of these kind of things, then I will need to
-   * create a more formal fusion layer hierarchy.
-   */
-  virtual bool nest_detect(void) const = 0;
-
-  /**
    * \brief Reset all sensors.
    */
   void reset(void) { base_subsystem::reset(m_sensors); }
@@ -125,4 +116,3 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
 };
 
 NS_END(subsystem, hal, cosm);
-

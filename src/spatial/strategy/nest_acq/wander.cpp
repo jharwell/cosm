@@ -39,8 +39,9 @@ NS_START(cosm, spatial, strategy, nest_acq);
  * Member Functions
  ******************************************************************************/
 void wander::task_start(cta::taskable_argument*) {
+  task_reset();
   m_task_running = true;
-  m_steps = rng()->uniform(kMIN_STEPS, kMAX_STEPS);
+  m_duration = rtypes::timestep(rng()->uniform(kMIN_DURATION, kMAX_DURATION));
 } /* task_start() */
 
 void wander::task_execute(void) {
@@ -50,21 +51,22 @@ void wander::task_execute(void) {
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.
    */
-  if (saa()->sensing()->nest_detect()) {
+  auto env = saa()->sensing()->env();
+  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
     base_strategy::wander();
-    m_count++;
+    ++m_steps;
     /*
      * Once we are comfortably inside the nest, stop phootoaxiing and just
      * wander.
      */
-    if (m_count <= kMIN_STEPS) {
+    if (m_steps <= kMIN_DURATION) {
       phototaxis();
     }
   } else { /* outside nest--just ca+phototaxis */
     phototaxis();
   }
 
-  if (m_count >= m_steps) {
+  if (m_steps >= m_duration) {
     m_task_running = false;
   }
 } /* task_execute() */

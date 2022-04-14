@@ -25,12 +25,15 @@
  ******************************************************************************/
 
 #include "cosm/cosm.hpp"
-#include "cosm/hal/ros/sensors/light_sensor.hpp"
 #include "cosm/hal/ros/sensors/lidar_sensor.hpp"
-#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
 #include "cosm/hal/sensors/odometry_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/env_sensor.hpp"
+
+#if(COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
+#include "cosm/hal/ros/sensors/light_sensor.hpp"
+#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
+#endif
 
 /*******************************************************************************
  * Namespaces

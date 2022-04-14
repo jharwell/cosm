@@ -27,6 +27,7 @@
 
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 #include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
+#include "cosm/spatial/strategy/block_drop/base_block_drop.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -53,6 +54,7 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
  public:
   foraging_util_hfsm(const csfsm::fsm_params* params,
                      std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
+                     std::unique_ptr<cssblock_drop::base_block_drop> block_drop,
                      rmath::rng* rng,
                      uint8_t max_states);
 
@@ -85,19 +87,24 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
                             const);
 
   /**
-   * \brief Robots entering this state will return to the nest.
-   *
-   * Once they enter the nest, robots:
-   *
-   * 1. Wander for a set amount of time in order to reduce congestion in the
-   *    nest.
-   * 2. Signal to the parent FSM that they have entered the nest and stop
-   *    moving.
+   * \brief Robots entering this state will return to the nest using the
+   * specified acquisition strategy.
    *
    * This state MUST have a parent state defined that is not
    * \ref rcppsw::patterns::fsm::hfsm::top_state().
    */
-  RCPPSW_HFSM_STATE_DECLARE(foraging_util_hfsm, transport_to_nest, nest_transport_data);
+  RCPPSW_HFSM_STATE_DECLARE(foraging_util_hfsm,
+                            transport_to_nest,
+                            nest_transport_data);
+
+  /**
+   * \brief Robots entering this state will drop their carried block in the nest
+   * using the specified strategy.
+   *
+   * This state MUST have a parent state defined that is not \ref
+   * hfsm::top_state().
+   */
+  RCPPSW_HFSM_STATE_DECLARE(foraging_util_hfsm, drop_carried_block, rpfsm::event_data);
 
   /**
    * \brief Robots entering this state will leave the nest (they are assumed to
@@ -139,9 +146,9 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
 
  private:
   /* clang-format off */
-  std::unique_ptr<cssnest_acq::base_nest_acq> m_nest_acq{nullptr};
+  std::unique_ptr<cssnest_acq::base_nest_acq>     m_nest_acq{nullptr};
+  std::unique_ptr<cssblock_drop::base_block_drop> m_block_drop{nullptr};
   /* clang-format on */
 };
 
 NS_END(fsm, foraging, cosm);
-

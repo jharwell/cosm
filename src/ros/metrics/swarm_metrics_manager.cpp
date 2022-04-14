@@ -92,7 +92,7 @@ swarm_metrics_manager::swarm_metrics_manager(
   ER_INFO("Waiting for all subscriber connections");
   std::all_of(std::begin(m_subs),
               std::end(m_subs),
-              [&](auto& sub) {
+              [&](const auto& sub) {
                 return wait_for_connection(sub);
               });
   ER_INFO("All subscribers connected");
@@ -205,7 +205,7 @@ void swarm_metrics_manager::register_with_n_block_clusters(
 } /* register_with_n_block_clusters() */
 
 bool swarm_metrics_manager::wait_for_connection(const ::ros::Subscriber& sub) {
-  while (sub.getNumPublishers() == 0) {
+  while (0 == sub.getNumPublishers()) {
     ER_ASSERT(::ros::ok(),
               "Unable to wait for subscriber connection--ros::ok() failed");
 

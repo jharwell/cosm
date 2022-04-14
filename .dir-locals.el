@@ -9,6 +9,7 @@
                                         (substitute-in-file-name "$rcsw/include")
                                         (substitute-in-file-name "$rcppsw/include")
                                         (substitute-in-file-name "/opt/ros/noetic/include")
+                                        (substitute-in-file-name "$localroot/ros/include")
                                         (concat (projectile-project-root)
                                                 "include")
                                         "/usr/include/lua5.2"

@@ -75,4 +75,3 @@ class nest_zone_tracker final : public cfsm::state_tracker,
 };
 
 NS_END(spatial, cosm);
-

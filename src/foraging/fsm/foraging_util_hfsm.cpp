@@ -39,20 +39,23 @@ NS_START(cosm, foraging, fsm);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-foraging_util_hfsm::foraging_util_hfsm(const csfsm::fsm_params* params,
-                                       std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
-                                       rmath::rng* rng,
-                                       uint8_t max_states)
+foraging_util_hfsm::foraging_util_hfsm(
+    const csfsm::fsm_params* params,
+    std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
+    std::unique_ptr<cssblock_drop::base_block_drop> block_drop,
+    rmath::rng* rng,
+    uint8_t max_states)
     : util_hfsm(params, rng, max_states),
       ER_CLIENT_INIT("cosm.foraging.fsm.foraging_util_hfsm"),
       RCPPSW_HFSM_CONSTRUCT_STATE(transport_to_nest, hfsm::top_state()),
+      RCPPSW_HFSM_CONSTRUCT_STATE(drop_carried_block, hfsm::top_state()),
       RCPPSW_HFSM_CONSTRUCT_STATE(leaving_nest, hfsm::top_state()),
-      m_nest_acq(std::move(nest_acq)) {}
+      m_nest_acq(std::move(nest_acq)),
+      m_block_drop(std::move(block_drop)) {}
 
 /*******************************************************************************
  * States
  ******************************************************************************/
-
 RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
                          leaving_nest,
                          rpfsm::event_data* data) {
@@ -75,7 +78,8 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
 
   /* don't use exited_nest() here--only high for a single timestep */
-  if (!saa()->sensing()->nest_detect()) {
+  auto env = saa()->sensing()->env();
+  if (!env->detect(chal::sensors::env_sensor::kNestTarget)) {
     return csfsm::util_signal::ekLEFT_NEST;
   }
   return rpfsm::event_signal::ekHANDLED;
@@ -95,7 +99,8 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
 
   if (!m_nest_acq->task_running()) {
     /* We have entered the nest, so perform our acquisition strategy */
-    if (saa()->sensing()->nest_detect()) {
+    auto env = saa()->sensing()->env();
+    if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
       /* tolerance not used at this level */
       csfsm::point_argument arg(-1, data->nest_loc);
       m_nest_acq->task_reset();
@@ -106,7 +111,8 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   if (m_nest_acq->task_running()) {
     m_nest_acq->task_execute();
     if (m_nest_acq->task_finished()) {
-      if (saa()->sensing()->nest_detect()) {
+      auto env = saa()->sensing()->env();
+      if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
         /*
          * We have arrived at the nest so stop moving and signal.
          */
@@ -121,6 +127,30 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
     inta_state_update();
     auto readings = saa()->sensing()->light()->readings();
     saa()->steer_force2D().accum(saa()->steer_force2D().phototaxis(readings));
+  }
+  return rpfsm::event_signal::ekHANDLED;
+} /* transport_to_nest() */
+
+RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
+                         drop_carried_block,
+                         rpfsm::event_data* data) {
+  ER_ASSERT(rpfsm::event_type::ekNORMAL == data->type(),
+            "ekST_TRANSPORT_TO_NEST cannot handle child events");
+  if (current_state() != last_state()) {
+    ER_DEBUG("Executing ekST_TRANSPORT_TO_NEST");
+    ER_ASSERT(nullptr != m_block_drop, "NULL block drop behavior");
+  }
+
+  if (!m_block_drop->task_running()) {
+    m_block_drop->task_reset();
+    m_block_drop->task_start(nullptr);
+  }
+
+  if (m_block_drop->task_running()) {
+    m_block_drop->task_execute();
+    if (m_block_drop->task_finished()) {
+      return csfsm::util_signal::ekDROPPED_BLOCK;
+    }
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* transport_to_nest() */
@@ -160,7 +190,9 @@ void foraging_util_hfsm::inta_state_update(void) {
 } /* inta_state_update() */
 
 void foraging_util_hfsm::nz_state_update(void) {
-  if (saa()->sensing()->nest_detect()) {
+  auto env = saa()->sensing()->env();
+
+  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
     nz_tracker()->state_enter();
   } else {
     nz_tracker()->state_exit();

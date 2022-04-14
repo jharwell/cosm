@@ -32,7 +32,7 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
-#include "cosm/hal/ros/sensors/ros_sensor.hpp"
+#include "cosm/hal/ros/sensors/ros_subscriber_sensor.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -54,7 +54,7 @@ NS_START(cosm, hal, ros, sensors);
  * - ROS extended turtlebot3
  */
 class lidar_sensor : public rer::client<lidar_sensor>,
-                     public chros::sensors::ros_sensor {
+                     public chros::sensors::ros_subscriber_sensor {
  public:
   explicit lidar_sensor(const cros::topic& robot_ns);
 

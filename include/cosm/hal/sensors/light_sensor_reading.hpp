@@ -52,4 +52,3 @@ struct light_sensor_reading {
 };
 
 NS_END(sensors, hal, cosm);
-

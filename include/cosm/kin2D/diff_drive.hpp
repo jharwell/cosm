@@ -88,4 +88,3 @@ class diff_drive : public rer::client<diff_drive> {
 };
 
 NS_END(kin2D, cosm);
-

@@ -46,9 +46,7 @@ NS_START(cosm, hal, sensors);
  */
 class env_sensor_impl {
  public:
-  explicit env_sensor_impl(const chsensors::config::env_sensor_config* const config)
-      : m_config(*config) {}
-
+  env_sensor_impl(void) = default;
   virtual ~env_sensor_impl(void) = default;
 
   /* Not copy constructable/assignable by default */
@@ -60,19 +58,8 @@ class env_sensor_impl {
   /**
    * \brief Detect the environmental feature represented by \p name.
    */
-  virtual bool detect(const std::string& name) const = 0;
-
-  void config_update(
-      const chsensors::config::env_sensor_config* const config) {
-    m_config = *config;
-  }
-
- protected:
-  const chsensors::config::env_sensor_config* config(void) const {
-    return &m_config;
-  }
-
-
+  virtual bool detect(const std::string& name,
+                      const chsensors::config::env_sensor_detection_config* config) = 0;
 };
 
 NS_END(sensors, hal, cosm);

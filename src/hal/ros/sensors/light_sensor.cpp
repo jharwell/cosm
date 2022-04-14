@@ -23,37 +23,42 @@
  ******************************************************************************/
 #include "cosm/hal/ros/sensors/light_sensor.hpp"
 
+#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
+#include "tsl2591/ReadingsService.h"
+#endif /* COSM_HAL_TARGET */
+
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+NS_START(rosbridge);
+namespace tsl2591 = ::tsl2591;
+NS_END(rosbridge);
 
+NS_START(cosm, hal, ros, sensors);
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
 light_sensor::light_sensor(const cros::topic& robot_ns)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"),
-      ros_sensor(robot_ns) {
-  /* enable(); */
-  /* auto n_publishers = decoratee().getNumPublishers(); */
-
-  /* ER_ASSERT(1 == n_publishers, */
-  /*           "Expected 1 publisher of light data for %s, got %d", */
-  /*           cpal::kRobotType.c_str(), */
-  /*           n_publishers); */
+      ros_service_sensor(robot_ns) {
+  enable();
+  ER_ASSERT(decoratee().exists(),
+            "Connected service %s does not exist for %s?",
+            service_name().c_str(),
+            cpal::kRobotType.c_str());
 }
 
 light_sensor::light_sensor(light_sensor&& other)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.light_sensor"),
-      ros_sensor(other.robot_ns()) {
-  /* enable(); */
+      ros_service_sensor(other.robot_ns()) {
+  enable();
 }
 
 light_sensor& light_sensor::operator=(light_sensor&& rhs) {
   this->m_light = rhs.m_light;
   rhs.disable();
-  /* this->enable(); */
+  this->enable();
   return *this;
 }
 
@@ -66,26 +71,38 @@ void light_sensor::enable(void) {
   if (is_enabled()) {
     return;
   }
-  auto topic = robot_ns() / cros::topic(kLightTopic);
-  ER_INFO("%s: ns=%s, topic=%s, subscribe=%s",
+  auto name = robot_ns() / cros::topic(kServiceName);
+  ER_INFO("%s: ns=%s, name=%s, connect=%s",
           __FUNCTION__,
           robot_ns().c_str(),
-          kLightTopic.c_str(),
-          topic.c_str());
+          kServiceName.c_str(),
+          name.c_str());
 
 
-  subscribe(topic, &light_sensor::callback, this);
+  connect<rosbridge::tsl2591::ReadingsService>(name);
 }
 
-std::vector<light_sensor::reading_type> light_sensor::readings(void) const {
-  /* ER_ASSERT(is_enabled(), */
-  /*           "%s called when disabled", */
-  /*           __FUNCTION__); */
-  return {};
-}
+std::vector<light_sensor::reading_type> light_sensor::readings(void) {
+  ER_ASSERT(is_enabled(),
+            "%s called when disabled",
+            __FUNCTION__);
 
-void light_sensor::callback(const std_msgs::Float32::ConstPtr& msg) {
-  m_light = *msg;
+  rosbridge::tsl2591::ReadingsService srv;
+
+  std::vector<chsensors::light_sensor_reading> ret;
+
+  if (!decoratee().call(srv)) {
+    ER_WARN("Failed to receive light sensor data!");
+    return ret;
+  }
+
+  for (auto &r : srv.response.readings) {
+    ER_INFO("Received reading: %f -> %f", r.angle, r.intensity);
+    if (r.intensity > 0) {
+      ret.push_back({r.intensity, rmath::radians(r.angle)});
+    }
+  } /* for(&r..) */
+  return ret;
 }
 
 NS_END(sensors, ros, hal, cosm);

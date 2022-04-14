@@ -49,4 +49,3 @@ struct nest_acq_config final : public rconfig::base_config {
 };
 
 NS_END(config, strategy, spatial, cosm);
-

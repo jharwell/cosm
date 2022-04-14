@@ -93,7 +93,7 @@ class block_carrying_controller {
    * values that are incidentally the same as those that correspond to a block
    * being found.
    */
-  virtual bool block_detect(void) const = 0;
+  virtual bool block_detect(void) = 0;
 
  private:
   /* clang-format off */

@@ -55,4 +55,3 @@ struct proximity_sensor_config final : public rconfig::base_config {
 };
 
 NS_END(config, sensors, hal, cosm);
-

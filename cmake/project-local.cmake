@@ -253,11 +253,19 @@ find_package(rcppsw COMPONENTS REQUIRED
 find_package(Lua REQUIRED)
 
 if("${COSM_BUILD_FOR}" MATCHES "ROS")
-  # ROS
-  find_package(catkin REQUIRED COMPONENTS
+  set(CATKIN_PKGS
     roscpp
     rosconsole
     std_msgs
+    )
+  if("${COSM_BUILD_FOR}" MATCHES "ETURTLEBOT3")
+    set(CATKIN_PKGS ${ROS_PKGS} sr04us)
+  endif()
+
+  # ROS
+  find_package(catkin REQUIRED COMPONENTS
+    ${CATKIN_PKGS}
+    HINTS ${CMAKE_INSTALL_PREFIX}
     )
 endif()
 
@@ -322,7 +330,7 @@ target_include_directories(
   ${cosm_LIBRARY}
   SYSTEM PUBLIC
   ${LIBRA_DEPS_PREFIX}/include
-  ${CMAKE_INSTALL_PREFIX}/system/include
+  ${CMAKE_INSTALL_PREFIX}/include
   ${catkin_INCLUDE_DIRS}
   )
 
@@ -357,6 +365,16 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   target_link_directories(${cosm_LIBRARY}
     PUBLIC
     ${LIBRA_DEPS_PREFIX}/lib/argos3)
+  target_link_libraries(${cosm_LIBRARY}
+    argos3core_simulator
+    argos3plugin_simulator_footbot
+    argos3plugin_simulator_epuck
+    argos3plugin_simulator_entities
+    argos3plugin_simulator_dynamics2d
+    argos3plugin_simulator_genericrobot
+    argos3plugin_simulator_qtopengl
+    argos3plugin_simulator_media
+    )
 endif()
 
 # Force failures at build time rather than runtime

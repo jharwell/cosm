@@ -25,14 +25,16 @@
  ******************************************************************************/
 #include <string>
 
+#include "rcppsw/patterns/decorator/decorator.hpp"
+
 #include "cosm/hal/hal.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/hal/sensors/config/env_sensor_config.hpp"
 
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-#include "cosm/hal/argos/sensors/ground_sensor.hpp"
+#include "cosm/hal/argos/sensors/env_sensor.hpp"
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-#include "cosm/hal/ros/sensors/sonar_sensor.hpp"
+#include "cosm/hal/ros/sensors/env_sensor.hpp"
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 
@@ -45,9 +47,9 @@ NS_START(cosm, hal, sensors);
  * Class Definitions
  ******************************************************************************/
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-using env_sensor_impl = chargos::sensors::ground_sensor;
+using impl_handle = chargos::sensors::env_sensor;
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-using env_sensor_impl = chros::sensors::sonar_sensor;
+using impl_handle = chros::sensors::env_sensor;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /**
@@ -60,30 +62,27 @@ using env_sensor_impl = chros::sensors::sonar_sensor;
  * additional higher level functionality beyond raw sensor readings too.
  */
 class env_sensor final : public rer::client<env_sensor>,
-                         public env_sensor_impl {
+                         public rpdecorator::decorator<impl_handle> {
  public:
   static inline const std::string kNestTarget = "nest";
+  static inline const std::string kBlockTarget = "block";
 
-#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-  template <typename TSensor>
-    env_sensor(TSensor * const sensor,
-               const chsensors::config::env_sensor_config* const config)
+  using rpdecorator::decorator<impl_handle>::decoratee;
+
+  env_sensor(impl_handle&& impl,
+             const config::env_sensor_config* const config)
        : ER_CLIENT_INIT("cosm.hal.sensors.env"),
-         env_sensor_impl(sensor),
+         decorator(std::move(impl)),
          m_config(*config) {}
-#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-  explicit env_sensor(const cros::topic& robot_ns,
-                      const config::env_sensor_config* const config)
-      : ER_CLIENT_INIT("cosm.hal.sensors.env"),
-        env_sensor_impl(robot_ns),
-        m_config(*config) {}
-#endif
 
   /* move only constructible/assignable to work with the saa subsystem */
   env_sensor(env_sensor&&) = default;
   env_sensor& operator=(env_sensor&&) = default;
   env_sensor(env_sensor&) = delete;
   env_sensor& operator=(env_sensor&) = delete;
+
+  RCPPSW_DECORATE_DECLDEF(reset);
+  RCPPSW_DECORATE_DECLDEF(disable);
 
   /**
    * \brief Detect if a certain condition is met by examining sensor
@@ -93,18 +92,14 @@ class env_sensor final : public rer::client<env_sensor>,
    *
    * \return \c TRUE iff the condition was detected.
    */
-  bool detect(const std::string& name) const {
+  bool detect(const std::string& name) {
     const auto &detection = m_config.detect_map.find(name);
 
     ER_ASSERT(m_config.detect_map.end() != detection,
               "Detection %s not found in configured map",
               name.c_str());
 
-    size_t sum = 0;
-    for (auto &r : readings()) {
-      sum += static_cast<size_t>(detection->second.range.contains(r.value));
-    } /* for(&r..) */
-    return  sum >= detection->second.consensus;
+    return decoratee().detect(name, &detection->second);
   }
 
   void config_update(
