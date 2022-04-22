@@ -1,7 +1,7 @@
 /**
- * \file backup.hpp
+ * \file backup_pivot.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2022 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -24,66 +24,67 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/strategy/block_drop/base_block_drop.hpp"
+#include "cosm/spatial/strategy/blocks/drop/base_drop.hpp"
+#include "cosm/kin/odometry.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, block_drop);
+NS_START(cosm, spatial, strategy, blocks, drop);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class backup
- * \ingroup spatial strategy block_drop
+ * \class backup_pivot
+ * \ingroup spatial strategy blocks drop
  *
  * \brief Strategy for robot motion after it has acquired the location it wants
- * to drop. Robots backup for a set # timesteps, and then continue on their
- * way. This is useful if robots are pushing objects rather than carrying them
- * to get them to "drop".
+ * to drop. Robots backup+pivot for a set # timesteps, and then continue on
+ * their way. This is useful if robots are pushing objects rather than carrying
+ * them to get them to "drop".
  *
- * Robots continue collisions while backing up.
+ * Robots do not avoid collisions while backing up (steering forces are disabled).
  */
-class backup : public csstrategy::block_drop::base_block_drop {
+class backup_pivot : public rer::client<backup_pivot>,
+               public cssblocks::drop::base_drop {
  public:
-  backup(const csfsm::fsm_params* params,
-         const config::block_drop_config* config,
-         rmath::rng* rng);
+  backup_pivot(const csfsm::fsm_params* params,
+               const cssblocks::config::drop_config* config,
+               rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
-  backup(const backup&) = delete;
-  backup& operator=(const backup&) = delete;
-  backup(backup&&) = delete;
-  backup& operator=(backup&&) = delete;
+  backup_pivot(const backup_pivot&) = delete;
+  backup_pivot& operator=(const backup_pivot&) = delete;
+  backup_pivot(backup_pivot&&) = delete;
+  backup_pivot& operator=(backup_pivot&&) = delete;
 
   /* taskable overrides */
   void task_start(cta::taskable_argument*) override final;
-  void task_reset(void) override final {
-    m_task_running = false;
-    m_duration = rtypes::timestep(0);
-  }
+  void task_reset(void) override final;
   bool task_running(void) const override final { return m_task_running; }
   bool task_finished(void) const override final { return !m_task_running; }
   void task_execute(void) override final;
 
-  std::unique_ptr<base_strategy> clone(void) const override {
+  std::unique_ptr<base_drop> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
       nz_tracker()
     };
-    return std::make_unique<backup>(&params, config(), rng());
+    return std::make_unique<backup_pivot>(&params, config(), rng());
   }
 
  private:
   /* clang-format off */
-  bool m_task_running{false};
+  bool             m_task_running{false};
   rtypes::timestep m_duration;
   rtypes::timestep m_steps{rtypes::timestep(0)};
+  ckin::odometry   m_odom_start{};
   /* clang-format on */
 };
 
 
-NS_END(block_drop, strategy, spatial, cosm);
+NS_END(drop, blocks, strategy, spatial, cosm);

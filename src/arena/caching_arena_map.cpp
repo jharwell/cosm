@@ -26,15 +26,15 @@
 
 #include "rcppsw/utils/maskable_enum.hpp"
 
+#include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/arena/ds/loctree.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
+#include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/arena/config/arena_map_config.hpp"
-#include "cosm/foraging/block_dist/dispatcher.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -68,27 +68,20 @@ bool caching_arena_map::initialize_private(void) {
 
   auto conflict_check = [&](const crepr::sim_block3D* block,
                             const rmath::vector2d& loc) {
-                          return cspatial::conflict_checker::placement2D(this,
-                                                                         block,
-                                                                         loc);
-                        };
+    return cspatial::conflict_checker::placement2D(this, block, loc);
+  };
   auto dist_success = [&](const crepr::sim_block3D* distributed) {
-                        /*
+    /*
                          * Update block location query tree. This is called from
                          * inside a block distributor, and therefore inside a
                          * context in which all necessary locks have already
                          * been taken.
                          */
-                        bloctree_update(distributed,
-                                        locking::ekALL_HELD);
-                      };
+    bloctree_update(distributed, locking::ekALL_HELD);
+  };
 
-  bool ret = block_dispatcher()->initialize(this,
-                                            avoid_ents,
-                                            block_bb(),
-                                            conflict_check,
-                                            dist_success,
-                                            rng());
+  bool ret = block_dispatcher()->initialize(
+      this, avoid_ents, block_bb(), conflict_check, dist_success, rng());
   ret |= distribute_all_blocks();
   return ret;
 } /* initialize_private() */
@@ -133,14 +126,12 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
    * Lookup the victim in the cache vector, since the i-th cache is not
    * guaranteed to be in position i in the vector.
    */
-  auto victim_oit =
-      std::find_if(m_cacheso.begin(), m_cacheso.end(), [&](const auto& c) {
-                                                         return id == c->id();
-      });
-  auto victim_ait =
-      std::find_if(m_cachesno.begin(), m_cachesno.end(), [&](const auto& c) {
-                                                         return id == c->id();
-                                                       });
+  auto victim_oit = std::find_if(m_cacheso.begin(),
+                                 m_cacheso.end(),
+                                 [&](const auto& c) { return id == c->id(); });
+  auto victim_ait = std::find_if(m_cachesno.begin(),
+                                 m_cachesno.end(),
+                                 [&](const auto& c) { return id == c->id(); });
   ER_ASSERT(victim_oit != m_cacheso.end(),
             "Victim cache%d not found in owned vector",
             victim->id().v());
@@ -168,12 +159,9 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
    * Update owned and access cache vectors, verifying that the removal worked as
    * expected.
    */
-  m_cachesno.erase(std::remove(m_cachesno.begin(),
-                               m_cachesno.end(),
-                               *victim_ait));
-  m_cacheso.erase(std::remove(m_cacheso.begin(),
-                              m_cacheso.end(),
-                              *victim_oit));
+  m_cachesno.erase(
+      std::remove(m_cachesno.begin(), m_cachesno.end(), *victim_ait));
+  m_cacheso.erase(std::remove(m_cacheso.begin(), m_cacheso.end(), *victim_oit));
   ER_ASSERT(m_cachesno.size() == before - 1,
             "Cache%d not removed from access vector",
             id.v());
@@ -182,10 +170,9 @@ void caching_arena_map::cache_remove(repr::arena_cache* victim,
             id.v());
 
   /* OK to search because victim memory chunk now in zombie caches */
-  auto sanity_ait =
-      std::find_if(m_zombie_caches.begin(),
-                   m_zombie_caches.end(),
-                   [&](const auto& c) { return id == c->id(); });
+  auto sanity_ait = std::find_if(m_zombie_caches.begin(),
+                                 m_zombie_caches.end(),
+                                 [&](const auto& c) { return id == c->id(); });
 
   /*
    * Remove from loctree. Notice that we don't reuse the victim_it--that has
@@ -310,19 +297,16 @@ void caching_arena_map::bloctree_update(const crepr::sim_block3D* block,
                                         const locking& locking) {
   maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 
-  auto created_it =
-      std::find_if(m_created_caches.begin(),
-                   m_created_caches.end(),
-                   [block](const auto& cache) {
+  auto created_it = std::find_if(m_created_caches.begin(),
+                                 m_created_caches.end(),
+                                 [block](const auto& cache) {
+                                   return cache->contains_block(block);
+                                 });
+
+  auto existing_it = std::find_if(
+      m_cachesno.begin(), m_cachesno.end(), [block](const auto& cache) {
         return cache->contains_block(block);
       });
-
-  auto existing_it =
-      std::find_if(m_cachesno.begin(),
-                   m_cachesno.end(),
-                   [block](const auto& cache) {
-                     return cache->contains_block(block);
-                   });
 
   /*
    * If the block is currently carried by a robot or in a cache don't put it in
@@ -378,21 +362,15 @@ void caching_arena_map::cloctree_update(const carepr::arena_cache* cache) {
 } /* cloctree_update() */
 
 void caching_arena_map::ordered_lock(const locking& locking) {
-    maybe_lock_wr(cache_mtx(),
-                !(locking & locking::ekCACHES_HELD));
-  maybe_lock_wr(block_mtx(),
-                !(locking & locking::ekBLOCKS_HELD));
-  maybe_lock_wr(grid_mtx(),
-                !(locking & locking::ekGRID_HELD));
+  maybe_lock_wr(cache_mtx(), !(locking & locking::ekCACHES_HELD));
+  maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
 } /* ordered_lock() */
 
 void caching_arena_map::ordered_unlock(const locking& locking) {
-  maybe_unlock_wr(grid_mtx(),
-                  !(locking & locking::ekGRID_HELD));
-  maybe_unlock_wr(block_mtx(),
-                  !(locking & locking::ekBLOCKS_HELD));
-  maybe_unlock_wr(cache_mtx(),
-                !(locking & locking::ekCACHES_HELD));
+  maybe_unlock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(cache_mtx(), !(locking & locking::ekCACHES_HELD));
 } /* ordered_unlock() */
 
 NS_END(arena, cosm);

@@ -24,9 +24,9 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/math/vector2.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/math/vector2.hpp"
 
 #include "cosm/repr/base_grid_view_entity.hpp"
 
@@ -56,22 +56,22 @@ NS_START(cosm, repr);
  * regardless of the orientation of the robot.
  */
 template <typename TGridViewEntityType, typename TFieldCoordRType>
-class base_grid_los : public rer::client<base_grid_los<TGridViewEntityType,
-                                             TFieldCoordRType>>,
-                      public TGridViewEntityType {
+class base_grid_los
+    : public rer::client<base_grid_los<TGridViewEntityType, TFieldCoordRType>>,
+      public TGridViewEntityType {
  public:
   using field_coord_rtype = TFieldCoordRType;
   using los_coord_type = rmath::vector2z;
   using grid_view_entity_type = TGridViewEntityType;
 
-  using typename grid_view_entity_type::grid_type;
   using typename grid_view_entity_type::cell_type;
+  using typename grid_view_entity_type::grid_type;
   using typename grid_view_entity_type::grid_view_type;
   using field_coord_dtype = typename grid_view_entity_type::coord_type;
 
+  using grid_view_entity_type::access;
   using grid_view_entity_type::xdsize;
   using grid_view_entity_type::ydsize;
-  using grid_view_entity_type::access;
 
   virtual field_coord_dtype abs_ll(void) const = 0;
   virtual field_coord_dtype abs_ul(void) const = 0;
@@ -86,4 +86,3 @@ class base_grid_los : public rer::client<base_grid_los<TGridViewEntityType,
 };
 
 NS_END(repr, cosm);
-

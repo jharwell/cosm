@@ -121,4 +121,3 @@ class partition_probability final : public rmath::sigmoid,
 };
 
 NS_END(ta, cosm);
-

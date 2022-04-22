@@ -27,7 +27,7 @@
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/rng.hpp"
 
-#include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/strategy/explore/base_explore.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -46,10 +46,12 @@ NS_START(cosm, spatial, strategy, explore);
  * \brief Roam around using Correlated Random Walk looking for something until
  * you happen to stumble across it.
  */
-class crw : public csstrategy::base_strategy,
-                          public rer::client<crw> {
+class crw : public cssexplore::base_explore,
+            public rer::client<crw> {
  public:
-  crw(const csfsm::fsm_params*  params, rmath::rng* rng);
+  crw(const csfsm::fsm_params* params,
+      const cssexplore::config::explore_config* config,
+      rmath::rng* rng);
 
   ~crw(void) override = default;
   crw(const crw&) = delete;
@@ -70,13 +72,13 @@ class crw : public csstrategy::base_strategy,
   void task_reset(void) override final;
 
   /* prototype overrides */
-  std::unique_ptr<base_strategy> clone(void) const override {
+  std::unique_ptr<base_explore> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
       nz_tracker()
     };
-    return std::make_unique<crw>(&params, rng());
+    return std::make_unique<crw>(&params, config(), rng());
   }
 
  private:
@@ -86,4 +88,3 @@ class crw : public csstrategy::base_strategy,
 };
 
 NS_END(explore, strategy, spatial, cosm);
-

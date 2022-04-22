@@ -48,10 +48,10 @@ class cube_block3D : public sim_block3D {
                const rmath::vector3d& dim,
                const rtypes::discretize_ratio& arena_res) noexcept
       : sim_block3D(id,
-                     dim,
-                     arena_res,
-                     rutils::color::kBLACK,
-                     crepr::block_type::ekCUBE) {}
+                    dim,
+                    arena_res,
+                    rutils::color::kBLACK,
+                    crepr::block_type::ekCUBE) {}
 
   std::unique_ptr<base_block3D> clone(void) const override {
     auto tmp = std::make_unique<cube_block3D>(id(), rdims3D(), arena_res());

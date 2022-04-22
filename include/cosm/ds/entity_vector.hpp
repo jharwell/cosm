@@ -71,4 +71,3 @@ using spatial_entity_vector = std::vector<spatial_entity_vector_type>;
 using const_spatial_entity_vector = std::vector<const_spatial_entity_vector_type>;
 
 NS_END(ds, cosm);
-

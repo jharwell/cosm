@@ -49,11 +49,9 @@ NS_START(cosm, spatial, strategy);
  * \brief Base class for different strategies that robots can
  * employ when exploring, acquiring goals, etc.
  */
-class  base_strategy : public cta::taskable,
-                                     public rpprototype::clonable<base_strategy> {
+class base_strategy : public cta::taskable {
  public:
-  explicit base_strategy(const csfsm::fsm_params*  params,
-                         rmath::rng* rng);
+  base_strategy(const csfsm::fsm_params*  params, rmath::rng* rng);
   base_strategy(subsystem::saa_subsystemQ3D* const saa,
                 cspatial::interference_tracker* const inta,
                 cspatial::nest_zone_tracker* const nz,
@@ -91,4 +89,3 @@ class  base_strategy : public cta::taskable,
 };
 
 NS_END(strategy, spatial, cosm);
-

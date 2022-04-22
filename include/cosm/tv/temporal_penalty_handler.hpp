@@ -28,12 +28,12 @@
 #include <mutex>
 #include <string>
 
+#include "rcppsw/control/periodic_waveform.hpp"
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/multithread/lockable.hpp"
-#include "rcppsw/control/periodic_waveform.hpp"
 
-#include "cosm/tv/temporal_penalty.hpp"
 #include "cosm/tv/config/temporal_penalty_config.hpp"
+#include "cosm/tv/temporal_penalty.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -55,7 +55,7 @@ NS_START(cosm, tv);
  * manipulating it to derived classes.
  */
 class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
-                                               public rmultithread::lockable {
+                                 public rmultithread::lockable {
  public:
   using const_iterator_type =
       typename std::list<temporal_penalty>::const_iterator;
@@ -67,8 +67,9 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
    * \param name The name of the handler, for differentiating handler instances
    *             in logging statements.
    */
-  temporal_penalty_handler(const ctv::config::temporal_penalty_config* const config,
-                           const std::string& name);
+  temporal_penalty_handler(
+      const ctv::config::temporal_penalty_config* const config,
+      const std::string& name);
 
   ~temporal_penalty_handler(void) override = default;
 
@@ -117,7 +118,7 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
    *             to this class.
    */
   bool is_serving_penalty(const controller::base_controller& controller,
-                        bool lock = true) const   RCPPSW_PURE ;
+                          bool lock = true) const RCPPSW_PURE;
 
   /**
    * \brief Determine if a robot has satisfied the \ref temporal_penalty
@@ -162,7 +163,6 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
   rtypes::timestep penalty_finish_uniqueify(const rtypes::timestep& start,
                                             rtypes::timestep duration) const;
 
-
   /* clang-format off */
   const bool                          mc_unique_finish;
   const std::string                   mc_name;
@@ -174,4 +174,3 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
 };
 
 NS_END(tv, cosm);
-

@@ -32,9 +32,7 @@ NS_START(cosm, arena, config, xml);
  * Member Functions
  ******************************************************************************/
 void arena_map_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   ticpp::Element anode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();

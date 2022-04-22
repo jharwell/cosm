@@ -66,4 +66,3 @@ class logical_task {
 };
 
 NS_END(ta, cosm);
-

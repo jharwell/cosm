@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/types/discretize_ratio.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/types/discretize_ratio.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -62,14 +62,11 @@ class base_grid_view_entity : public rpdecorator::decorator<TGridViewType> {
 
   base_grid_view_entity(const grid_view_type& view,
                         const rtypes::discretize_ratio& resolution)
-      : rpdecorator::decorator<grid_view_type>(view),
-        mc_resolution(resolution) {}
+      : rpdecorator::decorator<grid_view_type>(view), mc_resolution(resolution) {}
 
   virtual ~base_grid_view_entity(void) = default;
 
-  const rtypes::discretize_ratio& resolution(void) const {
-    return mc_resolution;
-  }
+  const rtypes::discretize_ratio& resolution(void) const { return mc_resolution; }
 
   /**
    * \brief Get the cell associated with a particular grid location within the
@@ -109,4 +106,3 @@ class base_grid_view_entity : public rpdecorator::decorator<TGridViewType> {
 };
 
 NS_END(repr, cosm);
-

@@ -21,24 +21,23 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/block_drop/base_block_drop.hpp"
+#include "cosm/spatial/strategy/blocks/drop/base_drop.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, block_drop);
+NS_START(cosm, spatial, strategy, blocks, drop);
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_block_drop::base_block_drop(const csfsm::fsm_params* params,
-                                 const config::block_drop_config* config,
-                                 rmath::rng* rng)
-    : base_strategy(params, rng),
-      mc_config(*config) {}
+base_drop::base_drop(const csfsm::fsm_params* params,
+                     const cssblocks::config::drop_config* config,
+                     rmath::rng* rng)
+    : base_strategy(params, rng), mc_config(*config) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 
-NS_END(block_drop, strategy, spatial, cosm);
+NS_END(drop, blocks, strategy, spatial, cosm);

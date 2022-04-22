@@ -82,7 +82,8 @@ void sierra_parser::parse(void) {
     ER_DEBUG("Found barrier_start: '%s'=%d", param.c_str(), start);
     m_config->experiment.barrier_start = start;
   }
-  ER_INFO("length=%zu,param_file=%s,ticks_per_sec=%d,n_robots=%zu,barrier_start=%d",
+  ER_INFO("length=%zu,param_file=%s,ticks_per_sec=%d,n_robots=%zu,barrier_start=%"
+          "d",
           m_config->experiment.length.v(),
           m_config->experiment.param_file.c_str(),
           m_config->experiment.ticks_per_sec.v(),
@@ -96,8 +97,7 @@ bool sierra_parser::validate(void) const {
              "Experiment length cannot be negative");
     ER_CHECK(!m_config->experiment.param_file.empty(),
              "Experiment param file cannot be empty");
-    ER_CHECK(m_config->experiment.n_robots > 0U,
-             "# robots must be > 0");
+    ER_CHECK(m_config->experiment.n_robots > 0U, "# robots must be > 0");
     ER_CHECK(m_config->experiment.ticks_per_sec > 0U,
              "Controller rate cannot be negative");
   }

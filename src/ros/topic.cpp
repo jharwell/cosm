@@ -36,9 +36,7 @@ NS_START(cosm, ros);
  * Member Functions
  ******************************************************************************/
 topic to_ns(const rtypes::type_uuid& robot_id) {
-  return cros::topic("/" +
-                     cpal::kRobotNamePrefix +
-                     rcppsw::to_string(robot_id));
+  return cros::topic("/" + cpal::kRobotNamePrefix + rcppsw::to_string(robot_id));
 } /* to_ns() */
 
 NS_END(ros, cosm);

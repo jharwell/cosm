@@ -50,5 +50,4 @@ penalty_id_calculator::from_free_pickup(const rmath::vector2d& loc,
   return id;
 } /* from_free_pickup() */
 
-
 NS_END(tv, foraging, cosm);

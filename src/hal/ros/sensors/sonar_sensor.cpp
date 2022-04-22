@@ -36,7 +36,7 @@ NS_START(cosm, hal, ros, sensors);
  * Constructors/Destructors
  ******************************************************************************/
 sonar_sensor::sonar_sensor(const cros::topic& robot_ns,
-                             const config::sonar_sensor_config* config)
+                           const config::sonar_sensor_config* config)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.sonar"),
       ros_service_sensor(robot_ns),
       m_config(*config) {
@@ -77,14 +77,11 @@ void sonar_sensor::enable(void) {
           m_config.trigger_pin,
           m_config.echo_pin);
 
-
   connect<rosbridge::sr04us::PingService>(name);
 }
 
 std::vector<chsensors::env_sensor_reading> sonar_sensor::readings(void) {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+  ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
 
   rosbridge::sr04us::PingService srv;
   srv.request.trig = m_config.trigger_pin;
@@ -97,7 +94,8 @@ std::vector<chsensors::env_sensor_reading> sonar_sensor::readings(void) {
       ER_DEBUG("Failed to receive ping data!");
       continue;
     }
-    for (auto &r : srv.response.readings) {
+    for (auto& r : srv.response.readings) {
+      ER_INFO("Received reading: %f", r.value);
       if (r.value > 0) {
         ret.emplace_back(r.value);
       }

@@ -25,12 +25,12 @@
 
 #include <algorithm>
 
+#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/arena/operations/block_extent_set.hpp"
 #include "cosm/arena/operations/free_block_drop.hpp"
-#include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/ds/cell2D.hpp"
-#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/entity2D.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -40,11 +40,12 @@ NS_START(cosm, foraging, block_dist);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-random_distributor::random_distributor(const cads::arena_grid::view& area,
-                                       cads::arena_grid* arena_grid,
-                                       const cspatial::conflict_checker::map_cb_type& conflict_check,
-                                       const dist_success_cb_type& dist_success,
-                                       rmath::rng* rng)
+random_distributor::random_distributor(
+    const cads::arena_grid::view& area,
+    cads::arena_grid* arena_grid,
+    const cspatial::conflict_checker::map_cb_type& conflict_check,
+    const dist_success_cb_type& dist_success,
+    rmath::rng* rng)
     : ER_CLIENT_INIT("cosm.foraging.block_dist.random"),
       base_distributor(arena_grid, rng),
       mc_origin(area.origin()->loc()),
@@ -62,8 +63,7 @@ random_distributor::random_distributor(const cads::arena_grid::view& area,
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status
-random_distributor::distribute_block(crepr::sim_block3D* block) {
+dist_status random_distributor::distribute_block(crepr::sim_block3D* block) {
   cds::cell2D* cell = nullptr;
   auto coords = coord_search(block);
   if (!coords) {
@@ -159,10 +159,10 @@ bool random_distributor::verify_block_dist(
   {
     auto status = mc_conflict_check(block, block->ranchor2D());
     ER_ASSERT(!(status.x && status.y),
-            "Placement conflict for block%d@%s/%s after distribution",
-            block->id().v(),
-            rcppsw::to_string(block->ranchor2D()).c_str(),
-            rcppsw::to_string(block->danchor2D()).c_str());
+              "Placement conflict for block%d@%s/%s after distribution",
+              block->id().v(),
+              rcppsw::to_string(block->ranchor2D()).c_str(),
+              rcppsw::to_string(block->danchor2D()).c_str());
   }
   return true;
 
@@ -182,9 +182,7 @@ random_distributor::coord_search(const crepr::sim_block3D* block) {
 
   if (coord_search_policy::ekFREE_CELL == m_search_policy) {
     ER_DEBUG("Using FREE_CELL policy");
-    return coord_search_free_cell(area_xrange,
-                                  area_yrange,
-                                  block);
+    return coord_search_free_cell(area_xrange, area_yrange, block);
   } else if (coord_search_policy::ekRANDOM == m_search_policy) {
     ER_DEBUG("Using RANDOM policy");
     return coord_search_random(area_xrange, area_yrange, block);
@@ -193,10 +191,9 @@ random_distributor::coord_search(const crepr::sim_block3D* block) {
 } /* coord_search() */
 
 boost::optional<random_distributor::coord_search_res_t>
-random_distributor::coord_search_random(
-    const rmath::rangez& c_xrange,
-    const rmath::rangez& c_yrange,
-    const crepr::sim_block3D* block) {
+random_distributor::coord_search_random(const rmath::rangez& c_xrange,
+                                        const rmath::rangez& c_yrange,
+                                        const crepr::sim_block3D* block) {
   /*
    * Try to find an available set of relative+absolute coordinates such that if
    * the entity is placed there it will not overlap any other entities in the
@@ -218,10 +215,9 @@ random_distributor::coord_search_random(
 } /* coord_search_random() */
 
 boost::optional<random_distributor::coord_search_res_t>
-random_distributor::coord_search_free_cell(
-    const rmath::rangez& c_xrange,
-    const rmath::rangez& c_yrange,
-    const crepr::sim_block3D* block) {
+random_distributor::coord_search_free_cell(const rmath::rangez& c_xrange,
+                                           const rmath::rangez& c_yrange,
+                                           const crepr::sim_block3D* block) {
   std::vector<rmath::vector2z> rel_coords;
   for (size_t i = c_xrange.lb(); i <= c_xrange.ub(); ++i) {
     for (size_t j = c_yrange.lb(); j <= c_yrange.ub(); ++j) {

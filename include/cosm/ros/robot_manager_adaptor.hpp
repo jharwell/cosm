@@ -67,9 +67,7 @@ class robot_manager_adaptor : public cpal::base_swarm_manager,
 
  protected:
 #if (LIBRA_ER >= LIBRA_ER_ALL)
-  void ndc_uuid_push(void) const override final {
-    ER_NDC_PUSH("[ros_rb]");
-  }
+  void ndc_uuid_push(void) const override final { ER_NDC_PUSH("[ros_rb]"); }
   void ndc_uuid_pop(void) const override final { ER_NDC_POP(); }
   void mdc_ts_update(void) const override final {
     auto diff = ::ros::Time::now().sec - m_start.sec;

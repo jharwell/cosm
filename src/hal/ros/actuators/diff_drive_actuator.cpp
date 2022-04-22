@@ -56,12 +56,11 @@ void diff_drive_actuator::enable(void) {
   advertise<geometry_msgs::Twist>(topic);
 }
 
-void diff_drive_actuator::set_from_twist(const ckin::twist& desired,
-                                         const rmath::range<rmath::radians>& soft_turn,
-                                         double) {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+void diff_drive_actuator::set_from_twist(
+    const ckin::twist& desired,
+    const rmath::range<rmath::radians>& soft_turn,
+    double) {
+  ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
 
   geometry_msgs::Twist t;
   auto angle = rmath::radians(desired.angular.z()).signed_normalize();
@@ -74,7 +73,5 @@ void diff_drive_actuator::set_from_twist(const ckin::twist& desired,
            rcppsw::to_string(soft_turn).c_str());
   decoratee().publish(t);
 }
-
-
 
 NS_END(actuators, ros, hal, cosm);

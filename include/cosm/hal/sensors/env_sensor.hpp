@@ -96,10 +96,30 @@ class env_sensor final : public rer::client<env_sensor>,
     const auto &detection = m_config.detect_map.find(name);
 
     ER_ASSERT(m_config.detect_map.end() != detection,
-              "Detection %s not found in configured map",
+              "Detection %s not found in configured map: cannot detect",
               name.c_str());
 
+    if (!detection->second.enabled) {
+      ER_WARN("Environmental feature detection of %s disabled",
+              name.c_str());
+      return false;
+    }
     return decoratee().detect(name, &detection->second);
+  }
+
+  void disable(const std::string& name) {
+    auto detection = m_config.detect_map.find(name);
+    ER_ASSERT(m_config.detect_map.end() != detection,
+              "Detection %s not found in configured map: cannot disable",
+              name.c_str());
+    detection->second.enabled = false;
+  }
+  void enable(const std::string& name) {
+    auto detection = m_config.detect_map.find(name);
+    ER_ASSERT(m_config.detect_map.end() != detection,
+              "Detection %s not found in configured map: cannot enable",
+              name.c_str());
+    detection->second.enabled = true;
   }
 
   void config_update(

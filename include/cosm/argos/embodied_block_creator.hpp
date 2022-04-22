@@ -26,10 +26,10 @@
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/argos/embodied_block_variant.hpp"
 #include "cosm/argos/embodied_cube_block.hpp"
 #include "cosm/argos/embodied_ramp_block.hpp"
-#include "cosm/argos/embodied_block_variant.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -45,7 +45,6 @@ class swarm_manager_adaptor;
 
 NS_START(cosm, argos);
 
-
 /*******************************************************************************
  * Structure Definitions
  ******************************************************************************/
@@ -58,12 +57,13 @@ NS_START(cosm, argos);
  */
 class embodied_block_creator {
  public:
-  explicit embodied_block_creator(cpargos::swarm_manager_adaptor* sm) : m_sm(sm) {}
+  explicit embodied_block_creator(cpargos::swarm_manager_adaptor* sm)
+      : m_sm(sm) {}
 
-  cargos::embodied_block_varianto operator()(
-      const crepr::cube_block3D* block) const;
-  cargos::embodied_block_varianto operator()(
-      const crepr::ramp_block3D* block) const;
+  cargos::embodied_block_varianto
+  operator()(const crepr::cube_block3D* block) const;
+  cargos::embodied_block_varianto
+  operator()(const crepr::ramp_block3D* block) const;
 
  private:
   /* clang-format off */
@@ -72,4 +72,3 @@ class embodied_block_creator {
 };
 
 NS_END(argos, cosm);
-

@@ -72,14 +72,11 @@ void lidar_sensor::enable(void) {
           kScanTopic.c_str(),
           topic.c_str());
 
-
   subscribe(topic, &lidar_sensor::callback, this);
 }
 
 std::vector<rmath::vector2d> lidar_sensor::readings(void) const {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+  ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
 
   std::vector<rmath::vector2d> ret;
 
@@ -89,11 +86,8 @@ std::vector<rmath::vector2d> lidar_sensor::readings(void) const {
    * which will make collision detection/obstacle avoidance much less reliable.
    */
   for (size_t i = 0; i < m_scan.ranges.size(); ++i) {
-    if (RCPPSW_IS_BETWEEN(m_scan.ranges[i],
-                          m_scan.range_min,
-                          m_scan.range_max)) {
-      auto angle = rmath::radians(m_scan.angle_min +
-                                  i * m_scan.angle_increment);
+    if (RCPPSW_IS_BETWEEN(m_scan.ranges[i], m_scan.range_min, m_scan.range_max)) {
+      auto angle = rmath::radians(m_scan.angle_min + i * m_scan.angle_increment);
 
       /*
        * To be consistent with what we have to use with ARGoS. Not ideal, but

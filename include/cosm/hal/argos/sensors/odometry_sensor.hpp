@@ -56,25 +56,25 @@ NS_START(cosm, hal, argos, sensors);
 */
 class odometry_sensor final
     : public rer::client<odometry_sensor>,
-      public chal::sensors::base_sensor<std::pair<position_sensor,
+      public chsensors::base_sensor<std::pair<position_sensor,
                                                   diff_drive_sensor>
                                         > {
  public:
   using decoratee_type = std::pair<position_sensor, diff_drive_sensor>;
 
  private:
-  using chal::sensors::base_sensor<decoratee_type>::decoratee;
+  using chsensors::base_sensor<decoratee_type>::decoratee;
 
  public:
-  using chal::sensors::base_sensor<decoratee_type>::enable;
-  using chal::sensors::base_sensor<decoratee_type>::disable;
-  using chal::sensors::base_sensor<decoratee_type>::reset;
-  using chal::sensors::base_sensor<decoratee_type>::is_enabled;
+  using chsensors::base_sensor<decoratee_type>::enable;
+  using chsensors::base_sensor<decoratee_type>::disable;
+  using chsensors::base_sensor<decoratee_type>::reset;
+  using chsensors::base_sensor<decoratee_type>::is_enabled;
 
   explicit odometry_sensor(position_sensor&& position,
                            diff_drive_sensor&& steering)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.odometry"),
-        chal::sensors::base_sensor<decoratee_type>(
+        chsensors::base_sensor<decoratee_type>(
             std::make_pair(std::move(position),
                            std::move(steering))) {}
 

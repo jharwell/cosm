@@ -44,7 +44,8 @@ nest_acq_metrics_collector::nest_acq_metrics_collector(
 
 void nest_acq_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const nest_acq_metrics&>(metrics);
-  auto* thresh = dynamic_cast<const cssnest_acq::random_thresh*>(m.nest_acq_strategy());
+  auto* thresh =
+      dynamic_cast<const cssnest_acq::random_thresh*>(m.nest_acq_strategy());
   if (nullptr == thresh) {
     return;
   }

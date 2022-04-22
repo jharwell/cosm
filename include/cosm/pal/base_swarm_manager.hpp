@@ -104,7 +104,6 @@ class base_swarm_manager : public rer::client<base_swarm_manager> {
 
   fs::path output_root(void) const { return m_output_root; }
 
-
   void timestep(const rtypes::timestep& t) { m_timestep = t; }
   const rtypes::timestep& timestep(void) const { return m_timestep; }
 
@@ -117,4 +116,3 @@ class base_swarm_manager : public rer::client<base_swarm_manager> {
 };
 
 NS_END(cosm, pal);
-

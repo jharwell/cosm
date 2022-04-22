@@ -33,9 +33,7 @@ NS_START(cosm, steer2D, config, xml);
  ******************************************************************************/
 void arrival_force_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: child=%s",
-             node.Value().c_str(),
-             kXMLRoot.c_str());
+    ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
     ticpp::Element anode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();

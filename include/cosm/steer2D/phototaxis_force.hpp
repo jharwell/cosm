@@ -70,4 +70,3 @@ class phototaxis_force {
 };
 
 NS_END(steer2D, cosm);
-

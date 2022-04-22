@@ -112,4 +112,3 @@ class abort_probability : public rmath::sigmoid {
 };
 
 NS_END(ta, cosm);
-

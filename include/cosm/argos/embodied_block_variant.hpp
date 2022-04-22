@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <variant>
 #include <memory>
+#include <variant>
 
 #include "cosm/cosm.hpp"
 
@@ -43,12 +43,11 @@ class embodied_cube_block;
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-using embodied_block_varianto = std::variant<
-  std::unique_ptr<embodied_ramp_block>,
-  std::unique_ptr<embodied_cube_block>
-  >;
+using embodied_block_varianto =
+    std::variant<std::unique_ptr<embodied_ramp_block>,
+                 std::unique_ptr<embodied_cube_block> >;
 
-using embodied_block_variantno = std::variant<embodied_ramp_block*,
-                                              embodied_cube_block*>;
+using embodied_block_variantno =
+    std::variant<embodied_ramp_block*, embodied_cube_block*>;
 
 NS_END(argos, cosm);

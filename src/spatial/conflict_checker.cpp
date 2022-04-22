@@ -26,8 +26,8 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/ds/loctree.hpp"
-#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/nest.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -101,9 +101,7 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
      * Because we picked a larger than strictly required bounding box, we
      * actually need to check what we get in return for overlap.
      */
-    conflict = block_conflict(block,
-                              map->blocks()[id.v()],
-                              loc);
+    conflict = block_conflict(block, map->blocks()[id.v()], loc);
     RCPPSW_CHECK(!(conflict.x && conflict.y));
   } /* for(&id..) */
 
@@ -115,9 +113,8 @@ conflict_checker::status
 conflict_checker::placement2D(const carena::caching_arena_map* map,
                               const crepr::sim_block3D* const block,
                               const rmath::vector2d& loc) {
-  status conflict =placement2D(static_cast<const carena::base_arena_map*>(map),
-                               block,
-                               loc);
+  status conflict =
+      placement2D(static_cast<const carena::base_arena_map*>(map), block, loc);
   if (conflict.x && conflict.y) {
     return conflict;
   }

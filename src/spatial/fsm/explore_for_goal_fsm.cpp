@@ -37,7 +37,7 @@ NS_START(cosm, spatial, fsm);
  ******************************************************************************/
 explore_for_goal_fsm::explore_for_goal_fsm(
     const csfsm::fsm_params* params,
-    std::unique_ptr<csstrategy::base_strategy> behavior,
+    std::unique_ptr<cssexplore::base_explore> behavior,
     rmath::rng* rng,
     const std::function<bool(void)>& goal_detect)
     : util_hfsm(params, rng, ekST_MAX_STATES),
@@ -53,7 +53,7 @@ explore_for_goal_fsm::explore_for_goal_fsm(
                                              &entry_explore,
                                              nullptr),
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
-      m_explore_behavior(std::move(behavior)),
+      m_behavior(std::move(behavior)),
       m_goal_detect(goal_detect) {}
 
 RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, start) {
@@ -75,14 +75,17 @@ RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   if (ekST_EXPLORE != last_state()) {
     ER_DEBUG("Executing ekST_EXPLORE");
   }
-
-  if (m_explore_time >= kMIN_EXPLORE_TIME && m_goal_detect()) {
+  ER_INFO("Behavior: %p, duration met? %d, goal detect? %d",
+          m_behavior.get(),
+          m_behavior->min_duration_met(),
+          m_goal_detect());
+  if (nullptr != m_behavior && m_behavior->min_duration_met() &&
+      m_goal_detect()) {
     internal_event(ekST_FINISHED);
   } else {
-    if (nullptr != m_explore_behavior) {
-      m_explore_behavior->task_execute();
+    if (nullptr != m_behavior) {
+      m_behavior->task_execute();
     }
-    ++m_explore_time;
   }
   return util_signal::ekHANDLED;
 }
@@ -99,7 +102,7 @@ bool explore_for_goal_fsm::task_finished(void) const {
 }
 
 bool explore_for_goal_fsm::task_running(void) const {
-  return ekST_EXPLORE == current_state() && nullptr != m_explore_behavior;
+  return ekST_EXPLORE == current_state() && nullptr != m_behavior;
 }
 
 void explore_for_goal_fsm::task_execute(void) {
@@ -108,15 +111,14 @@ void explore_for_goal_fsm::task_execute(void) {
 
 void explore_for_goal_fsm::task_reset(void) {
   init();
-  m_explore_time = 0;
-  if (nullptr != m_explore_behavior) {
-    m_explore_behavior->task_reset();
+  if (nullptr != m_behavior) {
+    m_behavior->task_reset();
   }
 }
 
 void explore_for_goal_fsm::task_start(ta::taskable_argument* c_arg) {
-  if (nullptr != m_explore_behavior) {
-    m_explore_behavior->task_start(c_arg);
+  if (nullptr != m_behavior) {
+    m_behavior->task_start(c_arg);
   }
 
   static const uint8_t kTRANSITIONS[] = {

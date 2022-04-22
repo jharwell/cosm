@@ -374,4 +374,3 @@ class executable_task : public logical_task,
 };
 
 NS_END(ta, cosm);
-

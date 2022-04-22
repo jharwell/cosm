@@ -48,8 +48,9 @@ NS_START(cosm, spatial, strategy, nest_acq);
 
 class wander_random_thresh : public csstrategy::nest_acq::random_thresh {
  public:
-  wander_random_thresh(const csfsm::fsm_params* params, rmath::rng* rng)
-      : random_thresh(params, rng) {}
+  wander_random_thresh(const cssnest_acq::config::nest_acq_config* config,
+                       const csfsm::fsm_params* params,
+                       rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
   wander_random_thresh(const wander_random_thresh&) = delete;
@@ -65,16 +66,15 @@ class wander_random_thresh : public csstrategy::nest_acq::random_thresh {
     return this;
   }
 
-  std::unique_ptr<base_strategy> clone(void) const override {
+  std::unique_ptr<base_nest_acq> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
       nz_tracker()
     };
-    return std::make_unique<wander_random_thresh>(&params, rng());
+    return std::make_unique<wander_random_thresh>(config(), &params, rng());
   }
 };
 
 
 NS_END(nest_acq3, strategy, spatial, cosm);
-

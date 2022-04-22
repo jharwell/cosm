@@ -35,9 +35,8 @@ NS_START(cosm, foraging, metrics);
  ******************************************************************************/
 block_cluster_metrics_collector::block_cluster_metrics_collector(
     std::unique_ptr<rmetrics::base_sink> sink,
-    size_t n_clusters) :
-    base_collector(std::move(sink)),
-    m_data(n_clusters) {}
+    size_t n_clusters)
+    : base_collector(std::move(sink)), m_data(n_clusters) {}
 
 /*******************************************************************************
  * Member Functions
@@ -51,13 +50,13 @@ void block_cluster_metrics_collector::collect(
 
   ral::mt_set(m_data.extents[m.id().v()].xmin, m.ranchor2D().x());
   ral::mt_set(m_data.extents[m.id().v()].xmax,
-               m.ranchor2D().x() + m.xrspan().span());
+              m.ranchor2D().x() + m.xrspan().span());
   ral::mt_set(m_data.extents[m.id().v()].ymin, m.ranchor2D().y());
   ral::mt_set(m_data.extents[m.id().v()].ymax,
-               m.ranchor2D().y() + m.yrspan().span());
+              m.ranchor2D().y() + m.yrspan().span());
 
   ral::mt_set(m_data.extents[m.id().v()].area,
-               m.xrspan().span() * m.yrspan().span());
+              m.xrspan().span() * m.yrspan().span());
 } /* collect() */
 
 void block_cluster_metrics_collector::reset_after_interval(void) {

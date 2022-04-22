@@ -33,28 +33,24 @@ NS_START(cosm, metrics, specs);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-name_spec::name_spec(const std::string& xml,
-                     const std::string& scoped)
-    : m_xml(xml),
-      m_scoped(scoped) {}
+name_spec::name_spec(const std::string& xml, const std::string& scoped)
+    : m_xml(xml), m_scoped(scoped) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 std::string name_spec::xml(const rtypes::type_uuid& id) const {
   if (rtypes::constants::kNoUUID != id) {
-    return std::regex_replace(m_xml.c_str(),
-                               std::regex("__UUID__"),
-                               rcppsw::to_string(id).c_str());
+    return std::regex_replace(
+        m_xml.c_str(), std::regex("__UUID__"), rcppsw::to_string(id).c_str());
   }
   return m_xml;
 } /* xml() */
 
 std::string name_spec::scoped(const rtypes::type_uuid& id) const {
   if (rtypes::constants::kNoUUID != id) {
-    return std::regex_replace(m_scoped.c_str(),
-                               std::regex("__UUID__"),
-                               rcppsw::to_string(id).c_str());
+    return std::regex_replace(
+        m_scoped.c_str(), std::regex("__UUID__"), rcppsw::to_string(id).c_str());
   }
   return m_scoped;
 } /* scoped() */

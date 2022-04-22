@@ -103,4 +103,3 @@ class temporal_penalty {
 };
 
 NS_END(tv, cosm);
-

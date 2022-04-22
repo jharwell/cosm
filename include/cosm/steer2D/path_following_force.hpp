@@ -78,4 +78,3 @@ class path_following_force {
 };
 
 NS_END(steer2D, cosm);
-

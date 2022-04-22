@@ -104,4 +104,3 @@ class block_motion_handler : public rer::client<block_motion_handler>,
 };
 
 NS_END(foraging, cosm);
-

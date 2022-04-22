@@ -25,6 +25,7 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/base_strategy.hpp"
 #include "cosm/spatial/strategy/metrics/nest_acq_metrics.hpp"
+#include "cosm/spatial/strategy/nest_acq/config/nest_acq_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -43,9 +44,12 @@ NS_START(cosm, spatial, strategy, nest_acq);
  */
 
 class base_nest_acq : public csstrategy::base_strategy,
+                      public rpprototype::clonable<base_nest_acq>,
                       public cssmetrics::nest_acq_metrics {
  public:
-  base_nest_acq(const csfsm::fsm_params* params, rmath::rng* rng);
+  base_nest_acq(const cssnest_acq::config::nest_acq_config* config,
+                const csfsm::fsm_params* params,
+                rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
   base_nest_acq(const base_nest_acq&) = delete;
@@ -56,7 +60,16 @@ class base_nest_acq : public csstrategy::base_strategy,
   const cssnest_acq::base_nest_acq* nest_acq_strategy(void) const override {
     return this;
   }
+
+ protected:
+  const cssnest_acq::config::nest_acq_config* config(void) const {
+    return &mc_config;
+  }
+
+ private:
+  /* clang-format off */
+  const cssnest_acq::config::nest_acq_config mc_config;
+  /* clang-format on */
 };
 
 NS_END(nest_acq, strategy, spatial, cosm);
-

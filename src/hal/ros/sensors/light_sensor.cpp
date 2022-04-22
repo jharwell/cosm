@@ -40,8 +40,7 @@ NS_START(cosm, hal, ros, sensors);
  * Constructors/Destructors
  ******************************************************************************/
 light_sensor::light_sensor(const cros::topic& robot_ns)
-    : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"),
-      ros_service_sensor(robot_ns) {
+    : ER_CLIENT_INIT("cosm.hal.ros.sensors.light"), ros_service_sensor(robot_ns) {
   enable();
   ER_ASSERT(decoratee().exists(),
             "Connected service %s does not exist for %s?",
@@ -78,14 +77,11 @@ void light_sensor::enable(void) {
           kServiceName.c_str(),
           name.c_str());
 
-
   connect<rosbridge::tsl2591::ReadingsService>(name);
 }
 
 std::vector<light_sensor::reading_type> light_sensor::readings(void) {
-  ER_ASSERT(is_enabled(),
-            "%s called when disabled",
-            __FUNCTION__);
+  ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
 
   rosbridge::tsl2591::ReadingsService srv;
 
@@ -96,10 +92,10 @@ std::vector<light_sensor::reading_type> light_sensor::readings(void) {
     return ret;
   }
 
-  for (auto &r : srv.response.readings) {
+  for (auto& r : srv.response.readings) {
     ER_INFO("Received reading: %f -> %f", r.angle, r.intensity);
     if (r.intensity > 0) {
-      ret.push_back({r.intensity, rmath::radians(r.angle)});
+      ret.push_back({ r.intensity, rmath::radians(r.angle) });
     }
   } /* for(&r..) */
   return ret;

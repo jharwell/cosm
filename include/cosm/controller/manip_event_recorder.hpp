@@ -88,4 +88,3 @@ class manip_event_recorder : public ccmetrics::manipulation_metrics {
 };
 
 NS_END(controller, cosm);
-

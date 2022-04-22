@@ -43,9 +43,8 @@ temporal_penalty_handler::temporal_penalty_handler(
     : ER_CLIENT_INIT("cosm.tv.temporal_penalty_handler"),
       mc_unique_finish(config->unique_finish),
       mc_name(name),
-      m_waveform(rct::waveform_generator()(config->waveform.type,
-                                           &config->waveform)) {}
-
+      m_waveform(
+          rct::waveform_generator()(config->waveform.type, &config->waveform)) {}
 
 /*******************************************************************************
  * Member Functions
@@ -64,8 +63,8 @@ void temporal_penalty_handler::penalty_abort(
             "Robot still serving penalty after abort?!");
 } /* penalty_abort() */
 
-rtypes::timestep temporal_penalty_handler::penalty_calc(
-    const rtypes::timestep& t) const {
+rtypes::timestep
+temporal_penalty_handler::penalty_calc(const rtypes::timestep& t) const {
   rtypes::timestep penalty(0);
 
   /* can be NULL if penalty handling is disabled */
@@ -136,7 +135,7 @@ bool temporal_penalty_handler::is_penalty_satisfied(
 
 bool temporal_penalty_handler::is_serving_penalty(
     const controller::base_controller& controller,
-                   bool lock) const {
+    bool lock) const {
   maybe_lock_rd(&m_list_mtx, lock);
   auto it = penalty_find(controller, false);
   bool ret = m_penalty_list.end() != it;
@@ -145,8 +144,9 @@ bool temporal_penalty_handler::is_serving_penalty(
 } /* is_serving_penalty() */
 
 temporal_penalty_handler::const_iterator_type
-temporal_penalty_handler::penalty_find(const controller::base_controller& controller,
-                                       bool lock) const {
+temporal_penalty_handler::penalty_find(
+    const controller::base_controller& controller,
+    bool lock) const {
   maybe_lock_rd(&m_list_mtx, lock);
   auto it = std::find_if(m_penalty_list.begin(),
                          m_penalty_list.end(),

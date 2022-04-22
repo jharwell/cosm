@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <functional>
 #include <boost/optional.hpp>
+#include <functional>
 
 #include "rcppsw/math/vector2.hpp"
 
@@ -127,4 +127,3 @@ class conflict_checker {
 };
 
 NS_END(spatial, cosm);
-

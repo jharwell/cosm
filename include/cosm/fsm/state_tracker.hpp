@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/types/timestep.hpp"
 #include "rcppsw/math/vector3.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
@@ -100,4 +100,3 @@ class state_tracker {
 };
 
 NS_END(fsm, cosm);
-

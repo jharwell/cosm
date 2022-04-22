@@ -35,7 +35,7 @@ NS_START(cosm, spatial, strategy, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 nest_acq_metrics_csv_sink::nest_acq_metrics_csv_sink(
-        fs::path fpath_no_ext,
+    fs::path fpath_no_ext,
     const rmetrics::output_mode& mode,
     const rtypes::timestep& interval)
     : csv_sink(fpath_no_ext, mode, interval) {}
@@ -43,8 +43,8 @@ nest_acq_metrics_csv_sink::nest_acq_metrics_csv_sink(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> nest_acq_metrics_csv_sink::csv_header_cols(
-    const rmetrics::base_data*) const {
+std::list<std::string>
+nest_acq_metrics_csv_sink::csv_header_cols(const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
@@ -56,9 +56,9 @@ std::list<std::string> nest_acq_metrics_csv_sink::csv_header_cols(
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string> nest_acq_metrics_csv_sink::csv_line_build(
-const rmetrics::base_data* data,
-      const rtypes::timestep& t) {
+boost::optional<std::string>
+nest_acq_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
+                                          const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }
@@ -69,12 +69,10 @@ const rmetrics::base_data* data,
 
   line += csv_entry_domavg(ral::mt_load(d->interval.random_thresh),
                            d->interval.n_random_thresh);
-  line += csv_entry_domavg(ral::mt_load(d->cum.random_thresh),
-                           d->cum.n_random_thresh,
-                           true);
+  line += csv_entry_domavg(
+      ral::mt_load(d->cum.random_thresh), d->cum.n_random_thresh, true);
 
   return boost::make_optional(line);
 } /* csv_line_build() */
-
 
 NS_END(metrics, strategy, spatial, cosm);

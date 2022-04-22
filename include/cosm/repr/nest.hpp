@@ -26,12 +26,11 @@
 #include <list>
 #include <string>
 
-
 #include "rcppsw/types/discretize_ratio.hpp"
 
-#include "cosm/repr/unicell_immovable_entity2D.hpp"
-#include "cosm/repr/nest_light.hpp"
 #include "cosm/repr/config/nest_config.hpp"
+#include "cosm/repr/nest_light.hpp"
+#include "cosm/repr/unicell_immovable_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -82,7 +81,7 @@ class nest : public repr::unicell_immovable_entity2D,
   static int m_nest_id;
 
   static rtypes::spatial_dist light_height_calc(const rmath::vector2d& arena) {
-    return rtypes::spatial_dist{std::pow(arena.x() * arena.y(), 0.25)};
+    return rtypes::spatial_dist{ std::pow(arena.x() * arena.y(), 0.25) };
   }
 
   static double light_intensity_calc(const rmath::vector2d& arena) {
@@ -102,4 +101,3 @@ class nest : public repr::unicell_immovable_entity2D,
 };
 
 NS_END(repr, cosm);
-

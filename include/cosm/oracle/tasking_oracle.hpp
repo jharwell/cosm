@@ -24,9 +24,9 @@
  * Includes
  ******************************************************************************/
 #include <boost/optional.hpp>
-#include <variant>
 #include <map>
 #include <string>
+#include <variant>
 
 #include "rcppsw/er/client.hpp"
 
@@ -109,4 +109,3 @@ class tasking_oracle final : public rer::client<tasking_oracle> {
 };
 
 NS_END(oracle, cosm);
-

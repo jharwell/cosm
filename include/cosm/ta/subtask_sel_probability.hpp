@@ -162,4 +162,3 @@ class subtask_sel_probability final : public rer::client<subtask_sel_probability
 };
 
 NS_END(ta, cosm);
-

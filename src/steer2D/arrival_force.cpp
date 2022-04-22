@@ -64,8 +64,8 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
   desired.normalize();
   if (distance <= mc_slowing_radius) {
     m_within_slowing_radius = true;
-    desired.scale(std::max(mc_slowing_speed_min,
-                           mc_max * distance / mc_slowing_radius));
+    desired.scale(
+        std::max(mc_slowing_speed_min, mc_max * distance / mc_slowing_radius));
   } else {
     m_within_slowing_radius = false;
     desired.scale(mc_max);

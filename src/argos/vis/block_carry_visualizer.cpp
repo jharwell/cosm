@@ -45,11 +45,11 @@ void block_carry_visualizer::draw(const crepr::sim_block3D* const block,
       m_qt->DrawBox(::argos::CVector3(0.0, 0.0, m_block_vis_offset),
                     ::argos::CQuaternion(),
                     ::argos::CVector3(block->xrsize().v(),
-                                    block->xrsize().v(),
-                                    block->xrsize().v()),
+                                      block->xrsize().v(),
+                                      block->xrsize().v()),
                     ::argos::CColor(block->md()->color().red(),
-                                  block->md()->color().green(),
-                                  block->md()->color().blue()));
+                                    block->md()->color().green(),
+                                    block->md()->color().blue()));
       break;
     case repr::block_type::ekRAMP:
       /*
@@ -61,11 +61,11 @@ void block_carry_visualizer::draw(const crepr::sim_block3D* const block,
       m_qt->DrawBox(::argos::CVector3(0.0, 0.0, m_block_vis_offset),
                     ::argos::CQuaternion(),
                     ::argos::CVector3(block->xrsize().v(),
-                                    block->yrsize().v(),
-                                    block->yrsize().v()),
+                                      block->yrsize().v(),
+                                      block->yrsize().v()),
                     ::argos::CColor(block->md()->color().red(),
-                                  block->md()->color().green(),
-                                  block->md()->color().blue()));
+                                    block->md()->color().green(),
+                                    block->md()->color().blue()));
 
       break;
     default:

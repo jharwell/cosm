@@ -33,11 +33,9 @@ NS_START(cosm, argos, vis, config, xml);
  ******************************************************************************/
 void visualization_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+    ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
-  ticpp::Element vnode = node_get(node, kXMLRoot);
+    ticpp::Element vnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();
 
     XML_PARSE_ATTR_DFLT(vnode, m_config, robot_id, false);

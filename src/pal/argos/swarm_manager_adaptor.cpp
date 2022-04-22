@@ -29,8 +29,8 @@
 #include "cosm/arena/caching_arena_map.hpp"
 #include "cosm/arena/config/arena_map_config.hpp"
 #include "cosm/argos/block_embodiment_creator.hpp"
-#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/argos/vis/config/visualization_config.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -72,7 +72,8 @@ void swarm_manager_adaptor::arena_map_init(
   }
 } /* arena_map_init() */
 
-::argos::CColor swarm_manager_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
+::argos::CColor
+swarm_manager_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
   rmath::vector2z dpos =
       rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());

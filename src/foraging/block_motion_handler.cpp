@@ -77,10 +77,7 @@ void block_motion_handler::random_walk(carena::base_arena_map* map) {
        * non-concurrent contexts, so no need to grab locks.
        */
       caops::free_block_drop_visitor drop_op(
-          b,
-          *coord,
-          map->grid_resolution(),
-          carena::locking::ekALL_HELD);
+          b, *coord, map->grid_resolution(), carena::locking::ekALL_HELD);
       pickup_op.visit(*map);
       ER_ASSERT(!b->is_out_of_sight() && !b->is_carried_by_robot(),
                 "Block%d out of sight or carried by robot",

@@ -32,15 +32,15 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 #include "cosm/fsm/cell2D_fsm.hpp"
-#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/repr/operations/block_pickup.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, arena, operations, detail);
-using carepr::base_cache;
 using cads::arena_grid;
+using carepr::base_cache;
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -111,8 +111,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
             m_real_cache->n_blocks(),
             cell.block_count());
 
-  map.maybe_lock_wr(map.cache_mtx(),
-                    !(mc_locking & locking::ekCACHES_HELD));
+  map.maybe_lock_wr(map.cache_mtx(), !(mc_locking & locking::ekCACHES_HELD));
   /*
    * If there are more than kMinBlocks blocks in cache, just remove one, and
    * update the underlying cell. If there are only kMinBlocks left, do the same
@@ -154,8 +153,7 @@ void cached_block_pickup::visit(caching_arena_map& map) {
      * DO always need the locks to be acquired in the same order to avoid
      * deadlocks. See COSM#151.
      */
-    map.maybe_lock_wr(map.grid_mtx(),
-                      !(mc_locking & locking::ekGRID_HELD));
+    map.maybe_lock_wr(map.grid_mtx(), !(mc_locking & locking::ekGRID_HELD));
 
     /* Clear the cache extent cells (already holding cache mutex) */
     cache_extent_clear_visitor clear_op1(m_real_cache);
@@ -174,17 +172,13 @@ void cached_block_pickup::visit(caching_arena_map& map) {
 
     /* "Drop" orphan block on the old cache host cell. */
     caops::free_block_drop_visitor drop_op(
-        orphan_block,
-        coord(),
-        map.grid_resolution(),
-        locking::ekALL_HELD);
+        orphan_block, coord(), map.grid_resolution(), locking::ekALL_HELD);
     drop_op.visit(map);
     ER_INFO("Orphan block%d@%s released to arena",
             orphan_block->id().v(),
             rcppsw::to_string(orphan_block->danchor2D()).c_str());
 
-    map.maybe_unlock_wr(map.grid_mtx(),
-                      !(mc_locking & locking::ekGRID_HELD));
+    map.maybe_unlock_wr(map.grid_mtx(), !(mc_locking & locking::ekGRID_HELD));
 
     ER_ASSERT(cell.state_has_block(),
               "Depleted cache host cell@%s not in HAS_BLOCK",
@@ -199,17 +193,14 @@ void cached_block_pickup::visit(caching_arena_map& map) {
             cache_id.v(),
             rcppsw::to_string(coord()).c_str());
   }
-  map.maybe_lock_wr(map.block_mtx(),
-                    !(mc_locking & locking::ekBLOCKS_HELD));
+  map.maybe_lock_wr(map.block_mtx(), !(mc_locking & locking::ekBLOCKS_HELD));
 
   /* finally, update state of arena map owned pickup block */
   visit(*m_pickup_block);
 
-  map.maybe_unlock_wr(map.block_mtx(),
-                       !(mc_locking & locking::ekBLOCKS_HELD));
+  map.maybe_unlock_wr(map.block_mtx(), !(mc_locking & locking::ekBLOCKS_HELD));
 
-  map.maybe_unlock_wr(map.cache_mtx(),
-                      !(mc_locking & locking::ekCACHES_HELD));
+  map.maybe_unlock_wr(map.cache_mtx(), !(mc_locking & locking::ekCACHES_HELD));
 } /* visit() */
 
 void cached_block_pickup::visit(crepr::sim_block3D& block) {

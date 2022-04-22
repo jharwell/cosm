@@ -31,9 +31,9 @@
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/foraging/block_dist/base_distributor.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -47,10 +47,7 @@ using cads::arena_grid;
 free_block_drop
 free_block_drop::for_block(const rmath::vector2z& coord,
                            const rtypes::discretize_ratio& resolution) {
-  return free_block_drop(nullptr,
-                         coord,
-                         resolution,
-                         locking::ekNONE_HELD);
+  return free_block_drop(nullptr, coord, resolution, locking::ekNONE_HELD);
 } /* for_block() */
 
 /*******************************************************************************
@@ -91,8 +88,8 @@ void free_block_drop::visit(crepr::sim_block3D& block) {
   block.md()->robot_id_reset();
 
   /* update block location */
-  auto rloc = rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(),
-                                               mc_resolution.v()));
+  auto rloc =
+      rmath::vector3d(rmath::zvec2dvec(cell2D_op::coord(), mc_resolution.v()));
 
   block.ranchor3D(rloc);
   block.danchor3D(rmath::vector3z(cell2D_op::coord()));
@@ -120,7 +117,8 @@ void free_block_drop::visit(base_arena_map& map) {
    * cache.
    */
   if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
-    ER_DEBUG("Free drop of block%s@%s not possible: cell_state=%d,conflict=%d -> redistribute",
+    ER_DEBUG("Free drop of block%s@%s not possible: cell_state=%d,conflict=%d -> "
+             "redistribute",
              rcppsw::to_string(m_block->id()).c_str(),
              rcppsw::to_string(coord()).c_str(),
              cell.fsm().current_state(),
@@ -174,7 +172,8 @@ void free_block_drop::visit(caching_arena_map& map) {
                                 locking::ekALL_HELD);
     op.visit(map);
   } else if (cell.state_has_block() || cell.state_in_block_extent() || conflict) {
-    ER_DEBUG("Free drop of block%s@%s invalid: cell_state=%d,conflict=%d -> redistribute",
+    ER_DEBUG("Free drop of block%s@%s invalid: cell_state=%d,conflict=%d -> "
+             "redistribute",
              rcppsw::to_string(m_block->id()).c_str(),
              rcppsw::to_string(m_block->danchor2D()).c_str(),
              cell.fsm().current_state(),
@@ -195,7 +194,7 @@ void free_block_drop::visit(caching_arena_map& map) {
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-template<typename TMap>
+template <typename TMap>
 void free_block_drop::execute_free_drop(TMap& map, cds::cell2D& cell) {
   ER_DEBUG("Execute free drop of block%s@%s",
            rcppsw::to_string(m_block->id()).c_str(),

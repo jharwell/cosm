@@ -45,8 +45,8 @@ void polygon2D_visualizer::relative_draw(
         ::argos::CVector3(points[i].x(), points[i].y(), pos.z() + kDRAW_OFFSET);
     /* modulo so that the last vertex can be connected to the first one */
     auto end = ::argos::CVector3(points[(i + 1) % points.size()].x(),
-                               points[(i + 1) % points.size()].y(),
-                               pos.z() + kDRAW_OFFSET);
+                                 points[(i + 1) % points.size()].y(),
+                                 pos.z() + kDRAW_OFFSET);
 
     /* draw segment line */
     m_qt->DrawRay(::argos::CRay3(start, end),
@@ -84,8 +84,8 @@ void polygon2D_visualizer::abs_draw(const rmath::vector3d& pos,
         ::argos::CVector3(points[i].x(), points[i].y(), pos.z() + kDRAW_OFFSET);
     /* modulo so that the last vertex can be connected to the first one */
     auto end = ::argos::CVector3(points[(i + 1) % points.size()].x(),
-                               points[(i + 1) % points.size()].y(),
-                               pos.z() + kDRAW_OFFSET);
+                                 points[(i + 1) % points.size()].y(),
+                                 pos.z() + kDRAW_OFFSET);
 
     /* draw segment line */
     m_qt->DrawRay(::argos::CRay3(start, end),

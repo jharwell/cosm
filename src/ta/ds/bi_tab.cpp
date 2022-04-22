@@ -28,9 +28,9 @@
 #include "cosm/ta/config/src_sigmoid_sel_config.hpp"
 #include "cosm/ta/config/task_partition_config.hpp"
 #include "cosm/ta/ds/bi_tdgraph.hpp"
+#include "cosm/ta/partition_probability.hpp"
 #include "cosm/ta/polled_task.hpp"
 #include "cosm/ta/subtask_sel_probability.hpp"
-#include "cosm/ta/partition_probability.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -52,8 +52,10 @@ bi_tab::bi_tab(const struct elements* elts,
       m_root(elts->root),
       m_child1(elts->child1),
       m_child2(elts->child2),
-      m_sel_prob(std::make_unique<subtask_sel_probability>(&subtask_sel->sigmoid)),
-      m_partition_prob(std::make_unique<partition_probability>(&partitioning->src_sigmoid.sigmoid)) {
+      m_sel_prob(
+          std::make_unique<subtask_sel_probability>(&subtask_sel->sigmoid)),
+      m_partition_prob(std::make_unique<partition_probability>(
+          &partitioning->src_sigmoid.sigmoid)) {
   ER_ASSERT(m_root->is_partitionable(),
             "Root task '%s' not partitionable",
             m_root->name().c_str());
@@ -73,13 +75,9 @@ bi_tab::~bi_tab(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-double bi_tab::partition_prob(void) const {
-  return m_partition_prob->v();
-}
+double bi_tab::partition_prob(void) const { return m_partition_prob->v(); }
 
-double bi_tab::subtask_selection_prob(void) const {
-  return m_sel_prob->v();
-}
+double bi_tab::subtask_selection_prob(void) const { return m_sel_prob->v(); }
 
 void bi_tab::task_abort_update(polled_task* const aborted, rmath::rng* rng) {
   ER_ASSERT(contains_task(aborted),
@@ -120,18 +118,18 @@ bool bi_tab::task_is_child(const polled_task* const task) const {
 void bi_tab::partition_prob_update(rmath::rng* rng) {
   if (kPartitionSrcExec == mc_partition_input) {
     m_partition_prob->operator()(m_root->task_exec_estimate(),
-                     m_child1->task_exec_estimate(),
-                     m_child2->task_exec_estimate(),
-                     rng);
+                                 m_child1->task_exec_estimate(),
+                                 m_child2->task_exec_estimate(),
+                                 rng);
   } else if (kPartitionSrcInterface == mc_partition_input) {
     int root_id = m_root->task_last_active_interface();
     int child1_id = m_child1->task_last_active_interface();
     int child2_id = m_child2->task_last_active_interface();
     if (root_id >= 0 && child1_id >= 0 && child2_id >= 0) {
       m_partition_prob->operator()(m_root->task_interface_estimate(root_id),
-                       m_child1->task_interface_estimate(child1_id),
-                       m_child2->task_interface_estimate(child2_id),
-                       rng);
+                                   m_child1->task_interface_estimate(child1_id),
+                                   m_child2->task_interface_estimate(child2_id),
+                                   rng);
 
     } else {
       ER_WARN("Cannot update partition prob for TAB rooted at '%s': >= 1 task "

@@ -64,12 +64,13 @@ dispatcher::~dispatcher(void) = default;
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool dispatcher::initialize(carena::base_arena_map* map,
-                            const cds::const_spatial_entity_vector& entities,
-                            const rmath::vector3d& block_bb,
-                            const cspatial::conflict_checker::map_cb_type& conflict_check,
-                            const base_distributor::dist_success_cb_type& dist_success,
-                            rmath::rng* rng) {
+bool dispatcher::initialize(
+    carena::base_arena_map* map,
+    const cds::const_spatial_entity_vector& entities,
+    const rmath::vector3d& block_bb,
+    const cspatial::conflict_checker::map_cb_type& conflict_check,
+    const base_distributor::dist_success_cb_type& dist_success,
+    rmath::rng* rng) {
   /* clang-format off */
   cads::arena_grid::view arena = m_grid->layer<arena_grid::kCell>()->subgrid(
       rmath::vector2z(mc_cells_xrange.lb(),
@@ -185,13 +186,11 @@ bool dispatcher::initialize(carena::base_arena_map* map,
   return true;
 } /* initialize() */
 
-dist_status
-dispatcher::distribute_block(crepr::sim_block3D* block) {
+dist_status dispatcher::distribute_block(crepr::sim_block3D* block) {
   return m_dist->distribute_block(block);
 } /* distribute_block() */
 
-dist_status
-dispatcher::distribute_blocks(cds::block3D_vectorno& blocks) {
+dist_status dispatcher::distribute_blocks(cds::block3D_vectorno& blocks) {
   return m_dist->distribute_blocks(blocks, mc_config.strict_success);
 } /* distribute_block() */
 

@@ -47,4 +47,3 @@ using diff_drive_actuator = chros::actuators::diff_drive_actuator;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(actuators, hal, cosm);
-

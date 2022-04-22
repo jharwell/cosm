@@ -59,6 +59,14 @@ class actuation_subsystem2D :
                              const);
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
+                             chactuators::diff_drive_actuator,
+                             diff_drive_raw);
+  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
+                             chactuators::diff_drive_actuator,
+                             diff_drive_raw,
+                             const);
+
+  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
                              chal::actuators::diagnostic_actuator,
                              diagnostics);
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,

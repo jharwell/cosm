@@ -31,9 +31,8 @@ NS_START(cosm, steer2D);
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-rmath::radians custom_bias_angle_generator::operator()(
-    const rmath::radians&,
-    rmath::rng* rng) {
+rmath::radians custom_bias_angle_generator::operator()(const rmath::radians&,
+                                                       rmath::rng* rng) {
   return config()->angles[rng->uniform(0UL, config()->angles.size() - 1UL)];
 } /* operator()() */
 

@@ -25,8 +25,8 @@
  ******************************************************************************/
 #include "rcppsw/math/vector3.hpp"
 
-#include "cosm/kin/twist.hpp"
 #include "cosm/kin/pose.hpp"
+#include "cosm/kin/twist.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -50,4 +50,3 @@ struct odometry {
 };
 
 NS_END(kin, cosm);
-

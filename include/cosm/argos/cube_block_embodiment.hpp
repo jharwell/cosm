@@ -51,4 +51,3 @@ struct cube_block_embodiment : public crepr::base_embodiment {
 };
 
 NS_END(argos, cosm);
-

@@ -64,4 +64,3 @@ class random_allocator : public rer::client<random_allocator> {
 };
 
 NS_END(ta, cosm);
-

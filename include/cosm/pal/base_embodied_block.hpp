@@ -51,4 +51,3 @@ class base_embodied_block : public crepr::embodied_entity {
 };
 
 NS_END(pal, cosm);
-

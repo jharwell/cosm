@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/nest_acq/factory.hpp"
 
-#include "cosm/spatial/strategy/nest_acq/wander.hpp"
 #include "cosm/spatial/strategy/nest_acq/random_thresh.hpp"
+#include "cosm/spatial/strategy/nest_acq/wander.hpp"
 #include "cosm/spatial/strategy/nest_acq/wander_random_thresh.hpp"
 
 /*******************************************************************************

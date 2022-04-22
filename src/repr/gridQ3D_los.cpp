@@ -34,8 +34,8 @@ NS_START(cosm, repr);
  * Constructors/Destructor
  ******************************************************************************/
 gridQ3D_los::gridQ3D_los(const rtypes::type_uuid& c_id,
-               const grid_view_type& c_view,
-               const rtypes::discretize_ratio& c_resolution)
+                         const grid_view_type& c_view,
+                         const rtypes::discretize_ratio& c_resolution)
     : base_grid_los(c_id, c_view, c_resolution),
       ER_CLIENT_INIT("cosm.repr.gridQ3D_los") {
   ER_ASSERT(1 == zdsize(), "Q3D view does not have zsize=1");
@@ -56,6 +56,5 @@ gridQ3D_los::field_coord_dtype gridQ3D_los::abs_lr(void) const {
 gridQ3D_los::field_coord_dtype gridQ3D_los::abs_ur(void) const {
   return access(xdsize() - 1, ydsize() - 1, 0).loc();
 }
-
 
 NS_END(repr, cosm);

@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/repr/entity3D.hpp"
 #include "cosm/repr/base_grid_view_entity.hpp"
+#include "cosm/repr/entity3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -52,19 +52,20 @@ NS_START(cosm, repr);
  * - Has no concept of movability/immovability (again, it is abstract).
  */
 template <typename TGridType, typename TGridViewType>
-class grid3D_view_entity : public crepr::entity3D,
-                           public crepr::base_grid_view_entity<TGridType, TGridViewType>,
-                           public rer::client<grid3D_view_entity<TGridType, TGridViewType>> {
+class grid3D_view_entity
+    : public crepr::entity3D,
+      public crepr::base_grid_view_entity<TGridType, TGridViewType>,
+      public rer::client<grid3D_view_entity<TGridType, TGridViewType>> {
  public:
   using grid_view_entity_type = base_grid_view_entity<TGridType, TGridViewType>;
 
-  using typename grid_view_entity_type::grid_type;
-  using typename grid_view_entity_type::grid_view_type;
   using typename grid_view_entity_type::cell_type;
   using typename grid_view_entity_type::coord_type;
+  using typename grid_view_entity_type::grid_type;
+  using typename grid_view_entity_type::grid_view_type;
 
-  using grid_view_entity_type::resolution;
   using grid_view_entity_type::access;
+  using grid_view_entity_type::resolution;
 
   grid3D_view_entity(const rtypes::type_uuid& id,
                      const grid_view_type& the_view,
@@ -92,14 +93,12 @@ class grid3D_view_entity : public crepr::entity3D,
   }
 
   bool contains_abs(const coord_type& cell) const override {
-    return xdspan().contains(cell.x()) &&
-        ydspan().contains(cell.y()) &&
-        zdspan().contains(cell.z());
+    return xdspan().contains(cell.x()) && ydspan().contains(cell.y()) &&
+           zdspan().contains(cell.z());
   }
   bool contains_rel(const coord_type& cell) const override {
-    return (cell.x() < xdsize()) &&
-        (cell.y() < ydsize()) &&
-        (cell.z() < zdsize());
+    return (cell.x() < xdsize()) && (cell.y() < ydsize()) &&
+           (cell.z() < zdsize());
   }
 
  protected:
@@ -107,4 +106,3 @@ class grid3D_view_entity : public crepr::entity3D,
 };
 
 NS_END(repr, cosm);
-

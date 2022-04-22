@@ -41,4 +41,3 @@ NS_START(cosm, ta);
 using time_estimate = rmath::ema<int>;
 
 NS_END(ta, cosm);
-

@@ -29,9 +29,9 @@
 #include "rcppsw/math/config/rng_config.hpp"
 #include "rcppsw/math/rngm.hpp"
 
+#include "cosm/subsystem/actuation_subsystem2D.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -59,12 +59,10 @@ void base_controllerQ3D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
 
 void base_controllerQ3D::mdc_ts_update(void) const {
   ER_MDC_RM("time");
-  auto tick = RCPPSW_LIKELY(nullptr != m_saa && nullptr != m_saa->sensing()) ?
-              m_saa->sensing()->tick() : rtypes::timestep(0);
-  ER_MDC_ADD("time",
-             "[t=" +
-             rcppsw::to_string(tick) +
-             std::string("]"));
+  auto tick = RCPPSW_LIKELY(nullptr != m_saa && nullptr != m_saa->sensing())
+                  ? m_saa->sensing()->tick()
+                  : rtypes::timestep(0);
+  ER_MDC_ADD("time", "[t=" + rcppsw::to_string(tick) + std::string("]"));
 }
 
 /*******************************************************************************

@@ -116,4 +116,3 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
 };
 
 NS_END(ta, cosm);
-

@@ -79,7 +79,7 @@ class nest_block_process
    */
   interactor_status_type operator()(TController& controller,
                                     const rtypes::timestep& t) {
-    if (controller.in_nest()) {
+    if (controller.in_nest() && controller.is_carrying_block()) {
       ER_ASSERT(pre_process_check(controller), "Pre-drop check failed");
       process_drop(controller, t);
       return interactor_status_type::ekNEST_BLOCK_PROCESS;
@@ -102,7 +102,6 @@ class nest_block_process
    */
   virtual void robot_previsit_hook(TController&) const {}
 
-
  private:
   void process_drop(TController& controller, const rtypes::timestep& t) {
     execute_drop(controller, t);
@@ -113,6 +112,9 @@ class nest_block_process
    * satisfied, update both the arena map and the controller, in that order.
    */
   void execute_drop(TController& controller, const rtypes::timestep& t) {
+    ER_INFO("Execute: Robot%d, block%d",
+            controller.entity_id().v(),
+            controller.block()->id().v());
     /*
      * We have to do this asynchronous to the rest of metric collection, because
      * the nest block drop event resets block metrics.
@@ -148,4 +150,3 @@ class nest_block_process
 };
 
 NS_END(interactors, ros, cosm);
-

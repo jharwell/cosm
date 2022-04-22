@@ -85,4 +85,3 @@ class cell2D_state {
 };
 
 NS_END(cosm, fsm);
-

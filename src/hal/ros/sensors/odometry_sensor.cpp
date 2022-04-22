@@ -59,15 +59,13 @@ odometry_sensor& odometry_sensor::operator=(odometry_sensor&& rhs) {
  * Member Functions
  ******************************************************************************/
 ckin::odometry odometry_sensor::reading(void) const {
-    ER_ASSERT(is_enabled(),
-              "%s called when disabled",
-              __FUNCTION__);
-    ckin::odometry ret;
-    ret.twist.linear = rmath::vector3d(m_odom.twist.twist.linear.x,
-                                       m_odom.twist.twist.linear.y,
-                                       m_odom.twist.twist.linear.z);
+  ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
+  ckin::odometry ret;
+  ret.twist.linear = rmath::vector3d(m_odom.twist.twist.linear.x,
+                                     m_odom.twist.twist.linear.y,
+                                     m_odom.twist.twist.linear.z);
 
-    /*
+  /*
      * If speed comes back as 0.0, then we are executing a hard turn, probably
      * as we vector somewhere. In order to have the arrival force work properly,
      * we need to have a velocity with a non-zero length and the correct heading
@@ -76,22 +74,23 @@ ckin::odometry odometry_sensor::reading(void) const {
      *
      * There probably is a better way to do this, but I don't know what it is.
      */
-    if (ret.twist.linear.length() <= std::numeric_limits<double>::epsilon()) {
-      ret.twist.linear = rmath::vector3d::X * 0.01;
-    }
-
-    ret.twist.angular = rmath::vector3d(m_odom.twist.twist.angular.x,
-                                        m_odom.twist.twist.angular.y,
-                                        m_odom.twist.twist.angular.z);
-    ret.pose.position = rmath::vector3d(m_odom.pose.pose.position.x,
-                                        m_odom.pose.pose.position.y,
-                                        m_odom.pose.pose.position.z);
-    ret.pose.orientation = rmath::euler_angles(rmath::radians(m_odom.pose.pose.orientation.x),
-                                               rmath::radians(m_odom.pose.pose.orientation.y),
-                                               rmath::radians(m_odom.pose.pose.orientation.z));
-
-    return ret;
+  if (ret.twist.linear.length() <= std::numeric_limits<double>::epsilon()) {
+    ret.twist.linear = rmath::vector3d::X * 0.01;
   }
+
+  ret.twist.angular = rmath::vector3d(m_odom.twist.twist.angular.x,
+                                      m_odom.twist.twist.angular.y,
+                                      m_odom.twist.twist.angular.z);
+  ret.pose.position = rmath::vector3d(m_odom.pose.pose.position.x,
+                                      m_odom.pose.pose.position.y,
+                                      m_odom.pose.pose.position.z);
+  ret.pose.orientation =
+      rmath::euler_angles(rmath::radians(m_odom.pose.pose.orientation.x),
+                          rmath::radians(m_odom.pose.pose.orientation.y),
+                          rmath::radians(m_odom.pose.pose.orientation.z));
+
+  return ret;
+}
 
 void odometry_sensor::reset(void) { m_odom = {}; }
 

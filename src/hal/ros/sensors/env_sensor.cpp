@@ -34,7 +34,7 @@ NS_START(cosm, hal, ros, sensors);
  * Constructors/Destructors
  ******************************************************************************/
 env_sensor::env_sensor(chrsensors::sonar_sensor&& sonar_sensor,
-           chrsensors::light_sensor&& light_sensor)
+                       chrsensors::light_sensor&& light_sensor)
     : ER_CLIENT_INIT("cosm.hal.ros.sensors.env_sensor"),
       sonar(std::move(sonar_sensor)),
       light(std::move(light_sensor)) {}
@@ -55,8 +55,7 @@ void env_sensor::disable(void) {
   light::decoratee().disable();
 }
 bool env_sensor::is_enabled(void) const {
-  return sonar::decoratee().is_enabled() &&
-      light::decoratee().is_enabled();
+  return sonar::decoratee().is_enabled() && light::decoratee().is_enabled();
 }
 
 bool env_sensor::detect(
@@ -64,15 +63,15 @@ bool env_sensor::detect(
     const chsensors::config::env_sensor_detection_config* config) {
   size_t sum = 0;
   if (chsensors::env_sensor::kNestTarget == name) {
-    for (auto &r : light::decoratee().readings()) {
+    for (auto& r : light::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.intensity));
     } /* for(&r..) */
-    return  sum >= config->consensus;
+    return sum >= config->consensus;
   } else if (chsensors::env_sensor::kBlockTarget == name) {
-    for (auto &r : sonar::decoratee().readings()) {
+    for (auto& r : sonar::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
-    return  sum >= config->consensus;
+    return sum >= config->consensus;
   } else {
     ER_FATAL_SENTINEL("Bad detection: %s", name.c_str());
     return false;

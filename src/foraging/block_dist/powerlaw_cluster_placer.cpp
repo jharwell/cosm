@@ -26,8 +26,8 @@
 #include <algorithm>
 #include <cmath>
 
-#include "cosm/repr/spatial_entity2D.hpp"
 #include "cosm/arena/base_arena_map.hpp"
+#include "cosm/repr/spatial_entity2D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -60,8 +60,10 @@ powerlaw_cluster_placer::placement_guess(const rtypes::type_uuid& c_id,
    * need to account for that so that a cluster of size k will ALWAYS be able to
    * hold k blocks, regardless of size.
    */
-  size_t xfactor = static_cast<size_t>(c_block_bb.x() / m_map->grid_resolution().v());
-  size_t yfactor = static_cast<size_t>(c_block_bb.y() / m_map->grid_resolution().v());
+  size_t xfactor =
+      static_cast<size_t>(c_block_bb.x() / m_map->grid_resolution().v());
+  size_t yfactor =
+      static_cast<size_t>(c_block_bb.y() / m_map->grid_resolution().v());
 
   /*
    * sqrt() might not be an integer, so we round up to get a smooth-ish

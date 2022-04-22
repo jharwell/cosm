@@ -46,4 +46,3 @@ enum class locking : uint {
   ekALL_HELD = ekNONE_HELD | ekBLOCKS_HELD | ekCACHES_HELD | ekGRID_HELD
 };
 NS_END(arena, cosm);
-

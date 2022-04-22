@@ -26,11 +26,11 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/steer2D/force_calculator.hpp"
-#include "cosm/hal/subsystem/sensor_map.hpp"
 #include "cosm/hal/subsystem/actuator_map.hpp"
-#include "cosm/hal/subsystem/robot_available_sensors.hpp"
 #include "cosm/hal/subsystem/robot_available_actuators.hpp"
+#include "cosm/hal/subsystem/robot_available_sensors.hpp"
+#include "cosm/hal/subsystem/sensor_map.hpp"
+#include "cosm/steer2D/force_calculator.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -62,7 +62,8 @@ class saa_subsystemQ3D final : public steer2D::boid,
 
   saa_subsystemQ3D(
       chsubsystem::sensor_variant_map<COSM_HAL_ROBOT_AVAILABLE_SENSORS>&& sensors,
-      chsubsystem::actuator_variant_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&& actuators,
+      chsubsystem::actuator_variant_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&&
+          actuators,
       const steer2D::config::force_calculator_config* const steer_config);
 
   /*
@@ -76,9 +77,7 @@ class saa_subsystemQ3D final : public steer2D::boid,
   sensing_type* sensing(void) { return m_sensing.get(); }
   const sensing_type* sensing(void) const { return m_sensing.get(); }
   actuation_type* actuation(void) { return m_actuation.get(); }
-  const actuation_type* actuation(void) const {
-    return m_actuation.get();
-  }
+  const actuation_type* actuation(void) const { return m_actuation.get(); }
 
   /**
    * \brief Apply the summed steering forces; change wheel speeds. Resets the
@@ -100,4 +99,3 @@ class saa_subsystemQ3D final : public steer2D::boid,
 };
 
 NS_END(subsystem, cosm);
-

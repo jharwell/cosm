@@ -31,6 +31,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/real_block3D.hpp"
+#include "cosm/controller/block_detect_context.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -103,7 +104,7 @@ class free_block_pickup
    */
   interactor_status_type operator()(TController& controller,
                                     const rtypes::timestep& t) {
-    if (controller.block_detect()) {
+    if (controller.block_detect(ccontroller::block_detect_context::ekARENA)) {
       ER_INFO("Robot%d detects block", controller.entity_id().v());
       if (controller.is_carrying_block()) {
         ER_INFO("Ignoring detected block--already carrying block");

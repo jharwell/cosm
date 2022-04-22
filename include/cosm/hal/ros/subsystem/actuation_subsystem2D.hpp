@@ -26,7 +26,6 @@
 #include "cosm/hal/subsystem/base_actuation_subsystem2D.hpp"
 #include "cosm/hal/ros/subsystem/robot_available_actuators.hpp"
 
-
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
@@ -53,6 +52,14 @@ class actuation_subsystem2D :
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
                              ckin2D::governed_diff_drive,
                              governed_diff_drive,
+                             const);
+
+  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
+                             chactuators::diff_drive_actuator,
+                             diff_drive_raw);
+  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
+                             chactuators::diff_drive_actuator,
+                             diff_drive_raw,
                              const);
 
   COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,

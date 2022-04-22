@@ -1,5 +1,5 @@
 /**
- * \file nest_acq_parser.hpp
+ * \file drop_parser.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -28,35 +28,36 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/spatial/strategy/config/nest_acq_config.hpp"
+#include "cosm/spatial/strategy/blocks/config/drop_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, config, xml);
+NS_START(cosm, spatial, strategy, blocks, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class nest_acq_parser
- * \ingroup spatial strategy config xml
+ * \class drop_parser
+ * \ingroup spatial strategy blocks config xml
  *
- * \brief Parses XML configuration for how robots should acq nests into \ref
- * nest_acq_config.
+ * \brief Parses XML configuration for how robots should drop blocks into \ref
+ * drop_config.
  */
-class nest_acq_parser final : public rer::client<nest_acq_parser>,
+class drop_parser final : public rer::client<drop_parser>,
                               public rconfig::xml::xml_config_parser {
  public:
-  using config_type = nest_acq_config;
+  using config_type = drop_config;
 
-  nest_acq_parser(void) : ER_CLIENT_INIT("cosm.spatial.strategy.config.xml.nest_acq_parser") {}
+  drop_parser(void)
+      : ER_CLIENT_INIT("cosm.spatial.strategy.blocks.config.xml.drop_parser") {}
 
   /**
    * \brief The root tag that all XML configuration for nest acq should lie
    * under in the XML tree.
    */
-  static inline const std::string kXMLRoot = "nest_acq";
+  static inline const std::string kXMLRoot = "drop";
 
   void parse(const ticpp::Element& node) override;
   std::string xml_root(void) const override { return kXMLRoot; }
@@ -71,5 +72,4 @@ class nest_acq_parser final : public rer::client<nest_acq_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, strategy, spatial, cosm);
-
+NS_END(xml, blocks, config, strategy, spatial, cosm);

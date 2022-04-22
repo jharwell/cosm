@@ -33,9 +33,7 @@ NS_START(cosm, fsm);
 /*******************************************************************************
  * State Metrics
  ******************************************************************************/
-bool state_tracker::in_state(void) const {
-  return m_in_state;
-} /* in_state() */
+bool state_tracker::in_state(void) const { return m_in_state; } /* in_state() */
 
 bool state_tracker::entered_state(void) const {
   return m_entered_state;

@@ -67,7 +67,8 @@ void execution_metrics_collector::collect(const rmetrics::base_metrics& metrics)
   m_data.interval.interface_count += static_cast<size_t>(m.task_at_interface());
   m_data.cum.interface_count += static_cast<size_t>(m.task_at_interface());
 
-  m_data.interval.exec_estimate += static_cast<size_t>(m.task_exec_estimate().v());
+  m_data.interval.exec_estimate +=
+      static_cast<size_t>(m.task_exec_estimate().v());
   m_data.cum.exec_estimate += static_cast<size_t>(m.task_exec_estimate().v());
   m_data.interval.exec_time += static_cast<size_t>(m.task_last_exec_time().v());
   m_data.cum.exec_time += static_cast<size_t>(m.task_last_exec_time().v());

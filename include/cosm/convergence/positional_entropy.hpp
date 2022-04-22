@@ -81,4 +81,3 @@ class positional_entropy final
 };
 
 NS_END(convergence, cosm);
-

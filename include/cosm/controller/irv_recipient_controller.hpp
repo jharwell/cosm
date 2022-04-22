@@ -68,4 +68,3 @@ class irv_recipient_controller {
 };
 
 NS_END(controller, cosm);
-

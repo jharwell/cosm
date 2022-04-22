@@ -36,7 +36,7 @@ NS_START(cosm, init);
  * Free Functions
  ******************************************************************************/
 void init(void) {
-  std::cout << "Loaded cosm." <<  kVERSION << std::endl;
+  std::cout << "Loaded cosm." << kVERSION << std::endl;
 } /* init() */
 
 NS_END(init, cosm);

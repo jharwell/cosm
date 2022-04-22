@@ -62,4 +62,3 @@ class unicell_movable_entity2D : public unicell_entity2D {
 };
 
 NS_END(repr, cosm);
-

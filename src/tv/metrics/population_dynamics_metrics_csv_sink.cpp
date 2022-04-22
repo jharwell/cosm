@@ -42,8 +42,7 @@ population_dynamics_metrics_csv_sink::population_dynamics_metrics_csv_sink(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-population_dynamics_metrics_csv_sink::csv_header_cols(
+std::list<std::string> population_dynamics_metrics_csv_sink::csv_header_cols(
     const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
@@ -86,8 +85,7 @@ population_dynamics_metrics_csv_sink::csv_header_cols(
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string>
-population_dynamics_metrics_csv_sink::csv_line_build(
+boost::optional<std::string> population_dynamics_metrics_csv_sink::csv_line_build(
     const rmetrics::base_data* data,
     const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
@@ -120,8 +118,7 @@ population_dynamics_metrics_csv_sink::csv_line_build(
   line += csv_entry_tsavg(ral::mt_load(d->cum.n_deaths), t);
   line += csv_entry_domavg(ral::mt_load(d->cum.death_interval),
                            ral::mt_load(d->cum.n_deaths));
-  line += rcppsw::to_string(ral::mt_load(d->interval.death_lambda)) +
-          separator();
+  line += rcppsw::to_string(ral::mt_load(d->interval.death_lambda)) + separator();
 
   /* repair queue */
   line += csv_entry_intavg(d->interval.repair_queue_size);

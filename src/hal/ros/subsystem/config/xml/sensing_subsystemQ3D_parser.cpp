@@ -32,24 +32,22 @@ NS_START(cosm, hal, ros, subsystem, config, xml);
  * Member Functions
  ******************************************************************************/
 void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   ticpp::Element snode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
   m_proximity.parse(snode);
   m_config->proximity = *m_proximity.config_get<
-    chsensors::config::xml::proximity_sensor_parser::config_type>();
+      chsensors::config::xml::proximity_sensor_parser::config_type>();
 
   m_env.parse(snode);
-  m_config->env = *m_env.config_get<
-    chsensors::config::xml::env_sensor_parser::config_type>();
+  m_config->env =
+      *m_env.config_get<chsensors::config::xml::env_sensor_parser::config_type>();
 
   m_sonar.parse(snode);
   m_config->sonar = *m_sonar.config_get<
-    chrsensors::config::xml::sonar_sensor_parser::config_type>();
+      chrsensors::config::xml::sonar_sensor_parser::config_type>();
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {

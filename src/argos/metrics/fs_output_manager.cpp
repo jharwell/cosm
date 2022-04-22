@@ -25,20 +25,15 @@
 
 #include <boost/mpl/for_each.hpp>
 
+#include "rcppsw/metrics/file_sink_registerer.hpp"
 #include "rcppsw/metrics/register_using_config.hpp"
 #include "rcppsw/metrics/register_with_sink.hpp"
-#include "rcppsw/metrics/file_sink_registerer.hpp"
 #include "rcppsw/mpl/identity.hpp"
 
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
 #include "cosm/convergence/convergence_calculator.hpp"
-#include "cosm/foraging/repr/block_cluster.hpp"
-#include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/repr/sim_block3D.hpp"
-#include "cosm/metrics/specs.hpp"
-
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_csv_sink.hpp"
@@ -46,14 +41,18 @@
 #include "cosm/foraging/block_dist/metrics/distributor_metrics.hpp"
 #include "cosm/foraging/block_dist/metrics/distributor_metrics_collector.hpp"
 #include "cosm/foraging/block_dist/metrics/distributor_metrics_csv_sink.hpp"
-#include "cosm/foraging/metrics/block_cluster_metrics_csv_sink.hpp"
+#include "cosm/foraging/block_motion_handler.hpp"
 #include "cosm/foraging/metrics/block_cluster_metrics_collector.hpp"
+#include "cosm/foraging/metrics/block_cluster_metrics_csv_sink.hpp"
 #include "cosm/foraging/metrics/block_motion_metrics_collector.hpp"
 #include "cosm/foraging/metrics/block_motion_metrics_csv_sink.hpp"
-#include "cosm/fsm/metrics/block_transporter_metrics_collector.hpp"
-#include "cosm/fsm/metrics/block_transporter_metrics_csv_sink.hpp"
 #include "cosm/foraging/metrics/block_transportee_metrics_collector.hpp"
 #include "cosm/foraging/metrics/block_transportee_metrics_csv_sink.hpp"
+#include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/fsm/metrics/block_transporter_metrics_collector.hpp"
+#include "cosm/fsm/metrics/block_transporter_metrics_csv_sink.hpp"
+#include "cosm/metrics/specs.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/metrics/dist2D_pos_metrics_collector.hpp"
 #include "cosm/spatial/metrics/dist2D_pos_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/dist3D_metrics.hpp"
@@ -76,12 +75,12 @@
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
 #include "cosm/spatial/metrics/movement_metrics_csv_sink.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_collector.hpp"
+#include "cosm/spatial/metrics/nest_zone_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
 #include "cosm/spatial/metrics/vector_locs2D_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_collector.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_csv_sink.hpp"
-#include "cosm/spatial/metrics/nest_zone_metrics_collector.hpp"
-#include "cosm/spatial/metrics/nest_zone_metrics_csv_sink.hpp"
 #include "cosm/spatial/strategy/metrics/nest_acq_metrics_collector.hpp"
 #include "cosm/spatial/strategy/metrics/nest_acq_metrics_csv_sink.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
@@ -95,9 +94,8 @@ NS_START(cosm, argos, metrics);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-fs_output_manager::fs_output_manager(
-    const rmconfig::metrics_config* const mconfig,
-    const fs::path& output_root)
+fs_output_manager::fs_output_manager(const rmconfig::metrics_config* const mconfig,
+                                     const fs::path& output_root)
     : rmetrics::fs_output_manager(mconfig, output_root),
       ER_CLIENT_INIT("cosm.argos.metrics.fs_output_manager") {
   /*
@@ -113,8 +111,7 @@ fs_output_manager::fs_output_manager(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void fs_output_manager::collect_from_block(
-    const crepr::sim_block3D* const block) {
+void fs_output_manager::collect_from_block(const crepr::sim_block3D* const block) {
   collect(cmspecs::blocks::kTransportee.scoped(), *block->md());
 } /* collect_from_block() */
 
@@ -156,18 +153,17 @@ void fs_output_manager::collect_from_arena(
 void fs_output_manager::register_standard(
     const rmconfig::metrics_config* mconfig) {
   using sink_list = rmpl::typelist<
-    rmpl::identity<cconvergence::metrics::convergence_metrics_csv_sink>,
-    rmpl::identity<csmetrics::movement_metrics_csv_sink>,
-    rmpl::identity<cfbd::metrics::distributor_metrics_csv_sink>,
-    rmpl::identity<cfmetrics::block_motion_metrics_csv_sink>,
-    rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
-    rmpl::identity<cfmetrics::block_transportee_metrics_csv_sink>,
-    rmpl::identity<csmetrics::goal_acq_metrics_csv_sink>,
-    rmpl::identity<csmetrics::interference_metrics_csv_sink>,
-    rmpl::identity<cssmetrics::nest_acq_metrics_csv_sink>,
-    rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>,
-    rmpl::identity<csmetrics::nest_zone_metrics_csv_sink>
-    >;
+      rmpl::identity<cconvergence::metrics::convergence_metrics_csv_sink>,
+      rmpl::identity<csmetrics::movement_metrics_csv_sink>,
+      rmpl::identity<cfbd::metrics::distributor_metrics_csv_sink>,
+      rmpl::identity<cfmetrics::block_motion_metrics_csv_sink>,
+      rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
+      rmpl::identity<cfmetrics::block_transportee_metrics_csv_sink>,
+      rmpl::identity<csmetrics::goal_acq_metrics_csv_sink>,
+      rmpl::identity<csmetrics::interference_metrics_csv_sink>,
+      rmpl::identity<cssmetrics::nest_acq_metrics_csv_sink>,
+      rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>,
+      rmpl::identity<csmetrics::nest_zone_metrics_csv_sink> >;
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(cconvergence::metrics::convergence_metrics_collector),
@@ -182,10 +178,10 @@ void fs_output_manager::register_standard(
       cmspecs::spatial::kInterferenceCounts.xml(),
       cmspecs::spatial::kInterferenceCounts.scoped(),
       rmetrics::output_mode::ekAPPEND },
-    {typeid(csmetrics::nest_zone_metrics_collector),
-     cmspecs::spatial::kNestZone.xml(),
-     cmspecs::spatial::kNestZone.scoped(),
-     rmetrics::output_mode::ekAPPEND },
+    { typeid(csmetrics::nest_zone_metrics_collector),
+      cmspecs::spatial::kNestZone.xml(),
+      cmspecs::spatial::kNestZone.scoped(),
+      rmetrics::output_mode::ekAPPEND },
     { typeid(cfbd::metrics::distributor_metrics_collector),
       cmspecs::blocks::kDistributor.xml(),
       cmspecs::blocks::kDistributor.scoped(),
@@ -206,10 +202,10 @@ void fs_output_manager::register_standard(
       cmspecs::blocks::kAcqCounts.xml(),
       cmspecs::blocks::kAcqCounts.scoped(),
       rmetrics::output_mode::ekAPPEND },
-    {typeid(cssmetrics::nest_acq_metrics_collector),
-     cmspecs::strategy::kNestAcq.xml(),
-     cmspecs::strategy::kNestAcq.scoped(),
-    rmetrics::output_mode::ekAPPEND },
+    { typeid(cssmetrics::nest_acq_metrics_collector),
+      cmspecs::strategy::kNestAcq.xml(),
+      cmspecs::strategy::kNestAcq.scoped(),
+      rmetrics::output_mode::ekAPPEND },
     { typeid(ctvmetrics::population_dynamics_metrics_collector),
       cmspecs::tv::kPopulation.xml(),
       cmspecs::tv::kPopulation.scoped(),
@@ -217,12 +213,10 @@ void fs_output_manager::register_standard(
   };
 
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
-                              rmetrics::file_sink_registerer> csv(this,
-                                                                  creatable_set);
-  rmetrics::register_using_config<decltype(csv),
-                                  rmconfig::file_sink_config> registerer(
-                                      std::move(csv),
-                                      &mconfig->csv);
+                               rmetrics::file_sink_registerer>
+      csv(this, creatable_set);
+  rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
+      registerer(std::move(csv), &mconfig->csv);
   boost::mpl::for_each<sink_list>(registerer);
 } /* register_standard() */
 
@@ -230,12 +224,11 @@ void fs_output_manager::register_with_arena_dims2D(
     const rmconfig::metrics_config* mconfig,
     const rmath::vector2z& dims) {
   using sink_typelist = rmpl::typelist<
-    rmpl::identity<csmetrics::dist2D_pos_metrics_csv_sink>,
-    rmpl::identity<csmetrics::explore_locs2D_metrics_csv_sink>,
-    rmpl::identity<csmetrics::goal_acq_locs2D_metrics_csv_sink>,
-    rmpl::identity<csmetrics::interference_locs2D_metrics_csv_sink>,
-    rmpl::identity<csmetrics::vector_locs2D_metrics_csv_sink>
-    >;
+      rmpl::identity<csmetrics::dist2D_pos_metrics_csv_sink>,
+      rmpl::identity<csmetrics::explore_locs2D_metrics_csv_sink>,
+      rmpl::identity<csmetrics::goal_acq_locs2D_metrics_csv_sink>,
+      rmpl::identity<csmetrics::interference_locs2D_metrics_csv_sink>,
+      rmpl::identity<csmetrics::vector_locs2D_metrics_csv_sink> >;
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist2D_pos_metrics_collector),
@@ -263,13 +256,10 @@ void fs_output_manager::register_with_arena_dims2D(
   auto extra_args = std::make_tuple(dims);
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
-                               decltype(extra_args)> csv(this,
-                                                         creatable_set,
-                                                         extra_args);
-  rmetrics::register_using_config<decltype(csv),
-                                  rmconfig::file_sink_config> registerer(
-                                      std::move(csv),
-                                      &mconfig->csv);
+                               decltype(extra_args)>
+      csv(this, creatable_set, extra_args);
+  rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
+      registerer(std::move(csv), &mconfig->csv);
 
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_arena_dims2D() */
@@ -278,11 +268,10 @@ void fs_output_manager::register_with_arena_dims3D(
     const rmconfig::metrics_config* mconfig,
     const rmath::vector3z& dims) {
   using sink_typelist = rmpl::typelist<
-    rmpl::identity<csmetrics::dist3D_pos_metrics_csv_sink>,
-    rmpl::identity<csmetrics::explore_locs3D_metrics_csv_sink>,
-    rmpl::identity<csmetrics::interference_locs3D_metrics_csv_sink>,
-    rmpl::identity<csmetrics::vector_locs3D_metrics_csv_sink>
-      >;
+      rmpl::identity<csmetrics::dist3D_pos_metrics_csv_sink>,
+      rmpl::identity<csmetrics::explore_locs3D_metrics_csv_sink>,
+      rmpl::identity<csmetrics::interference_locs3D_metrics_csv_sink>,
+      rmpl::identity<csmetrics::vector_locs3D_metrics_csv_sink> >;
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(csmetrics::dist3D_pos_metrics_collector),
@@ -306,13 +295,10 @@ void fs_output_manager::register_with_arena_dims3D(
   auto extra_args = std::make_tuple(dims);
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
-                               decltype(extra_args)> csv(this,
-                                                         creatable_set,
-                                                         extra_args);
-  rmetrics::register_using_config<decltype(csv),
-                                  rmconfig::file_sink_config> registerer(
-                                      std::move(csv),
-                                      &mconfig->csv);
+                               decltype(extra_args)>
+      csv(this, creatable_set, extra_args);
+  rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
+      registerer(std::move(csv), &mconfig->csv);
 
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_arena_dims3D() */
@@ -320,9 +306,8 @@ void fs_output_manager::register_with_arena_dims3D(
 void fs_output_manager::register_with_n_block_clusters(
     const rmconfig::metrics_config* mconfig,
     size_t n_clusters) {
-  using sink_typelist = rmpl::typelist<
-    rmpl::identity<cfmetrics::block_cluster_metrics_csv_sink>
-    >;
+  using sink_typelist =
+      rmpl::typelist<rmpl::identity<cfmetrics::block_cluster_metrics_csv_sink> >;
 
   rmetrics::creatable_collector_set creatable_set = {
     { typeid(cfmetrics::block_cluster_metrics_collector),
@@ -333,13 +318,10 @@ void fs_output_manager::register_with_n_block_clusters(
   auto extra_args = std::make_tuple(n_clusters);
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
-                               decltype(extra_args)> csv(this,
-                                                         creatable_set,
-                                                         extra_args);
-  rmetrics::register_using_config<decltype(csv),
-                                  rmconfig::file_sink_config> registerer(
-                                      std::move(csv),
-                                      &mconfig->csv);
+                               decltype(extra_args)>
+      csv(this, creatable_set, extra_args);
+  rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
+      registerer(std::move(csv), &mconfig->csv);
 
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_n_block_clusters() */

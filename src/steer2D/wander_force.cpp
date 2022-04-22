@@ -26,8 +26,8 @@
 #include "rcppsw/math/angles.hpp"
 #include "rcppsw/math/vector2.hpp"
 
-#include "cosm/steer2D/config/wander_force_config.hpp"
 #include "cosm/steer2D/bias_angle_generator_factory.hpp"
+#include "cosm/steer2D/config/wander_force_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -39,8 +39,9 @@ NS_START(cosm, steer2D);
  ******************************************************************************/
 wander_force::wander_force(const config::wander_force_config* const config)
     : mc_config(*config),
-      m_bias_generator(bias_angle_generator_factory().create(config->bias_angle.src,
-                                                             &config->bias_angle)) {}
+      m_bias_generator(
+          bias_angle_generator_factory().create(config->bias_angle.src,
+                                                &config->bias_angle)) {}
 
 /*******************************************************************************
  * Member Functions

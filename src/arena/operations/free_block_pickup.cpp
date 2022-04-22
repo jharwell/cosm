@@ -28,10 +28,9 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/arena/operations/block_extent_clear.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
-#include "cosm/repr/sim_block3D.hpp"
-#include "cosm/repr/operations/block_pickup.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
+#include "cosm/repr/operations/block_pickup.hpp"
 #include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************

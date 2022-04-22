@@ -26,9 +26,11 @@
 #include <string>
 
 #include "rcppsw/patterns/factory/factory.hpp"
+
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
 #include "cosm/spatial/fsm/fsm_params.hpp"
+#include "cosm/spatial/strategy/nest_acq/config/nest_acq_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -49,7 +51,8 @@ NS_START(spatial, strategy, nest_acq);
 class factory :
     public rpfactory::releasing_factory<csstrategy::nest_acq::base_nest_acq,
                                         std::string, /* key type */
-                                        csfsm::fsm_params*,
+                                        const cssnest_acq::config::nest_acq_config*,
+                                        const csfsm::fsm_params*,
                                         rmath::rng*> {
  public:
   static inline const std::string kWander = "wander";
@@ -60,4 +63,3 @@ class factory :
 };
 
 NS_END(nest_acq, strategy, spatial, cosm);
-

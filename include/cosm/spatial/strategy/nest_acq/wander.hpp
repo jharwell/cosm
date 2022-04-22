@@ -49,11 +49,12 @@ NS_START(cosm, spatial, strategy, nest_acq);
  * Robots continue to phototaxis towards the light and avoid collisions while
  * wandering.
  */
-class wander : public csstrategy::nest_acq::base_nest_acq {
+class wander : public rer::client<wander>,
+               public csstrategy::nest_acq::base_nest_acq {
  public:
-  wander(const csfsm::fsm_params* params,
-         rmath::rng* rng)
-      : base_nest_acq(params, rng) {}
+  wander(const cssnest_acq::config::nest_acq_config* config,
+         const csfsm::fsm_params* params,
+         rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
   wander(const wander&) = delete;
@@ -76,22 +77,18 @@ class wander : public csstrategy::nest_acq::base_nest_acq {
   bool task_finished(void) const override final { return !m_task_running; }
   void task_execute(void) override final;
 
-  std::unique_ptr<base_strategy> clone(void) const override {
+  std::unique_ptr<base_nest_acq> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
       nz_tracker()
     };
-    return std::make_unique<wander>(&params, rng());
+    return std::make_unique<wander>(config(), &params, rng());
   }
 
  private:
-  static constexpr const size_t kMIN_DURATION = 25;
-  static constexpr const size_t kMAX_DURATION = 100;
-
   /* clang-format off */
-  bool m_task_running{false};
-  rtypes::timestep m_duration{0};
+  bool             m_task_running{false};
   rtypes::timestep m_steps{0};
   /* clang-format on */
 };

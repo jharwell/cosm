@@ -47,8 +47,7 @@ NS_START(cosm, metrics, specs);
  */
 class name_spec {
  public:
-  name_spec(const std::string& xml,
-            const std::string& scoped);
+  name_spec(const std::string& xml, const std::string& scoped);
 
   /**
    * \brief If \p id is passed, then the string \p '__UUID__' will be replaced
@@ -60,7 +59,8 @@ class name_spec {
    * \brief If \p id is passed, then the string \p '__UUID__' will be replaced
    * by the string representing the passed id in the return scoped name.
    */
-  std::string scoped(const rtypes::type_uuid& id = rtypes::constants::kNoUUID) const;
+  std::string
+  scoped(const rtypes::type_uuid& id = rtypes::constants::kNoUUID) const;
 
  private:
   /* clang-format off */

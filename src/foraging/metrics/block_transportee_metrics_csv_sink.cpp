@@ -42,8 +42,7 @@ block_transportee_metrics_csv_sink::block_transportee_metrics_csv_sink(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-block_transportee_metrics_csv_sink::csv_header_cols(
+std::list<std::string> block_transportee_metrics_csv_sink::csv_header_cols(
     const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
@@ -69,8 +68,7 @@ block_transportee_metrics_csv_sink::csv_header_cols(
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string>
-block_transportee_metrics_csv_sink::csv_line_build(
+boost::optional<std::string> block_transportee_metrics_csv_sink::csv_line_build(
     const rmetrics::base_data* data,
     const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
@@ -114,7 +112,8 @@ block_transportee_metrics_csv_sink::csv_line_build(
    * infinite.
    */
   if (d->cum.initial_wait_time > 0) {
-    line += csv_entry_domavg(d->cum.initial_wait_time, d->cum.n_transported, true);
+    line +=
+        csv_entry_domavg(d->cum.initial_wait_time, d->cum.n_transported, true);
   } else {
     line += "inf";
   }

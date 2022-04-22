@@ -87,4 +87,3 @@ class applicator {
 };
 
 NS_END(interactors, cosm);
-

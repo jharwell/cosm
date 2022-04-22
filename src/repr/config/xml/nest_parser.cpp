@@ -33,9 +33,7 @@ NS_START(cosm, repr, config, xml);
  ******************************************************************************/
 void nest_parser::parse(const ticpp::Element& node) {
   ticpp::Element nnode;
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   /* we were called as part of arena configuration */
   if (nullptr == node.FirstChild(kXMLRoot, false)) {

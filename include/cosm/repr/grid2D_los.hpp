@@ -23,12 +23,12 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector2.hpp"
 #include "rcppsw/ds/grid2D.hpp"
+#include "rcppsw/math/vector2.hpp"
 
+#include "cosm/ds/cell2D.hpp"
 #include "cosm/repr/base_grid_los.hpp"
 #include "cosm/repr/grid2D_view_entity.hpp"
-#include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -44,18 +44,19 @@ NS_START(cosm, repr);
  *
  * \brief A repr of the robot's current line-of-sight in 2D.
  */
-class grid2D_los : public crepr::base_grid_los<
-  grid2D_view_entity<rds::grid2D<cds::cell2D>,
-                     rds::grid2D<cds::cell2D>::const_grid_view>,
-  rmath::vector2d>,
-              public rer::client<grid2D_los> {
+class grid2D_los
+    : public crepr::base_grid_los<
+          grid2D_view_entity<rds::grid2D<cds::cell2D>,
+                             rds::grid2D<cds::cell2D>::const_grid_view>,
+          rmath::vector2d>,
+      public rer::client<grid2D_los> {
  public:
-  using los_type = crepr::base_grid_los<grid2D_view_entity<rds::grid2D<cds::cell2D>,
-                                                           rds::grid2D<cds::cell2D>::const_grid_view>,
-                                   rmath::vector2d>;
-  using los_type::grid_view_type;
+  using los_type = crepr::base_grid_los<
+      grid2D_view_entity<rds::grid2D<cds::cell2D>,
+                         rds::grid2D<cds::cell2D>::const_grid_view>,
+      rmath::vector2d>;
   using los_type::access;
-
+  using los_type::grid_view_type;
 
   grid2D_los(const rtypes::type_uuid& c_id,
              const grid_view_type& c_view,
@@ -68,4 +69,3 @@ class grid2D_los : public crepr::base_grid_los<
 };
 
 NS_END(repr, cosm);
-

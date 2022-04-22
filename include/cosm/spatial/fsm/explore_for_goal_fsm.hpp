@@ -27,7 +27,7 @@
 #include <memory>
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/strategy/explore/base_explore.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 
@@ -76,7 +76,7 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   };
 
   explore_for_goal_fsm(const csfsm::fsm_params* params,
-                       std::unique_ptr<csstrategy::base_strategy> behavior,
+                       std::unique_ptr<cssexplore::base_explore> behavior,
                        rmath::rng* rng,
                        const std::function<bool(void)>& goal_detect);
   ~explore_for_goal_fsm(void) override = default;
@@ -129,22 +129,10 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
 
   RCPPSW_HFSM_DECLARE_STATE_MAP(state_map_ex, mc_state_map, ekST_MAX_STATES);
 
-  /**
-   * \brief The minimum # of timesteps that a robot must explore before goal
-   * acquisition will be checked. Needed to force some tasks to not pick up the
-   * block they just dropped if it is the only one they know about (The
-   * exceptions list disables vectoring to it, BUT they can still explore for
-   * it, and without this minimum they will immediately acquire it and bypass
-   * the list).
-   */
-  static constexpr const size_t kMIN_EXPLORE_TIME = 50;
-
   /* clang-format off */
-  size_t                                     m_explore_time{0};
-  std::unique_ptr<csstrategy::base_strategy> m_explore_behavior;
+  std::unique_ptr<cssexplore::base_explore>  m_behavior;
   std::function<bool(void)>                  m_goal_detect;
   /* clang-format on */
 };
 
 NS_END(fsm, spatial, cosm);
-

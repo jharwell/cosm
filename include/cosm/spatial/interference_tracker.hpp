@@ -73,4 +73,3 @@ class interference_tracker final : public cfsm::state_tracker,
 };
 
 NS_END(spatial, cosm);
-

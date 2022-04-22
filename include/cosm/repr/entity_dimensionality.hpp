@@ -42,4 +42,3 @@ enum class entity_dimensionality {
 };
 
 NS_END(repr, cosm);
-

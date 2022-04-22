@@ -1,5 +1,5 @@
 /**
- * \file block_drop_parser.cpp
+ * \file drop_parser.cpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -21,30 +21,28 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/config/xml/block_drop_parser.hpp"
+#include "cosm/spatial/strategy/blocks/config/xml/drop_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, config, xml);
+NS_START(cosm, spatial, strategy, blocks, config, xml);
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void block_drop_parser::parse(const ticpp::Element& node) {
+void drop_parser::parse(const ticpp::Element& node) {
   if (nullptr == node.FirstChild(kXMLRoot, false)) {
     return;
   }
 
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   ticpp::Element snode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
   XML_PARSE_ATTR(snode, m_config, strategy);
-  XML_PARSE_ATTR_DFLT(snode, m_config, duration, rtypes::timestep(0));
+  XML_PARSE_ATTR(snode, m_config, duration);
 } /* parse() */
 
-NS_END(xml, config, strategy, spatial, cosm);
+NS_END(xml, config, blocks, strategy, spatial, cosm);

@@ -38,7 +38,7 @@ NS_START(cosm, spatial, fsm);
  ******************************************************************************/
 acquire_goal_fsm::acquire_goal_fsm(
     const csfsm::fsm_params* params,
-    std::unique_ptr<csstrategy::base_strategy> behavior,
+    std::unique_ptr<cssexplore::base_explore> explore_behavior,
     rmath::rng* rng,
     const struct hook_list& hooks)
     : util_hfsm(params, rng, ekST_MAX_STATES),
@@ -56,7 +56,10 @@ acquire_goal_fsm::acquire_goal_fsm(
           RCPPSW_HFSM_STATE_MAP_ENTRY_EX(&finished)),
       m_hooks(hooks),
       m_vector_fsm(params, rng),
-      m_explore_fsm(params, std::move(behavior), rng, m_hooks.explore_term_cb) {
+      m_explore_fsm(params,
+                    std::move(explore_behavior),
+                    rng,
+                    m_hooks.explore_term_cb) {
   m_explore_fsm.change_parent(explore_for_goal_fsm::state::ekST_EXPLORE,
                               &fsm_acquire_goal);
 }

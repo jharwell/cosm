@@ -63,7 +63,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
 
   rmath::vector3z dcenter3D(void) const {
     ER_ASSERT(RCPPSW_IS_ODD(dbb().xsize()) && RCPPSW_IS_ODD(dbb().ysize()) &&
-              RCPPSW_IS_ODD(dbb().zsize()),
+                  RCPPSW_IS_ODD(dbb().zsize()),
               "dcenter3D() called on entity without defined center");
     return entity3D::dcenter3D();
   }
@@ -84,7 +84,7 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
   }
   bool contains_point(const rmath::vector3d& point) const {
     return xrspan().contains(point.x()) && yrspan().contains(point.y()) &&
-        zrspan().contains(point.z());
+           zrspan().contains(point.z());
   }
 
  protected:
@@ -113,7 +113,9 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
-  void ranchor3D(const rmath::vector3d& ranchor) { rbb().update(ranchor); }
+  void ranchor3D(const rmath::vector3d& ranchor) {
+    rbb().update(ranchor);
+  }
 
   /**
    * \brief SFINAE to allow only derived classes that mark themselves as movable
@@ -123,7 +125,9 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
    * of the entity.
    */
   template <typename T, RCPPSW_SFINAE_DECLDEF(T::is_movable())>
-  void danchor3D(const rmath::vector3z& danchor) { dbb().update(danchor); }
+  void danchor3D(const rmath::vector3z& danchor) {
+    dbb().update(danchor);
+  }
 
  private:
   /* clang-format off */
@@ -132,4 +136,3 @@ class unicell_entity3D : public entity3D, public rer::client<unicell_entity3D> {
 };
 
 NS_END(repr, cosm);
-

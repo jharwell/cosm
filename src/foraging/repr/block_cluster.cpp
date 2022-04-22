@@ -86,11 +86,10 @@ void block_cluster::update_after_drop(const crepr::sim_block3D* dropped) {
   m_blocks.push_back(dropped);
 } /* update_after_drop() */
 
-
 void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
-  auto it = std::find_if(m_blocks.begin(),
-                         m_blocks.end(),
-                         [&](const auto* b) { return b->id() == pickup_id;});
+  auto it = std::find_if(m_blocks.begin(), m_blocks.end(), [&](const auto* b) {
+    return b->id() == pickup_id;
+  });
   ER_ASSERT(it != m_blocks.end(),
             "Block%s not in cluster%s",
             rcppsw::to_string(pickup_id).c_str(),
@@ -103,9 +102,9 @@ void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
            rcppsw::to_string(ydspan()).c_str());
   m_blocks.erase(std::remove(m_blocks.begin(), m_blocks.end(), *it));
 
-  it = std::find_if(m_blocks.begin(),
-                         m_blocks.end(),
-                         [&](const auto* b) { return b->id() == pickup_id;});
+  it = std::find_if(m_blocks.begin(), m_blocks.end(), [&](const auto* b) {
+    return b->id() == pickup_id;
+  });
   ER_ASSERT(it == m_blocks.end(),
             "Block%s still in cluster%s",
             rcppsw::to_string(pickup_id).c_str(),

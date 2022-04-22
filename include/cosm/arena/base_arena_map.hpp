@@ -23,28 +23,28 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <list>
 #include <map>
 #include <memory>
 #include <shared_mutex>
 #include <string>
 #include <vector>
-#include <list>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/multithread/lockable.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/arena/locking.hpp"
-#include "cosm/arena/ds/nest_vector.hpp"
-#include "cosm/arena/update_status.hpp"
 #include "cosm/arena/ds/arena_grid.hpp"
+#include "cosm/arena/ds/nest_vector.hpp"
+#include "cosm/arena/locking.hpp"
+#include "cosm/arena/update_status.hpp"
 #include "cosm/ds/block3D_vector.hpp"
+#include "cosm/ds/entity_vector.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/ds/entity_vector.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -95,8 +95,8 @@ NS_START(cosm, arena);
  * efficiency with large numbers of objects.
  */
 class base_arena_map : public rer::client<base_arena_map>,
-                                     public rpdecorator::decorator<ds::arena_grid>,
-                                     public rmultithread::lockable {
+                       public rpdecorator::decorator<ds::arena_grid>,
+                       public rmultithread::lockable {
  public:
   using grid_view = rds::base_grid2D<cds::cell2D>::grid_view;
   using const_grid_view = rds::base_grid2D<cds::cell2D>::const_grid_view;
@@ -121,8 +121,8 @@ class base_arena_map : public rer::client<base_arena_map>,
     return decoratee().template access<Index>(d);
   }
   template <size_t Index>
-  typename ds::arena_grid::layer_value_type<Index>::value_type&
-  access(size_t i, size_t j) {
+  typename ds::arena_grid::layer_value_type<Index>::value_type& access(size_t i,
+                                                                       size_t j) {
     return decoratee().template access<Index>(i, j);
   }
   template <size_t Index>
@@ -160,9 +160,8 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \return The ID of the block that the robot is on, or -1 if the robot is not
    * actually on a block.
    */
-  virtual rtypes::type_uuid
-  robot_on_block(const rmath::vector2d& pos,
-                 const rtypes::type_uuid& ent_id) const;
+  virtual rtypes::type_uuid robot_on_block(const rmath::vector2d& pos,
+                                           const rtypes::type_uuid& ent_id) const;
 
   /**
    * \brief Determine if a robot is currently within the boundaries of a nest.
@@ -252,8 +251,7 @@ class base_arena_map : public rer::client<base_arena_map>,
    * \note This operation requires holding the block and grid mutexes for
    * writing, and takes them internally if they are not held.
    */
-  void distribute_single_block(crepr::sim_block3D* block,
-                               const locking& locking);
+  void distribute_single_block(crepr::sim_block3D* block, const locking& locking);
 
   /**
    * \brief Get the bounding box large enough to contain all blocks specified in
@@ -323,7 +321,9 @@ class base_arena_map : public rer::client<base_arena_map>,
   ds::loctree* bloctree(void) { return m_bloctree.get(); }
 
   virtual cds::const_spatial_entity_vector
-  initial_dist_precalc(const crepr::sim_block3D*) const { return {}; };
+  initial_dist_precalc(const crepr::sim_block3D*) const {
+    return {};
+  };
   bool initialize_shared(cpargos::swarm_manager_adaptor* sm,
                          const crepr::config::nests_config* nests);
 
@@ -335,7 +335,9 @@ class base_arena_map : public rer::client<base_arena_map>,
    *       multi-threaded contetxts.
    */
   bool distribute_all_blocks(void);
-  cfbd::dispatcher* block_dispatcher(void) const { return m_block_dispatcher.get(); }
+  cfbd::dispatcher* block_dispatcher(void) const {
+    return m_block_dispatcher.get();
+  }
   rmath::rng* rng(void) const { return m_rng; }
 
  private:
@@ -398,4 +400,3 @@ class base_arena_map : public rer::client<base_arena_map>,
 };
 
 NS_END(arena, cosm);
-

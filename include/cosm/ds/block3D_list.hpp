@@ -23,9 +23,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <list>
 #include <memory>
 #include <string>
-#include <list>
 
 #include "rcppsw/er/stringizable.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
@@ -53,8 +53,9 @@ using block3D_listno_type = crepr::sim_block3D*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_listno : public rpdecorator::decorator<std::list<block3D_listno_type>>,
-                       public rer::stringizable {
+class block3D_listno
+    : public rpdecorator::decorator<std::list<block3D_listno_type>>,
+      public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECLDEF(push_back);
   RCPPSW_DECORATE_DECLDEF(begin);
@@ -62,7 +63,7 @@ class block3D_listno : public rpdecorator::decorator<std::list<block3D_listno_ty
 
   std::string to_str(void) const override;
 
-  private:
+ private:
   /* clang-format off */
   std::list<block3D_listno_type> m_impl;
 };

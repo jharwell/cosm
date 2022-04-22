@@ -23,9 +23,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/types/timestep.hpp"
-#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/math/vector3.hpp"
+#include "rcppsw/types/timestep.hpp"
 
 #include "cosm/hal/subsystem/sensing_subsystemQ3D.hpp"
 
@@ -46,7 +46,7 @@ NS_START(cosm, subsystem);
  * chsubsystem::sensing_subsystemQ3D beyond the abstraction of available robot
  * sensors.
  *
- * Note that the \ref chal::sensors::position_sensor MUST be in the sensor map,
+ * Note that the \ref chsensors::position_sensor MUST be in the sensor map,
  * or \ref update() will crash.
  */
 class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
@@ -104,8 +104,7 @@ class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
   /**
    * \brief Update the current time and position information for the robot.
    */
-  void update(const rtypes::timestep& t,
-              const rtypes::discretize_ratio& ratio) {
+  void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
     m_tick = t;
     auto odom = odometry()->reading();
 

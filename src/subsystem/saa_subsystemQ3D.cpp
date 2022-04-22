@@ -36,7 +36,8 @@ NS_START(cosm, subsystem);
  ******************************************************************************/
 saa_subsystemQ3D::saa_subsystemQ3D(
     chsubsystem::sensor_variant_map<COSM_HAL_ROBOT_AVAILABLE_SENSORS>&& sensors,
-    chsubsystem::actuator_variant_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&& actuators,
+    chsubsystem::actuator_variant_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&&
+        actuators,
     const steer2D::config::force_calculator_config* const steer_config)
     : ER_CLIENT_INIT("cosm.subsystem.saa_subsystemQ3D"),
       m_actuation(std::make_unique<actuation_type>(std::move(actuators))),
@@ -47,15 +48,20 @@ saa_subsystemQ3D::saa_subsystemQ3D(
  * Member Functions
  ******************************************************************************/
 void saa_subsystemQ3D::steer_force2D_apply(void) {
+  if (!steer_force2D().is_enabled()) {
+    ER_DEBUG("Skipping applying steering forces--disabled");
+    return;
+  }
   auto odom = odometry();
   ER_DEBUG("odom.position=%s azimuth=%s zenith=%s",
            rcppsw::to_string(odom.pose.position).c_str(),
            rcppsw::to_string(odom.pose.orientation.z()).c_str(),
            rcppsw::to_string(odom.pose.orientation.y()).c_str());
-  ER_DEBUG("odom.twist.linear=%s@%s [%s] odom.twist.angular=%s [%s]",
+  ER_DEBUG("odom.twist.linear=%s@%s [%s]",
            rcppsw::to_string(odom.twist.linear).c_str(),
            rcppsw::to_string(odom.twist.linear.to_2D().angle()).c_str(),
-           rcppsw::to_string(odom.twist.linear.length()).c_str(),
+           rcppsw::to_string(odom.twist.linear.length()).c_str());
+  ER_DEBUG("odom.twist.angular=%s [%s]",
            rcppsw::to_string(odom.twist.angular).c_str(),
            rcppsw::to_string(odom.twist.angular.length()).c_str());
 

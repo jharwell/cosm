@@ -100,7 +100,7 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
   using chargos::sensors::argos_sensor<impl_type>::reset;
   using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  using reading_type = chal::sensors::light_sensor_reading;
+  using reading_type = chsensors::light_sensor_reading;
 
   explicit light_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.light"),

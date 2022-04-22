@@ -31,6 +31,10 @@ NS_START(cosm, spatial, strategy, nest_acq);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
+wander_random_thresh::wander_random_thresh(const cssnest_acq::config::nest_acq_config* config,
+                                           const csfsm::fsm_params* params,
+                                           rmath::rng* rng)
+    : random_thresh(config, params, rng) {}
 
 /*******************************************************************************
  * Member Functions

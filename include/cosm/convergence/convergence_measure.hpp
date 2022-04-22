@@ -120,4 +120,3 @@ class convergence_measure : public rmath::expression<double> {
 };
 
 NS_END(convergence, cosm);
-

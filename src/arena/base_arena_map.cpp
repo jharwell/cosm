@@ -29,22 +29,22 @@
 #include "rcppsw/utils/maskable_enum.hpp"
 
 #include "cosm/arena/config/arena_map_config.hpp"
-#include "cosm/repr/config/nest_config.hpp"
 #include "cosm/arena/ds/loctree.hpp"
 #include "cosm/arena/free_blocks_calculator.hpp"
 #include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/repr/light_type_index.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
+#include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/block3D_manifest_processor.hpp"
+#include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/pal/argos/swarm_manager_adaptor.hpp"
-#include "cosm/repr/sim_block3D.hpp"
+#include "cosm/repr/config/nest_config.hpp"
+#include "cosm/repr/nest.hpp"
 #include "cosm/repr/operations/nest_extent.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/spatial/conflict_checker.hpp"
 #include "cosm/spatial/dimension_checker.hpp"
-#include "cosm/foraging/block_dist/base_distributor.hpp"
-#include "cosm/repr/nest.hpp"
-#include "cosm/foraging/block_dist/dispatcher.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -62,9 +62,10 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
       m_blockso(foraging::block_dist::block3D_manifest_processor(
           &config->blocks.dist.manifest,
           config->grid.resolution)()),
-      m_block_dispatcher(std::make_unique<cfbd::dispatcher>(&decoratee(),
-                                                            config->grid.resolution,
-                                                            &config->blocks.dist)),
+      m_block_dispatcher(
+          std::make_unique<cfbd::dispatcher>(&decoratee(),
+                                             config->grid.resolution,
+                                             &config->blocks.dist)),
       m_redist_governor(&config->blocks.dist.redist_governor),
       m_bm_handler(&config->blocks.motion, m_rng),
       m_nests(std::make_unique<nest_map_type>()),
@@ -76,7 +77,6 @@ base_arena_map::base_arena_map(const caconfig::arena_map_config* config,
           xdsize(),
           ydsize(),
           grid_resolution().v());
-
 
   /*
    * Initialize nests, if configured (nests can also be manually initialized
@@ -108,8 +108,8 @@ bool base_arena_map::initialize_shared(cpargos::swarm_manager_adaptor* sm,
   /* compute block bounding box */
   auto* block = *std::max_element(
       m_blocksno.begin(), m_blocksno.end(), [&](const auto* b1, const auto* b2) {
-                                              return rmath::vector3d::componentwise_compare()(b1->rdims3D(),
-                                                                                    b2->rdims3D());
+        return rmath::vector3d::componentwise_compare()(b1->rdims3D(),
+                                                        b2->rdims3D());
       });
   m_block_bb = block->rdims3D();
 
@@ -125,27 +125,20 @@ bool base_arena_map::initialize_private(void) {
 
   auto conflict_check = [&](const crepr::sim_block3D* block,
                             const rmath::vector2d& loc) {
-                          return cspatial::conflict_checker::placement2D(this,
-                                                                         block,
-                                                                         loc);
-                        };
+    return cspatial::conflict_checker::placement2D(this, block, loc);
+  };
   auto dist_success = [&](const crepr::sim_block3D* distributed) {
-                        /*
+    /*
                          * Update block location query tree. This is called from
                          * inside a block distributor, and therefore inside a
                          * context in which all necessary locks have already
                          * been taken.
                          */
-                        bloctree_update(distributed,
-                                        locking::ekALL_HELD);
-                      };
+    bloctree_update(distributed, locking::ekALL_HELD);
+  };
 
-  bool ret = m_block_dispatcher->initialize(this,
-                                            avoid_ents,
-                                            m_block_bb,
-                                            conflict_check,
-                                            dist_success,
-                                            m_rng);
+  bool ret = m_block_dispatcher->initialize(
+      this, avoid_ents, m_block_bb, conflict_check, dist_success, m_rng);
   ret |= distribute_all_blocks();
   return ret;
 } /* initialize_private() */
@@ -190,8 +183,8 @@ void base_arena_map::initialize_nests(const crepr::config::nests_config* nests,
      * initialized.
      */
     for (auto& pair : *m_nests) {
-      pair.second.initialize(sm,
-                             carepr::light_type_index()[carepr::light_type_index::kNest]);
+      pair.second.initialize(
+          sm, carepr::light_type_index()[carepr::light_type_index::kNest]);
     } /* for(&pair..) */
   }
 } /* initialize_nests() */
@@ -272,7 +265,7 @@ void base_arena_map::distribute_single_block(crepr::sim_block3D* block,
   pre_block_dist_lock(locking);
 
   /* block to be distributed is tried before any leftover blocks */
-  m_pending_dists.push_front({block, 0});
+  m_pending_dists.push_front({ block, 0 });
 
   auto it = m_pending_dists.begin();
   while (m_pending_dists.end() != it) {
@@ -311,8 +304,7 @@ bool base_arena_map::distribute_all_blocks(void) {
                m_blocksno.end(),
                std::back_inserter(dist_blocks),
                [&](const auto* block) { return block->is_out_of_sight(); });
-  auto status =
-      m_block_dispatcher->distribute_blocks(dist_blocks);
+  auto status = m_block_dispatcher->distribute_blocks(dist_blocks);
   ER_CHECK(cfbd::dist_status::ekSUCCESS == status,
            "Failed to distribute all blocks");
 
@@ -418,17 +410,13 @@ error:
 } /* bloctree_verify() */
 
 void base_arena_map::ordered_lock(const locking& locking) {
-  maybe_lock_wr(block_mtx(),
-                !(locking & locking::ekBLOCKS_HELD));
-  maybe_lock_wr(grid_mtx(),
-                !(locking & locking::ekGRID_HELD));
+  maybe_lock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
+  maybe_lock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
 } /* ordered_lock() */
 
 void base_arena_map::ordered_unlock(const locking& locking) {
-  maybe_unlock_wr(grid_mtx(),
-                  !(locking & locking::ekGRID_HELD));
-  maybe_unlock_wr(block_mtx(),
-                !(locking & locking::ekBLOCKS_HELD));
+  maybe_unlock_wr(grid_mtx(), !(locking & locking::ekGRID_HELD));
+  maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 } /* ordered_unlock() */
 
 NS_END(arena, cosm);

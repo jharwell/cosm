@@ -62,4 +62,3 @@ class colored_entity {
 };
 
 NS_END(repr, cosm);
-

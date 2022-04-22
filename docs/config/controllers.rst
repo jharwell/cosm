@@ -110,6 +110,7 @@ XML configuration:
    <strategy>
        <nest_acq
           strategy="wander|random_thresh|wander_random_thresh"
+          duration="INT"
        </nest_acq>
        ...
    </strategy>
@@ -128,14 +129,16 @@ XML configuration:
 
   - ``wander_random_thresh`` - ``random_thresh`` + ``wander``.
 
+- ``duration`` - How long to perform the strategy for. Valid for: [ ``wander``
+  ].
 
 ``strategy/block_drop``
 -----------------------
 
 - Required child attributes if present: [  ``strategy`` ].
-- Required child tags if present: none.
+- Required child tags if present: [ ``duration`` ].
 - Optional child tags: none.
-- Optional child attributes: [ ``duration`` ].
+- Optional child attributes: none.
 
 
 XML configuration:
@@ -145,7 +148,8 @@ XML configuration:
      <strategy>
        ...
        <block_drop
-          strategy=""
+          strategy="backup"
+          duration="INT"
          ...
        </block_drop>
        ...

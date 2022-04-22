@@ -70,4 +70,3 @@ class entity3D : public spatial_entity3D {
 };
 
 NS_END(repr, cosm);
-

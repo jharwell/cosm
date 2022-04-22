@@ -23,13 +23,13 @@
  ******************************************************************************/
 #include "cosm/argos/tv/pd_adaptor.hpp"
 
-#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
-#include "cosm/hal/robot.hpp"
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/pal/argos/controller/adaptor2D.hpp"
-#include "cosm/pal/argos/controller/adaptorQ3D.hpp"
 #include "cosm/argos/operations/robot_malfunction.hpp"
 #include "cosm/argos/operations/robot_repair.hpp"
+#include "cosm/hal/robot.hpp"
+#include "cosm/pal/argos/controller/adaptor2D.hpp"
+#include "cosm/pal/argos/controller/adaptorQ3D.hpp"
+#include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/tv/config/population_dynamics_config.hpp"
 
 /*******************************************************************************
@@ -107,7 +107,7 @@ op_result pd_adaptor<TController>::robot_kill(void) {
 
 template <typename TController>
 op_result pd_adaptor<TController>::robot_add(int max_pop,
-                                                   const rtypes::type_uuid& id) {
+                                             const rtypes::type_uuid& id) {
   size_t total_pop = swarm_total_population();
   size_t active_pop = swarm_active_population();
 
@@ -166,8 +166,7 @@ op_result pd_adaptor<TController>::robot_malfunction(void) {
 } /* robot_malfunction() */
 
 template <typename TController>
-op_result
-pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
+op_result pd_adaptor<TController>::robot_repair(const rtypes::type_uuid& id) {
   ER_INFO("Robot with ID=%d repaired, n_repairing=%zu",
           id.v(),
           repair_queue_status().size);
@@ -207,8 +206,7 @@ pd_adaptor<TController>::malfunction_victim_locate(size_t total_pop) const {
 } /* malfunction_victim_locate() */
 
 template <typename TController>
-TController*
-pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
+TController* pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
   auto range = rmath::rangei(0, total_pop - 1);
   chal::robot* entity;
   for (size_t i = 0; i < kMaxOperationAttempts; ++i) {
@@ -226,8 +224,7 @@ pd_adaptor<TController>::kill_victim_locate(size_t total_pop) const {
 } /* kill_victim_locate() */
 
 template <typename TController>
-bool pd_adaptor<TController>::robot_attempt_add(
-    const rtypes::type_uuid& id) {
+bool pd_adaptor<TController>::robot_attempt_add(const rtypes::type_uuid& id) {
   /*
    * Give 2.0 buffer around the edges of the arena so that robots are not too
    * close to the boundaries of physics engines, which can cause "no engine can
@@ -267,8 +264,8 @@ bool pd_adaptor<TController>::robot_attempt_add(
         rmath::vector2d(x, y).to_str().c_str());
 
     /* Register controller for environmental variances */
-    auto* controller =
-        static_cast<TController*>(&robot->GetControllableEntity().GetController());
+    auto* controller = static_cast<TController*>(
+        &robot->GetControllableEntity().GetController());
 
     m_envd->register_controller(*controller);
 

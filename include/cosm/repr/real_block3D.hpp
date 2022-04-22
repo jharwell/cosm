@@ -25,8 +25,8 @@
  ******************************************************************************/
 #include <memory>
 
-#include "cosm/repr/base_entity.hpp"
 #include "cosm/repr/base_block3D.hpp"
+#include "cosm/repr/base_entity.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -50,11 +50,10 @@ class real_block3D : public rer::client<real_block3D>,
   /**
    * The dimensions and arena_res fields are not used for real blocks (for now).
    */
-  real_block3D(const rutils::color& color,
-               const crepr::block_type& type)
+  real_block3D(const rutils::color& color, const crepr::block_type& type)
       : ER_CLIENT_INIT("cosm.repr.real_block3D"),
         base_block3D(rtypes::type_uuid(m_next_id++),
-                     rmath::vector3d{1.0, 1.0, 1.0},
+                     rmath::vector3d{ 1.0, 1.0, 1.0 },
                      rtypes::discretize_ratio(1.0),
                      color,
                      type) {}
@@ -89,4 +88,3 @@ class real_block3D : public rer::client<real_block3D>,
 };
 
 NS_END(repr, cosm);
-

@@ -75,4 +75,3 @@ class interactivity final : public convergence_measure {
 };
 
 NS_END(convergence, cosm);
-

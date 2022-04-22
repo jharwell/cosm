@@ -46,9 +46,8 @@ base_block_pickup::base_block_pickup(crepr::base_block3D* block,
  * Member Functions
  ******************************************************************************/
 void base_block_pickup::visit(controller::block_carrying_controller& c) {
-  ER_ASSERT(!c.is_carrying_block(),
-            "Robot%u already carrying block!",
-            mc_robot_id.v());
+  ER_ASSERT(
+      !c.is_carrying_block(), "Robot%u already carrying block!", mc_robot_id.v());
 
   /*
    * Cloning resets robot ID, so we need to set it again in the clone (principle

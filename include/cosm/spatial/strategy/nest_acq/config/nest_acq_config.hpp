@@ -1,5 +1,5 @@
 /**
- * \file block_drop_config.hpp
+ * \file nest_acq_config.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -33,19 +33,19 @@
 /*******************************************************************************
   * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, config);
+NS_START(cosm, spatial, strategy, nest_acq, config);
 
 /*******************************************************************************
   * Structure Definitions
 ******************************************************************************/
 /**
-  * \struct block_drop_config
-  * \ingroup spatial strategy config
+  * \struct nest_acq_config
+  * \ingroup spatial strategy nest_acq config
   *
-  * \brief Configuration for block drop strategies that can be employed by
+  * \brief Configuration for nest acquisition strategies that can be employed by
   * robots.
   */
-struct block_drop_config final : public rconfig::base_config {
+struct nest_acq_config final : public rconfig::base_config {
   /**
    * \brief The strategy to employ.
    */
@@ -53,9 +53,9 @@ struct block_drop_config final : public rconfig::base_config {
 
   /**
    * \brief How long the strategy should be employed for (if relevant). E.g.,
-   * how long to backup for.
+   * how long to wander for.
    */
   rtypes::timestep duration{rtypes::constants::kNoTime};
 };
 
-NS_END(config, strategy, spatial, cosm);
+NS_END(config, nest_acq, strategy, spatial, cosm);

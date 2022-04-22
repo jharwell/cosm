@@ -88,4 +88,3 @@ class task_dist_entropy final : public convergence_measure {
 };
 
 NS_END(convergence, cosm);
-

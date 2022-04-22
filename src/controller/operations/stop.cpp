@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/controller/operations/stop.hpp"
 
-#include "cosm/fsm/supervisor_fsm.hpp"
 #include "cosm/controller/base_controller.hpp"
+#include "cosm/fsm/supervisor_fsm.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -43,8 +43,6 @@ void stop::visit(ccontroller::base_controller& controller) {
   controller.ndc_uuid_pop();
 } /* visit() */
 
-void stop::visit(cfsm::supervisor_fsm& fsm) {
-  fsm.event_stop();
-} /* visit() */
+void stop::visit(cfsm::supervisor_fsm& fsm) { fsm.event_stop(); } /* visit() */
 
 NS_END(operations, controller, cosm);

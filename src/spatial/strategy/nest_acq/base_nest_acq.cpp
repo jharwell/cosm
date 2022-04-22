@@ -31,8 +31,11 @@ NS_START(cosm, spatial, strategy, nest_acq);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_nest_acq::base_nest_acq(const csfsm::fsm_params* params, rmath::rng* rng) :
-    base_strategy(params, rng) {}
+base_nest_acq::base_nest_acq(const cssnest_acq::config::nest_acq_config* config,
+                             const csfsm::fsm_params* params,
+                             rmath::rng* rng)
+    : base_strategy(params, rng),
+      mc_config(*config) {}
 
 /*******************************************************************************
  * Member Functions

@@ -48,7 +48,7 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
                [&](const auto& b) RCPPSW_PURE {
                  /* block not carried by robot */
                  return !b->is_carried_by_robot() &&
-                     /*
+                        /*
                       * Block is not out of sight. Handles cases with powerlaw
                       * distribution where block dropped in the nest fail to
                       * re-distribute and are currently pending to be
@@ -58,8 +58,8 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
                       * also COSM#142 for correctly computing block cluster
                       * locations during deferred arena map initialization.
                       */
-                     (mc_oos_ok || !b->is_out_of_sight()) &&
-                     /*
+                        (mc_oos_ok || !b->is_out_of_sight()) &&
+                        /*
                       * Block not inside cache (to catch blocks that were on the
                       * host cell for the cache, and we incorporated into it
                       * during creation).

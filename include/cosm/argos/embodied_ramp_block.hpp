@@ -23,14 +23,14 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <boost/optional.hpp>
 #include <memory>
 #include <utility>
-#include <boost/optional.hpp>
 
-#include "cosm/hal/hal.hpp"
-#include "cosm/repr/ramp_block3D.hpp"
 #include "cosm/argos/ramp_block_embodiment.hpp"
+#include "cosm/hal/hal.hpp"
 #include "cosm/repr/embodied_entity.hpp"
+#include "cosm/repr/ramp_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -46,8 +46,9 @@ NS_START(cosm, argos);
  *
  * \brief A \ref crepr::ramp_block3D + ARGoS embodiment.
  */
-class embodied_ramp_block final : public crepr::ramp_block3D,
-                                  public repr::embodied_entity<ramp_block_embodiment> {
+class embodied_ramp_block final
+    : public crepr::ramp_block3D,
+      public repr::embodied_entity<ramp_block_embodiment> {
  public:
   using embodiment_type = ramp_block_embodiment;
 
@@ -61,4 +62,3 @@ class embodied_ramp_block final : public crepr::ramp_block3D,
 };
 
 NS_END(argos, cosm);
-

@@ -28,17 +28,17 @@
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
-#include "cosm/cosm.hpp"
+#include "cosm/argos/block_embodiment_variant.hpp"
 #include "cosm/argos/cube_block_embodiment.hpp"
 #include "cosm/argos/ramp_block_embodiment.hpp"
-#include "cosm/argos/block_embodiment_variant.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::pal::argos {
 class swarm_manager_adaptor;
-} /* namespace cosm::pal */
+} // namespace cosm::pal::argos
 
 NS_START(cosm, argos);
 class embodied_cube_block;
@@ -59,18 +59,17 @@ class block_embodiment_creator {
   block_embodiment_creator(const rmath::radians& z_rotation,
                            const rtypes::type_uuid& parent_id,
                            cpargos::swarm_manager_adaptor* sm)
-      : mc_z_rot(z_rotation),
-        mc_parent_id(parent_id),
-        m_sm(sm) {}
+      : mc_z_rot(z_rotation), mc_parent_id(parent_id), m_sm(sm) {}
 
   /* Not copy constructable/assignable by default */
   block_embodiment_creator(const block_embodiment_creator&) = delete;
-  const block_embodiment_creator& operator=(const block_embodiment_creator&) = delete;
+  const block_embodiment_creator&
+  operator=(const block_embodiment_creator&) = delete;
 
-  cargos::block_embodiment_variant operator()(
-      const cargos::embodied_cube_block* block) const;
-  cargos::block_embodiment_variant operator()(
-      const cargos::embodied_ramp_block* block) const;
+  cargos::block_embodiment_variant
+  operator()(const cargos::embodied_cube_block* block) const;
+  cargos::block_embodiment_variant
+  operator()(const cargos::embodied_ramp_block* block) const;
 
  private:
   /**

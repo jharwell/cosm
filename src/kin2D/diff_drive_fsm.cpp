@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/kin2D/diff_drive_fsm.hpp"
 
-#include "rcppsw/math/range.hpp"
 #include "rcppsw/math/angles.hpp"
+#include "rcppsw/math/range.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

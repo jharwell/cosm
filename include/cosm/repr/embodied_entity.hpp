@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <utility>
 #include <memory>
+#include <utility>
 
 #include "cosm/cosm.hpp"
 
@@ -42,7 +42,7 @@ NS_START(cosm, repr);
  *
  * \brief An entity that has a 3D/physical embodiment in the arena.
  */
-template<typename TEmbodimentType>
+template <typename TEmbodimentType>
 class embodied_entity {
  public:
   explicit embodied_entity(std::unique_ptr<TEmbodimentType> e)
@@ -57,9 +57,7 @@ class embodied_entity {
   embodied_entity(embodied_entity&&) = delete;
   embodied_entity& operator=(embodied_entity&&) = delete;
 
-  const TEmbodimentType* embodiment(void) const {
-    return m_embodiment.get();
-  }
+  const TEmbodimentType* embodiment(void) const { return m_embodiment.get(); }
   void embodiment(std::unique_ptr<TEmbodimentType> e) {
     m_embodiment = std::move(e);
   }
@@ -71,4 +69,3 @@ class embodied_entity {
 };
 
 NS_END(repr, cosm);
-

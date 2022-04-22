@@ -57,8 +57,9 @@ using block3D_vectorro_type = const crepr::sim_block3D*;
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectoro : public rpdecorator::decorator<std::vector<block3D_vectoro_type>>,
-                        public rer::stringizable {
+class block3D_vectoro
+    : public rpdecorator::decorator<std::vector<block3D_vectoro_type>>,
+      public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
   RCPPSW_DECORATE_DECL(iterator);
@@ -87,8 +88,9 @@ class block3D_vectoro : public rpdecorator::decorator<std::vector<block3D_vector
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectorno : public rpdecorator::decorator<std::vector<block3D_vectorno_type>>,
-                         public rer::stringizable {
+class block3D_vectorno
+    : public rpdecorator::decorator<std::vector<block3D_vectorno_type>>,
+      public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
   RCPPSW_DECORATE_DECL(iterator);
@@ -117,8 +119,9 @@ class block3D_vectorno : public rpdecorator::decorator<std::vector<block3D_vecto
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
-class block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vectorro_type>>,
-                         public rer::stringizable {
+class block3D_vectorro
+    : public rpdecorator::decorator<std::vector<block3D_vectorro_type>>,
+      public rer::stringizable {
  public:
   RCPPSW_DECORATE_DECL(value_type);
   RCPPSW_DECORATE_DECL(iterator);
@@ -142,4 +145,3 @@ class block3D_vectorro : public rpdecorator::decorator<std::vector<block3D_vecto
 };
 
 NS_END(ds, cosm);
-

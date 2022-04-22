@@ -22,8 +22,8 @@
  * Includes
  ******************************************************************************/
 #include "cosm/foraging/metrics/block_cluster_metrics_csv_sink.hpp"
-#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 
+#include "cosm/foraging/metrics/block_cluster_metrics_data.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,8 +42,7 @@ block_cluster_metrics_csv_sink::block_cluster_metrics_csv_sink(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string>
-block_cluster_metrics_csv_sink::csv_header_cols(
+std::list<std::string> block_cluster_metrics_csv_sink::csv_header_cols(
     const rmetrics::base_data* data) const {
   auto cols = dflt_csv_header_cols();
 
@@ -69,9 +68,8 @@ block_cluster_metrics_csv_sink::csv_header_cols(
 } /* csv_header_cols() */
 
 boost::optional<std::string>
-block_cluster_metrics_csv_sink::csv_line_build(
-    const rmetrics::base_data* data,
-    const rtypes::timestep& t) {
+block_cluster_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
+                                               const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }

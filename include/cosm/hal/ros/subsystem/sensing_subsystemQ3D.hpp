@@ -49,8 +49,8 @@ NS_START(cosm, hal, ros, subsystem);
  * - \ref chros::sensors::sonar_sensor
  * - \ref chros::sensors::lidar_sensor
  * - \ref chros::sensors::odometry_sensor
- * - \ref chal::sensors::proximity_sensor
- * - \ref chal::sensors::env_sensor
+ * - \ref chsensors::proximity_sensor
+ * - \ref chsensors::env_sensor
  */
 class sensing_subsystemQ3D :
     public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_AVAILABLE_SENSORS> {

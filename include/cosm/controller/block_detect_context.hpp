@@ -1,5 +1,5 @@
 /**
- * \file base_block_drop.hpp
+ * \file block_detect_context.hpp
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
@@ -23,46 +23,30 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/base_strategy.hpp"
-
-#include "cosm/spatial/strategy/config/block_drop_config.hpp"
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, block_drop);
+NS_START(cosm, controller);
 
 /*******************************************************************************
- * Class Definitions
+ * Enum Definitions
  ******************************************************************************/
 /**
- * \class base_block_drop
- * \ingroup spatial strategy block_drop
- *
- * \brief Base class for block drop strategies, to make doing experiments with
- * real robots where they actually have to do SOMETHING to drop a carried block
- * easier.
+ * \brief The calling context when something queries a \ref
+ * block_carrying_controller if it has detected a block.
  */
+enum class block_detect_context {
+    /**
+     * \brief Part of the robot controller
+     */
+    ekROBOT,
 
-class base_block_drop : public csstrategy::base_strategy {
- public:
-  base_block_drop(const csfsm::fsm_params* params,
-                  const config::block_drop_config*,
-                  rmath::rng* rng);
+    /**
+     * \brief Part of arena/loop functions
+     */
+    ekARENA
+  };
 
-  /* Not move/copy constructable/assignable by default */
-  base_block_drop(const base_block_drop&) = delete;
-  base_block_drop& operator=(const base_block_drop&) = delete;
-  base_block_drop(base_block_drop&&) = delete;
-  base_block_drop& operator=(base_block_drop&&) = delete;
-
- protected:
-  const config::block_drop_config* config(void) const { return &mc_config; }
-
- private:
-  /* clang-formatt off */
-  const config::block_drop_config mc_config;
-  /* clang-formatt on */
-};
-
-NS_END(block_drop, strategy, spatial, cosm);
+NS_END(controller, cosm);

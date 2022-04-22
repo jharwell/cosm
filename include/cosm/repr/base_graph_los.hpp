@@ -24,6 +24,7 @@
  * Includes
  ******************************************************************************/
 #include <utility>
+
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
@@ -66,4 +67,3 @@ class base_graph_los : public rer::client<base_graph_los<TGraphViewEntityType>>,
 };
 
 NS_END(repr, cosm);
-

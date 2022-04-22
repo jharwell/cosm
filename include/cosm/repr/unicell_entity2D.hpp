@@ -97,7 +97,9 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
   unicell_entity2D(const rtypes::type_uuid& id,
                    const rmath::vector2d& dims,
                    const rtypes::discretize_ratio& resolution)
-      : entity2D(id, rmath::vector3d(dims, 0.0), rtypes::spatial_dist(resolution.v())),
+      : entity2D(id,
+                 rmath::vector3d(dims, 0.0),
+                 rtypes::spatial_dist(resolution.v())),
         ER_CLIENT_INIT("cosm.repr.unicell_entity2D"),
         mc_arena_res(resolution) {}
 
@@ -145,4 +147,3 @@ class unicell_entity2D : public entity2D, public rer::client<unicell_entity2D> {
 };
 
 NS_END(repr, cosm);
-

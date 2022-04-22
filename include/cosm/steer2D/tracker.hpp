@@ -62,7 +62,7 @@ class tracker {
   };
   using map_type = std::map<std::string, map_value_type>;
 
-   tracker(void) = default;
+  tracker(void) = default;
 
   /* Not copy constructable/assignable by default */
   tracker(const tracker&) = delete;
@@ -82,14 +82,11 @@ class tracker {
                  const rmath::vector2d& force);
 
   boost::optional<ds::path_state> path(void) const { return m_path; }
-  const map_type& forces(void) const {
-    return m_forces;
-  }
+  const map_type& forces(void) const { return m_forces; }
 
   void reset(void);
 
  private:
-
   /* clang-format off */
   boost::optional<ds::path_state> m_path{};
   map_type                        m_forces{};
@@ -97,4 +94,3 @@ class tracker {
 };
 
 NS_END(steer2D, cosm);
-

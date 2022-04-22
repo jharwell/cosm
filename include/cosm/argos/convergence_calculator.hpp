@@ -58,13 +58,12 @@ class convergence_calculator final
       public rpdecorator::decorator<cconvergence::convergence_calculator> {
  public:
   convergence_calculator(const cconvconfig::convergence_config* config,
-                               cpargos::swarm_manager_adaptor* sm) RCPPSW_COLD;
+                         cpargos::swarm_manager_adaptor* sm) RCPPSW_COLD;
   ~convergence_calculator(void) override RCPPSW_COLD = default;
 
   /* Not copy constructible/assignable by default */
   convergence_calculator(const convergence_calculator&) = delete;
-  convergence_calculator&
-  operator=(const convergence_calculator&) = delete;
+  convergence_calculator& operator=(const convergence_calculator&) = delete;
 
   RCPPSW_DECORATE_DECLDEF(update);
   RCPPSW_DECORATE_DECLDEF(converged);

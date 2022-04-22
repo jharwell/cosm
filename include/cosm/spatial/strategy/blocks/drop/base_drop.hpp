@@ -1,5 +1,5 @@
 /**
- * \file factory.cpp
+ * \file base_drop.hpp
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
@@ -18,23 +18,52 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
+#pragma once
+
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/block_drop/factory.hpp"
+#include "cosm/spatial/strategy/base_strategy.hpp"
 
-#include "cosm/spatial/strategy/block_drop/backup.hpp"
+#include "cosm/spatial/strategy/blocks/config/drop_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, block_drop);
+NS_START(cosm, spatial, strategy, blocks, drop);
 
 /*******************************************************************************
- * Constructors/Destructors
+ * Class Definitions
  ******************************************************************************/
-factory::factory(void) {
-  register_type<backup>(kBackup);
-}
+/**
+ * \class base_drop
+ * \ingroup spatial strategy blocks drop
+ *
+ * \brief Base class for block drop strategies, to make doing experiments with
+ * real robots where they actually have to do SOMETHING to drop a carried block
+ * easier.
+ */
 
-NS_END(block_drop, strategy, spatial, cosm);
+class base_drop : public csstrategy::base_strategy,
+                  public rpprototype::clonable<base_drop> {
+ public:
+  base_drop(const csfsm::fsm_params* params,
+            const cssblocks::config::drop_config*,
+            rmath::rng* rng);
+
+  /* Not move/copy constructable/assignable by default */
+  base_drop(const base_drop&) = delete;
+  base_drop& operator=(const base_drop&) = delete;
+  base_drop(base_drop&&) = delete;
+  base_drop& operator=(base_drop&&) = delete;
+
+ protected:
+  const cssblocks::config::drop_config* config(void) const { return &mc_config; }
+
+ private:
+  /* clang-formatt off */
+  const cssblocks::config::drop_config mc_config;
+  /* clang-formatt on */
+};
+
+NS_END(drop, blocks, strategy, spatial, cosm);

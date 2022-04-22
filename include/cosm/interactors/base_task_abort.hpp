@@ -116,13 +116,12 @@ class base_task_abort
    * happens to be.
    */
   void task_abort_with_block(TController& controller) {
-    auto drop_loc = rmath::dvec2zvec(controller.rpos2D(),
-                                     m_map->grid_resolution().v());
+    auto drop_loc =
+        rmath::dvec2zvec(controller.rpos2D(), m_map->grid_resolution().v());
     auto drop_id = controller.block()->id();
 
-    robot_free_block_drop_visitor_type rdrop_op(controller.block_release(),
-                                                drop_loc,
-                                                m_map->grid_resolution());
+    robot_free_block_drop_visitor_type rdrop_op(
+        controller.block_release(), drop_loc, m_map->grid_resolution());
 
     auto to_drop = m_map->blocks()[drop_id.v()];
     caops::free_block_drop_visitor adrop_op(to_drop,

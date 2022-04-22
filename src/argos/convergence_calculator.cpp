@@ -23,14 +23,13 @@
  ******************************************************************************/
 #include "cosm/argos/convergence_calculator.hpp"
 
-
 #include "rcppsw/algorithm/closest_pair2D.hpp"
 #include "rcppsw/math/vector2.hpp"
 
+#include "cosm/hal/robot.hpp"
 #include "cosm/pal/argos/controller/adaptor2D.hpp"
 #include "cosm/pal/argos/controller/adaptorQ3D.hpp"
 #include "cosm/pal/argos/swarm_iterator.hpp"
-#include "cosm/hal/robot.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -54,10 +53,8 @@ convergence_calculator<TController>::convergence_calculator(
                   std::placeholders::_1));
   }
   if (config->interactivity.enable) {
-    decoratee().interactivity_init(
-        std::bind(&convergence_calculator::calc_robot_nn,
-                  this,
-                  std::placeholders::_1));
+    decoratee().interactivity_init(std::bind(
+        &convergence_calculator::calc_robot_nn, this, std::placeholders::_1));
   }
   if (config->pos_entropy.enable) {
     decoratee().positional_entropy_init(
@@ -99,9 +96,8 @@ std::vector<double> convergence_calculator<TController>::calc_robot_nn(
 #pragma omp parallel for num_threads(n_threads)
   for (size_t i = 0; i < n_robots / 2; ++i) {
     auto calculator = ralg::closest_pair2D<rmath::vector2d>();
-    auto pts = calculator.operator()<decltype(&rmath::l2norm<rmath::vector2d>)>("recursive",
-                                                                                v,
-                                                                                rmath::l2norm);
+    auto pts = calculator.operator()<decltype(&rmath::l2norm<rmath::vector2d>)>(
+        "recursive", v, rmath::l2norm);
     size_t old = v.size();
 #pragma omp critical
     {
@@ -129,7 +125,7 @@ convergence_calculator<TController>::calc_robot_headings2D(size_t) const {
 
   auto cb = [&](const auto* controller) { v.push_back(controller->heading2D()); };
   cpargos::swarm_iterator::controllers<TController,
-                                          cpal::iteration_order::ekSTATIC>(
+                                       cpal::iteration_order::ekSTATIC>(
       m_sm, cb, cpal::kRobotType);
   return v;
 } /* calc_robot_headings2D() */
@@ -141,7 +137,7 @@ convergence_calculator<TController>::calc_robot_positions(size_t) const {
 
   auto cb = [&](const auto* controller) { v.push_back(controller->rpos2D()); };
   cpargos::swarm_iterator::controllers<TController,
-                                          cpal::iteration_order::ekSTATIC>(
+                                       cpal::iteration_order::ekSTATIC>(
       m_sm, cb, cpal::kRobotType);
   return v;
 } /* calc_robot_positions() */

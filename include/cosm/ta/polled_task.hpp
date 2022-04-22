@@ -81,4 +81,3 @@ class polled_task : public executable_task, public taskable {
 };
 
 NS_END(ta, cosm);
-

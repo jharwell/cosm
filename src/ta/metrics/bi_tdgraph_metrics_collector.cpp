@@ -39,8 +39,7 @@ NS_START(cosm, ta, metrics);
 bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
     std::unique_ptr<rmetrics::base_sink> sink,
     size_t decomposition_depth)
-    : base_collector(std::move(sink)),
-      m_data(decomposition_depth) {}
+    : base_collector(std::move(sink)), m_data(decomposition_depth) {}
 
 /*******************************************************************************
  * Member Functions

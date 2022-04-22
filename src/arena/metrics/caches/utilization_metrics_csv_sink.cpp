@@ -43,8 +43,7 @@ utilization_metrics_csv_sink::utilization_metrics_csv_sink(
  * Member Functions
  ******************************************************************************/
 std::list<std::string>
-utilization_metrics_csv_sink::csv_header_cols(
-    const rmetrics::base_data* ) const {
+utilization_metrics_csv_sink::csv_header_cols(const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
@@ -62,9 +61,9 @@ utilization_metrics_csv_sink::csv_header_cols(
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string> utilization_metrics_csv_sink::csv_line_build(
-const rmetrics::base_data* data,
-      const rtypes::timestep& t) {
+boost::optional<std::string>
+utilization_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
+                                             const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }

@@ -36,4 +36,3 @@ NS_START(cosm, repr);
 struct base_embodiment {};
 
 NS_END(repr, cosm);
-

@@ -27,8 +27,8 @@
 #include <utility>
 
 #include "rcppsw/math/radians.hpp"
-#include "rcppsw/patterns/fsm/simple_fsm.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/patterns/fsm/simple_fsm.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/kin/twist.hpp"
@@ -89,8 +89,8 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
    *                    is executed.
    */
   void configure_wheel_speeds(double speed1,
-                               double speed2,
-                               const rmath::radians& new_heading);
+                              double speed2,
+                              const rmath::radians& new_heading);
   /**
    * \brief Output new twist according to the desired change in velocity.
    *
@@ -156,4 +156,3 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
 };
 
 NS_END(kin2D, cosm);
-

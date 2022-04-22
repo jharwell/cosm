@@ -70,16 +70,12 @@ void nest::initialize(cpargos::swarm_manager_adaptor* sm,
   m_initialized = true;
 } /* initialize() */
 
-
 std::list<nest_light> nest::init_square(const rutils::color& color) {
-  return std::list<nest_light>{
-    nest_light("nest" + rcppsw::to_string(id()) + "_" + "light0",
-               rmath::vector3d(rcenter2D().x(),
-                              rcenter2D().y(),
-                              mc_light_height.v()),
-               color,
-               mc_light_intensity)
-      };
+  return std::list<nest_light>{ nest_light(
+      "nest" + rcppsw::to_string(id()) + "_" + "light0",
+      rmath::vector3d(rcenter2D().x(), rcenter2D().y(), mc_light_height.v()),
+      color,
+      mc_light_intensity) };
 } /* init_square() */
 
 std::list<nest_light> nest::init_rect(const rutils::color& color) {
@@ -111,21 +107,10 @@ std::list<nest_light> nest::init_rect(const rutils::color& color) {
              mc_light_height.v());
   }
 
-  return { nest_light(name0,
-                      loc0,
-                      color,
-                      mc_light_intensity),
-           nest_light(name1,
-                      loc1,
-                      color,
-                      mc_light_intensity),
-           nest_light(name2,
-                      loc2,
-                      color,
-                      mc_light_intensity)
-  };
+  return { nest_light(name0, loc0, color, mc_light_intensity),
+           nest_light(name1, loc1, color, mc_light_intensity),
+           nest_light(name2, loc2, color, mc_light_intensity) };
 } /* init_rect() */
-
 
 std::string nest::to_str(void) const {
   /* Can't call dcenter2D(), as the nest might be even in X and/or Y */

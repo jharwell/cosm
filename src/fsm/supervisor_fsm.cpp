@@ -59,10 +59,7 @@ supervisor_fsm::supervisor_fsm(subsystem::saa_subsystemQ3D* saa)
           RCPPSW_FSM_STATE_MAP_ENTRY_EX(&start),
           RCPPSW_FSM_STATE_MAP_ENTRY_EX(&normal),
           RCPPSW_FSM_STATE_MAP_ENTRY_EX(&malfunction),
-          RCPPSW_FSM_STATE_MAP_ENTRY_EX_ALL(&stop,
-                                            nullptr,
-                                            &entry_stop,
-                                            nullptr)),
+          RCPPSW_FSM_STATE_MAP_ENTRY_EX_ALL(&stop, nullptr, &entry_stop, nullptr)),
       m_saa(saa) {}
 
 /*******************************************************************************

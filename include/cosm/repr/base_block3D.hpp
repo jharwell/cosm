@@ -119,4 +119,3 @@ class base_block3D : public crepr::unicell_movable_entity3D,
 };
 
 NS_END(repr, cosm);
-

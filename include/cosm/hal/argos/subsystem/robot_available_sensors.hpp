@@ -47,23 +47,23 @@ NS_START(cosm, hal, argos, subsystem);
     chargos::sensors::light_sensor,                     \
     chsensors::proximity_sensor,                        \
     chargos::sensors::colored_blob_camera_sensor,       \
-    chal::sensors::env_sensor,                          \
-    chal::sensors::odometry_sensor
+    chsensors::env_sensor,                          \
+    chsensors::odometry_sensor
 
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
 #define COSM_HAL_ROBOT_AVAILABLE_SENSORS                \
   chargos::sensors::light_sensor,                       \
     chsensors::proximity_sensor,                        \
     chargos::sensors::colored_blob_camera_sensor,       \
-    chal::sensors::env_sensor,                          \
-    chal::sensors::odometry_sensor
+    chsensors::env_sensor,                          \
+    chsensors::odometry_sensor
 
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
 #define COSM_HAL_ROBOT_AVAILABLE_SENSORS                \
   chsensors::proximity_sensor,                          \
     chargos::sensors::colored_blob_camera_sensor,       \
-    chal::sensors::env_sensor,                          \
-    chal::sensors::odometry_sensor
+    chsensors::env_sensor,                          \
+    chsensors::odometry_sensor
 #endif
 
 

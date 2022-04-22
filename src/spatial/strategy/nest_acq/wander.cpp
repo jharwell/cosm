@@ -34,6 +34,11 @@ NS_START(cosm, spatial, strategy, nest_acq);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
+wander::wander(const cssnest_acq::config::nest_acq_config* config,
+               const csfsm::fsm_params* params,
+               rmath::rng* rng)
+    : ER_CLIENT_INIT("cosm.spatial.strategy.nest_acq.wander"),
+      base_nest_acq(config, params, rng) {}
 
 /*******************************************************************************
  * Member Functions
@@ -41,32 +46,38 @@ NS_START(cosm, spatial, strategy, nest_acq);
 void wander::task_start(cta::taskable_argument*) {
   task_reset();
   m_task_running = true;
-  m_duration = rtypes::timestep(rng()->uniform(kMIN_DURATION, kMAX_DURATION));
 } /* task_start() */
 
 void wander::task_execute(void) {
+  auto env = saa()->sensing()->env();
+
+  ER_DEBUG("Nest detected: %d", env->detect(chsensors::env_sensor::kNestTarget));
+
   handle_ca();
 
   /*
    * We might get pushed out of the nest by collision avoidance after initially
    * entering it.
    */
-  auto env = saa()->sensing()->env();
-  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
+  if (env->detect(chsensors::env_sensor::kNestTarget)) {
+    ER_DEBUG("In nest: duration=%zu, threshold=%zu",
+             m_steps.v(),
+             config()->duration.v());
+
     base_strategy::wander();
     ++m_steps;
     /*
-     * Once we are comfortably inside the nest, stop phootoaxiing and just
+     * Once we are comfortably inside the nest, stop photoaxiing and just
      * wander.
      */
-    if (m_steps <= kMIN_DURATION) {
+    if (m_steps <= config()->duration) {
       phototaxis();
     }
   } else { /* outside nest--just ca+phototaxis */
     phototaxis();
   }
 
-  if (m_steps >= m_duration) {
+  if (m_steps >= config()->duration) {
     m_task_running = false;
   }
 } /* task_execute() */

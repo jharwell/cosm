@@ -25,8 +25,8 @@
  ******************************************************************************/
 #include <utility>
 
-#include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/types/spatial_dist.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -67,10 +67,8 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   using decoratee_type = typename decorator_type::decoratee_type;
   using decorator_type::decoratee;
 
-  base_graph_view_entity(graph_view_type&& view,
-                         const rtypes::spatial_dist& unit)
-      : rpdecorator::decorator<graph_view_type>(std::move(view)),
-        mc_unit(unit) {}
+  base_graph_view_entity(graph_view_type&& view, const rtypes::spatial_dist& unit)
+      : rpdecorator::decorator<graph_view_type>(std::move(view)), mc_unit(unit) {}
 
   virtual ~base_graph_view_entity(void) = default;
 
@@ -98,8 +96,10 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
    *
    * \return A reference to the vertex.
    */
-  virtual const vertex_property_type* access(const vertex_descriptor vd) const = 0;
-  virtual const vertex_property_type* access(const vertex_coord_type& c) const = 0;
+  virtual const vertex_property_type*
+  access(const vertex_descriptor vd) const = 0;
+  virtual const vertex_property_type*
+  access(const vertex_coord_type& c) const = 0;
 
   virtual const edge_property_type* access(const edge_descriptor vd) const = 0;
 
@@ -120,4 +120,3 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
 };
 
 NS_END(repr, cosm);
-

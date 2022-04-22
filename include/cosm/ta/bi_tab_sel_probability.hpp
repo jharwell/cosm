@@ -147,4 +147,3 @@ class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
 };
 
 NS_END(ta, cosm);
-

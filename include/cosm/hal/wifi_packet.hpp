@@ -45,4 +45,3 @@ struct wifi_packet {
 };
 
 NS_END(hal, cosm);
-

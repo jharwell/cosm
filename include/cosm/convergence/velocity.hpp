@@ -71,4 +71,3 @@ class velocity final : public convergence_measure {
 };
 
 NS_END(convergence, cosm);
-

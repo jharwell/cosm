@@ -1,4 +1,4 @@
- /**
+/**
  * \file epsilon_greedy_parser.cpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
@@ -37,9 +37,7 @@ void epsilon_greedy_parser::parse(const ticpp::Element& node) {
     return;
   }
 
-  ER_DEBUG("Parent node=%s: child=%s",
-           node.Value().c_str(),
-           kXMLRoot.c_str());
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   m_config = std::make_unique<config_type>();
 

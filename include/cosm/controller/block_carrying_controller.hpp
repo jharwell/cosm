@@ -27,6 +27,7 @@
 #include <utility>
 
 #include "cosm/cosm.hpp"
+#include "cosm/controller/block_detect_context.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -49,6 +50,7 @@ NS_START(cosm, controller);
  */
 class block_carrying_controller {
  public:
+
   block_carrying_controller(void) = default;
   virtual ~block_carrying_controller(void);
 
@@ -93,7 +95,7 @@ class block_carrying_controller {
    * values that are incidentally the same as those that correspond to a block
    * being found.
    */
-  virtual bool block_detect(void) = 0;
+  virtual bool block_detect(const block_detect_context& context) = 0;
 
  private:
   /* clang-format off */

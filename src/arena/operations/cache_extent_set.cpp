@@ -37,8 +37,7 @@ NS_START(cosm, arena, operations, detail);
  * Constructors/Destructor
  ******************************************************************************/
 cache_extent_set::cache_extent_set(carepr::arena_cache* cache)
-    : ER_CLIENT_INIT("cosm.arena.operations.cache_extent_set"),
-      m_cache(cache) {}
+    : ER_CLIENT_INIT("cosm.arena.operations.cache_extent_set"), m_cache(cache) {}
 
 /*******************************************************************************
  * Member Functions
@@ -54,13 +53,13 @@ void cache_extent_set::visit(cads::arena_grid& grid) {
       auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
 
       ER_CONDW(!m_cache->contains_point(rcoord),
-                "Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",
-                m_cache->id().v(),
-                rcppsw::to_string(m_cache->rcenter2D()).c_str(),
-                rcppsw::to_string(m_cache->dcenter2D()).c_str(),
-                rcppsw::to_string(m_cache->xrspan()).c_str(),
-                rcppsw::to_string(m_cache->yrspan()).c_str(),
-                rcppsw::to_string(rcoord).c_str());
+               "Cache%d@%s/%s xspan=%s,yspan=%s does not contain %s",
+               m_cache->id().v(),
+               rcppsw::to_string(m_cache->rcenter2D()).c_str(),
+               rcppsw::to_string(m_cache->dcenter2D()).c_str(),
+               rcppsw::to_string(m_cache->xrspan()).c_str(),
+               rcppsw::to_string(m_cache->yrspan()).c_str(),
+               rcppsw::to_string(rcoord).c_str());
 
       if (dcoord != m_cache->dcenter2D()) {
         ER_ASSERT(!cell.state_is_known() || cell.state_is_empty(),

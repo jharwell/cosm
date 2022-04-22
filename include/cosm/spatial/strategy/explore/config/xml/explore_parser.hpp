@@ -1,5 +1,5 @@
 /**
- * \file block_drop_parser.hpp
+ * \file explore_parser.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -28,36 +28,36 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/spatial/strategy/config/block_drop_config.hpp"
+#include "cosm/spatial/strategy/explore/config/explore_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, config, xml);
+NS_START(cosm, spatial, strategy, explore, config, xml);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class block_drop_parser
- * \ingroup spatial strategy config xml
+ * \class explore_parser
+ * \ingroup spatial strategy explore config xml
  *
- * \brief Parses XML configuration for how robots should drop blocks into \ref
- * block_drop_config.
+ * \brief Parses XML configuration exploration strategies into \ref
+ * explore_config.
  */
-class block_drop_parser final : public rer::client<block_drop_parser>,
-                              public rconfig::xml::xml_config_parser {
+class explore_parser final : public rer::client<explore_parser>,
+                             public rconfig::xml::xml_config_parser {
  public:
-  using config_type = block_drop_config;
+  using config_type = explore_config;
 
-  block_drop_parser(void)
-      : ER_CLIENT_INIT("cosm.spatial.strategy.config.xml.block_drop_parser") {}
+  explore_parser(void)
+      : ER_CLIENT_INIT("cosm.spatial.strategy.config.xml.explore_parser") {}
 
   /**
    * \brief The root tag that all XML configuration for nest acq should lie
    * under in the XML tree.
    */
-  static inline const std::string kXMLRoot = "block_drop";
+  static inline const std::string kXMLRoot = "explore";
 
   void parse(const ticpp::Element& node) override;
   std::string xml_root(void) const override { return kXMLRoot; }
@@ -72,4 +72,4 @@ class block_drop_parser final : public rer::client<block_drop_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, strategy, spatial, cosm);
+NS_END(xml, config, explore ,strategy, spatial, cosm);

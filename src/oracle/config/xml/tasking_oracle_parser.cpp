@@ -33,9 +33,7 @@ NS_START(cosm, oracle, config, xml);
  ******************************************************************************/
 void tasking_oracle_parser::parse(const ticpp::Element& node) {
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: child=%s",
-             node.Value().c_str(),
-             kXMLRoot.c_str());
+    ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
     ticpp::Element tonode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();

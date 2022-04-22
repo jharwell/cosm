@@ -23,9 +23,9 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include "rcppsw/math/bounding_box.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/math/bounding_box.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/base_entity.hpp"
@@ -47,17 +47,12 @@ class spatial_entity : public base_entity {
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3d& dims,
                  const rtypes::spatial_dist& factor)
-      : base_entity(id),
-        m_rbb(dims),
-        m_dbb(rmath::dvec2zvec(dims, factor.v())) {}
+      : base_entity(id), m_rbb(dims), m_dbb(rmath::dvec2zvec(dims, factor.v())) {}
 
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3z& dims,
                  const rtypes::spatial_dist& factor)
-      : base_entity(id),
-        m_rbb(rmath::zvec2dvec(dims, factor.v())),
-        m_dbb(dims) {}
-
+      : base_entity(id), m_rbb(rmath::zvec2dvec(dims, factor.v())), m_dbb(dims) {}
 
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3d& dims,
@@ -99,4 +94,3 @@ class spatial_entity : public base_entity {
 };
 
 NS_END(repr, cosm);
-

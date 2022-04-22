@@ -25,14 +25,13 @@
 
 #include <string>
 
-#include "cosm/repr/sim_block3D.hpp"
 #include "cosm/ds/utils.hpp"
+#include "cosm/repr/sim_block3D.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
 NS_START(cosm, ds);
-
 
 /*******************************************************************************
  * Member Functions

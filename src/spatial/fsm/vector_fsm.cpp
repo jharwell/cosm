@@ -239,9 +239,7 @@ void vector_fsm::task_execute(void) {
   inject_event(util_signal::ekRUN, rpfsm::event_type::ekNORMAL);
 } /* task_execute() */
 
-void vector_fsm::task_reset(void) {
-  init();
-} /* task_reset() */
+void vector_fsm::task_reset(void) { init(); } /* task_reset() */
 
 /*******************************************************************************
  * Member Functions

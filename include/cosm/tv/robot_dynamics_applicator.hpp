@@ -159,4 +159,3 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
 };
 
 NS_END(tv, cosm);
-

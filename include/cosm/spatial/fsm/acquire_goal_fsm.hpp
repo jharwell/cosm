@@ -153,8 +153,9 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   /**
    * \param saa Handle to sensing and actuation subsystem.
    *
-   * \param behavior The exploration behavior to use; can be NULL if goal
-   * acquisition should always be performed via vectoring.
+   * \param explore_behavior The exploration behavior to use; can be NULL if
+   *                          goal acquisition should always be performed via
+   *                          vectoring.
    *
    * \param rng Random number generator for use internally.
    *
@@ -163,7 +164,7 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
    *              class.
    */
   acquire_goal_fsm(const csfsm::fsm_params* params,
-                   std::unique_ptr<csstrategy::base_strategy> behavior,
+                   std::unique_ptr<cssexplore::base_explore> explore_behavior,
                    rmath::rng* rng,
                    const struct hook_list& hooks);
   ~acquire_goal_fsm(void) override = default;
@@ -293,4 +294,3 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
 };
 
 NS_END(fsm, spatial, cosm);
-

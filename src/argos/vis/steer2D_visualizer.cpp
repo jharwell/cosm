@@ -73,8 +73,8 @@ void steer2D_visualizer::path_draw(const rmath::vector3d& pos,
       auto start = ::argos::CVector3(
           path->path()[i].x(), path->path()[i].y(), pos.z() + kDRAW_OFFSET);
       auto end = ::argos::CVector3(path->path()[i + 1].x(),
-                                 path->path()[i + 1].y(),
-                                 pos.z() + kDRAW_OFFSET);
+                                   path->path()[i + 1].y(),
+                                   pos.z() + kDRAW_OFFSET);
 
       m_qt->DrawRay(::argos::CRay3(start, end), ::argos::CColor::GREEN, 5.0);
 
@@ -99,16 +99,17 @@ void steer2D_visualizer::forces_draw(const steer2D::tracker* tracker,
 
     accum += force.second.force * kVIS_MULTIPLIER;
     auto end = start + ::argos::CVector3(force.second.force.x() * kVIS_MULTIPLIER,
-                                       force.second.force.y() * kVIS_MULTIPLIER,
-                                       kDRAW_OFFSET);
+                                         force.second.force.y() * kVIS_MULTIPLIER,
+                                         kDRAW_OFFSET);
     m_qt->DrawRay(::argos::CRay3(start, end),
                   ::argos::CColor(force.second.color.red(),
-                                force.second.color.green(),
-                                force.second.color.blue()), 5.0);
+                                  force.second.color.green(),
+                                  force.second.color.blue()),
+                  5.0);
     if (labels) {
       m_qt->DrawText(::argos::CVector3(start.GetX() + end.GetX() / 2.0,
-                                     start.GetY() + end.GetY() / 2.0,
-                                     start.GetZ() + m_text_vis_offset),
+                                       start.GetY() + end.GetY() / 2.0,
+                                       start.GetZ() + m_text_vis_offset),
                      force.first,
                      ::argos::CColor::BLACK);
     }

@@ -82,4 +82,3 @@ class base_entity {
 };
 
 NS_END(repr, cosm);
-

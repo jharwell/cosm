@@ -67,6 +67,7 @@ class free_blocks_calculator {
   operator()(const cds::block3D_vectorno& c_all_blocks) const {
     return operator()(c_all_blocks, {});
   }
+
  private:
   /* clang-format off */
   const bool mc_oos_ok;
@@ -74,4 +75,3 @@ class free_blocks_calculator {
 };
 
 NS_END(arena, cosm);
-

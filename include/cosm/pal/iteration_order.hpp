@@ -56,4 +56,3 @@ enum class iteration_order {
 };
 
 NS_END(pal, cosm);
-

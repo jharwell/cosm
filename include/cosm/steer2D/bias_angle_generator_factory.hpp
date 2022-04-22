@@ -44,10 +44,11 @@ NS_START(cosm, steer2D);
  *
  * \brief Factory for creating bias angle generators for \ref wander_force.
  */
-class bias_angle_generator_factory :
-    public rpfactory::releasing_factory<base_bias_angle_generator,
-                                        std::string, /* key type */
-                                        const csteer2D::config::bias_angle_config*> {
+class bias_angle_generator_factory
+    : public rpfactory::releasing_factory<
+          base_bias_angle_generator,
+          std::string, /* key type */
+          const csteer2D::config::bias_angle_config*> {
  public:
   /**
    * \brief Angles will be drawn from a uniform distribution between [-max bias,
@@ -70,4 +71,3 @@ class bias_angle_generator_factory :
 };
 
 NS_END(steer2D, cosm);
-

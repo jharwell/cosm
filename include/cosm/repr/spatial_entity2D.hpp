@@ -103,4 +103,3 @@ class spatial_entity2D : public spatial_entity {
 };
 
 NS_END(repr, cosm);
-

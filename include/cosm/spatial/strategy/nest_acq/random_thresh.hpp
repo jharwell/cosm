@@ -56,10 +56,11 @@ NS_START(cosm, spatial, strategy, nest_acq);
  * Does NOT work well with controllers with memory.
  */
 
-class random_thresh : public csstrategy::nest_acq::base_nest_acq {
+class random_thresh : public cssnest_acq::base_nest_acq {
  public:
-  random_thresh(const csfsm::fsm_params* params, rmath::rng* rng)
-      : base_nest_acq(params, rng) {}
+  random_thresh(const cssnest_acq::config::nest_acq_config* config,
+                const csfsm::fsm_params* params,
+                rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
   random_thresh(const random_thresh&) = delete;
@@ -81,13 +82,13 @@ class random_thresh : public csstrategy::nest_acq::base_nest_acq {
   bool task_finished(void) const override final { return !m_task_running; }
   void task_execute(void) override;
 
-  std::unique_ptr<base_strategy> clone(void) const override {
+  std::unique_ptr<base_nest_acq> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
       nz_tracker()
     };
-    return std::make_unique<random_thresh>(&params, rng());
+    return std::make_unique<random_thresh>(config(), &params, rng());
   }
 
   boost::optional<rtypes::spatial_dist> thresh(void) const {
@@ -108,4 +109,3 @@ class random_thresh : public csstrategy::nest_acq::base_nest_acq {
 
 
 NS_END(nest_acq, strategy, spatial, cosm);
-

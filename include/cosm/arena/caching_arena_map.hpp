@@ -46,7 +46,7 @@ NS_START(cosm, arena);
  * \brief Decorates \ref base_arena_map to add the ability to manage caches.
  */
 class caching_arena_map final : public rer::client<caching_arena_map>,
-                                              public base_arena_map {
+                                public base_arena_map {
  public:
   caching_arena_map(const caconfig::arena_map_config* config, rmath::rng* rng);
   ~caching_arena_map(void) override;
@@ -72,7 +72,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    *
    * \note Cache mutex assumed to be held by the caller for writing.
    */
-  void caches_add(const cads::acache_vectoro& caches, cpargos::swarm_manager_adaptor* sm);
+  void caches_add(const cads::acache_vectoro& caches,
+                  cpargos::swarm_manager_adaptor* sm);
 
   /**
    * \brief Remove a cache from the list of caches.
@@ -82,7 +83,8 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
    *
    * \note Cache mutex assumed to be held by the caller for writing.
    */
-  void cache_remove(repr::arena_cache* victim, cpargos::swarm_manager_adaptor* sm);
+  void cache_remove(repr::arena_cache* victim,
+                    cpargos::swarm_manager_adaptor* sm);
 
   const cads::loctree* cloctree(void) const { return m_cloctree.get(); }
 
@@ -158,7 +160,6 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   cds::const_spatial_entity_vector
   initial_dist_precalc(const crepr::sim_block3D* block) const override;
 
-
   void ordered_lock(const locking& locking) override;
   void ordered_unlock(const locking& locking) override;
 
@@ -191,4 +192,3 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
 };
 
 NS_END(arena, cosm);
-

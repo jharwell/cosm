@@ -47,10 +47,8 @@ NS_START(cosm, steer2D);
  */
 class base_bias_angle_generator : public rer::client<base_bias_angle_generator> {
  public:
-  explicit base_bias_angle_generator(
-      const config::bias_angle_config* config)
-      :  ER_CLIENT_INIT("cosm.steer2D.bias_angle_generator"),
-         mc_config(*config) {}
+  explicit base_bias_angle_generator(const config::bias_angle_config* config)
+      : ER_CLIENT_INIT("cosm.steer2D.bias_angle_generator"), mc_config(*config) {}
 
   /* Not move/copy constructable/assignable by default */
   base_bias_angle_generator(const base_bias_angle_generator&) = delete;
@@ -77,4 +75,3 @@ class base_bias_angle_generator : public rer::client<base_bias_angle_generator> 
 };
 
 NS_END(steer2D, cosm);
-

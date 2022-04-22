@@ -38,14 +38,11 @@ nest_light::nest_light(const std::string& name,
                        const rutils::color& color,
                        double intensity)
     : colored_entity(color),
-      m_impl(new ::argos::CLightEntity(name,
-                                       ::argos::CVector3(pos.x(),
-                                                         pos.y(),
-                                                         pos.z()),
-                                       ::argos::CColor(color.red(),
-                                                       color.green(),
-                                                       color.blue()),
-                                       intensity)) {}
+      m_impl(new ::argos::CLightEntity(
+          name,
+          ::argos::CVector3(pos.x(), pos.y(), pos.z()),
+          ::argos::CColor(color.red(), color.green(), color.blue()),
+          intensity)) {}
 
 /*******************************************************************************
  * Member Functions

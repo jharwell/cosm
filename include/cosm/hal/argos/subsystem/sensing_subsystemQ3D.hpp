@@ -48,10 +48,10 @@ NS_START(cosm, hal, argos, subsystem);
  * - \ref chargos::sensors::colored_blob_camera_sensor
  * - \ref chargos::sensors::light_sensor
  * - \ref chargos::sensors::battery_sensor
- * - \ref chal::sensors::odometry_sensor
+ * - \ref chsensors::odometry_sensor
  * - \ref chargos::sensors::wifi_sensor
- * - \ref chal::sensors::proximity_sensor
- * - \ref chal::sensors::env_sensor
+ * - \ref chsensors::proximity_sensor
+ * - \ref chsensors::env_sensor
  */
 class sensing_subsystemQ3D :
     public chsubsystem::base_sensing_subsystemQ3D<COSM_HAL_ROBOT_AVAILABLE_SENSORS> {
@@ -85,10 +85,10 @@ class sensing_subsystemQ3D :
 
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chal::sensors::env_sensor,
+                           chsensors::env_sensor,
                            env);
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chal::sensors::env_sensor,
+                           chsensors::env_sensor,
                            env,
                            const);
 
@@ -101,10 +101,10 @@ class sensing_subsystemQ3D :
                            const);
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chal::sensors::odometry_sensor,
+                           chsensors::odometry_sensor,
                            odometry);
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chal::sensors::odometry_sensor,
+                           chsensors::odometry_sensor,
                            odometry,
                            const);
 };

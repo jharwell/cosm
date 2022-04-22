@@ -23,12 +23,13 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <argos3/plugins/simulator/entities/light_entity.h>
 #include <string>
 
+#include <argos3/plugins/simulator/entities/light_entity.h>
+
+#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/spatial_dist.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/repr/colored_entity.hpp"
@@ -38,7 +39,7 @@
  ******************************************************************************/
 namespace cosm::pal::argos {
 class swarm_manager_adaptor;
-} /* namespace cosm::pal */
+} // namespace cosm::pal::argos
 
 NS_START(cosm, repr);
 
@@ -85,4 +86,3 @@ class nest_light final : public repr::colored_entity {
 };
 
 NS_END(repr, cosm);
-

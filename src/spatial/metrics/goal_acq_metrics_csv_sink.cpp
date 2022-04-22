@@ -42,8 +42,8 @@ goal_acq_metrics_csv_sink::goal_acq_metrics_csv_sink(
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-std::list<std::string> goal_acq_metrics_csv_sink::csv_header_cols(
-const rmetrics::base_data*) const {
+std::list<std::string>
+goal_acq_metrics_csv_sink::csv_header_cols(const rmetrics::base_data*) const {
   auto merged = dflt_csv_header_cols();
   auto cols = std::list<std::string>{
     /* clang-format off */
@@ -61,9 +61,9 @@ const rmetrics::base_data*) const {
   return merged;
 } /* csv_header_cols() */
 
-boost::optional<std::string> goal_acq_metrics_csv_sink::csv_line_build(
-    const rmetrics::base_data* data,
-      const rtypes::timestep& t) {
+boost::optional<std::string>
+goal_acq_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
+                                          const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }
@@ -77,9 +77,9 @@ boost::optional<std::string> goal_acq_metrics_csv_sink::csv_line_build(
   line += csv_entry_intavg(ral::mt_load(d->interval.n_true_exploring_for_goal));
   line += csv_entry_tsavg(ral::mt_load(d->cum.n_true_exploring_for_goal), t);
   line += csv_entry_intavg(ral::mt_load(d->interval.n_false_exploring_for_goal));
-  line += csv_entry_tsavg(ral::mt_load(d->cum.n_false_exploring_for_goal), t, true);
+  line +=
+      csv_entry_tsavg(ral::mt_load(d->cum.n_false_exploring_for_goal), t, true);
   return boost::make_optional(line);
 } /* csv_line_build() */
-
 
 NS_END(metrics, spatial, cosm);

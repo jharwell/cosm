@@ -63,7 +63,8 @@ void bi_tab_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
 
   m_data.interval.task_sw_count += static_cast<size_t>(m.task_changed());
   m_data.cum.task_sw_count += static_cast<size_t>(m.task_changed());
-  m_data.interval.task_depth_sw_count += static_cast<size_t>(m.task_depth_changed());
+  m_data.interval.task_depth_sw_count +=
+      static_cast<size_t>(m.task_depth_changed());
   m_data.cum.task_depth_sw_count += static_cast<size_t>(m.task_depth_changed());
 } /* collect() */
 

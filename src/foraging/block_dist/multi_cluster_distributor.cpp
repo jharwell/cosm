@@ -50,13 +50,15 @@ multi_cluster_distributor::multi_cluster_distributor(
                          arena_grid,
                          conflict_check,
                          dist_success,
-                         capacity, rng);
+                         capacity,
+                         rng);
   } /* for(i..) */
 }
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-dist_status multi_cluster_distributor::distribute_block(crepr::sim_block3D* block) {
+dist_status
+multi_cluster_distributor::distribute_block(crepr::sim_block3D* block) {
   ER_INFO("Distribute block%d: n_clusts=%zu,total_capacity=%zu,total_size=%zu",
           block->id().v(),
           m_dists.size(),
@@ -100,8 +102,7 @@ dist_status multi_cluster_distributor::distribute_block(crepr::sim_block3D* bloc
   return dist_status::ekFAILURE;
 } /* distribute_block() */
 
-cfds::block3D_cluster_vectorno
-multi_cluster_distributor::block_clustersno(void) {
+cfds::block3D_cluster_vectorno multi_cluster_distributor::block_clustersno(void) {
   cfds::block3D_cluster_vectorno ret;
 
   for (auto& dist : m_dists) {

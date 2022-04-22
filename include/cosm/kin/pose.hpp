@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/math/orientation.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -50,4 +50,3 @@ struct pose {
 };
 
 NS_END(kin, cosm);
-

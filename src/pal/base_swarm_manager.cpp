@@ -29,8 +29,10 @@
 #include <chrono>
 #include <csignal>
 
-#include "rcppsw/math/rngm.hpp"
 #include "rcppsw/er/stacktrace.hpp"
+#include "rcppsw/math/rngm.hpp"
+
+#include "cosm/pal/pal.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -40,8 +42,8 @@ NS_START(cosm, pal);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_swarm_manager::base_swarm_manager(void) :
-    ER_CLIENT_INIT("cosm.pal.base_swarm_manager") {
+base_swarm_manager::base_swarm_manager(void)
+    : ER_CLIENT_INIT("cosm.pal.base_swarm_manager") {
   /*
    * Enable stacktraces when we crash with a segfault.
    */
@@ -70,6 +72,8 @@ base_swarm_manager::base_swarm_manager(void) :
 
   /* verify environment variables set up for logging */
   ER_ENV_VERIFY();
+
+  ER_ASSERT(cpal::kRobotType != "", "PAL robot type undefined");
 }
 
 /*******************************************************************************

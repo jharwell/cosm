@@ -46,10 +46,8 @@ NS_START(cosm, spatial);
 class nest_zone_tracker final : public cfsm::state_tracker,
                                 public csmetrics::nest_zone_metrics {
  public:
-  explicit nest_zone_tracker(
-      const csubsystem::sensing_subsystemQ3D* const sensing)
+  explicit nest_zone_tracker(const csubsystem::sensing_subsystemQ3D* const sensing)
       : cfsm::state_tracker(sensing) {}
-
 
   /* Not move/copy constructable/assignable by default */
   nest_zone_tracker(const nest_zone_tracker&) = delete;

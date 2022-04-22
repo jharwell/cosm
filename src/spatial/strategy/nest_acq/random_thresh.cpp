@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/nest_acq/random_thresh.hpp"
 
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/spatial/fsm/point_argument.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
@@ -35,6 +35,10 @@ NS_START(cosm, spatial, strategy, nest_acq);
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
+random_thresh::random_thresh(const cssnest_acq::config::nest_acq_config* config,
+                             const csfsm::fsm_params* params,
+                             rmath::rng* rng)
+    : base_nest_acq(config, params, rng) {}
 
 /*******************************************************************************
  * Member Functions
@@ -53,7 +57,7 @@ void random_thresh::task_execute(void) {
    * entering it.
    */
   auto env = saa()->sensing()->env();
-  if (env->detect(chal::sensors::env_sensor::kNestTarget)) {
+  if (env->detect(chsensors::env_sensor::kNestTarget)) {
     auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
     if (dist_to_light <= m_thresh.v()) {
       m_task_running = false;

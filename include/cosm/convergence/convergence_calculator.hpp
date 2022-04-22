@@ -24,22 +24,22 @@
  * Includes
  ******************************************************************************/
 #include <boost/optional.hpp>
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "rcppsw/er/client.hpp"
-#include "rcppsw/mpl/typelist.hpp"
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/mpl/typelist.hpp"
 
-#include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/config/convergence_config.hpp"
+#include "cosm/convergence/metrics/convergence_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
 namespace rcppsw::ds {
-template<typename Typelist>
+template <typename Typelist>
 class type_map;
 } /* namespace rcppsw::ds */
 
@@ -76,7 +76,8 @@ class convergence_calculator final : public metrics::convergence_metrics,
    * Takes a single integer argument specifying the # OpenMP threads to be
    * used, per configuration.
    */
-  using headings_calc_cb_type = std::function<std::vector<rmath::radians>(size_t)>;
+  using headings_calc_cb_type =
+      std::function<std::vector<rmath::radians>(size_t)>;
 
   /**
    * \brief Callback function that returns a vector of nearest neighbor

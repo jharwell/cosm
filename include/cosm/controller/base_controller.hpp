@@ -36,10 +36,10 @@
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/pal/pal.hpp"
 #include "cosm/pal/config/output_config.hpp"
-#include "cosm/spatial/metrics/interference_metrics.hpp"
+#include "cosm/pal/pal.hpp"
 #include "cosm/spatial/interference_tracker.hpp"
+#include "cosm/spatial/metrics/interference_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -125,10 +125,8 @@ class base_controller : public rer::client<base_controller>,
    * loop function execution (timestep is already there).
    */
   void ndc_uuid_push(void) const {
-    ER_NDC_PUSH("[" +
-                cpal::kRobotNamePrefix +
-                rcppsw::to_string(entity_id().v()) +
-                "]");
+    ER_NDC_PUSH("[" + cpal::kRobotNamePrefix +
+                rcppsw::to_string(entity_id().v()) + "]");
   }
   void ndc_uuid_pop(void) const { ER_NDC_POP(); }
   /**
@@ -201,4 +199,3 @@ class base_controller : public rer::client<base_controller>,
 };
 
 NS_END(controller, cosm);
-

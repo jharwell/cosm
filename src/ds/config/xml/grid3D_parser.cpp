@@ -37,9 +37,7 @@ void grid3D_parser::parse(const ticpp::Element& node) {
    * does not use grids.
    */
   if (nullptr != node.FirstChild(kXMLRoot, false)) {
-    ER_DEBUG("Parent node=%s: child=%s",
-             node.Value().c_str(),
-             kXMLRoot.c_str());
+    ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
     ticpp::Element gnode = node_get(node, kXMLRoot);
     m_config = std::make_unique<config_type>();

@@ -26,6 +26,7 @@
 #include <boost/variant.hpp>
 
 #include "rcppsw/ds/type_map.hpp"
+
 #include "cosm/convergence/angular_order.hpp"
 #include "cosm/convergence/interactivity.hpp"
 #include "cosm/convergence/positional_entropy.hpp"
@@ -128,8 +129,7 @@ struct convergence_status_collator : public boost::static_visitor<bool> {
  ******************************************************************************/
 convergence_calculator::convergence_calculator(
     const config::convergence_config* config)
-    : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"),
-      mc_config(*config) {}
+    : ER_CLIENT_INIT("rcppsw.swarm.convergence.calculator"), mc_config(*config) {}
 convergence_calculator::~convergence_calculator(void) = default;
 
 /*******************************************************************************
@@ -148,7 +148,7 @@ void convergence_calculator::interactivity_init(const nn_calc_cb_type& cb) {
 void convergence_calculator::task_dist_entropy_init(const tasks_calc_cb_type& cb) {
   m_tasks_calc = boost::make_optional(cb);
   m_measures->emplace(typeid(task_dist_entropy),
-                     task_dist_entropy(mc_config.epsilon));
+                      task_dist_entropy(mc_config.epsilon));
 } /* task_dist_init() */
 
 void convergence_calculator::positional_entropy_init(const pos_calc_cb_type& cb) {

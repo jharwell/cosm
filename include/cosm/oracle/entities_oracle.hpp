@@ -76,4 +76,3 @@ class entities_oracle {
 };
 
 NS_END(oracle, cosm);
-

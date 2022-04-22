@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "rcppsw/common/common.hpp"
 #include "rcppsw/er/client.hpp"
@@ -91,4 +91,3 @@ class epsilon_greedy_allocator : public rer::client<epsilon_greedy_allocator> {
 };
 
 NS_END(ta, cosm);
-

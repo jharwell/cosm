@@ -39,15 +39,16 @@ NS_START(cosm, foraging, block_dist);
  * Member Functions
  ******************************************************************************/
 void base_distributor::clusters_update(void) {
-  for (auto *clust : block_clustersno()) {
+  for (auto* clust : block_clustersno()) {
     clust->blocks_recalc();
   } /* for(*clust..) */
 }
 
-void base_distributor::cluster_update_after_pickup(const crepr::sim_block3D* const block,
-                                                   const rmath::vector2z& old_loc) {
+void base_distributor::cluster_update_after_pickup(
+    const crepr::sim_block3D* const block,
+    const rmath::vector2z& old_loc) {
   auto clusters = block_clustersno();
-  for (auto *clust : clusters) {
+  for (auto* clust : clusters) {
     if (clust->contains_abs(old_loc)) {
       clust->update_after_pickup(block->id());
       return;
@@ -55,9 +56,10 @@ void base_distributor::cluster_update_after_pickup(const crepr::sim_block3D* con
   } /* for(*clust..) */
 } /* cluster_update_after_pickup() */
 
-void base_distributor::cluster_update_after_drop(const crepr::sim_block3D* const block) {
+void base_distributor::cluster_update_after_drop(
+    const crepr::sim_block3D* const block) {
   auto clusters = block_clustersno();
-  for (auto *clust : clusters) {
+  for (auto* clust : clusters) {
     if (clust->contains_abs(block->danchor2D())) {
       clust->update_after_drop(block);
       return;

@@ -86,4 +86,3 @@ class taskable : public virtual rmetrics::base_metrics {
 };
 
 NS_END(ta, cosm);
-

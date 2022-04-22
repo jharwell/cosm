@@ -22,6 +22,7 @@
  * Includes
  *****************************************************************************/
 #include "cosm/repr/grid2D_los.hpp"
+
 #include "cosm/ds/cell2D.hpp"
 
 /*******************************************************************************
@@ -33,8 +34,8 @@ NS_START(cosm, repr);
  * Constructors/Destructor
  ******************************************************************************/
 grid2D_los::grid2D_los(const rtypes::type_uuid& c_id,
-           const grid_view_type& c_view,
-           const rtypes::discretize_ratio& c_resolution)
+                       const grid_view_type& c_view,
+                       const rtypes::discretize_ratio& c_resolution)
     : base_grid_los(c_id, c_view, c_resolution),
       ER_CLIENT_INIT("cosm.repr.grid2D_los") {}
 
@@ -53,6 +54,5 @@ grid2D_los::field_coord_dtype grid2D_los::abs_lr(void) const {
 grid2D_los::field_coord_dtype grid2D_los::abs_ur(void) const {
   return access(xdsize() - 1, ydsize() - 1).loc();
 }
-
 
 NS_END(repr, cosm);

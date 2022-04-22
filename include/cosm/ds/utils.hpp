@@ -23,10 +23,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <numeric>
-#include <vector>
 #include <list>
+#include <numeric>
 #include <unordered_map>
+#include <vector>
 
 #include "cosm/cosm.hpp"
 
@@ -39,26 +39,27 @@ class base_block3D;
 
 NS_START(cosm, ds, detail);
 
-template<typename T, typename U = void>
-struct is_mappish_impl : std::false_type { };
+template <typename T, typename U = void>
+struct is_mappish_impl : std::false_type {};
 
-template<typename T>
-struct is_mappish_impl<T, std::void_t<typename T::key_type,
-                                      typename T::mapped_type,
-                                      decltype(std::declval<T&>()[std::declval<const typename T::key_type&>()])>>
-    : std::true_type { };
+template <typename T>
+struct is_mappish_impl<T,
+                       std::void_t<typename T::key_type,
+                                   typename T::mapped_type,
+                                   decltype(std::declval<T&>()[std::declval<
+                                       const typename T::key_type&>()])>>
+    : std::true_type {};
 
-
-template<typename T>
-struct is_mappish : detail::is_mappish_impl<T>::type { };
+template <typename T>
+struct is_mappish : detail::is_mappish_impl<T>::type {};
 
 NS_END(detail);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-template<typename TContainer,
-         RCPPSW_SFINAE_DECLDEF(!detail::is_mappish<TContainer>::value)>
+template <typename TContainer,
+          RCPPSW_SFINAE_DECLDEF(!detail::is_mappish<TContainer>::value)>
 std::string to_string(const TContainer& container, const std::string& prefix) {
   return std::accumulate(container.begin(),
                          container.end(),
@@ -68,17 +69,15 @@ std::string to_string(const TContainer& container, const std::string& prefix) {
                          });
 }
 
-template <typename TMap,
-          RCPPSW_SFINAE_DECLDEF(detail::is_mappish<TMap>::value)>
+template <typename TMap, RCPPSW_SFINAE_DECLDEF(detail::is_mappish<TMap>::value)>
 std::string to_string(const TMap& table, const std::string& prefix) {
   return std::accumulate(table.begin(),
                          table.end(),
                          std::string(),
                          [&](const std::string& a, const auto& pair) {
-                           return a + prefix + rcppsw::to_string(pair.second->id()) +
-                               ",";
+                           return a + prefix +
+                                  rcppsw::to_string(pair.second->id()) + ",";
                          });
 } /* do_to_str() */
 
 NS_END(ds, cosm);
-

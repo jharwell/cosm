@@ -82,14 +82,14 @@ elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
     set(COSM_ROS_MD5
       0 # temporarily to make stuff easier ${COSM_ROS_MD5_CURRENT}
       CACHE INTERNAL "MD5 hash used for ROS message versioning")
-    configure_file(
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
-      ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
-      @ONLY
-      )
     endif()
 endif()
 
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
+  @ONLY
+  )
 
 list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp")
 

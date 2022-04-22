@@ -34,7 +34,7 @@ NS_START(cosm, ta, metrics);
  * Constructors/Destructor
  ******************************************************************************/
 bi_tdgraph_metrics_csv_sink::bi_tdgraph_metrics_csv_sink(
-        fs::path fpath_no_ext,
+    fs::path fpath_no_ext,
     const rmetrics::output_mode& mode,
     const rtypes::timestep& interval)
     : csv_sink(fpath_no_ext, mode, interval) {}
@@ -74,9 +74,9 @@ std::list<std::string> bi_tdgraph_metrics_csv_sink::csv_header_cols(
   return cols;
 } /* csv_header_cols() */
 
-boost::optional<std::string> bi_tdgraph_metrics_csv_sink::csv_line_build(
-const rmetrics::base_data* data,
-      const rtypes::timestep& t) {
+boost::optional<std::string>
+bi_tdgraph_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
+                                            const rtypes::timestep& t) {
   if (!ready_to_flush(t)) {
     return boost::none;
   }
@@ -109,11 +109,9 @@ const rmetrics::base_data* data,
     line += csv_entry_tsavg(d->cum.tab_counts[i], t);
   } /* for(i..) */
 
-  line += csv_entry_tsavg(d->cum.tab_counts[d->cum.tab_counts.size() - 1],
-                          t,
-                          true);
+  line +=
+      csv_entry_tsavg(d->cum.tab_counts[d->cum.tab_counts.size() - 1], t, true);
   return boost::make_optional(line);
 } /* csv_line_build() */
-
 
 NS_END(metrics, ta, cosm);

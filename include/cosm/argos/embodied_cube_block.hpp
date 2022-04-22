@@ -26,9 +26,9 @@
 #include <memory>
 #include <utility>
 
+#include "cosm/argos/cube_block_embodiment.hpp"
 #include "cosm/hal/hal.hpp"
 #include "cosm/repr/cube_block3D.hpp"
-#include "cosm/argos/cube_block_embodiment.hpp"
 #include "cosm/repr/embodied_entity.hpp"
 
 /*******************************************************************************
@@ -45,8 +45,9 @@ NS_START(cosm, argos);
  *
  * \brief A \ref cepr::cube_block3D + ARGoS embodiment.
  */
-class embodied_cube_block final : public crepr::cube_block3D,
-                                  public repr::embodied_entity<cube_block_embodiment> {
+class embodied_cube_block final
+    : public crepr::cube_block3D,
+      public repr::embodied_entity<cube_block_embodiment> {
  public:
   using embodiment_type = cube_block_embodiment;
 
@@ -60,4 +61,3 @@ class embodied_cube_block final : public crepr::cube_block3D,
 };
 
 NS_END(argos, cosm);
-

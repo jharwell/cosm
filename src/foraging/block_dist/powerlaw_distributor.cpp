@@ -64,10 +64,10 @@ dist_status powerlaw_distributor::distribute_block(crepr::sim_block3D* block) {
       continue;
     }
     ER_INFO("Attempt distribution: block%d -> cluster group: "
-             "capacity=%zu,size=%zu]",
-             block->id().v(),
-             mclust->capacity(),
-             mclust->size());
+            "capacity=%zu,size=%zu]",
+            block->id().v(),
+            mclust->capacity(),
+            mclust->size());
 
     if (dist_status::ekSUCCESS == mclust->distribute_block(block)) {
       return dist_status::ekSUCCESS;
@@ -88,8 +88,8 @@ void powerlaw_distributor::initialize(
   /* First, calc cluster sizes, and sort */
   for (size_t i = 0; i < m_config_clusters; ++i) {
     /* can't have a cluster of size 0 */
-    auto index = std::max(static_cast<decltype(m_pwrdist(rng()))>(1),
-                          m_pwrdist(rng()));
+    auto index =
+        std::max(static_cast<decltype(m_pwrdist(rng()))>(1), m_pwrdist(rng()));
     clust_sizes.push_back(index);
   } /* for(i..) */
   std::sort(clust_sizes.begin(), clust_sizes.end(), std::greater<>());
@@ -103,8 +103,7 @@ void powerlaw_distributor::initialize(
   ER_DEBUG("Cluster sizes: [%s]", sum.c_str());
 
   /* Compute cluster locations in arena */
-  powerlaw_cluster_placer placer(
-      map, c_block_bb, kMAX_DIST_TRIES, rng());
+  powerlaw_cluster_placer placer(map, c_block_bb, kMAX_DIST_TRIES, rng());
   auto placements = placer(c_entities, clust_sizes);
 
   std::map<size_t, std::vector<cads::arena_grid::view>> grids;
@@ -114,14 +113,14 @@ void powerlaw_distributor::initialize(
 
   size_t id_start = 0;
   for (auto& pair : grids) {
-    auto mclust = std::make_unique<multi_cluster_distributor>(
-        pair.second,
-        arena_grid(),
-        conflict_check,
-        dist_success,
-        pair.first,
-        rtypes::type_uuid(id_start),
-        rng());
+    auto mclust =
+        std::make_unique<multi_cluster_distributor>(pair.second,
+                                                    arena_grid(),
+                                                    conflict_check,
+                                                    dist_success,
+                                                    pair.first,
+                                                    rtypes::type_uuid(id_start),
+                                                    rng());
     ER_INFO("Mapped multi-cluster: capacity=%zu,ID start=%zu",
             mclust->capacity(),
             id_start);

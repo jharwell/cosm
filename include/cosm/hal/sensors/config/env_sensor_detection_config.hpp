@@ -55,6 +55,11 @@ struct env_sensor_detection_config final : public rconfig::base_config {
    * need to agree for successful detection of the environmental feature?
    */
   size_t        consensus{0};
+
+  /**
+   * \brief Is detection of this environmental feature enabled?
+   */
+  bool enabled{true};
 };
 
 NS_END(config, sensors, hal, cosm);

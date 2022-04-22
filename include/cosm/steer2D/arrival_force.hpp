@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/rcppsw.hpp"
 #include "rcppsw/er/client.hpp"
+#include "rcppsw/rcppsw.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/steer2D/boid.hpp"
@@ -68,4 +68,3 @@ class arrival_force : public rer::client<arrival_force> {
 };
 
 NS_END(steer2D, cosm);
-

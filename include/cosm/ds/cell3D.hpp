@@ -99,4 +99,3 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
 };
 
 NS_END(ds, cosm);
-

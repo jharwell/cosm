@@ -27,8 +27,8 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"
-#include "cosm/kin2D/diff_drive_fsm.hpp"
 #include "cosm/kin2D/config/diff_drive_config.hpp"
+#include "cosm/kin2D/diff_drive_fsm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls

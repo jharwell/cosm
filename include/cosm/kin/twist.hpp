@@ -50,4 +50,3 @@ struct twist {
 };
 
 NS_END(kin, cosm);
-

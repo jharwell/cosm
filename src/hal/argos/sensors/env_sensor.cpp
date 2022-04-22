@@ -40,35 +40,28 @@ env_sensor::env_sensor(chasensors::ground_sensor&& sensor)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void env_sensor::reset(void) {
-  ground::decoratee().reset();
-}
-void env_sensor::enable(void) {
-  ground::decoratee().enable();
-}
+void env_sensor::reset(void) { ground::decoratee().reset(); }
+void env_sensor::enable(void) { ground::decoratee().enable(); }
 
-void env_sensor::disable(void) {
-  ground::decoratee().disable();
-}
+void env_sensor::disable(void) { ground::decoratee().disable(); }
 bool env_sensor::is_enabled(void) const {
   return ground::decoratee().is_enabled();
 }
 
-
 bool env_sensor::detect(
     const std::string& name,
-    const chsensors::config::env_sensor_detection_config* config) const {
+    const chsensors::config::env_sensor_detection_config* config) {
   size_t sum = 0;
   if (chsensors::env_sensor::kNestTarget == name) {
-    for (auto &r : ground::decoratee().readings()) {
+    for (auto& r : ground::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
-    return  sum >= config->consensus;
+    return sum >= config->consensus;
   } else if (chsensors::env_sensor::kBlockTarget == name) {
-    for (auto &r : ground::decoratee().readings()) {
+    for (auto& r : ground::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
-    return  sum >= config->consensus;
+    return sum >= config->consensus;
   } else {
     ER_FATAL_SENTINEL("Bad detection: %s", name.c_str());
     return false;

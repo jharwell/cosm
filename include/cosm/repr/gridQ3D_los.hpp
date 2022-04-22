@@ -26,9 +26,9 @@
 #include "rcppsw/ds/grid3D.hpp"
 #include "rcppsw/math/vector3.hpp"
 
+#include "cosm/ds/cell3D.hpp"
 #include "cosm/repr/base_grid_los.hpp"
 #include "cosm/repr/grid3D_view_entity.hpp"
-#include "cosm/ds/cell3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -47,17 +47,19 @@ NS_START(cosm, repr);
  * slice of 3D cells. This is in keeping with making the robot controllers as
  * simple as poossible.
  */
-class gridQ3D_los : public crepr::base_grid_los<
-  grid3D_view_entity<rds::grid3D<cds::cell3D>,
-                     rds::grid3D<cds::cell3D>::const_grid_view>,
-  rmath::vector3d>,
-               public rer::client<gridQ3D_los> {
+class gridQ3D_los
+    : public crepr::base_grid_los<
+          grid3D_view_entity<rds::grid3D<cds::cell3D>,
+                             rds::grid3D<cds::cell3D>::const_grid_view>,
+          rmath::vector3d>,
+      public rer::client<gridQ3D_los> {
  public:
-  using los_type = crepr::base_grid_los<grid3D_view_entity<rds::grid3D<cds::cell3D>,
-                                                           rds::grid3D<cds::cell3D>::const_grid_view>,
-                                   rmath::vector3d>;
-  using los_type::grid_view_type;
+  using los_type = crepr::base_grid_los<
+      grid3D_view_entity<rds::grid3D<cds::cell3D>,
+                         rds::grid3D<cds::cell3D>::const_grid_view>,
+      rmath::vector3d>;
   using los_type::access;
+  using los_type::grid_view_type;
 
   gridQ3D_los(const rtypes::type_uuid& c_id,
               const grid_view_type& c_view,
@@ -70,4 +72,3 @@ class gridQ3D_los : public crepr::base_grid_los<
 };
 
 NS_END(repr, cosm);
-

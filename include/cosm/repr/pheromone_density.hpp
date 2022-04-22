@@ -167,4 +167,3 @@ class pheromone_density final : public rmath::expression<double>,
 };
 
 NS_END(repr, cosm);
-

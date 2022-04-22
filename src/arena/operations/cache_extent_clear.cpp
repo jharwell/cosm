@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/arena/operations/cache_extent_clear.hpp"
 
-#include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/arena/ds/arena_grid.hpp"
+#include "cosm/arena/repr/arena_cache.hpp"
 #include "cosm/ds/cell2D.hpp"
 #include "cosm/ds/operations/cell2D_empty.hpp"
 

@@ -175,4 +175,3 @@ class population_dynamics : public rer::client<population_dynamics>,
 };
 
 NS_END(tv, cosm);
-

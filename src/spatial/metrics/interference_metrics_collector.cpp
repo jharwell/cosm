@@ -49,11 +49,13 @@ void interference_metrics_collector::collect(
 
   m_data.interval.n_entered_interference +=
       static_cast<size_t>(m.entered_interference());
-  m_data.cum.n_entered_interference += static_cast<size_t>(m.entered_interference());
+  m_data.cum.n_entered_interference +=
+      static_cast<size_t>(m.entered_interference());
 
   m_data.interval.n_exited_interference +=
       static_cast<size_t>(m.exited_interference());
-  m_data.cum.n_exited_interference += static_cast<size_t>(m.exited_interference());
+  m_data.cum.n_exited_interference +=
+      static_cast<size_t>(m.exited_interference());
 
   if (m.exited_interference()) {
     ++m_data.interval.n_episodes;

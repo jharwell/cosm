@@ -45,19 +45,17 @@ NS_START(cosm, repr);
  * they actually live in the world) and discretized locations (where they are
  * mapped to within the arena).
  */
-class sim_block3D : public rer::client<sim_block3D>,
-                    public crepr::base_block3D {
+class sim_block3D : public rer::client<sim_block3D>, public crepr::base_block3D {
  public:
   sim_block3D(const rtypes::type_uuid& id,
-               const rmath::vector3d& dim,
-               const rtypes::discretize_ratio& arena_res,
-               const rutils::color& color,
-               const crepr::block_type& type)
+              const rmath::vector3d& dim,
+              const rtypes::discretize_ratio& arena_res,
+              const rutils::color& color,
+              const crepr::block_type& type)
       : ER_CLIENT_INIT("cosm.repr.sim_block3D"),
         base_block3D(id, dim, arena_res, color, type) {}
 
   ~sim_block3D(void) override = default;
-
 
   /**
    * \brief Determine if the block is currently out of sight.
@@ -66,7 +64,7 @@ class sim_block3D : public rer::client<sim_block3D>,
    */
   bool is_out_of_sight(void) const {
     return kOutOfSight.dpos == unicell_movable_entity3D::danchor3D() ||
-        kOutOfSight.rpos == unicell_movable_entity3D::ranchor3D();
+           kOutOfSight.rpos == unicell_movable_entity3D::ranchor3D();
   }
   /**
    * \brief Change the block's location to something outside the visitable space
@@ -111,4 +109,3 @@ class sim_block3D : public rer::client<sim_block3D>,
 };
 
 NS_END(repr, cosm);
-

@@ -42,18 +42,17 @@ NS_START(cosm, repr);
  * imaginary Z dimension (i.e., it is a bounding box).
  */
 template <typename TGridType, typename TGridViewType>
-class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
-                                                                   TGridViewType>>,
-                            public crepr::entity3D,
-                            public crepr::base_grid_view_entity<TGridType,
-                                                                TGridViewType> {
+class gridQ3D_view_entity
+    : public rer::client<gridQ3D_view_entity<TGridType, TGridViewType>>,
+      public crepr::entity3D,
+      public crepr::base_grid_view_entity<TGridType, TGridViewType> {
  public:
   using grid_view_entity_type = base_grid_view_entity<TGridType, TGridViewType>;
 
-  using typename grid_view_entity_type::grid_type;
-  using typename grid_view_entity_type::grid_view_type;
   using typename grid_view_entity_type::cell_type;
   using typename grid_view_entity_type::coord_type;
+  using typename grid_view_entity_type::grid_type;
+  using typename grid_view_entity_type::grid_view_type;
 
   using grid_view_entity_type::resolution;
 
@@ -63,7 +62,8 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
                       const rtypes::discretize_ratio& res)
       : ER_CLIENT_INIT("cosm.repr.gridQ3D_view_entity"),
         entity3D(id,
-                 rmath::vector3z({the_view.shape()[0], the_view.shape()[1]}, zdsize),
+                 rmath::vector3z({ the_view.shape()[0], the_view.shape()[1] },
+                                 zdsize),
                  rmath::vector3z(the_view.origin()->loc(), 0),
                  rtypes::spatial_dist(res.v())),
         grid_view_entity_type(the_view, res) {}
@@ -93,4 +93,3 @@ class gridQ3D_view_entity : public rer::client<gridQ3D_view_entity<TGridType,
 };
 
 NS_END(repr, cosm);
-

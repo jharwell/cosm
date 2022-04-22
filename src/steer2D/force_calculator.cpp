@@ -61,9 +61,7 @@ rmath::vector2d force_calculator::seek_to(const rmath::vector2d& target) {
 
 rmath::vector2d force_calculator::wander(rmath::rng* rng) {
   rmath::vector2d force = m_wander(m_entity, rng);
-  m_tracker.force_add("wander",
-                      rutils::color::kMAGENTA,
-                      force); /* accum */
+  m_tracker.force_add("wander", rutils::color::kMAGENTA, force); /* accum */
 
   ER_DEBUG("Wander force: %s@%s [%f]",
            rcppsw::to_string(force).c_str(),
@@ -74,11 +72,8 @@ rmath::vector2d force_calculator::wander(rmath::rng* rng) {
 
 rmath::vector2d
 force_calculator::avoidance(const rmath::vector2d& closest_obstacle) {
-  rmath::vector2d force = m_avoidance(m_entity,
-                                      closest_obstacle);
-  m_tracker.force_add("avoidance",
-                      rutils::color::kRED,
-                      force); /* accum */
+  rmath::vector2d force = m_avoidance(m_entity, closest_obstacle);
+  m_tracker.force_add("avoidance", rutils::color::kRED, force); /* accum */
 
   ER_DEBUG("Avoidance force: %s@%s [%f]",
            rcppsw::to_string(force).c_str(),
@@ -90,9 +85,8 @@ force_calculator::avoidance(const rmath::vector2d& closest_obstacle) {
 rmath::vector2d force_calculator::phototaxis(
     const phototaxis_force::light_sensor_readings& readings) {
   rmath::vector2d force = m_phototaxis(readings);
-  m_tracker.force_add("phototaxis_light",
-                      rutils::color::kYELLOW,
-                      force); /* accum */
+  m_tracker.force_add(
+      "phototaxis_light", rutils::color::kYELLOW, force); /* accum */
 
   ER_DEBUG("Phototaxis force: %s@%s [%f]",
            force.to_str().c_str(),
@@ -117,9 +111,8 @@ rmath::vector2d force_calculator::phototaxis(
 rmath::vector2d force_calculator::anti_phototaxis(
     const phototaxis_force::light_sensor_readings& readings) {
   rmath::vector2d force = -m_phototaxis(readings);
-  m_tracker.force_add("anti_phototaxis_light",
-                      rutils::color::kBLACK,
-                      force); /* accum */
+  m_tracker.force_add(
+      "anti_phototaxis_light", rutils::color::kBLACK, force); /* accum */
 
   ER_DEBUG("Anti-phototaxis force: %s@%s [%f]",
            force.to_str().c_str(),
@@ -144,9 +137,8 @@ rmath::vector2d force_calculator::anti_phototaxis(
 rmath::vector2d force_calculator::path_following(ds::path_state* state) {
   rmath::vector2d force = m_path_following(m_entity, state);
   m_tracker.path_add(*state); /* idempotent */
-  m_tracker.force_add("path_following",
-                      rutils::color::kORANGE,
-                      force); /* accum */
+  m_tracker.force_add(
+      "path_following", rutils::color::kORANGE, force); /* accum */
 
   ER_DEBUG("Path following force: %s@%s [%f]",
            force.to_str().c_str(),
@@ -157,9 +149,7 @@ rmath::vector2d force_calculator::path_following(ds::path_state* state) {
 
 rmath::vector2d force_calculator::polar(const rmath::vector2d& center) {
   rmath::vector2d force = m_polar(m_entity, center);
-  m_tracker.force_add("polar",
-                      rutils::color::kCYAN,
-                      force); /* accum */
+  m_tracker.force_add("polar", rutils::color::kCYAN, force); /* accum */
 
   ER_DEBUG("Polar force: %s@%s [%f]",
            force.to_str().c_str(),

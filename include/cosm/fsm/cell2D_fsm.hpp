@@ -130,4 +130,3 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
 };
 
 NS_END(fsm, forydca);
-

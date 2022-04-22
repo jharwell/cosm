@@ -26,12 +26,15 @@
 #include <memory>
 
 #include "cosm/spatial/fsm/util_hfsm.hpp"
-#include "cosm/spatial/strategy/nest_acq/base_nest_acq.hpp"
-#include "cosm/spatial/strategy/block_drop/base_block_drop.hpp"
+
+#include "cosm/spatial/strategy/metrics/nest_acq_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
+namespace cosm::spatial::strategy::nest_acq { class base_nest_acq;}
+namespace cosm::spatial::strategy::blocks::drop { class base_drop;}
+
 NS_START(cosm, foraging, fsm);
 
 /*******************************************************************************
@@ -49,12 +52,12 @@ NS_START(cosm, foraging, fsm);
  * per-se.
  */
 class foraging_util_hfsm : public csfsm::util_hfsm,
-                                         public cssmetrics::nest_acq_metrics,
-                                         public rer::client<foraging_util_hfsm> {
+                           public cssmetrics::nest_acq_metrics,
+                           public rer::client<foraging_util_hfsm> {
  public:
   foraging_util_hfsm(const csfsm::fsm_params* params,
                      std::unique_ptr<cssnest_acq::base_nest_acq> nest_acq,
-                     std::unique_ptr<cssblock_drop::base_block_drop> block_drop,
+                     std::unique_ptr<cssblocks::drop::base_drop> block_drop,
                      rmath::rng* rng,
                      uint8_t max_states);
 
@@ -146,8 +149,8 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
 
  private:
   /* clang-format off */
-  std::unique_ptr<cssnest_acq::base_nest_acq>     m_nest_acq{nullptr};
-  std::unique_ptr<cssblock_drop::base_block_drop> m_block_drop{nullptr};
+  std::unique_ptr<cssnest_acq::base_nest_acq> m_nest_acq{nullptr};
+  std::unique_ptr<cssblocks::drop::base_drop> m_block_drop{nullptr};
   /* clang-format on */
 };
 

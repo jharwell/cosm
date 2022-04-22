@@ -40,16 +40,14 @@ namespace fs = std::filesystem;
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_controller::base_controller(void)
-    : ER_CLIENT_INIT("cosm.controller.base") {}
+base_controller::base_controller(void) : ER_CLIENT_INIT("cosm.controller.base") {}
 
 base_controller::~base_controller(void) = default;
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-fs::path base_controller::output_init(
-    const cpconfig::output_config* config) {
+fs::path base_controller::output_init(const cpconfig::output_config* config) {
   auto path = cpconfig::output_config::root_calc(config);
 
   if (!fs::exists(path)) {

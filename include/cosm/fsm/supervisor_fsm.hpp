@@ -23,8 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <variant>
 #include <utility>
+#include <variant>
 
 #include "rcppsw/patterns/fsm/simple_fsm.hpp"
 
@@ -145,4 +145,3 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
 };
 
 NS_END(fsm, cosm);
-

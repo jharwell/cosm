@@ -78,6 +78,10 @@ class force_calculator : public rer::client<force_calculator> {
    */
   void tracking_reset(void);
 
+  bool is_enabled(void) const { return m_enabled; }
+  void enable(void) { m_enabled = true; }
+  void disable(void) { m_enabled = false; }
+
   /**
    * \brief Calculate the \ref arrival_force for this timestep.
    *
@@ -160,6 +164,7 @@ class force_calculator : public rer::client<force_calculator> {
   const boid& entity(void) const { return m_entity; }
 
   /* clang-format off */
+  bool                 m_enabled{true};
   boid&                m_entity;
   rmath::vector2d      m_force_accum{};
   avoidance_force      m_avoidance;
@@ -176,4 +181,3 @@ class force_calculator : public rer::client<force_calculator> {
 };
 
 NS_END(steer2D, cosm);
-

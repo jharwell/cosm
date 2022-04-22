@@ -132,4 +132,3 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
 };
 
 NS_END(ds, cosm);
-

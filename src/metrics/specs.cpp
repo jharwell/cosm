@@ -31,68 +31,29 @@ NS_START(cosm, metrics, specs);
 /*******************************************************************************
  * Global Variables
  ******************************************************************************/
-name_spec kConvergence = {
-  "swarm_convergence",
-  "swarm/convergence"
-};
+name_spec kConvergence = { "swarm_convergence", "swarm/convergence" };
 
 NS_START(spatial);
-name_spec kMovement = {
-  "spatial_movement",
-  "spatial/movement"
-};
-name_spec kInterferenceCounts = {
-  "spatial_interference_counts",
-  "spatial/interference/counts"
-};
-name_spec kInterferenceLocs2D = {
-  "spatial_interference_locs2D",
-  "spatial/interference/locs2D"
-};
-name_spec kInterferenceLocs3D = {
-  "spatial_interference_locs3D",
-  "spatial/interference/locs3D"
-};
-name_spec kNestZone = {
-  "spatial_nest_zone",
-  "spatial/nest_zone"
-};
-name_spec kDistPosition2D = {
-  "spatial_dist_pos2D",
-  "spatial/dist/pos2D"
-};
-name_spec kDistPosition3D = {
-  "spatial_dist_pos3D",
-  "spatial/dist/pos3D"
-};
+name_spec kMovement = { "spatial_movement", "spatial/movement" };
+name_spec kInterferenceCounts = { "spatial_interference_counts",
+                                  "spatial/interference/counts" };
+name_spec kInterferenceLocs2D = { "spatial_interference_locs2D",
+                                  "spatial/interference/locs2D" };
+name_spec kInterferenceLocs3D = { "spatial_interference_locs3D",
+                                  "spatial/interference/locs3D" };
+name_spec kNestZone = { "spatial_nest_zone", "spatial/nest_zone" };
+name_spec kDistPosition2D = { "spatial_dist_pos2D", "spatial/dist/pos2D" };
+name_spec kDistPosition3D = { "spatial_dist_pos3D", "spatial/dist/pos3D" };
 NS_END(spatial);
 
 NS_START(blocks);
 
-name_spec kDistributor = {
-  "block_distributor",
-  "blocks/distributor"
-};
-name_spec kMotion = {
-  "block_motion",
-  "blocks/motion"
-};
-name_spec kClusters = {
-  "block_clusters",
-  "blocks/clusters"
-};
-name_spec kTransporter = {
-  "block_transporter",
-  "blocks/transporter"
-};
-name_spec kTransportee = {
-  "block_transportee",
-  "blocks/transportee"
-};
-name_spec kAcqCounts = {
-  "block_acq_counts",
-  "blocks/acq/counts"
-};
+name_spec kDistributor = { "block_distributor", "blocks/distributor" };
+name_spec kMotion = { "block_motion", "blocks/motion" };
+name_spec kClusters = { "block_clusters", "blocks/clusters" };
+name_spec kTransporter = { "block_transporter", "blocks/transporter" };
+name_spec kTransportee = { "block_transportee", "blocks/transportee" };
+name_spec kAcqCounts = { "block_acq_counts", "blocks/acq/counts" };
 name_spec kAcqExploreLocs2D = {
   "block_acq_explore_locs2D",
   "blocks/acq/explore_locs2D",
@@ -117,31 +78,19 @@ name_spec kAcqVectorLocs3D = {
 NS_END(blocks);
 
 NS_START(strategy);
-name_spec kNestAcq = {
-  "nest_acq_strategy",
-  "strategy/nest_acq"
-};
+name_spec kNestAcq = { "nest_acq_strategy", "strategy/nest_acq" };
 
 NS_END(strategy);
 
 NS_START(tv);
-name_spec kPopulation = {
-  "tv_population",
-  "tv/population"
-};
-name_spec kEnvironment = {
-  "tv_environment",
-  "tv/environment"
-};
+name_spec kPopulation = { "tv_population", "tv/population" };
+name_spec kEnvironment = { "tv_environment", "tv/environment" };
 
 NS_END(tv);
 
 NS_START(tasks);
 
-name_spec kDistribution = {
-  "task_distribution",
-  "tasks/distribution"
-};
+name_spec kDistribution = { "task_distribution", "tasks/distribution" };
 
 NS_END(tasks);
 

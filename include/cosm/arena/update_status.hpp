@@ -50,4 +50,3 @@ enum update_status {
 };
 
 NS_END(arena, cosm);
-

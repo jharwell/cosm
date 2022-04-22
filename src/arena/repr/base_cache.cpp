@@ -44,7 +44,7 @@ base_cache::base_cache(const params& p)
                                              : p.id,
           rmath::vector2d(p.dimension.v(), p.dimension.v()),
           p.center - rmath::vector2d(p.dimension.v(), p.dimension.v()) / 2.0 +
-          rmath::vector2d(rmath::kDOUBLE_EPSILON, rmath::kDOUBLE_EPSILON),
+              rmath::vector2d(rmath::kDOUBLE_EPSILON, rmath::kDOUBLE_EPSILON),
           p.resolution),
       ER_CLIENT_INIT("cosm.arena.repr.base_cache"),
       colored_entity(rutils::color::kGRAY40),
@@ -80,12 +80,12 @@ void base_cache::block_remove(const crepr::sim_block3D* const victim) {
   }
   auto it = std::find_if(m_blocks_vec.begin(),
                          m_blocks_vec.end(),
-                         [&](const auto*b) { return b->id() == victim->id(); });
+                         [&](const auto* b) { return b->id() == victim->id(); });
   m_blocks_vec.erase(it);
 } /* block_remove() */
 
 void base_cache::blocks_map_enable(void) {
-  for (auto *b : m_blocks_vec) {
+  for (auto* b : m_blocks_vec) {
     m_blocks_map.insert(std::make_pair(b->id(), b));
   } /* for(*b..) */
 
@@ -103,9 +103,10 @@ bool base_cache::contains_block(const crepr::sim_block3D* const c_block) const {
   if (m_map_en) {
     return m_blocks_map.end() != m_blocks_map.find(c_block->id());
   } else {
-    return m_blocks_vec.end() != std::find_if(m_blocks_vec.begin(),
-                                              m_blocks_vec.end(),
-                                              [&](const auto*b) { return b->id() == c_block->id(); });
+    return m_blocks_vec.end() !=
+           std::find_if(m_blocks_vec.begin(),
+                        m_blocks_vec.end(),
+                        [&](const auto* b) { return b->id() == c_block->id(); });
   }
 }
 crepr::sim_block3D* base_cache::block_select(rmath::rng* rng) {

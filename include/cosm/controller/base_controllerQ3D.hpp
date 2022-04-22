@@ -64,9 +64,9 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controllerQ3D : public base_controller,
-                                         public csmetrics::movement_metrics,
-                                         public csmetrics::goal_acq_metrics,
-                                         public csmetrics::dist3D_metrics {
+                           public csmetrics::movement_metrics,
+                           public csmetrics::goal_acq_metrics,
+                           public csmetrics::dist3D_metrics {
  public:
   base_controllerQ3D(void) RCPPSW_COLD;
   ~base_controllerQ3D(void) override RCPPSW_COLD;

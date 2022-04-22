@@ -29,9 +29,9 @@
 #include "rcppsw/math/rng.hpp"
 #include "rcppsw/rcppsw.hpp"
 
+#include "cosm/steer2D/base_bias_angle_generator.hpp"
 #include "cosm/steer2D/boid.hpp"
 #include "cosm/steer2D/config/wander_force_config.hpp"
-#include "cosm/steer2D/base_bias_angle_generator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -68,4 +68,3 @@ class wander_force {
 };
 
 NS_END(steer2D, cosm);
-

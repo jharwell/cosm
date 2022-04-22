@@ -75,4 +75,3 @@ class dimension_checker {
 };
 
 NS_END(spatial, cosm);
-

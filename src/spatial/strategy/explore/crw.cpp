@@ -23,8 +23,8 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/explore/crw.hpp"
 
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -34,14 +34,21 @@ NS_START(cosm, spatial, strategy, explore);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-crw::crw(const csfsm::fsm_params* params, rmath::rng* rng)
-    : base_strategy(params, rng),
+crw::crw(const csfsm::fsm_params* params,
+         const cssexplore::config::explore_config* config,
+         rmath::rng* rng)
+    : base_explore(params, config, rng),
       ER_CLIENT_INIT("cosm.spatial.strategy.explore.crw") {}
 
 /*******************************************************************************
  * Taskable Interface
  ******************************************************************************/
 void crw::task_execute(void) {
+  base_explore::task_execute();
+  ER_DEBUG("Explore time=%zu,min_duration=%zu",
+           steps().v(),
+           config()->min_duration.v());
+
   /* apply wander force */
   wander();
 
@@ -58,6 +65,8 @@ void crw::task_execute(void) {
 } /* task_execute() */
 
 void crw::task_reset(void) {
+  base_explore::task_reset();
+
   /* no longer running */
   m_task_running = false;
 
@@ -72,6 +81,5 @@ void crw::task_reset(void) {
 
   nz_tracker()->state_reset();
 } /* task_reset() */
-
 
 NS_END(explore, strategy, spatial, cosm);

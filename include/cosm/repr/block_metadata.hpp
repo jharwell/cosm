@@ -166,4 +166,3 @@ class block_metadata final : public cfmetrics::block_transportee_metrics,
 };
 
 NS_END(repr, cosm);
-

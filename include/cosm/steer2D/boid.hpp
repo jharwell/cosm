@@ -60,4 +60,3 @@ class boid {
 };
 
 NS_END(steer2D, cosm);
-
