@@ -1,7 +1,7 @@
 /**
- * \file specs.hpp
+ * \file anti_phototaxis.cpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2022 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -18,71 +18,46 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include "cosm/spatial/strategy/nest/exit/anti_phototaxis.hpp"
+
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, spatial, strategy, nest, exit);
 
 /*******************************************************************************
- * Global Variables
+ * Constructors/Destructors
  ******************************************************************************/
-extern name_spec kConvergence;
+anti_phototaxis::anti_phototaxis(const cssnest::config::exit_config* config,
+               const csfsm::fsm_params* params,
+               rmath::rng* rng)
+    : ER_CLIENT_INIT("cosm.spatial.strategy.nest.exit.anti_phototaxis"),
+      base_exit(config, params, rng) {}
 
-NS_START(spatial);
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void anti_phototaxis::task_start(cta::taskable_argument*) {
+  task_reset();
+  m_task_running = true;
+} /* task_start() */
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
+void anti_phototaxis::task_execute(void) {
+  auto env = saa()->sensing()->env();
 
-NS_END(spatial);
+  handle_ca();
 
-NS_START(blocks);
+  base_strategy::anti_phototaxis();
 
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
+  if (!env->detect(chsensors::env_sensor::kNestTarget)) {
+    m_task_running = false;
+  }
+} /* task_execute() */
 
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(exit, nest, spatial, strategy, cosm);

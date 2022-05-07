@@ -286,14 +286,16 @@ namespace metrics {}
 
 namespace strategy {
 namespace metrics {}
-namespace nest_acq {}
+namespace nest {
+namespace acq {}
+namespace exit {}
+}
 
 namespace blocks {
 namespace drop {}
 } /* namespace blocks */
 
 namespace explore {}
-namespace config {}
 } /* namespace strategy */
 
 } /* namespace spatial */
@@ -379,11 +381,9 @@ namespace cspatial = cosm::spatial;
 namespace csfsm = cspatial::fsm;
 namespace csmetrics = cspatial::metrics;
 namespace csstrategy = cspatial::strategy;
-namespace cssmetrics = csstrategy::metrics;
-namespace cssnest_acq = csstrategy::nest_acq;
+namespace cssnest = csstrategy::nest;
 namespace cssblocks = csstrategy::blocks;
 namespace cssexplore = csstrategy::explore;
-namespace cssconfig = csstrategy::config;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;

@@ -78,9 +78,15 @@ name_spec kAcqVectorLocs3D = {
 NS_END(blocks);
 
 NS_START(strategy);
-name_spec kNestAcq = { "nest_acq_strategy", "strategy/nest_acq" };
+
+NS_START(nest);
+
+name_spec kAcq = { "nest_acq_strategy", "strategy/nest/acq" };
+
+NS_END(nest);
 
 NS_END(strategy);
+
 
 NS_START(tv);
 name_spec kPopulation = { "tv_population", "tv/population" };

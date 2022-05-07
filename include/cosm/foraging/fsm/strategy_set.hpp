@@ -1,7 +1,7 @@
 /**
- * \file specs.hpp
+ * \file strategy_set.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2022 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,66 +23,38 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include <memory>
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+namespace cosm::spatial::strategy::nest::acq { class base_acq;}
+namespace cosm::spatial::strategy::nest::exit { class base_exit;}
+namespace cosm::spatial::strategy::explore { class base_explore;}
+namespace cosm::spatial::strategy::blocks::drop { class base_drop;}
+
+NS_START(cosm, foraging, fsm);
 
 /*******************************************************************************
- * Global Variables
+ * Class Definitions
  ******************************************************************************/
-extern name_spec kConvergence;
+struct strategy_set {
+  strategy_set(void);
+  strategy_set(std::unique_ptr<cssexplore::base_explore> explore_in,
+               std::unique_ptr<cssnest::acq::base_acq> nest_acq_in,
+               std::unique_ptr<cssnest::exit::base_exit> nest_exit_in,
+               std::unique_ptr<cssblocks::drop::base_drop> block_drop);
 
-NS_START(spatial);
+  ~strategy_set(void);
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
+  strategy_set(strategy_set&& other);
 
-NS_END(spatial);
+  std::unique_ptr<cssexplore::base_explore> explore{nullptr};
+  std::unique_ptr<cssnest::acq::base_acq> nest_acq{nullptr};
+  std::unique_ptr<cssnest::exit::base_exit> nest_exit{nullptr};
+  std::unique_ptr<cssblocks::drop::base_drop> block_drop{nullptr};
+};
 
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(fsm, foraging, cosm);

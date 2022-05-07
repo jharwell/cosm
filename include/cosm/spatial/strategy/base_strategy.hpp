@@ -76,6 +76,7 @@ class base_strategy : public cta::taskable {
 
   bool handle_ca(void);
   void phototaxis(void);
+  void anti_phototaxis(void);
   void wander(void);
   bool nz_update(void);
 

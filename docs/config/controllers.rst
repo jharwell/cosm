@@ -74,11 +74,11 @@ XML configuration:
 ``strategy``
 ============
 
-- Required by: none.
-- Required child attributes if present: all.
+- Required by: all.
+- Required child attributes if present: [ ``nest_acq``, ``nest_exit`` ].
 - Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: [ ``nest_acq``, ``block_drop`` ].
+- Optional child tags: [ ``blocks`` ].
 
 XML configuration:
 
@@ -88,14 +88,72 @@ XML configuration:
        <nest_acq>
          ...
        </nest_acq>
-       <block_drop>
+       <nest_exit>
          ...
-       </block_drop>
+       </nest_exit>
+       <blocks>
+         ...
+       </blocks>
+   />
+
+``strategy/explore``
+---------------------------
+
+- Required child attributes if present: [  ``strategy`` ].
+- Required child tags if present: [ ``min_duration`` ].
+- Optional child tags: none.
+- Optional child attributes: none.
+
+
+XML configuration:
+
+  .. code-block:: XML
+
+     <strategy>
+       ...
+       <explore
+          strategy="crw"
+          min_duration="INT"
+         ...
+       </explore>
+       ...
+   />
+
+- ``strategy`` - The strategy robots should use when exploring for SOMETHING
+  (unspecified at this level). Valid values are:
+
+  - ``CRW`` - Correlated Random Walk.
+
+- ``min_duration`` - How long to perform the selected strategy for. Valid for: [
+  ``CRW`` ].
+
+``strategy/nest``
+-------------------
+
+- Required child attributes if present: none.
+- Required child tags if present: [ ``acq``, ``exit`` ].
+- Optional child tags: none.
+- Optional child attributes: none.
+
+
+XML configuration:
+
+  .. code-block:: XML
+
+     <strategy>
+       ...
+       <nest>
+         <acq
+           ../>
+         <exit
+           ../>
+       </nest>
+       ...
    />
 
 
-``strategy/nest_acq``
----------------------
+``strategy/nest/acq``
+^^^^^^^^^^^^^^^^^^^^^
 
 - Required by: All controllers.
 - Required child attributes if present: ``strategy``.
@@ -107,13 +165,13 @@ XML configuration:
 
 .. code-block:: XML
 
-   <strategy>
-       <nest_acq
+   <nest>
+       <acq
           strategy="wander|random_thresh|wander_random_thresh"
           duration="INT"
-       </nest_acq>
+       </acq>
        ...
-   </strategy>
+   </nest>
 
 
 - ``strategy`` - The strategy robots should use once they have entered the nest
@@ -132,12 +190,42 @@ XML configuration:
 - ``duration`` - How long to perform the strategy for. Valid for: [ ``wander``
   ].
 
-``strategy/block_drop``
------------------------
+``strategy/nest/exit``
+^^^^^^^^^^^^^^^^^^^^^^
 
-- Required child attributes if present: [  ``strategy`` ].
-- Required child tags if present: [ ``duration`` ].
-- Optional child tags: none.
+- Required by: All controllers.
+- Required child attributes if present: ``strategy``.
+- Required child tags if present: None.
+- Optional child attributes: None.
+- Optional child tags: None.
+
+XML configuration:
+
+.. code-block:: XML
+
+   <nest>
+       <acq
+          strategy="wander|anti_phototaxis"
+       </acq>
+       ...
+   </nest>
+
+
+- ``strategy`` - The strategy robots should use once they have entered the nest
+  with an object to choose a precise location to drop it at. Valid values are:
+
+  - ``wander`` - Perform wander, avoiding collisions as needed, until the robot
+    exits the nest or gets pushed out.
+
+  - ``anti_phototaxis`` - Perform anti-phototaxis+collision avoidance until the
+    robot exits the nest.
+
+``strategy/blocks``
+-------------------
+
+- Required child attributes if present: none.
+- Required child tags if present: none.
+- Optional child tags: [ ``drop`` ].
 - Optional child attributes: none.
 
 
@@ -147,11 +235,33 @@ XML configuration:
 
      <strategy>
        ...
-       <block_drop
-          strategy="backup"
+       <blocks>
+         <drop
+           ../>
+       </blocks>
+       ...
+   />
+
+``strategy/blocks/drop``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Required child attributes if present: [  ``strategy`` ].
+- Required child tags if present: none.
+- Optional child tags: [ ``duration`` ].
+- Optional child attributes: none.
+
+
+XML configuration:
+
+  .. code-block:: XML
+
+     <blocks>
+       ...
+       <drop
+          strategy="backup|backup_pivot"
           duration="INT"
          ...
-       </block_drop>
+       </drop>
        ...
    />
 
@@ -161,8 +271,12 @@ XML configuration:
   - ``backup`` - Backup for ``duration`` timesteps. Useful when robots are
     pushing blocks to "carry" them.
 
+  - ``backup_pivot`` - Backup for ``duration``/2 timesteps, then pivot for
+    ``duration/2`` timesteps. Useful when robots are pushing blocks to "carry"
+    them.
+
 - ``duration`` - How long to perform the selected strategy for. Valid for: [
-  ``backup`` ].
+  ``backup``, ``backup_pivot`` ].
 
 ``perception``
 ==============

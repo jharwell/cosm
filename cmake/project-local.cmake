@@ -259,7 +259,7 @@ if("${COSM_BUILD_FOR}" MATCHES "ROS")
     std_msgs
     )
   if("${COSM_BUILD_FOR}" MATCHES "ETURTLEBOT3")
-    set(CATKIN_PKGS ${ROS_PKGS} sr04us)
+    set(CATKIN_PKGS ${ROS_PKGS} sr04us tsl2591)
   endif()
 
   # ROS

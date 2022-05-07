@@ -1,7 +1,7 @@
 /**
- * \file base_strategy.cpp
+ * \file random_thresh.cpp
  *
- * \copyright 2020 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -21,67 +21,51 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/spatial/strategy/base_strategy.hpp"
+#include "cosm/spatial/strategy/nest/acq/random_thresh.hpp"
 
+#include "cosm/spatial/fsm/point_argument.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
 #include "cosm/subsystem/sensing_subsystemQ3D.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy);
+NS_START(cosm, spatial, strategy, nest, acq);
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-base_strategy::base_strategy(const csfsm::fsm_params* params, rmath::rng* rng)
-    : m_saa(params->saa),
-      m_inta_tracker(params->inta),
-      m_nz_tracker(params->nz),
-      m_rng(rng) {}
+random_thresh::random_thresh(const cssnest::config::acq_config* config,
+                             const csfsm::fsm_params* params,
+                             rmath::rng* rng)
+    : base_acq(config, params, rng) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void base_strategy::phototaxis(void) {
-  auto* light = saa()->sensing()->light();
-  saa()->steer_force2D().accum(
-      saa()->steer_force2D().phototaxis(light->readings()));
-} /* phototaxis() */
+void random_thresh::task_start(cta::taskable_argument* arg) {
+  m_nest_loc = static_cast<fsm::point_argument*>(arg)->point();
 
-void base_strategy::anti_phototaxis(void) {
-  auto* light = saa()->sensing()->light();
-  saa()->steer_force2D().accum(
-      saa()->steer_force2D().anti_phototaxis(light->readings()));
-} /* anti_phototaxis() */
+  auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
+  m_thresh = rtypes::spatial_dist(rng()->uniform(0.01, dist_to_light));
+  m_task_running = true;
+} /* task_start() */
 
-void base_strategy::wander(void) {
-  saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
-} /* wander() */
-
-bool base_strategy::handle_ca(void) {
-  auto* prox = saa()->sensing()->proximity();
-
-  if (auto obs = prox->avg_prox_obj()) {
-    inta_tracker()->state_enter();
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
-    return true;
-  } else {
-    inta_tracker()->state_exit();
-    return false;
-  }
-} /* handle_ca() */
-
-bool base_strategy::nz_update(void) {
+void random_thresh::task_execute(void) {
+  /*
+   * We might get pushed out of the nest by collision avoidance after initially
+   * entering it.
+   */
   auto env = saa()->sensing()->env();
-
   if (env->detect(chsensors::env_sensor::kNestTarget)) {
-    nz_tracker()->state_enter();
-    return true;
-  } else {
-    nz_tracker()->state_exit();
-    return false;
+    auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
+    if (dist_to_light <= m_thresh.v()) {
+      m_task_running = false;
+    }
   }
-} /* nz_update() */
 
-NS_END(strategy, spatial, cosm);
+  phototaxis();
+  handle_ca();
+} /* task_execute() */
+
+NS_END(acq, nest, spatial, strategy, cosm);

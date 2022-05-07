@@ -1,5 +1,5 @@
 /**
- * \file specs.hpp
+ * \file acq_metrics_data.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -23,66 +23,31 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include "rcppsw/metrics/base_data.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, spatial, strategy, nest, metrics, detail);
 
 /*******************************************************************************
- * Global Variables
+ * Class Definitions
  ******************************************************************************/
-extern name_spec kConvergence;
+/**
+ * \brief Container for holding collected statistics. Must be atomic so counts
+ * are valid in parallel metric collection contexts.
+ */
+struct acq_metrics_data {
+  ral::mt_double_t random_thresh{0.0};
+  ral::mt_size_t  n_random_thresh{0};
+};
 
-NS_START(spatial);
+NS_END(detail);
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
+struct acq_metrics_data : public rmetrics::base_data {
+  detail::acq_metrics_data interval{};
+  detail::acq_metrics_data cum{};
+};
 
-NS_END(spatial);
-
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(metrics, nest, strategy, spatial, cosm);

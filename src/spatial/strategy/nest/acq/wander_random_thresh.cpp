@@ -1,5 +1,5 @@
 /**
- * \file specs.hpp
+ * \file wander_random_thresh.cpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,71 +18,30 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include "cosm/spatial/strategy/nest/acq/wander_random_thresh.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, spatial, strategy, nest, acq);
 
 /*******************************************************************************
- * Global Variables
+ * Constructors/Destructors
  ******************************************************************************/
-extern name_spec kConvergence;
+wander_random_thresh::wander_random_thresh(const cssnest::config::acq_config* config,
+                                           const csfsm::fsm_params* params,
+                                           rmath::rng* rng)
+    : random_thresh(config, params, rng) {}
 
-NS_START(spatial);
+/*******************************************************************************
+ * Member Functions
+ ******************************************************************************/
+void wander_random_thresh::task_execute(void) {
+  random_thresh::task_execute();
+  wander();
+} /* task_execute() */
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
-
-NS_END(spatial);
-
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(acq, nest, spatial, strategy, cosm);

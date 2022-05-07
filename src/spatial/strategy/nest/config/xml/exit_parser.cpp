@@ -1,5 +1,5 @@
 /**
- * \file specs.hpp
+ * \file exit_parser.cpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -18,71 +18,30 @@
  * COSM.  If not, see <http://www.gnu.org/licenses/
  */
 
-#pragma once
-
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include "cosm/spatial/strategy/nest/config/xml/exit_parser.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, spatial, strategy, nest, config, xml);
 
 /*******************************************************************************
- * Global Variables
+ * Member Functions
  ******************************************************************************/
-extern name_spec kConvergence;
+void exit_parser::parse(const ticpp::Element& node) {
+  if (nullptr == node.FirstChild(kXMLRoot, false)) {
+    return;
+  }
 
-NS_START(spatial);
+  ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
+  ticpp::Element snode = node_get(node, kXMLRoot);
+  m_config = std::make_unique<config_type>();
 
-NS_END(spatial);
+  XML_PARSE_ATTR(snode, m_config, strategy);
+} /* parse() */
 
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(xml, config, strategy, nest, spatial, cosm);

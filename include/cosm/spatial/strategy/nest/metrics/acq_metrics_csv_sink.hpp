@@ -1,7 +1,7 @@
 /**
- * \file specs.hpp
+ * \file acq_metrics_csv_sink.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,66 +23,47 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include <string>
+#include <list>
+
+#include "rcppsw/metrics/csv_sink.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, spatial, strategy, nest, metrics);
+class acq_metrics_collector;
 
 /*******************************************************************************
- * Global Variables
+ * Class Definitions
  ******************************************************************************/
-extern name_spec kConvergence;
+/**
+ * \class acq_metrics_csv_sink
+ * \ingroup spatial strategy nest metrics
+ *
+ * \brief Sink for \ref acq_metrics and \ref acq_metrics_collector to
+ * output metrics to .csv.
+ */
+class acq_metrics_csv_sink final : public rmetrics::csv_sink {
+ public:
+  using collector_type = acq_metrics_collector;
 
-NS_START(spatial);
+  /**
+   * \brief \see rmetrics::csv_sink.
+   */
+  acq_metrics_csv_sink(fs::path fpath_no_ext,
+                       const rmetrics::output_mode& mode,
+                       const rtypes::timestep& interval);
 
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
+  /* csv_sink overrides */
+  std::list<std::string> csv_header_cols(
+      const rmetrics::base_data* data) const override;
 
-NS_END(spatial);
+  boost::optional<std::string> csv_line_build(
+      const rmetrics::base_data* data,
+      const rtypes::timestep& t) override;
+};
 
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(metrics, nest, strategy, spatial, cosm);

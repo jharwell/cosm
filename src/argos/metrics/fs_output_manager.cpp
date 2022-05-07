@@ -81,8 +81,8 @@
 #include "cosm/spatial/metrics/vector_locs2D_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_collector.hpp"
 #include "cosm/spatial/metrics/vector_locs3D_metrics_csv_sink.hpp"
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics_collector.hpp"
-#include "cosm/spatial/strategy/metrics/nest_acq_metrics_csv_sink.hpp"
+#include "cosm/spatial/strategy/nest/metrics/acq_metrics_collector.hpp"
+#include "cosm/spatial/strategy/nest/metrics/acq_metrics_csv_sink.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_csv_sink.hpp"
 
@@ -161,7 +161,7 @@ void fs_output_manager::register_standard(
       rmpl::identity<cfmetrics::block_transportee_metrics_csv_sink>,
       rmpl::identity<csmetrics::goal_acq_metrics_csv_sink>,
       rmpl::identity<csmetrics::interference_metrics_csv_sink>,
-      rmpl::identity<cssmetrics::nest_acq_metrics_csv_sink>,
+    rmpl::identity<cssnest::metrics::acq_metrics_csv_sink>,
       rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>,
       rmpl::identity<csmetrics::nest_zone_metrics_csv_sink> >;
 
@@ -202,9 +202,9 @@ void fs_output_manager::register_standard(
       cmspecs::blocks::kAcqCounts.xml(),
       cmspecs::blocks::kAcqCounts.scoped(),
       rmetrics::output_mode::ekAPPEND },
-    { typeid(cssmetrics::nest_acq_metrics_collector),
-      cmspecs::strategy::kNestAcq.xml(),
-      cmspecs::strategy::kNestAcq.scoped(),
+    { typeid(cssnest::metrics::acq_metrics_collector),
+      cmspecs::strategy::nest::kAcq.xml(),
+      cmspecs::strategy::nest::kAcq.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(ctvmetrics::population_dynamics_metrics_collector),
       cmspecs::tv::kPopulation.xml(),
