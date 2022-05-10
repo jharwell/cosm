@@ -158,7 +158,7 @@ class force_calculator : public rer::client<force_calculator> {
   anti_phototaxis(const phototaxis_force::camera_sensor_readings& readings,
                   const rutils::color& color);
 
-  void accum(const rmath::vector2d& force) { m_force_accum += force; }
+  void accum(const rmath::vector2d& force);
 
  private:
   const boid& entity(void) const { return m_entity; }

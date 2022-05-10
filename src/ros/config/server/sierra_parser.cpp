@@ -55,31 +55,32 @@ void sierra_parser::parse(void) {
   std::string param;
   ER_ASSERT(nh.searchParam("sierra/experiment/length", param),
             "Couldn't resolve parameter 'sierra/experiment/length'");
-  nh.getParam(param, tmp);
+  ER_ASSERT(nh.getParam(param, tmp), "%s not found?", param.c_str());
   m_config->experiment.length = rtypes::timestep(tmp);
 
   ER_ASSERT(nh.searchParam("sierra/experiment/param_file", param),
             "Couldn't resolve parameter 'sierra/experiment/param_file'");
-  nh.getParam(param, m_config->experiment.param_file);
+  ER_ASSERT(nh.getParam(param, m_config->experiment.param_file),
+            "%s not found?",
+            param.c_str());
 
   ER_ASSERT(nh.searchParam("sierra/experiment/ticks_per_sec", param),
             "Couldn't resolve parameter 'sierra/experiment/ticks_per_sec'");
-  nh.getParam(param, tmp);
+  ER_ASSERT(nh.getParam(param, tmp), "%s not found?", param.c_str());
   m_config->experiment.ticks_per_sec = rtypes::hertz(tmp);
 
   /* n_robots not present on robot configuration */
   if (nh.searchParam("sierra/experiment/n_robots", param)) {
     tmp = -1;
-    nh.getParam(param, tmp);
-    ER_DEBUG("Found n_robots: '%s'=%d", param.c_str(), tmp);
-    m_config->experiment.n_robots = tmp;
+    if (nh.getParam(param, tmp)) {
+      m_config->experiment.n_robots = tmp;
+    }
   }
 
   /* barrier_start not required */
   if (nh.searchParam("sierra/experiment/barrier_start", param)) {
-    bool start;
-    nh.getParam(param, start);
-    ER_DEBUG("Found barrier_start: '%s'=%d", param.c_str(), start);
+    bool start = false;
+    ER_ASSERT(nh.getParam(param, start), "%s not found?", param.c_str());
     m_config->experiment.barrier_start = start;
   }
   ER_INFO("length=%zu,param_file=%s,ticks_per_sec=%d,n_robots=%zu,barrier_start=%"

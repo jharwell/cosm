@@ -58,6 +58,7 @@ class env_sensor : public rer::client<env_sensor>,
                    public chsensors::env_sensor_impl {
  public:
   using ground = chsensors::base_sensor<chasensors::ground_sensor>;
+  static inline const std::string kCacheTarget = "cache";
 
   explicit env_sensor(chasensors::ground_sensor&& sensor);
 

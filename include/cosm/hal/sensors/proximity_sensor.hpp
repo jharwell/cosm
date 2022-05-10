@@ -69,21 +69,21 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
  public:
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
   template <typename TSensor>
-    proximity_sensor(TSensor * const sensor,
-                    const config::proximity_sensor_config* const config)
-       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-         proximity_sensor_impl(sensor),
-         m_config(*config) {
+  proximity_sensor(TSensor * const sensor,
+                   const config::proximity_sensor_config* const config)
+      : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
+        proximity_sensor_impl(sensor),
+        m_config(*config) {
     enable();
   }
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-  explicit proximity_sensor(const cros::topic& robot_ns,
-                            const config::proximity_sensor_config* const config)
-       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-         proximity_sensor_impl(robot_ns),
-         m_config(*config) {
-     enable();
-   }
+  proximity_sensor(const cros::topic& robot_ns,
+                   const config::proximity_sensor_config* const config)
+      : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
+        proximity_sensor_impl(robot_ns, config),
+        m_config(*config) {
+    enable();
+  }
 #endif
 
   /* move only constructible/assignable to work with the saa subsystem */
@@ -128,6 +128,10 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
 
     accum /= count;
 
+    ER_DEBUG("Avg obstacle: %s@%s",
+             rcppsw::to_string(accum).c_str(),
+             rcppsw::to_string(accum.angle()).c_str());
+
     if (m_config.fov.contains(accum.angle()) &&
         accum.length() <= m_config.delta) {
       return boost::none;
@@ -140,7 +144,5 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
   config::proximity_sensor_config m_config;
   /* clang-format on */
 };
-
-/* static_assert(std::is_nothrow_move_constructible<proximity_sensor>::value, "ERROR"); */
 
 NS_END(sensors, hal, cosm);

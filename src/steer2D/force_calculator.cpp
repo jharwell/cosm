@@ -158,6 +158,13 @@ rmath::vector2d force_calculator::polar(const rmath::vector2d& center) {
   return force;
 } /* polar() */
 
+void force_calculator::accum(const rmath::vector2d& force) {
+  ER_DEBUG("Current force: %s, new=%s",
+           rcppsw::to_string(m_force_accum).c_str(),
+           rcppsw::to_string(force).c_str())
+  m_force_accum += force;
+}
+
 void force_calculator::forces_reset(void) {
   m_force_accum.set(0, 0);
 } /* forces_reset() */

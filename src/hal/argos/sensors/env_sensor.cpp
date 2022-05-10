@@ -62,6 +62,11 @@ bool env_sensor::detect(
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
     return sum >= config->consensus;
+  } else if (kCacheTarget == name) {
+    for (auto& r : ground::decoratee().readings()) {
+      sum += static_cast<size_t>(config->range.contains(r.value));
+    } /* for(&r..) */
+    return sum >= config->consensus;
   } else {
     ER_FATAL_SENTINEL("Bad detection: %s", name.c_str());
     return false;

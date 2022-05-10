@@ -77,4 +77,3 @@ class output_parser final : public rer::client<output_parser>,
 };
 
 NS_END(xml, config, pal, cosm);
-

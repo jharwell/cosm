@@ -50,4 +50,3 @@ struct avoidance_force_config final : public rconfig::base_config {
 };
 
 NS_END(config, steer2D, cosm);
-
