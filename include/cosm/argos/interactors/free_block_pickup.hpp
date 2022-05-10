@@ -167,7 +167,7 @@ class free_block_pickup
      * robots both having finished serving their penalty this timestep manage to
      * pass the check to actually perform the block pickup before one of them
      * actually finishes picking up a block, then the second one will not get
-     * the necessary \ref block_vanished event. See COSM#594.
+     * the necessary \ref block_vanished event. See FORDYCA#594.
      */
     m_map->lock_wr(m_map->block_mtx());
 
@@ -177,7 +177,7 @@ class free_block_pickup
      * first will correctly take the block via \ref free_block_pickup, and the
      * second one will attempt to perform the pickup on a block that is already
      * out of sight, resulting in a boost index out of bounds assertion. See
-     * COSM#410.
+     * FORDYCA#410.
      *
      * Furthermore, it is ALSO possible that while the second robot is still
      * waiting to serve its penalty, and the first robot has already picked up

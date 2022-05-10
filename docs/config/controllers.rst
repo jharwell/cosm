@@ -796,7 +796,7 @@ Parameters for proximity sensor configuration.
 - Required by: All controllers.
 - Required child attributes if present: all.
 - Required child tags if present: none.
-- Optional child attributes: none.
+- Optional child attributes: [ ``exp_decay`` ].
 - Optional child tags: none.
 
 .. code-block:: XML
@@ -805,17 +805,23 @@ Parameters for proximity sensor configuration.
         ...
         <proximity_sensor
             fov="FLOAT:FLOAT"
-            delta="FLOAT"/>
+            delta="FLOAT"
+            exp_decay="BOOL"/>
         ...
     </sensing_subsystemQ3D>
 
-- ``fov`` - The angle range to the left/right of center (90 degrees on a unit
-  circle) in which obstacles are not ignored (outside of this range they are
-  ignored, assuming the robot will be able to drive by them). Takes a pair like
-  so: ``-1:1``. Specified in radians.
+- ``fov`` - The angle range to the left/right of center in which obstacles are
+  not ignored (outside of this range they are ignored, assuming the robot will
+  be able to drive by them). Takes a pair like so: ``-1:1``. Specified in
+  radians.
 
-- ``delta`` - Tripping threshold for exponential distance calculations for
-  obstacle detection.
+- ``delta`` - Tripping threshold for calculations for obstacle
+  detection. Dependent on the value of ``exp_decay``.
+
+- ``exp_decay`` - If ``true``, then apply :math:`e^{-x}` to all distance values
+  before returning them to the robot controller. Only used if COSM is built for
+  ROS; for compatibility of ROS robot controller code with ARGoS robot
+  controller code, which does this by default.
 
 ``sensing_subsystemQ3D/ground_sensor``
 --------------------------------------

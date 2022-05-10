@@ -40,6 +40,7 @@ void proximity_sensor_parser::parse(const ticpp::Element& node) {
 
     XML_PARSE_ATTR(pnode, m_config, delta);
     XML_PARSE_ATTR(pnode, m_config, fov);
+    XML_PARSE_ATTR_DFLT(pnode, m_config, exp_decay, true);
   }
 } /* parse() */
 

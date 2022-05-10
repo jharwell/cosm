@@ -33,6 +33,7 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/ros/sensors/ros_subscriber_sensor.hpp"
+#include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -56,7 +57,8 @@ NS_START(cosm, hal, ros, sensors);
 class lidar_sensor : public rer::client<lidar_sensor>,
                      public chros::sensors::ros_subscriber_sensor {
  public:
-  explicit lidar_sensor(const cros::topic& robot_ns);
+  lidar_sensor(const cros::topic& robot_ns,
+               const chsensors::config::proximity_sensor_config* const config);
 
   /* move constructible/assignable to work with the saa subsystem */
   lidar_sensor(lidar_sensor&& other);
@@ -83,6 +85,7 @@ class lidar_sensor : public rer::client<lidar_sensor>,
   void callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 
   /* clang-format off */
+  bool                   m_use_exp{true};
   sensor_msgs::LaserScan m_scan{};
   /* clang-format off */
 };
