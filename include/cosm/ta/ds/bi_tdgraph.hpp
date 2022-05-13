@@ -99,15 +99,19 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
   void active_tab(bi_tab* active_tab) { m_active_tab = active_tab; }
 
   /**
-   * \brief Return a uuid for the active tab (really just an index in the vector
-   * of TABs).
+   * \brief Return a uuid for the active TAB (really just an index in the vector
+   * of TABs) or -1 if no active TAB.
    */
   RCPPSW_PURE int active_tab_id(void) const {
-    return std::distance(
-        m_tabs.begin(),
-        std::find_if(m_tabs.begin(), m_tabs.end(), [this](const auto& tab) {
-          return &tab == m_active_tab;
-        }));
+    auto it  = std::find_if(m_tabs.begin(),
+                            m_tabs.end(), [this](const auto& tab) {
+                                            return &tab == m_active_tab;
+                                          });
+    if (m_tabs.end() != it) {
+      return std::distance(m_tabs.begin(), it);
+    } else {
+      return -1;
+    }
   }
   /**
    * \brief Get the parent TAB for the argument (i.e. the TAB which has as a
@@ -148,4 +152,3 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
 };
 
 NS_END(ds, ta, cosm);
-

@@ -66,6 +66,9 @@ polled_task* tdgraph::find_vertex(int id) {
 } /* find_vertex() */
 
 int tdgraph::vertex_id(const polled_task* const v) const {
+  if (nullptr == v) {
+    return -1;
+  }
   auto it = find_vertex_impl(v);
   if (it == boost::vertices(m_impl).second) {
     ER_WARN("No such vertex %s found in graph", v->name().c_str());
@@ -75,6 +78,9 @@ int tdgraph::vertex_id(const polled_task* const v) const {
 } /* vertex_id() */
 
 int tdgraph::vertex_depth(const polled_task* const v) const {
+  if (nullptr == v) {
+    return -1;
+  }
   auto it = find_vertex_impl(v);
   if (it == boost::vertices(m_impl).second) {
     ER_WARN("No such vertex %s found in graph", v->name().c_str());

@@ -46,13 +46,25 @@ bi_tdgraph_metrics_collector::bi_tdgraph_metrics_collector(
  ******************************************************************************/
 void bi_tdgraph_metrics_collector::collect(const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const bi_tdgraph_metrics&>(metrics);
-  ++m_data.interval.depth_counts[m.current_task_depth()];
-  ++m_data.interval.task_counts[m.current_task_id()];
-  ++m_data.interval.tab_counts[m.current_task_tab()];
 
-  ++m_data.cum.depth_counts[m.current_task_depth()];
-  ++m_data.cum.task_counts[m.current_task_id()];
-  ++m_data.cum.tab_counts[m.current_task_tab()];
+  auto depth = m.current_task_depth();
+  auto id = m.current_task_id();
+  auto tab = m.current_task_tab();
+
+  if (-1 != depth) {
+    ++m_data.interval.depth_counts[m.current_task_depth()];
+    ++m_data.cum.depth_counts[m.current_task_depth()];
+  }
+
+  if (-1 != id) {
+    ++m_data.interval.task_counts[m.current_task_id()];
+    ++m_data.cum.task_counts[m.current_task_id()];
+  }
+
+  if (-1 != tab) {
+    ++m_data.interval.tab_counts[m.current_task_tab()];
+    ++m_data.cum.tab_counts[m.current_task_tab()];
+  }
 } /* collect() */
 
 void bi_tdgraph_metrics_collector::reset_after_interval(void) {

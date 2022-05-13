@@ -60,10 +60,10 @@ class bi_tdgraph_metrics : public virtual rmetrics::base_metrics {
   virtual int current_task_id(void) const = 0;
 
   /**
-   * \brief Return a uuid for the TAB that the current task belongs to.
+   * \brief Return a uuid for the TAB that the current task belongs to, or -1 if
+   * no current TAB.
    */
   virtual int current_task_tab(void) const = 0;
 };
 
 NS_END(metrics, ta, cosm);
-
