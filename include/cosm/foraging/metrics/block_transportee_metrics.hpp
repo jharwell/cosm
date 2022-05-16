@@ -77,4 +77,3 @@ class block_transportee_metrics : public rmetrics::base_metrics {
 };
 
 NS_END(metrics, foraging, cosm);
-

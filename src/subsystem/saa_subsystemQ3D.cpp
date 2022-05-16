@@ -88,8 +88,8 @@ ckin::odometry saa_subsystemQ3D::odometry(void) const {
   return sensing()->odometry()->reading();
 } /* odometry() */
 
-double saa_subsystemQ3D::max_speed(void) const {
-  return actuation()->governed_diff_drive()->max_speed();
-} /* max_speed() */
+double saa_subsystemQ3D::max_linear_speed(void) const {
+  return actuation()->governed_diff_drive()->max_linear_speed();
+} /* max_linear_speed() */
 
 NS_END(subsystem, cosm);

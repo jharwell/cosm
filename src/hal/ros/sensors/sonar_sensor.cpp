@@ -95,7 +95,7 @@ std::vector<chsensors::env_sensor_reading> sonar_sensor::readings(void) {
       continue;
     }
     for (auto& r : srv.response.readings) {
-      ER_INFO("Received reading: %f", r.value);
+      ER_DEBUG("Received reading: %f", r.value);
       if (r.value > 0) {
         ret.emplace_back(r.value);
       }

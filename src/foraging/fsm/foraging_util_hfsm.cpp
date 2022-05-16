@@ -213,6 +213,15 @@ RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
                           const);
 
 /*******************************************************************************
+ * Block Drop Metrics
+ ******************************************************************************/
+RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
+                          block_drop_strategy,
+                          m_strategies.block_drop,
+                          nullptr,
+                          const);
+
+/*******************************************************************************
  * Member Functions
  ******************************************************************************/
 void foraging_util_hfsm::inta_state_update(void) {

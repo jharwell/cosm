@@ -72,7 +72,7 @@ class saa_subsystemQ3D final : public steer2D::boid,
    * robot's current zenith angle.
    */
   ckin::odometry odometry(void) const override;
-  double max_speed(void) const override RCPPSW_PURE;
+  double max_linear_speed(void) const override RCPPSW_PURE;
 
   sensing_type* sensing(void) { return m_sensing.get(); }
   const sensing_type* sensing(void) const { return m_sensing.get(); }

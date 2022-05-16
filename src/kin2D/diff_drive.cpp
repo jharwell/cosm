@@ -37,7 +37,7 @@ diff_drive::diff_drive(const config::diff_drive_config* const config,
                        chactuators::diff_drive_actuator&& actuator)
     : ER_CLIENT_INIT("cosm.kin2D.diff_drive"),
       m_config(*config),
-      m_fsm(config->max_speed, config->soft_turn_max),
+      m_fsm(config),
       m_actuator(std::move(actuator)) {}
 
 /*******************************************************************************
@@ -50,7 +50,9 @@ void diff_drive::fsm_drive(const ckin::twist& delta) {
   rmath::range<rmath::radians> range(-m_config.soft_turn_max,
                                      m_config.soft_turn_max);
 
-  m_actuator.set_from_twist(m_fsm.configured_twist(), range, m_config.max_speed);
+  m_actuator.set_from_twist(m_fsm.configured_twist(),
+                            range,
+                            m_config.max_linear_speed);
 } /* fsm_drive() */
 
 NS_END(kin2D, cosm);

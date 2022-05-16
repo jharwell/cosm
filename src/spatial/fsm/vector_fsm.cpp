@@ -127,9 +127,9 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
    * recovery. You have to do this each timestep because the accumulated force
    * is reset at the end of the robot's control loop.
    */
-  rmath::vector2d force(
-      actuation()->actuator<kin2D::governed_diff_drive>()->max_speed() * 0.7,
-      rmath::radians(0.0));
+  auto diff_drive = actuation()->actuator<kin2D::governed_diff_drive>();
+  rmath::vector2d force(diff_drive->max_linear_speed() * 0.7,
+                        rmath::radians(0.0));
   saa()->steer_force2D().accum(force);
   return util_signal::ekHANDLED;
 }

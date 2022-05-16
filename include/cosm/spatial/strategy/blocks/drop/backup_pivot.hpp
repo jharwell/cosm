@@ -68,6 +68,11 @@ class backup_pivot : public rer::client<backup_pivot>,
   bool task_finished(void) const override final { return !m_task_running; }
   void task_execute(void) override final;
 
+  /* drop metrics */
+  const cssblocks::drop::base_drop* block_drop_strategy(void) const override {
+    return this;
+  }
+
   std::unique_ptr<base_drop> clone(void) const override {
     csfsm::fsm_params params {
       saa(),

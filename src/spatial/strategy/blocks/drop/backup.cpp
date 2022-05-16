@@ -66,11 +66,11 @@ void backup::task_execute(void) {
   ER_DEBUG("Backing up: steps=%zu,duration=%zu,speed=%f",
            m_steps.v(),
            m_duration.v(),
-           drive->max_speed());
+           drive->max_linear_speed());
 
   ckin::twist reverse = m_odom_start.twist;
 
-  reverse.linear.x(-drive->max_speed());
+  reverse.linear.x(-drive->max_linear_speed());
   reverse.angular.z(0);
 
   drive->fsm_drive(reverse);

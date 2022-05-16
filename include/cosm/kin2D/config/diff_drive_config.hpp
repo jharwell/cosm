@@ -43,16 +43,20 @@ NS_START(cosm, kin2D, config);
  */
 struct diff_drive_config final : public rconfig::base_config {
   /**
-   * Maximum angle difference between current and new heading that will not
-   * trigger a hard (in place) turn.
+   * \brief Maximum angle difference between current and new heading that will
+   * not trigger a hard (in place) turn.
    */
   rmath::radians soft_turn_max{};
 
   /**
-   * Maximum output of wheels (i.e. max wheel speed).
+   * \brief The maximum angular speed. Radians/s.
    */
-  double        max_speed{0.0};
+  double max_angular_speed{0.0};
+
+  /**
+   * \brief The maximum linear speed. M/s.
+   */
+  double max_linear_speed{0.0};
 };
 
 NS_END(config, kin2D, cosm);
-

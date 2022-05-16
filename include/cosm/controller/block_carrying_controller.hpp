@@ -28,6 +28,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/controller/block_detect_context.hpp"
+#include "cosm/spatial/strategy/blocks/metrics/drop_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -48,9 +49,8 @@ NS_START(cosm, controller);
  * \brief Defines the interface and common functionality for all controllers
  * which are capable of carrying blocks.
  */
-class block_carrying_controller {
+class block_carrying_controller : public cssblocks::metrics::drop_metrics {
  public:
-
   block_carrying_controller(void) = default;
   virtual ~block_carrying_controller(void);
 

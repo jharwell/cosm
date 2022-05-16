@@ -107,13 +107,13 @@ class free_block_pickup
     if (controller.block_detect(ccontroller::block_detect_context::ekARENA)) {
       ER_INFO("Robot%d detects block", controller.entity_id().v());
       if (controller.is_carrying_block()) {
-        ER_INFO("Ignoring detected block--already carrying block");
+        ER_DEBUG("Ignoring detected block--already carrying block");
       } else {
         process_pickup(controller, t);
         return interactor_status_type::ekARENA_FREE_BLOCK_PICKUP;
       }
     } else {
-      ER_INFO("Robot%d: no block detected", controller.entity_id().v());
+      ER_DEBUG("Robot%d: no block detected", controller.entity_id().v());
       return interactor_status_type::ekNO_EVENT;
     }
   }

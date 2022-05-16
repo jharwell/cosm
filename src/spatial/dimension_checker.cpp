@@ -46,6 +46,11 @@ rmath::vector2d dimension_checker::odd_dsize(const rtypes::discretize_ratio& res
                                              const rmath::vector2d& to_check) {
   auto checked = to_check;
   auto ddims = rmath::dvec2zvec(to_check, res.v());
+
+  /*
+   * We arbitrarily choose to subtract, rather than add one unit of size if
+   * needed--Princple Of Least Surprise at work again!
+   */
   if (RCPPSW_IS_EVEN(ddims.x())) {
     checked.x(checked.x() - res.v());
   }

@@ -26,6 +26,7 @@
 #include "cosm/spatial/strategy/base_strategy.hpp"
 
 #include "cosm/spatial/strategy/blocks/config/drop_config.hpp"
+#include "cosm/spatial/strategy/blocks/metrics/drop_metrics.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -45,7 +46,8 @@ NS_START(cosm, spatial, strategy, blocks, drop);
  */
 
 class base_drop : public csstrategy::base_strategy,
-                  public rpprototype::clonable<base_drop> {
+                  public rpprototype::clonable<base_drop>,
+                  public cssblocks::metrics::drop_metrics {
  public:
   base_drop(const csfsm::fsm_params* params,
             const cssblocks::config::drop_config*,
@@ -57,7 +59,10 @@ class base_drop : public csstrategy::base_strategy,
   base_drop(base_drop&&) = delete;
   base_drop& operator=(base_drop&&) = delete;
 
- protected:
+  const cssblocks::drop::base_drop* block_drop_strategy(void) const override {
+    return this;
+  }
+
   const cssblocks::config::drop_config* config(void) const { return &mc_config; }
 
  private:

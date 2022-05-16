@@ -60,7 +60,7 @@ struct block_transporter_metrics_data : public rmetrics::base_data {
    * a way to justify accumulating already cumulative data again (it would have
    * required some additional changes/contortions elsewhere).
    */
-  block_transporter_metrics_data&  operator+=(const  block_transporter_metrics_data &rhs) {
+  block_transporter_metrics_data& operator+=(const block_transporter_metrics_data &rhs) {
     ral::mt_accum(this->interval.n_phototaxiing_to_goal_including_ca,
                   rhs.interval.n_phototaxiing_to_goal_including_ca);
     ral::mt_accum(this->interval.n_phototaxiing_to_goal_no_ca,

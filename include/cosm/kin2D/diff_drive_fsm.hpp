@@ -29,6 +29,7 @@
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/patterns/fsm/simple_fsm.hpp"
+#include "cosm/kin2D/config/diff_drive_config.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/kin/twist.hpp"
@@ -51,14 +52,7 @@ NS_START(cosm, kin2D);
  */
 class diff_drive_fsm final : public rpfsm::simple_fsm {
  public:
-  /**
-   * \brief Initialize the FSM.
-   *
-   * \param max_speed Maximum wheel velocity.
-   * \param soft_turn_max Maximum angle difference between current and new
-   *                      heading that will not trigger a hard (in place) turn.
-   */
-  diff_drive_fsm(double max_speed, const rmath::radians& soft_turn_max);
+  diff_drive_fsm(const ckin2D::config::diff_drive_config* config);
 
   /* move only constructible/assignable to work with the saa subsystem */
   diff_drive_fsm(diff_drive_fsm&&);
@@ -145,9 +139,9 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
     return &mc_state_map[index];
   }
   /* clang-format off */
-  const double              mc_max_speed;
-  const rmath::radians      mc_soft_turn_max;
-  ckin::twist               m_twist{};
+  const config::diff_drive_config mc_config;
+
+  ckin::twist                     m_twist{};
 
   RCPPSW_FSM_DECLARE_STATE_MAP(state_map,
                         mc_state_map,

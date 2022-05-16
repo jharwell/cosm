@@ -53,10 +53,10 @@ class boid {
   virtual ckin::odometry odometry(void) const = 0;
 
   /**
-   * \brief Should return the maximum speed of the entity. This can vary in
-   * time, if desired.
+   * \brief Should return the maximum linear speed of the entity. This can vary
+   * in time, if desired.
    */
-  virtual double max_speed(void) const = 0;
+  virtual double max_linear_speed(void) const = 0;
 };
 
 NS_END(steer2D, cosm);

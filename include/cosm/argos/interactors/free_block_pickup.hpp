@@ -294,4 +294,3 @@ class free_block_pickup
 };
 
 NS_END(interactors, argos, cosm);
-

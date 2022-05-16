@@ -49,7 +49,8 @@ void cache_extent_set::visit(cads::arena_grid& grid) {
   for (size_t i = xspan.lb(); i <= xspan.ub(); ++i) {
     for (size_t j = yspan.lb(); j <= yspan.ub(); ++j) {
       auto dcoord = rmath::vector2z(i, j);
-      RCPPSW_UNUSED auto rcoord = rmath::zvec2dvec(dcoord, grid.resolution().v());
+      RCPPSW_UNUSED auto rcoord = rmath::zvec2dvec(dcoord,
+                                                   grid.resolution().v());
       auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
 
       ER_CONDW(!m_cache->contains_point(rcoord),

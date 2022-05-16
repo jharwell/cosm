@@ -215,4 +215,3 @@ using diff_drive_actuator = diff_drive_actuator_impl<::argos::CCI_PiPuckDifferen
 #endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, argos, hal, cosm);
-

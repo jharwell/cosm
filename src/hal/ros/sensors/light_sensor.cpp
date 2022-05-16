@@ -93,7 +93,7 @@ std::vector<light_sensor::reading_type> light_sensor::readings(void) {
   }
 
   for (auto& r : srv.response.readings) {
-    ER_INFO("Received reading: %f -> %f", r.angle, r.intensity);
+    ER_DEBUG("Received reading: %f -> %f", r.angle, r.intensity);
     if (r.intensity > 0) {
       ret.push_back({ r.intensity, rmath::radians(r.angle) });
     }

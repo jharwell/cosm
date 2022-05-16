@@ -61,4 +61,3 @@ class block_transporter_metrics_topic_sink final
 };
 
 NS_END(metrics, fsm, ros, cosm);
-

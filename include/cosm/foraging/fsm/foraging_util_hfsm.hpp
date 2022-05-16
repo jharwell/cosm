@@ -28,6 +28,7 @@
 #include "cosm/spatial/fsm/util_hfsm.hpp"
 
 #include "cosm/spatial/strategy/nest/metrics/acq_metrics.hpp"
+#include "cosm/spatial/strategy/blocks/metrics/drop_metrics.hpp"
 #include "cosm/foraging/fsm/strategy_set.hpp"
 
 /*******************************************************************************
@@ -51,6 +52,7 @@ NS_START(cosm, foraging, fsm);
  */
 class foraging_util_hfsm : public csfsm::util_hfsm,
                            public cssnest::metrics::acq_metrics,
+                           public cssblocks::metrics::drop_metrics,
                            public rer::client<foraging_util_hfsm> {
  public:
   foraging_util_hfsm(const csfsm::fsm_params* params,
@@ -63,12 +65,24 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
   foraging_util_hfsm(const foraging_util_hfsm&) = delete;
   foraging_util_hfsm& operator=(const foraging_util_hfsm&) = delete;
 
+  /* nest acquisition metrics */
+  RCPPSW_WRAP_DECL_OVERRIDE(const cssnest::acq::base_acq*,
+                            nest_acq_strategy,
+                            const);
+
+  /* block drop metrics */
+  RCPPSW_WRAP_DECL_OVERRIDE(const cssblocks::drop::base_drop*,
+                            block_drop_strategy,
+                            const);
+
  protected:
   struct nest_transport_data : public rpfsm::event_data {
     explicit nest_transport_data(const rmath::vector2d& in)
         : nest_loc(in) {}
     rmath::vector2d nest_loc;
   };
+
+  strategy_set& strategies(void) { return m_strategies; }
 
   /**
    * \brief Update the \ref interference_tracker state and applies the avoidance
@@ -80,13 +94,6 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
    * \brief Update the \ref nest_zone_tracker state.
    */
   void nz_state_update(void);
-
-  strategy_set& strategies(void) { return m_strategies; }
-
-  /* nest_acq metrics */
-  RCPPSW_WRAP_DECL_OVERRIDE(const cssnest::acq::base_acq*,
-                            nest_acq_strategy,
-                            const);
 
   /**
    * \brief Robots entering this state will return to the nest using the

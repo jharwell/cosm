@@ -75,7 +75,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(explore_for_goal_fsm, explore) {
   if (ekST_EXPLORE != last_state()) {
     ER_DEBUG("Executing ekST_EXPLORE");
   }
-  ER_INFO("Behavior: %p, duration met? %d, goal detect? %d",
+  ER_TRACE("Behavior: %p, duration met? %d, goal detect? %d",
           m_behavior.get(),
           m_behavior->min_duration_met(),
           m_goal_detect());

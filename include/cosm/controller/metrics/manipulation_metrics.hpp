@@ -60,4 +60,3 @@ class manipulation_metrics : public virtual rmetrics::base_metrics {
 };
 
 NS_END(metrics, controller, cosm);
-

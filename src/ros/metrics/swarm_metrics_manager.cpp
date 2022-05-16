@@ -333,7 +333,6 @@ void swarm_metrics_manager::collect(
   ER_DEBUG("Received '%s' metrics, seq=%u",
            cmspecs::spatial::kInterferenceCounts.scoped().c_str(),
            msg->header.seq);
-  printf("RECEIVED: n_exp_interference: %zu\n", msg->data.cum.n_exp_interference);
   collector->collect(msg->data);
 } /* collect() */
 

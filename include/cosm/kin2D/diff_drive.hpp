@@ -68,7 +68,9 @@ class diff_drive : public rer::client<diff_drive> {
    */
   void fsm_drive(const ckin::twist& delta);
 
-  double max_speed(void) const { return m_config.max_speed; }
+  double max_linear_speed(void) const { return m_config.max_linear_speed; }
+
+  double max_angular_speed(void) const { return m_config.max_angular_speed; }
 
  private:
   /* clang-format off */

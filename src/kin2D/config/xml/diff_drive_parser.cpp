@@ -40,13 +40,15 @@ void diff_drive_parser::parse(const ticpp::Element& node) {
   ticpp::Element wnode = node_get(node, kXMLRoot);
   m_config = std::make_unique<config_type>();
 
-  XML_PARSE_ATTR(wnode, m_config, max_speed);
+  XML_PARSE_ATTR(wnode, m_config, max_linear_speed);
+  XML_PARSE_ATTR(wnode, m_config, max_angular_speed);
   XML_PARSE_ATTR(wnode, m_config, soft_turn_max);
 } /* parse() */
 
 bool diff_drive_parser::validate(void) const {
   ER_CHECK(m_config->soft_turn_max.v() > 0.0, "Soft turn max must be > 0");
-  ER_CHECK(m_config->max_speed > 0.0, "Max speed must be > 0");
+  ER_CHECK(m_config->max_linear_speed > 0.0, "Max linear speed must be > 0");
+  ER_CHECK(m_config->max_angular_speed > 0.0, "Max angular speed must be > 0");
   return true;
 
 error:

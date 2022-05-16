@@ -23,6 +23,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <array>
+
 #include "rcppsw/types/timestep.hpp"
 
 #include "cosm/controller/metrics/manipulation_metrics.hpp"

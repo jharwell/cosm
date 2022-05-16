@@ -34,19 +34,16 @@ NS_START(cosm, kin2D);
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-diff_drive_fsm::diff_drive_fsm(double max_speed,
-                               const rmath::radians& soft_turn_max)
+diff_drive_fsm::diff_drive_fsm(const config::diff_drive_config* const config)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
-      mc_max_speed(max_speed),
-      mc_soft_turn_max(soft_turn_max),
+      mc_config(*config),
       RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
 
 diff_drive_fsm::diff_drive_fsm(diff_drive_fsm&& other)
     : rpfsm::simple_fsm(ekST_MAX_STATES),
-      mc_max_speed(other.mc_max_speed),
-      mc_soft_turn_max(other.mc_soft_turn_max),
+      mc_config(other.mc_config),
       RCPPSW_FSM_DEFINE_STATE_MAP(mc_state_map,
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&soft_turn),
                                   RCPPSW_FSM_STATE_MAP_ENTRY(&hard_turn)) {}
@@ -69,7 +66,8 @@ void diff_drive_fsm::change_velocity(const ckin::twist& delta) {
  * States
  ******************************************************************************/
 RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
-  rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
+  rmath::range<rmath::radians> range(-mc_config.soft_turn_max,
+                                     mc_config.soft_turn_max);
 
   rmath::radians angle = data->angle;
   /* too large of a direction change for soft turn--go to hard turn */
@@ -77,13 +75,15 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, soft_turn, turn_data* data) {
     internal_event(ekST_HARD_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
-  double clamped = std::min(data->speed, mc_max_speed);
-  configure_twist(clamped, data->angle);
+  double clamped_lin = std::min(data->speed, mc_config.max_linear_speed);
+  double clamped_ang = std::min(data->angle.v(), mc_config.max_angular_speed);
+  configure_twist(clamped_lin, rmath::radians(clamped_ang));
 
   return rpfsm::event_signal::ekHANDLED;
 }
 RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
-  rmath::range<rmath::radians> range(-mc_soft_turn_max, mc_soft_turn_max);
+  rmath::range<rmath::radians> range(-mc_config.soft_turn_max,
+                                     mc_config.soft_turn_max);
 
   rmath::radians angle = data->angle;
 
@@ -92,8 +92,9 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
     internal_event(ekST_SOFT_TURN);
     return rpfsm::event_signal::ekHANDLED;
   }
-  /* hard turn=spin in place */
-  configure_twist(0, data->angle);
+  /* hard turn=spin in place. But not too fast! */
+  double clamped_ang = std::min(data->angle.v(), mc_config.max_angular_speed);
+  configure_twist(0, rmath::radians(clamped_ang));
 
   return rpfsm::event_signal::ekHANDLED;
 }
