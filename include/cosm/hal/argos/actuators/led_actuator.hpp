@@ -79,7 +79,7 @@ NS_END(detail);
 template<typename TActuator>
 class led_actuator_impl : public rer::client<led_actuator_impl<TActuator>>,
                           public chargos::actuators::argos_actuator<TActuator> {
-   private:
+ private:
   using chargos::actuators::argos_actuator<TActuator>::decoratee;
 
  public:
@@ -190,4 +190,3 @@ class led_actuator {};
 #endif /* COSM_HAL_TARGET */
 
 NS_END(actuators, argos, hal, cosm);
-

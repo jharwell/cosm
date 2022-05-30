@@ -130,8 +130,10 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
-  collect(cmspecs::sensors::kBattery.scoped(),
-          *controller->saa()->sensing()->battery());
+  auto battery = controller->saa()->sensing()->battery();
+  if (nullptr != battery) {
+    collect(cmspecs::sensors::kBattery.scoped(), *battery);
+  }
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_controller(
@@ -145,8 +147,10 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
-  collect(cmspecs::sensors::kBattery.scoped(),
-          *controller->saa()->sensing()->battery());
+  auto battery = controller->saa()->sensing()->battery();
+  if (nullptr != battery) {
+    collect(cmspecs::sensors::kBattery.scoped(), *battery);
+  }
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_arena(

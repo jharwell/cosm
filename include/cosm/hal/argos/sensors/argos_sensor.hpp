@@ -82,4 +82,3 @@ class argos_sensor : public rer::client<argos_sensor<TSensor>>,
 };
 
 NS_END(sensors, argos, hal, cosm);
-

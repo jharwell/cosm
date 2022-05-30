@@ -58,15 +58,22 @@ void cache_extent_clear::visit(cads::arena_grid& grid) {
       rmath::vector2z c = rmath::vector2z(i, j);
       auto& cell = grid.access<cads::arena_grid::kCell>(i, j);
       if (c != m_victim->dcenter2D()) {
-        ER_ASSERT(cell.state_in_cache_extent(),
-                  "Cell@%s not in CACHE_EXTENT [state=%d]",
-                  rcppsw::to_string(c).c_str(),
-                  cell.fsm().current_state());
+        /*
+         * These need to be warnings, not assert()s, because we can get here
+         * when a dynamically created cache is found to be bad, which might
+         * happen as a result of a bad center due to floating point
+         * representation errors. In that case, we want to clear everything
+         * out.
+         */
+        ER_CONDW(!cell.state_in_cache_extent(),
+                 "Cell@%s not in CACHE_EXTENT [state=%d]--bad cache center?",
+                 rcppsw::to_string(c).c_str(),
+                 cell.fsm().current_state());
 
-        ER_ASSERT(cell.cache() == m_victim,
-                  "Cache in cell@%s not victim cache%d",
-                  rcppsw::to_string(c).c_str(),
-                  m_victim->id().v());
+        ER_CONDW(!(cell.cache() == m_victim),
+                 "Cache in cell@%s not victim cache%d--bad cache center",
+                 rcppsw::to_string(c).c_str(),
+                 m_victim->id().v());
 
         cdops::cell2D_empty_visitor e(c);
         e.visit(cell);

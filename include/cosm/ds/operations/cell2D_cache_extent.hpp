@@ -90,4 +90,3 @@ NS_END(detail);
 using cell2D_cache_extent_visitor = rpvisitor::filtered_visitor<detail::cell2D_cache_extent>;
 
 NS_END(operations, ds, cosm);
-
