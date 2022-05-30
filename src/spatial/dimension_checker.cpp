@@ -46,7 +46,6 @@ rmath::vector2d dimension_checker::odd_dsize(const rtypes::discretize_ratio& res
                                              const rmath::vector2d& to_check) {
   auto checked = to_check;
   auto ddims = rmath::dvec2zvec(to_check, res.v());
-
   /*
    * We arbitrarily choose to subtract, rather than add one unit of size if
    * needed--Princple Of Least Surprise at work again!
@@ -75,13 +74,29 @@ dimension_checker::even_multiple(const rtypes::discretize_ratio& res,
 rtypes::spatial_dist
 dimension_checker::odd_dsize(const rtypes::discretize_ratio& res,
                              const rtypes::spatial_dist& to_check) {
-  auto checked = to_check;
-
-  auto rdims = rmath::vector2d(to_check.v(), to_check.v());
+  /*
+   * Add a TINY bit of extra padding here to fix floating point representation
+   * errors.
+   */
+  auto checked = to_check + rmath::kDOUBLE_EPSILON;
+  auto rdims = rmath::vector2d(checked.v(), checked.v());
   auto ddims = rmath::dvec2zvec(rdims, res.v());
 
   if (RCPPSW_IS_EVEN(ddims.x()) || RCPPSW_IS_EVEN(ddims.y())) {
-    checked -= res.v();
+    auto checked_sub = checked;
+    checked_sub -= res.v();
+    rdims = rmath::vector2d(checked_sub.v(), checked_sub.v());
+    ddims = rmath::dvec2zvec(rdims, res.v());
+    if (RCPPSW_IS_ODD(ddims.x()) && RCPPSW_IS_ODD(ddims.y())) {
+      return checked_sub;
+    }
+    auto checked_add = checked;
+    checked_add += res.v();
+    rdims = rmath::vector2d(checked_add.v(), checked_add.v());
+    ddims = rmath::dvec2zvec(rdims, res.v());
+    if (RCPPSW_IS_ODD(ddims.x()) && RCPPSW_IS_ODD(ddims.y())) {
+      return checked_add;
+    }
   }
   return checked;
 } /* odd_dsize() */

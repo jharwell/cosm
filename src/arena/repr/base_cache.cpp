@@ -43,6 +43,12 @@ base_cache::base_cache(const params& p)
           rtypes::constants::kNoUUID == p.id ? rtypes::type_uuid(m_next_id++)
                                              : p.id,
           rmath::vector2d(p.dimension.v(), p.dimension.v()),
+          /*
+           * We add a TINY amount here to offset any floating point
+           * representation errors which can arise from the subtraction (even
+           * though we already checked and made sure the dimension would result
+           * in an odd dsize cache, we still need to do this).
+           */
           p.center - rmath::vector2d(p.dimension.v(), p.dimension.v()) / 2.0 +
               rmath::vector2d(rmath::kDOUBLE_EPSILON, rmath::kDOUBLE_EPSILON),
           p.resolution),
