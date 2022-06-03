@@ -94,6 +94,7 @@ class fs_output_manager : public rmetrics::fs_output_manager,
    * - \ref specs::spatial::kMovement
    * - \ref specs::spatial::kInterferenceCounts
    * - \ref specs::spatial::kInterferenceLocs2D
+   * - \ref specs::sensors::kBattery
    */
   void collect_from_controller(const ccontroller::base_controller2D* controller);
 

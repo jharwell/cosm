@@ -128,7 +128,7 @@ XML configuration:
   ``CRW`` ].
 
 ``strategy/nest``
--------------------
+-----------------
 
 - Required child attributes if present: none.
 - Required child tags if present: [ ``acq``, ``exit`` ].

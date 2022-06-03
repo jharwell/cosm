@@ -97,12 +97,12 @@ class base_controllerQ3D : public base_controller,
   rmath::radians heading2D(void) const RCPPSW_PURE;
 
   void mdc_ts_update(void) const override final;
+  const class subsystem::saa_subsystemQ3D* saa(void) const { return m_saa.get(); }
 
  protected:
   class subsystem::saa_subsystemQ3D* saa(void) {
     return m_saa.get();
   }
-  const class subsystem::saa_subsystemQ3D* saa(void) const { return m_saa.get(); }
   void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
 
   rtypes::spatial_dist ts_distance_impl(void) const RCPPSW_PURE;

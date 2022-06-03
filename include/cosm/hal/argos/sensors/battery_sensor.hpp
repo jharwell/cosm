@@ -22,12 +22,15 @@
 /******************************************************************************
  * Includes
  ******************************************************************************/
+#include <vector>
 #include <argos3/plugins/robots/generic/control_interface/ci_battery_sensor.h>
 
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/battery_sensor_reading.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics.hpp"
 
 /******************************************************************************
  * Namespaces/Decls
@@ -64,6 +67,7 @@ NS_END(detail);
  */
 template <typename TSensor>
 class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor>>,
+                                  public chsensors::metrics::battery_metrics,
                                   public chargos::sensors::argos_sensor<TSensor> {
  private:
   using chargos::sensors::argos_sensor<TSensor>::decoratee;
@@ -75,19 +79,6 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
   using chargos::sensors::argos_sensor<impl_type>::reset;
   using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  /**
-   * \brief A battery sensor reading.
-   *
-   * The first argument is the amount of battery left as a percent between 0 and
-   * 1, and the second argument is the amount of time left for the robot.
-   *
-   * Note that these are different representations of the same essential
-   * information: how much energy the robot current has left.
-   */
-  struct sensor_reading {
-    double availible_charge;
-    double time_left;
-  };
 
   explicit battery_sensor_impl(impl_type * const sensor)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.battery"),
@@ -99,12 +90,17 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
   battery_sensor_impl& operator=(battery_sensor_impl&&) = default;
   battery_sensor_impl(battery_sensor_impl&&) = default;
 
+  /* Battery metrics */
+  double percent_remaining(void) const override {
+    return readings()[0].percentage;
+  }
+
   /**
    * \brief Get the current battery sensor reading for the footbot robot.
    */
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_battery_sensor<U>::value)>
-  sensor_reading reading(void) const {
+  std::vector<chsensors::battery_sensor_reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -113,11 +109,15 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
               __FUNCTION__);
 
     auto temp = decoratee()->GetReading();
-    return {temp.AvailableCharge, temp.TimeLeft};
+
+    chsensors::battery_sensor_reading ret;
+    ret.percentage = temp.AvailableCharge;
+    ret.time_left = temp.TimeLeft;
+
+    return {ret};
   }
 };
 
 using battery_sensor = battery_sensor_impl<::argos::CCI_BatterySensor>;
 
 NS_END(sensors, argos, hal, cosm);
-

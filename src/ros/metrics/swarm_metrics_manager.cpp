@@ -52,6 +52,9 @@
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
 #include "cosm/spatial/metrics/movement_metrics_csv_sink.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_csv_sink.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
+#include "cosm/hal/ros/sensors/metrics/battery_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -105,7 +108,9 @@ void swarm_metrics_manager::register_standard(
       rmpl::identity<cspatial::metrics::movement_metrics_csv_sink>,
       rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
       rmpl::identity<cforaging::metrics::block_transportee_metrics_csv_sink>,
-      rmpl::identity<cspatial::metrics::interference_metrics_csv_sink> >;
+    rmpl::identity<cspatial::metrics::interference_metrics_csv_sink>,
+    rmpl::identity<chsensors::metrics::battery_metrics_csv_sink>
+    >;
 
   rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
                                rmetrics::file_sink_registerer>
@@ -120,6 +125,7 @@ void swarm_metrics_manager::register_standard(
   m_tracking.init(cmspecs::spatial::kInterferenceCounts.scoped());
   m_tracking.init(cmspecs::blocks::kTransporter.scoped());
   m_tracking.init(cmspecs::blocks::kTransportee.scoped());
+  m_tracking.init(cmspecs::sensors::kBattery.scoped());
 
   /* set ROS callbacks for metric collection */
   ::ros::NodeHandle n;
@@ -141,6 +147,11 @@ void swarm_metrics_manager::register_standard(
         this));
     m_subs.push_back(n.subscribe<crfmetrics::block_transportee_metrics_msg>(
         robot_ns / cmspecs::blocks::kTransportee.scoped(),
+        kQueueBufferSize,
+        &swarm_metrics_manager::collect,
+        this));
+    m_subs.push_back(n.subscribe<chros::sensors::metrics::battery_metrics_msg>(
+        robot_ns / cmspecs::sensors::kBattery.scoped(),
         kQueueBufferSize,
         &swarm_metrics_manager::collect,
         this));
@@ -332,6 +343,18 @@ void swarm_metrics_manager::collect(
                                msg->header.seq);
   ER_DEBUG("Received '%s' metrics, seq=%u",
            cmspecs::spatial::kInterferenceCounts.scoped().c_str(),
+           msg->header.seq);
+  collector->collect(msg->data);
+} /* collect() */
+
+void swarm_metrics_manager::collect(
+    const boost::shared_ptr<const chros::sensors::metrics::battery_metrics_msg>& msg) {
+  auto* collector = get<chsensors::metrics::battery_metrics_collector>(
+      cmspecs::sensors::kBattery.scoped());
+  m_tracking.update_on_receive(cmspecs::sensors::kBattery.scoped(),
+                               msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::sensors::kBattery.scoped().c_str(),
            msg->header.seq);
   collector->collect(msg->data);
 } /* collect() */

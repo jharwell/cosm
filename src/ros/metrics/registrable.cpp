@@ -32,6 +32,7 @@
 #include "cosm/spatial/metrics/interference_metrics_collector.hpp"
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -57,6 +58,10 @@ rmetrics::creatable_collector_set kStandard = {
   { typeid(cfmetrics::block_transportee_metrics_collector),
     cmspecs::blocks::kTransportee.xml(),
     cmspecs::blocks::kTransportee.scoped(),
+    rmetrics::output_mode::ekSTREAM | rmetrics::output_mode::ekAPPEND },
+  { typeid(chsensors::metrics::battery_metrics_collector),
+    cmspecs::sensors::kBattery.xml(),
+    cmspecs::sensors::kBattery.scoped(),
     rmetrics::output_mode::ekSTREAM | rmetrics::output_mode::ekAPPEND },
 };
 

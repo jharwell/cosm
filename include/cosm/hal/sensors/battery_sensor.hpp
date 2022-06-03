@@ -1,5 +1,5 @@
 /**
- * \file specs.hpp
+ * \file battery_sensor.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -23,70 +23,27 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "cosm/metrics/name_spec.hpp"
+#include "cosm/hal/hal.hpp"
+#include "cosm/cosm.hpp"
+
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+#include "cosm/hal/argos/sensors/battery_sensor.hpp"
+#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
+#include "cosm/hal/ros/sensors/battery_sensor.hpp"
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+NS_START(cosm, hal, sensors);
 
 /*******************************************************************************
- * Global Variables
+ * Class Definitions
  ******************************************************************************/
-extern name_spec kConvergence;
+#if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
+using battery_sensor = chargos::sensors::battery_sensor;
+#elif defined(COSM_HAL_TARGET_ROS_ROBOT)
+using battery_sensor = chros::sensors::battery_sensor;
+#endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
-NS_START(spatial);
-
-extern name_spec kMovement;
-extern name_spec kInterferenceCounts;
-extern name_spec kInterferenceLocs2D;
-extern name_spec kInterferenceLocs3D;
-extern name_spec kNestZone;
-extern name_spec kDistPosition2D;
-extern name_spec kDistPosition3D;
-
-NS_END(spatial);
-
-NS_START(sensors);
-extern name_spec kBattery;
-NS_END(sensors);
-
-NS_START(blocks);
-
-extern name_spec kDistributor;
-extern name_spec kMotion;
-extern name_spec kClusters;
-extern name_spec kTransporter;
-extern name_spec kTransportee;
-extern name_spec kAcqCounts;
-extern name_spec kAcqExploreLocs2D;
-extern name_spec kAcqLocs2D;
-extern name_spec kAcqExploreLocs3D;
-extern name_spec kAcqVectorLocs2D;
-extern name_spec kAcqVectorLocs3D;
-
-NS_END(blocks);
-
-NS_START(strategy);
-NS_START(nest);
-
-extern name_spec kAcq;
-
-NS_END(strategy);
-
-NS_END(strategy);
-
-NS_START(tv);
-
-extern name_spec kPopulation;
-extern name_spec kEnvironment;
-
-NS_END(tv);
-
-NS_START(tasks);
-
-extern name_spec kDistribution;
-
-NS_END(tasks);
-
-NS_END(specs, metrics, cosm);
+NS_END(sensors, hal, cosm);

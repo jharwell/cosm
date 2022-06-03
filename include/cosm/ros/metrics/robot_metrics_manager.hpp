@@ -77,6 +77,7 @@ class robot_metrics_manager :public rer::client<robot_metrics_manager>,
    *
    * - \ref cmspecs::spatial::kMovement
    * - \ref cmspecs::spatial::kInterferenceCounts
+   * - \ref cmspecs::sensors::kBattery
    */
   void collect_from_controller(const ccontroller::base_controller2D* controller);
 

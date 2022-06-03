@@ -40,6 +40,7 @@
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_msg.hpp"
 #include "cosm/ros/foraging/metrics/block_transportee_metrics_msg.hpp"
 #include "cosm/ros/foraging/metrics/block_cluster_metrics_msg.hpp"
+#include "cosm/hal/ros/sensors/metrics/battery_metrics_msg.hpp"
 #include "cosm/ros/metrics/msg_tracking_map.hpp"
 
 /*******************************************************************************
@@ -98,6 +99,8 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
    * - \ref cmspecs::blocks::kTransportee -> \ref
    *  cfmetrics::block_transportee_metrics
    * - \ref cmspecs::blocks::kAcqCounts -> \ref csmetrics::goal_acq_metrics
+   * - \ref cmspecs::sensors::kBattery -> \ref
+   *   chsensors::metrics::battery_metrics
    */
   void register_standard(const rmconfig::metrics_config* mconfig,
                          size_t n_robots);
@@ -124,6 +127,7 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
   void collect(const boost::shared_ptr<const crsmetrics::interference_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crfsm::metrics::block_transporter_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crfmetrics::block_transportee_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const chros::sensors::metrics::battery_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crfmetrics::block_cluster_metrics_msg>& msg);
 
 

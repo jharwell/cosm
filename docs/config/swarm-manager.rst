@@ -363,6 +363,14 @@ type for that category.
 
      -
 
+   * - ``battery_state``
+
+     - Diagnostic metrics for robot batteries.
+
+     - append, stream
+
+     -
+
 ``convergence``
 ===============
 

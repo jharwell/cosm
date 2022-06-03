@@ -85,6 +85,10 @@
 #include "cosm/spatial/strategy/nest/metrics/acq_metrics_csv_sink.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_csv_sink.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_csv_sink.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -126,6 +130,8 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
+  collect(cmspecs::sensors::kBattery.scoped(),
+          *controller->saa()->sensing()->battery());
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_controller(
@@ -139,6 +145,8 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
+  collect(cmspecs::sensors::kBattery.scoped(),
+          *controller->saa()->sensing()->battery());
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_arena(
@@ -160,7 +168,8 @@ void fs_output_manager::register_standard(
       rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
       rmpl::identity<cfmetrics::block_transportee_metrics_csv_sink>,
       rmpl::identity<csmetrics::goal_acq_metrics_csv_sink>,
-      rmpl::identity<csmetrics::interference_metrics_csv_sink>,
+    rmpl::identity<csmetrics::interference_metrics_csv_sink>,
+    rmpl::identity<chsensors::metrics::battery_metrics_csv_sink>,
     rmpl::identity<cssnest::metrics::acq_metrics_csv_sink>,
       rmpl::identity<ctvmetrics::population_dynamics_metrics_csv_sink>,
       rmpl::identity<csmetrics::nest_zone_metrics_csv_sink> >;
@@ -193,6 +202,10 @@ void fs_output_manager::register_standard(
     { typeid(cfsm::metrics::block_transporter_metrics_collector),
       cmspecs::blocks::kTransporter.xml(),
       cmspecs::blocks::kTransporter.scoped(),
+      rmetrics::output_mode::ekAPPEND },
+    { typeid(chsensors::metrics::battery_metrics_collector),
+      cmspecs::sensors::kBattery.xml(),
+      cmspecs::sensors::kBattery.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(cfmetrics::block_transportee_metrics_collector),
       cmspecs::blocks::kTransportee.xml(),

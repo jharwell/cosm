@@ -1,7 +1,7 @@
 /**
- * \file nest_zone_metrics_data.hpp
+ * \file battery_metrics_topic_sink.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,34 +23,41 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/metrics/base_data.hpp"
-#include "rcppsw/al/multithread.hpp"
+#include <string>
+
+#include "cosm/ros/metrics/topic_sink.hpp"
+#include "cosm/cosm.hpp"
+#include "cosm/hal/ros/sensors/metrics/battery_metrics_glue.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics, detail);
+namespace cosm::hal::sensors::metrics {
+class battery_metrics_collector;
+} /* namespace cosm::fsm::metrics */
+
+NS_START(cosm, hal, ros, sensors, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \brief Container for holding collected statistics. Must be atomic so counts
- * are valid in parallel metric collection contexts.
+ * \class battery_metrics_topic_sink
+ * \ingroup hal ros sensors metrics
+ *
+ * \brief Sink for \ref cfsm::metrics::battery_metrics and \ref
+ * chsensors::metrics::battery_metrics_collector to output metrics to a ROS
+ * topic.
  */
-struct nest_zone_metrics_data {
-  ral::mt_size_t n_in_nest{0};
-  ral::mt_size_t n_entered_nest{0};
-  ral::mt_size_t n_exited_nest{0};
-  ral::mt_size_t nest_duration{0};
-  ral::mt_size_t first_nest_entry_time{0};
+class battery_metrics_topic_sink final
+    : public cros::metrics::topic_sink<chros::sensors::metrics::battery_metrics_msg> {
+ public:
+  using collector_type = chsensors::metrics::battery_metrics_collector;
+
+  battery_metrics_topic_sink(const std::string& topic,
+                             const rmetrics::output_mode& mode,
+                             const rtypes::timestep& interval)
+      : topic_sink(topic, mode, interval) {}
 };
 
-NS_END(detail);
-
-struct nest_zone_metrics_data : public rmetrics::base_data {
-  detail::nest_zone_metrics_data interval{};
-  detail::nest_zone_metrics_data cum{};
-};
-
-NS_END(metrics, spatial, cosm);
+NS_END(metrics, sensors, ros, hal, cosm);

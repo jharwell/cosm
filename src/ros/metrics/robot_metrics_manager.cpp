@@ -47,6 +47,10 @@
 #include "cosm/spatial/metrics/interference_metrics_collector.hpp"
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
+#include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
+#include "cosm/hal/ros/sensors/metrics/battery_metrics_topic_sink.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -86,12 +90,15 @@ void robot_metrics_manager::collect_from_controller(
   collect(cmspecs::spatial::kMovement.scoped(), *controller);
   collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
+  collect(cmspecs::sensors::kBattery.scoped(),
+          *controller->saa()->sensing()->battery());
 } /* collect_from_controller() */
 
 void robot_metrics_manager::register_standard(
     const rmconfig::metrics_config* mconfig) {
   using sink_list = rmpl::typelist<
-      rmpl::identity<cros::spatial::metrics::movement_metrics_topic_sink>,
+    rmpl::identity<cros::spatial::metrics::movement_metrics_topic_sink>,
+    rmpl::identity<chros::sensors::metrics::battery_metrics_topic_sink>,
       rmpl::identity<cros::fsm::metrics::block_transporter_metrics_topic_sink>,
       rmpl::identity<cros::foraging::metrics::block_transportee_metrics_topic_sink>,
       rmpl::identity<cros::spatial::metrics::interference_metrics_topic_sink> >;

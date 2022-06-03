@@ -47,4 +47,3 @@ using odometry_sensor = chros::sensors::odometry_sensor;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
 NS_END(sensors, hal, cosm);
-

@@ -48,6 +48,7 @@ struct saa_names {
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
   static inline const std::string leds_saa = "leds";
   static inline const std::string position_sensor = "positioning";
+  static inline const std::string battery_sensor = "battery";
 #endif
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT

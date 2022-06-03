@@ -47,7 +47,7 @@ NS_START(cosm, hal, argos, subsystem);
  *
  * - \ref chargos::sensors::colored_blob_camera_sensor
  * - \ref chargos::sensors::light_sensor
- * - \ref chargos::sensors::battery_sensor
+ * - \ref chsensors::battery_sensor
  * - \ref chsensors::odometry_sensor
  * - \ref chargos::sensors::wifi_sensor
  * - \ref chsensors::proximity_sensor
@@ -93,10 +93,10 @@ class sensing_subsystemQ3D :
                            const);
 
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chargos::sensors::battery_sensor,
+                           chsensors::battery_sensor,
                            battery);
   COSM_HAL_SENSOR_ACCESSOR(robot_sensor_types,
-                           chargos::sensors::battery_sensor,
+                           chsensors::battery_sensor,
                            battery,
                            const);
 

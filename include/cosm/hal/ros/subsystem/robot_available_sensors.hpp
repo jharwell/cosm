@@ -29,6 +29,7 @@
 #include "cosm/hal/sensors/odometry_sensor.hpp"
 #include "cosm/hal/sensors/proximity_sensor.hpp"
 #include "cosm/hal/sensors/env_sensor.hpp"
+#include "cosm/hal/sensors/battery_sensor.hpp"
 
 #if(COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 #include "cosm/hal/ros/sensors/light_sensor.hpp"
@@ -45,12 +46,13 @@ NS_START(cosm, hal, ros, subsystem);
  ******************************************************************************/
 #if(COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 #define COSM_HAL_ROBOT_AVAILABLE_SENSORS             \
-  chros::sensors::light_sensor,                 \
-  chros::sensors::lidar_sensor,                 \
-  chros::sensors::sonar_sensor,                 \
-  chros::sensors::odometry_sensor,              \
-  chsensors::proximity_sensor,                  \
-  chsensors::env_sensor
+  chros::sensors::light_sensor,                      \
+    chros::sensors::lidar_sensor,                    \
+    chsensors::battery_sensor,                       \
+    chros::sensors::sonar_sensor,                    \
+    chros::sensors::odometry_sensor,                 \
+    chsensors::proximity_sensor,                     \
+    chsensors::env_sensor
 #endif
 
 

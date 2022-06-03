@@ -46,6 +46,10 @@ name_spec kDistPosition2D = { "spatial_dist_pos2D", "spatial/dist/pos2D" };
 name_spec kDistPosition3D = { "spatial_dist_pos3D", "spatial/dist/pos3D" };
 NS_END(spatial);
 
+NS_START(sensors);
+name_spec kBattery = { "battery_state", "sensors/battery"};
+NS_END(sensors);
+
 NS_START(blocks);
 
 name_spec kDistributor = { "block_distributor", "blocks/distributor" };

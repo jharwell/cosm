@@ -1,7 +1,7 @@
 /**
- * \file nest_zone_metrics_data.hpp
+ * \file battery_metrics_collector.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2020 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,34 +23,51 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/metrics/base_data.hpp"
-#include "rcppsw/al/multithread.hpp"
+#include <string>
+#include <list>
+#include <memory>
+
+#include "rcppsw/metrics/base_collector.hpp"
+
+#include "cosm/hal/sensors/metrics/battery_metrics_data.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics, detail);
+NS_START(cosm, hal, sensors, metrics);
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \brief Container for holding collected statistics. Must be atomic so counts
- * are valid in parallel metric collection contexts.
+ * \class battery_metrics_collector
+ * \ingroup hal senosrs metrics
+ *
+ * \brief Collector for \ref battery_metrics.
+ *
+ * Metrics CAN be collected in parallel from robots; concurrent updates to the
+ * gathered stats are supported.
  */
-struct nest_zone_metrics_data {
-  ral::mt_size_t n_in_nest{0};
-  ral::mt_size_t n_entered_nest{0};
-  ral::mt_size_t n_exited_nest{0};
-  ral::mt_size_t nest_duration{0};
-  ral::mt_size_t first_nest_entry_time{0};
+class battery_metrics_collector final : public rmetrics::base_collector {
+ public:
+  /**
+   * \param sink The metrics sink to use.
+   */
+  explicit battery_metrics_collector(std::unique_ptr<rmetrics::base_sink> sink);
+
+  /* base_collector overrides */
+  void collect(const rmetrics::base_metrics& metrics) override;
+  void reset_after_interval(void) override;
+  const rmetrics::base_data* data(void) const override { return &m_data; }
+
+#if defined(COSM_PAL_TARGET_ROS)
+  void collect(const battery_metrics_data& data) { m_data += data; }
+#endif
+
+ private:
+  /* clang-format off */
+  battery_metrics_data m_data{};
+  /* clang-format on */
 };
 
-NS_END(detail);
-
-struct nest_zone_metrics_data : public rmetrics::base_data {
-  detail::nest_zone_metrics_data interval{};
-  detail::nest_zone_metrics_data cum{};
-};
-
-NS_END(metrics, spatial, cosm);
+NS_END(metrics, sensors, hal, cosm);

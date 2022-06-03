@@ -1,7 +1,7 @@
 /**
- * \file nest_zone_metrics_data.hpp
+ * \file battery_metrics_csv_sink.hpp
  *
- * \copyright 2021 John Harwell, All rights reserved.
+ * \copyright 2018 John Harwell, All rights reserved.
  *
  * This file is part of COSM.
  *
@@ -23,34 +23,50 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/metrics/base_data.hpp"
-#include "rcppsw/al/multithread.hpp"
+#include <memory>
+#include <string>
+#include <list>
+
+#include "rcppsw/metrics/csv_sink.hpp"
+
+#include "cosm/cosm.hpp"
 
 /*******************************************************************************
- * Namespaces/Decls
+ * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics, detail);
+NS_START(cosm, hal, sensors, metrics);
+class battery_metrics_collector;
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \brief Container for holding collected statistics. Must be atomic so counts
- * are valid in parallel metric collection contexts.
+ * \class battery_metrics_csv_sink
+ * \ingroup hal sensors metrics
+ *
+ * \brief Sink for \ref battery_metrics and \ref
+ * battery_metrics_collector to output metrics to .csv.
  */
-struct nest_zone_metrics_data {
-  ral::mt_size_t n_in_nest{0};
-  ral::mt_size_t n_entered_nest{0};
-  ral::mt_size_t n_exited_nest{0};
-  ral::mt_size_t nest_duration{0};
-  ral::mt_size_t first_nest_entry_time{0};
+class battery_metrics_csv_sink final
+    : public rer::client<battery_metrics_csv_sink>,
+      public rmetrics::csv_sink {
+ public:
+  using collector_type = battery_metrics_collector;
+
+  /**
+   * \brief \see rmetrics::csv_sink.
+   */
+  battery_metrics_csv_sink(fs::path fpath_no_ext,
+                            const rmetrics::output_mode& mode,
+                            const rtypes::timestep& interval);
+
+  /* csv_sink overrides */
+  std::list<std::string> csv_header_cols(
+      const rmetrics::base_data* data) const override;
+
+  boost::optional<std::string> csv_line_build(
+      const rmetrics::base_data* data,
+      const rtypes::timestep& t) override;
 };
 
-NS_END(detail);
-
-struct nest_zone_metrics_data : public rmetrics::base_data {
-  detail::nest_zone_metrics_data interval{};
-  detail::nest_zone_metrics_data cum{};
-};
-
-NS_END(metrics, spatial, cosm);
+NS_END(metrics, sensors, hal, cosm);
