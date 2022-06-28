@@ -61,25 +61,34 @@ class argos_actuator : public rer::client<argos_actuator<TActuator>>,
   argos_actuator& operator=(argos_actuator&&) = default;
 
   void enable(void) override {
-    ER_ASSERT(nullptr != decoratee(),
+    ER_CHECK(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
     m_enabled = true;
+
+ error:
+    return;
   }
 
   void disable(void) override {
-    ER_ASSERT(nullptr != decoratee(),
+    ER_CHECK(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
     reset();
     m_enabled = false;
+
+ error:
+    return;
   }
 
   void reset(void) override {
-    ER_ASSERT(nullptr != decoratee(),
+    ER_CHECK(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
     decoratee()->Reset();
+
+ error:
+    return;
   }
 
   bool is_enabled(void) const override { return m_enabled; }

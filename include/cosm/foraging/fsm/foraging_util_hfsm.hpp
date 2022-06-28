@@ -137,9 +137,14 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
 
   /**
    * \brief A simple entry state for leaving nest, used to set LED colors for
-   * visualization purposes and disable block detection
+   * visualization purposes and enable light sensors.
    */
   RCPPSW_HFSM_ENTRY_DECLARE_ND(foraging_util_hfsm, entry_leaving_nest);
+
+  /**
+   * \brief A simple entry state for leaving nest, used to enable light sensors.
+   */
+  RCPPSW_HFSM_EXIT_DECLARE(foraging_util_hfsm, exit_leaving_nest);
 
   /**
    * \brief Exit state for returning to nest (i.e. when the robot arrives in the

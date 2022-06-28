@@ -86,6 +86,10 @@ void robot_metrics_manager::collect_from_controller(
   collect(cmspecs::spatial::kMovement.scoped(), *controller);
   collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
+  auto battery = controller->saa()->sensing()->battery();
+  if (nullptr != battery) {
+    collect(cmspecs::sensors::kBattery.scoped(), *battery);
+  }
 } /* collect_from_controller() */
 
 void robot_metrics_manager::register_standard(

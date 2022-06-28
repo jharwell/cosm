@@ -146,6 +146,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
         saa()->actuation()->governed_diff_drive()->reset();
         event_data_hold(false);
         nz_state_update();
+
         return csfsm::util_signal::ekENTERED_NEST;
       } else { /* we are somehow outside the nest--try again */
         ER_DEBUG("Outside nest: Nest acquisition strategy reset");
@@ -191,6 +192,11 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
 } /* transport_to_nest() */
 
 RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_leaving_nest) {
+  sensing()->light()->enable();
+  actuation()->diagnostics()->emit(chactuators::diagnostics::ekLEAVING_NEST);
+}
+RCPPSW_HFSM_EXIT_DEFINE(foraging_util_hfsm, exit_leaving_nest) {
+  sensing()->light()->disable();
   actuation()->diagnostics()->emit(chactuators::diagnostics::ekLEAVING_NEST);
 }
 
@@ -200,7 +206,7 @@ RCPPSW_HFSM_ENTRY_DEFINE_ND(foraging_util_hfsm, entry_transport_to_nest) {
 }
 
 RCPPSW_HFSM_EXIT_DEFINE(foraging_util_hfsm, exit_transport_to_nest) {
-  /* sensing()->light()->disable(); */
+  sensing()->light()->disable();
 }
 
 /*******************************************************************************

@@ -183,4 +183,3 @@ using colored_blob_camera_sensor =
     colored_blob_camera_sensor_impl<::argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
 
 NS_END(sensors, argos, hal, cosm);
-

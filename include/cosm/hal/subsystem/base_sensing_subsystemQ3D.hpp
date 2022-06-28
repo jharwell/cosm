@@ -101,12 +101,20 @@ class base_sensing_subsystemQ3D : private chsubsystem::base_subsystem {
 
   template <typename T>
   const T* sensor(void) const {
-    return &std::get<T>(m_sensors.find(typeid(T))->second);
+    auto it = m_sensors.find(typeid(T));
+    if (RCPPSW_LIKELY(m_sensors.end() != it)) {
+      return &std::get<T>(it->second);
+    }
+    return nullptr;
   }
 
   template <typename T>
   T* sensor(void) {
-    return &std::get<T>(m_sensors.find(typeid(T))->second);
+    auto it = m_sensors.find(typeid(T));
+    if (RCPPSW_LIKELY(m_sensors.end() != it)) {
+      return &std::get<T>(it->second);
+    }
+    return nullptr;
   }
 
  private:
