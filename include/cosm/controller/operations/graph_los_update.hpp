@@ -3,19 +3,7 @@
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -31,7 +19,7 @@
 #include "rcppsw/ds/graph/hgrid3D.hpp"
 #include "rcppsw/ds/graph/hgrid3D_view.hpp"
 #include "rcppsw/types/type_uuid.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -60,7 +48,7 @@ class graph_los_update final
   using los_type = TLOS;
 
   graph_los_update(const TSrcGraph* graph,
-                   const rtypes::spatial_dist& unit_dim)
+                   const rspatial::euclidean_dist& unit_dim)
       : ER_CLIENT_INIT("cosm.support.graph_los_update"),
         mc_graph(graph),
         mc_unit_dim(unit_dim) {}
@@ -104,7 +92,7 @@ class graph_los_update final
 
   /* clang-format off */
   const TSrcGraph*           mc_graph;
-  const rtypes::spatial_dist mc_unit_dim;
+  const rspatial::euclidean_dist mc_unit_dim;
   /* clang-format on */
 };
 

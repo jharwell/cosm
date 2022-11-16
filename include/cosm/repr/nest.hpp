@@ -3,19 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -80,8 +68,8 @@ class nest : public repr::unicell_immovable_entity2D,
    */
   static int m_nest_id;
 
-  static rtypes::spatial_dist light_height_calc(const rmath::vector2d& arena) {
-    return rtypes::spatial_dist{ std::pow(arena.x() * arena.y(), 0.25) };
+  static rspatial::euclidean_dist light_height_calc(const rmath::vector2d& arena) {
+    return rspatial::euclidean_dist{ std::pow(arena.x() * arena.y(), 0.25) };
   }
 
   static double light_intensity_calc(const rmath::vector2d& arena) {
@@ -93,7 +81,7 @@ class nest : public repr::unicell_immovable_entity2D,
 
   /* clang-format off */
   const double               mc_light_intensity;
-  const rtypes::spatial_dist mc_light_height;
+  const rspatial::euclidean_dist mc_light_height;
 
   bool                       m_initialized{false};
   std::list<nest_light>      m_lights{};

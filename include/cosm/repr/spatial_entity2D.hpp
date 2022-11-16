@@ -3,19 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -24,7 +12,7 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/math/range.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/repr/spatial_entity.hpp"
 
@@ -65,16 +53,16 @@ class spatial_entity2D : public spatial_entity {
    * \brief Get the size of the entity in the X direction in real
    * coordinates.
    */
-  rtypes::spatial_dist xrsize(void) const {
-    return rtypes::spatial_dist(rbb().xsize());
+  rspatial::euclidean_dist xrsize(void) const {
+    return rspatial::euclidean_dist(rbb().xsize());
   }
 
   /**
    * \brief Get the size of the entity in the Y direction in real
    * coordinates.
    */
-  rtypes::spatial_dist yrsize(void) const {
-    return rtypes::spatial_dist(rbb().ysize());
+  rspatial::euclidean_dist yrsize(void) const {
+    return rspatial::euclidean_dist(rbb().ysize());
   }
 
   /**

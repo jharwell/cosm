@@ -3,19 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -61,8 +49,8 @@ class spatial_entity3D : public spatial_entity2D {
    * \brief Get the size of the 3D entity in the Z direction in real
    * coordinates.
    */
-  rtypes::spatial_dist zrsize(void) const {
-    return rtypes::spatial_dist(rbb().zsize());
+  rspatial::euclidean_dist zrsize(void) const {
+    return rspatial::euclidean_dist(rbb().zsize());
   }
 
   /**

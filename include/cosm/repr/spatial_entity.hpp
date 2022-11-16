@@ -3,19 +3,7 @@
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -23,8 +11,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/math/bounding_box.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/bounding_box.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 #include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/cosm.hpp"
@@ -41,23 +29,23 @@ NS_START(cosm, repr);
  ******************************************************************************/
 class spatial_entity : public base_entity {
  public:
-  using rbb_type = rmath::bounding_box<rmath::vector3d>;
-  using dbb_type = rmath::bounding_box<rmath::vector3z>;
+  using rbb_type = rspatial::bounding_box<rmath::vector3d>;
+  using dbb_type = rspatial::bounding_box<rmath::vector3z>;
 
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3d& dims,
-                 const rtypes::spatial_dist& factor)
+                 const rspatial::euclidean_dist& factor)
       : base_entity(id), m_rbb(dims), m_dbb(rmath::dvec2zvec(dims, factor.v())) {}
 
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3z& dims,
-                 const rtypes::spatial_dist& factor)
+                 const rspatial::euclidean_dist& factor)
       : base_entity(id), m_rbb(rmath::zvec2dvec(dims, factor.v())), m_dbb(dims) {}
 
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3d& dims,
                  const rmath::vector3d& center,
-                 const rtypes::spatial_dist& factor)
+                 const rspatial::euclidean_dist& factor)
       : base_entity(id),
         m_rbb(dims, center),
         m_dbb(rmath::dvec2zvec(dims, factor.v()),
@@ -66,7 +54,7 @@ class spatial_entity : public base_entity {
   spatial_entity(const rtypes::type_uuid& id,
                  const rmath::vector3z& dims,
                  const rmath::vector3z& center,
-                 const rtypes::spatial_dist& factor)
+                 const rspatial::euclidean_dist& factor)
       : base_entity(id),
         m_rbb(rmath::zvec2dvec(dims, factor.v()),
               rmath::zvec2dvec(center, factor.v())),

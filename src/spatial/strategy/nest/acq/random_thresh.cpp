@@ -3,19 +3,7 @@
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 /*******************************************************************************
@@ -47,7 +35,7 @@ void random_thresh::task_start(cta::taskable_argument* arg) {
   m_nest_loc = static_cast<fsm::point_argument*>(arg)->point();
 
   auto dist_to_light = (saa()->sensing()->rpos2D() - m_nest_loc).length();
-  m_thresh = rtypes::spatial_dist(rng()->uniform(0.01, dist_to_light));
+  m_thresh = rspatial::euclidean_dist(rng()->uniform(0.01, dist_to_light));
   m_task_running = true;
 } /* task_start() */
 

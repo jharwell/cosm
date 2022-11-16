@@ -3,19 +3,7 @@
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 /*******************************************************************************
@@ -62,8 +50,8 @@ conflict_checker::placement2D(const carena::base_arena_map* map,
    * one a robot knows about (see FORDYCA#242).
    */
   auto dloc = rmath::dvec2zvec(loc, map->grid_resolution().v());
-  auto drop_xspan = rmath::xspan(dloc, block->xdsize());
-  auto drop_yspan = rmath::yspan(dloc, block->ydsize());
+  auto drop_xspan = rspatial::xspan(dloc, block->xdsize());
+  auto drop_yspan = rspatial::yspan(dloc, block->ydsize());
 
   bool out_of_bounds = !map->distributable_cellsx().contains(drop_xspan) ||
                        !map->distributable_cellsy().contains(drop_yspan);
@@ -155,8 +143,8 @@ conflict_checker::status
 conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
                               const rmath::vector2d& ent1_dims,
                               const crepr::entity2D* const ent2) {
-  auto loc_xspan = rmath::xspan(ent1_anchor, ent1_dims.x());
-  auto loc_yspan = rmath::yspan(ent1_anchor, ent1_dims.y());
+  auto loc_xspan = rspatial::xspan(ent1_anchor, ent1_dims.x());
+  auto loc_yspan = rspatial::yspan(ent1_anchor, ent1_dims.y());
   return { ent2->xrspan().overlaps_with(loc_xspan),
            ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
@@ -165,8 +153,8 @@ conflict_checker::status
 conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
                               const rmath::vector2d& ent1_dims,
                               const crepr::entity3D* const ent2) {
-  auto loc_xspan = rmath::xspan(ent1_anchor, ent1_dims.x());
-  auto loc_yspan = rmath::yspan(ent1_anchor, ent1_dims.y());
+  auto loc_xspan = rspatial::xspan(ent1_anchor, ent1_dims.x());
+  auto loc_yspan = rspatial::yspan(ent1_anchor, ent1_dims.y());
   return { ent2->xrspan().overlaps_with(loc_xspan),
            ent2->yrspan().overlaps_with(loc_yspan) };
 } /* placement2D() */
@@ -177,8 +165,8 @@ conflict_checker::placement2D(const rmath::vector2d& ent1_anchor,
 conflict_checker::status nest_conflict(const crepr::sim_block3D* const block,
                                        const crepr::nest& nest,
                                        const rmath::vector2d& drop_loc) {
-  auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());
-  auto drop_yspan = rmath::yspan(drop_loc, block->yrsize().v());
+  auto drop_xspan = rspatial::xspan(drop_loc, block->xrsize().v());
+  auto drop_yspan = rspatial::yspan(drop_loc, block->yrsize().v());
 
   return { nest.xrspan().overlaps_with(drop_xspan),
            nest.yrspan().overlaps_with(drop_yspan) };
@@ -187,8 +175,8 @@ conflict_checker::status nest_conflict(const crepr::sim_block3D* const block,
 conflict_checker::status block_conflict(const crepr::sim_block3D* const block1,
                                         const crepr::sim_block3D* const block2,
                                         const rmath::vector2d& drop_loc) {
-  auto drop_xspan = rmath::xspan(drop_loc, block1->xrsize().v());
-  auto drop_yspan = rmath::yspan(drop_loc, block1->yrsize().v());
+  auto drop_xspan = rspatial::xspan(drop_loc, block1->xrsize().v());
+  auto drop_yspan = rspatial::yspan(drop_loc, block1->yrsize().v());
   return { block2->xrspan().overlaps_with(drop_xspan),
            block2->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_block() */
@@ -196,8 +184,8 @@ conflict_checker::status block_conflict(const crepr::sim_block3D* const block1,
 conflict_checker::status cache_conflict(const crepr::sim_block3D* const block,
                                         const carepr::arena_cache* const cache,
                                         const rmath::vector2d& drop_loc) {
-  auto drop_xspan = rmath::xspan(drop_loc, block->xrsize().v());
-  auto drop_yspan = rmath::yspan(drop_loc, block->yrsize().v());
+  auto drop_xspan = rspatial::xspan(drop_loc, block->xrsize().v());
+  auto drop_yspan = rspatial::yspan(drop_loc, block->yrsize().v());
   return { cache->xrspan().overlaps_with(drop_xspan),
            cache->yrspan().overlaps_with(drop_yspan) };
 } /* block_drop_overlap_with_cache() */

@@ -3,19 +3,7 @@
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -25,7 +13,7 @@
  ******************************************************************************/
 #include "rcppsw/math/vector2.hpp"
 #include "rcppsw/types/discretize_ratio.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -57,8 +45,8 @@ class dimension_checker {
    */
   static rmath::vector2d even_multiple(const rtypes::discretize_ratio& res,
                                        const rmath::vector2d& to_check);
-  static rtypes::spatial_dist even_multiple(const rtypes::discretize_ratio& res,
-                                            const rtypes::spatial_dist& to_check);
+  static rspatial::euclidean_dist even_multiple(const rtypes::discretize_ratio& res,
+                                            const rspatial::euclidean_dist& to_check);
 
   /**
    * \brief Check the dimension that a class wants to use to create objects
@@ -70,8 +58,8 @@ class dimension_checker {
    */
   static rmath::vector2d odd_dsize(const rtypes::discretize_ratio& res,
                                    const rmath::vector2d& to_check);
-  static rtypes::spatial_dist odd_dsize(const rtypes::discretize_ratio& res,
-                                        const rtypes::spatial_dist& to_check);
+  static rspatial::euclidean_dist odd_dsize(const rtypes::discretize_ratio& res,
+                                        const rspatial::euclidean_dist& to_check);
 };
 
 NS_END(spatial, cosm);

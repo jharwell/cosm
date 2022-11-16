@@ -3,19 +3,7 @@
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -27,7 +15,7 @@
 #include <memory>
 
 #include "rcppsw/patterns/prototype/clonable.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 #include "rcppsw/types/timestep.hpp"
 #include "rcppsw/math/rng.hpp"
 
@@ -73,7 +61,7 @@ class base_cache : public crepr::unicell_immovable_entity2D,
    */
   struct params {
     /* clang-format off */
-    rtypes::spatial_dist          dimension; /* caches are square */
+    rspatial::euclidean_dist          dimension; /* caches are square */
     rtypes::discretize_ratio      resolution;
     rmath::vector2d               center;
     const cds::block3D_vectorno&& blocks;

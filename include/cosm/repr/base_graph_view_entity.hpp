@@ -3,19 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -26,7 +14,7 @@
 #include <utility>
 
 #include "rcppsw/patterns/decorator/decorator.hpp"
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/cosm.hpp"
 
@@ -67,7 +55,7 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   using decoratee_type = typename decorator_type::decoratee_type;
   using decorator_type::decoratee;
 
-  base_graph_view_entity(graph_view_type&& view, const rtypes::spatial_dist& unit)
+  base_graph_view_entity(graph_view_type&& view, const rspatial::euclidean_dist& unit)
       : rpdecorator::decorator<graph_view_type>(std::move(view)), mc_unit(unit) {}
 
   virtual ~base_graph_view_entity(void) = default;
@@ -109,13 +97,13 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   virtual bool contains(const vertex_coord_type& c) const = 0;
 
  protected:
-  const rtypes::spatial_dist& unit(void) const { return mc_unit; }
+  const rspatial::euclidean_dist& unit(void) const { return mc_unit; }
   const graph_view_type& view(void) const { return decoratee(); }
   graph_view_type& view(void) { return decoratee(); }
 
  private:
   /* clang-format off */
-  const rtypes::spatial_dist mc_unit;
+  const rspatial::euclidean_dist mc_unit;
   /* clang-format on */
 };
 

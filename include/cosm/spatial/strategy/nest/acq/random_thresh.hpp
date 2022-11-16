@@ -3,19 +3,7 @@
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -26,7 +14,7 @@
 #include <boost/optional.hpp>
 #include <memory>
 
-#include "rcppsw/types/spatial_dist.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/strategy/nest/acq/base_acq.hpp"
@@ -91,7 +79,7 @@ class random_thresh : public cssnest::acq::base_acq {
     return std::make_unique<random_thresh>(config(), &params, rng());
   }
 
-  boost::optional<rtypes::spatial_dist> thresh(void) const {
+  boost::optional<rspatial::euclidean_dist> thresh(void) const {
     if (task_running()) {
       return boost::make_optional(m_thresh);
     } else {
@@ -103,7 +91,7 @@ class random_thresh : public cssnest::acq::base_acq {
   /* clang-format off */
   bool                 m_task_running{false};
   rmath::vector2d      m_nest_loc{};
-  rtypes::spatial_dist m_thresh{rtypes::spatial_dist(0)};
+  rspatial::euclidean_dist m_thresh{rspatial::euclidean_dist(0)};
   /* clang-format on */
 };
 

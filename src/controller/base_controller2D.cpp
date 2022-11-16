@@ -3,19 +3,7 @@
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
- * This file is part of COSM.
- *
- * COSM is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * COSM is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * COSM.  If not, see <http://www.gnu.org/licenses/
+ * SPDX-License-Identifier: MIT
  */
 
 /*******************************************************************************
@@ -69,15 +57,15 @@ void base_controller2D::mdc_ts_update(void) const {
 /*******************************************************************************
  * Movement
  ******************************************************************************/
-rtypes::spatial_dist base_controller2D::ts_distance_impl(void) const {
+rspatial::euclidean_dist base_controller2D::ts_distance_impl(void) const {
   /*
    * If you allow distance gathering at timesteps < 2, you get a big jump
    * because of the prev/current location not being set up properly yet.
    */
   if (saa()->sensing()->tick() > 2U) {
-    return rtypes::spatial_dist(saa()->sensing()->tick_travel2D().length());
+    return rspatial::euclidean_dist(saa()->sensing()->tick_travel2D().length());
   }
-  return rtypes::spatial_dist(0.0);
+  return rspatial::euclidean_dist(0.0);
 } /* ts_distance_impl() */
 
 rmath::vector3d base_controller2D::ts_velocity_impl(void) const {
