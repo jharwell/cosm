@@ -137,12 +137,13 @@ namespace kin {}
 namespace kin2D {}
 
 /**
- * \namespace steer2D
+ * \namespace apf2D
  *
- * \brief Steering forces for 2D wheeled robots, inspired from Arkin's original
- * 1987 paper: arrival, avoidance, wander, etc., and their configuration.
+ * \brief Artificial Potential Fields (APFs), inspired from Arkin's original
+ * 1987 paper: arrival, avoidance, wander, etc., and their
+ * configuration. Generally 2D.
  */
-namespace steer2D {}
+namespace apf2D {}
 
 /**
  * \namespace convergence
@@ -284,6 +285,10 @@ namespace drop {}
 } /* namespace blocks */
 
 namespace explore {}
+
+namespace flocking {
+} /* namespace flocking */
+
 } /* namespace strategy */
 
 } /* namespace spatial */
@@ -372,6 +377,7 @@ namespace csstrategy = cspatial::strategy;
 namespace cssnest = csstrategy::nest;
 namespace cssblocks = csstrategy::blocks;
 namespace cssexplore = csstrategy::explore;
+namespace cssflocking = csstrategy::flocking;
 
 namespace carena = cosm::arena;
 namespace cads = carena::ds;
@@ -446,4 +452,4 @@ namespace crconfig = crepr::config;
 namespace cfsm = cosm::fsm;
 namespace ckin = cosm::kin;
 namespace ckin2D = cosm::kin2D;
-namespace csteer2D = cosm::steer2D;
+namespace capf2D = cosm::apf2D;

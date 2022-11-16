@@ -70,7 +70,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
              obs->to_str().c_str(),
              obs->angle().v(),
              obs->length());
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
+    saa()->apf2D().accum(saa()->apf2D().avoidance(*obs));
     /*
      * If we are currently spinning in place (hard turn), we have 0 linear
      * velocity, and that does not play well with the arrival force
@@ -78,7 +78,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_avoidance) {
      */
     auto odom = saa()->sensing()->odometry()->reading();
     /* if (odom.twist.linear.to_2D().length() <= 0.1) { */
-    /*   saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng())); */
+    /*   saa()->apf2D().accum(saa()->apf2D().wander(rng())); */
     /* } */
   } else {
     internal_event(ekST_INTERFERENCE_RECOVERY);
@@ -118,7 +118,7 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, interference_recovery) {
   auto diff_drive = actuation()->actuator<kin2D::governed_diff_drive>();
   rmath::vector2d force(diff_drive->max_linear_speed() * 0.7,
                         rmath::radians(0.0));
-  saa()->steer_force2D().accum(force);
+  saa()->apf2D().accum(force);
   return util_signal::ekHANDLED;
 }
 
@@ -143,10 +143,10 @@ RCPPSW_HFSM_STATE_DEFINE_ND(vector_fsm, vector) {
    * acquire locations in close quarters.
    */
   if (saa()->sensing()->sensor<hal::sensors::proximity_sensor>()->avg_prox_obj() &&
-      !saa()->steer_force2D().within_slowing_radius()) {
+      !saa()->apf2D().within_slowing_radius()) {
     internal_event(ekST_INTERFERENCE_AVOIDANCE);
   } else {
-    saa()->steer_force2D().accum(saa()->steer_force2D().seek_to(m_goal.point()));
+    saa()->apf2D().accum(saa()->apf2D().seek_to(m_goal.point()));
     actuation()->diagnostics()->emit(chactuators::diagnostics::ekVECTOR_TO_GOAL);
   }
   return util_signal::ekHANDLED;

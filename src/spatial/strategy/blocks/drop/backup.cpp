@@ -39,7 +39,7 @@ void backup::task_start(cta::taskable_argument*) {
   m_odom_start = saa()->sensing()->odometry()->reading();
 
   /* steering forces don't work for going backwards */
-  saa()->steer_force2D().disable();
+  saa()->apf2D().disable();
 
   /*
    * When we are backing up, we might be bringing a block to the nest, and will
@@ -73,7 +73,7 @@ void backup::task_execute(void) {
 void backup::task_reset(void) {
   m_task_running = false;
   m_steps = rtypes::timestep(0);
-  saa()->steer_force2D().enable();
+  saa()->apf2D().enable();
   saa()->sensing()->env()->enable(chsensors::env_sensor::kBlockTarget);
 }
 

@@ -19,6 +19,18 @@
                                         "/usr/include/x86_64-linux-gnu/qt5/QtCore"
                                         "/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64"
                                         )))
+                    (setq company-c-headers-path-system
+                          (list
+                           (substitute-in-file-name
+                            "$localroot/ros/include")
+                           (substitute-in-file-name "$localroot/system/include")
+                           )
+                          )
+                    (setq company-c-headers-path-user
+                          (list
+                           (substitute-in-file-name
+                            "$localroot/include")
+                           ))
                     (setq flycheck-clang-include-path includes-list)
                     (add-to-list 'flycheck-clang-args "-fPIC")
                     (add-to-list 'flycheck-clang-args "-std=c++17")

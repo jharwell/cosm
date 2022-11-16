@@ -33,18 +33,18 @@ base_strategy::base_strategy(const csfsm::fsm_params* params, rmath::rng* rng)
  ******************************************************************************/
 void base_strategy::phototaxis(void) {
   auto* light = saa()->sensing()->light();
-  saa()->steer_force2D().accum(
-      saa()->steer_force2D().phototaxis(light->readings()));
+  saa()->apf2D().accum(
+      saa()->apf2D().phototaxis(light->readings()));
 } /* phototaxis() */
 
 void base_strategy::anti_phototaxis(void) {
   auto* light = saa()->sensing()->light();
-  saa()->steer_force2D().accum(
-      saa()->steer_force2D().anti_phototaxis(light->readings()));
+  saa()->apf2D().accum(
+      saa()->apf2D().anti_phototaxis(light->readings()));
 } /* anti_phototaxis() */
 
 void base_strategy::wander(void) {
-  saa()->steer_force2D().accum(saa()->steer_force2D().wander(rng()));
+  saa()->apf2D().accum(saa()->apf2D().wander(rng()));
 } /* wander() */
 
 bool base_strategy::handle_ca(void) {
@@ -52,7 +52,7 @@ bool base_strategy::handle_ca(void) {
 
   if (auto obs = prox->avg_prox_obj()) {
     inta_tracker()->state_enter();
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
+    saa()->apf2D().accum(saa()->apf2D().avoidance(*obs));
     return true;
   } else {
     inta_tracker()->state_exit();

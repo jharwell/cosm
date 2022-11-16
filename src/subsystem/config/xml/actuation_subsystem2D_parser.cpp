@@ -26,18 +26,18 @@ void actuation_subsystem2D_parser::parse(const ticpp::Element& node) {
   m_config = std::make_unique<config_type>();
 
   m_diff_drive.parse(anode);
-  m_steering.parse(anode);
+  m_apf.parse(anode);
   m_config->diff_drive =
       *m_diff_drive
            .config_get<kin2D::config::xml::diff_drive_parser::config_type>();
-  m_config->steering = *m_steering.config_get<
-      steer2D::config::xml::force_calculator_parser::config_type>();
+  m_config->apf_manager = *m_apf.config_get<
+      apf2D::config::xml::apf_manager_parser::config_type>();
   ER_DEBUG("Finished");
 } /* parse() */
 
 bool actuation_subsystem2D_parser::validate(void) const {
   ER_CHECK(m_diff_drive.validate(), "Diff drive failed validation");
-  ER_CHECK(m_steering.validate(), "Steering failed validation");
+  ER_CHECK(m_apf.validate(), "APF failed validation");
 
   return true;
 
