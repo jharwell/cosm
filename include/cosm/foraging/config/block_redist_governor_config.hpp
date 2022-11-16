@@ -47,9 +47,9 @@ NS_START(cosm, foraging, config);
 struct block_redist_governor_config final : public rconfig::base_config {
   rtypes::timestep timestep{0};
   size_t           block_count{0};
-  std::string      trigger{"Null"};
+  std::string      disable_trigger{"Null"};
   std::string      recurrence_policy{};
+  bool             redistribute{true};
 };
 
 NS_END(config, foraging, cosm);
-

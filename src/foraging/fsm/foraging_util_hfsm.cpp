@@ -69,15 +69,16 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
   }
   inta_state_update();
 
-    if (!m_strategies.nest_exit->task_running()) {
-    auto env = saa()->sensing()->env();
-
-    /* We have entered the nest, so perform our exituisition strategy */
-    if (env->detect(chsensors::env_sensor::kNestTarget)) {
-      ER_DEBUG("Start nest exit strategy");
-      m_strategies.nest_exit->task_reset();
-      m_strategies.nest_exit->task_start(nullptr);
-    }
+  if (!m_strategies.nest_exit->task_running()) {
+    /*
+     * Regardless of whether we are in the nest start our exit strategy. If
+     * we condition on being in the nest, then we risk a deadlock if the chosen
+     * block drop strategy ends with the robot outside the nest (can happen if
+     * we are supposed to "backup", for example).
+     */
+    ER_DEBUG("Start nest exit strategy");
+    m_strategies.nest_exit->task_reset();
+    m_strategies.nest_exit->task_start(nullptr);
   }
 
   if (m_strategies.nest_exit->task_running()) {

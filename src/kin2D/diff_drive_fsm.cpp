@@ -60,7 +60,7 @@ void diff_drive_fsm::change_velocity(const ckin::twist& delta) {
   external_event(kTRANSITIONS[current_state()],
                  std::make_unique<turn_data>(delta.linear.x(),
                                              rmath::radians(delta.angular.z())));
-} /* set_rel_heading() */
+} /* change_velocity() */
 
 /*******************************************************************************
  * States

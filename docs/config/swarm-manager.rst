@@ -692,33 +692,37 @@ XML configuration:
    <distribution>
        ...
        <redist_governor
-           trigger="Null"
-           recurrence_policy="mult|single"
+           disable_trigger="Null"
+           recurrence_policy="multi|latch"
            timestep="INTEGER"
+           redistribute="true"
            block_count="INTEGER"/>
        ...
    </distribution>
 
 
-- ``trigger`` - The trigger for (possibly) stopping block redistribution:
+- ``disable_trigger`` - The trigger for (possibly) stopping block
+  redistribution:
 
-  - ``Null`` - Disables the governor.
+  - ``Null`` - Disables the governor. Whatever the initial state is, it will not
+    change.
 
-  - ``timestep`` - Blocks will be redistributed until the specified timestep. This
-                 trigger type can be used with the [ ``single`` ] recurrence policy.
+  - ``timestep`` - Blocks will be redistributed until the specified
+                 timestep. This trigger type can be used with the [ ``latch`` ]
+                 recurrence policy.
 
   - ``block_count`` - Blocks will be redistributed until the specified " of
     blocks have been collected. This trigger type can be used with the
-    ``single`` recurrence policy.
+    ``latch`` recurrence policy.
 
   - ``convergence`` - Blocks will be redistributed until the swarm has
-    converged. This trigger type can be used with the ``single``, ``multi``
+    converged. This trigger type can be used with the ``latch``, ``multi``
     recurrence policies.
 
 - ``recurrence_policy`` - The policy for determining how block redistribution
   status can change as the simulation progresses.
 
-  - ``single`` - Once the specified trigger is tripped, then block
+  - ``latch`` - Once the specified trigger is tripped, then block
     redistribution will stop permanently.
 
   - ``multi`` - Blocks will be redistributed as long as the specified trigger
@@ -726,10 +730,13 @@ XML configuration:
     until the trigger is no longer tripped, in which case it will resume.
 
 - ``timestep`` - The timestep to stop block redistribution at. Only required if
-  ``trigger`` is ``timestep``.
+  ``disable_trigger`` is ``timestep``.
 
 - ``block_count`` - The collection count to stop block redistribution at. Only
-  required if ``trigger`` is ``block_count``.
+  required if ``disable_trigger`` is ``block_count``.
+
+- ``redistribute`` - Should blocks be redistributed initially? If ``false``,
+  then all other configuration is optional and ignored.
 
 ``arena_map/blocks/distribution/manifest``
 """"""""""""""""""""""""""""""""""""""""""

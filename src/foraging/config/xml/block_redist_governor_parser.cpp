@@ -40,7 +40,16 @@ void block_redist_governor_parser::parse(const ticpp::Element& node) {
   m_config = std::make_unique<config_type>();
   ticpp::Element lnode = node_get(node, kXMLRoot);
 
-  XML_PARSE_ATTR(lnode, m_config, trigger);
+  XML_PARSE_ATTR(lnode, m_config, redistribute);
+
+  /*
+   * All other config ignored, because we currently only have disable trigger
+   * configuration with possible re-enabling later, but not the reverse.
+   */
+  if (!m_config->redistribute) {
+    return;
+  }
+  XML_PARSE_ATTR(lnode, m_config, disable_trigger);
   XML_PARSE_ATTR(lnode, m_config, recurrence_policy);
   XML_PARSE_ATTR_DFLT(lnode, m_config, timestep, rtypes::timestep(0));
   XML_PARSE_ATTR_DFLT(lnode, m_config, block_count, 0UL);

@@ -257,7 +257,7 @@ base_arena_map::robot_in_nest(const rmath::vector2d& pos) const {
 void base_arena_map::distribute_single_block(crepr::sim_block3D* block,
                                              const locking& locking) {
   /* The distribution of nothing is ALWAYS successful */
-  if (!m_redist_governor.dist_status()) {
+  if (!m_redist_governor.enabled()) {
     return;
   }
 
