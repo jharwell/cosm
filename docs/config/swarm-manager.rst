@@ -1,3 +1,5 @@
+.. SPDX-License-Identifier:  LGPL-2.0-or-later
+
 ===============================
 Swarm Manager XML Configuration
 ===============================

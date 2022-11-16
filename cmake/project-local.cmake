@@ -142,7 +142,7 @@ string(CONCAT common_regex
   "src/ta|"
   "src/init|"
   "src/subsystem|"
-  "src/steer2D|"
+  "src/apf2D|"
   "src/metrics"
   )
 

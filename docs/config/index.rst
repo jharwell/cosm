@@ -1,3 +1,5 @@
+.. SPDX-License-Identifier:  LGPL-2.0-or-later
+
 .. _ln-xml-config:
 
 XML Configuration

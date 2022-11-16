@@ -1,3 +1,5 @@
+.. SPDX-License-Identifier:  LGPL-2.0-or-later
+
 ============================
 Controller XML Configuration
 ============================
@@ -865,7 +867,7 @@ required:
 
 - Required by: All controllers.
 - Required child attributes if present: none.
-- Required child tags if present: [ ``force_calculator``, ``diff_drive`` ]
+- Required child tags if present: [ ``apf_manager``, ``diff_drive`` ]
 - Optional child attributes: none.
 - Optional child tags: none.
 
@@ -874,17 +876,44 @@ XML configuration:
 .. code-block:: XML
 
    <actuation_subsystem2D>
-       <force_calculator>
+       <apf_manager>
        ...
-       </force_calculator>
+       </apf_manager>
        <diff_drive>
        ...
        </diff_drive>
    </actuation_subsystem2D>
 
 
-``actuation_subsystem2D/force_calculator``
-------------------------------------------
+``actuation_subsystem2D/apf_manager``
+-------------------------------------
+
+Parameters for the virtual forces used to control robot movement, based on the
+original paper :xref:`Arkin1987` and the tutorial in :xref:`SteeringTutorial`.
+
+- Required by: All controllers.
+- Required child attributes if present: none.
+- Required child tags: none.
+- Optional child attributes: none.
+- Optional child tags if present: [ ``nav`` ].
+
+XML configuration:
+
+.. code-block:: XML
+
+    <actuation_subsystem2D>
+        ...
+        <apf_manager>
+          <nav>
+            ...
+          </nav>
+        </apf_manager>
+        ...
+    </actuation_subsystem2D>
+
+
+``actuation_subsystem2D/apf_manager/nav``
+"""""""""""""""""""""""""""""""""""""""""
 
 Parameters for the virtual forces used to control robot movement, based on the
 original paper :xref:`Arkin1987` and the tutorial in :xref:`SteeringTutorial`.
@@ -902,7 +931,8 @@ XML configuration:
 
     <actuation_subsystem2D>
         ...
-        <force_calculator>
+        <apf_manager>
+          <nav>
           <avoidance_force>
             ...
           </avoidance_force>
@@ -918,13 +948,13 @@ XML configuration:
           <path_following_force>
             ...
           </path_following_force>
-        </force_calculator>
+        </apf_manager>
         ...
     </actuation_subsystem2D>
 
 
-``actuation_subsystem2D/force_calculator/avoidance_force``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``actuation_subsystem2D/apf_manager/nav/avoidance_force``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The force which repels robots from other nearby robots and obstacles (robots do
 not distinguish between these two cases).
@@ -937,20 +967,20 @@ not distinguish between these two cases).
 
 .. code-block:: XML
 
-    <force_calculator>
+    <nav>
       ...
       <avoidance_force lookahead="FLOAT"
                        max="FLOAT"/>
       ...
-    </force_calculator>
+    </nav>
 
 - ``lookahead`` - How far ahead of the robot to look for obstacles. Currently
   unused, but may be used in the future.
 
 - ``max`` - Max value for the force, in m/s.
 
-``actuation_subsystem2D/force_calculator/arrival_force``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``actuation_subsystem2D/apf_manager/nav/arrival_force``
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The force which attracts robots towards a goal and gets them to it.
 
@@ -962,13 +992,13 @@ The force which attracts robots towards a goal and gets them to it.
 
 .. code-block:: XML
 
-    <force_calculator>
+    <nav>
       ...
       <arrival_force slowing_radius="FLOAT"
                      slowing_speed_min="FLOAT"
                      max="FLOAT"/>
       ...
-    </force_calculator>
+    </nav>
 
 - ``slowing_radius`` - Radius around target inside which robots will slow down
   linearly to not overshoot their target.
@@ -978,8 +1008,8 @@ The force which attracts robots towards a goal and gets them to it.
 
 - ``max`` - Max value for the force, in m/s.
 
-``actuation_subsystem2D/force_calculator/wander_force``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``actuation_subsystem2D/apf_manager/nav/wander_force``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The force which causes robots to wander randomly in the environment in a
 correlated random walk.
@@ -992,7 +1022,7 @@ correlated random walk.
 
 .. code-block:: XML
 
-    <force_calculator>
+    <nav>
       ...
       <wander_force circle_distance="FLOAT"
                     circle_radius_min="FLOAT"
@@ -1003,7 +1033,7 @@ correlated random walk.
          </bias_angle>
       </wander_force>
       ...
-    </force_calculator>
+    </nav>
 
 - ``circle_distance`` - Scaling factor for force; applied to current velocity.
 
@@ -1014,8 +1044,8 @@ correlated random walk.
 
 - ``interval`` - How many timesteps to skip between applying the force.
 
-``actuation_subsystem2D/force_calculator/wander_force/bias_angle``
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+``actuation_subsystem2D/apf_manager/nav/wander_force/bias_angle``
+#################################################################
 
 Configuration for how the wander/bias angle should be calculated if the wander
 force is employed.
@@ -1053,8 +1083,8 @@ force is employed.
 - ``angles`` - A comma separated list of angles specified in radians defining
   the custom bias angle distribution to draw from.
 
-``actuation_subsystem2D/force_calculator/phototaxis_force``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``actuation_subsystem2D/apf_manager/nav/phototaxis_force``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The force which attracts/repels robots towards/away from light sources.
 
@@ -1066,16 +1096,16 @@ The force which attracts/repels robots towards/away from light sources.
 
 .. code-block:: XML
 
-    <force_calculator>
+    <nav>
       ...
       <phototaxis_force max="FLOAT"/>
       ...
-    </force_calculator>
+    </nav>
 
 - ``max`` - Max value for the force, in m/s.
 
-``actuation_subsystem2D/force_calculator/path_following_force``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``actuation_subsystem2D/apf_manager/nav/path_following_force``
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 The force which guides robots along a specified path.
 
@@ -1087,13 +1117,13 @@ The force which guides robots along a specified path.
 
 .. code-block:: XML
 
-    <force_calculator>
+    <nav>
       ...
       <arrival_force slowing_radius="FLOAT"
                      slowing_speed_min="FLOAT"
                      max="FLOAT"/>
       ...
-    </force_calculator>
+    </nav>
 
 - ``max`` - Max value for the force, in m/s.
 

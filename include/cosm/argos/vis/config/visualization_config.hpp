@@ -33,7 +33,7 @@ struct visualization_config : public rconfig::base_config {
   bool robot_id{false};
   bool robot_los{false};
   bool robot_task{false};
-  bool robot_steer2D{false};
+  bool robot_apf2D{false};
   bool block_id{false};
 };
 

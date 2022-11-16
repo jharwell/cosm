@@ -58,12 +58,12 @@ class base_adaptor : public ::argos::CCI_Controller,
    */
   void display_los(bool b) { m_display_los = b; }
 
-  void display_steer2D(bool b) { m_display_steer2D = b; }
-  bool display_steer2D(void) const { return m_display_steer2D; }
+  void display_apf2D(bool b) { m_display_apf2D = b; }
+  bool display_apf2D(void) const { return m_display_apf2D; }
 
  private:
   bool m_display_id{false};
-  bool m_display_steer2D{false};
+  bool m_display_apf2D{false};
   bool m_display_los{false};
 };
 

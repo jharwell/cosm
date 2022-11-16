@@ -146,7 +146,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
     ER_DEBUG("Outside nest");
     inta_state_update();
     auto readings = saa()->sensing()->light()->readings();
-    saa()->steer_force2D().accum(saa()->steer_force2D().phototaxis(readings));
+    saa()->apf2D().accum(saa()->apf2D().phototaxis(readings));
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* transport_to_nest() */
@@ -222,7 +222,7 @@ RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
 void foraging_util_hfsm::inta_state_update(void) {
   if (auto obs = saa()->sensing()->proximity()->avg_prox_obj()) {
     inta_tracker()->state_enter();
-    saa()->steer_force2D().accum(saa()->steer_force2D().avoidance(*obs));
+    saa()->apf2D().accum(saa()->apf2D().avoidance(*obs));
   } else {
     inta_tracker()->state_exit();
   }

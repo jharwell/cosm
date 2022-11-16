@@ -16,7 +16,7 @@
 
 #include "cosm/subsystem/config/actuation_subsystem2D_config.hpp"
 #include "cosm/kin2D/config/xml/diff_drive_parser.hpp"
-#include "cosm/steer2D/config/xml/force_calculator_parser.hpp"
+#include "cosm/apf2D/config/xml/apf_manager_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -58,9 +58,9 @@ class actuation_subsystem2D_parser final : public rer::client<actuation_subsyste
   }
 
   /* clang-format off */
-  std::unique_ptr<config_type>                  m_config{nullptr};
-  kin2D::config::xml::diff_drive_parser         m_diff_drive{};
-  steer2D::config::xml::force_calculator_parser m_steering{};
+  std::unique_ptr<config_type>           m_config{nullptr};
+  kin2D::config::xml::diff_drive_parser  m_diff_drive{};
+  apf2D::config::xml::apf_manager_parser m_apf{};
   /* clang-format on */
 };
 

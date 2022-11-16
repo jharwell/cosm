@@ -29,7 +29,7 @@ void visualization_parser::parse(const ticpp::Element& node) {
     XML_PARSE_ATTR_DFLT(vnode, m_config, robot_id, false);
     XML_PARSE_ATTR_DFLT(vnode, m_config, robot_los, false);
     XML_PARSE_ATTR_DFLT(vnode, m_config, robot_task, false);
-    XML_PARSE_ATTR_DFLT(vnode, m_config, robot_steer2D, false);
+    XML_PARSE_ATTR_DFLT(vnode, m_config, robot_apf2D, false);
     XML_PARSE_ATTR_DFLT(vnode, m_config, block_id, false);
   }
 } /* parse() */

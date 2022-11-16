@@ -13,7 +13,7 @@
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
 #include "cosm/kin2D/config/diff_drive_config.hpp"
-#include "cosm/steer2D/config/force_calculator_config.hpp"
+#include "cosm/apf2D/config/apf_manager_config.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -32,8 +32,8 @@ NS_START(cosm, subsystem, config);
  * operate in two dimensions.
  */
 struct actuation_subsystem2D_config final : public rconfig::base_config {
-  ckin2D::config::diff_drive_config diff_drive{};
-  csteer2D::config::force_calculator_config steering{};
+  ckin2D::config::diff_drive_config  diff_drive{};
+  capf2D::config::apf_manager_config apf_manager{};
 };
 
 NS_END(config, subsystem, cosm);

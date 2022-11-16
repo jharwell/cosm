@@ -18,7 +18,7 @@
 #include "cosm/hal/subsystem/robot_available_actuators.hpp"
 #include "cosm/hal/subsystem/robot_available_sensors.hpp"
 #include "cosm/hal/subsystem/sensor_map.hpp"
-#include "cosm/steer2D/force_calculator.hpp"
+#include "cosm/apf2D/apf_manager.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -42,7 +42,7 @@ NS_START(cosm, subsystem);
  * set of sensors/actuators abstracted away at a lower level, so that this class
  * can be used for any robot.
  */
-class saa_subsystemQ3D final : public steer2D::boid,
+class saa_subsystemQ3D final : public apf2D::boid,
                                public rer::client<saa_subsystemQ3D> {
  public:
   using sensing_type = csubsystem::sensing_subsystemQ3D;
@@ -52,7 +52,7 @@ class saa_subsystemQ3D final : public steer2D::boid,
       chsubsystem::sensor_variant_map<COSM_HAL_ROBOT_AVAILABLE_SENSORS>&& sensors,
       chsubsystem::actuator_variant_map<COSM_HAL_ROBOT_AVAILABLE_ACTUATORS>&&
           actuators,
-      const steer2D::config::force_calculator_config* const steer_config);
+      const apf2D::config::apf_manager_config* const apf_config);
 
   /*
    * 2D BOID interface. We report velocities, speeds, and positions that respect
@@ -68,21 +68,21 @@ class saa_subsystemQ3D final : public steer2D::boid,
   const actuation_type* actuation(void) const { return m_actuation.get(); }
 
   /**
-   * \brief Apply the summed steering forces; change wheel speeds. Resets the
+   * \brief Apply the summed APF forces; change wheel speeds. Resets the
    * summed forces.
    */
-  void steer_force2D_apply(void);
+  void apf2D_apply(void);
 
-  const steer2D::force_calculator& steer_force2D(void) const {
-    return m_steer2D_calc;
+  const apf2D::apf_manager& apf2D(void) const {
+    return m_apf2D;
   }
-  steer2D::force_calculator& steer_force2D(void) { return m_steer2D_calc; }
+  apf2D::apf_manager& apf2D(void) { return m_apf2D; }
 
  private:
   /* clang-format off */
   std::unique_ptr<actuation_type> m_actuation;
   std::unique_ptr<sensing_type>   m_sensing;
-  steer2D::force_calculator       m_steer2D_calc;
+  apf2D::apf_manager              m_apf2D;
   /* clang-format on */
 };
 
