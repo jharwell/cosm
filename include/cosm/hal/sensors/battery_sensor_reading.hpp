@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,10 +37,10 @@ struct battery_sensor_reading {
   double percentage{-1};
 
   /**
-   * \brief In seconds
+   * \brief In seconds.
    */
   double time_left{-1};
 };
 
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

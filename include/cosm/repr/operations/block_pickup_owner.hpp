@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr, operations);
+namespace cosm::repr::operations {
 
 /*******************************************************************************
  * Type Definitions
@@ -31,5 +31,5 @@ enum block_pickup_owner {
   };
 
 
-NS_END(operations, repr, cosm);
+} /* namespace cosm::repr::operations */
 

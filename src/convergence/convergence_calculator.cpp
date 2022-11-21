@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 /*******************************************************************************
  * Class Definitions
@@ -245,4 +245,4 @@ void convergence_calculator::reset_metrics(void) {
   }
 } /* reset_metrics() */
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

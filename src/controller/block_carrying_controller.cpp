@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller);
+namespace cosm::controller {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -37,4 +37,4 @@ block_carrying_controller::block_release(void) {
   return std::move(m_block);
 }
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

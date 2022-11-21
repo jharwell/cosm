@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -101,4 +101,4 @@ double bi_tab_sel_probability::operator()(const ds::bi_tab* const tab1,
   return 0.0;
 } /* operator() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, exit);
+namespace cosm::spatial::strategy::nest::exit {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -29,4 +29,4 @@ base_exit::base_exit(const cssnest::config::exit_config* config,
  * Member Functions
  ******************************************************************************/
 
-NS_END(exit, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::exit */

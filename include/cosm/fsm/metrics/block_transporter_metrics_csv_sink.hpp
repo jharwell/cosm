@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+namespace cosm::fsm::metrics {
 class block_transporter_metrics_collector;
 
 /*******************************************************************************
@@ -57,4 +57,4 @@ class block_transporter_metrics_csv_sink final
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, fsm, cosm);
+} /* namespace cosm::fsm::metrics */

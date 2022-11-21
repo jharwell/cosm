@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -36,4 +36,4 @@ bool ucb1_parser::validate(void) const {
   return !is_parsed() || m_config->gamma > 0.0;
 } /* validate() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

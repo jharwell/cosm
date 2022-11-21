@@ -11,8 +11,7 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include <string>
-#include <list>
+#include <memory>
 
 #include "rcppsw/metrics/base_collector.hpp"
 
@@ -21,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, metrics);
+namespace cosm::spatial::strategy::nest::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -41,8 +40,7 @@ class acq_metrics_collector final : public rmetrics::base_collector {
     /**
    * \param sink The metrics sink to use.
    */
-  explicit acq_metrics_collector(
-      std::unique_ptr<rmetrics::base_sink> sink);
+  explicit acq_metrics_collector(std::unique_ptr<rmetrics::base_sink> sink);
 
   /* base_collector overrides */
   void collect(const rmetrics::base_metrics& metrics) override;
@@ -55,4 +53,4 @@ class acq_metrics_collector final : public rmetrics::base_collector {
   /* clang-format on */
 };
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

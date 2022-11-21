@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, interactors);
+namespace cosm::interactors {
 
 /*******************************************************************************
  * Class Definitions
@@ -74,4 +74,4 @@ class applicator {
   /* clang-format on */
 };
 
-NS_END(interactors, cosm);
+} /* namespace cosm::interactors */

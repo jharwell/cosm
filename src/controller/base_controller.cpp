@@ -18,17 +18,21 @@
 #include "rcppsw/math/rngm.hpp"
 
 #include "cosm/fsm/supervisor_fsm.hpp"
+#include "cosm/kin/metrics_proxy.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller);
+namespace cosm::controller {
+
 namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Constructors/Destructor
  ******************************************************************************/
-base_controller::base_controller(void) : ER_CLIENT_INIT("cosm.controller.base") {}
+base_controller::base_controller(void)
+    : ER_CLIENT_INIT("cosm.controller.base") {}
 
 base_controller::~base_controller(void) = default;
 
@@ -52,8 +56,6 @@ fs::path base_controller::output_init(const cpconfig::output_config* config) {
                  path / "controller.log");
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.fsm"), path / "fsm.log");
   ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.subsystem.saa"),
-                 path / "saa.log");
-  ER_LOGFILE_SET(log4cxx::Logger::getLogger("cosm.robots.footbot.saa"),
                  path / "saa.log");
   return path;
 } /* output_init() */
@@ -79,4 +81,36 @@ void base_controller::inta_tracker(
   m_inta_tracker = std::move(inta);
 } /* inta_tracker() */
 
-NS_END(controller, cosm);
+void base_controller::kin_proxy(std::unique_ptr<ckin::metrics_proxy> prox) {
+  m_kin_proxy = std::move(prox);
+} /* kin_proxy() */
+
+void base_controller::saa(std::unique_ptr<subsystem::base_saa_subsystem> saa) {
+  m_saa = std::move(saa);
+} /* saa() */
+
+rmath::vector3d base_controller::rpos3D(void) const {
+  return m_saa->sensing()->rpos3D();
+}
+
+rmath::vector2d base_controller::rpos2D(void) const {
+  return m_saa->sensing()->rpos2D();
+}
+
+rmath::vector3z base_controller::dpos3D(void) const {
+  return m_saa->sensing()->dpos3D();
+}
+
+rmath::vector2z base_controller::dpos2D(void) const {
+  return m_saa->sensing()->dpos2D();
+}
+
+rmath::radians base_controller::azimuth(void) const {
+  return m_saa->sensing()->azimuth();
+}
+
+rmath::radians base_controller::zenith(void) const {
+  return m_saa->sensing()->zenith();
+}
+
+} /* namespace cosm::controller */

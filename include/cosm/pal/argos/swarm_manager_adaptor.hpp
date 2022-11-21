@@ -46,7 +46,7 @@ namespace cosm::argos::vis::config {
 struct visualization_config;
 } // namespace cosm::vis::config
 
-NS_START(cosm, pal, argos);
+namespace cosm::pal::argos {
 
 /*******************************************************************************
  * Class Definitions
@@ -55,7 +55,7 @@ NS_START(cosm, pal, argos);
  * \class swarm_manager_adaptor
  * \ingroup pal argos
  *
- * \brief Adaptor for \ref swarm_manager to provide an interface for
+ * \brief Adaptor for \ref cpal::base_swarm_manager to provide an interface for
  * managing swarms within ARGoS.
  */
 class swarm_manager_adaptor : public cpal::base_swarm_manager,
@@ -131,5 +131,4 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
   /* clang-format on */
 };
 
-NS_END(argos, pal, cosm);
-
+} /* namespace cosm::pal::argos */

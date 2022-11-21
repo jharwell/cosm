@@ -11,10 +11,10 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
-#include "rcppsw/ds/rtree.hpp"
-#include "rcppsw/types/type_uuid.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
+#include "rcppsw/ds/rtree.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/types/type_uuid.hpp"
 
 #include "cosm/repr/unicell_entity2D.hpp"
 #include "cosm/repr/unicell_entity3D.hpp"
@@ -22,12 +22,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, ds, detail);
+namespace cosm::arena::ds {
 
-using rtree_spec_type = rds::rtree_spec<rmath::vector2d,
-                                        rds::rtree_box<rmath::vector2d>,
-                                        rtypes::type_uuid>;
-NS_END(detail);
+using loctree_spec_type = rds::rtree_spec<rmath::vector2d,
+                                          rds::rtree_box<rmath::vector2d>,
+                                          rtypes::type_uuid>;
 
 /*******************************************************************************
  * Class Definitions
@@ -42,7 +41,7 @@ NS_END(detail);
  * \note You can't mix multiple types of entities, and the \ref
  * rtypes::type_uuid does not guarantee uniqueness across types (duh).
  */
-class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spec_type>> {
+class loctree final : public rpdecorator::decorator<rds::rtree<loctree_spec_type>> {
 
  private:
   template<typename TEntity>
@@ -78,4 +77,4 @@ class loctree final : public rpdecorator::decorator<rds::rtree<detail::rtree_spe
   RCPPSW_DECORATE_DECLDEF(size, const);
 };
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */

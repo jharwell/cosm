@@ -12,13 +12,15 @@
 #include "cosm/apf2D/apf_manager.hpp"
 
 #include "cosm/apf2D/config/apf_manager_config.hpp"
-#include "cosm/apf2D/nav/ds/path_state.hpp"
+#include "cosm/nav/trajectory.hpp"
 #include "cosm/apf2D/nav/arrival_force.hpp"
 #include "cosm/apf2D/nav/avoidance_force.hpp"
 #include "cosm/apf2D/nav/path_following_force.hpp"
 #include "cosm/apf2D/nav/phototaxis_force.hpp"
 #include "cosm/apf2D/nav/polar_force.hpp"
 #include "cosm/apf2D/nav/wander_force.hpp"
+#include "cosm/apf2D/flocking/alignment_force.hpp"
+#include "cosm/apf2D/flocking/constant_speed_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -37,7 +39,9 @@ apf_manager::apf_manager(boid& entity,
       m_wander(std::make_unique<nav::wander_force>(&config->nav.wander)),
       m_polar(std::make_unique<nav::polar_force>(&config->nav.polar)),
       m_phototaxis(std::make_unique<nav::phototaxis_force>(&config->nav.phototaxis)),
-      m_path_following(std::make_unique<nav::path_following_force>(&config->nav.path_following)) {}
+      m_path_following(std::make_unique<nav::path_following_force>(&config->nav.path_following)),
+      m_alignment(std::make_unique<flocking::alignment_force>(&config->flocking.alignment)),
+      m_constant_speed(std::make_unique<flocking::constant_speed_force>(&config->flocking.constant_speed)) {}
 
 apf_manager::~apf_manager(void) = default;
 
@@ -130,9 +134,9 @@ rmath::vector2d apf_manager::anti_phototaxis(
   return force;
 } /* anti_phototaxis() */
 
-rmath::vector2d apf_manager::path_following(nav::ds::path_state* state) {
-  rmath::vector2d force = m_path_following->operator()(m_entity, state);
-  m_tracker.path_add(*state); /* idempotent */
+rmath::vector2d apf_manager::path_following(cnav::trajectory* path) {
+  rmath::vector2d force = m_path_following->operator()(m_entity, path);
+  m_tracker.path_add(*path); /* idempotent */
   m_tracker.force_add(
       "path_following", rutils::color::kORANGE, force); /* accum */
 
@@ -142,6 +146,28 @@ rmath::vector2d apf_manager::path_following(nav::ds::path_state* state) {
            force.length());
   return force;
 } /* path_following() */
+
+rmath::vector2d apf_manager::alignment(const std::vector<rmath::vector2d> others) {
+  rmath::vector2d force = m_alignment->operator()(m_entity, others);
+  m_tracker.force_add("alignment", rutils::color::kCYAN, force); /* accum */
+
+  ER_DEBUG("Alignment force: %s@%s [%f]",
+           force.to_str().c_str(),
+           force.angle().to_str().c_str(),
+           force.length());
+  return force;
+} /* alignment() */
+
+rmath::vector2d apf_manager::constant_speed(const std::vector<rmath::vector2d> others) {
+  rmath::vector2d force = m_constant_speed->operator()(m_entity, others);
+  m_tracker.force_add("constant_speed", rutils::color::kCYAN, force); /* accum */
+
+  ER_DEBUG("Constant speed force: %s@%s [%f]",
+           force.to_str().c_str(),
+           force.angle().to_str().c_str(),
+           force.length());
+  return force;
+} /* constant_speed() */
 
 rmath::vector2d apf_manager::polar(const rmath::vector2d& center) {
   rmath::vector2d force = m_polar->operator()(m_entity, center);

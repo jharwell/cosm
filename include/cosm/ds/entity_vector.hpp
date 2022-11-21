@@ -25,7 +25,7 @@ class base_entity;
 class spatial_entity2D;
 } // namespace cosm::repr
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 using entity2D_vector_type = crepr::unicell_entity2D*;
 using const_entity2D_vector_type = const crepr::unicell_entity2D*;
@@ -58,4 +58,4 @@ using const_entity_vector = std::vector<const_entity_vector_type>;
 using spatial_entity_vector = std::vector<spatial_entity_vector_type>;
 using const_spatial_entity_vector = std::vector<const_spatial_entity_vector_type>;
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

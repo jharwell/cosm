@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -88,4 +88,4 @@ class nest : public repr::unicell_immovable_entity2D,
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis, config, xml);
+namespace cosm::argos::vis::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -34,4 +34,4 @@ void visualization_parser::parse(const ticpp::Element& node) {
   }
 } /* parse() */
 
-NS_END(xml, config, vis, argos, cosm);
+} /* namespace cosm::argos::vis::config::xml */

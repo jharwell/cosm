@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,5 +62,5 @@ class cell3D_empty : public cell3D_op, public rer::client<cell3D_empty> {
  */
 using cell3D_empty_visitor = rpvisitor::filtered_visitor<cell3D_empty>;
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

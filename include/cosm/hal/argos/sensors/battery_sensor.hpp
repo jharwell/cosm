@@ -19,23 +19,13 @@
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
 #include "cosm/hal/sensors/battery_sensor_reading.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
+#include "cosm/hal/sensors/stub_sensor.hpp"
 
 /******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_BatterySensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_battery_sensor = std::is_same<TSensor, ::argos::CCI_BatterySensor>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /******************************************************************************
  * Class Definitions
@@ -46,9 +36,12 @@ NS_END(detail);
  *
  * \brief Battery sensor wrapper for the following supported robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
+ *
+ * HOWEVER, this is a generic sensor which can be attached to any robot in
+ * ARGoS; I just haven't tested it with any robots other than the ones above.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
@@ -106,6 +99,9 @@ class battery_sensor_impl final : public rer::client<battery_sensor_impl<TSensor
   }
 };
 
+#if defined(COSM_HAL_TARGET_HAS_BATTERY_SENSOR)
 using battery_sensor = battery_sensor_impl<::argos::CCI_BatterySensor>;
-
-NS_END(sensors, argos, hal, cosm);
+#else
+using battery_sensor = chsensors::stub_sensor<std::vector<chsensors::battery_sensor_reading>>;
+#endif
+} /* namespace cosm::hal::argos::sensors */

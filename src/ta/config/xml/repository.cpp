@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -31,4 +31,4 @@ repository::repository(void) {
       cta::config::xml::task_executive_parser::kXMLRoot);
 }
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

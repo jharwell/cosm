@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -46,5 +46,5 @@ struct exec_estimates_config final : public rcppsw::config::base_config {
   std::map<std::string, rmath::rangez> ranges{};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

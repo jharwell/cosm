@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config);
+namespace cosm::repr::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -31,11 +31,11 @@ NS_START(cosm, repr, config);
  * \struct nests_config
  * \ingroup repr config
  *
- * \brief Configuration for the \ref nest(s) within the arena.
+ * \brief Configuration for the \ref crepr::nest(s) within the arena.
  */
 struct nests_config final : public rconfig::base_config {
   std::vector<nest_config> nests{};
 };
 
-NS_END(config, repr, cosm);
+} /* namespace cosm::repr::config */
 

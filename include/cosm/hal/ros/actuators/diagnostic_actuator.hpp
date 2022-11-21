@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, actuators);
+namespace cosm::hal::ros::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -76,4 +76,4 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
   /* clang-format on */
 };
 
-NS_END(actuators, ros, hal, cosm);
+} /* namespace cosm::hal::ros::actuators */

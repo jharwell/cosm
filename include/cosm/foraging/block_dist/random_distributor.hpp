@@ -24,18 +24,14 @@
 #include "cosm/arena/ds/arena_grid.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/coord_search_policy.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm);
+namespace cosm::repr { class multicell_entity;}
 
-namespace repr {
-class multicell_entity;
-} // namespace repr
-
-NS_START(foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -125,10 +121,9 @@ class random_distributor : public rer::client<random_distributor>,
   const cspatial::conflict_checker::map_cb_type mc_conflict_check;
   const dist_success_cb_type                    mc_dist_success;
 
-  enum coord_search_policy                      m_search_policy{coord_search_policy::ekRANDOM};
-  cads::arena_grid::view                         m_area;
+  cfbd::coord_search_policy                     m_search_policy{cfbd::coord_search_policy::ekRANDOM};
+  cads::arena_grid::view                        m_area;
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
-
+} /* namespace cosm::foraging::block_dist */

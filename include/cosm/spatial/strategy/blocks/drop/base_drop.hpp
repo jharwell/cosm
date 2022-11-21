@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, drop);
+namespace cosm::spatial::strategy::blocks::drop {
 
 /*******************************************************************************
  * Class Definitions
@@ -59,4 +59,4 @@ class base_drop : public csstrategy::base_strategy,
   /* clang-formatt on */
 };
 
-NS_END(drop, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::drop */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -95,4 +95,4 @@ std::vector<chsensors::env_sensor_reading> sonar_sensor::readings(void) {
   return {};
 }
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

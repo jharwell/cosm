@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, interactors);
+namespace cosm::argos::interactors {
 
 /*******************************************************************************
  * Classes
@@ -228,5 +228,5 @@ class nest_block_process
   /* clang-format on */
 };
 
-NS_END(interactors, argos, cosm);
+} /* namespace cosm::argos::interactors */
 

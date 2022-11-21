@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Class Definitions
@@ -68,4 +68,4 @@ class polled_task : public executable_task, public taskable {
   std::unique_ptr<taskable> m_mechanism;
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

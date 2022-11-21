@@ -16,9 +16,11 @@
 #include "cosm/hal/sensors/colored_blob_camera_sensor_reading.hpp"
 #include "cosm/hal/sensors/light_sensor_reading.hpp"
 #include "cosm/apf2D/boid.hpp"
+#include "cosm/apf2D/base_force.hpp"
+
 
 /*******************************************************************************
- * namespaces
+ * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::apf2D::nav {
 
@@ -36,7 +38,7 @@ struct phototaxis_force_config;
  *
  * \brief A force pushing the robot away from light sources.
  */
-class phototaxis_force {
+class phototaxis_force : public capf2D::base_force {
  public:
   using light_sensor_readings = std::vector<hal::sensors::light_sensor_reading>;
   using camera_sensor_readings =

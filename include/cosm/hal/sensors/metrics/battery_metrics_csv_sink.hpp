@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics);
+namespace cosm::hal::sensors::metrics {
 class battery_metrics_collector;
 
 /*******************************************************************************
@@ -57,4 +57,4 @@ class battery_metrics_csv_sink final
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

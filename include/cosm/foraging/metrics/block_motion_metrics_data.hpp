@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, metrics, detail);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -36,12 +36,10 @@ struct block_motion_metrics_data_impl  {
   ral::mt_size_t n_moved{0};
 };
 
-NS_END(detail);
-
 struct block_motion_metrics_data : public rmetrics::base_data {
-  detail::block_motion_metrics_data_impl interval{};
-  detail::block_motion_metrics_data_impl cum{};
+  block_motion_metrics_data_impl interval{};
+  block_motion_metrics_data_impl cum{};
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */
 

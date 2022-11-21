@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, repr);
+namespace cosm::arena::repr {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -39,4 +39,4 @@ void arena_cache::reset_metrics(void) {
   m_penalty_count = rtypes::timestep(0);
 } /* reset_metrics() */
 
-NS_END(repr, arena, cosm);
+} /* namespace cosm::arena::repr */

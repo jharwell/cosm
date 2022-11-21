@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, actuators);
+namespace cosm::hal::ros::actuators {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -62,4 +62,4 @@ void diff_drive_actuator::set_from_twist(
   decoratee().publish(t);
 }
 
-NS_END(actuators, ros, hal, cosm);
+} /* namespace cosm::hal::ros::actuators */

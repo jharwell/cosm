@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, drop);
+namespace cosm::spatial::strategy::blocks::drop {
 
 /*******************************************************************************
  * Class Definitions
@@ -46,4 +46,4 @@ class factory :
   factory(void);
 };
 
-NS_END(drop, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::drop */

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,5 +37,5 @@ struct task_id_extract {
   }
 };
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */
 

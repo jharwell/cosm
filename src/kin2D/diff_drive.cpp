@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -38,9 +38,7 @@ void diff_drive::fsm_drive(const ckin::twist& delta) {
   rmath::range<rmath::radians> range(-m_config.soft_turn_max,
                                      m_config.soft_turn_max);
 
-  m_actuator.set_from_twist(m_fsm.configured_twist(),
-                            range,
-                            m_config.max_linear_speed);
+  m_actuator.set_from_twist(m_fsm.configured_twist(), range);
 } /* fsm_drive() */
 
-NS_END(kin2D, cosm);
+} /* namespace cosm::kin2D */

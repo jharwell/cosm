@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -107,4 +107,4 @@ class base_graph_view_entity : public rpdecorator::decorator<TGraphViewType> {
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

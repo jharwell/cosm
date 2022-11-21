@@ -16,19 +16,20 @@
 #include "cosm/cosm.hpp"
 #include "cosm/apf2D/boid.hpp"
 #include "cosm/apf2D/nav/seek_force.hpp"
+#include "cosm/apf2D/base_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
+namespace cosm::nav {
+class trajectory;
+} /* namespace cosm::nav */
+
 namespace cosm::apf2D::nav {
 
 namespace config {
 struct path_following_force_config;
 } /* config */
-
-namespace ds {
-class path_state;
-} /* namespace ds */
 
 /*******************************************************************************
  * Class Definitions
@@ -40,7 +41,7 @@ class path_state;
  * \brief A force pushing the robot along a trajectory defined by a set of
  * points in 2D.
  */
-class path_following_force {
+class path_following_force : public capf2D::base_force {
  public:
   explicit path_following_force(
       const config::path_following_force_config* config);
@@ -54,7 +55,7 @@ class path_following_force {
    * \param entity The robot to calculate the force for.
    * \param state The current path state.
    */
-  rmath::vector2d operator()(const boid& entity, ds::path_state* state) const;
+  rmath::vector2d operator()(const boid& entity, cnav::trajectory* traj) const;
 
  private:
   /* clang-format off */

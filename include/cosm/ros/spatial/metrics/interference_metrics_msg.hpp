@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, spatial, metrics);
+namespace cosm::ros::spatial::metrics {
 
 /*******************************************************************************
  * ROS Messages
@@ -29,4 +29,4 @@ struct interference_metrics_msg {
   csmetrics::interference_metrics_data data{};
 };
 
-NS_END(metrics, spatial, ros, cosm)
+} /* namespace cosm::ros::spatial::metrics */

@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 /**
  * \brief The types of the layers used by \ref arena_grid.
@@ -36,8 +36,8 @@ using arena_layer_stack = std::tuple<cds::cell2D>;
  * \class arena_grid
  * \ingroup arena ds
  *
- * \brief 2D grid of \ref cell2D objects containing the state of the geometrical
- * extent of the arena floor.
+ * \brief 2D grid of \ref cds::cell2D objects containing the state of the
+ * geometrical extent of the arena floor.
  */
 class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
  public:
@@ -96,4 +96,4 @@ class arena_grid : public rds::stacked_grid2D<arena_layer_stack> {
   /* clang-format on */
 };
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */

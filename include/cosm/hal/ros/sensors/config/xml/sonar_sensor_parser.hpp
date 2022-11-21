@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, config, xml);
+namespace cosm::hal::ros::sensors::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -63,4 +63,4 @@ class sonar_sensor_parser : public rer::client<sonar_sensor_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors::xml, config */

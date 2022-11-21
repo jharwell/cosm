@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, operations, detail);
+namespace cosm::ds::operations::detail {
 using cads::arena_grid;
 
 /*******************************************************************************
@@ -45,4 +45,4 @@ void cell2D_cache_extent::visit(cads::arena_grid& grid) {
   visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
 } /* visit() */
 
-NS_END(detail, operations, ds, cosm);
+} /* namespace cosm::ds::operations::detail */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv, config, xml);
+namespace cosm::tv::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -66,5 +66,5 @@ class population_dynamics_parser final : public rer::client<population_dynamics_
   /* clang-format on */
 };
 
-NS_END(xml, config, tv, cosm);
+} /* namespace cosm::tv::config::xml */
 

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config, xml);
+namespace cosm::subsystem::perception::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,5 +61,5 @@ class pheromone_parser : public rer::client<pheromone_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, perception, subsystem, cosm);
+} /* namespace cosm::subsystem::perception::config::xml */
 

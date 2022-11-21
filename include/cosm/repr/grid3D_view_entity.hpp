@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -26,8 +26,8 @@ NS_START(cosm, repr);
  * \class grid3D_view_entity
  * \ingroup repr
  *
- * \brief Representation of an \ref arena_grid::grid_view or \ref
- * arena_grid::const_grid_view object as an entity in the arena. This
+ * \brief Representation of an \ref cads::arena_grid::view or \ref
+ * cads::arena_grid::const_view object as an entity in the arena. This
  * representation makes it much easier to pass abstract, mult-cell objects that
  * are not entities per-se as entities for various operations such as block
  * distribution in foraging.
@@ -93,4 +93,4 @@ class grid3D_view_entity
   using grid_view_entity_type::view;
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

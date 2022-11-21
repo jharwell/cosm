@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, subsystem, perception);
+namespace cosm::subsystem::perception {
 
 /*******************************************************************************
  * Class Definitions
@@ -39,5 +39,5 @@ class base_memory_model {
   base_memory_model& operator=(base_memory_model&&) = delete;
 };
 
-NS_END(perception, subsystem, cosm);
+} /* namespace cosm::subsystem::perception */
 

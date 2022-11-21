@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,4 +56,4 @@ class task_allocator : public boost::static_visitor<polled_task*> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

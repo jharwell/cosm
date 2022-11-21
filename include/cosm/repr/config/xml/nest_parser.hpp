@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config, xml);
+namespace cosm::repr::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -63,5 +63,5 @@ class nest_parser final : public rer::client<nest_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, repr, cosm);
+} /* namespace cosm::repr::config::xml */
 

@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+namespace cosm::arena::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,7 +34,8 @@ NS_START(cosm, arena, config, xml);
  * \class arena_map_parser
  * \ingroup arena config xml
  *
- * \brief Parses XML parameters for \ref arena_map into \ref arena_map_config.
+ * \brief Parses XML parameters for \ref carena::base_arena_map and derived
+ * classes into \ref caconfig::arena_map_config.
  */
 class arena_map_parser final : public rer::client<arena_map_parser>,
                                public rconfig::xml::xml_config_parser {
@@ -67,5 +68,5 @@ class arena_map_parser final : public rer::client<arena_map_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, arena, cosm);
+} /* namespace cosm::arena::config::xml */
 

@@ -21,7 +21,7 @@
 /*******************************************************************************
   * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore, config);
+namespace cosm::spatial::strategy::explore::config {
 
 /*******************************************************************************
   * Structure Definitions
@@ -55,4 +55,4 @@ struct explore_config final : public rconfig::base_config {
   rtypes::timestep min_duration{rtypes::constants::kNoTime};
 };
 
-NS_END(config, explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore::config */

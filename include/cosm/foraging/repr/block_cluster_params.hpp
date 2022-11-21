@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, repr);
+namespace cosm::foraging::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -39,5 +39,5 @@ struct block_cluster_params {
   cads::arena_grid::view   view;
 };
 
-NS_END(repr, foraging, cosm);
+} /* namespace cosm::foraging::repr */
 

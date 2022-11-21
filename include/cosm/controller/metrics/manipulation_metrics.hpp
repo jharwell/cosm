@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, metrics);
+namespace cosm::controller::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -47,4 +47,4 @@ class manipulation_metrics : public virtual rmetrics::base_metrics {
   virtual rtypes::timestep penalty(uint event) const = 0;
 };
 
-NS_END(metrics, controller, cosm);
+} /* namespace cosm::controller::metrics */

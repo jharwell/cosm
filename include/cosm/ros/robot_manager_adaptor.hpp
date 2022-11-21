@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros);
+namespace cosm::ros {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,7 +27,7 @@ NS_START(cosm, ros);
  * \class robot_manager_adaptor
  * \ingroup ros
  *
- * \brief Adaptor for \ref base_swarm_manager to provide an interface for
+ * \brief Adaptor for \ref cpal::base_swarm_manager to provide an interface for
  * managing a single robot within a swarm using ROS.
  */
 class robot_manager_adaptor : public cpal::base_swarm_manager,
@@ -74,4 +74,4 @@ class robot_manager_adaptor : public cpal::base_swarm_manager,
   /* clang-format on */
 };
 
-NS_END(ros, cosm);
+} /* namespace cosm::ros */

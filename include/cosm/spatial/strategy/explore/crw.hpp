@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Class Definitions
@@ -75,4 +75,4 @@ class crw : public cssexplore::base_explore,
   /* clang-format on */
 };
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

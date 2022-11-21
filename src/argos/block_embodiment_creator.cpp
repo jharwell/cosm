@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Member Functions
@@ -148,4 +148,4 @@ block_embodiment_creator::ramp_top(const cargos::embodied_ramp_block* block,
       ::argos::CVector3(length, block->rdims3D().y(), kRAMP_BOX_THICKNESS));
 } /* ramp_top() */
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

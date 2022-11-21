@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Class Definitions
@@ -179,4 +179,4 @@ class caching_arena_map final : public rer::client<caching_arena_map>,
   /* clang-format on */
 };
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

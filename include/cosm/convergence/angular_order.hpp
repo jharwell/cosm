@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,4 +60,4 @@ class angular_order final : public convergence_measure {
   }
 };
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

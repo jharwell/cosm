@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config, xml);
+namespace cosm::oracle::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,5 +57,5 @@ class tasking_oracle_parser : public rer::client<tasking_oracle_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, oracle, cosm);
+} /* namespace cosm::oracle::config::xml */
 

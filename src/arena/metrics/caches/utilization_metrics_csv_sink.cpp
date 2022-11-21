@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -71,4 +71,4 @@ utilization_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */

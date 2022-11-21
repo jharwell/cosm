@@ -1,5 +1,5 @@
 /**
- * \file arena_cache_block_drop.hpp
+ * \file cache_block_drop.hpp
  *
  * \copyright 2017 John Harwell, All rights reserved.
  *
@@ -37,7 +37,8 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations {
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -105,7 +106,7 @@ class cache_block_drop : public rer::client<cache_block_drop>,
 };
 
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \brief We use the precise visitor in order to force compile errors if a call
@@ -115,4 +116,4 @@ NS_END(detail);
  */
 using cache_block_drop_visitor = rpvisitor::filtered_visitor<detail::cache_block_drop>;
 
-NS_END(operations, arena, cosm);
+} /* namespace cosm::arena::operations */

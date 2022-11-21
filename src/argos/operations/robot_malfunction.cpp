@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, operations);
+namespace cosm::argos::operations {
 
 /*******************************************************************************
  * Depth0 Foraging
@@ -45,4 +45,4 @@ void robot_malfunction::visit(cfsm::supervisor_fsm& fsm) {
   fsm.event_malfunction();
 } /* visit() */
 
-NS_END(operations, argos, cosm);
+} /* namespace cosm::argos::operations */

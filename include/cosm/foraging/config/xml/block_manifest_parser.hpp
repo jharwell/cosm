@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,5 +60,5 @@ class block_manifest_parser : public rer::client<block_manifest_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */
 

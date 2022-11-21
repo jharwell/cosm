@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics);
+namespace cosm::hal::sensors::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -47,4 +47,4 @@ void battery_metrics_collector::reset_after_interval(void) {
   ral::mt_set(m_data.interval.n_robots, 0);
 } /* reset_after_interval() */
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, config);
+namespace cosm::convergence::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -44,5 +44,5 @@ struct convergence_config final : public rconfig::base_config {
   struct velocity_config           velocity{};
 };
 
-NS_END(config, convergence, cosm);
+} /* namespace cosm::convergence::config */
 

@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,7 +62,7 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   size_t capacity(void) const override {
     return m_dists.size() * m_dists[0].capacity();
   }
-  size_t size(void) const override RCSW_PURE;
+  size_t size(void) const override RCPPSW_PURE;
 
   dist_status distribute_block(crepr::sim_block3D* block) override;
 
@@ -72,5 +72,5 @@ class multi_cluster_distributor final : public rer::client<multi_cluster_distrib
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

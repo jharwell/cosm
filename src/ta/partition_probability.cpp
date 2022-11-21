@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -72,4 +72,4 @@ double partition_probability::calc_random(rmath::rng* rng) {
   return eval(rng->uniform(0.0, 1.0));
 } /* calc_random() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

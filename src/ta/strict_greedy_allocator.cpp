@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Member Functions
@@ -50,4 +50,4 @@ polled_task* strict_greedy_allocator::operator()(
       rmath::rangez(0, equiv_min_tasks.size() - 1))];
 } /* alloc_strict_greedy() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

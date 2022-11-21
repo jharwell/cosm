@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -81,4 +81,4 @@ class spatial_entity : public base_entity {
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -44,4 +44,4 @@ class unicell_immovable_entity2D : public unicell_entity2D {
   ~unicell_immovable_entity2D(void) override = default;
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

@@ -16,24 +16,24 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-env_sensor::env_sensor(chasensors::ground_sensor&& sensor)
+env_sensor::env_sensor(chargos::sensors::ground_sensor&& sensor)
     : ER_CLIENT_INIT("cosm.hal.argos.sensors.env_sensor"),
-      ground(std::move(sensor)) {}
+      impl_type(std::move(sensor)) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void env_sensor::reset(void) { ground::decoratee().reset(); }
-void env_sensor::enable(void) { ground::decoratee().enable(); }
+void env_sensor::reset(void) { impl_type::decoratee().reset(); }
+void env_sensor::enable(void) { impl_type::decoratee().enable(); }
 
-void env_sensor::disable(void) { ground::decoratee().disable(); }
+void env_sensor::disable(void) { impl_type::decoratee().disable(); }
 bool env_sensor::is_enabled(void) const {
-  return ground::decoratee().is_enabled();
+  return impl_type::decoratee().is_enabled();
 }
 
 bool env_sensor::detect(
@@ -41,17 +41,17 @@ bool env_sensor::detect(
     const chsensors::config::env_sensor_detection_config* config) {
   size_t sum = 0;
   if (chsensors::env_sensor::kNestTarget == name) {
-    for (auto& r : ground::decoratee().readings()) {
+    for (auto& r : impl_type::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
     return sum >= config->consensus;
   } else if (chsensors::env_sensor::kBlockTarget == name) {
-    for (auto& r : ground::decoratee().readings()) {
+    for (auto& r : impl_type::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
     return sum >= config->consensus;
   } else if (kCacheTarget == name) {
-    for (auto& r : ground::decoratee().readings()) {
+    for (auto& r : impl_type::decoratee().readings()) {
       sum += static_cast<size_t>(config->range.contains(r.value));
     } /* for(&r..) */
     return sum >= config->consensus;
@@ -61,4 +61,4 @@ bool env_sensor::detect(
   }
 }
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

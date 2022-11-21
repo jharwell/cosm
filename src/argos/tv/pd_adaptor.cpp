@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos, tv);
+namespace cosm::argos::tv {
 
 using op_result = ctv::population_dynamics::op_result;
 
@@ -234,12 +234,11 @@ bool pd_adaptor<TController>::robot_attempt_add(const rtypes::type_uuid& id) {
    * potentially a lot of dynamic memory management that can slow things down,
    * but it is required. See #623.
    *
-   * This is a @bug in ARGoS, and so this code can be reverted to something like
+   * This is a \bug in ARGoS, and so this code can be reverted to something like
    * what is was originally once this is fixed in the ARGoS master. Diffing the
    * branch for FORDYCA#623 against the previous commit should show the changes.
    */
   try {
-    /* ick raw pointers--thanks ARGoS... */
     robot = new chal::robot(cpal::kRobotNamePrefix + rcppsw::to_string(id),
                             cpal::kControllerXMLId,
                             ::argos::CVector3(x, y, 0.0),
@@ -273,4 +272,4 @@ bool pd_adaptor<TController>::robot_attempt_add(const rtypes::type_uuid& id) {
 template class pd_adaptor<cpargos::controller::adaptor2D>;
 template class pd_adaptor<cpargos::controller::adaptorQ3D>;
 
-NS_END(tv, argos, cosm);
+} /* namespace cosm::argos::tv */

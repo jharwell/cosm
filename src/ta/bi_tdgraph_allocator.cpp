@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Member Functions
@@ -53,4 +53,4 @@ polled_task* bi_tdgraph_allocator::operator()(const polled_task* current_task,
   return nullptr;
 }
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

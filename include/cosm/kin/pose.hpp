@@ -13,13 +13,14 @@
  ******************************************************************************/
 #include "rcppsw/math/orientation.hpp"
 #include "rcppsw/math/vector3.hpp"
+#include "rcppsw/al/multithread.hpp"
 
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin);
+namespace cosm::kin {
 
 /*******************************************************************************
  * Class Definitions
@@ -35,6 +36,16 @@ NS_START(cosm, kin);
 struct pose {
   rmath::vector3d position{};
   rmath::euler_angles orientation{};
+
+  /**
+   * \brief Accumulate pose--should only be used in metric collection contexts.
+   */
+  pose& operator+=(const pose &rhs) {
+    this->position += rhs.position;
+    this->orientation += rhs.orientation;
+
+    return *this;
+  }
 };
 
-NS_END(kin, cosm);
+} /* namespace cosm::kin */

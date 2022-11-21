@@ -30,7 +30,7 @@ namespace cosm::apf2D {
 class tracker;
 } /* namespace cosm::apf2D */
 
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Classes
@@ -75,10 +75,10 @@ class apf2D_visualizer : public rer::client<apf2D_visualizer> {
    * \brief Draw 2D APF force visualizations
    *
    * \param tracker The 2D force tracker.
+   *
    * \param labels Include textual labels for what the forces are?
    */
-  void forces_draw(const apf2D::tracker* tracker,
-                   bool labels);
+  void forces_draw(const apf2D::tracker* tracker, bool labels);
 
   /**
    * \brief Draw path visualizations
@@ -97,5 +97,5 @@ class apf2D_visualizer : public rer::client<apf2D_visualizer> {
   /* clang-format on */
 };
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */
 

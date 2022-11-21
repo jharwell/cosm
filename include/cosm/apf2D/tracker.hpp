@@ -18,7 +18,7 @@
 
 #include "rcppsw/utils/color.hpp"
 
-#include "cosm/apf2D/nav/ds/path_state.hpp"
+#include "cosm/nav/trajectory.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -59,7 +59,7 @@ class tracker {
   /**
    * \brief Overwriting add of the the robot's currently active path.
    */
-  bool path_add(const nav::ds::path_state& path);
+  bool path_add(const cnav::trajectory& path);
 
   /**
    * \brief Add the specified force vector to the accumulated vector of forces
@@ -69,15 +69,15 @@ class tracker {
                  const rutils::color& color,
                  const rmath::vector2d& force);
 
-  boost::optional<nav::ds::path_state> path(void) const { return m_path; }
+  boost::optional<cnav::trajectory> path(void) const { return m_path; }
   const map_type& forces(void) const { return m_forces; }
 
   void reset(void);
 
  private:
   /* clang-format off */
-  boost::optional<nav::ds::path_state> m_path{};
-  map_type                             m_forces{};
+  boost::optional<cnav::trajectory> m_path{};
+  map_type                          m_forces{};
   /* clang-format on */
 };
 

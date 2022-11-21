@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,4 +34,4 @@ using battery_sensor = chargos::sensors::battery_sensor;
 using battery_sensor = chros::sensors::battery_sensor;
 #endif /* COSM_HAL_TARGET_ARGOS_ROBOT */
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -40,5 +40,5 @@ struct block_manifest final : public rconfig::base_config {
   double unit_dim{0.0};
 };
 
-NS_END(config, foraging, cosm);
+} /* namespace cosm::foraging::config */
 

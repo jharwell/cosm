@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, ds);
+namespace cosm::ta::ds {
 class bi_tdgraph;
 
 /*******************************************************************************
@@ -31,4 +31,4 @@ class bi_tdgraph;
  */
 using ds_variant = std::variant<std::unique_ptr<bi_tdgraph>>;
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

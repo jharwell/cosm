@@ -28,7 +28,7 @@ namespace rcppsw::math::config {
 struct ema_config;
 } // namespace rcppsw::math::config
 
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 namespace config {
 struct src_sigmoid_sel_config;
@@ -170,7 +170,7 @@ class executable_task : public logical_task,
 
   /**
    * \brief Update the current estimate of the task interface time by using a
-   * weighted sum of the previous \ref time_estimate and the new value.
+   * weighted sum of the previous \ref cta::time_estimate and the new value.
    *
    * \param i The interface ID.
    * \param last_measure The last measured time.
@@ -181,7 +181,7 @@ class executable_task : public logical_task,
 
   /**
    * \brief Update the current estimate of the task execution time by using a
-   * weighted sum of the previous \ref time_estimate and the new value.
+   * weighted sum of the previous \ref cta::time_estimate and the new value.
    *
    * \param last_measure The last measured time.
    */
@@ -361,4 +361,4 @@ class executable_task : public logical_task,
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

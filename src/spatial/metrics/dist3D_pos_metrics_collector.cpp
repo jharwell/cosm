@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -37,4 +37,4 @@ void dist3D_pos_metrics_collector::collect(const rmetrics::base_metrics& metrics
   inc_cell_count(m.dpos3D());
 } /* collect() */
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Member Functions
@@ -61,4 +61,4 @@ cds::block3D_vectorno free_blocks_calculator::operator()(
   return free_blocks;
 } /* operator()() */
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

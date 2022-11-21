@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, ds);
+namespace cosm::foraging::ds {
 
 /*******************************************************************************
  * Non-Member Functions
@@ -45,4 +45,4 @@ std::string block3D_cluster_vectorno::to_str(void) const {
   return do_to_str(decoratee());
 } /* to_str() */
 
-NS_END(ds, foraging, cosm);
+} /* namespace cosm::foraging::ds */

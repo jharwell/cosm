@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -49,4 +49,4 @@ class unicell_movable_entity3D : public unicell_entity3D {
   }
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

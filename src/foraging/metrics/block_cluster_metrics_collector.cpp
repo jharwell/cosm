@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -53,4 +53,4 @@ void block_cluster_metrics_collector::reset_after_interval(void) {
   } /* for(i..) */
 } /* reset_after_interval() */
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

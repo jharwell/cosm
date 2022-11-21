@@ -21,7 +21,7 @@
 #include "cosm/ds/entity_vector.hpp"
 #include "cosm/ds/block3D_vector.hpp"
 #include "cosm/foraging/block_dist/dist_status.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 
 #include "rcppsw/types/discretize_ratio.hpp"
@@ -40,7 +40,7 @@ namespace cosm::arena::ds {
 class arena_grid;
 } // namespace ds
 
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -128,5 +128,5 @@ class dispatcher final : public rer::client<dispatcher> {
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

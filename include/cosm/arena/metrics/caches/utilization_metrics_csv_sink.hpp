@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 class utilization_metrics_collector;
 
 /*******************************************************************************
@@ -54,5 +54,5 @@ class utilization_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, caches, arena, cosm);
+} /* namespace cosm::arena::caches::metrics */
 

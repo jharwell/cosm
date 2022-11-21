@@ -1,14 +1,21 @@
 ################################################################################
-# Build Environment Configuration Options                                      #
+# Build Environment Configuration
 ################################################################################
 # We are might be linking with a shared library
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(cosm_CHECK_LANGUAGE "CXX")
 
+# Each conference tag=minor increment. Each minor feature added=patch increment.
+set(PROJECT_VERSION_MAJOR 1)
+set(PROJECT_VERSION_MINOR 2)
+set(PROJECT_VERSION_PATCH 9)
+set(cosm_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+
 if(NOT DEFINED COSM_BUILD_ENV)
   set(COSM_BUILD_ENV "DEVEL")
 endif()
+
 
 if("${COSM_BUILD_ENV}" MATCHES "DEVEL" )
   # Nothing to do for now
@@ -20,81 +27,32 @@ else()
   message(FATAL_ERROR "Build environment must be: [DEVEL,ROBOT,MSI]")
 endif()
 
-################################################################################
-# HAL Configuration Options                                                    #
-################################################################################
-if(NOT DEFINED COSM_BUILD_FOR)
-  set(COSM_BUILD_FOR "ARGOS_FOOTBOT")
-endif()
-
-if("${COSM_BUILD_FOR}" MATCHES "ARGOS_FOOTBOT")
-  set(COSM_HAL_TARGET "argos-footbot")
-  set(COSM_ARGOS_ROBOT_TYPE "foot-bot")
-  set(COSM_ARGOS_ROBOT_NAME_PREFIX "fb")
-  set(COSM_ARGOS_CONTROLLER_XML_ID "fbc")
-
-elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
-  set(COSM_HAL_TARGET "argos-eepuck3D")
-  set(COSM_ARGOS_ROBOT_TYPE "e-puck")
-  set(COSM_ARGOS_ROBOT_NAME_PREFIX "ep")
-  set(COSM_ARGOS_CONTROLLER_XML_ID "epc")
-
-elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_PIPUCK")
-  set(COSM_HAL_TARGET "argos-pipuck")
-  set(COSM_ARGOS_ROBOT_TYPE "pipuck")
-  set(COSM_ARGOS_ROBOT_NAME_PREFIX "pp")
-  set(COSM_ARGOS_CONTROLLER_XML_ID "ppc")
-elseif("${COSM_BUILD_FOR}" MATCHES "ROS_ETURTLEBOT3")
-  set(COSM_HAL_TARGET "ros-eturtlebot3")
-  set(COSM_ROS_ROBOT_TYPE "eturtlebot3")
-  set(COSM_ROS_ROBOT_NAME_PREFIX "etb3_")
-else()
-  set(COSM_BUILD_TARGETS
-    ARGOS_FOOTBOT
-    ARGOS_EEPUCK3D
-    ARGOS_PIPUCK
-    ROS_ETURTLEBOT3
-    )
-  message(FATAL_ERROR "Build target must be one of ${COSM_BUILD_TARGETS}")
-endif()
-
-################################################################################
-# PAL Configuration Options                                                    #
-################################################################################
-if("${COSM_BUILD_FOR}" MATCHES "ARGOS")
-  set(COSM_PAL_TARGET "ARGOS")
-  set(COSM_PAL_NATIVE_BUILD ON)
-
-elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
-  set(COSM_PAL_TARGET "ROS")
-  if(NOT CMAKE_CROSSCOMPILING)
-    set(COSM_PAL_NATIVE_BUILD ON)
-  else()
-    set(COSM_PAL_NATIVE_BUILD OFF)
-  endif()
-
-  execute_process(COMMAND git rev-parse HEAD
-    OUTPUT_VARIABLE COSM_ROS_MD5_CURRENT
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-  if (NOT COSM_ROS_MD5_CURRENT STREQUAL COSM_ROS_MD5)
-    message("ROS Msg MD5 changed ${COSM_ROS_MD5} -> ${COSM_ROS_MD5_CURRENT}")
-    set(COSM_ROS_MD5
-      0 # temporarily to make stuff easier ${COSM_ROS_MD5_CURRENT}
-      CACHE INTERNAL "MD5 hash used for ROS message versioning")
-    endif()
-endif()
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/pal/pal.cpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp
-  @ONLY
+libra_configure_version(
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/version/version.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/src/version/version.cpp
+  cosm_components_SRC
+  message("${cosm_components_SRC}")
   )
+# list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/version/version.cpp")
 
-list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp")
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/hal.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pal.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/argos.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ros.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake)
 
 ################################################################################
-# Qt Configuration Options                                                     #
+# HAL Configuration
+################################################################################
+cosm_hal_configure_target()
+
+################################################################################
+# PAL Configuration
+################################################################################
+cosm_pal_configure_target()
+
+################################################################################
+# Qt Configuration
 ################################################################################
 
 # Conditionally compile/link Qt visualizations.
@@ -106,7 +64,7 @@ list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/pal/pal.cpp")
 #   nice with the Intel compiler.
 if (NOT DEFINED COSM_WITH_VIS)
   if ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64" AND
-    "${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
+      "${COSM_BUILD_FOR}" MATCHES "ARGOS" AND
       NOT "${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     set(COSM_WITH_VIS ON)
   else()
@@ -128,25 +86,40 @@ if (COSM_WITH_VIS)
 endif()
 
 ################################################################################
-# Components                                                                   #
+# Components
 ################################################################################
+string(CONCAT Q3D_bindings_regex
+  "src/kin2D|"
+  "src/controller/base_controller2D|"
+  "src/controller/base_controllerQ3D|"
+  "src/subsystem/saa_subsystemQ3D"
+  )
+string(CONCAT 3D_bindings_regex
+  "src/controller/base_controller3D|"
+  "src/subsystem/saa_subsystem3D"
+  )
+
 string(CONCAT common_regex
   "src/ds/config|"
-  "src/hal/subsystem|"
   "src/hal/sensors|"
   "src/hal/actuators|"
-  "src/kin2D|"
+  "src/kin/|" # trailing slash needed not to catch kin2D
+  "src/nav|"
   "src/pal/config|"
   "src/pal/base_swarm_manager|"
-  "src/controller|"
   "src/ta|"
   "src/init|"
-  "src/subsystem|"
+  "src/controller/base_controller.cpp|"
+  "src/controller/config|"
+  "src/subsystem/base_|"
+  "src/subsystem/config|"
+  "src/subsystem/perception|"
   "src/apf2D|"
+  "src/flocking|"
   "src/metrics"
   )
 
-component_register_as_src(
+libra_component_register_as_src(
   cosm_common_SRC
   cosm
   "${cosm_SRC}"
@@ -154,85 +127,20 @@ component_register_as_src(
   "(${common_regex})")
 
 if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
-  string(CONCAT argos_regex
-    "src/ds|"
-    "src/arena|"
-    "src/convergence|"
-    "src/foraging|"
-    "src/fsm|"
-    "src/hal/argos|"
-    "src/hal/sensors|"
-    "src/metrics|"
-    "src/oracle|"
-    "src/pal/argos|"
-    "src/repr|"
-    "src/spatial|"
-    "src/tv|"
-    "src/argos"
-    )
-  component_register_as_src(
-    cosm_argos_SRC
-    cosm
-    "${cosm_SRC}"
-    argos
-    "(${argos_regex})")
+  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/argos.cmake)
 
-  if(COSM_WITH_VIS)
-    component_register_as_src(
-      cosm_argos_vis_SRC
-      cosm
-      "${cosm_SRC}"
-      argos_vis
-      "src/argos/vis")
-  endif()
-
-  # Root project (not used in find_package())
-  if (NOT cosm_FIND_COMPONENTS)
-    set(cosm_FIND_COMPONENTS
-      common
-      argos
-      argos_vis
-      )
-  endif()
+  cosm_argos_configure_components()
 
 elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
-  string(CONCAT ros_regex
-    "src/ros|"
-    "src/hal/ros|"
-    "src/pal/ros|"
-    "src/fsm|"
-    "src/foraging/fsm|"
-    "src/kin2D|"
-    "src/foraging/metrics|"
-    "src/spatial/fsm|"
-    "src/spatial/metrics|"
-    "src/spatial/strategy|"
-    "src/repr/operations/block_pickup|"
-    "src/repr/base_block3D|"
-    "src/repr/config/xml"
-    )
-  component_register_as_src(
-    cosm_ros_SRC
-    cosm
-    "${cosm_SRC}"
-    ros
-    "(${ros_regex})")
-
-  # Root project (not used in find_package())
-  if (NOT cosm_FIND_COMPONENTS)
-    set(cosm_FIND_COMPONENTS
-      common
-      ros
-      )
-  endif()
-
+  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ros.cmake)
+  cosm_ros_configure_components()
 endif()
 
 
-requested_components_check(cosm)
+libra_requested_components_check(cosm)
 
 ################################################################################
-# External Projects                                                            #
+# External Projects
 ################################################################################
 # RCPPSW
 find_package(rcppsw COMPONENTS REQUIRED
@@ -274,7 +182,7 @@ endif()
 # irritating.
 
 ################################################################################
-# Libraries                                                                    #
+# Libraries
 ################################################################################
 # Create the source for the SINGLE library to build by combining the
 # source of the selected components
@@ -283,18 +191,6 @@ foreach(component ${cosm_FIND_COMPONENTS})
     list(APPEND cosm_components_SRC ${cosm_} ${cosm_${component}_SRC})
   endif()
 endforeach()
-
-# Configure version
-execute_process(COMMAND git rev-list --count HEAD
-  OUTPUT_VARIABLE COSM_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/src/version.cpp
-  @ONLY
-  )
-list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/version.cpp")
 
 # Define the COSM library
 set(cosm_LIBRARY ${target}-${COSM_HAL_TARGET})
@@ -315,6 +211,17 @@ set_target_properties(${cosm_LIBRARY}
   PROPERTIES OUTPUT_NAME
   ${cosm_LIBRARY_NAME}
   )
+
+# Setting this results in TWO files being installed: the actual
+# library with the version embedded, and a symlink to the actual
+# library with the same name sans the embedded version (if COSM
+# is built as a shared library).
+set_target_properties(${cosm_LIBRARY}
+  PROPERTIES
+  VERSION ${cosm_VERSION}
+  SOVERSION ${cosm_VERSION}
+  )
+
 ########################################
 # Include directories
 ########################################
@@ -360,7 +267,6 @@ if (${COSM_WITH_VIS})
     OpenGL::GL
     )
 endif()
-
 if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
   target_link_directories(${cosm_LIBRARY}
     PUBLIC
@@ -369,6 +275,7 @@ if ("${COSM_BUILD_FOR}" MATCHES "ARGOS")
     argos3core_simulator
     argos3plugin_simulator_footbot
     argos3plugin_simulator_epuck
+    argos3plugin_simulator_drone
     argos3plugin_simulator_entities
     argos3plugin_simulator_dynamics2d
     argos3plugin_simulator_genericrobot
@@ -383,56 +290,41 @@ target_link_options(${cosm_LIBRARY} PRIVATE -Wl,--no-undefined)
 ########################################
 # Compile Options/Definitions
 ########################################
-if ("${COSM_BUILD_FOR}" MATCHES "ROS")
-  target_compile_options(${cosm_LIBRARY}
-    PUBLIC
-    -Wno-psabi)
-endif()
-
-if ("${COSM_HAL_TARGET}" MATCHES "argos-footbot")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_FOOTBOT)
-elseif("${COSM_HAL_TARGET}" MATCHES "argos-eepuck3d")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_EEPUCK3D)
-elseif("${COSM_HAL_TARGET}" MATCHES "argos-pipuck")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_HAL_TARGET=COSM_HAL_TARGET_ARGOS_PIPUCK)
-elseif("${COSM_HAL_TARGET}" MATCHES "ros-eturtlebot3")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_HAL_TARGET=COSM_HAL_TARGET_ROS_ETURTLEBOT3)
-endif()
-
-if("${COSM_PAL_TARGET}" MATCHES "ARGOS")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_ENABLE_PAL_TARGET_ARGOS)
-elseif("${COSM_PAL_TARGET}" MATCHES "ROS")
-  target_compile_definitions(${cosm_LIBRARY}
-    PUBLIC
-    COSM_ENABLE_PAL_TARGET_ROS)
-endif()
+cosm_hal_configure_buildflags()
+cosm_pal_configure_buildflags()
 
 ################################################################################
-# Installation                                                                 #
+# Installation and Deployment
 ################################################################################
-configure_exports_as(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
+libra_configure_exports_as(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
 
-# Install cosm
-register_target_for_install(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
-register_headers_for_install(include/cosm ${CMAKE_INSTALL_PREFIX})
-register_extra_configs_for_install(${cosm_LIBRARY}
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake
+# Install COSM
+libra_register_target_for_install(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
+libra_register_headers_for_install(include/cosm ${CMAKE_INSTALL_PREFIX})
+
+file(GLOB COSM_CMAKE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake/*.cmake")
+libra_register_extra_configs_for_install(${cosm_LIBRARY}
+  "${COSM_CMAKE_FILES}"
   ${CMAKE_INSTALL_PREFIX})
 
-################################################################################
-# Status                                                                       #
-################################################################################
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake)
-libra_config_summary()
+# Deploy COSM
+set(CPACK_SET_DESTDIR YES)
+set(CPACK_PACKAGE_FILE_NAME
+  ${cosm_LIBRARY}-${cosm_VERSION}-${CMAKE_SYSTEM_PROCESSOR})
+libra_configure_cpack(
+  "DEB;TGZ"
 
+  "Core Swarm (COSM) is a collection of non application, method, or controller
+specific software components that can be reused across multiple
+Multi-Agent System (MAS) projects (i.e., generic in the context of
+MAS, but maybe not more broadly).  "
+
+  "John Harwell"
+  "https://jharwell.github.io/cosm"
+  "John Harwell <john.r.harwell@gmail.com>")
+
+################################################################################
+# Status
+################################################################################
+libra_config_summary()
 cosm_config_summary()

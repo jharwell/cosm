@@ -26,7 +26,7 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Classes
@@ -71,4 +71,4 @@ class block_carry_visualizer : public rer::client<block_carry_visualizer> {
   /* clang-format on */
 };
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */

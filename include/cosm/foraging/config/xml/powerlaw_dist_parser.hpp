@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -30,7 +30,7 @@ NS_START(cosm, foraging, config, xml);
  * \class powerlaw_dist_parser
  * \ingroup foraging config xml
  *
- * \brief Parses XML parameters for related to \ref powerlaw_distributor
+ * \brief Parses XML parameters for related to \ref cfbd::powerlaw_distributor
  * objects into \ref powerlaw_dist_config.
  */
 class powerlaw_dist_parser final : public rer::client<powerlaw_dist_parser>,
@@ -61,5 +61,5 @@ class powerlaw_dist_parser final : public rer::client<powerlaw_dist_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */
 

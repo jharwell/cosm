@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, repr);
+namespace cosm::foraging::repr {
 
 /*******************************************************************************
  * Member Functions
@@ -99,4 +99,4 @@ void block_cluster::update_after_pickup(const rtypes::type_uuid& pickup_id) {
             rcppsw::to_string(this->id()).c_str());
 } /* update_after_pickup() */
 
-NS_END(repr, foraging, cosm);
+} /* namespace cosm::foraging::repr */

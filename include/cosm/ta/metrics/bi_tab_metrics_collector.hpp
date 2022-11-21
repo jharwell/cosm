@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -55,4 +55,4 @@ class bi_tab_metrics_collector final : public rmetrics::base_collector {
   bi_tab_metrics_data m_data{};
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

@@ -30,7 +30,7 @@ namespace cosm::foraging::repr {
 class block_cluster;
 } // namespace repr
 
-NS_START(cosm, foraging, ds);
+namespace cosm::foraging::ds {
 
 using block3D_cluster_vectorro_type = const cfrepr::block_cluster*;
 using block3D_cluster_vectorno_type = cfrepr::block_cluster*;
@@ -104,4 +104,4 @@ class block3D_cluster_vectorno : public rpdecorator::decorator<std::vector<block
   std::string to_str(void) const override;
 };
 
-NS_END(ds, foraging, cosm);
+} /* namespace cosm::foraging::ds */

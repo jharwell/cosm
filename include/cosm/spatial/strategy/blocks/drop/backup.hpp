@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, drop);
+namespace cosm::spatial::strategy::blocks::drop {
 
 /*******************************************************************************
  * Class Definitions
@@ -81,4 +81,4 @@ class backup : public rer::client<backup>,
 };
 
 
-NS_END(drop, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::drop */

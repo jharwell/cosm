@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv, config, xml);
+namespace cosm::tv::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -48,4 +48,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, tv, cosm);
+} /* namespace cosm::tv::config::xml */

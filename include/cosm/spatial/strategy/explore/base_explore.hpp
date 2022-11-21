@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Class Definitions
@@ -64,4 +64,4 @@ class base_explore : public csstrategy::base_strategy,
   /* clang-formatt on */
 };
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

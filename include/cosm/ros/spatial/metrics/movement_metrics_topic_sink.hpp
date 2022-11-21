@@ -23,7 +23,7 @@ namespace cosm::spatial::metrics {
 class movement_metrics_collector;
 } /* namespace cosm::spatial::metrics */
 
-NS_START(cosm, ros, spatial, metrics);
+namespace cosm::ros::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -46,4 +46,4 @@ class movement_metrics_topic_sink final
       : topic_sink(topic, mode, interval) {}
 };
 
-NS_END(metrics, spatial, ros, cosm);
+} /* namespace cosm::ros::spatial::metrics */

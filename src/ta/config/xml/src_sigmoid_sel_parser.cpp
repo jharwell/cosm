@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -35,4 +35,4 @@ bool src_sigmoid_sel_parser::validate(void) const {
   return m_sigmoid.validate();
 } /* validate() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

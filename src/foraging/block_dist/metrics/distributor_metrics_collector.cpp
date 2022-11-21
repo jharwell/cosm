@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist, metrics);
+namespace cosm::foraging::block_dist::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -47,4 +47,4 @@ void distributor_metrics_collector::reset_after_interval(void) {
   m_data.interval.size = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist::metrics */

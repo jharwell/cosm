@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,4 +27,4 @@ NS_START(cosm, tv);
  */
 enum class dynamics_type { ekPOPULATION, ekENVIRONMENT };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

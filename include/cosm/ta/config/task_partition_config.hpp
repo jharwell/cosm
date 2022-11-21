@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -35,5 +35,5 @@ struct task_partition_config final : public rcppsw::config::base_config {
   bool never_partition{false};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

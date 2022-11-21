@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config);
+namespace cosm::subsystem::perception::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -33,5 +33,5 @@ struct pheromone_config final : public rconfig::base_config {
   bool repeat_deposit{false};
 };
 
-NS_END(config, perception, subsystem, cosm);
+} /* namespace cosm::subsystem::perception::config */
 

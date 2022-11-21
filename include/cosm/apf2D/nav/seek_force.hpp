@@ -3,7 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -15,6 +15,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/apf2D/boid.hpp"
+#include "cosm/apf2D/base_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -31,11 +32,14 @@ namespace cosm::apf2D::nav {
  * \brief A force pulling the robot to a target and then through the target
  * (i.e. the robot does not slow down to "arrive").
  */
-class seek_force {
+class seek_force : public rer::client<seek_force>,
+                   public capf2D::base_force {
  public:
-  explicit seek_force(double max) : mc_max(max) {}
+  explicit seek_force(double max)
+      : ER_CLIENT_INIT("cosm.apf2D.nav.seek_force"),
+        mc_max(max) {}
 
-  rmath::vector2d operator()(const boid& entity,
+  rmath::vector2d operator()(const boid& agent,
                              const rmath::vector2d& target) const;
 
  private:

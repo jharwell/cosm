@@ -30,7 +30,7 @@ namespace cosm::arena::ds {
 class arena_grid;
 } /* namespace cosm::ds */
 
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -74,8 +74,8 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
   virtual dist_status distribute_block(crepr::sim_block3D* block) = 0;
 
   /**
-   * \brief Return a read-only list of \ref block_clusters for capacity checking
-   * by external classes.
+   * \brief Return a read-only list of \ref cfrepr::block_cluster objects for
+   * capacity checking by external classes.
    */
   cfds::block3D_cluster_vectorro block_clustersro(void) const;
   virtual cfds::block3D_cluster_vectorno block_clustersno(void) = 0;
@@ -123,5 +123,5 @@ class base_distributor : public cfbd::metrics::distributor_metrics {
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

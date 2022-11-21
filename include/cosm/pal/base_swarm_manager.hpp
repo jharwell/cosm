@@ -30,7 +30,7 @@
  ******************************************************************************/
 namespace fs = std::filesystem;
 
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 /*******************************************************************************
  * Class Definitions
@@ -103,4 +103,4 @@ class base_swarm_manager : public rer::client<base_swarm_manager> {
   /* clang-format on */
 };
 
-NS_END(cosm, pal);
+} /* namespace cosm::pal */

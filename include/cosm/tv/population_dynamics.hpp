@@ -1,5 +1,5 @@
 /**
- * \file swarm_population.hpp
+ * \file population_dynamics.hpp
  *
  * \copyright 2019 John Harwell, All rights reserved.
  *
@@ -29,7 +29,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -162,4 +162,4 @@ class population_dynamics : public rer::client<population_dynamics>,
   /* clang-format on */
 };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

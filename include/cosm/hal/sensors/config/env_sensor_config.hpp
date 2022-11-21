@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config);
+namespace cosm::hal::sensors::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -36,4 +36,4 @@ struct env_sensor_config : public rconfig::base_config {
   std::map<std::string, env_sensor_detection_config> detect_map{};
 };
 
-NS_END(config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config */

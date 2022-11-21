@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -49,5 +49,5 @@ struct task_alloc_config final : public rcppsw::config::base_config {
   ucb1_config ucb1{};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

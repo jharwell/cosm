@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 /*******************************************************************************
  * Class Definitions
@@ -107,4 +107,4 @@ class convergence_measure : public rmath::expression<double> {
   /* clang-format on */
 };
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

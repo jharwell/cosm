@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -72,5 +72,5 @@ class population_dynamics_metrics : public virtual rmetrics::base_metrics {
   virtual size_t swarm_max_population(void) const = 0;
 };
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */
 

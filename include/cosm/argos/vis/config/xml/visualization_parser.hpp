@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis, config, xml);
+namespace cosm::argos::vis::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,5 +61,5 @@ class visualization_parser final : public rer::client<visualization_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, vis, argos, cosm);
+} /* namespace cosm::argos::vis::config::xml */
 

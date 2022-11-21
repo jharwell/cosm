@@ -16,16 +16,22 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+namespace cosm::metrics::specs {
 
 /*******************************************************************************
  * Global Variables
  ******************************************************************************/
 extern name_spec kConvergence;
 
-NS_START(spatial);
+namespace kinematics {
 
-extern name_spec kMovement;
+extern name_spec kAvg;
+extern name_spec kDist;
+
+} /* namespace kinematics */
+
+namespace spatial {
+
 extern name_spec kInterferenceCounts;
 extern name_spec kInterferenceLocs2D;
 extern name_spec kInterferenceLocs3D;
@@ -33,13 +39,13 @@ extern name_spec kNestZone;
 extern name_spec kDistPosition2D;
 extern name_spec kDistPosition3D;
 
-NS_END(spatial);
+} /* namespace spatial */
 
-NS_START(sensors);
+namespace sensors {
 extern name_spec kBattery;
-NS_END(sensors);
+} /* namespace sensors */
 
-NS_START(blocks);
+namespace blocks {
 
 extern name_spec kDistributor;
 extern name_spec kMotion;
@@ -53,28 +59,28 @@ extern name_spec kAcqExploreLocs3D;
 extern name_spec kAcqVectorLocs2D;
 extern name_spec kAcqVectorLocs3D;
 
-NS_END(blocks);
+} /* namespace blocks */
 
-NS_START(strategy);
-NS_START(nest);
+namespace strategy {
+namespace nest {
 
 extern name_spec kAcq;
 
-NS_END(strategy);
+} /* namespace strategy */
 
-NS_END(strategy);
+} /* namespace strategy */
 
-NS_START(tv);
+namespace tv {
 
 extern name_spec kPopulation;
 extern name_spec kEnvironment;
 
-NS_END(tv);
+} /* namespace tv */
 
-NS_START(tasks);
+namespace tasks {
 
 extern name_spec kDistribution;
 
-NS_END(tasks);
+} /* namespace tasks */
 
-NS_END(specs, metrics, cosm);
+} /* namespace cosm::metrics::specs */

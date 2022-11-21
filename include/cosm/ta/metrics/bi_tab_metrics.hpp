@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -78,9 +78,9 @@ class bi_tab_metrics : public virtual rmetrics::base_metrics {
   virtual bool task_changed(void) const = 0;
 
   /**
-   * \brief This function should return \c TRUE iff the task that has just
-   * been allocated is a different depth in the \ref tdgraph than the previous
-   * task.
+   * \brief This function should return \c TRUE iff the task that has just been
+   * allocated is a different depth in the \ref cta::ds::tdgraph than the
+   * previous task.
    *
    * \return Undefined unless \ref task_changed() returns \c TRUE.
    */
@@ -99,5 +99,5 @@ class bi_tab_metrics : public virtual rmetrics::base_metrics {
   virtual double subtask_selection_prob(void) const = 0;
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */
 

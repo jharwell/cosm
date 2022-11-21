@@ -17,12 +17,13 @@
 #include "cosm/hal/robot.hpp"
 #include "cosm/pal/argos/controller/adaptor2D.hpp"
 #include "cosm/pal/argos/controller/adaptorQ3D.hpp"
+#include "cosm/pal/argos/controller/adaptor3D.hpp"
 #include "cosm/pal/argos/swarm_iterator.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -111,7 +112,7 @@ std::vector<rmath::radians>
 convergence_calculator<TController>::calc_robot_headings2D(size_t) const {
   std::vector<rmath::radians> v;
 
-  auto cb = [&](const auto* controller) { v.push_back(controller->heading2D()); };
+  auto cb = [&](const auto* controller) { v.push_back(controller->azimuth()); };
   cpargos::swarm_iterator::controllers<TController,
                                        cpal::iteration_order::ekSTATIC>(
       m_sm, cb, cpal::kRobotType);
@@ -133,7 +134,11 @@ convergence_calculator<TController>::calc_robot_positions(size_t) const {
 /*******************************************************************************
  * Template Instantiations
  ******************************************************************************/
+#if defined(COSM_HAL_TARGET_OPERATES_IN_Q3D)
 template class convergence_calculator<cpargos::controller::adaptor2D>;
 template class convergence_calculator<cpargos::controller::adaptorQ3D>;
+#elif defined(COSM_HAL_TARGET_OPERATES_IN_3D)
+template class convergence_calculator<cpargos::controller::adaptor3D>;
+#endif
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

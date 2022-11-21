@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 using cosm::arena::ds::arena_grid;
 
 /*******************************************************************************
@@ -166,4 +166,4 @@ powerlaw_cluster_placer::placements powerlaw_cluster_placer::operator()(
   return placed;
 } /* operator()() */
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

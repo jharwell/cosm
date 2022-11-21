@@ -1,5 +1,5 @@
 /**
- * \file sim_block.hpp
+ * \file sim_block3D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -96,4 +96,4 @@ class sim_block3D : public rer::client<sim_block3D>, public crepr::base_block3D 
   static const out_of_sight3D kOutOfSight;
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

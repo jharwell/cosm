@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, actuators);
+namespace cosm::hal::ros::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -72,4 +72,4 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
 #endif /* COSM_HAL_TARGET */
 };
 
-NS_END(actuators, ros, hal, cosm);
+} /* namespace cosm::hal::ros::actuators */

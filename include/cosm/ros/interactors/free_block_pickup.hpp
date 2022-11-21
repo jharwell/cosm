@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, interactors);
+namespace cosm::ros::interactors {
 
 /*******************************************************************************
  * Classes
@@ -150,4 +150,4 @@ class free_block_pickup
   }
 };
 
-NS_END(interactors, ros, cosm);
+} /* namespace cosm::ros::interactors */

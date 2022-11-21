@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -132,4 +132,4 @@ boost::optional<std::string> population_dynamics_metrics_csv_sink::csv_line_buil
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */

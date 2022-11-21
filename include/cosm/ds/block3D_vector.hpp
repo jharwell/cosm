@@ -27,7 +27,7 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 using block3D_vectoro_type = std::unique_ptr<crepr::sim_block3D>;
 using block3D_vectorno_type = crepr::sim_block3D*;
@@ -132,4 +132,4 @@ class block3D_vectorro
   std::string to_str(void) const override final;
 };
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

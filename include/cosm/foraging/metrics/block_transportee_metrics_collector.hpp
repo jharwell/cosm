@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,4 +62,4 @@ class block_transportee_metrics_collector final : public rmetrics::base_collecto
   /* clang-format on */
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Member Functions
@@ -30,4 +30,4 @@ void cell2D_unknown::visit(fsm::cell2D_fsm& fsm) {
   fsm.event_unknown();
 } /* visit() */
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */

@@ -11,13 +11,13 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/nest/acq/wander.hpp"
 
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -70,4 +70,4 @@ void wander::task_execute(void) {
   }
 } /* task_execute() */
 
-NS_END(acq, nest, spatial, strategy, cosm);
+} /* namespace cosm::strategy::spatial::nest::acq */

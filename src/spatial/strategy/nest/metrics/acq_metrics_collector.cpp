@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, metrics);
+namespace cosm::spatial::strategy::nest::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -52,4 +52,4 @@ void acq_metrics_collector::reset_after_interval(void) {
   m_data.interval.n_random_thresh = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

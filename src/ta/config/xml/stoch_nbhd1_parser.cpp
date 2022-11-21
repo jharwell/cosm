@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -49,4 +49,4 @@ bool stoch_nbhd1_parser::validate(void) const {
                           m_tab_sel.validate());
 } /* validate() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,5 +62,5 @@ class src_sigmoid_sel_parser : public rer::client<src_sigmoid_sel_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */
 

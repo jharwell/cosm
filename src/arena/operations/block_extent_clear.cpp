@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -62,4 +62,4 @@ void block_extent_clear::visit(cads::arena_grid& grid) {
   } /* for(i..) */
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

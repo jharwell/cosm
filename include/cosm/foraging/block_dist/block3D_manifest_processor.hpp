@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -58,5 +58,5 @@ class block3D_manifest_processor
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

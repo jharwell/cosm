@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, metrics);
+namespace cosm::hal::ros::sensors::metrics {
 
 /*******************************************************************************
  * ROS Messages
@@ -29,4 +29,4 @@ struct battery_metrics_msg {
   chsensors::metrics::battery_metrics_data data{};
 };
 
-NS_END(metrics, sensors, ros, hal, cosm)
+} /* namespace cosm::ros::sensors::metrics */

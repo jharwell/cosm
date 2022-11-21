@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config);
+namespace cosm::oracle::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -42,4 +42,4 @@ struct tasking_oracle_config final : public rconfig::base_config {
   bool task_interface_ests{false};
 };
 
-NS_END(config, oracle, cosm);
+} /* namespace cosm::oracle::config */

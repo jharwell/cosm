@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -43,4 +43,4 @@ grid2D_los::field_coord_dtype grid2D_los::abs_ur(void) const {
   return access(xdsize() - 1, ydsize() - 1).loc();
 }
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

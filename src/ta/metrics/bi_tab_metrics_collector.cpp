@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -67,4 +67,4 @@ void bi_tab_metrics_collector::reset_after_interval(void) {
   m_data.interval.subtask_sel_prob = 0.0;
 } /* reset_after_interval() */
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

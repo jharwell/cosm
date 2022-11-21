@@ -12,7 +12,7 @@
 #include "cosm/apf2D/nav/path_following_force.hpp"
 
 #include "cosm/apf2D/nav/config/path_following_force_config.hpp"
-#include "cosm/apf2D/nav/ds/path_state.hpp"
+#include "cosm/nav/trajectory.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -24,23 +24,25 @@ namespace cosm::apf2D::nav {
  ******************************************************************************/
 path_following_force::path_following_force(
     const config::path_following_force_config* config)
-    : mc_max(config->max), mc_radius(config->radius), m_seek(mc_max) {}
+    : mc_max(config->max),
+      mc_radius(config->radius),
+      m_seek(mc_max) {}
 
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
 rmath::vector2d
 path_following_force::operator()(const boid& entity,
-                                 ds::path_state* state) const {
+                                 cnav::trajectory* state) const {
   auto next_point = state->next_point();
   auto odom = entity.odometry();
-  if ((odom.pose.position.to_2D() - next_point).length() <= mc_radius) {
+  if ((odom.pose.position.to_2D() - next_point.to_2D()).length() <= mc_radius) {
     state->mark_progress(1);
   }
   if (state->is_complete()) {
     return { 0.0, 0.0 }; /* reached the end of the path */
   } else {
-    return m_seek(entity, state->next_point());
+    return m_seek(entity, state->next_point().to_2D());
   }
 } /* operator()() */
 

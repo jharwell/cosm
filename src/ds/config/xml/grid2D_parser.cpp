@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config, xml);
+namespace cosm::ds::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -47,4 +47,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, ds, cosm);
+} /* namespace cosm::ds::config::xml */

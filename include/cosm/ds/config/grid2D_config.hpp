@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config);
+namespace cosm::ds::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -29,13 +29,12 @@ NS_START(cosm, ds, config);
  * \struct grid2D_config
  * \ingroup config ds
  *
- * \brief Configuration for the \ref arena_grid used to represent the arena by
- * both loop functions and robots.
+ * \brief Configuration for the \ref cads::arena_grid used to represent the
+ * arena by both loop functions and robots.
  */
 struct grid2D_config final : public rconfig::base_config {
   rtypes::discretize_ratio resolution{0.0};
   rmath::vector2d dims{};
 };
 
-NS_END(config, ds, cosm);
-
+} /* namespace cosm::ds::config */

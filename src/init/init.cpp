@@ -11,23 +11,25 @@
  ******************************************************************************/
 #include "cosm/init/init.hpp"
 
-#include "rcppsw/common/licensing.hpp"
+#include "rcppsw/version/version.hpp"
 
 #include <iostream>
 
-#include "cosm/version.hpp"
+#include "rcppsw/init/init.hpp"
+
+#include "cosm/version/version.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, init);
+namespace cosm::init {
 
 /*******************************************************************************
  * Free Functions
  ******************************************************************************/
 void init(void) {
-  std::cout << "Loaded COSM, " << kVERSION << ": ";
-  std::cout << RCPPSW_LICENSE(MIT, COSM, 2022, John Harwell) << std::endl;
+  std::cout << "Loaded Core Swarm (COSM): ";
+  std::cout << rversion::meta_info_to_str(&version::kVersion);
 } /* init() */
 
-NS_END(init, cosm);
+} /* namespace cosm::init */

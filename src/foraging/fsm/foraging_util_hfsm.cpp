@@ -15,9 +15,9 @@
 
 #include "cosm/spatial/fsm/point_argument.hpp"
 #include "cosm/spatial/fsm/util_signal.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
+#include "cosm/subsystem/actuation_subsystem.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 #include "cosm/spatial/strategy/nest/acq/base_acq.hpp"
 #include "cosm/spatial/strategy/nest/exit/base_exit.hpp"
 #include "cosm/spatial/strategy/blocks/drop/base_drop.hpp"
@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, fsm);
+namespace cosm::foraging::fsm {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -132,7 +132,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
          * acquisition strategy we don't signal until the strategy has
          * completed, because signaling triggers the block drop process.
          */
-        saa()->actuation()->governed_diff_drive()->reset();
+        saa()->actuation()->locomotion()->reset();
         event_data_hold(false);
         nz_state_update();
 
@@ -146,7 +146,7 @@ RCPPSW_HFSM_STATE_DEFINE(foraging_util_hfsm,
     ER_DEBUG("Outside nest");
     inta_state_update();
     auto readings = saa()->sensing()->light()->readings();
-    saa()->apf2D().accum(saa()->apf2D().phototaxis(readings));
+    saa()->apf().accum(saa()->apf().phototaxis(readings));
   }
   return rpfsm::event_signal::ekHANDLED;
 } /* transport_to_nest() */
@@ -222,7 +222,7 @@ RCPPSW_WRAP_DEFP_OVERRIDE(foraging_util_hfsm,
 void foraging_util_hfsm::inta_state_update(void) {
   if (auto obs = saa()->sensing()->proximity()->avg_prox_obj()) {
     inta_tracker()->state_enter();
-    saa()->apf2D().accum(saa()->apf2D().avoidance(*obs));
+    saa()->apf().accum(saa()->apf().avoidance(*obs));
   } else {
     inta_tracker()->state_exit();
   }
@@ -238,4 +238,4 @@ void foraging_util_hfsm::nz_state_update(void) {
   }
 } /* nz_state_update() */
 
-NS_END(fsm, foraging, cosm);
+} /* namespace cosm::foraging::fsm */

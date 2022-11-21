@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, metrics, detail);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,7 +28,7 @@ NS_START(cosm, foraging, metrics, detail);
  * the times would be atomic \ref rtypes::timestep, but that type does not meet
  * the std::atomic requirements.
  */
-struct block_transportee_metrics_data {
+struct block_transportee_metrics_data_impl {
   /**
    * \brief  Total # blocks transported.
    */
@@ -63,11 +63,9 @@ struct block_transportee_metrics_data {
   ral::mt_size_t initial_wait_time{0};
 };
 
-NS_END(detail);
-
 struct block_transportee_metrics_data : public rmetrics::base_data {
-  detail::block_transportee_metrics_data interval{};
-  detail::block_transportee_metrics_data cum{};
+  block_transportee_metrics_data_impl interval{};
+  block_transportee_metrics_data_impl cum{};
 
   /**
    * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
@@ -108,4 +106,4 @@ struct block_transportee_metrics_data : public rmetrics::base_data {
   }
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

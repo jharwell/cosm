@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin);
+namespace cosm::kin {
 
 /*******************************************************************************
  * Struct Definitions
@@ -35,6 +35,17 @@ NS_START(cosm, kin);
 struct twist {
   rmath::vector3d linear{};
   rmath::vector3d angular{};
+
+  /**
+   * \brief Accumulate twist--should only be used in metric collection contexts.
+   */
+  twist& operator+=(const twist &rhs) {
+    this->linear += rhs.linear;
+    this->angular += rhs.angular;
+
+    return *this;
+  }
+
 };
 
-NS_END(kin, cosm);
+} /* namespace cosm::kin */

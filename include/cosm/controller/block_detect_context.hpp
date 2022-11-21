@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller);
+namespace cosm::controller {
 
 /*******************************************************************************
  * Enum Definitions
@@ -37,4 +37,4 @@ enum class block_detect_context {
     ekARENA
   };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

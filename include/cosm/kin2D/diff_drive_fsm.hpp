@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Class Definitions
@@ -137,4 +137,4 @@ class diff_drive_fsm final : public rpfsm::simple_fsm {
   /* clang-format on */
 };
 
-NS_END(kin2D, cosm);
+} /* namespace cosm::kin2D */

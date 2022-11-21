@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, config);
+namespace cosm::arena::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -34,5 +34,5 @@ struct arena_map_config final : public rconfig::base_config {
   struct crepr::config::nests_config nests {};
 };
 
-NS_END(config, arena, cosm);
+} /* namespace cosm::arena::config */
 

@@ -30,7 +30,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -175,17 +175,17 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   bool exp_interference(void) const override final RCPPSW_PURE;
   bool entered_interference(void) const override final RCPPSW_PURE;
   bool exited_interference(void) const override final RCPPSW_PURE;
-  rtypes::timestep interference_duration(void) const override final RCPPSW_PURE;
-  rmath::vector3z interference_loc3D(void) const override final RCPPSW_PURE;
+  boost::optional<rtypes::timestep> interference_duration(void) const override final RCPPSW_PURE;
+  boost::optional<rmath::vector3z> interference_loc3D(void) const override final RCPPSW_PURE;
 
   /* goal acquisition metrics */
   exp_status is_exploring_for_goal(void) const override final RCPPSW_PURE;
   bool is_vectoring_to_goal(void) const override final RCPPSW_PURE;
   bool goal_acquired(void) const override final RCPPSW_PURE;
   metrics::goal_acq_metrics::goal_type acquisition_goal(void) const override final;
-  rmath::vector3z acquisition_loc3D(void) const override final RCPPSW_PURE;
-  rmath::vector3z explore_loc3D(void) const override final RCPPSW_PURE;
-  rmath::vector3z vector_loc3D(void) const override final RCPPSW_PURE;
+  boost::optional<rmath::vector3z> acquisition_loc3D(void) const override final RCPPSW_PURE;
+  boost::optional<rmath::vector3z> explore_loc3D(void) const override final RCPPSW_PURE;
+  boost::optional<rmath::vector3z> vector_loc3D(void) const override final RCPPSW_PURE;
   rtypes::type_uuid entity_acquired_id(void) const override final {
     return m_acq_id;
   }
@@ -281,4 +281,4 @@ class acquire_goal_fsm : public csfsm::util_hfsm,
   /* clang-format on */
 };
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

@@ -21,7 +21,7 @@
 /*******************************************************************************
   * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, config);
+namespace cosm::spatial::strategy::blocks::config {
 
 /*******************************************************************************
   * Structure Definitions
@@ -46,4 +46,4 @@ struct drop_config final : public rconfig::base_config {
   rtypes::timestep duration{rtypes::constants::kNoTime};
 };
 
-NS_END(config, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::config */

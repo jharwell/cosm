@@ -1,5 +1,9 @@
 @PACKAGE_INIT@
 
+set(cosm_VERSION @cosm_VERSION@)
+set(cosm_INSTALL_PREFIX @CMAKE_INSTALL_PREFIX@)
+set(cosm_INCLUDE_DIRS ${cosm_INSTALL_PREFIX}/include)
+
 set(COSM_HAL_TARGET @COSM_HAL_TARGET@)
 set(COSM_BUILD_FOR @COSM_BUILD_FOR@)
 set(COSM_WITH_VIS @COSM_WITH_VIS@)
@@ -16,6 +20,7 @@ set(COSM_ROS_ROBOT_NAME_PREFIX @COSM_ROS_ROBOT_NAME_PREFIX@)
 set(COSM_ROS_CONTROLLER_XML_ID @COSM_ROS_CONTROLLER_XML_ID@)
 set(COSM_ROS_MD5 @COSM_ROS_MD5@)
 
+
 if(COSM_WITH_VIS)
   set(CMAKE_AUTOMOC ON)
   find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Widgets Gui REQUIRED)
@@ -24,8 +29,6 @@ if(COSM_WITH_VIS)
 
   find_package(OpenGL REQUIRED)
 endif()
-
-set(cosm_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 
 if(NOT TARGET rcppsw::rcppsw)
   find_package(rcppsw
@@ -44,7 +47,6 @@ endif()
 
 
 include("${CMAKE_CURRENT_LIST_DIR}/cosm-@COSM_HAL_TARGET@-exports.cmake")
-set(cosm_INCLUDE_DIRS ${cosm_INSTALL_PREFIX}/include)
 
 
 check_required_components("COSM")

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, operations, detail);
+namespace cosm::repr::operations::detail {
 using cads::arena_grid;
 
 /*******************************************************************************
@@ -44,4 +44,4 @@ void nest_extent::visit(cads::arena_grid& grid) {
   visit(grid.access<arena_grid::kCell>(cell2D_op::coord()));
 } /* visit() */
 
-NS_END(detail, operations, repr, cosm);
+} /* namespace cosm::repr::operations::detail */

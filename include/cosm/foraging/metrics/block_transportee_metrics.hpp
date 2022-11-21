@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,10 +27,10 @@ NS_START(cosm, foraging, metrics);
  * \class block_transportee_metrics
  * \ingroup foraging metrics
  *
- * \brief Defines the metrics to be collected from \ref sim_block3D objects and
- * their derived classes about the process of transportation from their original
- * location in the arena after distribution to their final destination (nest,
- * structure, etc).
+ * \brief Defines the metrics to be collected from \ref crepr::sim_block3D
+ * objects and their derived classes about the process of transportation from
+ * their original location in the arena after distribution to their final
+ * destination (nest, structure, etc).
  *
  * Metrics should be collected upon deposition at the block's final location,
  * rather than every timestep.
@@ -64,4 +64,4 @@ class block_transportee_metrics : public rmetrics::base_metrics {
   virtual crepr::block_type type(void) const = 0;
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

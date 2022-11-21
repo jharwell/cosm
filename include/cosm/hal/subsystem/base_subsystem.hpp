@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, subsystem);
+namespace cosm::hal::subsystem {
 
 /*******************************************************************************
  * Struct Definitions
@@ -41,12 +41,11 @@ class base_subsystem {
   base_subsystem(void) = default;
   virtual ~base_subsystem(void) = default;
 
-
-  /* Not move/copy constructable/assignable by default */
+  /* Not copy constructable/assignable by default */
   base_subsystem(const base_subsystem&) = delete;
   base_subsystem& operator=(const base_subsystem&) = delete;
-  base_subsystem(base_subsystem&&) = delete;
-  base_subsystem& operator=(base_subsystem&&) = delete;
+  base_subsystem(base_subsystem&&) = default;
+  base_subsystem& operator=(base_subsystem&&) = default;
 
   template<typename TCollection>
   void reset(TCollection& collection) {
@@ -68,17 +67,23 @@ class base_subsystem {
 /*******************************************************************************
  * Macros
  ******************************************************************************/
-#define COSM_HAL_SAA_ACCESSOR(category, Typelist, type, name, ...)      \
+/**
+ * \def COSM_HAL_SAA_ACCESSOR(category, Typelist, type, name, ...)
+ *
+ * \param SAACategoryAccessor A templated function available at class scope
+ *                            which can be used to returned a handle to a
+ *                            specific \p type.
+ *
+ * \param type The type of the sensor/actuator which will be returned by \p
+ *             AccessorName.
+ *
+ * \param name The name that the accessor function should have.
+ *
+ * \c const can be passed as an additional argument to make the accessor const.
+ */
+#define COSM_HAL_SAA_ACCESSOR(SAACategoryAccessor, type, name, ...) \
   __VA_ARGS__ type* name(void) __VA_ARGS__ {                            \
-    return category<type>();                                            \
+    return SAACategoryAccessor<type>();                                 \
   }                                                                     \
 
-#define COSM_HAL_SAA_ACCESSOR_VISITOR(type, ...)                        \
-  template<typename U = T,                                              \
-           COSM_SFINAE_DECLDEF(std::is_same<U, type>::value)>         \
-  __VA_ARGS__ type* operator()(__VA_ARGS__ type& item)  __VA_ARGS__ {   \
-    return &item;                                                       \
-  }
-
-NS_END(subsystem, hal, cosm);
-
+} /* namespace cosm::hal::subsystem */

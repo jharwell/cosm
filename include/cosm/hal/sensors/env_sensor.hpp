@@ -29,7 +29,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -127,4 +127,4 @@ class env_sensor final : public rer::client<env_sensor>,
   /* clang-format on */
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

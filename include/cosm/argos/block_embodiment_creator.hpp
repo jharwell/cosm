@@ -28,7 +28,7 @@ namespace cosm::pal::argos {
 class swarm_manager_adaptor;
 } // namespace cosm::pal::argos
 
-NS_START(cosm, argos);
+namespace cosm::argos {
 class embodied_cube_block;
 class embodied_ramp_block;
 
@@ -104,5 +104,5 @@ class block_embodiment_creator {
   /* clang-format off */
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */
 

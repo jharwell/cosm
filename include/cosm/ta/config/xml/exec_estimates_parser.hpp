@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -73,5 +73,5 @@ class exec_estimates_parser final : public rconfig::xml::xml_config_parser,
   /* clang-format on */
 };
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */
 

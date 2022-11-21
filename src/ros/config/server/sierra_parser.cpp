@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, config, server);
+namespace cosm::ros::config::server {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -96,4 +96,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(server, config, ros, cosm);
+} /* namespace cosm::ros::config::server */

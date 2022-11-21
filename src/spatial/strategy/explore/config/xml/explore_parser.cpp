@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore, config, xml);
+namespace cosm::spatial::strategy::explore::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -33,4 +33,4 @@ void explore_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR_DFLT(snode, m_config, min_duration, rtypes::timestep(1));
 } /* parse() */
 
-NS_END(xml, config, explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore::xml, config */

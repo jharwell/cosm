@@ -31,7 +31,7 @@ template <typename Typelist>
 class type_map;
 } /* namespace rcppsw::ds */
 
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 class angular_order;
 class interactivity;
@@ -173,4 +173,4 @@ class convergence_calculator final : public metrics::convergence_metrics,
   /* clang-format on */
 };
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

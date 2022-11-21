@@ -19,32 +19,17 @@
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/math/vector2.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
 #include "cosm/kin/twist.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_DifferentialSteeringSensor;
-class CCI_PiPuckDifferentialDriveSensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename T>
-using is_generic_ds_sensor = std::is_same<T,
-                                          ::argos::CCI_DifferentialSteeringSensor>;
-template<typename T>
-using is_pipuck_ds_sensor = std::is_same<T,
-                                         ::argos::CCI_PiPuckDifferentialDriveSensor>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,16 +42,16 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                 HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<TSensor>>,
-                                  public chargos::sensors::argos_sensor<TSensor> {
+                                     public chargos::sensors::argos_sensor<TSensor> {
  private:
   using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
@@ -97,6 +82,30 @@ class diff_drive_sensor_impl final : public rer::client<diff_drive_sensor_impl<T
   diff_drive_sensor_impl(const diff_drive_sensor_impl&) = delete;
    diff_drive_sensor_impl& operator=(diff_drive_sensor_impl&&) = default;
   diff_drive_sensor_impl(diff_drive_sensor_impl&&) = default;
+
+  /**
+   * \brief Get the axle length of the differential drive robot for use in
+   * mathematical calculations.
+   */
+
+  template <typename U = impl_type,
+            RCPPSW_SFINAE_DECLDEF(detail::is_generic_ds_sensor<U>::value)>
+  rspatial::euclidean_dist axle_length(void) const {
+    ER_ASSERT(nullptr != decoratee(),
+              "%s called with NULL impl handle!",
+              __FUNCTION__);
+    ER_ASSERT(is_enabled(),
+              "%s called when disabled",
+              __FUNCTION__);
+
+    auto raw = decoratee()->GetReading();
+
+    /*
+     * ARGoS reports the distances and velocities in cm and cm/s for some
+     * reason, so put it in SI units (meters), like a sane person.
+     */
+    return rspatial::euclidean_dist(raw.WheelAxisLength / 100.0);
+  }
 
   /**
    * \brief Get the current differential drive reading for the robot.
@@ -161,5 +170,4 @@ using diff_drive_sensor = diff_drive_sensor_impl<::argos::CCI_PiPuckDifferential
 class diff_drive_sensor{};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(sensors, argos, hal, cosm);
-
+} /* namespace cosm::hal::argos::sensors */

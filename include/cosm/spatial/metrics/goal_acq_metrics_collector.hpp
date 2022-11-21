@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,4 +57,4 @@ class goal_acq_metrics_collector final : public rmetrics::base_collector {
   /* clang-format on */
 };
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

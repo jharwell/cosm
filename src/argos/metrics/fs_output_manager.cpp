@@ -21,6 +21,7 @@
 #include "cosm/arena/base_arena_map.hpp"
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
+#include "cosm/controller/base_controller3D.hpp"
 #include "cosm/convergence/convergence_calculator.hpp"
 #include "cosm/convergence/metrics/convergence_metrics.hpp"
 #include "cosm/convergence/metrics/convergence_metrics_collector.hpp"
@@ -60,9 +61,12 @@
 #include "cosm/spatial/metrics/interference_locs3D_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/interference_metrics_collector.hpp"
 #include "cosm/spatial/metrics/interference_metrics_csv_sink.hpp"
-#include "cosm/spatial/metrics/movement_metrics.hpp"
-#include "cosm/spatial/metrics/movement_metrics_collector.hpp"
-#include "cosm/spatial/metrics/movement_metrics_csv_sink.hpp"
+#include "cosm/kin/metrics/kinematics_metrics.hpp"
+#include "cosm/kin/metrics_proxy.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_collector.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_avg_csv_sink.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_dist_csv_sink.hpp"
+#include "cosm/kin/metrics/contexts.hpp"
 #include "cosm/spatial/metrics/nest_zone_metrics_collector.hpp"
 #include "cosm/spatial/metrics/nest_zone_metrics_csv_sink.hpp"
 #include "cosm/spatial/metrics/vector_locs2D_metrics_collector.hpp"
@@ -74,14 +78,14 @@
 #include "cosm/tv/metrics/population_dynamics_metrics_collector.hpp"
 #include "cosm/tv/metrics/population_dynamics_metrics_csv_sink.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics_csv_sink.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, metrics);
+namespace cosm::argos::metrics {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -110,7 +114,8 @@ void fs_output_manager::collect_from_block(const crepr::sim_block3D* const block
 void fs_output_manager::collect_from_controller(
     const ccontroller::base_controller2D* const controller) {
   collect(cmspecs::spatial::kDistPosition2D.scoped(), *controller);
-  collect(cmspecs::spatial::kMovement.scoped(), *controller);
+  collect(cmspecs::kinematics::kAvg.scoped(), *controller->kin_proxy());
+  collect(cmspecs::kinematics::kDist.scoped(), *controller->kin_proxy());
   collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
   collect_if(cmspecs::spatial::kInterferenceLocs2D.scoped(),
@@ -118,16 +123,20 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
+
+#if defined(COSM_HAL_TARGET_HAS_BATTERY_SENSOR)
   auto battery = controller->saa()->sensing()->battery();
   if (nullptr != battery) {
     collect(cmspecs::sensors::kBattery.scoped(), *battery);
   }
+#endif
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_controller(
     const ccontroller::base_controllerQ3D* const controller) {
   collect(cmspecs::spatial::kDistPosition3D.scoped(), *controller);
-  collect(cmspecs::spatial::kMovement.scoped(), *controller);
+  collect(cmspecs::kinematics::kAvg.scoped(), *controller->kin_proxy());
+  collect(cmspecs::kinematics::kDist.scoped(), *controller->kin_proxy());
   collect(cmspecs::spatial::kInterferenceCounts.scoped(),
           *controller->inta_tracker());
   collect_if(cmspecs::spatial::kInterferenceLocs3D.scoped(),
@@ -135,10 +144,32 @@ void fs_output_manager::collect_from_controller(
              [&](const rmetrics::base_metrics&) {
                return controller->inta_tracker()->exp_interference();
              });
+#if defined(COSM_HAL_TARGET_HAS_BATTERY_SENSOR)
   auto battery = controller->saa()->sensing()->battery();
   if (nullptr != battery) {
     collect(cmspecs::sensors::kBattery.scoped(), *battery);
   }
+#endif
+} /* collect_from_controller() */
+
+void fs_output_manager::collect_from_controller(
+    const ccontroller::base_controller3D* const controller) {
+  collect(cmspecs::spatial::kDistPosition3D.scoped(), *controller);
+  collect(cmspecs::kinematics::kAvg.scoped(), *controller->kin_proxy());
+  collect(cmspecs::kinematics::kDist.scoped(), *controller->kin_proxy());
+  collect(cmspecs::spatial::kInterferenceCounts.scoped(),
+          *controller->inta_tracker());
+  collect_if(cmspecs::spatial::kInterferenceLocs3D.scoped(),
+             *controller->inta_tracker(),
+             [&](const rmetrics::base_metrics&) {
+               return controller->inta_tracker()->exp_interference();
+             });
+#if defined(COSM_HAL_TARGET_HAS_BATTERY_SENSOR)
+  auto battery = controller->saa()->sensing()->battery();
+  if (nullptr != battery) {
+    collect(cmspecs::sensors::kBattery.scoped(), *battery);
+  }
+#endif
 } /* collect_from_controller() */
 
 void fs_output_manager::collect_from_arena(
@@ -154,7 +185,6 @@ void fs_output_manager::register_standard(
     const rmconfig::metrics_config* mconfig) {
   using sink_list = rmpl::typelist<
       rmpl::identity<cconvergence::metrics::convergence_metrics_csv_sink>,
-      rmpl::identity<csmetrics::movement_metrics_csv_sink>,
       rmpl::identity<cfbd::metrics::distributor_metrics_csv_sink>,
       rmpl::identity<cfmetrics::block_motion_metrics_csv_sink>,
       rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
@@ -170,10 +200,6 @@ void fs_output_manager::register_standard(
     { typeid(cconvergence::metrics::convergence_metrics_collector),
       cmspecs::kConvergence.xml(),
       cmspecs::kConvergence.scoped(),
-      rmetrics::output_mode::ekAPPEND },
-    { typeid(csmetrics::movement_metrics_collector),
-      cmspecs::spatial::kMovement.xml(),
-      cmspecs::spatial::kMovement.scoped(),
       rmetrics::output_mode::ekAPPEND },
     { typeid(csmetrics::interference_metrics_collector),
       cmspecs::spatial::kInterferenceCounts.xml(),
@@ -331,4 +357,34 @@ void fs_output_manager::register_with_n_block_clusters(
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_n_block_clusters() */
 
-NS_END(metrics, argos, cosm);
+void fs_output_manager::register_kinematics(
+    const rmconfig::metrics_config* mconfig,
+    size_t n_robots) {
+  using sink_typelist =
+      rmpl::typelist<rmpl::identity<ckmetrics::kinematics_metrics_avg_csv_sink>,
+      rmpl::identity<ckmetrics::kinematics_metrics_dist_csv_sink>>;
+
+  rmetrics::creatable_collector_set creatable_set = {
+        { typeid(ckmetrics::kinematics_metrics_collector),
+      cmspecs::kinematics::kAvg.xml(),
+      cmspecs::kinematics::kAvg.scoped(),
+      rmetrics::output_mode::ekAPPEND,
+      typeid(ckmetrics::kinematics_metrics_avg_csv_sink)},
+        { typeid(ckmetrics::kinematics_metrics_collector),
+      cmspecs::kinematics::kDist.xml(),
+      cmspecs::kinematics::kDist.scoped(),
+      rmetrics::output_mode::ekAPPEND,
+      typeid(ckmetrics::kinematics_metrics_dist_csv_sink)},
+  };
+  auto extra_args = std::make_tuple(n_robots, ckmetrics::kContexts.size());
+  rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
+                               rmetrics::file_sink_registerer,
+                               decltype(extra_args)>
+      csv(this, creatable_set, extra_args);
+  rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
+      registerer(std::move(csv), &mconfig->csv);
+
+  boost::mpl::for_each<sink_typelist>(registerer);
+} /* register_kinematics() */
+
+} /* namespace cosm::argos::metrics */

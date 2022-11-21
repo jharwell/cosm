@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, subsystem);
+namespace cosm::hal::ros::subsystem {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,29 +34,13 @@ class actuation_subsystem2D :
   explicit actuation_subsystem2D(actuator_map&& actuators)
       : base_actuation_subsystem2D(std::move(actuators)) {}
 
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             ckin2D::governed_diff_drive,
-                             governed_diff_drive);
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             ckin2D::governed_diff_drive,
-                             governed_diff_drive,
-                             const);
+  COSM_HAL_ACTUATOR_ACCESSOR(ckin2D::governed_diff_drive, governed_diff_drive);
+  COSM_HAL_ACTUATOR_ACCESSOR(ckin2D::governed_diff_drive, governed_diff_drive, const);
 
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             chactuators::diff_drive_actuator,
-                             diff_drive_raw);
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             chactuators::diff_drive_actuator,
-                             diff_drive_raw,
-                             const);
-
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             chactuators::diagnostic_actuator,
-                             diagnostics);
-  COSM_HAL_ACTUATOR_ACCESSOR(robot_actuator_types,
-                             chactuators::diagnostic_actuator,
-                             diagnostics,
-                             const);
+  COSM_HAL_ACTUATOR_ACCESSOR(chactuators::diff_drive_actuator, diff_drive_raw);
+  COSM_HAL_ACTUATOR_ACCESSOR(chactuators::diff_drive_actuator, diff_drive_raw, const);
+  COSM_HAL_ACTUATOR_ACCESSOR(chactuators::diagnostic_actuator, diagnostics);
+  COSM_HAL_ACTUATOR_ACCESSOR(chactuators::diagnostic_actuator, diagnostics, const);
 };
 
-NS_END(subsystem, ros, hal, cosm);
+} /* namespace cosm::hal::ros::subsystem */

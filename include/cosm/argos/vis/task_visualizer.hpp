@@ -26,7 +26,7 @@ namespace cosm::ta {
 class logical_task;
 } /* namespace ta */
 
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Classes
@@ -64,5 +64,5 @@ class task_visualizer : public rer::client<task_visualizer> {
   /* clang-format on */
 };
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */
 

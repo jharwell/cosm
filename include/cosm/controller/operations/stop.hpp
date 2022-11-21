@@ -26,7 +26,7 @@ namespace cosm::controller {
 class base_controller;
 }
 
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -43,7 +43,7 @@ NS_START(cosm, controller, operations);
  */
 class stop : public rer::client<stop> {
  public:
-  stop(void) : ER_CLIENT_INIT("cosm.events.stop") {}
+  stop(void) : ER_CLIENT_INIT("cosm.controller.operations.stop") {}
   ~stop(void) override = default;
 
   stop(const stop&) = delete;
@@ -53,5 +53,5 @@ class stop : public rer::client<stop> {
   void visit(ccontroller::base_controller& controller);
 };
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */
 

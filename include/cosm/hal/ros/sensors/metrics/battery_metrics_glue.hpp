@@ -20,20 +20,20 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics, msg_traits);
+namespace cosm::ros::metrics::msg_traits {
 
 template<>
 struct payload_type<chros::sensors::metrics::battery_metrics_msg> {
   using type = chsensors::metrics::battery_metrics_data;
 };
 
-NS_END(msg_traits, metrics, ros, cosm);
+} /* namespace cosm::ros::metrics::msg_traits */
 
 
 /*******************************************************************************
  * ROS Message Traits
  ******************************************************************************/
-NS_START(ros, message_traits);
+namespace ros::message_traits {
 
 template<>
 struct MD5Sum<chros::sensors::metrics::battery_metrics_msg> {
@@ -67,9 +67,9 @@ struct Definition<chros::sensors::metrics::battery_metrics_msg> {
 template<>
 struct HasHeader<chros::sensors::metrics::battery_metrics_msg> : TrueType {};
 
-NS_END(message_traits);
+} /* namespace message_traits */
 
-NS_START(serialization);
+namespace serialization {
 
 template<>
 struct Serializer<chros::sensors::metrics::battery_metrics_msg> {
@@ -88,4 +88,4 @@ struct Serializer<chros::sensors::metrics::battery_metrics_msg> {
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
-NS_END(serialization, ros);
+} /* namespace ros::serialization */

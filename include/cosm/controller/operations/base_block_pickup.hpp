@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -74,5 +74,5 @@ class base_block_pickup : public rer::client<base_block_pickup> {
   /* clang-format on */
 };
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */
 

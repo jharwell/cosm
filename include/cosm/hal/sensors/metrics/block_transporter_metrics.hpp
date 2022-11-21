@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+namespace cosm::fsm::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -51,4 +51,4 @@ class block_transporter_metrics : public virtual rmetrics::base_metrics {
   virtual bool is_phototaxiing_to_goal(bool include_ca) const = 0;
 };
 
-NS_END(metrics, fsm, cosm);
+} /* namespace cosm::fsm::metrics */

@@ -18,14 +18,14 @@
 #include "cosm/ta/taskable.hpp"
 #include "cosm/cosm.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
-#include "cosm/spatial/interference_tracker.hpp"
-#include "cosm/spatial/nest_zone_tracker.hpp"
+#include "cosm/spatial/common/interference_tracker.hpp"
+#include "cosm/spatial/common/nest_zone_tracker.hpp"
 #include "cosm/spatial/fsm/fsm_params.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy);
+namespace cosm::spatial::strategy {
 
 /*******************************************************************************
  * Class Definitions
@@ -40,7 +40,7 @@ NS_START(cosm, spatial, strategy);
 class base_strategy : public cta::taskable {
  public:
   base_strategy(const csfsm::fsm_params*  params, rmath::rng* rng);
-  base_strategy(subsystem::saa_subsystemQ3D* const saa,
+  base_strategy(csubsystem::base_saa_subsystem* const saa,
                 cspatial::interference_tracker* const inta,
                 cspatial::nest_zone_tracker* const nz,
                 rmath::rng* rng);
@@ -51,8 +51,8 @@ class base_strategy : public cta::taskable {
   base_strategy& operator=(const base_strategy&) = delete;
 
  protected:
-  subsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
-  subsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
+  subsystem::base_saa_subsystem* saa(void) const { return m_saa; }
+  subsystem::base_saa_subsystem* saa(void) { return m_saa; }
   rmath::rng* rng(void) { return m_rng; }
   rmath::rng* rng(void) const { return m_rng; }
   cspatial::interference_tracker* inta_tracker(void) { return m_inta_tracker; }
@@ -70,11 +70,11 @@ class base_strategy : public cta::taskable {
 
  private:
   /* clang-format off */
-  subsystem::saa_subsystemQ3D*    m_saa;
+  subsystem::base_saa_subsystem*  m_saa;
   cspatial::interference_tracker* m_inta_tracker;
   cspatial::nest_zone_tracker*    m_nz_tracker;
   rmath::rng*                     m_rng;
   /* clang-format on */
 };
 
-NS_END(strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy */

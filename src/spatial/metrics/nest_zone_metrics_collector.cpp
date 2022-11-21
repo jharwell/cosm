@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -54,4 +54,4 @@ void nest_zone_metrics_collector::reset_after_interval(void) {
   m_data.interval.nest_duration = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

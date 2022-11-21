@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, subsystem);
+namespace cosm::hal::ros::subsystem {
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3
 #define COSM_HAL_ROBOT_AVAILABLE_ACTUATORS      \
@@ -28,4 +28,4 @@ NS_START(cosm, hal, ros, subsystem);
 #endif
 
 
-NS_END(subsystem, ros, hal, cosm);
+} /* namespace cosm::hal::ros::subsystem */

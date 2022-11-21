@@ -15,9 +15,13 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/argos/actuators/argos_actuator.hpp"
+#include "cosm/hal/argos/actuators/detail/identify.hpp"
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if ((COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || \
+     (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D))
 #include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_DRONE)
+#include <argos3/plugins/robots/drone/control_interface/ci_drone_leds_actuator.h>
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 #include <argos3/plugins/robots/generic/control_interface/ci_directional_leds_actuator.h>
 #endif /* COSM_HAL_TARGET */
@@ -26,25 +30,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_LEDsActuator;
-class CCI_DirectionalLEDsActuator;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, actuators, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TActuator>
-using is_generic_led_actuator = std::is_same<TActuator,
-                                             ::argos::CCI_LEDsActuator>;
-
-template<typename TActuator>
-using is_generic_dirled_actuator = std::is_same<TActuator,
-                                                ::argos::CCI_DirectionalLEDsActuator>;
-
-NS_END(detail);
+namespace cosm::hal::argos::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,9 +43,10 @@ NS_END(detail);
  *
  *  Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS drone
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
  *
  * \tparam TActuator The underlying actuator handle type abstracted away by the
  *                   HAL.
@@ -134,13 +121,40 @@ class led_actuator_impl : public rer::client<led_actuator_impl<TActuator>>,
     return false;
   }
 
+  template <typename U = TActuator,
+            RCPPSW_SFINAE_DECLDEF(detail::is_drone_led_actuator<U>::value)>
+  bool set_color(int id, const rutils::color& color) {
+    ER_CHECK(nullptr != decoratee(),
+             "%s called with NULL impl handle!",
+             __FUNCTION__);
+    ER_CHECK(is_enabled(),
+             "%s called when disabled",
+             __FUNCTION__);
+
+    if (-1 == id) {
+      decoratee()->SetLEDs(::argos::CColor(color.red(),
+                                           color.green(),
+                                           color.blue(),
+                                           color.alpha()));
+    } else {
+      decoratee()->SetLEDIndex(id, ::argos::CColor(color.red(),
+                                                   color.green(),
+                                                   color.blue(),
+                                                   color.alpha()));
+    }
+    return true;
+
+ error:
+    return false;
+  }
+
   /**
    * \brief Set intensity for a single LED on the robot (or set intensity of all
    * LEDs).
    *
    * \param id Which LED to set intensity for. This is application
    * defined. However, the reserved value of -1 should be interpreted to mean
-   * set the intensity of \c ALL LEDs on the robot.
+   * set the intensity of \a ALL LEDs on the robot.
    *
    * \param intensity In the range [0,255]. Application defined meaning.
    *
@@ -169,12 +183,15 @@ class led_actuator_impl : public rer::client<led_actuator_impl<TActuator>>,
   }
 };
 
-#if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
+#if ((COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || \
+     (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D))
 using led_actuator = led_actuator_impl<::argos::CCI_LEDsActuator>;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_DRONE)
+using led_actuator = led_actuator_impl<::argos::CCI_DroneLEDsActuator>;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 using led_actuator = led_actuator_impl<::argos::CCI_DirectionalLEDsActuator>;
 #else
 class led_actuator {};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(actuators, argos, hal, cosm);
+} /* namespace cosm::hal::argos::actuators */

@@ -18,21 +18,16 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/ta/taskable.hpp"
+#include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm);
-
-namespace subsystem {
-class saa_subsystemQ3D;
-} /* namespace subsystem */
-
-namespace ta {
+namespace cosm::ta {
 class base_executive;
 } /* namespace ta */
 
-NS_START(fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -43,7 +38,7 @@ NS_START(fsm);
  *
  * \brief An FSM used supervise robot operation.
  *
- * In normal operation, the \ref taskable object is just executed. If a
+ * In normal operation, the \ref cta::taskable object is just executed. If a
  * non-standard event is received (implemented in derived classes), then
  * normal operation can be replaced by something else (e.g., stopping all robot
  * motion if a robot malfunction event is received).
@@ -54,7 +49,7 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
       std::variant<ta::taskable*, ta::base_executive*>;
 
  public:
-  explicit supervisor_fsm(subsystem::saa_subsystemQ3D* saa);
+  explicit supervisor_fsm(csubsystem::base_saa_subsystem* saa);
 
   supervisor_fsm& operator=(const supervisor_fsm&) = delete;
   supervisor_fsm(const supervisor_fsm&) = delete;
@@ -64,19 +59,19 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
   }
 
   /**
-   * \brief Signal that the  \ref taskable object should not be run every
+   * \brief Signal that the  \ref cta::taskable object should not be run every
    * timestep until the robot has been repaired.
    */
   void event_malfunction(void);
 
   /**
-   * \brief Signal that the  \ref taskable object should not be run every
+   * \brief Signal that the  \ref cta::taskable object should not be run every
    * timestep until the robot has been repaired.
    */
   void event_repair(void);
 
   /**
-   * \brief Signal that the \ref taskable object should not be run again until
+   * \brief Signal that the \ref cta::taskable object should not be run again until
    * the robot is reset, AND that all sensors and actuators should be disabled.
    */
   void event_stop(void);
@@ -127,9 +122,9 @@ class supervisor_fsm final : public rpfsm::simple_fsm,
                                states::ekST_MAX_STATES);
 
   /* clang-format off */
-  subsystem::saa_subsystemQ3D* m_saa;
-  supervisee_variant_type      m_supervisee{};
+  csubsystem::base_saa_subsystem* m_saa;
+  supervisee_variant_type         m_supervisee{};
   /* clang-format on */
 };
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

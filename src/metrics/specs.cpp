@@ -14,15 +14,21 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+namespace cosm::metrics::specs {
 
 /*******************************************************************************
  * Global Variables
  ******************************************************************************/
 name_spec kConvergence = { "swarm_convergence", "swarm/convergence" };
 
-NS_START(spatial);
-name_spec kMovement = { "spatial_movement", "spatial/movement" };
+namespace kinematics {
+
+name_spec kAvg = { "kinematics_avg", "kinematics/avg" };
+name_spec kDist = { "kinematics_dist", "kinematics/dist" };
+
+} /* namespace kinematics */
+
+namespace spatial {
 name_spec kInterferenceCounts = { "spatial_interference_counts",
                                   "spatial/interference/counts" };
 name_spec kInterferenceLocs2D = { "spatial_interference_locs2D",
@@ -32,13 +38,13 @@ name_spec kInterferenceLocs3D = { "spatial_interference_locs3D",
 name_spec kNestZone = { "spatial_nest_zone", "spatial/nest_zone" };
 name_spec kDistPosition2D = { "spatial_dist_pos2D", "spatial/dist/pos2D" };
 name_spec kDistPosition3D = { "spatial_dist_pos3D", "spatial/dist/pos3D" };
-NS_END(spatial);
+} /* namespace spatial */
 
-NS_START(sensors);
+namespace sensors {
 name_spec kBattery = { "battery_state", "sensors/battery"};
-NS_END(sensors);
+} /* namespace sensors */
 
-NS_START(blocks);
+namespace blocks {
 
 name_spec kDistributor = { "block_distributor", "blocks/distributor" };
 name_spec kMotion = { "block_motion", "blocks/motion" };
@@ -67,29 +73,29 @@ name_spec kAcqVectorLocs3D = {
   "blocks/acq/vector_locs3D",
 };
 
-NS_END(blocks);
+} /* namespace blocks */
 
-NS_START(strategy);
+namespace strategy {
 
-NS_START(nest);
+namespace nest {
 
 name_spec kAcq = { "nest_acq_strategy", "strategy/nest/acq" };
 
-NS_END(nest);
+} /* namespace nest */
 
-NS_END(strategy);
+} /* namespace strategy */
 
 
-NS_START(tv);
+namespace tv {
 name_spec kPopulation = { "tv_population", "tv/population" };
 name_spec kEnvironment = { "tv_environment", "tv/environment" };
 
-NS_END(tv);
+} /* namespace tv */
 
-NS_START(tasks);
+namespace tasks {
 
 name_spec kDistribution = { "task_distribution", "tasks/distribution" };
 
-NS_END(tasks);
+} /* namespace tasks */
 
-NS_END(specs, metrics, cosm);
+} /* namespace cosm::metrics::specs */

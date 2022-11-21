@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -100,4 +100,4 @@ void odometry_sensor::callback(const nav_msgs::Odometry::ConstPtr& msg) {
   m_odom = *msg;
 }
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -114,4 +114,4 @@ void free_block_pickup::visit(base_arena_map& map) {
   map.block_distributor()->cluster_update_after_pickup(m_block, old);
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

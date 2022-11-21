@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Member Functions
@@ -60,4 +60,4 @@ polled_task* ucb1_allocator::operator()(const std::vector<polled_task*>& tasks,
       rmath::rangez(0, equiv_min_tasks.size() - 1))];
 } /* alloc_ucb1() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

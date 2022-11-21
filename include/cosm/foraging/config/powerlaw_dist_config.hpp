@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -45,4 +45,4 @@ struct powerlaw_dist_config final : public rconfig::base_config {
   size_t n_clusters{0};
 };
 
-NS_END(config, foraging, cosm);
+} /* namespace cosm::foraging::config */

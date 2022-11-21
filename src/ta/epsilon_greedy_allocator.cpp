@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Member Functions
@@ -58,4 +58,4 @@ epsilon_greedy_allocator::operator()(const std::vector<polled_task*>& tasks,
   return tasks[m_rng->uniform(rmath::rangez(0, tasks.size() - 1))];
 } /* operator()() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

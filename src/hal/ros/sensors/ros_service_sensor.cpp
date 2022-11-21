@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -34,4 +34,4 @@ void ros_service_sensor::disable(void) {
   }
 }
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

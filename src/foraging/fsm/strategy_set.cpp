@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, fsm);
+namespace cosm::foraging::fsm {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -48,4 +48,4 @@ strategy_set::~strategy_set(void) = default;
  * Member Functions
  ******************************************************************************/
 
-NS_END(fsm, foraging, cosm);
+} /* namespace cosm::foraging::fsm */

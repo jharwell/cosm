@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, config);
+namespace cosm::ros::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -44,4 +44,4 @@ struct sierra_config final : public rconfig::base_config {
   sierra_experiment_config experiment{};
 };
 
-NS_END(config, ros, cosm);
+} /* namespace cosm::ros::config */

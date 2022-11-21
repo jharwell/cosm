@@ -13,7 +13,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -212,4 +212,4 @@ RCPPSW_FSM_STATE_DEFINE_ND(cell2D_fsm, state_nest_extent) {
   return rpfsm::event_signal::ekHANDLED;
 }
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, config, xml);
+namespace cosm::convergence::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,5 +60,5 @@ class interactivity_parser : public rer::client<interactivity_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, convergence, cosm);
+} /* namespace cosm::convergence::config::xml */
 

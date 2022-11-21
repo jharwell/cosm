@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -63,4 +63,4 @@ void nest_block_process::visit(crepr::sim_block3D& block) {
   block.md()->distribution_time(mc_timestep);
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

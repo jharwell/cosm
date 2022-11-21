@@ -17,28 +17,26 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, fsm, metrics, detail);
+namespace cosm::fsm::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \struct block_transporter_metrics_data
+ * \struct block_transporter_metrics_data_impl
  * \ingroup fsm metrics detail
  *
  * \brief Container for holding \ref block_transporter_metrics data. Must
  * be atomic so counts are valid in parallel metric collection contexts.
  */
-struct block_transporter_metrics_data {
+struct block_transporter_metrics_data_impl {
   ral::mt_size_t n_phototaxiing_to_goal_including_ca{0};
   ral::mt_size_t n_phototaxiing_to_goal_no_ca{0};
 };
 
-NS_END(detail);
-
 struct block_transporter_metrics_data : public rmetrics::base_data {
-  detail::block_transporter_metrics_data interval{};
-  detail::block_transporter_metrics_data cum{};
+  block_transporter_metrics_data_impl interval{};
+  block_transporter_metrics_data_impl cum{};
 
   /**
    * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
@@ -62,4 +60,4 @@ struct block_transporter_metrics_data : public rmetrics::base_data {
   }
 };
 
-NS_END(metrics, fsm, cosm);
+} /* namespace cosm::fsm::metrics */

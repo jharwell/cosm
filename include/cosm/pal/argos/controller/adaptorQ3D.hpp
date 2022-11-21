@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, argos, controller);
+namespace cosm::pal::argos::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -44,5 +44,5 @@ class adaptorQ3D : public ccontroller::base_controllerQ3D,
 
 };
 
-NS_END(controller, argos, pal, cosm);
+} /* namespace cosm::pal::argos::controller */
 

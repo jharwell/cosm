@@ -21,7 +21,7 @@ class interference_tracker;
 class nest_zone_tracker;
 } /* namespace cosm::spatial */
 
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,9 +31,9 @@ NS_START(cosm, spatial, fsm);
  * \ingroup spatial fsm
  */
 struct fsm_params {
-  csubsystem::saa_subsystemQ3D* saa;
+  csubsystem::base_saa_subsystem* saa;
   cspatial::interference_tracker* const inta;
   cspatial::nest_zone_tracker* const nz;
 };
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

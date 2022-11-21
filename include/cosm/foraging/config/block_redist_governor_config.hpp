@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -33,11 +33,13 @@ NS_START(cosm, foraging, config);
  * collection.
  */
 struct block_redist_governor_config final : public rconfig::base_config {
+  /* clang-format off */
   rtypes::timestep timestep{0};
   size_t           block_count{0};
-  std::string      disable_trigger{"Null"};
-  std::string      recurrence_policy{""};
+  std::string      disable_trigger{rconfig::constants::kNoValue};
+  std::string      recurrence_policy{rconfig::constants::kNoValue};
   bool             redistribute{true};
+  /* clang-format on */
 };
 
-NS_END(config, foraging, cosm);
+} /* namespace cosm::foraging::config */

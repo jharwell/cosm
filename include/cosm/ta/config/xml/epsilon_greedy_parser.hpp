@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,5 +60,5 @@ class epsilon_greedy_parser final : public rer::client<epsilon_greedy_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */
 

@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 
 /*******************************************************************************
@@ -78,4 +78,4 @@ class lidar_sensor : public rer::client<lidar_sensor>,
   /* clang-format off */
 };
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

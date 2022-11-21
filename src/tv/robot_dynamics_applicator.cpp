@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -72,4 +72,4 @@ void robot_dynamics_applicator::unregister_controller(
   ER_INFO("Unregistered controller with ID=%d", id.v());
 } /* unregister_controller() */
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

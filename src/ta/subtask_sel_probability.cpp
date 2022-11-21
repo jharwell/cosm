@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -99,4 +99,4 @@ double subtask_sel_probability::operator()(const time_estimate* subtask1,
   return 0.0;
 } /* operator() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

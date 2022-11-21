@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -29,4 +29,4 @@ factory::factory(void) {
   register_type<wander_random_thresh>(kWanderRandomThresh);
 }
 
-NS_END(acq, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::acq */

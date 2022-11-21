@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Class Definitions
@@ -54,5 +54,5 @@ class utilization_metrics_collector final : public rmetrics::base_collector {
   /* clang-format on */
 };
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */
 

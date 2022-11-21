@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Operators
@@ -31,4 +31,4 @@ std::istream& operator>>(std::istream& in, block_type& b) {
   return in;
 }
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

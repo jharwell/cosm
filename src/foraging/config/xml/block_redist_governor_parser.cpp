@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -43,4 +43,4 @@ void block_redist_governor_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR_DFLT(lnode, m_config, block_count, 0UL);
 } /* parse() */
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */

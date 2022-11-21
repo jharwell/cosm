@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -28,4 +28,4 @@ base_explore::base_explore(const csfsm::fsm_params* params,
  * Member Functions
  ******************************************************************************/
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

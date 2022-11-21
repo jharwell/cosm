@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -84,4 +84,4 @@ double battery_sensor::percent_remaining(void) const {
   return readings()[0].percentage;
 } /* percent_remaining() */
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

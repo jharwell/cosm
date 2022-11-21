@@ -23,7 +23,7 @@ namespace cosm::controller {
 class base_controller;
 } /* namespace cosm::controller */
 
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -90,4 +90,4 @@ class temporal_penalty {
   /* clang-format on */
 };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

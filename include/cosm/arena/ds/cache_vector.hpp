@@ -30,7 +30,7 @@ class arena_cache;
 class base_cache;
 }
 
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 /*
  * Must be shared_ptr because the # of caches in the arena can change
@@ -191,5 +191,5 @@ class bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorr
   std::string to_str(void) const override;
 };
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */
 

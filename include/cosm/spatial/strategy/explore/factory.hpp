@@ -21,9 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm);
-
-NS_START(spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Class Definitions
@@ -46,4 +44,4 @@ class factory :
   factory(void);
 };
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

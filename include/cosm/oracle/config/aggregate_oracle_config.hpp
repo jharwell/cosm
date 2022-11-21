@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config);
+namespace cosm::oracle::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -37,4 +37,4 @@ struct aggregate_oracle_config final : public rconfig::base_config {
   struct coconfig::entities_oracle_config entities{};
 };
 
-NS_END(config, oracle, cosm);
+} /* namespace cosm::oracle::config */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+namespace cosm::pal::config::xml {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -31,4 +31,4 @@ base_swarm_manager_repository::base_swarm_manager_repository(void) noexcept {
       cpconfig::xml::output_parser::kXMLRoot);
 }
 
-NS_END(xml, config, pal, cosm);
+} /* namespace cosm::pal::config::xml */

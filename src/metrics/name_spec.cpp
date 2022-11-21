@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+namespace cosm::metrics::specs {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -43,4 +43,4 @@ std::string name_spec::scoped(const rtypes::type_uuid& id) const {
   return m_scoped;
 } /* scoped() */
 
-NS_END(specs, metrics, cosm);
+} /* namespace cosm::metrics::specs */

@@ -19,7 +19,7 @@ namespace cosm::apf2D {
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-bool tracker::path_add(const nav::ds::path_state& path) {
+bool tracker::path_add(const cnav::trajectory& path) {
   m_path = boost::make_optional(path);
   return true;
 } /* path_add() */

@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -103,4 +103,4 @@ bi_tab_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

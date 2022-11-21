@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -117,4 +117,4 @@ void lidar_sensor::callback(const sensor_msgs::LaserScan::ConstPtr& msg) {
   m_scan = *msg;
 }
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

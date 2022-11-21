@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Member Functions
@@ -44,4 +44,4 @@ double governed_diff_drive::applied_throttle(void) const {
   /* applied throttle cannot be negative */
   return std::max(sum, 0.0);
 }
-NS_END(kin2d, cosm);
+} /* namespace cosm::kin2d */

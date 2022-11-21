@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,4 +62,4 @@ class msg_tracking_map
   void reset(const std::string& key);
 };
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

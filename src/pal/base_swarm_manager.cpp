@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -88,4 +88,4 @@ void base_swarm_manager::rng_init(const rmath::config::rng_config* config) {
   }
 } /* rng_init() */
 
-NS_END(pal, cosm);
+} /* namespace cosm::pal */

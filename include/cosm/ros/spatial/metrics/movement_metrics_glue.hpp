@@ -20,19 +20,19 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics, msg_traits);
+namespace cosm::ros::metrics::msg_traits {
 
 template<>
 struct payload_type<crsmetrics::movement_metrics_msg> {
   using type = csmetrics::movement_metrics_data;
 };
 
-NS_END(msg_traits, metrics, ros, cosm);
+} /* namespace cosm::ros::metrics::msg_traits */
 
 /*******************************************************************************
  * ROS Message Traits
  ******************************************************************************/
-NS_START(ros, message_traits);
+namespace ros::message_traits {
 
 template<>
 struct MD5Sum<crsmetrics::movement_metrics_msg> {
@@ -66,9 +66,9 @@ struct Definition<crsmetrics::movement_metrics_msg> {
 template<>
 struct HasHeader<crsmetrics::movement_metrics_msg> : TrueType {};
 
-NS_END(message_traits);
+} /* namespace message_traits */
 
-NS_START(serialization);
+namespace serialization {
 
 template<>
 struct Serializer<crsmetrics::movement_metrics_msg> {
@@ -91,4 +91,4 @@ struct Serializer<crsmetrics::movement_metrics_msg> {
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
-NS_END(serialization, ros);
+} /* namespace ros::serialization */

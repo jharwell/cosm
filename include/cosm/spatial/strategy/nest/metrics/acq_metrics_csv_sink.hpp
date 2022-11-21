@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, metrics);
+namespace cosm::spatial::strategy::nest::metrics {
 class acq_metrics_collector;
 
 /*******************************************************************************
@@ -54,4 +54,4 @@ class acq_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

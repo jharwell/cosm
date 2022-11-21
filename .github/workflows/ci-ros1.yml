@@ -1,0 +1,45 @@
+name: ROS1 build and test
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: jharwell/ubuntu20.04:2023-03-28
+    strategy:
+      matrix:
+        CMAKE_BUILD_TYPE:
+          - OPT
+          - DEV
+        COSM_BUILD_FOR:
+          - ROS_ETURTLEBOT3
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rcsw-setup
+      - uses: ./.github/actions/rcppsw-setup
+        with:
+          cmake_extra_args: '-DRCPPSW_ER_OLD_LOG4CXX=YES'
+      - uses: ./.github/actions/rosbridge-setup
+      - name: Build=${{ matrix.CMAKE_BUILD_TYPE }} HAL_TARGET=${{ matrix.COSM_BUILD_FOR }}
+        shell: bash
+        run: |
+
+          git config --global --add safe.directory $PWD
+          git submodule update --init --remote --recursive
+          mkdir -p build && cd build
+
+          source /usr/local/setup.bash
+
+          cmake  \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DLIBRA_DEPS_PREFIX=/usr/local \
+          -DCMAKE_BUILD_TYPE=${{ matrix.CMAKE_BUILD_TYPE }} \
+          -DLIBRA_ER=ALL \
+          -DCOSM_BUILD_FOR=${{ matrix.COSM_BUILD_FOR }} \
+          ..
+
+          make -j$(nproc)

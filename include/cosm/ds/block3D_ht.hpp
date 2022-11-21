@@ -27,7 +27,7 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 using block3D_ht_key_type = rtypes::type_uuid;
 
@@ -38,7 +38,7 @@ using block3D_htro_value_type = const crepr::sim_block3D*;
 /*******************************************************************************
  * Type Definitions
  ******************************************************************************/
-NS_START(detail);
+namespace detail {
 
 struct hash_function {
   decltype(std::declval<rtypes::type_uuid>().v())
@@ -47,14 +47,14 @@ struct hash_function {
   }
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \class block3D_hto
  * \ingroup ds
  *
- * \brief Specialization of \ref std::ht indicating the blocks are OWNED by
- * this class.
+ * \brief Specialization of \ref std::unordered_map indicating the blocks are
+ * OWNED by this class.
  *
  * Has a \ref to_str() method for more convenient debugging.
  */
@@ -142,4 +142,4 @@ class block3D_htro
   std::string to_str(void) const override;
 };
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

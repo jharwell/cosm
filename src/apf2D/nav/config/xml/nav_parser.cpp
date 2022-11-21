@@ -20,6 +20,7 @@ namespace cosm::apf2D::nav::config::xml {
  * Member Functions
  ******************************************************************************/
 void nav_parser::parse(const ticpp::Element& node) {
+  /* No return--navigation forces are required. */
   ER_DEBUG("Parent node=%s: child=%s", node.Value().c_str(), kXMLRoot.c_str());
 
   ticpp::Element knode = node_get(node, kXMLRoot);

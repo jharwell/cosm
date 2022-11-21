@@ -30,7 +30,7 @@ class adaptor2D;
 class adaptorQ3D;
 } /* namespace cosm::pal */
 
-NS_START(cosm, argos, operations);
+namespace cosm::argos::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,5 +61,5 @@ class robot_repair : public rer::client<robot_repair> {
   void visit(cpargos::controller::adaptorQ3D& controller);
 };
 
-NS_END(operations, argos, cosm);
+} /* namespace cosm::argos::operations */
 

@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 class population_dynamics_metrics_collector;
 
 /*******************************************************************************
@@ -53,5 +53,5 @@ class population_dynamics_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */
 

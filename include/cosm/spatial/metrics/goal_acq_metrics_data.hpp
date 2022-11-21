@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics, detail);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -26,19 +26,17 @@ NS_START(cosm, spatial, metrics, detail);
  * \brief Container for holding collected statistics. Must be atomic so counts
  * are valid in parallel metric collection contexts.
  */
-struct goal_acq_data {
+struct goal_acq_data_impl {
   ral::mt_size_t n_true_exploring_for_goal{0};
   ral::mt_size_t n_false_exploring_for_goal{0};
   ral::mt_size_t n_vectoring_to_goal{0};
   ral::mt_size_t n_acquiring_goal{0};
 };
 
-NS_END(detail);
-
 struct goal_acq_metrics_data : public rmetrics::base_data {
-  detail::goal_acq_data interval{};
-  detail::goal_acq_data cum{};
+  goal_acq_data_impl interval{};
+  goal_acq_data_impl cum{};
 };
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */
 

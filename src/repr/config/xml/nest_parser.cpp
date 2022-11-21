@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config, xml);
+namespace cosm::repr::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -56,4 +56,4 @@ error:
   return false;
 } /* validate(const nest_config *config)() */
 
-NS_END(xml, config, repr, cosm);
+} /* namespace cosm::repr::config::xml */

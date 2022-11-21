@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 namespace config {
 struct sigmoid_sel_config;
@@ -51,8 +51,8 @@ struct sigmoid_sel_config;
  * - The reactivity parameter: how sensitive should controller be to abrupt
  *   changes in the estimates?
  *
- * Used in \cite Harwell2018-partitioning, \cite
- * Harwell2020a-demystify. Originally inspired by \cite Pini2011.
+ * Used in \cite Harwell:2018-partitioning, \cite Harwell:2020a-demystify.
+ * Originally inspired by \cite Pini2011b.
  */
 class partition_probability final : public rmath::sigmoid,
                                     public rer::client<partition_probability> {
@@ -108,4 +108,4 @@ class partition_probability final : public rmath::sigmoid,
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

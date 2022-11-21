@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /******************************************************************************
  * Class Definitions
@@ -56,5 +56,4 @@ class dist3D_metrics : public virtual rmetrics::base_metrics {
   virtual rmath::radians zenith(void) const = 0;
 };
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */

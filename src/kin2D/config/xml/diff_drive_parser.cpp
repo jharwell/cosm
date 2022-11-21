@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config, xml);
+namespace cosm::kin2D::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -43,4 +43,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, kin2D, cosm);
+} /* namespace cosm::kin2D::config::xml */

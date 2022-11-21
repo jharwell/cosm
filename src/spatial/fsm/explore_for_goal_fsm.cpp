@@ -12,13 +12,13 @@
 #include "cosm/spatial/fsm/explore_for_goal_fsm.hpp"
 
 #include "cosm/spatial/fsm/util_signal.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -118,4 +118,4 @@ void explore_for_goal_fsm::task_start(ta::taskable_argument* c_arg) {
   external_event(kTRANSITIONS[current_state()]);
 }
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

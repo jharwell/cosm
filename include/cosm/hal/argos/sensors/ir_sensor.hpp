@@ -28,30 +28,14 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/stub_sensor.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
+#include "cosm/hal/sensors/proximity_sensor_reading.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_FootBotProximitySensor;
-class CCI_EPuckProximitySensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_footbot_ir_sensor = std::is_same<TSensor,
-                                          ::argos::CCI_FootBotProximitySensor>;
-template<typename TSensor>
-using is_epuck_ir_sensor = std::is_same<TSensor,
-                                        ::argos::CCI_EPuckProximitySensor>;
-template<typename TSensor>
-using is_pipuck_ir_sensor = std::is_same<TSensor, std::false_type>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -64,9 +48,11 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck (stub only)
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ *
+ * For other HAL targets, the sensor is stubbed out so things will compile
+ * elsewhere, but the sensor and any algorithms using it WILL NOT WORK.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
@@ -84,18 +70,9 @@ class ir_sensor_impl : public rer::client<ir_sensor_impl<TSensor>>,
   using chargos::sensors::argos_sensor<impl_type>::reset;
   using chargos::sensors::argos_sensor<impl_type>::is_enabled;
 
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_footbot_ir_sensor<U>::value ||
-                               detail::is_epuck_ir_sensor<U>::value)>
-   ir_sensor_impl(TSensor * const sensor)
+  explicit ir_sensor_impl(TSensor * const sensor)
        : ER_CLIENT_INIT("cosm.hal.argos.sensors.ir"),
          chargos::sensors::argos_sensor<TSensor>(sensor) {}
-
-  template <typename U = TSensor,
-            RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_ir_sensor<U>::value)>
-   ir_sensor_impl(void)
-       : ER_CLIENT_INIT("cosm.hal.sensors.ir"),
-         chal::sensors::base_sensor<TSensor>(nullptr) {}
 
   /* move only constructible/assignable for use with saa subsystem */
   const ir_sensor_impl& operator=(const ir_sensor_impl&) = delete;
@@ -112,7 +89,7 @@ class ir_sensor_impl : public rer::client<ir_sensor_impl<TSensor>>,
   template <typename U = TSensor,
             RCPPSW_SFINAE_DECLDEF(detail::is_footbot_ir_sensor<U>::value ||
                                   detail::is_epuck_ir_sensor<U>::value)>
-  std::vector<rmath::vector2d> readings(void) const {
+  std::vector<chsensors::proximity_sensor_reading> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -130,16 +107,22 @@ class ir_sensor_impl : public rer::client<ir_sensor_impl<TSensor>>,
 
     return ret;
   }
+
+  template <typename U = impl_type,
+            RCPPSW_SFINAE_DECLDEF(chsensors::is_null_sensor<U>::value)>
+  std::vector<chsensors::proximity_sensor_reading>  readings(void) const {
+    return {};
+  }
 };
 
 #if COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT
 using ir_sensor = ir_sensor_impl<::argos::CCI_FootBotProximitySensor>;
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
 using ir_sensor = ir_sensor_impl<::argos::CCI_EPuckProximitySensor>;
-#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
-using ir_sensor = ir_sensor_impl<std::false_type>;
 #else
-class ir_sensor{};
+using ir_sensor = chsensors::stub_sensor<
+                  std::vector<chsensors::proximity_sensor_reading>
+                  >;
 #endif /* COSM_HAL_TARGET */
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore, config, xml);
+namespace cosm::spatial::strategy::explore::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,4 +60,4 @@ class explore_parser final : public rer::client<explore_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, explore ,strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore ::xml, config */

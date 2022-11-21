@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics);
+namespace cosm::convergence::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -52,5 +52,5 @@ class convergence_metrics_collector final : public rmetrics::base_collector {
   /* clang-format on */
 };
 
-NS_END(convergence, metrics, cosm);
+} /* namespace cosm::metrics::convergence */
 

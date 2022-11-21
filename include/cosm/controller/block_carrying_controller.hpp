@@ -25,7 +25,7 @@ namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, controller);
+namespace cosm::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -91,4 +91,4 @@ class block_carrying_controller : public cssblocks::metrics::drop_metrics {
   /* clang-format on */
 };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

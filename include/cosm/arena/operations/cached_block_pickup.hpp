@@ -21,7 +21,7 @@
 #include "cosm/arena/locking.hpp"
 
 /*******************************************************************************
- * Namespaces
+ * Namespaces/Decls
  ******************************************************************************/
 namespace cosm::arena::repr {
 class arena_cache;
@@ -38,7 +38,8 @@ namespace cosm::pal::argos {
 class swarm_manager_adaptor;
 } /* namespace cosm::pal */
 
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations {
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -107,7 +108,7 @@ class cached_block_pickup : public rer::client<cached_block_pickup>,
   /* clang-format on */
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \brief We use the precise visitor in order to force compile errors if a call to
@@ -117,4 +118,4 @@ NS_END(detail);
  */
 using cached_block_pickup_visitor = rpvisitor::filtered_visitor<detail::cached_block_pickup>;
 
-NS_END(operations, arena, cosm);
+} /* namespace cosm::arena::operations */

@@ -27,7 +27,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, subsystem);
+namespace cosm::hal::ros::subsystem {
 
 /*******************************************************************************
  * Macros
@@ -44,4 +44,4 @@ NS_START(cosm, hal, ros, subsystem);
 #endif
 
 
-NS_END(subsystem, ros, hal, cosm);
+} /* namespace cosm::hal::ros::subsystem */

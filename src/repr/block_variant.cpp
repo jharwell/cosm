@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Free Functions
@@ -42,4 +42,4 @@ crepr::block3D_variantro make_variant(const crepr::base_block3D* block) {
   }
 } /* make_variant() */
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

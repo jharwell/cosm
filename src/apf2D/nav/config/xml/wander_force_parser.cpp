@@ -41,7 +41,7 @@ bool wander_force_parser::validate(void) const {
     ER_CHECK(m_config->circle_distance > 0.0, "Circle distance must be > 0");
     ER_CHECK(m_config->circle_radius > 0.0, "Circle radius must be > 0");
     ER_CHECK(m_config->interval > 0, "Interval must be > 0");
-    ER_CHECK(m_config->max > 0, "Max force must be > 0");
+    ER_CHECK(m_config->max >= 0, "Max force must be >= 0");
     ER_CHECK(m_bias.validate(), "Bias angle failed validation");
   }
   return true;

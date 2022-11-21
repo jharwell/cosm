@@ -28,7 +28,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, repr);
+namespace cosm::arena::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -158,5 +158,5 @@ class base_cache : public crepr::unicell_immovable_entity2D,
   /* clang-format on */
 };
 
-NS_END(repr, arena, cosm);
+} /* namespace cosm::arena::repr */
 

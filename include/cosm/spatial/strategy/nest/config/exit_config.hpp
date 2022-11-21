@@ -21,7 +21,7 @@
 /*******************************************************************************
   * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, config);
+namespace cosm::spatial::strategy::nest::config {
 
 /*******************************************************************************
   * Structure Definitions
@@ -40,4 +40,4 @@ struct exit_config final : public rconfig::base_config {
   std::string strategy{};
 };
 
-NS_END(config, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::config */

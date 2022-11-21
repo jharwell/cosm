@@ -39,7 +39,7 @@ namespace cosm {
  * \namespace tv
  *
  * \brief Container namespace for temporal variance machinery and
- * configuration. Used to modify swarm behavior over time (e.g., forcing robots
+ * configuration. Used to modify swarm behavior over time (e.g., forcing agents
  * to slow down after N timesteps, simulating changing weather conditions).
  */
 namespace tv {
@@ -85,12 +85,13 @@ namespace metrics {}
 /**
  * \namespace subsystem
  *
- * \brief Classes for robotic susbystems such as sensing, perception, and
- * actuation, and their configuration. Not tied to a specific robot.
+ * \brief Classes for agent subsystem such as sensing, perception, and
+ * actuation, and their configuration. Not tied to a specific agent type.
  */
 namespace subsystem {
 namespace config {}
 namespace perception {
+namespace rlos {}
 namespace config {}
 } /* namespace perception */
 } /* namespace subsystem */
@@ -98,11 +99,15 @@ namespace config {}
 /**
  * \namespace hal
  *
- * \brief Hardware Abstraction Layer. Compile time switching between different
- * implementations of robot sensors and actuators to (1) eliminate run-time
- * penalties when de-muxing, (2) present a uniform interface to higher level
- * modules, such as \ref subystem classes, regardless of which robot platform
- * COSM is targeting.
+ * \brief Hardware Abstraction Layer (HAL) for compile time switching between
+ * different implementations of agent sensors and actuators.
+ *
+ * Useful to:
+ *
+ * - Eliminate run-time penalties when de-muxing
+ *
+ * - Present a uniform interface to higher level modules, such as \ref subystem
+ *   classes, regardless of which platform/agent type COSM is built for.
  */
 namespace hal {
 
@@ -126,12 +131,21 @@ namespace sensors {}
 namespace actuators {}
 } /* namespace hal */
 
-namespace kin {}
+/**
+ * \namespace kin
+ *
+ * \brief Classes for representing and tracking agent kinematics for agents
+ * for which doing so is meaningful.
+ */
+namespace kin {
+namespace metrics {}
+
+} /* namespace kin */
 
 /**
  * \namespace kin2D
  *
- * \brief Differential drive classes for wheeled robots moving in 2D, and their
+ * \brief Differential drive classes for wheeled agents moving in 2D, and their
  * configuration.
  */
 namespace kin2D {}
@@ -140,8 +154,9 @@ namespace kin2D {}
  * \namespace apf2D
  *
  * \brief Artificial Potential Fields (APFs), inspired from Arkin's original
- * 1987 paper: arrival, avoidance, wander, etc., and their
- * configuration. Generally 2D.
+ * 1987 paper.
+ *
+ * Arrival, avoidance, wander, etc., and their configuration. Generally 2D.
  */
 namespace apf2D {}
 
@@ -196,9 +211,9 @@ namespace operations {}
 /**
  * \namespace controller
  *
- * \brief Base classes for robot controllers that actuate in 2D, and that sense
- * in 2D or 3D, common operations on them (pickup a block, drop a block, etc.),
- * and metric interfaces
+ * \brief Base classes for agent controllers that sense in 3D/actuate in 2D,
+ * sense/actuate in 3D, common operations on them (pickup a block, drop a block,
+ * etc.), and metric interfaces.
  */
 namespace controller {
 namespace operations {}
@@ -207,8 +222,7 @@ namespace metrics {}
 
 /**
  * \namespace fsm
- * \brief Reusable FSMs not specific to any particular application within swarm
- *        robotics.
+ * \brief Reusable FSMs not specific to any particular application within MAS.
  */
 namespace fsm {}
 
@@ -226,11 +240,12 @@ namespace operations {}
 /**
  * \namespace pal
  *
- * \brief Platform Abstraction Layer. Compile time switching between different
- * swarm manager platforms (whatever is running above/in addition to robot
- * controllers and collects metrics from them, processes, events, etc.). Also
- * contains configuration, operations, and temporal variance adapter classes for
- * each platform.
+ * \brief Platform Abstraction Layer (PAL)for compile time switching between different
+ * swarm manager platforms (whatever is running above/in addition to agent
+ * controllers and collects metrics from them, processes, events, etc.).
+ *
+ * Also contains configuration, operations, and temporal variance adapter
+ * classes for each platform.
  */
 namespace pal {
 namespace controller {}
@@ -251,10 +266,11 @@ namespace controller {}
  * \namespace ta
  *
  * \brief Task allocation machinery for different task allocation strategies:
- * greedy, stochastic choice, random, UCB, etc. Also contains a runtime task
- * executive which can use any include strategy, necessary configuration, data
- * structures, and some metrics which can be collected about task
- * allocation/from tasks as they run.
+ * greedy, stochastic choice, random, UCB, etc.
+ *
+ * Also contains a runtime task executive which can use any include strategy,
+ * necessary configuration, data structures, and some metrics which can be
+ * collected about task allocation/from tasks as they run.
  */
 namespace ta {
 namespace metrics {}
@@ -265,7 +281,9 @@ namespace metrics {}
  * \namespace spatial
  *
  * \brief Classes relating to spatial aspects of the arena in which swarms
- * operate: FSMs for acquiring spatial goal locations, spatial conflict
+ * operate..
+ *
+ * FSMs for acquiring spatial goal locations, spatial conflict
  * checkers, metrics, and different spatial strategies for exploration,
  * collision avoidance, etc.
  */
@@ -302,7 +320,7 @@ namespace flocking {
  * - Representation of block clusters
  * - Data structures
  * - Oracles for object locations which can inject perfect knowledge of arena
- *   state into robot controllers.
+ *   state into agent controllers.
  * - FSMs.
  */
 namespace foraging {
@@ -316,12 +334,21 @@ namespace fsm {}
 } /* namespace foraging */
 
 /**
+ * \namespace flocking
+ *
+ * \brief Reusable machinery for flocking applications.
+ */
+namespace flocking {}
+
+/**
  * \namespace arena
  *
  * \brief The arena map which swarm managers from the PAL use as a data store
- * for simulation state. Contains arena internal data structures, operations on
- * the arena (e.g., block pickup/drop), representation of arena internal objects
- * such as caches, and metric interfaces.
+ * for experimental run state.
+ *
+ * Contains arena internal data structures, operations on the arena (e.g., block
+ * pickup/drop), representation of arena internal objects such as caches, and
+ * metric interfaces.
  */
 namespace arena {
 namespace operations {}
@@ -336,7 +363,7 @@ namespace config {}
  * \namespace oracle
  *
  * \brief Oracles for injecting  perfect knowledge of simulation state into
- *  robot controllers.
+ *  agent controllers.
  */
 namespace oracle {
 namespace config {}
@@ -345,16 +372,30 @@ namespace config {}
 /**
  * \namespace interactors
  *
- * \brief Base classes for some robot-arena interactions such as block pickup,
+ * \brief Base classes for some agent-arena interactions such as block pickup,
  * block drop, task abort, etc.
  */
 namespace interactors {}
+
+/**
+ * \namespace nav
+ *
+ * Classes related to navigation generally which are not specific to the method
+ * of navigation (e.g., APF).
+ */
+namespace nav {
+
+namespace config {}
+
+} /* namespace nav */
+
 } /* namespace cosm */
 
 namespace csubsystem = cosm::subsystem;
 namespace csconfig = csubsystem::config;
 namespace csperception = csubsystem::perception;
 namespace cspconfig = csperception::config;
+namespace csprlos = csperception::rlos;
 
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
@@ -450,6 +491,14 @@ namespace chsconfig = chsubsystem::config;
 namespace crconfig = crepr::config;
 
 namespace cfsm = cosm::fsm;
+
 namespace ckin = cosm::kin;
+namespace ckmetrics = ckin::metrics;
+
 namespace ckin2D = cosm::kin2D;
 namespace capf2D = cosm::apf2D;
+
+namespace cflocking = cosm::flocking;
+
+namespace cnav = cosm::nav;
+namespace cnconfig = cnav::config;

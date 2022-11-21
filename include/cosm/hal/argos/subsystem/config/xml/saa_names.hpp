@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, subsystem, config, xml);
+namespace cosm::hal::argos::subsystem::config::xml {
 
 /*******************************************************************************
  * Struct Definitions
@@ -54,7 +54,10 @@ struct saa_names {
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK
   static inline const std::string diff_steering_saa = "pipuck_differential_drive";
   static inline const std::string ground_sensor = "pipuck_ground";
+#elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_DRONE
+  static inline const std::string quadrotor_sensor = "drone_flight_system";
+  static inline const std::string quadrotor_actuator = "drone_flight_system";
 #endif
 };
 
-NS_END(xml, config, subsystem, argos, hal, cosm);
+} /* namespace cosm::hal::argos::subsystem::xml::config */

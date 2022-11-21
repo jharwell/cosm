@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+namespace cosm::fsm::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -46,4 +46,4 @@ void block_transporter_metrics_collector::reset_after_interval(void) {
   m_data.interval.n_phototaxiing_to_goal_no_ca = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, fsm, cosm);
+} /* namespace cosm::fsm::metrics */

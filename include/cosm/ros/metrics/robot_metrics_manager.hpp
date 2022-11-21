@@ -1,5 +1,5 @@
 /**
- * \file robot_output_manager.hpp
+ * \file robot_metrics_manager.hpp
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
@@ -33,7 +33,7 @@ class base_controller2D;
 class base_controllerQ3D;
 } /* namespace cosm::controller */
 
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -93,5 +93,5 @@ class robot_metrics_manager :public rer::client<robot_metrics_manager>,
   void register_standard(const rmconfig::metrics_config* mconfig);
 };
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */
 

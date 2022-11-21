@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, actuators);
+namespace cosm::hal::argos::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -87,4 +87,4 @@ class argos_actuator : public rer::client<argos_actuator<TActuator>>,
   /* clang-format on */
 };
 
-NS_END(actuators, argos, hal, cosm);
+} /* namespace cosm::hal::argos::actuators */

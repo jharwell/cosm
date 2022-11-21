@@ -24,7 +24,7 @@ namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, repr, operations);
+namespace cosm::repr::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,5 +61,5 @@ class block_pickup : public rer::client<block_pickup> {
   /* clang-format on */
 };
 
-NS_END(operations, repr, cosm);
+} /* namespace cosm::repr::operations */
 

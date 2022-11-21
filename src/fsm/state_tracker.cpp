@@ -11,12 +11,12 @@
  ******************************************************************************/
 #include "cosm/fsm/state_tracker.hpp"
 
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * State Metrics
@@ -80,4 +80,4 @@ void state_tracker::state_reset(void) {
   m_state_start = rtypes::timestep(0);
 } /* state_reset() */
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

@@ -27,21 +27,12 @@
 #include "cosm/cosm.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
 #include "cosm/hal/sensors/colored_blob_camera_sensor_reading.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_blob_camera_sensor = std::is_same<
-  TSensor,
-  ::argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -54,13 +45,16 @@ NS_END(detail);
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
  *
- * ^The simulated sensor is expensive to update each timestep,
- *  so it is disabled upon creation, so robots can selectively enable/disable
- *  it as needed for maximum speed.
+ * HOWEVER, this is a generic sensor which can be attached to any robot in
+ * ARGoS; I just haven't tested it with any robots other than the ones above.
+ *
+ * The simulated sensor is expensive to update each timestep, so it is disabled
+ * upon creation, so robots can selectively enable/disable it as needed for
+ * maximum speed.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
@@ -170,4 +164,5 @@ class colored_blob_camera_sensor_impl final : public rer::client<colored_blob_ca
 using colored_blob_camera_sensor =
     colored_blob_camera_sensor_impl<::argos::CCI_ColoredBlobOmnidirectionalCameraSensor>;
 
-NS_END(sensors, argos, hal, cosm);
+
+} /* namespace cosm::hal::argos::sensors */

@@ -30,8 +30,14 @@ polar_force::polar_force(const config::polar_force_config* const config)
 rmath::vector2d polar_force::operator()(const boid& entity,
                                         const rmath::vector2d& source) const {
   auto odom = entity.odometry();
+  auto vel = odom.pose.position.to_2D();
+
   auto to_src = (odom.pose.position.to_2D() - source).normalize();
   rmath::vector2d orthogonal(-to_src.y(), to_src.x());
+
+  /* ensure velocity is always non-zero */
+  vel = make_vel_floor(vel);
+
   /*
    * atan2() is discontinuous at angles ~pi! So we wrap the angle to target
    * into [-pi,pi].
@@ -42,8 +48,7 @@ rmath::vector2d polar_force::operator()(const boid& entity,
    * abs() around the angle, and using angle instead of -angle in the return
    * vector seems to have done the trick, for now. See COSM#39,RCPPSW#232.
    */
-  auto angle =
-      (orthogonal.angle() - odom.twist.linear.to_2D().angle()).signed_normalize();
+  auto angle = (orthogonal.angle() - vel.angle()).signed_normalize();
   return rmath::vector2d(orthogonal.length(), angle).scale(mc_max);
 } /* operator()() */
 

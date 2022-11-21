@@ -27,7 +27,7 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 using block3D_listno_type = crepr::sim_block3D*;
 
@@ -56,5 +56,5 @@ class block3D_listno
   std::list<block3D_listno_type> m_impl;
 };
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */
 

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -85,4 +85,4 @@ void execution_metrics_collector::reset_after_interval(void) {
   m_data.interval.interface_estimate = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

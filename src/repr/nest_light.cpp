@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -39,4 +39,4 @@ void nest_light::initialize(cpargos::swarm_manager_adaptor* sm) {
   sm->AddEntity(*m_impl);
 } /* initialize() */
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

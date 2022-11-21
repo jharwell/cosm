@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Member Functions
@@ -69,4 +69,4 @@ void block_carry_visualizer::draw(const crepr::sim_block3D* const block,
   }
 } /* draw() */
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */

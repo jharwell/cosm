@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 struct ramp_block_embodiment;
 struct cube_block_embodiment;
@@ -31,4 +31,4 @@ using block_embodiment_variant =
     std::variant<std::unique_ptr<ramp_block_embodiment>,
                  std::unique_ptr<cube_block_embodiment> >;
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

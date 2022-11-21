@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class bi_tdgraph;
 struct executive_config;
 
@@ -38,7 +38,7 @@ class bi_tab;
  * \ingroup ta
  *
  * \brief A task executive which tasks are run one step at a time and polled
- * until they are finished. Operates on \ref bi_tdgraph.
+ * until they are finished. Operates on \ref cta::ds::bi_tdgraph.
  */
 class bi_tdgraph_executive final : public base_executive,
                                    public rer::client<bi_tdgraph_executive> {
@@ -90,4 +90,4 @@ class bi_tdgraph_executive final : public base_executive,
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

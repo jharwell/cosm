@@ -16,10 +16,12 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, subsystem);
+namespace cosm::subsystem {
+class actuation_subsystem;
+class sensing_subsystem;
 
+class base_saa_subsystem;
 class saa_subsystemQ3D;
-class actuation_subsystem2D;
-class sensing_subsystemQ3D;
+class saa_subsystem3D;
 
-NS_END(subsystem, cosm);
+} /* namespace cosm::subsystem */

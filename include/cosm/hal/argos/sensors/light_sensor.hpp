@@ -24,33 +24,14 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/stub_sensor.hpp"
 #include "cosm/hal/sensors/light_sensor_reading.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_FootBotLightSensor;
-class CCI_EPuckLightSensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_footbot_light_sensor = std::is_same<TSensor,
-                                             ::argos::CCI_FootBotLightSensor>;
-
-template<typename TSensor>
-using is_epuck_light_sensor = std::is_same<TSensor,
-                                           ::argos::CCI_EPuckLightSensor>;
-
-template<typename TSensor>
-using is_pipuck_light_sensor = std::is_same<TSensor, std::false_type>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -65,19 +46,21 @@ NS_END(detail);
  *
  * - ARGoS footbot^
  * - ARGoS epuck^
- * - ARGoS pipuck (stub only)
  *
  * ^The simulated sensor is expensive to update each timestep, AND is not
  *  necessarily needed each timestep, so it is disabled upon creation, so robots
  *  can selectively enable/disable it as needed for maximum computational
  *  efficiency.
  *
+ * For other HAL targets, the sensor is stubbed out so things will compile
+ * elsewhere, but the sensor and any algorithms using it WILL NOT WORK.
+ *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
  */
 template <typename TSensor>
 class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
-                                  public chargos::sensors::argos_sensor<TSensor> {
+                                public chargos::sensors::argos_sensor<TSensor> {
  private:
   using chargos::sensors::argos_sensor<TSensor>::decoratee;
 
@@ -102,12 +85,6 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
   light_sensor_impl& operator=(light_sensor_impl&&) = default;
   light_sensor_impl(light_sensor_impl&&) = default;
 
-  template <typename U = impl_type,
-            RCPPSW_SFINAE_DECLDEF(detail::is_pipuck_light_sensor<U>::value)>
-  std::vector<reading_type>  readings(void) const {
-    return {};
-  }
-
   /**
    * \brief Get the current light sensor readings for the footbot/epuck robots.
    *
@@ -116,7 +93,7 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
   template <typename U = impl_type,
             RCPPSW_SFINAE_DECLDEF(detail::is_footbot_light_sensor<U>::value ||
                                   detail::is_epuck_light_sensor<U>::value)>
-  std::vector<reading_type>  readings(void) const {
+  std::vector<reading_type> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
               __FUNCTION__);
@@ -131,16 +108,22 @@ class light_sensor_impl final : public rer::client<light_sensor_impl<TSensor>>,
 
     return ret;
   }
+
+  template <typename U = impl_type,
+            RCPPSW_SFINAE_DECLDEF(chsensors::is_null_sensor<U>::value)>
+  std::vector<reading_type>  readings(void) const {
+    return {};
+  }
 };
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using light_sensor = light_sensor_impl<::argos::CCI_FootBotLightSensor>;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
 using light_sensor = light_sensor_impl<::argos::CCI_EPuckLightSensor>;
-#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
-using light_sensor = light_sensor_impl<std::false_type>;
 #else
-using light_sensor = light_sensor_impl<std::false_type>;
+using light_sensor = chsensors::stub_sensor<
+  std::vector<chsensors::light_sensor_reading>
+  >;
 #endif /* COSM_HAL_TARGET */
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

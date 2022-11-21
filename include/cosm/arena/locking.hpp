@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Class Definitions
@@ -33,4 +33,4 @@ enum class locking : uint {
   ekGRID_HELD = 1 << 3,
   ekALL_HELD = ekNONE_HELD | ekBLOCKS_HELD | ekCACHES_HELD | ekGRID_HELD
 };
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "cosm/cosm.hpp"
+#include "cosm/ds/detail/mappish.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -25,23 +26,7 @@ namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds, detail);
-
-template <typename T, typename U = void>
-struct is_mappish_impl : std::false_type {};
-
-template <typename T>
-struct is_mappish_impl<T,
-                       std::void_t<typename T::key_type,
-                                   typename T::mapped_type,
-                                   decltype(std::declval<T&>()[std::declval<
-                                       const typename T::key_type&>()])>>
-    : std::true_type {};
-
-template <typename T>
-struct is_mappish : detail::is_mappish_impl<T>::type {};
-
-NS_END(detail);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Class Definitions
@@ -68,4 +53,4 @@ std::string to_string(const TMap& table, const std::string& prefix) {
                          });
 } /* do_to_str() */
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

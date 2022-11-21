@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics);
+namespace cosm::hal::sensors::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -40,4 +40,4 @@ class battery_metrics : public rmetrics::base_metrics {
   virtual double percent_remaining(void) const = 0;
 };
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

@@ -13,13 +13,13 @@
 
 #include "cosm/spatial/fsm/point_argument.hpp"
 #include "cosm/spatial/fsm/util_signal.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -100,13 +100,13 @@ bool acquire_goal_fsm::exited_interference(void) const {
          (m_vector_fsm.task_running() && m_vector_fsm.exited_interference());
 } /* exited_interference() */
 
-rtypes::timestep acquire_goal_fsm::interference_duration(void) const {
+boost::optional<rtypes::timestep> acquire_goal_fsm::interference_duration(void) const {
   if (m_explore_fsm.task_running()) {
     return m_explore_fsm.interference_duration();
   } else if (m_vector_fsm.task_running()) {
     return m_vector_fsm.interference_duration();
   }
-  return rtypes::timestep(0);
+  return boost::none;
 } /* interference_duration() */
 
 bool acquire_goal_fsm::goal_acquired(void) const {
@@ -131,19 +131,32 @@ acquire_goal_fsm::acquisition_goal(void) const {
   return metrics::goal_acq_metrics::goal_type(-1);
 } /* acquisition_goal() */
 
-rmath::vector3z acquire_goal_fsm::acquisition_loc3D(void) const {
-  return sensing()->dpos3D();
+boost::optional<rmath::vector3z> acquire_goal_fsm::acquisition_loc3D(void) const {
+  if (goal_acquired()) {
+    return boost::make_optional(sensing()->dpos3D());
+  }
+  return boost::none;
 } /* acquisition_loc3D() */
 
-rmath::vector3z acquire_goal_fsm::explore_loc3D(void) const {
-  return sensing()->dpos3D();
+boost::optional<rmath::vector3z> acquire_goal_fsm::explore_loc3D(void) const {
+  auto status = is_exploring_for_goal();
+  /*
+   * Include both false and true exploring for goal.
+   */
+  if (status.is_exploring) {
+    return boost::make_optional(sensing()->dpos3D());
+  }
+  return boost::none;
 } /* explore_loc3D() */
 
-rmath::vector3z acquire_goal_fsm::vector_loc3D(void) const {
-  return sensing()->dpos3D();
+boost::optional<rmath::vector3z> acquire_goal_fsm::vector_loc3D(void) const {
+  if (is_vectoring_to_goal()) {
+    return boost::make_optional(sensing()->dpos3D());
+  }
+  return boost::none;
 } /* vector_loc3D() */
 
-rmath::vector3z acquire_goal_fsm::interference_loc3D(void) const {
+boost::optional<rmath::vector3z> acquire_goal_fsm::interference_loc3D(void) const {
   return sensing()->dpos3D();
 } /* interference_loc3D() */
 
@@ -256,4 +269,4 @@ void acquire_goal_fsm::task_execute(void) {
   inject_event(util_signal::ekRUN, rpfsm::event_type::ekNORMAL);
 } /* task_execute() */
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

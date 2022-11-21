@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, init);
+namespace cosm::init {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,4 +28,4 @@ NS_START(cosm, init);
  */
 void init(void) RCPPSW_LIB_INIT;
 
-NS_END(init, cosm);
+} /* namespace cosm::init */

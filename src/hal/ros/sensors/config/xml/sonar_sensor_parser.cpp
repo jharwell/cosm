@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, config, xml);
+namespace cosm, hal::ros::sensors::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -40,4 +40,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors::xml, config */

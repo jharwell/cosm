@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config, xml);
+namespace cosm::oracle::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -37,4 +37,4 @@ void entities_oracle_parser::parse(const ticpp::Element& node) {
   }
 } /* parse() */
 
-NS_END(xml, config, oracle, cosm);
+} /* namespace cosm::oracle::config::xml */

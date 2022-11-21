@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+namespace cosm::pal::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -64,4 +64,4 @@ class output_parser final : public rer::client<output_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, pal, cosm);
+} /* namespace cosm::pal::config::xml */

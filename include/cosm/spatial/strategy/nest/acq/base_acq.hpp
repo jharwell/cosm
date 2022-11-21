@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Class Definitions
@@ -30,7 +30,6 @@ NS_START(cosm, spatial, strategy, nest, acq);
  * \brief Base class for nest acquisition strategies, to make collecting metrics
  * and usage of the strategy pattern easier.
  */
-
 class base_acq : public csstrategy::base_strategy,
                  public rpprototype::clonable<base_acq>,
                  public cssnest::metrics::acq_metrics {
@@ -60,4 +59,4 @@ class base_acq : public csstrategy::base_strategy,
   /* clang-format on */
 };
 
-NS_END(acq, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::acq */

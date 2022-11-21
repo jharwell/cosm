@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -35,4 +35,4 @@ class repository : public virtual rconfig::xml::xml_config_repository {
   repository(void) RCPPSW_COLD;
 };
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

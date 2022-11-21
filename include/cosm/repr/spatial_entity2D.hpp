@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -90,4 +90,4 @@ class spatial_entity2D : public spatial_entity {
   size_t ydsize(void) const { return dbb().ysize(); }
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

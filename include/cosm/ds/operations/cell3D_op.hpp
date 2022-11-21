@@ -26,7 +26,7 @@ namespace cosm::fsm {
 class cell3D_fsm;
 }
 
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -73,5 +73,5 @@ class cell3D_op {
  */
 using cell3D_op_visitor = rpvisitor::precise_visitor<cell3D_op,
                                                      cell3D_op::visit_typelist>;
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config);
+namespace cosm::pal::config {
 
 namespace fs = std::filesystem;
 
@@ -55,4 +55,4 @@ struct output_config final : public rconfig::base_config {
   static fs::path root_calc(const output_config* config);
 };
 
-NS_END(config, pal, cosm);
+} /* namespace cosm::pal::config */

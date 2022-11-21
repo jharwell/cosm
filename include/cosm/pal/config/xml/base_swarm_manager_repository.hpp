@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+namespace cosm::pal::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,5 +37,5 @@ class base_swarm_manager_repository : public rconfig::xml::xml_config_repository
   base_swarm_manager_repository(void) noexcept RCPPSW_COLD;
 };
 
-NS_END(xml, config, pal, cosm);
+} /* namespace cosm::pal::config::xml */
 

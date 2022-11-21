@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, config);
+namespace cosm::tv::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -41,4 +41,4 @@ struct temporal_penalty_config final : public rconfig::base_config {
   rct::config::waveform_config waveform{};
 };
 
-NS_END(tv, config, cosm);
+} /* namespace cosm::config::tv */

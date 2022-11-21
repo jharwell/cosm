@@ -14,13 +14,12 @@
 #include <memory>
 #include <string>
 #include <typeindex>
+#include <vector>
 
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/controller/base_controller.hpp"
 #include "cosm/spatial/metrics/dist2D_metrics.hpp"
-#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
-#include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
 
 /*******************************************************************************
@@ -30,7 +29,7 @@ namespace cosm::tv {
 class irv_manager;
 } /* namespace cosm::tv */
 
-NS_START(cosm, controller);
+namespace cosm::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -46,8 +45,6 @@ NS_START(cosm, controller);
  * controllers in the PAL.
  */
 class base_controller2D : public base_controller,
-                          public csmetrics::movement_metrics,
-                          public csmetrics::goal_acq_metrics,
                           public csmetrics::dist2D_metrics {
  public:
   base_controller2D(void) RCPPSW_COLD;
@@ -64,22 +61,9 @@ class base_controller2D : public base_controller,
   void sensing_update(const rtypes::timestep& tick,
                       const rtypes::discretize_ratio& ratio) override;
 
+  void sensing_update(const rtypes::timestep& tick) override;
+
   void mdc_ts_update(void) const override final;
-  const class subsystem::saa_subsystemQ3D* saa(void) const { return m_saa.get(); }
-
- protected:
-  class subsystem::saa_subsystemQ3D* saa(void) {
-    return m_saa.get();
-  }
-  void saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa);
-
-  rspatial::euclidean_dist ts_distance_impl(void) const RCPPSW_PURE;
-  rmath::vector3d ts_velocity_impl(void) const;
-
- private:
-  /* clang-format off */
-  std::unique_ptr<subsystem::saa_subsystemQ3D>    m_saa{nullptr};
-  /* clang-format on */
 };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

@@ -23,11 +23,9 @@
  ******************************************************************************/
 namespace cosm::pal::argos {
 class swarm_manager_adaptor;
-class controller2D_adaptor;
-class controllerQ3D_adaptor;
 } /* namespace cosm::pal::argos */
 
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Classes
@@ -68,4 +66,4 @@ class convergence_calculator final
   /* clang-format on */
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

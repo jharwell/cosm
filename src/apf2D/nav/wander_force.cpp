@@ -49,8 +49,10 @@ rmath::vector2d wander_force::operator()(const boid& entity, rmath::rng* rng) {
   auto odom = entity.odometry();
   auto velocity = odom.twist.linear.to_2D();
 
-  rmath::vector2d circle_center =
-      (odom.twist.linear.to_2D()).normalize().scale(mc_config.circle_distance);
+  /* ensure velocity is always non-zero */
+  velocity = make_vel_floor(velocity);
+
+  auto circle_center = velocity.normalize().scale(mc_config.circle_distance);
 
   /*
    * Calculate displacement force (the actual wandering) using the wander angle

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -30,7 +30,8 @@ NS_START(cosm, foraging, metrics);
  * \class block_cluster_metrics
  * \ingroup foraging metrics
  *
- * \brief Defines the metrics to be collected from \ref block_cluster objects.
+ * \brief Defines the metrics to be collected from \ref cfrepr::block_cluster
+ * objects.
  *
  * Metrics should be collected every timestep.
  */
@@ -66,5 +67,5 @@ class block_cluster_metrics : public rmetrics::base_metrics {
   virtual rmath::vector2d ranchor2D(void) const = 0;
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */
 

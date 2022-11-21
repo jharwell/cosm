@@ -28,7 +28,7 @@ namespace cosm::repr {
 class base_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, foraging, tv);
+namespace cosm::foraging::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,7 +37,7 @@ NS_START(cosm, foraging, tv);
  * \class penalty_id_calculator
  * \ingroup foraging tv
  *
- * \brief Calculates the ID for a \ref temporal_penalty under some general
+ * \brief Calculates the ID for a \ref ctv::temporal_penalty under some general
  * purpose conditions. Projects built on COSM will undoubtedly have to define
  * their own additional ID calculation functions/classes to extend the
  * functionality present here.
@@ -74,5 +74,5 @@ class penalty_id_calculator : public rer::client<penalty_id_calculator> {
 
 };
 
-NS_END(tv, foraging, cosm);
+} /* namespace cosm::foraging::tv */
 

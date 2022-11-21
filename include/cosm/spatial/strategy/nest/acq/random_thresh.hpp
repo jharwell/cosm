@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Class Definitions
@@ -96,4 +96,4 @@ class random_thresh : public cssnest::acq::base_acq {
 };
 
 
-NS_END(acq, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::acq */

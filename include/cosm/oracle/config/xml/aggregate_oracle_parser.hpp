@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config, xml);
+namespace cosm::oracle::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -64,4 +64,4 @@ class aggregate_oracle_parser final : public rer::client<aggregate_oracle_parser
   /* clang-format on */
 };
 
-NS_END(xml, config, oracle, cosm);
+} /* namespace cosm::oracle::config::xml */

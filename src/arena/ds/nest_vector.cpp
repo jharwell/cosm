@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 /*******************************************************************************
  * Non-Member Functions
@@ -44,4 +44,4 @@ std::string nest_vectorro::to_str(void) const {
   return do_to_str(*this);
 } /* to_str() */
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */

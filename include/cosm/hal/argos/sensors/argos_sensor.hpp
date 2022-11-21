@@ -12,11 +12,12 @@
  * Includes
  ******************************************************************************/
 #include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/sensors/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -69,4 +70,4 @@ class argos_sensor : public rer::client<argos_sensor<TSensor>>,
   bool is_enabled(void) const override { return decoratee()->IsEnabled(); }
 };
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

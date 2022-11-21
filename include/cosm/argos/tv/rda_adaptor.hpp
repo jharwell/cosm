@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos, tv);
+namespace cosm::argos::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -103,5 +103,5 @@ class rda_adaptor final : public rer::client<rda_adaptor<TController>>,
   /* clang-format on */
 };
 
-NS_END(tv, argos, cosm);
+} /* namespace cosm::argos::tv */
 

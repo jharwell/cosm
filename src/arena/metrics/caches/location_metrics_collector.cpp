@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Member Functions
@@ -27,4 +27,4 @@ void location_metrics_collector::collect(const rmetrics::base_metrics& metrics) 
   inc_cell_count(m.location());
 } /* collect() */
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */

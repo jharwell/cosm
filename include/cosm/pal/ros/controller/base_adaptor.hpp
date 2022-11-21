@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, ros, controller);
+namespace cosm::pal::ros::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -43,4 +43,4 @@ class base_adaptor : public rmpl::reflectable {
   /* clang-format on */
 };
 
-NS_END(controller, ros, pal, cosm);
+} /* namespace cosm::pal::ros::controller */

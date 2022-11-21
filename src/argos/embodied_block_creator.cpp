@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Member Functions
@@ -49,4 +49,4 @@ embodied_block_creator::operator()(const crepr::ramp_block3D* block) const {
   return { std::move(embodied) };
 }
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

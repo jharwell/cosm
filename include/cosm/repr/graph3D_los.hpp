@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -53,4 +53,4 @@ class graph3D_los : public crepr::base_graph_los<
                                                c_unit) {}
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

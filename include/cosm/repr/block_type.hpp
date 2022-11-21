@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -48,4 +48,4 @@ enum class block_type {
 std::ostream& operator<<(std::ostream& out, const block_type& b);
 std::istream& operator>>(std::istream& in, block_type& b);
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

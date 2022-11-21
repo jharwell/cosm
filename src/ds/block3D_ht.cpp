@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Member Functions
@@ -36,4 +36,4 @@ std::string block3D_htro::to_str(void) const {
   return cds::to_string(decoratee(), "b");
 } /* to_str() */
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

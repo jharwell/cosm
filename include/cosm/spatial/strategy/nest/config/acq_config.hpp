@@ -21,7 +21,7 @@
 /*******************************************************************************
   * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, config);
+namespace cosm::spatial::strategy::nest::config {
 
 /*******************************************************************************
   * Structure Definitions
@@ -46,4 +46,4 @@ struct acq_config final : public rconfig::base_config {
   rtypes::timestep duration{rtypes::constants::kNoTime};
 };
 
-NS_END(config, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::config */

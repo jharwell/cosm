@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, config, xml);
+namespace cosm::arena::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -44,4 +44,4 @@ bool arena_map_parser::validate(void) const {
   return m_grid.validate() && m_blocks.validate() && m_nests.validate();
 } /* validate() */
 
-NS_END(xml, config, arena, cosm);
+} /* namespace cosm::arena::config::xml */

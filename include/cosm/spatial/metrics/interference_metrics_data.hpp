@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics, detail);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,7 +28,7 @@ NS_START(cosm, spatial, metrics, detail);
    * would be atomic \ref rtypes::timestep, but that type does not meet the
    * std::atomic requirements.
    */
-  struct interference_metrics_data {
+  struct interference_metrics_data_impl {
     ral::mt_size_t n_exp_interference{0};
     ral::mt_size_t n_episodes{0};
     ral::mt_size_t n_entered_interference{0};
@@ -37,11 +37,9 @@ NS_START(cosm, spatial, metrics, detail);
   };
 
 
-NS_END(detail);
-
 struct interference_metrics_data : public rmetrics::base_data {
-  detail::interference_metrics_data interval{};
-  detail::interference_metrics_data cum{};
+  interference_metrics_data_impl interval{};
+  interference_metrics_data_impl cum{};
 
   /**
    * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
@@ -78,4 +76,4 @@ struct interference_metrics_data : public rmetrics::base_data {
   }
 };
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

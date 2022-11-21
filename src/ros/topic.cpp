@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros);
+namespace cosm::ros {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -27,4 +27,4 @@ topic to_ns(const rtypes::type_uuid& robot_id) {
   return cros::topic("/" + cpal::kRobotNamePrefix + rcppsw::to_string(robot_id));
 } /* to_ns() */
 
-NS_END(ros, cosm);
+} /* namespace cosm::ros */

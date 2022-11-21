@@ -18,11 +18,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(rosbridge);
+namespace rosbridge {
 namespace tsl2591 = ::tsl2591;
-NS_END(rosbridge);
+} /* namespace rosbridge */
 
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -89,4 +89,4 @@ std::vector<light_sensor::reading_type> light_sensor::readings(void) {
   return ret;
 }
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

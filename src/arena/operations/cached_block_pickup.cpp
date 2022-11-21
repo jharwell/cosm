@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 using cads::arena_grid;
 using carepr::base_cache;
 
@@ -196,4 +196,4 @@ void cached_block_pickup::visit(crepr::sim_block3D& block) {
   op.visit(block, crops::block_pickup_owner::ekARENA_MAP);
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

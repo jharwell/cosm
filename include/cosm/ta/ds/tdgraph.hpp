@@ -22,11 +22,9 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta { class polled_task;}
 
-class polled_task;
-
-NS_START(ds);
+namespace cosm::ta::ds {
 
 /*******************************************************************************
  * Class Definitions
@@ -201,4 +199,4 @@ class tdgraph : public rer::client<tdgraph> {
   /* clang-format on */
 };
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

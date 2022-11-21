@@ -31,7 +31,7 @@ namespace cosm::pal::argos {
 class swarm_manager_adaptor;
 } /* namespace cosm::pal::argos */
 
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Structure Definitions
@@ -59,4 +59,4 @@ class embodied_block_creator {
   /* clang-format on */
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

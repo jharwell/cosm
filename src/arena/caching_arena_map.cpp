@@ -22,12 +22,12 @@
 #include "cosm/foraging/block_dist/dispatcher.hpp"
 #include "cosm/pal/argos/swarm_manager_adaptor.hpp"
 #include "cosm/repr/sim_block3D.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -361,4 +361,4 @@ void caching_arena_map::ordered_unlock(const locking& locking) {
   maybe_unlock_wr(cache_mtx(), !(locking & locking::ekCACHES_HELD));
 } /* ordered_unlock() */
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

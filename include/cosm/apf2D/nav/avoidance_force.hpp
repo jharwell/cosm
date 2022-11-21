@@ -15,6 +15,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/apf2D/boid.hpp"
+#include "cosm/apf2D/base_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -36,7 +37,7 @@ struct avoidance_force_config;
  * \brief A force pushing the robot away from perceived obstacles. Only active
  * when threatening obstacles are detected.
  */
-class avoidance_force {
+class avoidance_force : public capf2D::base_force {
  public:
   explicit avoidance_force(const config::avoidance_force_config* config);
 

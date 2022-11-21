@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist, metrics);
+namespace cosm::foraging::block_dist::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -65,5 +65,5 @@ class distributor_metrics : public rmetrics::base_metrics {
   virtual size_t size(void) const = 0;
 };
 
-NS_END(metrics, block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist::metrics */
 

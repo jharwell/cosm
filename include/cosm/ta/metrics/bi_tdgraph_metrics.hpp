@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,7 +28,7 @@ NS_START(cosm, ta, metrics);
  * \ingroup ta metrics
  *
  * \brief Interface defining metrics that can be collected about the current
- * task dist of a \ref bi_tdgraph.
+ * task dist of a \ref cta::ds::bi_tdgraph.
  */
 class bi_tdgraph_metrics : public virtual rmetrics::base_metrics {
  public:
@@ -54,4 +54,4 @@ class bi_tdgraph_metrics : public virtual rmetrics::base_metrics {
   virtual int current_task_tab(void) const = 0;
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

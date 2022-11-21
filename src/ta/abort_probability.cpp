@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -45,4 +45,4 @@ double abort_probability::operator()(const rtypes::timestep& exec_time,
   return eval(1.0 / (1 + std::exp(theta)) * gamma());
 } /* operator() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

@@ -27,10 +27,9 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
-namespace config {
-struct task_executive_config;
-} /* namespace config */
+namespace cosm::ta {
+
+namespace config { struct task_executive_config;}
 
 /*******************************************************************************
  * Class Definitions
@@ -216,4 +215,4 @@ class base_executive : public rer::client<base_executive> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

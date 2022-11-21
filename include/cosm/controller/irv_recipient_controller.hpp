@@ -16,13 +16,13 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm);
+namespace cosm {
 
 namespace tv {
 class robot_dynamics_applicator;
 } /* namespace tv */
 
-NS_START(controller);
+namespace controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -55,4 +55,4 @@ class irv_recipient_controller {
   virtual void irv_init(const tv::robot_dynamics_applicator* irv) = 0;
 };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr, config);
+namespace cosm::repr::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -38,5 +38,5 @@ struct nest_config final : public rconfig::base_config {
   rmath::vector2d dims{};
 };
 
-NS_END(config, repr, cosm);
+} /* namespace cosm::repr::config */
 

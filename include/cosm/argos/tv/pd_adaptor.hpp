@@ -38,7 +38,7 @@ class adaptor2D;
 class adaptorQ3D;
 } /* namespace cosm::pal */
 
-NS_START(cosm, argos, tv);
+namespace cosm::argos::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -121,5 +121,5 @@ class pd_adaptor : public rer::client<pd_adaptor<TController>>,
   /* clang-format on */
 };
 
-NS_END(tv, argos, cosm);
+} /* namespace cosm::argos::tv */
 

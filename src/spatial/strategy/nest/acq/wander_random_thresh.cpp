@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -32,4 +32,4 @@ void wander_random_thresh::task_execute(void) {
   wander();
 } /* task_execute() */
 
-NS_END(acq, nest, spatial, strategy, cosm);
+} /* namespace cosm::strategy::spatial::nest::acq */

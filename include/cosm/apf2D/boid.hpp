@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, apf2D);
+namespace cosm::apf2D {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,8 +27,8 @@ NS_START(cosm, apf2D);
  * \ingroup apf2D
  *
  * \brief Interface representing an entity upon which kinematic forces can act
- * (i.e. any class that wants to use the \ref force_calculator must conform to
- * this interface).
+ * (i.e. any class that wants to use the \ref capf2D::apf_manager must conform
+ * to this interface).
  */
 class boid {
  public:
@@ -41,10 +41,10 @@ class boid {
   virtual ckin::odometry odometry(void) const = 0;
 
   /**
-   * \brief Should return the maximum linear speed of the entity. This can vary
-   * in time, if desired.
+   * \brief Should return the magnitude of the maximum velocity of the
+   * entity. This can vary in time, if desired.
    */
-  virtual double max_linear_speed(void) const = 0;
+  virtual double max_velocity(void) const = 0;
 };
 
-NS_END(apf2D, cosm);
+} /* namespace cosm::apf2D */

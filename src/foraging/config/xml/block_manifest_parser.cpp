@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -42,4 +42,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */

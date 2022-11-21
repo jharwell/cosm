@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, foraging, metrics);
+namespace cosm::ros::foraging::metrics {
 
 /*******************************************************************************
  * ROS Messages
@@ -33,4 +33,4 @@ struct block_cluster_metrics_msg {
   cfmetrics::block_cluster_metrics_data data;
 };
 
-NS_END(metrics, foraging, ros, cosm)
+} /* namespace cosm::ros::foraging::metrics */

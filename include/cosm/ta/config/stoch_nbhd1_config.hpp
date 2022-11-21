@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -44,5 +44,5 @@ struct stoch_nbhd1_config final : public rcppsw::config::base_config {
   src_sigmoid_sel_config tab_sel{};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

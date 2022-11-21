@@ -24,7 +24,7 @@ namespace cosm::hal::sensors::metrics {
 class battery_metrics_collector;
 } /* namespace cosm::fsm::metrics */
 
-NS_START(cosm, hal, ros, sensors, metrics);
+namespace cosm::hal::ros::sensors::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -33,7 +33,7 @@ NS_START(cosm, hal, ros, sensors, metrics);
  * \class battery_metrics_topic_sink
  * \ingroup hal ros sensors metrics
  *
- * \brief Sink for \ref cfsm::metrics::battery_metrics and \ref
+ * \brief Sink for \ref chsensors::metrics::battery_metrics and \ref
  * chsensors::metrics::battery_metrics_collector to output metrics to a ROS
  * topic.
  */
@@ -48,4 +48,4 @@ class battery_metrics_topic_sink final
       : topic_sink(topic, mode, interval) {}
 };
 
-NS_END(metrics, sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors::metrics */

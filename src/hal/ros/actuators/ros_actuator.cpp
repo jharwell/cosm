@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, actuators);
+namespace cosm::hal::ros::actuators {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -33,4 +33,4 @@ void ros_actuator::disable(void) {
   }
 }
 
-NS_END(actuators, ros, hal, cosm);
+} /* namespace cosm::hal::ros::actuators */

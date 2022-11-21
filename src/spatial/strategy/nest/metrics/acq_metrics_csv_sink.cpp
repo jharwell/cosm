@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, metrics);
+namespace cosm::spatial::strategy::nest::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -63,4 +63,4 @@ acq_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

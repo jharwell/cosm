@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, argos, controller);
+namespace cosm::pal::argos::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -67,4 +67,4 @@ class base_adaptor : public ::argos::CCI_Controller,
   bool m_display_los{false};
 };
 
-NS_END(controller, argos, pal, cosm);
+} /* namespace cosm::pal::argos::controller */

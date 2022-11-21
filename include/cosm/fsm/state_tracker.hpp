@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -36,7 +36,7 @@ NS_START(cosm, fsm);
  */
 class state_tracker {
  public:
-  explicit state_tracker(const csubsystem::sensing_subsystemQ3D* const sensing)
+  explicit state_tracker(const csubsystem::sensing_subsystem* const sensing)
       : mc_sensing(sensing) {}
   virtual ~state_tracker(void) = default;
 
@@ -78,7 +78,7 @@ class state_tracker {
 
  private:
   /* clang-format off */
-  const subsystem::sensing_subsystemQ3D* const mc_sensing;
+  const subsystem::sensing_subsystem* const mc_sensing;
 
   bool                                         m_entered_state{false};
   bool                                         m_exited_state{false};
@@ -87,4 +87,4 @@ class state_tracker {
   /* clang-format on */
 };
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

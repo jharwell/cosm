@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,9 +34,9 @@ NS_START(cosm, repr);
  * \ingroup repr
  *
  * \brief Metadata for blocks which robots can carry and manipulate within the
- * arena, including implementation of \ref metrics::blocks::transport_metrics
- * and what color the block is. This does NOT include the ID of the block, which
- * is part of its core definition.
+ * arena, including implementation of \ref
+ * cfmetrics::blocks::transportee_metrics and what color the block is. This does
+ * NOT include the ID of the block, which is part of its core definition.
  */
 class block_metadata final : public cfmetrics::block_transportee_metrics,
                              public colored_entity {
@@ -128,8 +128,8 @@ class block_metadata final : public cfmetrics::block_transportee_metrics,
   void robot_id_reset(void) { m_robot_id = rtypes::constants::kNoUUID; }
 
   /**
-   * \brief Provided to block classes implementing \ref clonable::clone() so
-   * that they can correctly clone block metadata/metrics.
+   * \brief Provided to block classes implementing clone() so that they can
+   * correctly clone block metadata/metrics.
    *
    * Note that the robot ID is not copied.
    */
@@ -153,4 +153,4 @@ class block_metadata final : public cfmetrics::block_transportee_metrics,
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

@@ -1,5 +1,5 @@
 /**
- * \file free_block_calculator.hpp
+ * \file free_blocks_calculator.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,4 +62,4 @@ class free_blocks_calculator {
   /* clang-format on */
 };
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

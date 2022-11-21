@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 using cads::arena_grid;
 
 /*******************************************************************************
@@ -99,4 +99,4 @@ void cache_block_drop::visit(carepr::arena_cache& cache) {
   cache.has_block_drop();
 } /* visit() */
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

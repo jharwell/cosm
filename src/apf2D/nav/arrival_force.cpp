@@ -33,7 +33,7 @@ arrival_force::arrival_force(const config::arrival_force_config* const config)
 rmath::vector2d arrival_force::operator()(const boid& entity,
                                           const rmath::vector2d& target) {
   auto odom = entity.odometry();
-  rmath::vector2d desired = target - odom.pose.position.to_2D();
+  auto desired = target - odom.pose.position.to_2D();
   double distance = desired.length();
 
   ER_DEBUG("Robot: position=%s,orientation=%s",
@@ -50,6 +50,7 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
            desired.length());
 
   desired.normalize();
+
   if (distance <= mc_slowing_radius) {
     m_within_slowing_radius = true;
     desired.scale(
@@ -58,8 +59,9 @@ rmath::vector2d arrival_force::operator()(const boid& entity,
     m_within_slowing_radius = false;
     desired.scale(mc_max);
   }
+
   /*
-   * atan2() is discontinuous at angles ~pi! so we wrap the angle to target
+   * atan2() is discontinuous at angles ~pi so we wrap the angle to target
    * into [-pi,pi].
    *
    * This used to take the absolute value in order to get something [0, pi],

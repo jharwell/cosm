@@ -16,11 +16,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
 factory::factory(void) { register_type<crw>(kCRW); }
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

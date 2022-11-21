@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config, xml);
+namespace cosm::hal::sensors::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -28,4 +28,4 @@ void env_sensor_detection_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR(pnode, m_config, range);
 } /* parse() */
 
-NS_END(xml, config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config::xml */

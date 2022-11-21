@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,4 +56,4 @@ class env_dynamics {
   virtual bool penalties_flush(const TController& c) = 0;
 };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

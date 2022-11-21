@@ -12,13 +12,13 @@
 #include "cosm/spatial/strategy/nest/acq/random_thresh.hpp"
 
 #include "cosm/spatial/fsm/point_argument.hpp"
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -56,4 +56,4 @@ void random_thresh::task_execute(void) {
   handle_ca();
 } /* task_execute() */
 
-NS_END(acq, nest, spatial, strategy, cosm);
+} /* namespace cosm::strategy::spatial::nest::acq */

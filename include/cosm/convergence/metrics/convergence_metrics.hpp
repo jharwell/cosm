@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics);
+namespace cosm::convergence::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -88,5 +88,5 @@ class convergence_metrics : public virtual rmetrics::base_metrics {
   virtual conv_status_t swarm_velocity(void) const = 0;
 };
 
-NS_END(metrics, convergence, cosm);
+} /* namespace cosm::convergence::metrics */
 

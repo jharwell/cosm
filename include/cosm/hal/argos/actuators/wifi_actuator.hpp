@@ -15,6 +15,7 @@
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/argos/actuators/argos_actuator.hpp"
+#include "cosm/hal/argos/actuators/detail/identify.hpp"
 #include "cosm/hal/wifi_packet.hpp"
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT) || (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D)
@@ -24,19 +25,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_RangeAndBearingActuator;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, actuators, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename Actuator>
-using is_rab_actuator = std::is_same<Actuator,
-                                           ::argos::CCI_RangeAndBearingActuator>;
-NS_END(detail);
+namespace cosm::hal::argos::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -141,5 +130,4 @@ using wifi_actuator = wifi_actuator_impl<::argos::CCI_RangeAndBearingActuator>;
 class wifi_actuator {};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(actuators, argos, hal, cosm);
-
+} /* namespace cosm::hal::argos::actuators */

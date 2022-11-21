@@ -16,39 +16,43 @@
 #include "rcppsw/math/vector3.hpp"
 #include "rcppsw/er/client.hpp"
 
-#include "cosm/cosm.hpp"
-#include "cosm/hal/argos/sensors/position_sensor.hpp"
-#include "cosm/hal/argos/sensors/diff_drive_sensor.hpp"
 #include "cosm/hal/hal.hpp"
 #include "cosm/kin/odometry.hpp"
+#include "cosm/hal/argos/sensors/position_sensor.hpp"
+#if defined(COSM_HAL_TARGET_HAS_DIFF_DRIVE_SENSOR)
+#include "cosm/hal/argos/sensors/diff_drive_sensor.hpp"
+#elif defined(COSM_HAL_TARGET_HAS_QUADROTOR_SENSOR)
+#include "cosm/hal/argos/sensors/quadrotor_sensor.hpp"
+#endif
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \class odometry_sensor
+ * \class odometry_sensor_impl
  * \ingroup hal argos sensors
  *
  * \brief Odometry sensor built from the position and diff drive sensors.
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
 */
-class odometry_sensor final
-    : public rer::client<odometry_sensor>,
-      public chsensors::base_sensor<std::pair<position_sensor,
-                                                  diff_drive_sensor>
-                                        > {
+template <typename TPoseSrc, typename TTwistSrc>
+class odometry_sensor_impl final
+    : public rer::client<odometry_sensor_impl<TPoseSrc, TTwistSrc>>,
+      public chsensors::base_sensor<std::pair<TPoseSrc, TTwistSrc> > {
  public:
-  using decoratee_type = std::pair<position_sensor, diff_drive_sensor>;
+  using decoratee_type = std::pair<TPoseSrc, TTwistSrc>;
+  using pose_src_type = typename decoratee_type::first_type;
+  using twist_src_type = typename decoratee_type::second_type;
 
  private:
   using chsensors::base_sensor<decoratee_type>::decoratee;
@@ -59,21 +63,27 @@ class odometry_sensor final
   using chsensors::base_sensor<decoratee_type>::reset;
   using chsensors::base_sensor<decoratee_type>::is_enabled;
 
-  explicit odometry_sensor(position_sensor&& position,
-                           diff_drive_sensor&& steering)
+  odometry_sensor_impl(pose_src_type&& pose, twist_src_type&& twist)
       : ER_CLIENT_INIT("cosm.hal.argos.sensors.odometry"),
         chsensors::base_sensor<decoratee_type>(
-            std::make_pair(std::move(position),
-                           std::move(steering))) {}
+            std::make_pair(std::move(pose),
+                           std::move(twist))) {
+    /* odometry is almost always needed, and its cheap to obtain from ARGoS */
+    enable();
+  }
 
   /* move only constructible/assignable for use with saa subsystem */
-  const odometry_sensor& operator=(const odometry_sensor&) = delete;
-  odometry_sensor(const odometry_sensor&) = delete;
-  odometry_sensor& operator=(odometry_sensor&&) = default;
-  odometry_sensor(odometry_sensor&&) = default;
+  const odometry_sensor_impl& operator=(const odometry_sensor_impl&) = delete;
+  odometry_sensor_impl(const odometry_sensor_impl&) = delete;
+  odometry_sensor_impl& operator=(odometry_sensor_impl&&) = default;
+  odometry_sensor_impl(odometry_sensor_impl&&) = default;
 
   /**
    * \brief Get the current odometry sensor readings for the robot.
+   *
+   * \note If a robot is currently executing a HARD turn/spinning in place, then
+   *       the reported linear velocity will be 0, which can make some virtual
+   *       forces not work without special cases.
    *
    * \return A \ref ckin::odometry reading.
    */
@@ -90,18 +100,6 @@ class odometry_sensor final
     /* get twist */
     ret.twist = decoratee().second.reading();
 
-    /*
-     * If speed comes back as 0.0, then we are executing a hard turn, probably
-     * as we vector somewhere. In order to have the arrival force work properly,
-     * we need to have a velocity with a non-zero length and the correct heading
-     * angle at all times. So we report that we have velocity even though we do
-     * not, for the purposes of making those calculations work.
-     *
-     * There probably is a better way to do this, but I don't know what it is.
-     */
-    if (ret.twist.linear.length() <= std::numeric_limits<double>::epsilon()) {
-      ret.twist.linear = rmath::vector3d::X * 0.01;
-    }
     return ret;
   }
 
@@ -123,4 +121,10 @@ class odometry_sensor final
   }
 };
 
-NS_END(sensors, argos, hal, cosm);
+#if defined(COSM_HAL_TARGET_HAS_DIFF_DRIVE_SENSOR)
+using odometry_sensor = odometry_sensor_impl<position_sensor, diff_drive_sensor>;
+#elif defined(COSM_HAL_TARGET_HAS_QUADROTOR_SENSOR)
+using odometry_sensor = odometry_sensor_impl<position_sensor, quadrotor_sensor>;
+#endif /* COSM_HAL_TARGET_HAS_DIFF_DRIVE_SENSOR */
+
+} /* namespace cosm::hal::argos::sensors */

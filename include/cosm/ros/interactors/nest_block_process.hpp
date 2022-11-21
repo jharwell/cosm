@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, interactors);
+namespace cosm::ros::interactors {
 
 /*******************************************************************************
  * Classes
@@ -137,4 +137,4 @@ class nest_block_process
   /* clang-format on */
 };
 
-NS_END(interactors, ros, cosm);
+} /* namespace cosm::ros::interactors */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, ros, config, xml);
+namespace cosm::pal::ros::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -32,5 +32,5 @@ NS_START(cosm, pal, ros, config, xml);
  */
 class swarm_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
 
-NS_END(xml, config, ros, pal, cosm);
+} /* namespace cosm::pal::ros::config::xml */
 

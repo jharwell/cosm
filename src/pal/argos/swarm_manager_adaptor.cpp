@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, argos);
+namespace cosm::pal::argos {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -62,6 +62,11 @@ void swarm_manager_adaptor::arena_map_init(
 
 ::argos::CColor
 swarm_manager_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
+  /* no arena map -> can't change the color */
+  if (nullptr == m_arena_map) {
+    return ::argos::CColor::WHITE;
+  }
+
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
   rmath::vector2z dpos =
       rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());
@@ -102,4 +107,4 @@ template void swarm_manager_adaptor::arena_map_create<carena::base_arena_map>(
 template void swarm_manager_adaptor::arena_map_create<carena::caching_arena_map>(
     const caconfig::arena_map_config* aconfig);
 
-NS_END(argos, pal, cosm);
+} /* namespace cosm::pal::argos */

@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -38,7 +38,7 @@ void redist_governor::update(const rtypes::timestep& t,
                              bool convergence_status) {
 
   /* # blocks is always infinite/finite, depending on initial status */
-  if (kDisableTriggerNull == mc_config.disable_trigger) {
+  if (kDisableTriggerNone == mc_config.disable_trigger) {
     return;
   }
   /*
@@ -92,4 +92,4 @@ void redist_governor::update(const rtypes::timestep& t,
   }
 } /* update() */
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

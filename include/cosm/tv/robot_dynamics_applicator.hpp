@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 namespace config {
 struct robot_dynamics_applicator_config;
@@ -146,4 +146,4 @@ class robot_dynamics_applicator : public rer::client<robot_dynamics_applicator> 
   /* clang-format on */
 };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

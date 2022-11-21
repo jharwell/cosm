@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -54,5 +54,5 @@ class population_dynamics_metrics_collector final : public rmetrics::base_collec
   population_dynamics_metrics_data m_data{};
 };
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */
 

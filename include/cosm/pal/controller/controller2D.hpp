@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, controller);
+namespace cosm::pal::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,5 +37,5 @@ using controller2D = cpargos::controller::adaptor2D;
 using controller2D = cpros::controller::adaptor2D;
 #endif /* COSM_PAL_TARGET_ARGOS */
 
-NS_END(controller, pal, cosm);
+} /* namespace cosm::pal::controller */
 

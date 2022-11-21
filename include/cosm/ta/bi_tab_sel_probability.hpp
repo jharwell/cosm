@@ -21,14 +21,10 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
-namespace ds {
-class bi_tab;
-} /* namespace ds */
+namespace cosm::ta {
 
-namespace config {
-struct src_sigmoid_sel_config;
-} /* namespace config */
+namespace ds { class bi_tab; }
+namespace config { struct src_sigmoid_sel_config; }
 
 /*******************************************************************************
  * Class Definitions
@@ -54,7 +50,7 @@ struct src_sigmoid_sel_config;
  * Depends on:
  *
  * - The robot's time estimates of how long it takes to complete task in each
-     TAB.
+ *   TAB.
  *
  * - The reactivity parameter: How quickly should the increase in sel
  *   probability be for an increasing difference between TAB balance ratios.
@@ -134,4 +130,4 @@ class bi_tab_sel_probability : public rer::client<bi_tab_sel_probability>,
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

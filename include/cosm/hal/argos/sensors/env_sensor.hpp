@@ -11,6 +11,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <string>
+
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
@@ -21,34 +23,39 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, sensors);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
+
 /**
  * \class env_sensor
  * \ingroup hal argos sensors
  *
  * \brief Environment sensor wrapper to provide a uniform interface to sensing
  * (roughly) "what is the environment/spatial features of the environment/etc
- * near me" regardless of robot and platform. Provides some additional higher
- * level functionality beyond raw sensor readings too.
+ * near me" regardless of robot and platform.
+ *
+ * Provides some additional higher level functionality beyond raw sensor
+ * readings too.
  *
  * Supports the following robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck (stub only)
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ *
+ * For other HAL targets, the sensor is stubbed out so things will compile
+ * elsewhere, but the sensor and any algorithms using it WILL NOT WORK.
  */
 class env_sensor : public rer::client<env_sensor>,
-                   public chsensors::base_sensor<chasensors::ground_sensor>,
+                   public chsensors::base_sensor<chargos::sensors::ground_sensor>,
                    public chsensors::env_sensor_impl {
  public:
-  using ground = chsensors::base_sensor<chasensors::ground_sensor>;
+  using impl_type = chsensors::base_sensor<chargos::sensors::ground_sensor>;
   static inline const std::string kCacheTarget = "cache";
 
-  explicit env_sensor(chasensors::ground_sensor&& sensor);
+  explicit env_sensor(chargos::sensors::ground_sensor&& sensor);
 
   /* move only constructible/assignable to work with the saa subsystem */
   env_sensor& operator=(const env_sensor&) = delete;
@@ -67,4 +74,4 @@ class env_sensor : public rer::client<env_sensor>,
               const chsensors::config::env_sensor_detection_config* config) override;
 };
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

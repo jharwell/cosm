@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, config);
+namespace cosm::pal::config {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -41,4 +41,4 @@ fs::path output_config::root_calc(const output_config* const config) {
   return path;
 } /* root_calc */
 
-NS_END(config, pal, cosm);
+} /* namespace cosm::pal::config */

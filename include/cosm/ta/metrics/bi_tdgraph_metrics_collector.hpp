@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,7 +31,7 @@ NS_START(cosm, ta, metrics);
  * \ingroup ta metrics
  *
  * \brief Collector for metrics about the current task_dist of tasks in a
- * collection of agents executing tasks in a \ref bi_tdgraph.
+ * collection of agents executing tasks in a \ref cta::ds::bi_tdgraph.
  *
  * Metrics CAN be collected in parallel from robots; concurrent updates to the
  * gathered stats are supported. Metrics are written out at the specified
@@ -41,7 +41,7 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_collector {
  public:
   /**
    * \param sink The metrics sink to use.
-   * \param decomposition_depth The maximum depth of the \ref bi_tdgraph.
+   * \param decomposition_depth The maximum depth of the \ref cta::ds::bi_tdgraph.
    */
   explicit bi_tdgraph_metrics_collector(
       std::unique_ptr<rmetrics::base_sink> sink,
@@ -61,4 +61,4 @@ class bi_tdgraph_metrics_collector final : public rmetrics::base_collector {
   bi_tdgraph_metrics_data m_data;
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

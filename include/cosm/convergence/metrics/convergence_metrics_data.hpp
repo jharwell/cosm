@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics, detail);
+namespace cosm::convergence::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -26,24 +26,22 @@ NS_START(cosm, convergence, metrics, detail);
  * \ingroup convergence metrics detail
  *
  * \brief Container for holding collected statistics of \ref
- * convergence_metrics.
+ * cconvergence::convergence_metrics.
  */
-struct convergence_measure_data {
+struct convergence_measure_data_impl {
   double raw{0.0};
   double norm{0.0};
   bool converged{false};
 };
 
-NS_END(detail);
-
 struct convergence_metrics_data : public rmetrics::base_data {
   double                           conv_epsilon{0.0};
-  detail::convergence_measure_data interact{};
-  detail::convergence_measure_data order{};
-  detail::convergence_measure_data pos_ent{};
-  detail::convergence_measure_data tdist_ent{};
-  detail::convergence_measure_data velocity{};
+  convergence_measure_data_impl interact{};
+  convergence_measure_data_impl order{};
+  convergence_measure_data_impl pos_ent{};
+  convergence_measure_data_impl tdist_ent{};
+  convergence_measure_data_impl velocity{};
 };
 
-NS_END(metrics, convergence, cosm);
+} /* namespace cosm::convergence::metrics */
 

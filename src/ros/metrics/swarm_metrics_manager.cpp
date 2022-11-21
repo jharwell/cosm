@@ -47,7 +47,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -347,4 +347,4 @@ void swarm_metrics_manager::collect(
   collector->collect(msg->data);
 } /* collect() */
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

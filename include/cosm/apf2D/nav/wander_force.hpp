@@ -20,6 +20,7 @@
 #include "cosm/apf2D/nav/base_bias_angle_generator.hpp"
 #include "cosm/apf2D/boid.hpp"
 #include "cosm/apf2D/nav/config/wander_force_config.hpp"
+#include "cosm/apf2D/base_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -37,7 +38,7 @@ namespace cosm::apf2D::nav {
  * velocity in order to make it move randomly throughout the environment. This
  * can be thought of as a directed random walk.
  */
-class wander_force {
+class wander_force : capf2D::base_force {
  public:
   explicit wander_force(const config::wander_force_config* config);
 
@@ -48,7 +49,7 @@ class wander_force {
   const config::wander_force_config          mc_config;
 
   int                                        m_count{-1};
-  rmath::radians                             m_last_angle{0};
+  rmath::radians                             m_last_angle{0.001};
   rmath::radians                             m_angle{0};
   std::unique_ptr<base_bias_angle_generator> m_bias_generator;
   /* clang-format on */

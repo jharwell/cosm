@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -29,4 +29,4 @@ void polled_task::exec_estimate_init(const rmath::rangez& bounds,
   executable_task::exec_estimate_init(rtypes::timestep(rng->uniform(bounds)));
 } /* exec_estimate_init() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

@@ -1,5 +1,5 @@
 /**
- * \file base_block.hpp
+ * \file base_block3D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -106,4 +106,4 @@ class base_block3D : public crepr::unicell_movable_entity3D,
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

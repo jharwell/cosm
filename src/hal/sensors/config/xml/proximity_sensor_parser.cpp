@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config, xml);
+namespace cosm::hal::sensors::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -33,6 +33,9 @@ void proximity_sensor_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool proximity_sensor_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
   ER_CHECK(m_config->delta > 0.0, "Delta must be > 0");
   ER_CHECK(m_config->fov.lb() < m_config->fov.ub(),
            "Malformed Field Of View range");
@@ -42,4 +45,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config::xml */

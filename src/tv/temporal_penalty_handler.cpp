@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -157,4 +157,4 @@ rtypes::timestep temporal_penalty_handler::penalty_finish_uniqueify(
   return duration;
 } /* penalty_finish_uniqueify() */
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

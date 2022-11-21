@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 class location_metrics_collector;
 
 /*******************************************************************************
@@ -29,5 +29,5 @@ class location_metrics_csv_sink final :
   using rdmetrics::grid2D_metrics_csv_sink<rdmetrics::cell_avg>::grid2D_metrics_csv_sink;
 };
 
-NS_END(metrics, caches, arena, cosm);
+} /* namespace cosm::arena::caches::metrics */
 

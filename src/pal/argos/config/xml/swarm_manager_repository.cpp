@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, argos, config, xml);
+namespace cosm::pal::argos::config::xml {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -45,4 +45,4 @@ swarm_manager_repository::swarm_manager_repository(void) noexcept {
       ctv::config::xml::population_dynamics_parser::kXMLRoot);
 }
 
-NS_END(xml, config, argos, pal, cosm);
+} /* namespace cosm::pal::argos::config::xml */

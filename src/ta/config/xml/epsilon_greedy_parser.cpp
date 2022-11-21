@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -38,4 +38,4 @@ bool epsilon_greedy_parser::validate(void) const {
   return !is_parsed() || RCPPSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0);
 } /* validate() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

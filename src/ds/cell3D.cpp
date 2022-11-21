@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -34,4 +34,4 @@ crepr::sim_block3D* cell3D::block(void) {
   return dynamic_cast<crepr::sim_block3D*>(m_entity);
 } /* block3D() */
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

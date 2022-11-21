@@ -51,5 +51,5 @@ node_modules
 
 # Sphinx
 docs/_build/
-docs/api
+docs/_api
 docs/_ext/__pycache__

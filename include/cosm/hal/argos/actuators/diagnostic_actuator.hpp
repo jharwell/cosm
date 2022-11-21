@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, argos, actuators);
+namespace cosm::hal::argos::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,11 +34,8 @@ NS_START(cosm, hal, argos, actuators);
  *
  * \brief Diagnostic actuator via LEDs.
  *
- *  Supports the following robots:
- *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ *  Can be used with any ARGoS robot supported by \ref
+ *  chargos::actuators::led_acuator.
  *
  * \tparam TActuator The underlying actuator handle type abstracted away by the
  *                   HAL.
@@ -74,4 +71,4 @@ class diagnostic_actuator final : public rer::client<diagnostic_actuator>,
   /* clang-format on */
 };
 
-NS_END(actuators, argos, hal, cosm);
+} /* namespace cosm::hal::argos::actuators */

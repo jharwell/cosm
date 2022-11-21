@@ -34,7 +34,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 namespace fs = std::filesystem;
 
 /*******************************************************************************
@@ -133,4 +133,4 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
   /* clang-format on */
 };
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

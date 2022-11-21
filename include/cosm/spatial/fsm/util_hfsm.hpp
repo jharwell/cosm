@@ -20,10 +20,10 @@
 #include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/cosm.hpp"
-#include "cosm/spatial/interference_tracker.hpp"
+#include "cosm/spatial/common/interference_tracker.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 #include "cosm/spatial/strategy/base_strategy.hpp"
-#include "cosm/spatial/nest_zone_tracker.hpp"
+#include "cosm/spatial/common/nest_zone_tracker.hpp"
 #include "cosm/spatial/metrics/nest_zone_metrics.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
 #include "cosm/spatial/fsm/fsm_params.hpp"
@@ -31,7 +31,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -47,9 +47,9 @@ NS_START(cosm, spatial, fsm);
  * per-se.
  */
 class util_hfsm : public rpfsm::hfsm,
-                                public rer::client<util_hfsm>,
-                                public metrics::interference_metrics,
-                                public metrics::nest_zone_metrics {
+                  public rer::client<util_hfsm>,
+                  public metrics::interference_metrics,
+                  public metrics::nest_zone_metrics {
  public:
   util_hfsm(const fsm_params* params,
             rmath::rng* rng,
@@ -61,11 +61,11 @@ class util_hfsm : public rpfsm::hfsm,
   util_hfsm& operator=(const util_hfsm&) = delete;
 
   void init(void) override;
-  csubsystem::sensing_subsystemQ3D* sensing(void) RCPPSW_PURE;
-  const csubsystem::sensing_subsystemQ3D* sensing(void) const RCPPSW_PURE;
+  csubsystem::sensing_subsystem* sensing(void) RCPPSW_PURE;
+  const csubsystem::sensing_subsystem* sensing(void) const RCPPSW_PURE;
 
-  typename csubsystem::actuation_subsystem2D* actuation(void) RCPPSW_PURE;
-  typename csubsystem::actuation_subsystem2D* actuation(void) const RCPPSW_PURE;
+  typename csubsystem::actuation_subsystem* actuation(void) RCPPSW_PURE;
+  typename csubsystem::actuation_subsystem* actuation(void) const RCPPSW_PURE;
 
   /**
    * \brief Handle to internal interference tracker; provided as a common
@@ -90,25 +90,30 @@ class util_hfsm : public rpfsm::hfsm,
   rmath::rng* rng(void) { return m_rng; }
   const rmath::rng* rng(void) const { return m_rng; }
 
-  const csubsystem::saa_subsystemQ3D* saa(void) const { return m_saa; }
-  csubsystem::saa_subsystemQ3D* saa(void) { return m_saa; }
+  const csubsystem::base_saa_subsystem* saa(void) const { return m_saa; }
+  csubsystem::base_saa_subsystem* saa(void) { return m_saa; }
   interference_tracker* inta_tracker(void) { return m_inta_tracker; }
   nest_zone_tracker* nz_tracker(void) { return m_nz_tracker; }
 
   /**
-   * \brief Simple state for entry into the "wait for signal" state, used to
-   * change LED color for visualization purposes.
+   * \brief Simple state for entry into the "wait for external signal" state.
+   *
+   * In order:
+   *
+   * - Reset/stop locomotion.
+   * - Change LED color for visualization purposes.
    */
   RCPPSW_HFSM_ENTRY_DECLARE_ND(util_hfsm, entry_wait_for_signal);
 
  private:
   /* clang-format off */
-  csubsystem::saa_subsystemQ3D* const m_saa;
-  interference_tracker*               m_inta_tracker;
-  nest_zone_tracker*                  m_nz_tracker;
+  csubsystem::base_saa_subsystem* const m_saa;
+  interference_tracker*                 m_inta_tracker;
+  nest_zone_tracker*                    m_nz_tracker;
 
-  rmath::rng*                         m_rng;
+  rmath::rng*                           m_rng;
   /* clang-format on */
+
 
  public:
   /* interference metrics */
@@ -126,5 +131,4 @@ class util_hfsm : public rpfsm::hfsm,
   RCPPSW_WRAP_DECLDEF_OVERRIDE(nest_entry_time, *m_nz_tracker, const);
 };
 
-NS_END(fsm, spatial, cosm);
-
+} /* namespace cosm::spatial::fsm */

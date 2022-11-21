@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 class execution_metrics_collector;
 
 /*******************************************************************************
@@ -52,5 +52,5 @@ class execution_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */
 

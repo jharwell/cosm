@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,4 +34,4 @@ class taskable_argument {
   virtual ~taskable_argument(void) = default;
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

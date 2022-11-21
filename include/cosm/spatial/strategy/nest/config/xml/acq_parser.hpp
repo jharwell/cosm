@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, config, xml);
+namespace cosm::spatial::strategy::nest::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,4 +60,4 @@ class acq_parser final : public rer::client<acq_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::xml, config */

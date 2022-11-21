@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Member Functions
@@ -119,4 +119,4 @@ void apf2D_visualizer::forces_draw(const apf2D::tracker* tracker,
   /*                ::argos::CColor::BLACK); */
 } /* forces_draw() */
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, ros);
+namespace cosm::pal::ros {
 
 /*******************************************************************************
  * Class Definitions
@@ -33,7 +33,7 @@ NS_START(cosm, pal, ros);
 class swarm_manager_adaptor : public cpal::base_swarm_manager,
                               public rer::client<swarm_manager_adaptor> {
  public:
-  swarm_manager_adaptor(size_t n_robots);
+  explicit swarm_manager_adaptor(size_t n_robots);
   ~swarm_manager_adaptor(void) override = default;
 
   /* Not copy constructable/assignable by default */
@@ -76,4 +76,4 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
   /* clang-format on */
 };
 
-NS_END(ros, pal, cosm);
+} /* namespace cosm::pal::ros */

@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -39,4 +39,4 @@ struct light_sensor_reading {
   rmath::radians angle;
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

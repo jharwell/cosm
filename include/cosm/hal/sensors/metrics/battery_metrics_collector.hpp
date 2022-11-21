@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics);
+namespace cosm::hal::sensors::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -58,4 +58,4 @@ class battery_metrics_collector final : public rmetrics::base_collector {
   /* clang-format on */
 };
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

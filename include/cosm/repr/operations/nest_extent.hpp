@@ -26,7 +26,9 @@ namespace cosm::repr {
 class nest;
 } // namespace repr
 
-NS_START(cosm, repr, operations, detail);
+namespace cosm::repr::operations {
+
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -65,7 +67,7 @@ class nest_extent : public cdops::cell2D_op {
   /* clang-format on */
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \brief We use the precise visitor in order to force compile errors if a call
@@ -75,5 +77,5 @@ NS_END(detail);
  */
 using nest_extent_visitor = rpvisitor::filtered_visitor<detail::nest_extent>;
 
-NS_END(operations, repr, cosm);
+} /* namespace cosm::repr::operations */
 

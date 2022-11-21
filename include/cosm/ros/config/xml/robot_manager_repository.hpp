@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, config, xml);
+namespace cosm::ros::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,8 +28,8 @@ NS_START(cosm, ros, config, xml);
  * \ingroup ros config xml
  *
  * \brief Collection of all XML parsers and parse results common to all \ref
- * base_robot_manager derived classes for the ROS platform.
+ * robot_manager_adaptor derived classes for the ROS platform.
  */
 class robot_manager_repository : public cpconfig::xml::base_swarm_manager_repository {};
 
-NS_END(xml, config, ros, cosm);
+} /* namespace cosm::ros::config::xml */

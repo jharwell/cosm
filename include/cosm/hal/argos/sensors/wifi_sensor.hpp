@@ -20,23 +20,12 @@
 
 #include "cosm/hal/wifi_packet.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_RangeAndBearingSensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_sensor = std::is_same<TSensor, ::argos::CCI_RangeAndBearingSensor>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -48,7 +37,7 @@ NS_END(detail);
  * \brief Wireless communication sensor with range and bearing information for
  * the following supported robots:
  *
- * - ARGoS footbot
+ * - ARGoS foot-bot
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
@@ -82,7 +71,7 @@ private:
    * \return A vector of \ref wifi_packet.
    */
   template <typename U = impl_type,
-            RCPPSW_SFINAE_DECLDEF(detail::is_sensor<U>::value)>
+            RCPPSW_SFINAE_DECLDEF(detail::is_rab_sensor<U>::value)>
   std::vector<wifi_packet> readings(void) const {
     ER_ASSERT(nullptr != decoratee(),
               "%s called with NULL impl handle!",
@@ -109,5 +98,4 @@ using wifi_sensor = wifi_sensor_impl<::argos::CCI_RangeAndBearingSensor>;
 struct wifi_sensor{};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(sensors, argos, hal, cosm);
-
+} /* namespace cosm::hal::argos::sensors */

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle);
+namespace cosm::oracle {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -115,4 +115,4 @@ void tasking_oracle::task_abort_cb(const cta::polled_task* task) {
            int_est.v());
 } /* task_abort_cb() */
 
-NS_END(oracle, cosm);
+} /* namespace cosm::oracle */

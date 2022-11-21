@@ -15,7 +15,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -55,5 +55,5 @@ class applicator {
   /* clang-format on */
 };
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */
 

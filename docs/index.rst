@@ -1,22 +1,36 @@
-.. SPDX-License-Identifier:  LGPL-2.0-or-later
+.. SPDX-License-Identifier:  MIT
 
+================================
 Welcome to COSM's documentation!
 ================================
 
+Overview
+========
+
+Core Swarm (COSM) is a middleware-esque library providing:
+
+- A :ref:`ln-cosm-support-pal`: A common API to different platforms (ARgoS, ROS,
+  etc) which client applications can write to.
+
+- A see :ref:`ln-cosm-support-hal`: A common API to different agent/robot types
+  which client applications to write to.
+
+- A collection of reusable algorithms and scaffolding to maximize reuse across
+  MAS projects and reduce development time (see :ref:`ln-cosm-modules` for a
+  very brief overview).
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting Started
 
-   config/index.rst
-   build.rst
+   src/modules.rst
+   src/support.rst
+   src/setup/index.rst
+   src/usage/index.rst
+   _api/api.rst
 
-   api/index.rst
+.. toctree::
+   :maxdepth: 2
+   :caption: Extending COSM
 
-Other Projects (in descending probability of interest)
-------------------------------------------------------
-
-- `SILICON <https://swarm-robotics-silicon.readthedocs.io>`_
-- `FORDYCA <https://swarm-robotics-fordyca.readthedocs.io>`_
-- `SIERRA <https://swarm-robotics-sierra.readthedocs.io>`_
-- `RCPPSW <https://swarm-robotics-rcppsw.readthedocs.io>`_
-- `RCSW <https://swarm-robotics-rcsw.readthedocs.io>`_
+   src/extend/hal.rst

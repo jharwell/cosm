@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -33,8 +33,7 @@ NS_START(cosm, foraging, config);
  */
 struct block_motion_config final : public rconfig::base_config {
   double           random_walk_prob{0};
-  std::string      policy{"Null"};
+  std::string      policy{rconfig::constants::kNoValue};
 };
 
-NS_END(config, foraging, cosm);
-
+} /* namespace cosm::foraging::config */

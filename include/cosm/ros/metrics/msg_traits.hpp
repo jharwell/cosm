@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics, msg_traits);
+namespace cosm::ros::metrics::msg_traits {
 
 /*******************************************************************************
  * Class Definitions
@@ -26,4 +26,4 @@ NS_START(cosm, ros, metrics, msg_traits);
 template<class TMsg>
 struct payload_type;
 
-NS_END(msg_traits, metrics, ros, cosm);
+} /* namespace cosm::ros::metrics::msg_traits */

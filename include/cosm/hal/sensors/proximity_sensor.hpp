@@ -23,26 +23,36 @@
 #include "cosm/hal/ros/sensors/lidar_sensor.hpp"
 #endif
 
-#include "rcppsw/math/range.hpp"
-#include "rcppsw/math/radians.hpp"
-#include "rcppsw/math/vector2.hpp"
 #include "rcppsw/er/client.hpp"
 
 #include "cosm/hal/sensors/config/proximity_sensor_config.hpp"
+#include "cosm/hal/sensors/identify.hpp"
+#include "cosm/hal/sensors/base_sensor.hpp"
+#include "cosm/hal/sensors/stub_sensor.hpp"
+#include "cosm/hal/sensors/proximity_sensor_reading.hpp"
+
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-using proximity_sensor_impl = chargos::sensors::ir_sensor;
+
+#if defined(COSM_HAL_TARGET_HAS_PROX_SENSOR)
+using proximity_sensor_impl_type = chargos::sensors::ir_sensor;
+#else
+using proximity_sensor_impl_type = chsensors::stub_sensor<
+  std::vector<chsensors::proximity_sensor_reading>
+  >;
+#endif
+
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-using proximity_sensor_impl = chros::sensors::lidar_sensor;
-#endif /* COSM_HAL_TARGET */
+using proximity_sensor_impl_type = chros::sensors::lidar_sensor;
+#endif
 
 /**
  * \class proximity_sensor
@@ -53,14 +63,15 @@ using proximity_sensor_impl = chros::sensors::lidar_sensor;
  * additional higher level functionality beyond raw sensor readings too.
  */
 class proximity_sensor final : public rer::client<proximity_sensor>,
-                               public proximity_sensor_impl {
+                               public chsensors::base_sensor<proximity_sensor_impl_type> {
  public:
+  using impl_type = chsensors::base_sensor<proximity_sensor_impl_type>;
+
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
-  template <typename TSensor>
-  proximity_sensor(TSensor * const sensor,
+  proximity_sensor(proximity_sensor_impl_type&& sensor,
                    const config::proximity_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-        proximity_sensor_impl(sensor),
+        impl_type(std::move(sensor)),
         m_config(*config) {
     enable();
   }
@@ -68,7 +79,7 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
   proximity_sensor(const cros::topic& robot_ns,
                    const config::proximity_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-        proximity_sensor_impl(robot_ns, config),
+        impl_type(robot_ns, config),
         m_config(*config) {
     enable();
   }
@@ -79,6 +90,16 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
   proximity_sensor& operator=(proximity_sensor&&) = default;
   proximity_sensor(const proximity_sensor&) = delete;
   proximity_sensor& operator=(const proximity_sensor&) = delete;
+
+  /* base_sensor overrides */
+  void reset(void) override { decoratee().reset(); }
+  void enable(void) override { decoratee().enable(); }
+  void disable(void) override {decoratee().disable(); }
+  bool is_enabled(void) const override { return decoratee().is_enabled(); }
+
+  std::vector<proximity_sensor_reading> readings(void) const {
+    return decoratee().readings();
+  }
 
   /**
    * \brief Return the average object reading within proximity for the
@@ -133,4 +154,4 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
   /* clang-format on */
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

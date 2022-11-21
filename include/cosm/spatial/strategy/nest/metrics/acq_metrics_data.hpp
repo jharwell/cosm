@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, metrics, detail);
+namespace cosm::spatial::strategy::nest::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -26,16 +26,14 @@ NS_START(cosm, spatial, strategy, nest, metrics, detail);
  * \brief Container for holding collected statistics. Must be atomic so counts
  * are valid in parallel metric collection contexts.
  */
-struct acq_metrics_data {
+struct acq_metrics_data_impl {
   ral::mt_double_t random_thresh{0.0};
   ral::mt_size_t  n_random_thresh{0};
 };
 
-NS_END(detail);
-
 struct acq_metrics_data : public rmetrics::base_data {
-  detail::acq_metrics_data interval{};
-  detail::acq_metrics_data cum{};
+  acq_metrics_data_impl interval{};
+  acq_metrics_data_impl cum{};
 };
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

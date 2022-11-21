@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Class Definitions
@@ -48,4 +48,4 @@ class factory :
   factory(void);
 };
 
-NS_END(acq, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::acq */

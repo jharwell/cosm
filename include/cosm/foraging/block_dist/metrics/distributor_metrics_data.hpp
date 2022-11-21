@@ -17,19 +17,19 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist, metrics, detail);
+namespace cosm::foraging::block_dist::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \struct distributor_metrics_data
+ * \struct distributor_metrics_data_impl
  * \ingroup foraging block_dist metrics detail
  *
  * \brief Container for holding collected statistics of \ref
  * distributor_metrics.
  */
-struct distributor_metrics_data  {
+struct distributor_metrics_data_impl  {
   /**
    * \brief  Total # blocks distributed in interval.
    */
@@ -51,12 +51,10 @@ struct distributor_metrics_data  {
   size_t size{0};
 };
 
-NS_END(detail);
-
 struct distributor_metrics_data : public rmetrics::base_data {
-  detail::distributor_metrics_data cum{};
-  detail::distributor_metrics_data interval{};
+  distributor_metrics_data_impl cum{};
+  distributor_metrics_data_impl interval{};
 };
 
-NS_END(metrics, block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist::metrics */
 

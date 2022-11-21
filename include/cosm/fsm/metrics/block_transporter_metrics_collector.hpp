@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm, metrics);
+namespace cosm::fsm::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -59,4 +59,4 @@ class block_transporter_metrics_collector final : public rmetrics::base_collecto
   /* clang-format on */
 };
 
-NS_END(metrics, fsm, cosm);
+} /* namespace cosm::fsm::metrics */

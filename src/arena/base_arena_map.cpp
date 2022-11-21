@@ -31,13 +31,13 @@
 #include "cosm/repr/nest.hpp"
 #include "cosm/repr/operations/nest_extent.hpp"
 #include "cosm/repr/sim_block3D.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
-#include "cosm/spatial/dimension_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
+#include "cosm/spatial/common/dimension_checker.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -407,4 +407,4 @@ void base_arena_map::ordered_unlock(const locking& locking) {
   maybe_unlock_wr(block_mtx(), !(locking & locking::ekBLOCKS_HELD));
 } /* ordered_unlock() */
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

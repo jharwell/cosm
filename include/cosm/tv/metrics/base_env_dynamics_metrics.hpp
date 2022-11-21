@@ -1,5 +1,5 @@
 /**
- * \file env_dynamics_metrics.hpp
+ * \file base_env_dynamics_metrics.hpp
  *
  * \copyright 2020 John Harwell, All rights reserved.
  *
@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,5 +56,5 @@ class base_env_dynamics_metrics : public virtual rmetrics::base_metrics {
   virtual rtypes::timestep arena_block_manip_penalty(void) const = 0;
 };
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */
 

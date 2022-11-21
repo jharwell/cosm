@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors, config);
+namespace cosm::hal::ros::sensors::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -39,4 +39,4 @@ struct sonar_sensor_config final : public rconfig::base_config {
   int echo_pin{-1};
 };
 
-NS_END(config, sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors::config */

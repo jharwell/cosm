@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -82,7 +82,7 @@ RCPPSW_FSM_STATE_DEFINE(diff_drive_fsm, hard_turn, turn_data* data) {
   }
   /* hard turn=spin in place. But not too fast! */
   double clamped_ang = std::min(data->angle.v(), mc_config.max_angular_speed);
-  configure_twist(0, rmath::radians(clamped_ang));
+  configure_twist(0, rmath::radians(clamped_ang + 0.0001));
 
   return rpfsm::event_signal::ekHANDLED;
 }
@@ -96,4 +96,4 @@ void diff_drive_fsm::configure_twist(double speed,
   m_twist.angular = rmath::vector3d::Z * heading.v();
 } /* configure_twist() */
 
-NS_END(kin2D, cosm);
+} /* namespace cosm::kin2D */

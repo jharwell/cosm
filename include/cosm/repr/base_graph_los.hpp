@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -54,4 +54,4 @@ class base_graph_los : public rer::client<base_graph_los<TGraphViewEntityType>>,
         graph_view_entity_type(c_id, std::move(the_view), c_unit) {}
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

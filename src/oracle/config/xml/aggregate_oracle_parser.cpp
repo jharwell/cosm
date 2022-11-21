@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config, xml);
+namespace cosm::oracle::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -50,4 +50,4 @@ bool aggregate_oracle_parser::validate(void) const {
   return m_entities.validate() && m_tasking.validate();
 } /* validate() */
 
-NS_END(xml, config, oracle, cosm);
+} /* namespace cosm::oracle::config::xml */

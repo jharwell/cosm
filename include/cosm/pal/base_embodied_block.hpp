@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 /*******************************************************************************
  * Class Definitions
@@ -38,4 +38,4 @@ class base_embodied_block : public crepr::embodied_entity {
   /* clang-format on */
 };
 
-NS_END(pal, cosm);
+} /* namespace cosm::pal */

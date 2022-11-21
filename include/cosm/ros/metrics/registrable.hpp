@@ -18,10 +18,10 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics, registrable);
+namespace cosm::ros::metrics::registrable {
 
 extern rmetrics::creatable_collector_set kStandard;
 
 extern rmetrics::creatable_collector_set kWithNBlockClusters;
 
-NS_END(registrable, metrics, ros, cosm);
+} /* namespace cosm::ros::metrics::registrable */

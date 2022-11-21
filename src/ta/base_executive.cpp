@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -158,4 +158,4 @@ void base_executive::do_task_start(polled_task* const task) {
   current_task(task);
 } /* do_task_start() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

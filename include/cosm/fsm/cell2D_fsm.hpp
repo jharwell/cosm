@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -33,7 +33,7 @@ NS_START(cosm, fsm);
  * \ingroup fsm
  *
  * \brief Per-cell FSM containing the current state of the cell (empty, has a
- * block, has a cache, unknown, etc.). Used by \ref arena_grid.
+ * block, has a cache, unknown, etc.). Used by \ref cads::arena_grid.
  */
 class cell2D_fsm final : public rpfsm::simple_fsm,
                          public rer::client<cell2D_fsm> {
@@ -117,4 +117,4 @@ class cell2D_fsm final : public rpfsm::simple_fsm,
   /* clang-format on */
 };
 
-NS_END(fsm, forydca);
+} /* namespace forydca::fsm */

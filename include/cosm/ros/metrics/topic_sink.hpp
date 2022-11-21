@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -89,4 +89,4 @@ class topic_sink : public rmetrics::network_sink,
   /* clang-format on */
 };
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

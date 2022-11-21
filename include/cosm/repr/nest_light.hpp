@@ -29,7 +29,7 @@ namespace cosm::pal::argos {
 class swarm_manager_adaptor;
 } // namespace cosm::pal::argos
 
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -73,4 +73,4 @@ class nest_light final : public repr::colored_entity {
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

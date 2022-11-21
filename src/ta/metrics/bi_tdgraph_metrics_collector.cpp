@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -69,4 +69,4 @@ void bi_tdgraph_metrics_collector::reset_after_interval(void) {
   } /* for(i..) */
 } /* reset_after_interval() */
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */

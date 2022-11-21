@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config, xml);
+namespace cosm::hal::sensors::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -36,6 +36,10 @@ void env_sensor_parser::parse(const ticpp::Element& node) {
 } /* parse() */
 
 bool env_sensor_parser::validate(void) const {
+  if (!is_parsed()) {
+    return true;
+  }
+
   for (auto& d1 : m_config->detect_map) {
     for (auto& d2 : m_config->detect_map) {
       if (d1.first == d2.first) {
@@ -55,4 +59,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config::xml */

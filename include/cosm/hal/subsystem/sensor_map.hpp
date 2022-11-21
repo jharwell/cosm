@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, subsystem);
+namespace cosm::hal::subsystem {
 
 /*******************************************************************************
  * Class Definitions
@@ -33,4 +33,4 @@ using sensor_variant_map = std::unordered_map<std::type_index,
                                               sensor_variant<TSensorTypes...>
                                               >;
 
-NS_END(subsystem, hal, cosm);
+} /* namespace cosm::hal::subsystem */

@@ -26,7 +26,8 @@ namespace cosm::arena::ds {
 class arena_grid;
 } // namespace ds
 
-NS_START(cosm, ds, operations, detail);
+namespace cosm::ds::operations {
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -66,7 +67,7 @@ class cell2D_block_extent : public cdops::cell2D_op {
   /* clang-format on */
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \brief We use the precise visitor in order to force compile errors if a call
@@ -76,5 +77,5 @@ NS_END(detail);
  */
 using cell2D_block_extent_visitor = rpvisitor::filtered_visitor<detail::cell2D_block_extent>;
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

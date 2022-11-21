@@ -19,6 +19,8 @@
 #include <argos3/plugins/robots/e-puck/simulator/epuck_entity.h>
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 #include <argos3/plugins/robots/pi-puck/simulator/pipuck_entity.h>
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_DRONE)
+#include <argos3/plugins/robots/drone/simulator/drone_entity.h>
 #endif /* COSM_HAL_TARGET */
 
 #include "cosm/cosm.hpp"
@@ -26,7 +28,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal);
+namespace cosm::hal {
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using robot = ::argos::CFootBotEntity;
@@ -34,8 +36,10 @@ using robot = ::argos::CFootBotEntity;
 using robot = ::argos::CEPuckEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 using robot = ::argos::CPiPuckEntity;
+#elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_DRONE)
+using robot = ::argos::CDroneEntity;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
 struct robot {};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(hal, cosm);
+} /* namespace cosm::hal */

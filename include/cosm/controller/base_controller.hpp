@@ -26,7 +26,7 @@
 #include "cosm/cosm.hpp"
 #include "cosm/pal/config/output_config.hpp"
 #include "cosm/pal/pal.hpp"
-#include "cosm/spatial/interference_tracker.hpp"
+#include "cosm/spatial/common/interference_tracker.hpp"
 #include "cosm/spatial/metrics/interference_metrics.hpp"
 
 /*******************************************************************************
@@ -36,9 +36,13 @@ namespace cosm::fsm {
 class supervisor_fsm;
 } /* namespace cosm::fsm */
 
-namespace fs = std::filesystem;
+namespace cosm::kin {
+class metrics_proxy;
+} /* namespace cosm::kin */
 
-NS_START(cosm, controller);
+namespace cosm::controller {
+
+namespace fs = std::filesystem;
 
 /*******************************************************************************
  * Class Definitions
@@ -94,19 +98,34 @@ class base_controller : public rer::client<base_controller>,
    * \brief Update the sensing for the robot.
    *
    * - Set the current clock tick.
+   *
    * - Update positioning information.
    *
-   * In a real world, each robot would maintain its own clock tick, and overall
-   * there would no doubt be considerable skew; this is a simulation hack that
-   * makes things much nicer/easier to deal with.
+   * \param tick The current clock tick.
    *
-   * \param tick The current simulation clock tick.
    * \param ratio The ratio that should be used to calculate the robot's
    *              discrete position in the arena (should match the ratio used to
-   *              create the arena grid)).
+   *              create the arena grid).
    */
   virtual void sensing_update(const rtypes::timestep& tick,
                               const rtypes::discretize_ratio& ratio) = 0;
+
+  /**
+   * \brief Update the sensing for the robot.
+   *
+   * - Set the current clock tick.
+   *
+   * - Update positioning information.
+   *
+   * \param tick The current simulation clock tick.
+   */
+  virtual void sensing_update(const rtypes::timestep& tick) = 0;
+
+  /**
+   * \brief Convenience function to add timestamp to messages during
+   * the control step.
+   */
+  virtual void mdc_ts_update(void) const = 0;
 
   /**
    * \brief Convenience function to add footbot ID to salient messages during
@@ -117,17 +136,19 @@ class base_controller : public rer::client<base_controller>,
                 rcppsw::to_string(entity_id().v()) + "]");
   }
   void ndc_uuid_pop(void) const { ER_NDC_POP(); }
-  /**
-   * \brief Convenience function to add timestamp to messages during
-   * the control step.
-   */
-  virtual void mdc_ts_update(void) const = 0;
 
   /**
    * \brief Return a handle to the \ref rmath::rng used for random
    * number generation by this robot.
    */
   rmath::rng* rng(void) { return m_rng; }
+
+  rmath::vector3d rpos3D(void) const;
+  rmath::vector3z dpos3D(void) const;
+  rmath::radians azimuth(void) const;
+  rmath::radians zenith(void) const;
+  rmath::vector2d rpos2D(void) const;
+  rmath::vector2z dpos2D(void) const;
 
   cfsm::supervisor_fsm* supervisor(void) { return m_supervisor.get(); }
   const cfsm::supervisor_fsm* supervisor(void) const {
@@ -136,8 +157,18 @@ class base_controller : public rer::client<base_controller>,
   const cspatial::interference_tracker* inta_tracker(void) const {
     return m_inta_tracker.get();
   }
+  const ckin::metrics_proxy* kin_proxy(void) const { return m_kin_proxy.get(); }
+
+  const class subsystem::base_saa_subsystem* saa(void) const { return m_saa.get(); }
+
+  class subsystem::base_saa_subsystem* saa(void) {
+    return m_saa.get();
+  }
 
  protected:
+  void saa(std::unique_ptr<subsystem::base_saa_subsystem> saa);
+
+
   cspatial::interference_tracker* inta_tracker(void) {
     return m_inta_tracker.get();
   }
@@ -170,11 +201,15 @@ class base_controller : public rer::client<base_controller>,
 
   void inta_tracker(std::unique_ptr<cspatial::interference_tracker> inta);
 
+  void kin_proxy(std::unique_ptr<ckin::metrics_proxy> prox);
+
  private:
   /* clang-format off */
   rmath::rng*                                     m_rng{nullptr};
   std::unique_ptr<cfsm::supervisor_fsm>           m_supervisor{nullptr};
   std::unique_ptr<cspatial::interference_tracker> m_inta_tracker{nullptr};
+  std::unique_ptr<ckin::metrics_proxy>            m_kin_proxy{nullptr};
+  std::unique_ptr<subsystem::base_saa_subsystem>  m_saa{nullptr};
   /* clang-format on */
 
  public:
@@ -186,4 +221,4 @@ class base_controller : public rer::client<base_controller>,
   RCPPSW_WRAP_DECLDEF_OVERRIDE(interference_loc3D, *m_inta_tracker, const);
 };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

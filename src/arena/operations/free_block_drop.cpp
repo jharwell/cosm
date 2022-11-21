@@ -21,12 +21,12 @@
 #include "cosm/ds/operations/cell2D_block_extent.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/repr/sim_block3D.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations::detail {
 using cads::arena_grid;
 
 /*******************************************************************************
@@ -210,4 +210,4 @@ template void free_block_drop::execute_free_drop(carena::base_arena_map&,
 template void free_block_drop::execute_free_drop(carena::caching_arena_map&,
                                                  cds::cell2D&);
 
-NS_END(detail, operations, arena, cosm);
+} /* namespace cosm::arena::operations::detail */

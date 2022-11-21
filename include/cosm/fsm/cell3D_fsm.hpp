@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -86,4 +86,4 @@ class cell3D_fsm final : public rpfsm::simple_fsm,
   RCPPSW_FSM_DECLARE_STATE_MAP(state_map, mc_state_map, state::ekST_MAX_STATES);
 };
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

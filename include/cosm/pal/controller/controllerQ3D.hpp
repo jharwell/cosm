@@ -23,16 +23,14 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, controller);
+namespace cosm::pal::controller {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 #if defined(COSM_PAL_TARGET_ARGOS)
 using controllerQ3D = cpargos::controller::adaptorQ3D;
-#elif defined(COSM_PAL_TARGET_ARGOS)
-using controllerQ3D = cpros::controller::adaptorQ3D;
 #endif /* COSM_PAL_TARGET_ARGOS */
 
-NS_END(controller, pal, cosm);
+} /* namespace cosm::pal::controller */
 

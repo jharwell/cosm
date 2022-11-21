@@ -17,12 +17,12 @@
 #include "cosm/foraging/block_dist/random_distributor.hpp"
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/repr/block_cluster.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -72,5 +72,5 @@ class cluster_distributor final : public rer::client<cluster_distributor>,
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

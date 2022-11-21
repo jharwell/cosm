@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, drop);
+namespace cosm::spatial::strategy::blocks::drop {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -28,4 +28,4 @@ base_drop::base_drop(const csfsm::fsm_params* params,
  * Member Functions
  ******************************************************************************/
 
-NS_END(drop, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::drop */

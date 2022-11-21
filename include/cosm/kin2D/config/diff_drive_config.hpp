@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config);
+namespace cosm::kin2D::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -47,4 +47,4 @@ struct diff_drive_config final : public rconfig::base_config {
   double max_linear_speed{0.0};
 };
 
-NS_END(config, kin2D, cosm);
+} /* namespace cosm::kin2D::config */

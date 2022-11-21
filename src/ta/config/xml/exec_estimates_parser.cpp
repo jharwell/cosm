@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 namespace mxml = rmath::config::xml;
 
@@ -65,4 +65,4 @@ bool exec_estimates_parser::validate(void) const {
   return m_ema.validate();
 } /* validate() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

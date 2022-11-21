@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Member Functions
@@ -33,4 +33,4 @@ void task_visualizer::draw(const ta::logical_task* const current_task) {
   }
 }
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */

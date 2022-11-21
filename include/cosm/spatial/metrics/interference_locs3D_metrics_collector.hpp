@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -48,5 +48,4 @@ class interference_locs3D_metrics_collector final : public rdmetrics::grid3D_met
   void collect(const rmetrics::base_metrics& metrics) override;
 };
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */

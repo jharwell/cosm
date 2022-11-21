@@ -27,7 +27,7 @@ namespace cosm::fsm {
 class cell2D_fsm;
 }
 
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -72,5 +72,5 @@ class cell2D_unknown : public cell2D_op, public rer::client<cell2D_unknown> {
  */
 using cell2D_unknown_visitor = rpvisitor::filtered_visitor<cell2D_unknown>;
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, oracle, config);
+namespace cosm::oracle::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -36,5 +36,5 @@ struct entities_oracle_config final : public rconfig::base_config {
   std::map<std::string, bool> types{};
 };
 
-NS_END(config, oracle, cosm);
+} /* namespace cosm::oracle::config */
 

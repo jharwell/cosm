@@ -16,14 +16,14 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \brief The status return from \ref base_arena_map::update() (or the overriden
- * version in a derived class).
+ * \brief The status returned from \ref base_arena_map::pre_step_update() (or
+ * the overriden version in a derived class).
  */
 enum update_status {
   /**
@@ -37,4 +37,4 @@ enum update_status {
   ekBLOCK_MOTION
 };
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

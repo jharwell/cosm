@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -51,4 +51,4 @@ void utilization_metrics_collector::reset_after_interval(void) {
   m_data.interval.cache_count = 0;
 } /* resedt_after_interval() */
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */

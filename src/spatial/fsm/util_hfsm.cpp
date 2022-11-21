@@ -14,14 +14,14 @@
 #include <numeric>
 
 #include "cosm/spatial/fsm/util_signal.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -40,8 +40,8 @@ util_hfsm::util_hfsm(const fsm_params* const params,
  * States
  ******************************************************************************/
 RCPPSW_HFSM_ENTRY_DEFINE_ND(util_hfsm, entry_wait_for_signal) {
-  actuation()->governed_diff_drive()->reset();
-  actuation()->diagnostics()->emit(chactuators::diagnostics::ekWAIT_FOR_SIGNAL);
+    actuation()->locomotion()->reset();
+    actuation()->diagnostics()->emit(chactuators::diagnostics::ekWAIT_FOR_SIGNAL);
 }
 
 /*******************************************************************************
@@ -51,19 +51,19 @@ rmath::radians util_hfsm::random_angle(void) {
   return rmath::radians(m_rng->uniform(0.0, rmath::radians::kPI.v()));
 } /* randomize_vector_angle() */
 
-csubsystem::sensing_subsystemQ3D* util_hfsm::sensing(void) {
+csubsystem::sensing_subsystem* util_hfsm::sensing(void) {
   return m_saa->sensing();
 }
 
-const csubsystem::sensing_subsystemQ3D* util_hfsm::sensing(void) const {
+const csubsystem::sensing_subsystem* util_hfsm::sensing(void) const {
   return m_saa->sensing();
 }
 
-csubsystem::actuation_subsystem2D* util_hfsm::actuation(void) {
+csubsystem::actuation_subsystem* util_hfsm::actuation(void) {
   return m_saa->actuation();
 }
 
-csubsystem::actuation_subsystem2D* util_hfsm::actuation(void) const {
+csubsystem::actuation_subsystem* util_hfsm::actuation(void) const {
   return m_saa->actuation();
 }
 
@@ -73,4 +73,4 @@ void util_hfsm::init(void) {
   m_nz_tracker->state_reset();
 } /* init() */
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

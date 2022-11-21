@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -75,5 +75,5 @@ class nest_zone_metrics : public virtual rmetrics::base_metrics {
   virtual rtypes::timestep nest_entry_time(void) const = 0;
 };
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */
 

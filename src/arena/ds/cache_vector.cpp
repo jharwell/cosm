@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 /*******************************************************************************
  * Member Functions
@@ -42,4 +42,4 @@ std::string bcache_vectorro::to_str(void) const {
   return cds::to_string(decoratee(), "c");
 } /* to_str() */
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */

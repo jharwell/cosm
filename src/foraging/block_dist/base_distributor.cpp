@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -65,4 +65,4 @@ cfds::block3D_cluster_vectorro base_distributor::block_clustersro(void) const {
   return ret;
 }
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

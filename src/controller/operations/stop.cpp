@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Depth0 Foraging
@@ -33,4 +33,4 @@ void stop::visit(ccontroller::base_controller& controller) {
 
 void stop::visit(cfsm::supervisor_fsm& fsm) { fsm.event_stop(); } /* visit() */
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */

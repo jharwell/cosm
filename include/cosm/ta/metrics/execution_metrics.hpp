@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -82,5 +82,5 @@ class execution_metrics : public virtual rmetrics::base_metrics {
   virtual int task_last_active_interface(void) const = 0;
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */
 

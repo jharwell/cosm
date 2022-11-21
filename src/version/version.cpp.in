@@ -1,0 +1,42 @@
+/**
+ * \file version.cpp
+ *
+ * \copyright 2022 John Harwell, All rights reserved.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+/*******************************************************************************
+ * Includes
+ ******************************************************************************/
+#include "cosm/version/version.hpp"
+
+#include "rcppsw/version/licenses.hpp"
+
+/*******************************************************************************
+ * Namespaces/Decls
+ ******************************************************************************/
+namespace cosm::version {
+
+/*******************************************************************************
+ * Global Variables
+ ******************************************************************************/
+rversion::meta_info kVersion = {
+  .version = {
+    .version = "v@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@",
+    .license = {
+      .abbrev = RCPPSW_LICENSE_SHORT(MIT, COSM),
+      .full = RCPPSW_LICENSE_FULL(MIT, COSM),
+      .copyright = RCPPSW_COPYRIGHT(2022, John Harwell)
+    },
+  },
+  .build = {
+    .git_rev = "@LIBRA_GIT_REV@",
+    .git_diff = "@LIBRA_GIT_DIFF@",
+    .git_tag = "@LIBRA_GIT_TAG@",
+    .git_branch = "@LIBRA_GIT_BRANCH@",
+    .compiler_flags = "@LIBRA_CXX_FLAGS_BUILD@"
+  }
+};
+
+} /* namespace cosm::version */

@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, ros, controller);
+namespace cosm::pal::ros::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -50,4 +50,4 @@ class adaptor2D : public ccontroller::base_controller2D,
   /* clang-format on */
 };
 
-NS_END(controller, ros, pal, cosm);
+} /* namespace cosm::pal::ros::controller */

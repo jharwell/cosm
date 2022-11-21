@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -32,5 +32,5 @@ struct blocks_config final : public rconfig::base_config {
   block_motion_config motion{};
 };
 
-NS_END(config, foraging, cosm);
+} /* namespace cosm::foraging::config */
 

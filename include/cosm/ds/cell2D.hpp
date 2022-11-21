@@ -32,7 +32,7 @@ class sim_block3D;
 class spatial_entity;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Class Definitions
@@ -119,4 +119,4 @@ class cell2D final : public rpdecorator::decorator<fsm::cell2D_fsm> {
   /* clang-format on */
 };
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,7 +31,7 @@ NS_START(cosm, argos);
  * \class embodied_cube_block
  * \ingroup argos
  *
- * \brief A \ref cepr::cube_block3D + ARGoS embodiment.
+ * \brief A \ref crepr::cube_block3D + ARGoS embodiment.
  */
 class embodied_cube_block final
     : public crepr::cube_block3D,
@@ -48,4 +48,4 @@ class embodied_cube_block final
   ~embodied_cube_block(void) override = default;
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

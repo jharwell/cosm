@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -35,5 +35,5 @@ struct src_sigmoid_sel_config final : public rcppsw::config::base_config {
   sigmoid_sel_config sigmoid{};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

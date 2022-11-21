@@ -35,7 +35,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 /**
  * \brief The name of the type robots within the swarm from the POV of
@@ -64,4 +64,4 @@ extern const std::string kMsgTraitsMD5;
 
 #endif
 
-NS_END(pal, cosm)
+} /* namespace cosm::pal */

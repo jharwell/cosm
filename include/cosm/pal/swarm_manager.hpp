@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,4 +37,4 @@ using swarm_manager = cpargos::swarm_manager_adaptor;
 using swarm_manager = cpros::swarm_manager_adaptor;
 #endif /* COSM_PAL_TARGET_ARGOS */
 
-NS_END(pal, cosm);
+} /* namespace cosm::pal */

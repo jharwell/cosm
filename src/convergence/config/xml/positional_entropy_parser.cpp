@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, config, xml);
+namespace cosm::convergence::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -34,4 +34,4 @@ void positional_entropy_parser::parse(const ticpp::Element& node) {
   }
 } /* parse() */
 
-NS_END(xml, config, convergence, cosm);
+} /* namespace cosm::convergence::config::xml */

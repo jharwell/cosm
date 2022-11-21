@@ -17,12 +17,12 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics, detail);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-struct execution_metrics_data {
+struct execution_metrics_data_impl {
   /**
    * \brief # Times the task has been completed.
    */
@@ -52,12 +52,10 @@ struct execution_metrics_data {
   ral::mt_size_t interface_estimate{0};
 };
 
-NS_END(detail);
-
 struct execution_metrics_data : public rmetrics::base_data {
-  detail::execution_metrics_data interval{};
-  detail::execution_metrics_data cum{};
+  execution_metrics_data_impl interval{};
+  execution_metrics_data_impl cum{};
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */
 

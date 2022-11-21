@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config);
+namespace cosm::ta::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -34,5 +34,5 @@ struct ucb1_config final : public rcppsw::config::base_config {
   double gamma{-1};
 };
 
-NS_END(config, ta, cosm);
+} /* namespace cosm::ta::config */
 

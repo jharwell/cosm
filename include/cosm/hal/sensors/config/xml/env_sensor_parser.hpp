@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config, xml);
+namespace cosm::hal::sensors::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -71,4 +71,4 @@ class env_sensor_parser : public rer::client<env_sensor_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config::xml */

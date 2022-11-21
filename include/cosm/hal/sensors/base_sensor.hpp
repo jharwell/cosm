@@ -11,6 +11,8 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <utility>
+
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/patterns/decorator/decorator.hpp"
 
@@ -19,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -76,6 +78,9 @@ class base_sensor : public rer::client<base_sensor<TSensor>>,
   virtual bool is_enabled(void) const = 0;
 
   bool is_disabled(void) const { return !is_enabled(); }
+
+  template<typename TReadingType>
+  TReadingType readings(void) const;
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics);
+namespace cosm::convergence::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -71,4 +71,4 @@ void convergence_metrics_collector::reset_after_interval(void) {
   m_data.velocity = { 0.0, 0.0, false };
 } /* reset_after_interval() */
 
-NS_END(metrics, convergence, cosm);
+} /* namespace cosm::convergence::metrics */

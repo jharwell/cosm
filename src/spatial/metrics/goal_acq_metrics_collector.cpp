@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -56,4 +56,4 @@ void goal_acq_metrics_collector::reset_after_interval(void) {
   m_data.interval.n_vectoring_to_goal = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

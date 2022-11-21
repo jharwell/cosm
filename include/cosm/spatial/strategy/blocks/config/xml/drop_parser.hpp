@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, config, xml);
+namespace cosm::spatial::strategy::blocks::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,4 +60,4 @@ class drop_parser final : public rer::client<drop_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, blocks, config, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::config::xml, blocks */

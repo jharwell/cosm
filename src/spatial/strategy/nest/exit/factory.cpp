@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, exit);
+namespace cosm::spatial::strategy::nest::exit {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -27,4 +27,4 @@ factory::factory(void) {
   register_type<anti_phototaxis>(kAntiPhototaxis);
 }
 
-NS_END(exit, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::exit */

@@ -17,12 +17,12 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics, detail);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-struct bi_tab_metrics_data {
+struct bi_tab_metrics_data_impl {
   /**
    * \brief # Times subtask 1 was chosen if partitioning was employed.
    */
@@ -69,12 +69,9 @@ struct bi_tab_metrics_data {
 };
 
 
-NS_END(detail);
-
 struct bi_tab_metrics_data : public rmetrics::base_data {
-  detail::bi_tab_metrics_data interval{};
-  detail::bi_tab_metrics_data cum{};
+  bi_tab_metrics_data_impl interval{};
+  bi_tab_metrics_data_impl cum{};
 };
 
-NS_END(metrics, ta, cosm);
-
+} /* namespace cosm::ta::metrics */

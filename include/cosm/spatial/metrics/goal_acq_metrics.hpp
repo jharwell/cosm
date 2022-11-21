@@ -12,6 +12,7 @@
  * Includes
  ******************************************************************************/
 #include <utility>
+#include <boost/optional.hpp>
 
 #include "rcppsw/metrics/base_metrics.hpp"
 #include "rcppsw/math/vector3.hpp"
@@ -23,7 +24,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,7 +57,6 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    * trying to acquire. A -1 value is used to indicate that no goal is currently
    * being acquired.
    */
-
   using goal_type = rtypes::named_type<int, struct goal_type_tag>;
 
   goal_acq_metrics(void) = default;
@@ -105,22 +105,22 @@ class goal_acq_metrics : public virtual rmetrics::base_metrics {
    * \brief When \ref goal_acquired() returns \c TRUE, then this should return
    * the location of the goal that was acquired.
    */
-  virtual rmath::vector3z acquisition_loc3D(void) const = 0;
+  virtual boost::optional<rmath::vector3z> acquisition_loc3D(void) const = 0;
 
   /**
    * \brief When \ref is_exploring_for_goal() returns \c TRUE, then this should
    * return the robot's current position as it explores for its goal. If the
-   * robot is only moving in 2D, then the Z component should always be 0.
+   * robot is only moving in 3D, then the Z component should always be 0.
    */
-  virtual rmath::vector3z explore_loc3D(void) const = 0;
+  virtual boost::optional<rmath::vector3z> explore_loc3D(void) const = 0;
 
   /**
    * \brief When \ref is_vectoring_to_goal() returns \c TRUE, then this should
    * return the robot's current discrete position as it vectors to its
-   * goal. If the robot is only moving in 2D, then the Z component should always
+   * goal. If the robot is only moving in 3D, then the Z component should always
    * be 0.
    */
-  virtual rmath::vector3z vector_loc3D(void) const = 0;
+  virtual boost::optional<rmath::vector3z> vector_loc3D(void) const = 0;
 };
 
 /*******************************************************************************
@@ -136,5 +136,4 @@ bool operator!=(const TInt& other, const goal_acq_metrics::goal_type& goal) {
   return goal.v() != other;
 }
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */

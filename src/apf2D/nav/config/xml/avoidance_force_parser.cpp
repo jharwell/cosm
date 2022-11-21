@@ -32,7 +32,7 @@ void avoidance_force_parser::parse(const ticpp::Element& node) {
 
 bool avoidance_force_parser::validate(void) const {
   if (is_parsed()) {
-    ER_CHECK(m_config->max > 0.0, "Max force must be > 0");
+    ER_CHECK(m_config->max >= 0.0, "Max force must be > 0");
   }
   return true;
 

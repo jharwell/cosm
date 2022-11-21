@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -197,4 +197,4 @@ void population_dynamics::repair_dynamics(const rtypes::timestep& t) {
   }
 } /* repair_dynamics() */
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

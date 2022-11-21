@@ -29,7 +29,9 @@ namespace cosm::arena::ds {
 class arena_grid;
 } /* namespace cosm::ds */
 
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations {
+
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -66,7 +68,7 @@ class block_extent_clear : public rer::client<block_extent_clear> {
   /* clang-format on */
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 
 /**
@@ -77,5 +79,5 @@ NS_END(detail);
  */
 using block_extent_clear_visitor = rpvisitor::filtered_visitor<detail::block_extent_clear>;
 
-NS_END(operations, arena, cosm);
+} /* namespace cosm::arena::operations */
 

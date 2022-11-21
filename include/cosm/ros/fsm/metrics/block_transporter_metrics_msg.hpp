@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, fsm, metrics);
+namespace cosm::ros::fsm::metrics {
 
 /*******************************************************************************
  * ROS Messages
@@ -29,4 +29,4 @@ struct block_transporter_metrics_msg {
   cfsm::metrics::block_transporter_metrics_data data{};
 };
 
-NS_END(metrics, fsm, ros, cosm)
+} /* namespace cosm::ros::fsm::metrics */

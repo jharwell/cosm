@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception);
+namespace cosm::subsystem::perception {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,5 +57,5 @@ class mlos_perception_subsystem : public rlos_perception_subsystem<TLOS> {
   /* clang-format on */
 };
 
-NS_END(perception, subsystem, cosm);
+} /* namespace cosm::subsystem::perception */
 

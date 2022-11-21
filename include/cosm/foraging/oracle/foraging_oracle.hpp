@@ -44,7 +44,9 @@ namespace cosm::oracle {
 class tasking_oracle;
 } /* namespace cosm::oracle */
 
-NS_START(cosm, foraging, oracle, detail);
+namespace cosm::foraging::oracle {
+
+namespace detail {
 
 using entity_types = rmpl::typelist<crepr::sim_block3D, carepr::base_cache>;
 using entity_oracle_types = rmpl::typelist_wrap_apply<entity_types,
@@ -54,8 +56,7 @@ using oracle_types = boost::mpl::copy<entity_oracle_types::type,
                                       boost::mpl::back_inserter<tasking_oracle_types>
                                       >::type;
 
-
-NS_END(detail);
+} /* namespace detail */
 
 /*******************************************************************************
  * Class Definitions
@@ -113,5 +114,5 @@ class foraging_oracle : public coracle::aggregate_oracle<detail::oracle_types> {
   void update(carena::base_arena_map* map);
 };
 
-NS_END(oracle, foraging, cosm);
+} /* namespace cosm::foraging::oracle */
 

@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -37,4 +37,4 @@ void switchable_tv_generator::update(const rtypes::timestep& t) {
   m_active = (m_en) ? value : 0.0;
 } /* update() */
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

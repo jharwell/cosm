@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, blocks, config, xml);
+namespace cosm::spatial::strategy::blocks::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -33,4 +33,4 @@ void drop_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR(snode, m_config, duration);
 } /* parse() */
 
-NS_END(xml, config, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::xml, config */

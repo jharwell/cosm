@@ -22,7 +22,7 @@ namespace cosm::spatial::strategy::blocks::drop {
 class base_drop;
 } /* namespace cosm::spatial::strategy::drop */
 
-NS_START(cosm, spatial, strategy, blocks, metrics);
+namespace cosm::spatial::strategy::blocks::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,7 +31,8 @@ NS_START(cosm, spatial, strategy, blocks, metrics);
  * \class drop_metrics
  * \ingroup spatial strategy blocks metrics
  *
- * \brief Metrics to be collected from \ref base_drop and derived classes.
+ * \brief Metrics to be collected from \ref cssblocks::base_drop and derived
+ * classes.
  */
 class drop_metrics : virtual rmetrics::base_metrics {
  public:
@@ -50,4 +51,4 @@ class drop_metrics : virtual rmetrics::base_metrics {
   virtual const cssblocks::drop::base_drop* block_drop_strategy(void) const = 0;
 };
 
-NS_END(metrics, blocks, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::blocks::metrics */

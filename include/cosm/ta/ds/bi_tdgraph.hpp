@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, ds);
+namespace cosm::ta::ds {
 
 /*******************************************************************************
  * Class Definitions
@@ -139,4 +139,4 @@ class bi_tdgraph final : public tdgraph, public rer::client<bi_tdgraph> {
   /* clang-format on */
 };
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

@@ -23,17 +23,16 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 
 class subtask_sel_probability;
 class partition_probability;
+} /* namespace cosm::ta */
 
-namespace ds {
+namespace cosm::ta::ds {
+
 class bi_tdgraph;
-} /* namespace ds */
-
-NS_START(ds);
 
 /*******************************************************************************
  * Class Definitions
@@ -48,7 +47,7 @@ NS_START(ds);
  * additional TABs.
  */
 class bi_tab final : public metrics::bi_tab_metrics,
-                                   public rer::client<bi_tab> {
+                     public rer::client<bi_tab> {
  public:
   static inline const std::string kPartitionSrcExec = "exec";
   static inline const std::string kPartitionSrcInterface = "interface";
@@ -246,4 +245,4 @@ class bi_tab final : public metrics::bi_tab_metrics,
   /* clang-format on */
 };
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

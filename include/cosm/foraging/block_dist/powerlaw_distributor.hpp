@@ -19,7 +19,7 @@
 #include "rcppsw/math/vector3.hpp"
 
 #include "cosm/foraging/block_dist/base_distributor.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 #include "cosm/ds/entity_vector.hpp"
 
 /*******************************************************************************
@@ -27,7 +27,7 @@
  ******************************************************************************/
 namespace cosm::foraging::config { struct powerlaw_dist_config; }
 
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 class multi_cluster_distributor;
 
@@ -88,5 +88,5 @@ class powerlaw_distributor final : public rer::client<powerlaw_distributor>,
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

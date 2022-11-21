@@ -11,13 +11,13 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/explore/crw.hpp"
 
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
+#include "cosm/subsystem/actuation_subsystem.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces
 ******************************************************************************/
-NS_START(cosm, spatial, strategy, explore);
+namespace cosm::spatial::strategy::explore {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -70,4 +70,4 @@ void crw::task_reset(void) {
   nz_tracker()->state_reset();
 } /* task_reset() */
 
-NS_END(explore, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::explore */

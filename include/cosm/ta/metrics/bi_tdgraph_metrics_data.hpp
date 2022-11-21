@@ -20,13 +20,13 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics, detail);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
-struct bi_tdgraph_metrics_data {
-  explicit bi_tdgraph_metrics_data(size_t decomposition_depth)
+struct bi_tdgraph_metrics_data_impl {
+  explicit bi_tdgraph_metrics_data_impl(size_t decomposition_depth)
       : depth_counts(decomposition_depth + 1),
         task_counts(
           static_cast<size_t>(std::pow(2, decomposition_depth + 1) - 1)),
@@ -39,16 +39,13 @@ struct bi_tdgraph_metrics_data {
   std::vector<ral::mt_size_t> tab_counts;
 };
 
-NS_END(detail);
-
 struct bi_tdgraph_metrics_data : public rmetrics::base_data {
   explicit bi_tdgraph_metrics_data(size_t decomposition_depth)
       : interval(decomposition_depth),
         cum(decomposition_depth) {}
 
-  detail::bi_tdgraph_metrics_data interval;
-  detail::bi_tdgraph_metrics_data cum;
+  bi_tdgraph_metrics_data_impl interval;
+  bi_tdgraph_metrics_data_impl cum;
 };
 
-NS_END(metrics, ta, cosm);
-
+} /* namespace cosm::ta::metrics */

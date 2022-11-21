@@ -30,7 +30,7 @@ class ramp_block3D;
 class entity3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Class Definitions
@@ -86,4 +86,4 @@ class cell3D final : public rpdecorator::decorator<fsm::cell3D_fsm> {
   /* clang-format on */
 };
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

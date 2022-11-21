@@ -32,7 +32,8 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations {
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -146,7 +147,7 @@ using free_block_drop_visitor_impl =
     rpvisitor::precise_visitor<free_block_drop,
                                free_block_drop::visit_typelist>;
 
-NS_END(detail);
+} /* namespace detail */
 
 class free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
  public:
@@ -154,5 +155,5 @@ class free_block_drop_visitor : public detail::free_block_drop_visitor_impl {
 };
 
 
-NS_END(operations, arena, cosm);
+} /* namespace cosm::arena::operations */
 

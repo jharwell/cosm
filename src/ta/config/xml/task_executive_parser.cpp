@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -33,4 +33,4 @@ void task_executive_parser::parse(const ticpp::Element& node) {
   XML_PARSE_ATTR_DFLT(pnode, m_config, update_interface_ests, false);
 } /* parse() */
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */

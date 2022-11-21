@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -50,11 +50,11 @@ class entity2D : public spatial_entity2D {
 
   /**
    * \brief Return the anchor (LL corner) of the object in discrete
-   * coordinates. This ALWAYS exists, evenif if \ref center2D() does not.
+   * coordinates. This ALWAYS exists, evenif if \ref dcenter2D() does not.
    */
   rmath::vector2z danchor2D(void) const { return dbb().anchor3D().to_2D(); }
 
-  /*
+  /**
    * \brief Return the center of the object in discrete coordinates,
    * \a IF it exists. If the entity X,Y dimensions are both odd, then it exists,
    * otherwise, it does not.
@@ -72,4 +72,4 @@ class entity2D : public spatial_entity2D {
   }
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

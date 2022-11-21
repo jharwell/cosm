@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -50,4 +50,4 @@ bool block_dist_parser::validate(void) const {
          m_redist_governor.validate();
 } /* validate() */
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Type Definitions
@@ -25,7 +25,6 @@ NS_START(cosm, foraging, block_dist);
  * \brief The policy to use when trying to find coordinates to distribute a
  * block to.
  */
-
 enum coord_search_policy {
   /**
    * \brief Guess and check.
@@ -39,5 +38,4 @@ enum coord_search_policy {
   ekFREE_CELL
 };
 
-NS_END(block_dist, foraging, cosm);
-
+} /* namespace cosm::foraging::block_dist */

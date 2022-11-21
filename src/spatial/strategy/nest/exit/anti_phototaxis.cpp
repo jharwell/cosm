@@ -11,13 +11,13 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/nest/exit/anti_phototaxis.hpp"
 
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, exit);
+namespace cosm::spatial::strategy::nest::exit {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -48,4 +48,4 @@ void anti_phototaxis::task_execute(void) {
   }
 } /* task_execute() */
 
-NS_END(exit, nest, spatial, strategy, cosm);
+} /* namespace cosm::strategy::spatial::nest::exit */

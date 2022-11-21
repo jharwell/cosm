@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 /*******************************************************************************
  * Class Definitions
@@ -75,4 +75,4 @@ class task_dist_entropy final : public convergence_measure {
   }
 };
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

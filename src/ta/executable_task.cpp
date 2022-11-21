@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -51,4 +51,4 @@ int executable_task::active_interface(void) const {
   return -1;
 } /* active_interface() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

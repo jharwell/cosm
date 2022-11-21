@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -53,4 +53,4 @@ void msg_tracking_map::reset(const std::string& key) {
   tracking.flush_ts = rtypes::constants::kNoTime;
 } /* reset() */
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

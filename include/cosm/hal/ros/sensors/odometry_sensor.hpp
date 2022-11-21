@@ -27,7 +27,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, ros, sensors);
+namespace cosm::hal::ros::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -79,4 +79,4 @@ class odometry_sensor final : public rer::client<odometry_sensor>,
   /* clang-format on */
 };
 
-NS_END(sensors, ros, hal, cosm);
+} /* namespace cosm::hal::ros::sensors */

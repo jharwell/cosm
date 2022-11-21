@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, ds);
+namespace cosm::ta::ds {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -269,4 +269,4 @@ bool bi_tab::task_depth_changed(void) const {
          mc_graph->vertex_depth(m_last_task);
 } /* task_depth_changed() */
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

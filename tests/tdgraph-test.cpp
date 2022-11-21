@@ -3,7 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 /*******************************************************************************
@@ -11,6 +11,7 @@
  ******************************************************************************/
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_PREFIX_ALL
+
 #include "rcppsw/ta/polled_task.hpp"
 #include "rcppsw/ta/tdgraph.hpp"
 #include "rcppsw/ta/config/task_alloc_config.hpp"

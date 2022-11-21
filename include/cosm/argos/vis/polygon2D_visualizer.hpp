@@ -27,7 +27,7 @@ namespace argos {
 class CQTOpenGLUserFunctions;
 }
 
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Classes
@@ -97,5 +97,5 @@ class polygon2D_visualizer {
   /* clang-format on */
 };
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */
 

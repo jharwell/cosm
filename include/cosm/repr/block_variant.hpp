@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 class cube_block3D;
 class ramp_block3D;
@@ -36,4 +36,4 @@ using block3D_variantro = std::variant<const cube_block3D*, const ramp_block3D*>
 crepr::block3D_variantno make_variant(crepr::base_block3D* block);
 crepr::block3D_variantro make_variant(const crepr::base_block3D* block);
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

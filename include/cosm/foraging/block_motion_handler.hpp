@@ -32,7 +32,7 @@ namespace cosm::arena {
 class base_arena_map;
 } /* namespace cosm::arena */
 
-NS_START(cosm, foraging);
+namespace cosm::foraging {
 
 /*******************************************************************************
  * Class Definitions
@@ -46,7 +46,7 @@ NS_START(cosm, foraging);
 class block_motion_handler : public rer::client<block_motion_handler>,
                              public cfmetrics::block_motion_metrics {
  public:
-  static inline const std::string kPolicyNull = "Null";
+  static inline const std::string kPolicyNone = rconfig::constants::kNoValue;
   static inline const std::string kPolicyRandomWalk = "random_walk";
 
   block_motion_handler(const config::block_motion_config* config,
@@ -91,4 +91,4 @@ class block_motion_handler : public rer::client<block_motion_handler>,
   /* clang-format on */
 };
 
-NS_END(foraging, cosm);
+} /* namespace cosm::foraging */

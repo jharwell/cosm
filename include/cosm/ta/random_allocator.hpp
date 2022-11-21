@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 
 /*******************************************************************************
@@ -51,4 +51,4 @@ class random_allocator : public rer::client<random_allocator> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

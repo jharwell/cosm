@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis);
+namespace cosm::argos::vis {
 
 /*******************************************************************************
  * Member Functions
@@ -89,4 +89,4 @@ void polygon2D_visualizer::abs_draw(const rmath::vector3d& pos,
   glPopMatrix();
 } /* abs_draw() */
 
-NS_END(vis, argos, cosm);
+} /* namespace cosm::argos::vis */

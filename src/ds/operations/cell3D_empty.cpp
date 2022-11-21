@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Member Functions
@@ -30,4 +30,4 @@ void cell3D_empty::visit(fsm::cell3D_fsm& fsm) {
   fsm.event_empty();
 } /* visit() */
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */

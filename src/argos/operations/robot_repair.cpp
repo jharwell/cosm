@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, operations);
+namespace cosm::argos::operations {
 
 /*******************************************************************************
  * Member Functions
@@ -45,4 +45,4 @@ void robot_repair::visit(cfsm::supervisor_fsm& fsm) {
   fsm.event_repair();
 } /* visit() */
 
-NS_END(operations, argos, cosm);
+} /* namespace cosm::argos::operations */

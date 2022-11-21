@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -28,4 +28,4 @@ struct env_sensor_reading {
   double value{0};
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

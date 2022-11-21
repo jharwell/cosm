@@ -25,7 +25,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ros, metrics, registrable);
+namespace cosm::ros::metrics::registrable {
 
 /*******************************************************************************
  * Global Variables
@@ -60,4 +60,4 @@ rmetrics::creatable_collector_set kWithNBlockClusters = {
     rmetrics::output_mode::ekSTREAM | rmetrics::output_mode::ekAPPEND }
 };
 
-NS_END(registrable, metrics, ros, cosm);
+} /* namespace cosm::ros::metrics::registrable */

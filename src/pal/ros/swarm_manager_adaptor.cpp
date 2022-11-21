@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal, ros);
+namespace cosm::pal::ros {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -27,4 +27,4 @@ swarm_manager_adaptor::swarm_manager_adaptor(size_t n_robots)
  * Member Functions
  ******************************************************************************/
 
-NS_END(ros, pal, cosm);
+} /* namespace cosm::pal::ros */

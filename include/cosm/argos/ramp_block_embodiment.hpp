@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Struct Definitions
@@ -27,8 +27,8 @@ NS_START(cosm, argos);
  * \struct ramp_block_embodiment
  * \ingroup argos
  *
- * \brief Handle for the implementation on how to take a \ref ramp_block3D and
- * make it physically embodied in the 3D world in ARGoS.
+ * \brief Handle for the implementation on how to take a \ref
+ * crepr::ramp_block3D and make it physically embodied in the 3D world in ARGoS.
  *
  * Right now, this is done by using very thin ARGoS boxes for the slope (top),
  * the back, and the botton of the block. Since the sides are triangles, that is
@@ -43,4 +43,4 @@ struct ramp_block_embodiment : public crepr::base_embodiment {
   ::argos::CBoxEntity* back{ nullptr };
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

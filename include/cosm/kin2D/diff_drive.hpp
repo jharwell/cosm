@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Struct Definitions
@@ -77,4 +77,4 @@ class diff_drive : public rer::client<diff_drive> {
   RCPPSW_WRAP_DECLDEF(enable, m_actuator);
 };
 
-NS_END(kin2D, cosm);
+} /* namespace cosm::kin2D */

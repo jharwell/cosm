@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -73,4 +73,4 @@ class base_grid_los
         grid_view_entity_type(c_id, c_view, c_resolution) {}
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

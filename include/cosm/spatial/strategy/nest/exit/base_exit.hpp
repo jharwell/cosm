@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, exit);
+namespace cosm::spatial::strategy::nest::exit {
 
 /*******************************************************************************
  * Class Definitions
@@ -54,4 +54,4 @@ class base_exit : public csstrategy::base_strategy,
   /* clang-format on */
 };
 
-NS_END(exit, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::exit */

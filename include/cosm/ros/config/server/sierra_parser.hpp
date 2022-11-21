@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, config, server);
+namespace cosm::ros::config::server {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,4 +57,4 @@ class sierra_parser : public rer::client<sierra_parser>,
   /* clang-format on */
 };
 
-NS_END(server, config, ros, cosm);
+} /* namespace cosm::ros::config::server */

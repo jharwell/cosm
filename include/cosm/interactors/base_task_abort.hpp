@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, interactors);
+namespace cosm::interactors {
 
 /*******************************************************************************
  * Classes
@@ -130,4 +130,4 @@ class base_task_abort
   /* clang-format on */
 };
 
-NS_END(interactors, cosm);
+} /* namespace cosm::interactors */

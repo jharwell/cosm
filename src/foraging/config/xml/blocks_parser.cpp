@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -38,4 +38,4 @@ bool blocks_parser::validate(void) const {
   return m_dist.validate();
 } /* validate() */
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */

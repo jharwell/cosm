@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence);
+namespace cosm::convergence {
 
 /*******************************************************************************
  * Class Definitions
@@ -58,4 +58,4 @@ class velocity final : public convergence_measure {
   /* clang-format on */
 };
 
-NS_END(convergence, cosm);
+} /* namespace cosm::convergence */

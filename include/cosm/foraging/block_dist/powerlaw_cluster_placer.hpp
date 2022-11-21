@@ -27,7 +27,7 @@ namespace cosm::arena {
 class base_arena_map;
 } /* namespace cosm::arena */
 
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -64,8 +64,9 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
 
   /**
    * \brief Perform a "guess and check" cluster placement until you get a
-   * distribution without overlap, or \ref kMAX_DIST_TRIES is exceeded,
-   * whichever happens first.
+   * distribution without overlap, or \ref
+   * cfbd::base_distributor::kMAX_DIST_TRIES is exceeded, whichever happens
+   * first.
    *
    * Cluster sizes are drawn from the internal power law distribution.
    */
@@ -115,5 +116,5 @@ class powerlaw_cluster_placer : public rer::client<powerlaw_cluster_placer> {
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */
 

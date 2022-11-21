@@ -1,0 +1,31 @@
+name: 'Setup a sensor for the ROS Extended Turtlebot3'
+description: 'Setup a sensor for the ROS Extended Turtlebot3'
+# inputs:
+#   repo:  # id of input
+#     description: 'The github repo'
+#     required: true
+
+# outputs:
+#   time: # id of output
+#     description: 'The time we greeted you'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install the ROSbridge
+      shell: bash
+      run: |
+        source /opt/ros/noetic/setup.bash
+        pip3 install catkin_tools
+
+        mkdir -p build && cd build
+        git clone https://github.com/jharwell/rosbridge.git
+        cd rosbridge
+        git submodule update --init --remote --recursive
+        git checkout devel
+
+        catkin init
+        catkin config --extend /opt/ros/noetic
+        catkin config --install -DCMAKE_INSTALL_PREFIX=/usr/local
+        catkin build --verbose sr04us tsl2591
+        source /usr/local/setup.bash
+        rospack find tsl2591

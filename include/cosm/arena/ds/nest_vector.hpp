@@ -22,7 +22,7 @@
  ******************************************************************************/
 namespace cosm::repr { class nest; }
 
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 using nest_vectorno_type = crepr::nest*;
 using nest_vectorro_type = const crepr::nest*;
@@ -71,5 +71,5 @@ class nest_vectorro : public std::vector<nest_vectorro_type> {
   std::string to_str(void) const;
 };
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */
 

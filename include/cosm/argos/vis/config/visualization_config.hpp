@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, vis, config);
+namespace cosm::argos::vis::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -37,4 +37,4 @@ struct visualization_config : public rconfig::base_config {
   bool block_id{false};
 };
 
-NS_END(config, vis, argos, cosm);
+} /* namespace cosm::argos::vis::config */

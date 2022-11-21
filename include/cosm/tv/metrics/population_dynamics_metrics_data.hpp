@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv, metrics, detail);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,7 +27,7 @@ NS_START(cosm, tv, metrics, detail);
  * the swarm. Must be atomic so counts are valid in parallel metric collection
  * contexts.
  */
-struct population_dynamics_metrics_data {
+struct population_dynamics_metrics_data_impl {
   /* clang-format off */
   ral::mt_size_t  n_births{0};
   ral::mt_size_t  birth_interval{0};
@@ -52,13 +52,10 @@ struct population_dynamics_metrics_data {
   /* clang-format on */
 };
 
-
-NS_END(detail);
-
 struct population_dynamics_metrics_data : public rmetrics::base_data {
-  detail::population_dynamics_metrics_data interval{};
-  detail::population_dynamics_metrics_data cum{};
+  population_dynamics_metrics_data_impl interval{};
+  population_dynamics_metrics_data_impl cum{};
 };
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */
 

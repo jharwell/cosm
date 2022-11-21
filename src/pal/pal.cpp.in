@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, pal);
+namespace cosm::pal {
 
 #if defined(COSM_PAL_TARGET_ARGOS)
 
@@ -30,4 +30,4 @@ const std::string kControllerXMLId = "@COSM_ROS_CONTROLLER_XML_ID@";
 const std::string kMsgTraitsMD5 = "@COSM_ROS_MD5@";
 #endif /* COSM_PAL_TARGET */
 
-NS_END(pal, cosm);
+} /* namespace cosm::pal */

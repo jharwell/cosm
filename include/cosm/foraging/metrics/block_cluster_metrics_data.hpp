@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, metrics, detail);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,21 +31,21 @@ struct cluster_extent {
   ral::mt_double_t ymin;
   ral::mt_double_t ymax;
 };
+
 /**
- * \struct block_cluster_metrics_data
+ * \struct block_cluster_metrics_data_impl
  * \ingroup foraging block_dist metrics detail
  *
  * \brief Container for holding collected statistics of \ref
  * block_cluster_metrics.
  */
-struct block_cluster_metrics_data  {
-  explicit block_cluster_metrics_data(size_t n_clusters)
+struct block_cluster_metrics_data_impl  {
+  explicit block_cluster_metrics_data_impl(size_t n_clusters)
       : block_counts(n_clusters) {}
 
   std::vector<ral::mt_size_t> block_counts;
 };
 
-NS_END(detail);
 
 struct block_cluster_metrics_data : public rmetrics::base_data {
   explicit block_cluster_metrics_data(size_t n_clusters)
@@ -53,9 +53,9 @@ struct block_cluster_metrics_data : public rmetrics::base_data {
         cum{n_clusters},
         extents{n_clusters} {}
 
-  detail::block_cluster_metrics_data  interval;
-  detail::block_cluster_metrics_data  cum;
-  std::vector<detail::cluster_extent> extents{};
+  block_cluster_metrics_data_impl interval;
+  block_cluster_metrics_data_impl cum;
+  std::vector<cluster_extent>     extents{};
 
   /**
    * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
@@ -78,4 +78,4 @@ struct block_cluster_metrics_data : public rmetrics::base_data {
   }
 };
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

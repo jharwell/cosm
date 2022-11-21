@@ -13,16 +13,15 @@
 
 #include "rcppsw/patterns/fsm/event.hpp"
 
-#include "cosm/kin2D/governed_diff_drive.hpp"
-#include "cosm/subsystem/actuation_subsystem2D.hpp"
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/hal/subsystem/base_actuation_subsystem.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 #include "cosm/ta/base_executive.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Struct Definitions
@@ -39,7 +38,7 @@ struct normal_op_visitor {
 /*******************************************************************************
  * Constructors/Destructors
  ******************************************************************************/
-supervisor_fsm::supervisor_fsm(subsystem::saa_subsystemQ3D* saa)
+supervisor_fsm::supervisor_fsm(csubsystem::base_saa_subsystem* saa)
     : rpfsm::simple_fsm(states::ekST_MAX_STATES, states::ekST_START),
       ER_CLIENT_INIT("cosm.fsm.supervisor"),
       RCPPSW_FSM_DEFINE_STATE_MAP(
@@ -60,7 +59,7 @@ RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, start) {
 
 RCPPSW_CONST RCPPSW_FSM_STATE_DEFINE_ND(supervisor_fsm, normal) {
   std::visit(normal_op_visitor(), m_supervisee);
-  m_saa->apf2D_apply();
+  m_saa->apf_apply();
   return rpfsm::event_signal::ekHANDLED;
 }
 
@@ -117,4 +116,4 @@ void supervisor_fsm::event_stop(void) {
   external_event(kTRANSITIONS[current_state()], nullptr);
 } /* event_stop() */
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

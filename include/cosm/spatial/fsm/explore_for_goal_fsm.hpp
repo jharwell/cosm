@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -123,4 +123,4 @@ class explore_for_goal_fsm final : public csfsm::util_hfsm,
   /* clang-format on */
 };
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */

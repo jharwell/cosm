@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, config);
+namespace cosm::tv::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -38,5 +38,5 @@ struct population_dynamics_config final : public rconfig::base_config {
   int max_size{-1}; /* -1 is no limit */
 };
 
-NS_END(config, tv, cosm);
+} /* namespace cosm::tv::config */
 

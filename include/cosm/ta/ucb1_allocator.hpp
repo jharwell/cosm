@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 
 /*******************************************************************************
@@ -32,8 +32,8 @@ class polled_task;
  * \ingroup ta
  *
  * \brief Allocates a task from a given set of a tasks, using the UCB1 approach
- * from \cite Pini2012,\cite Auer2002, treating the task allocation problem as a
- * multi-armed bandit and achieving a logarithmic regret bound.
+ * from \cite TA:Pini2012-bandit,\cite Auer2002, treating the task allocation
+ * problem as a multi-armed bandit and achieving a logarithmic regret bound.
  */
 class ucb1_allocator : public rer::client<ucb1_allocator> {
  public:
@@ -59,4 +59,4 @@ class ucb1_allocator : public rer::client<ucb1_allocator> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

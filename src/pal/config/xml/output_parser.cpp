@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, pal, config, xml);
+namespace cosm::pal::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -39,4 +39,4 @@ bool output_parser::validate(void) const {
   return m_metrics_parser.validate();
 } /* validate() */
 
-NS_END(xml, config, pal, cosm);
+} /* namespace cosm::pal::config::xml */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller, config, xml);
+namespace cosm::controller::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -36,4 +36,4 @@ class base_controller_repository
   base_controller_repository(void) RCPPSW_COLD;
 };
 
-NS_END(xml, config, controller, cosm);
+} /* namespace cosm::controller::config::xml */

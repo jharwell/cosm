@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, kin2D, config, xml);
+namespace cosm::kin2D::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -62,5 +62,5 @@ class diff_drive_parser : public rer::client<diff_drive_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, kin2D, cosm);
+} /* namespace cosm::kin2D::config::xml */
 

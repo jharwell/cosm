@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -45,4 +45,4 @@ gridQ3D_los::field_coord_dtype gridQ3D_los::abs_ur(void) const {
   return access(xdsize() - 1, ydsize() - 1, 0).loc();
 }
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

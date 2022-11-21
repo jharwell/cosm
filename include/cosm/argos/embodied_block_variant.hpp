@@ -23,7 +23,7 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 class embodied_ramp_block;
 class embodied_cube_block;
@@ -38,4 +38,4 @@ using embodied_block_varianto =
 using embodied_block_variantno =
     std::variant<embodied_ramp_block*, embodied_cube_block*>;
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

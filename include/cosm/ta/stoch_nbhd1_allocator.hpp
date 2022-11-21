@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 
 namespace ds {
@@ -34,8 +34,8 @@ class bi_tdgraph;
  * \class stoch_nbhd1_allocator
  * \ingroup ta
  *
- * \brief Allocates a task from a \ref bi_tdgraph using the STOCH-NBHD1 method
- * from \cite Harwell2020a-demystify.
+ * \brief Allocates a task from a \ref cta::ds::bi_tdgraph using the STOCH-NBHD1
+ * method from \cite Harwell:2020a-demystify.
  */
 class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
  public:
@@ -58,4 +58,4 @@ class stoch_nbhd1_allocator : public rer::client<stoch_nbhd1_allocator> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

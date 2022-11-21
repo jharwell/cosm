@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 
 /*******************************************************************************
@@ -61,4 +61,4 @@ class strict_greedy_allocator : public rer::client<strict_greedy_allocator> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

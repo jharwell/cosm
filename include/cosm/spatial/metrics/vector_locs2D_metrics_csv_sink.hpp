@@ -1,5 +1,5 @@
 /**
- * \file vector_locs2D_pos_metrics_csv_sink.hpp
+ * \file vector_locs2D_metrics_csv_sink.hpp
  *
  * \copyright 2021 John Harwell, All rights reserved.
  *
@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 class vector_locs2D_metrics_collector;
 
 /*******************************************************************************
@@ -29,5 +29,4 @@ class vector_locs2D_metrics_csv_sink final :
   using rdmetrics::grid2D_metrics_csv_sink<rdmetrics::cell_avg>::grid2D_metrics_csv_sink;
 };
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, config);
+namespace cosm::hal::sensors::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -50,4 +50,4 @@ struct env_sensor_detection_config final : public rconfig::base_config {
   bool enabled{true};
 };
 
-NS_END(config, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::config */

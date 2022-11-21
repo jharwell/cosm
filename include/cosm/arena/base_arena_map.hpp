@@ -32,7 +32,7 @@
 #include "cosm/foraging/block_dist/base_distributor.hpp"
 #include "cosm/foraging/block_dist/redist_governor.hpp"
 #include "cosm/foraging/block_motion_handler.hpp"
-#include "cosm/spatial/conflict_checker.hpp"
+#include "cosm/spatial/common/conflict_checker.hpp"
 
 /*******************************************************************************
  * Namespaces
@@ -61,7 +61,7 @@ namespace cosm::foraging::block_dist {
 class dispatcher;
 }
 
-NS_START(cosm, arena);
+namespace cosm::arena {
 
 /*******************************************************************************
  * Class Definitions
@@ -387,4 +387,4 @@ class base_arena_map : public rer::client<base_arena_map>,
   RCPPSW_PTRREF_DECLDEF(redist_governor, m_redist_governor);
 };
 
-NS_END(arena, cosm);
+} /* namespace cosm::arena */

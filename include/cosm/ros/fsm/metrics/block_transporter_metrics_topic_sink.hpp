@@ -24,7 +24,7 @@ namespace cosm::fsm::metrics {
 class block_transporter_metrics_collector;
 } /* namespace cosm::fsm::metrics */
 
-NS_START(cosm, ros, fsm, metrics);
+namespace cosm::ros::fsm::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -48,4 +48,4 @@ class block_transporter_metrics_topic_sink final
       : topic_sink(topic, mode, interval) {}
 };
 
-NS_END(metrics, fsm, ros, cosm);
+} /* namespace cosm::ros::fsm::metrics */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, config);
+namespace cosm::tv::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -34,5 +34,5 @@ struct robot_dynamics_applicator_config final : public rconfig::base_config {
   rct::config::waveform_config block_carry_throttle{};
 };
 
-NS_END(config, tv, cosm);
+} /* namespace cosm::tv::config */
 

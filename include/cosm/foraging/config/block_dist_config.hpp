@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config);
+namespace cosm::foraging::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -61,5 +61,5 @@ struct block_dist_config final : public rconfig::base_config {
   struct block_redist_governor_config redist_governor{};
 };
 
-NS_END(config, foraging, cosm);
+} /* namespace cosm::foraging::config */
 

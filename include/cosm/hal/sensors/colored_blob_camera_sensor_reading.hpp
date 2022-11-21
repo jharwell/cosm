@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,5 +37,5 @@ struct colored_blob_camera_sensor_reading {
   rutils::color color{};
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */
 

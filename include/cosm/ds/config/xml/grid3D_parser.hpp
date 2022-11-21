@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config, xml);
+namespace cosm::ds::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,7 +31,7 @@ NS_START(cosm, ds, config, xml);
  * \class grid3D_parser
  * \ingroup ds config xml
  *
- * \brief Parses XML parameters for \ref arena_grid grid structures into \ref
+ * \brief Parses XML parameters for \ref cads::arena_grid grid structures into \ref
  * grid3D_config.
  */
 
@@ -63,5 +63,5 @@ class grid3D_parser : public rer::client<grid3D_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, ds, cosm);
+} /* namespace cosm::ds::config::xml */
 

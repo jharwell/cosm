@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics);
+namespace cosm::convergence::metrics {
 class convergence_metrics_collector;
 
 /*******************************************************************************
@@ -54,5 +54,5 @@ class convergence_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(convergence, metrics, cosm);
+} /* namespace cosm::metrics::convergence */
 

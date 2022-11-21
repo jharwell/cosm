@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, config, xml);
+namespace cosm::foraging::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -32,7 +32,7 @@ NS_START(cosm, foraging, config, xml);
  * \ingroup foraging config xml
  *
  * \brief Parses XML parameters related to block redistribution by the \ref
- * redist_governor.
+ * block_redist_governor.
  */
 class block_redist_governor_parser : public rer::client<block_redist_governor_parser>,
                                      public rconfig::xml::xml_config_parser {
@@ -61,5 +61,5 @@ class block_redist_governor_parser : public rer::client<block_redist_governor_pa
   /* clang-format on */
 };
 
-NS_END(xml, config, foraging, cosm);
+} /* namespace cosm::foraging::config::xml */
 

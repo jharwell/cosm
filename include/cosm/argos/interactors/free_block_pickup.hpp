@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos, interactors);
+namespace cosm::argos::interactors {
 
 /*******************************************************************************
  * Classes
@@ -281,4 +281,4 @@ class free_block_pickup
   /* clang-format on */
 };
 
-NS_END(interactors, argos, cosm);
+} /* namespace cosm::argos::interactors */

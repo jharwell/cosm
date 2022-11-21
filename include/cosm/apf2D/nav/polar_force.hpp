@@ -14,6 +14,7 @@
 #include "rcppsw/rcppsw.hpp"
 
 #include "cosm/apf2D/boid.hpp"
+#include "cosm/apf2D/base_force.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -36,7 +37,7 @@ struct polar_force_config;
  * always pushes the robot away. Used to add curvature to otherwise straight
  * trajectories.
  */
-class polar_force {
+class polar_force : public capf2D::base_force {
  public:
   explicit polar_force(const config::polar_force_config* config);
 

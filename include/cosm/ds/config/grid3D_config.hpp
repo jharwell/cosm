@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds, config);
+namespace cosm::ds::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -36,5 +36,5 @@ struct grid3D_config final : public rconfig::base_config {
   rmath::vector3d dims{};
 };
 
-NS_END(config, ds, cosm);
+} /* namespace cosm::ds::config */
 

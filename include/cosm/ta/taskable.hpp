@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Class Decls
@@ -73,4 +73,4 @@ class taskable : public virtual rmetrics::base_metrics {
   virtual void task_start(RCPPSW_UNUSED taskable_argument* c_arg) = 0;
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

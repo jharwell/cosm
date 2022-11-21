@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, ds);
+namespace cosm::ta::ds {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -230,4 +230,4 @@ bool bi_tdgraph::tab_parent_verify(const bi_tab* const tab) const {
   return count <= 1;
 } /* tab_parent() */
 
-NS_END(ds, ta, cosm);
+} /* namespace cosm::ta::ds */

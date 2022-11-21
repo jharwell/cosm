@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config, xml);
+namespace cosm::subsystem::perception::config::xml {
 
 /*******************************************************************************
  * Member Functions
@@ -40,4 +40,4 @@ error:
   return false;
 } /* validate() */
 
-NS_END(xml, config, perception, subsystem, cosm);
+} /* namespace cosm::subsystem::perception::config::xml */

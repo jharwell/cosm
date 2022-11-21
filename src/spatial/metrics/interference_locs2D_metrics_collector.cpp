@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -33,7 +33,10 @@ void interference_locs2D_metrics_collector::collect(
     const rmetrics::base_metrics& metrics) {
   auto& m = dynamic_cast<const interference_metrics&>(metrics);
   inc_total_count();
-  inc_cell_count(m.interference_loc3D().to_2D());
+
+  if (auto loc = m.interference_loc3D()) {
+    inc_cell_count(loc->to_2D());
+  }
 } /* collect() */
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

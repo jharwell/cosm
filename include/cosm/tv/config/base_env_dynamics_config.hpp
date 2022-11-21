@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, config);
+namespace cosm::tv::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -37,5 +37,5 @@ struct base_env_dynamics_config : public rconfig::base_config {
   ctv::config::temporal_penalty_config block_manip_penalty{};
 };
 
-NS_END(tv, config, cosm);
+} /* namespace cosm::config::tv */
 

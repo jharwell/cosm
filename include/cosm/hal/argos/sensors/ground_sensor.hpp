@@ -26,35 +26,14 @@
 
 #include "cosm/hal/hal.hpp"
 #include "cosm/hal/argos/sensors/argos_sensor.hpp"
+#include "cosm/hal/sensors/stub_sensor.hpp"
 #include "cosm/hal/sensors/env_sensor_reading.hpp"
+#include "cosm/hal/argos/sensors/detail/identify.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace argos {
-class CCI_FootBotMotorGroundSensor;
-class CCI_EPuckGroundSensor;
-class CCI_PiPuckGroundSensor;
-} /* namespace argos */
-
-NS_START(cosm, hal, argos, sensors, detail);
-
-/*******************************************************************************
- * Templates
- ******************************************************************************/
-template<typename TSensor>
-using is_footbot_ground_sensor = std::is_same<TSensor,
-                                              ::argos::CCI_FootBotMotorGroundSensor>;
-
-template<typename TSensor>
-using is_epuck_ground_sensor = std::is_same<TSensor,
-                                            ::argos::CCI_EPuckGroundSensor>;
-
-template<typename TSensor>
-using is_pipuck_ground_sensor = std::is_same<TSensor,
-                                             ::argos::CCI_PiPuckGroundSensor>;
-
-NS_END(detail);
+namespace cosm::hal::argos::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -65,9 +44,12 @@ NS_END(detail);
  *
  * \brief Ground sensor wrapper for the following supported robots:
  *
- * - ARGoS footbot
- * - ARGoS epuck
- * - ARGoS pipuck
+ * - ARGoS foot-bot
+ * - ARGoS e-puck
+ * - ARGoS pi-puck
+ *
+ * For other HAL targets, the sensor is stubbed out so things will compile
+ * elsewhere, but the sensor and any algorithms using it WILL NOT WORK.
  *
  * \tparam TSensor The underlying sensor handle type abstracted away by the
  *                  HAL. If nullptr, then that effectively disables the sensor.
@@ -174,7 +156,9 @@ using ground_sensor = ground_sensor_impl<::argos::CCI_EPuckGroundSensor>;
 #elif (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_PIPUCK)
 using ground_sensor = ground_sensor_impl<::argos::CCI_PiPuckGroundSensor>;
 #else
-class ground_sensor{};
+using ground_sensor = chsensors::stub_sensor<
+  std::vector<chsensors::env_sensor_reading>
+  >;
 #endif /* COSM_HAL_TARGET */
 
-NS_END(sensors, argos, hal, cosm);
+} /* namespace cosm::hal::argos::sensors */

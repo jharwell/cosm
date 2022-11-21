@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, tv, config, xml);
+namespace cosm::tv::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -34,8 +34,7 @@ NS_START(cosm, tv, config, xml);
  * \ingroup tv config xml
  *
  * \brief Parses XML configuration for \ref temporal_penalty into \ref
- * temporal_penalty_config. Assumes it is handed an XML parent in which
- * the child tag \ref kXMLRoot is found.
+ * temporal_penalty_config.
  *
  * Parameter tags under the XML root are expected to exactly match the names of
  * the fields in the \ref temporal_penalty_config struct.
@@ -70,5 +69,5 @@ class temporal_penalty_parser final : public rer::client<temporal_penalty_parser
   /* clang-format on */
 };
 
-NS_END(xml, config, tv, cosm);
+} /* namespace cosm::tv::config::xml */
 

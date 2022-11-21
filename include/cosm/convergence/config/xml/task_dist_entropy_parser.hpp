@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, config, xml);
+namespace cosm::convergence::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -60,5 +60,5 @@ class task_dist_entropy_parser : public rer::client<task_dist_entropy_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, convergence, cosm);
+} /* namespace cosm::convergence::config::xml */
 

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv, metrics);
+namespace cosm::tv::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -108,4 +108,4 @@ void population_dynamics_metrics_collector::reset_after_interval(void) {
   m_data.interval.repair_mu = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, tv, cosm);
+} /* namespace cosm::tv::metrics */

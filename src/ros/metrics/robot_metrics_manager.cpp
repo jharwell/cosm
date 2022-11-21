@@ -36,14 +36,14 @@
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics_collector.hpp"
 #include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
 #include "cosm/hal/ros/sensors/metrics/battery_metrics_topic_sink.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ros, metrics);
+namespace cosm::ros::metrics {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -121,4 +121,4 @@ void robot_metrics_manager::register_with_n_block_clusters(
   boost::mpl::for_each<sink_typelist>(registerer);
 } /* register_with_n_block_clusters() */
 
-NS_END(metrics, ros, cosm);
+} /* namespace cosm::ros::metrics */

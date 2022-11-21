@@ -11,13 +11,13 @@
  ******************************************************************************/
 #include "cosm/spatial/strategy/base_strategy.hpp"
 
-#include "cosm/subsystem/saa_subsystemQ3D.hpp"
-#include "cosm/subsystem/sensing_subsystemQ3D.hpp"
+#include "cosm/subsystem/base_saa_subsystem.hpp"
+#include "cosm/subsystem/sensing_subsystem.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy);
+namespace cosm::spatial::strategy {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -33,31 +33,36 @@ base_strategy::base_strategy(const csfsm::fsm_params* params, rmath::rng* rng)
  ******************************************************************************/
 void base_strategy::phototaxis(void) {
   auto* light = saa()->sensing()->light();
-  saa()->apf2D().accum(
-      saa()->apf2D().phototaxis(light->readings()));
+  saa()->apf().accum(
+      saa()->apf().phototaxis(light->readings()));
 } /* phototaxis() */
 
 void base_strategy::anti_phototaxis(void) {
   auto* light = saa()->sensing()->light();
-  saa()->apf2D().accum(
-      saa()->apf2D().anti_phototaxis(light->readings()));
+  saa()->apf().accum(
+      saa()->apf().anti_phototaxis(light->readings()));
 } /* anti_phototaxis() */
 
 void base_strategy::wander(void) {
-  saa()->apf2D().accum(saa()->apf2D().wander(rng()));
+  saa()->apf().accum(saa()->apf().wander(rng()));
 } /* wander() */
 
 bool base_strategy::handle_ca(void) {
   auto* prox = saa()->sensing()->proximity();
 
   if (auto obs = prox->avg_prox_obj()) {
-    inta_tracker()->state_enter();
-    saa()->apf2D().accum(saa()->apf2D().avoidance(*obs));
+    if (nullptr != inta_tracker()) {
+      inta_tracker()->state_enter();
+    }
+
+    saa()->apf().accum(saa()->apf().avoidance(*obs));
     return true;
   } else {
-    inta_tracker()->state_exit();
-    return false;
+    if (nullptr != inta_tracker()) {
+      inta_tracker()->state_exit();
+    }
   }
+  return false;
 } /* handle_ca() */
 
 bool base_strategy::nz_update(void) {
@@ -68,8 +73,8 @@ bool base_strategy::nz_update(void) {
     return true;
   } else {
     nz_tracker()->state_exit();
-    return false;
   }
+  return false;
 } /* nz_update() */
 
-NS_END(strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy */

@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, ds);
+namespace cosm::arena::ds {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -41,4 +41,4 @@ size_t loctree::remove(const crepr::base_entity* ent) {
 template void loctree::do_update(const crepr::unicell_entity2D*);
 template void loctree::do_update(const crepr::unicell_entity3D*);
 
-NS_END(ds, arena, cosm);
+} /* namespace cosm::arena::ds */

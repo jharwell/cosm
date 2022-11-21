@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,4 +56,4 @@ class grid2D_los
   field_coord_dtype abs_ur(void) const override final;
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

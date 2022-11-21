@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -49,8 +49,8 @@ void interference_metrics_collector::collect(
     ++m_data.interval.n_episodes;
     ++m_data.cum.n_episodes;
 
-    m_data.interval.interference_duration += m.interference_duration().v();
-    m_data.cum.interference_duration += m.interference_duration().v();
+    m_data.interval.interference_duration += m.interference_duration()->v();
+    m_data.cum.interference_duration += m.interference_duration()->v();
   }
 } /* collect() */
 
@@ -62,4 +62,4 @@ void interference_metrics_collector::reset_after_interval(void) {
   m_data.interval.interference_duration = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, spatial, cosm);
+} /* namespace cosm::spatial::metrics */

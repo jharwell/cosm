@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, metrics, specs);
+namespace cosm::metrics::specs {
 
 /*******************************************************************************
  * Class Definitions
@@ -57,4 +57,4 @@ class name_spec {
   /* clang-format on */
 };
 
-NS_END(specs, metrics, cosm);
+} /* namespace cosm::metrics::specs */

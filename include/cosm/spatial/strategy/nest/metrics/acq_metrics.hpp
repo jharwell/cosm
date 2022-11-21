@@ -22,7 +22,7 @@ namespace cosm::spatial::strategy::nest::acq {
 class base_acq;
 } /* namespace cosm::spatial::strategy::acq */
 
-NS_START(cosm, spatial, strategy, nest, metrics);
+namespace cosm::spatial::strategy::nest::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -31,7 +31,8 @@ NS_START(cosm, spatial, strategy, nest, metrics);
  * \class acq_metrics
  * \ingroup spatial strategy nest metrics
  *
- * \brief Metrics to be collected from \ref base_acq and derived classes.
+ * \brief Metrics to be collected from \ref cssnest::acq::base_acq and derived
+ * classes.
  */
 class acq_metrics : virtual rmetrics::base_metrics {
  public:
@@ -50,4 +51,4 @@ class acq_metrics : virtual rmetrics::base_metrics {
   virtual const cssnest::acq::base_acq* nest_acq_strategy(void) const = 0;
 };
 
-NS_END(metrics, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::metrics */

@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, strategy, nest, acq);
+namespace cosm::spatial::strategy::nest::acq {
 
 /*******************************************************************************
  * Class Definitions
@@ -65,4 +65,4 @@ class wander_random_thresh : public cssnest::acq::random_thresh {
 };
 
 
-NS_END(acq, nest, strategy, spatial, cosm);
+} /* namespace cosm::spatial::strategy::nest::acq */

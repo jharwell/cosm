@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, metrics);
+namespace cosm::convergence::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -97,4 +97,4 @@ convergence_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, convergence, cosm);
+} /* namespace cosm::convergence::metrics */

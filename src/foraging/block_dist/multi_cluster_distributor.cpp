@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -109,4 +109,4 @@ size_t multi_cluster_distributor::size(void) const {
                          });
 } /* size() */
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

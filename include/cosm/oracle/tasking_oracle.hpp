@@ -36,7 +36,7 @@ namespace cosm::oracle::config {
 struct tasking_oracle_config;
 } // namespace cosm::oracle::config
 
-NS_START(cosm, oracle);
+namespace cosm::oracle {
 
 /*******************************************************************************
  * Class Definitions
@@ -96,4 +96,4 @@ class tasking_oracle final : public rer::client<tasking_oracle> {
   /* clang-format on */
 };
 
-NS_END(oracle, cosm);
+} /* namespace cosm::oracle */

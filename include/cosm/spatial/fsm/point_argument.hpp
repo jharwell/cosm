@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, fsm);
+namespace cosm::spatial::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -52,5 +52,5 @@ class point_argument final : public ta::taskable_argument,
   /* clang-format on */
 };
 
-NS_END(fsm, spatial, cosm);
+} /* namespace cosm::spatial::fsm */
 

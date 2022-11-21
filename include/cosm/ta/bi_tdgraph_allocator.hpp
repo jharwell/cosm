@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 class polled_task;
 namespace ds {
 class bi_tdgraph;
@@ -36,8 +36,8 @@ struct task_alloc_config;
  * \class bi_tdgraph_allocator
  * \ingroup ta
  *
- * \brief Allocate a task from a \ref bi_tdgraph according to a specified
- * policy.
+ * \brief Allocate a task from a \ref cta::ds::bi_tdgraph according to a
+ * specified policy.
  */
 class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
  public:
@@ -103,4 +103,4 @@ class bi_tdgraph_allocator : public rer::client<bi_tdgraph_allocator> {
   /* clang-format on */
 };
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

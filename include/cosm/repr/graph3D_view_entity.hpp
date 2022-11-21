@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -93,4 +93,4 @@ class graph3D_view_entity
   using graph_view_entity_type::view;
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

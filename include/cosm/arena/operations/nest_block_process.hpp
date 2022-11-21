@@ -33,7 +33,8 @@ namespace cosm::repr {
 class sim_block3D;
 } /* namespace cosm::repr */
 
-NS_START(cosm, arena, operations, detail);
+namespace cosm::arena::operations {
+namespace detail {
 
 /*******************************************************************************
  * Class Definitions
@@ -96,7 +97,7 @@ class nest_block_process : public rer::client<nest_block_process> {
   /* clang-format on */
 };
 
-NS_END(detail);
+} /* namespace detail */
 
 /**
  * \brief We use the precise visitor in order to force compile errors if a call
@@ -106,5 +107,5 @@ NS_END(detail);
  */
 using nest_block_process_visitor = rpvisitor::filtered_visitor<detail::nest_block_process>;
 
-NS_END(operations, arena, cosm);
+} /* namespace cosm::arena::operations */
 

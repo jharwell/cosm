@@ -26,7 +26,7 @@ namespace cosm::fsm {
 class cell2D_fsm;
 }
 
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -36,8 +36,8 @@ NS_START(cosm, ds, operations);
  * \ingroup ds operations
  *
  * \brief Non-abstract interface specifying the minimum set of classes that all
- * operations that operate on \ref cell2D objects within an \ref ds::arena_grid
- * need to visit.
+ * operations that operate on \ref cds::cell2D objects within an \ref
+ * cads::arena_grid need to visit.
  *
  * Also provided are the (x, y) coordinates of the cell to which the event is
  * directed. Not all derived operations may need them, but they are there.
@@ -73,5 +73,5 @@ class cell2D_op {
  */
 using cell2D_op_visitor = rpvisitor::filtered_visitor<cell2D_op>;
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

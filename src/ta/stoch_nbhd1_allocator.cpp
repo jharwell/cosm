@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Member Functions
@@ -45,4 +45,4 @@ stoch_nbhd1_allocator::operator()(const polled_task* current_task) const {
   }
 } /* alloc_stoch_nbhd1() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

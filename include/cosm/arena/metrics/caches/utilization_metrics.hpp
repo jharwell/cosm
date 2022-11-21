@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,7 +27,7 @@ NS_START(cosm, arena, metrics, caches);
  * \ingroup arena metrics caches
  *
  * \brief Interface defining utilization metrics that can be collected on \ref
- * arena_cache objects in the arena during their lifetime.
+ * carepr::arena_cache objects in the arena during their lifetime.
  */
 class utilization_metrics : virtual public rmetrics::base_metrics {
  public:
@@ -61,5 +61,5 @@ class utilization_metrics : virtual public rmetrics::base_metrics {
   virtual size_t total_block_drops(void) const = 0;
 };
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */
 

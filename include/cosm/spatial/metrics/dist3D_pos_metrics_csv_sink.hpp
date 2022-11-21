@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 class dist3D_pos_metrics_collector;
 
 /*******************************************************************************
@@ -29,5 +29,4 @@ class dist3D_pos_metrics_csv_sink final:
   using rdmetrics::grid3D_metrics_csv_sink<rdmetrics::cell_avg>::grid3D_metrics_csv_sink;
 };
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */

@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -70,4 +70,4 @@ cds::block3D_vectoro block3D_manifest_processor::operator()(void) {
   return v;
 } /* operator()() */
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

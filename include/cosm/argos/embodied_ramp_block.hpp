@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Class Definitions
@@ -49,4 +49,4 @@ class embodied_ramp_block final
   ~embodied_ramp_block(void) override = default;
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

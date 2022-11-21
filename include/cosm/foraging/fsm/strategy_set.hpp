@@ -23,7 +23,7 @@ namespace cosm::spatial::strategy::nest::exit { class base_exit;}
 namespace cosm::spatial::strategy::explore { class base_explore;}
 namespace cosm::spatial::strategy::blocks::drop { class base_drop;}
 
-NS_START(cosm, foraging, fsm);
+namespace cosm::foraging::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -45,4 +45,4 @@ struct strategy_set {
   std::unique_ptr<cssblocks::drop::base_drop> block_drop{nullptr};
 };
 
-NS_END(fsm, foraging, cosm);
+} /* namespace cosm::foraging::fsm */

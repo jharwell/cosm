@@ -27,7 +27,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, oracle);
+namespace cosm::oracle {
 class tasking_oracle;
 
 /*******************************************************************************
@@ -85,4 +85,4 @@ class aggregate_oracle {
   /* clang-format on */
 };
 
-NS_END(oracle, cosm);
+} /* namespace cosm::oracle */

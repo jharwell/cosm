@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, actuators);
+namespace cosm::hal::actuators {
 
 /*******************************************************************************
  * Enum Definitions
@@ -65,4 +65,4 @@ enum diagnostics {
   ekMAX
 };
 
-NS_END(actuators, hal, cosm);
+} /* namespace cosm::hal::actuators */

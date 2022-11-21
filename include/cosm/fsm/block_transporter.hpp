@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, fsm);
+namespace cosm::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -42,4 +42,4 @@ class block_transporter {
   virtual TGoal block_transport_goal(void) const = 0;
 };
 
-NS_END(fsm, cosm);
+} /* namespace cosm::fsm */

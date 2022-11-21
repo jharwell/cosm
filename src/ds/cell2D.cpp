@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, ds);
+namespace cosm::ds {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -43,4 +43,4 @@ carepr::base_cache* cell2D::cache(void) {
   return dynamic_cast<carepr::base_cache*>(m_entity);
 } /* cache() */
 
-NS_END(ds, cosm);
+} /* namespace cosm::ds */

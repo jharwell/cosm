@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, repr);
+namespace cosm::arena::repr {
 
 /*******************************************************************************
  * Static Members
@@ -115,4 +115,4 @@ crepr::sim_block3D* base_cache::block_select(rmath::rng* rng) {
     return m_blocks_vec[0];
   }
 }
-NS_END(repr, arena, cosm);
+} /* namespace cosm::arena::repr */

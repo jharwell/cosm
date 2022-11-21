@@ -1,5 +1,5 @@
 /**
- * \file real_block.hpp
+ * \file real_block3D.hpp
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -75,4 +75,4 @@ class real_block3D : public rer::client<real_block3D>,
   /* clang-format on */
 };
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

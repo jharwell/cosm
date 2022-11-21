@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, tv);
+namespace cosm::tv {
 
 /*******************************************************************************
  * Classes
@@ -161,4 +161,4 @@ class temporal_penalty_handler : public rer::client<temporal_penalty_handler>,
   /* clang-format on */
 };
 
-NS_END(tv, cosm);
+} /* namespace cosm::tv */

@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches, detail);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Class Definitions
@@ -24,19 +24,16 @@ NS_START(cosm, arena, metrics, caches, detail);
 /**
  * \brief All stats are cumulative within an interval.
  */
-struct utilization_metrics_data {
+struct utilization_metrics_data_impl {
   size_t n_blocks{0};
   size_t n_pickups{0};
   size_t n_drops{0};
   size_t cache_count{0};
 };
 
-NS_END(detail);
-
 struct utilization_metrics_data : public rmetrics::base_data {
-  detail::utilization_metrics_data interval{};
-  detail::utilization_metrics_data cum{};
+  utilization_metrics_data_impl interval{};
+  utilization_metrics_data_impl cum{};
 };
 
-NS_END(caches, metrics, arena, cosm);
-
+} /* namespace cosm::arena::metrics::caches */

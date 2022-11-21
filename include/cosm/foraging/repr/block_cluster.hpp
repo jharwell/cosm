@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, repr);
+namespace cosm::foraging::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -92,5 +92,5 @@ class block_cluster final : public crepr::grid2D_view_entity<cads::arena_grid,
   /* clang-format on */
 };
 
-NS_END(repr, foraging, cosm);
+} /* namespace cosm::foraging::repr */
 

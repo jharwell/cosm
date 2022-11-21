@@ -17,30 +17,28 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics, detail);
+namespace cosm::hal::sensors::metrics {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
- * \struct battery_metrics_data
- * \ingroup hal sensors metrics detail
+ * \struct battery_metrics_data_impl
+ * \ingroup hal sensors metrics
  *
  * \brief Container for holding \ref battery_metrics data. Must
  * be atomic so counts are valid in parallel metric collection contexts.
  */
-struct battery_metrics_data {
+struct battery_metrics_data_impl {
   ral::mt_size_t n_robots{0};
   ral::mt_double_t percentage{0};
   ral::mt_double_t voltage{0};
   ral::mt_double_t time_remaining{0};
 };
 
-NS_END(detail);
-
 struct battery_metrics_data : public rmetrics::base_data {
-  detail::battery_metrics_data interval{};
-  detail::battery_metrics_data cum{};
+  battery_metrics_data_impl interval{};
+  battery_metrics_data_impl cum{};
 
   /**
    * \brief Accumulate data. We ignore the "cum" field on \p rhs, and accumulate
@@ -73,4 +71,4 @@ struct battery_metrics_data : public rmetrics::base_data {
   }
 };
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

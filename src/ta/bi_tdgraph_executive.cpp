@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta);
+namespace cosm::ta {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -137,4 +137,4 @@ const polled_task* bi_tdgraph_executive::parent_task(const polled_task* v) {
   return ds::bi_tdgraph::vertex_parent(*graph(), v);
 } /* parent_task() */
 
-NS_END(ta, cosm);
+} /* namespace cosm::ta */

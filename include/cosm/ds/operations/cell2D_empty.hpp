@@ -23,7 +23,7 @@ namespace cosm::arena::ds {
 class arena_grid;
 } // namespace cosm::ds
 
-NS_START(cosm, ds, operations);
+namespace cosm::ds::operations {
 
 /*******************************************************************************
  * Class Definitions
@@ -69,5 +69,5 @@ class cell2D_empty : public cell2D_op, public rer::client<cell2D_empty> {
  */
 using cell2D_empty_visitor = rpvisitor::filtered_visitor<cell2D_empty>;
 
-NS_END(operations, ds, cosm);
+} /* namespace cosm::ds::operations */
 

@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, arena, repr);
+namespace cosm::arena::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -58,4 +58,4 @@ class light_type_index {
   /* clang-format on */
 };
 
-NS_END(repr, arena, cosm);
+} /* namespace cosm::arena::repr */

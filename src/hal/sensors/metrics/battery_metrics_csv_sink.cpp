@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, hal, sensors, metrics);
+namespace cosm::hal::sensors::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -64,4 +64,4 @@ boost::optional<std::string> battery_metrics_csv_sink::csv_line_build(
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, sensors, hal, cosm);
+} /* namespace cosm::hal::sensors::metrics */

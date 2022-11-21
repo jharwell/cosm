@@ -17,7 +17,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, controller, operations);
+namespace cosm::controller::operations {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -56,4 +56,4 @@ void base_block_pickup::visit(controller::block_carrying_controller& c) {
   op.visit(*c.block(), crops::block_pickup_owner::ekROBOT);
 } /* visit() */
 
-NS_END(operations, controller, cosm);
+} /* namespace cosm::controller::operations */

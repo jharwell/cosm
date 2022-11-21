@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging);
+namespace cosm::foraging {
 
 /*******************************************************************************
  * Constructors/Destructors
@@ -36,7 +36,7 @@ block_motion_handler::block_motion_handler(
  ******************************************************************************/
 size_t block_motion_handler::move_blocks(carena::base_arena_map* map) {
   m_n_moved = 0;
-  if (kPolicyNull == mc_config.policy) {
+  if (kPolicyNone == mc_config.policy) {
     /* nothing to do */
   } else if (kPolicyRandomWalk == mc_config.policy) {
     random_walk(map);
@@ -114,4 +114,4 @@ block_motion_handler::free_adjacent_coord(const crepr::sim_block3D* block,
   return boost::none;
 } /* free_adjacent_coord() */
 
-NS_END(foraging, cosm);
+} /* namespace cosm::foraging */

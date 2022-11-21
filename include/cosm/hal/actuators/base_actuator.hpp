@@ -19,7 +19,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, actuators);
+namespace cosm::hal::actuators {
 
 /*******************************************************************************
  * Class Definitions
@@ -76,5 +76,4 @@ class base_actuator : public rer::client<base_actuator<TActuator>>,
   bool is_disabled(void) const { return !is_enabled(); }
 };
 
-NS_END(actuators, hal, cosm);
-
+} /* namespace cosm::hal::actuators */

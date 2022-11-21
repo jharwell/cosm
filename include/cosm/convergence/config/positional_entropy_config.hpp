@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, convergence, config);
+namespace cosm::convergence::config {
 
 /*******************************************************************************
  * Structure Definitions
@@ -38,5 +38,5 @@ struct positional_entropy_config final : public rconfig::base_config {
   double horizon_delta{-1};
 };
 
-NS_END(config, convergence, cosm);
+} /* namespace cosm::convergence::config */
 

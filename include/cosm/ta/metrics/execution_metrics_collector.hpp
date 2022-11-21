@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, metrics);
+namespace cosm::ta::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -56,5 +56,5 @@ class execution_metrics_collector final : public rmetrics::base_collector,
   /* clang-format on */
 };
 
-NS_END(metrics, ta, cosm);
+} /* namespace cosm::ta::metrics */
 

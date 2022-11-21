@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -90,4 +90,4 @@ block_cluster_metrics_csv_sink::csv_line_build(const rmetrics::base_data* data,
   return boost::make_optional(line);
 } /* csv_line_build() */
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

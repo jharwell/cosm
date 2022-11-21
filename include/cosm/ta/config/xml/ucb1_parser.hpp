@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, ta, config, xml);
+namespace cosm::ta::config::xml {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,5 +61,5 @@ class ucb1_parser final : public rer::client<ucb1_parser>,
   /* clang-format on */
 };
 
-NS_END(xml, config, ta, cosm);
+} /* namespace cosm::ta::config::xml */
 

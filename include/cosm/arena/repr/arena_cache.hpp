@@ -23,7 +23,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, repr);
+namespace cosm::arena::repr {
 
 /*******************************************************************************
  * Class Definitions
@@ -88,5 +88,5 @@ class arena_cache final : public base_cache,
   /* clang-format on */
 };
 
-NS_END(repr, arena, cosm);
+} /* namespace cosm::arena::repr */
 

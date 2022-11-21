@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, argos);
+namespace cosm::argos {
 
 /*******************************************************************************
  * Struct Definitions
@@ -28,8 +28,8 @@ NS_START(cosm, argos);
  * \struct cube_block_embodiment
  * \ingroup argos
  *
- * \brief Handle for the implementation on how to take a \ref cube_block3D and
- * make it physically embodied in the 3D world in ARGoS.
+ * \brief Handle for the implementation on how to take a \ref
+ * crepr::cube_block3D and make it physically embodied in the 3D world in ARGoS.
  *
  * Have to use raw pointers and new in order to be able to hand ownership of the
  * block to ARGoS.
@@ -38,4 +38,4 @@ struct cube_block_embodiment : public crepr::base_embodiment {
   ::argos::CBoxEntity* box{ nullptr };
 };
 
-NS_END(argos, cosm);
+} /* namespace cosm::argos */

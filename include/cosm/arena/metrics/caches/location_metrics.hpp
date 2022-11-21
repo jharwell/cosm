@@ -18,7 +18,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, arena, metrics, caches);
+namespace cosm::arena::metrics::caches {
 
 /*******************************************************************************
  * Class Definitions
@@ -27,8 +27,8 @@ NS_START(cosm, arena, metrics, caches);
  * \class location_metrics
  * \ingroup arena metrics caches
  *
- * \brief Defines the metrics to be collected from a \ref arena_cache regarding
- * its location in the arena.
+ * \brief Defines the metrics to be collected from a \ref carepr::arena_cache
+ * regarding its location in the arena.
  *
  * Metrics are collected every timestep.
  */
@@ -42,4 +42,4 @@ class location_metrics : public virtual rmetrics::base_metrics {
   virtual rcppsw::math::vector2z location(void) const = 0;
 };
 
-NS_END(caches, metrics, arena, cosm);
+} /* namespace cosm::arena::metrics::caches */

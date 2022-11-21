@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist, metrics);
+namespace cosm::foraging::block_dist::metrics {
 
 class distributor_metrics_collector;
 
@@ -55,5 +55,5 @@ class distributor_metrics_csv_sink final : public rmetrics::csv_sink {
       const rtypes::timestep& t) override;
 };
 
-NS_END(metrics, block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist::metrics */
 

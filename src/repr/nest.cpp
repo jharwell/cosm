@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, repr);
+namespace cosm::repr {
 
 /*******************************************************************************
  * Class Constants
@@ -105,4 +105,4 @@ std::string nest::to_str(void) const {
   return "nest" + rcppsw::to_string(id()) + "@" + rcenter2D().to_str();
 } /* to_str() */
 
-NS_END(repr, cosm);
+} /* namespace cosm::repr */

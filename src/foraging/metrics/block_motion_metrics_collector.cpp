@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, metrics);
+namespace cosm::foraging::metrics {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -39,4 +39,4 @@ void block_motion_metrics_collector::reset_after_interval(void) {
   m_data.interval.n_moved = 0;
 } /* reset_after_interval() */
 
-NS_END(metrics, foraging, cosm);
+} /* namespace cosm::foraging::metrics */

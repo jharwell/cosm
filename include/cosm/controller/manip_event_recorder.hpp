@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, controller);
+namespace cosm::controller {
 
 /*******************************************************************************
  * Class Definitions
@@ -77,4 +77,4 @@ class manip_event_recorder : public ccmetrics::manipulation_metrics {
   /* clang-format on */
 };
 
-NS_END(controller, cosm);
+} /* namespace cosm::controller */

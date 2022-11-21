@@ -22,7 +22,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, fsm);
+namespace cosm::foraging::fsm {
 
 /*******************************************************************************
  * Class Definitions
@@ -73,13 +73,13 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
   strategy_set& strategies(void) { return m_strategies; }
 
   /**
-   * \brief Update the \ref interference_tracker state and applies the avoidance
-   * force if obstacles are detected.
+   * \brief Update the \ref cspatial::interference_tracker state and applies the
+   * avoidance force if obstacles are detected.
    */
   void inta_state_update(void);
 
   /**
-   * \brief Update the \ref nest_zone_tracker state.
+   * \brief Update the \ref cspatial::nest_zone_tracker state.
    */
   void nz_state_update(void);
 
@@ -152,4 +152,4 @@ class foraging_util_hfsm : public csfsm::util_hfsm,
   /* clang-format on */
 };
 
-NS_END(fsm, foraging, cosm);
+} /* namespace cosm::foraging::fsm */

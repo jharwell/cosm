@@ -20,7 +20,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal, sensors);
+namespace cosm::hal::sensors {
 
 /*******************************************************************************
  * Class Definitions
@@ -50,4 +50,4 @@ class env_sensor_impl {
                       const chsensors::config::env_sensor_detection_config* config) = 0;
 };
 
-NS_END(sensors, hal, cosm);
+} /* namespace cosm::hal::sensors */

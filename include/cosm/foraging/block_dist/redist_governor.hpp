@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 
 /*******************************************************************************
  * Class Definitions
@@ -39,7 +39,7 @@ NS_START(cosm, foraging, block_dist);
  * Conditions for disabling block re-distribution (and therefore the # blocks
  * becoming finite) are one of:
  *
- * - Null: the # blocks is always infinite/finite, depending what state the
+ * - none: the # blocks is always infinite/finite, depending what state the
  *   governor is initialized with.
  * - A specified # of blocks have been collected (any type).
  * - The swarm has converged, according to some measure.
@@ -57,7 +57,7 @@ NS_START(cosm, foraging, block_dist);
  */
 class redist_governor : public rer::client<redist_governor> {
  public:
-  static inline const std::string kDisableTriggerNull = "Null";
+  static inline const std::string kDisableTriggerNone = rconfig::constants::kNoValue;
   static inline const std::string kDisableTriggerTime = "timestep";
   static inline const std::string kDisableTriggerBlockCount = "block_count";
   static inline const std::string kDisableTriggerConvergence = "convergence";
@@ -87,4 +87,4 @@ class redist_governor : public rer::client<redist_governor> {
   /* clang-format on */
 };
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

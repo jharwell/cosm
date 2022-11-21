@@ -12,6 +12,7 @@
  * Includes
  ******************************************************************************/
 #include <vector>
+#include <utility>
 
 #include "cosm/hal/actuators/diff_drive_actuator.hpp"
 #include "cosm/kin2D/diff_drive.hpp"
@@ -19,15 +20,14 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm);
-namespace kin2D::config {
+namespace cosm::kin2D::config {
 struct diff_drive_config;
 }
-namespace tv {
+namespace cosm::tv {
 class switchable_tv_generator;
 } /* namespace tv */
 
-NS_START(kin2D);
+namespace cosm::kin2D {
 
 /*******************************************************************************
  * Class Definitions
@@ -37,7 +37,7 @@ NS_START(kin2D);
  * \ingroup kin2D
  *
  * \brief A differential drive whose maximum speed can be set in a temporally
- * varyng manner via one or more \ref tv::switchable_tv_generators, if
+ * varyng manner via one or more \ref ctv::switchable_tv_generators, if
  * configured to do so. The effect of all configured generators is cumulative.
  */
 class governed_diff_drive final : public kin2D::diff_drive {
@@ -83,4 +83,4 @@ class governed_diff_drive final : public kin2D::diff_drive {
   /* clang-format on */
 };
 
-NS_END(kin2D, cosm);
+} /* namespace cosm::kin2D */

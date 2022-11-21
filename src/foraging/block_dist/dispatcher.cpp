@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, foraging, block_dist);
+namespace cosm::foraging::block_dist {
 using cads::arena_grid;
 
 /*******************************************************************************
@@ -182,4 +182,4 @@ dist_status dispatcher::distribute_blocks(cds::block3D_vectorno& blocks) {
   return m_dist->distribute_blocks(blocks, mc_config.strict_success);
 } /* distribute_block() */
 
-NS_END(block_dist, foraging, cosm);
+} /* namespace cosm::foraging::block_dist */

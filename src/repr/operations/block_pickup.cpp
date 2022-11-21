@@ -16,7 +16,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, repr, operations);
+namespace cosm::repr::operations {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -35,4 +35,4 @@ void block_pickup::visit(crepr::base_block3D& block,
   block.update_on_pickup(mc_robot_id, mc_timestep, owner);
 } /* visit() */
 
-NS_END(operations, repr, cosm);
+} /* namespace cosm::repr::operations */

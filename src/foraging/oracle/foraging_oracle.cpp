@@ -21,7 +21,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, foraging, oracle);
+namespace cosm::foraging::oracle {
 
 /*******************************************************************************
  * Constructors/Destructor
@@ -106,4 +106,4 @@ void foraging_oracle::update(carena::caching_arena_map* const map) {
   }
 } /* update() */
 
-NS_END(oracle, foraging, cosm);
+} /* namespace cosm::foraging::oracle */

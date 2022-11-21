@@ -11,16 +11,18 @@
 /*******************************************************************************
  * Includes
  ******************************************************************************/
+#include <boost/optional.hpp>
+
 #include "rcppsw/metrics/base_metrics.hpp"
-#include "rcppsw/math/vector3.hpp"
 #include "rcppsw/types/timestep.hpp"
+#include "rcppsw/math/vector3.hpp"
 
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, spatial, metrics);
+namespace cosm::spatial::metrics {
 
 /*******************************************************************************
  * Class Definitions
@@ -61,15 +63,14 @@ class interference_metrics : public virtual rmetrics::base_metrics {
    * \brief If \ref exited_interference() returns \c TRUE, then this should
    * return the duration of the interference in timesteps.
    */
-  virtual rtypes::timestep interference_duration(void) const = 0;
+  virtual boost::optional<rtypes::timestep> interference_duration(void) const = 0;
 
   /**
-   * \brief When \ref facing_interference() returns \c TRUE, then this should
-   * return the robot's current discrete position in 3D. If the robot is only
-   * moving in 2D, then the Z component should always be 0.
+   * \brief When \ref exp_interference() returns \c TRUE, then this should
+   * return the robot's current discrete position in 3D.
    */
-  virtual rmath::vector3z interference_loc3D(void) const = 0;
+  virtual boost::optional<rmath::vector3z> interference_loc3D(void) const = 0;
+
 };
 
-NS_END(metrics, spatial, cosm);
-
+} /* namespace cosm::spatial::metrics */
