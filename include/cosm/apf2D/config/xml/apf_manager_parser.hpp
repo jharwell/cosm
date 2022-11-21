@@ -3,7 +3,7 @@
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -17,6 +17,7 @@
 #include "rcppsw/rcppsw.hpp"
 #include "cosm/apf2D/config/apf_manager_config.hpp"
 #include "cosm/apf2D/nav/config/xml/nav_parser.hpp"
+#include "cosm/apf2D/flocking/config/xml/flocking_parser.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -60,8 +61,9 @@ class apf_manager_parser : public rer::client<apf_manager_parser>,
   }
 
   /* clang-format off */
-  std::unique_ptr<config_type> m_config{nullptr};
-  nav::config::xml::nav_parser  m_nav{};
+  std::unique_ptr<config_type>           m_config{nullptr};
+  nav::config::xml::nav_parser           m_nav{};
+  flocking::config::xml::flocking_parser m_flocking{};
   /* clang-format on */
 };
 

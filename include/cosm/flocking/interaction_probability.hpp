@@ -3,7 +3,7 @@
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
- * SPDX-License Identifier: LGPL-2.0-or-later
+ * SPDX-License Identifier: MIT
  */
 
 #pragma once
@@ -15,10 +15,11 @@
 
 #include "rcppsw/math/radians.hpp"
 #include "rcppsw/spatial/euclidean_dist.hpp"
-#include "rcppsw/math/probability.hpp"
+#include "rcppsw/math/expression.hpp"
 #include "rcppsw/math/vector2.hpp"
 
 #include "cosm/cosm.hpp"
+#include "cosm/apf2D/boid_vector.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -36,7 +37,7 @@ namespace cosm::flocking {
  *
  * From Bagarti2018.
  */
-class interaction_probability : public rmath::probability {
+class interaction_probability : public rmath::expression<double> {
  public:
   interaction_probability(const rmath::radians& theta_max,
                           const rspatial::euclidean_dist& mean_interaction_dist);
@@ -52,13 +53,12 @@ class interaction_probability : public rmath::probability {
    * \param[in] other_idx Index of the OTHER agent to calculate the
    *                      probability of interaction with in \p fov_agents.
    *
-   * \param[in] fov_agents The positions of ALL other agents in the current
-   *                       agent's Field of View (FOV).
+   * \param[in] others The ALL other agents in the current agents FOV.
    */
-  rmath::probability operator()(const rmath::vector2d& self_pos,
-                                const rmath::vector2d& self_vel,
-                                size_t other_idx,
-                                const std::vector<rmath::vector2d>& fov_agents);
+  double operator()(const rmath::vector2d& self_pos,
+                    const rmath::vector2d& self_vel,
+                    size_t other_idx,
+                    const capf2D::boid_vectorro& others);
 
   /* Not move/copy constructable/assignable by default */
   interaction_probability(const interaction_probability&) = delete;
@@ -67,9 +67,9 @@ class interaction_probability : public rmath::probability {
   interaction_probability& operator=(interaction_probability&&) = delete;
 
  private:
-  rmath::probability calc_for_agent(const rmath::vector2d& pos,
-                                    const rmath::vector2d& vel,
-                                    const rmath::vector2d fov_agent_pos);
+  double calc_for_agent(const rmath::vector2d& pos,
+                        const rmath::vector2d& vel,
+                        const capf2D::boid* other);
   /* clang-format off */
   const rmath::radians mc_theta_max;
   const rspatial::euclidean_dist mc_mean_interaction_dist;

@@ -3,7 +3,7 @@
  *
  * \copyright 2022 SIFT LLC, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 /*******************************************************************************

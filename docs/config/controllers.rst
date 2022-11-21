@@ -772,9 +772,9 @@ XML configuration:
 
 - Required by: All controllers.
 - Required child attributes if present: none.
-- Required child tags if present: [ ``proximity_sensor``, ``ground_sensor`` ].
+- Required child tags if present: none.
 - Optional child attributes: none.
-- Optional child tags: none.
+- Optional child tags: [ ``proximity_sensor``, ``env_sensor`` ].
 
 XML configuration:
 
@@ -784,9 +784,9 @@ XML configuration:
        <proximity_sensor>
        ...
        </proximity_sensor>
-       <ground_sensor>
+       <env_sensor>
        ...
-       </ground_sensor>
+       </env_sensor>
    </sensing_subsystemQ3D>
 
 

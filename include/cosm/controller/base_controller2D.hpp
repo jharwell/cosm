@@ -19,7 +19,6 @@
 
 #include "cosm/controller/base_controller.hpp"
 #include "cosm/spatial/metrics/dist2D_metrics.hpp"
-#include "cosm/spatial/metrics/goal_acq_metrics.hpp"
 #include "cosm/spatial/metrics/movement_metrics.hpp"
 #include "cosm/subsystem/subsystem_fwd.hpp"
 
@@ -47,7 +46,6 @@ NS_START(cosm, controller);
  */
 class base_controller2D : public base_controller,
                           public csmetrics::movement_metrics,
-                          public csmetrics::goal_acq_metrics,
                           public csmetrics::dist2D_metrics {
  public:
   base_controller2D(void) RCPPSW_COLD;
@@ -63,6 +61,8 @@ class base_controller2D : public base_controller,
 
   void sensing_update(const rtypes::timestep& tick,
                       const rtypes::discretize_ratio& ratio) override;
+
+  void sensing_update(const rtypes::timestep& tick) override;
 
   void mdc_ts_update(void) const override final;
   const class subsystem::saa_subsystemQ3D* saa(void) const { return m_saa.get(); }

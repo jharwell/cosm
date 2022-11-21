@@ -91,6 +91,7 @@ namespace metrics {}
 namespace subsystem {
 namespace config {}
 namespace perception {
+namespace rlos {}
 namespace config {}
 } /* namespace perception */
 } /* namespace subsystem */
@@ -316,6 +317,13 @@ namespace fsm {}
 } /* namespace foraging */
 
 /**
+ * \namespace flocking
+ *
+ * \brief Reusable machinery for flocking applications.
+ */
+namespace flocking {}
+
+/**
  * \namespace arena
  *
  * \brief The arena map which swarm managers from the PAL use as a data store
@@ -355,6 +363,7 @@ namespace csubsystem = cosm::subsystem;
 namespace csconfig = csubsystem::config;
 namespace csperception = csubsystem::perception;
 namespace cspconfig = csperception::config;
+namespace csprlos = csperception::rlos;
 
 namespace cinteractors = cosm::interactors;
 namespace ccontroller = cosm::controller;
@@ -453,3 +462,5 @@ namespace cfsm = cosm::fsm;
 namespace ckin = cosm::kin;
 namespace ckin2D = cosm::kin2D;
 namespace capf2D = cosm::apf2D;
+
+namespace cflocking = cosm::flocking;

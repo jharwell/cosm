@@ -37,6 +37,11 @@ enum movement_category {
   ekEXPLORING,
 
   /**
+   * \brief Robots which are flocking.
+   */
+  ekFLOCKING,
+
+  /**
    * \brief Catch-all category which is reported each timestep.
    */
   ekALL,

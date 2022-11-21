@@ -94,19 +94,28 @@ class base_controller : public rer::client<base_controller>,
    * \brief Update the sensing for the robot.
    *
    * - Set the current clock tick.
+   *
    * - Update positioning information.
    *
-   * In a real world, each robot would maintain its own clock tick, and overall
-   * there would no doubt be considerable skew; this is a simulation hack that
-   * makes things much nicer/easier to deal with.
+   * \param tick The current clock tick.
    *
-   * \param tick The current simulation clock tick.
    * \param ratio The ratio that should be used to calculate the robot's
    *              discrete position in the arena (should match the ratio used to
-   *              create the arena grid)).
+   *              create the arena grid).
    */
   virtual void sensing_update(const rtypes::timestep& tick,
                               const rtypes::discretize_ratio& ratio) = 0;
+
+  /**
+   * \brief Update the sensing for the robot.
+   *
+   * - Set the current clock tick.
+   *
+   * - Update positioning information.
+   *
+   * \param tick The current simulation clock tick.
+   */
+  virtual void sensing_update(const rtypes::timestep& tick) = 0;
 
   /**
    * \brief Convenience function to add footbot ID to salient messages during

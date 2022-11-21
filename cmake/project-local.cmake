@@ -143,6 +143,7 @@ string(CONCAT common_regex
   "src/init|"
   "src/subsystem|"
   "src/apf2D|"
+  "src/flocking|"
   "src/metrics"
   )
 

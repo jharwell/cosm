@@ -16,30 +16,31 @@
 
 #include "rcppsw/config/xml/xml_config_parser.hpp"
 
-#include "cosm/subsystem/perception/config/rlos_config.hpp"
-#include "cosm/ds/config/xml/grid2D_parser.hpp"
+#include "cosm/subsystem/perception/rlos/config/rlos_config.hpp"
+#include "cosm/subsystem/perception/rlos/config/xml/grid_parser.hpp"
+#include "cosm/subsystem/perception/rlos/config/xml/fov_parser.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config, xml);
+namespace cosm::subsystem::perception::rlos::config::xml {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class rlos_parser
- * \ingroup subsystem perception config xml
+ * \ingroup subsystem perception rlos config xml
  *
- * \brief Parses XML parameters relating to reactive LOS perception
- * subsystems into \ref rlos_config.
+ * \brief Parses XML parameters relating to \ref rlos_config.
  */
 class rlos_parser : public rer::client<rlos_parser>,
                     public rconfig::xml::xml_config_parser {
  public:
   using config_type = rlos_config;
 
-  rlos_parser(void) : ER_CLIENT_INIT("cosm.subsystem.perception.config.xml.rlos_parser") {}
+  rlos_parser(void)
+      : ER_CLIENT_INIT("cosm.subsystem.perception.config.rlos.xml.rlos_parser") {}
 
   /**
    * \brief The root tag that all rlos parameters should lie under in the
@@ -58,9 +59,9 @@ class rlos_parser : public rer::client<rlos_parser>,
  private:
   /* clang-format off */
   std::shared_ptr<config_type> m_config{nullptr};
-  cdconfig::xml::grid2D_parser m_grid{};
+  fov_parser                   m_fov{};
+  grid_parser                  m_grid{};
   /* clang-format on */
 };
 
-NS_END(xml, config, perception, subsystem, cosm);
-
+} /* namespace cosm::subsystem::perception::rlos::config::xml */

@@ -30,7 +30,7 @@ NS_START(cosm, pal, argos, controller);
  * for creating controllers within ARGoS.
  */
 class adaptor2D : public ccontroller::base_controller2D,
-                             public cpargos::controller::base_adaptor {
+                  public cpargos::controller::base_adaptor {
  public:
   /* ARGoS hook overrides */
   void Init(ticpp::Element& node) override RCPPSW_COLD { init(node); }
@@ -44,4 +44,3 @@ class adaptor2D : public ccontroller::base_controller2D,
 };
 
 NS_END(controller, argos, pal, cosm);
-

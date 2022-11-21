@@ -75,10 +75,10 @@ class apf2D_visualizer : public rer::client<apf2D_visualizer> {
    * \brief Draw 2D APF force visualizations
    *
    * \param tracker The 2D force tracker.
+   *
    * \param labels Include textual labels for what the forces are?
    */
-  void forces_draw(const apf2D::tracker* tracker,
-                   bool labels);
+  void forces_draw(const apf2D::tracker* tracker, bool labels);
 
   /**
    * \brief Draw path visualizations

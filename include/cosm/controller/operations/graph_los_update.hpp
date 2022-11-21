@@ -49,7 +49,7 @@ class graph_los_update final
 
   graph_los_update(const TSrcGraph* graph,
                    const rspatial::euclidean_dist& unit_dim)
-      : ER_CLIENT_INIT("cosm.support.graph_los_update"),
+      : ER_CLIENT_INIT("cosm.controller.operations.graph_los_update"),
         mc_graph(graph),
         mc_unit_dim(unit_dim) {}
 
@@ -91,10 +91,9 @@ class graph_los_update final
   }
 
   /* clang-format off */
-  const TSrcGraph*           mc_graph;
+  const TSrcGraph*               mc_graph;
   const rspatial::euclidean_dist mc_unit_dim;
   /* clang-format on */
 };
 
 NS_END(operations, controller, cosm);
-

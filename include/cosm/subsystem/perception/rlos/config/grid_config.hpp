@@ -1,7 +1,7 @@
 /**
- * \file rlos_config.hpp
+ * \file grid_config.hpp
  *
- * \copyright 2018 John Harwell, All rights reserved.
+ * \copyright 2022 SIFT LLC, All rights reserved.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -12,27 +12,27 @@
  * Includes
  ******************************************************************************/
 #include "rcppsw/config/base_config.hpp"
+#include "rcppsw/spatial/euclidean_dist.hpp"
 
 #include "cosm/ds/config/grid2D_config.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception, config);
+namespace cosm::subsystem::perception::rlos::config {
 
 /*******************************************************************************
  * Structure Definitions
  ******************************************************************************/
 /**
- * \struct rlos_config
- * \ingroup subsystem perception config
+ * \struct grid_config
+ * \ingroup subsystem perception rlos config
  *
- * \brief Configuration for robot reactive LOS perception.
+ * \brief Configuration for robot reactive LOS perception sourced from a grid.
  */
-struct rlos_config final : public rconfig::base_config {
-  double dim{-1};
+struct grid_config final : public rconfig::base_config {
+  rspatial::euclidean_dist dim{0};
   cds::config::grid2D_config grid2D {};
 };
 
-NS_END(config, perception, subsystem, cosm);
-
+} /* namespace cosm::subsystem::perception::rlos::config */

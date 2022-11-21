@@ -12,21 +12,22 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <utility>
 
-#include "cosm/subsystem/perception/config/rlos_config.hpp"
+#include "cosm/subsystem/perception/rlos/config/rlos_config.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-NS_START(cosm, subsystem, perception);
+namespace cosm::subsystem::perception::rlos {
 
 /*******************************************************************************
  * Class Definitions
  ******************************************************************************/
 /**
  * \class rlos_perception_subsystem
- * \ingroup subsystem perception
+ * \ingroup subsystem perception rlos
  *
  * \brief Base class for Line-Of-Sight (LOS) based robot perception without
  * memory (reactive behaviors only).
@@ -34,8 +35,8 @@ NS_START(cosm, subsystem, perception);
 template<typename TLOS>
 class rlos_perception_subsystem {
  public:
-  explicit rlos_perception_subsystem(const cspconfig::rlos_config* const config)
-      : mc_los_dim(config->dim) {}
+  explicit rlos_perception_subsystem(const csprlos::config::rlos_config* const config)
+      : mc_config(*config) {}
 
   virtual ~rlos_perception_subsystem(void) = default;
 
@@ -60,15 +61,15 @@ class rlos_perception_subsystem {
    * \brief Get the robot's current line-of-sight (LOS)
    */
   const TLOS* los(void) const { return m_los.get(); }
-  double los_dim(void) const { return mc_los_dim; }
+
+  const csprlos::config::rlos_config* config(void) const { return &mc_config; }
 
  private:
   /* clang-format off */
-  const double          mc_los_dim;
+  const csprlos::config::rlos_config mc_config;
 
-  std::unique_ptr<TLOS> m_los{nullptr};
+  std::unique_ptr<TLOS>              m_los{nullptr};
   /* clang-format on */
 };
 
-NS_END(perception, subsystem, cosm);
-
+} /* namespace cosm::subsystem::perception::rlos */

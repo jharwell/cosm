@@ -70,6 +70,7 @@ class base_controllerQ3D : public base_controller,
 
   void sensing_update(const rtypes::timestep& tick,
                       const rtypes::discretize_ratio& ratio) override;
+  void sensing_update(const rtypes::timestep& tick) override;
 
   /**
    * \brief For less typing when doing operations with the arena map, which is

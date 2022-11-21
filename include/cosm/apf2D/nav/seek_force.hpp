@@ -3,7 +3,7 @@
  *
  * \copyright 2018 John Harwell, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once

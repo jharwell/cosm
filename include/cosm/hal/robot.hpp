@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-NS_START(cosm, hal);
+namespace cosm::hal {
 
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_FOOTBOT)
 using robot = ::argos::CFootBotEntity;
@@ -38,4 +38,4 @@ using robot = ::argos::CPiPuckEntity;
 struct robot {};
 #endif /* COSM_HAL_TARGET */
 
-NS_END(hal, cosm);
+} /* namespace cosm::hal */

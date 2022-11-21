@@ -93,7 +93,8 @@ class grid_los_update final
                                     TLOS>> {
  public:
   explicit grid_los_update(TSrcGrid* const grid)
-      : ER_CLIENT_INIT("cosm.support.grid_los_update"), mc_grid(grid) {}
+      : ER_CLIENT_INIT("cosm.controller.operations.grid_los_update"),
+        mc_grid(grid) {}
 
   /*
    * \todo Ideally these would be deleted, but emplace() does not seem to do

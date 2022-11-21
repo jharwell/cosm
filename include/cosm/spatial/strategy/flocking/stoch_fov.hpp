@@ -3,7 +3,7 @@
  *
  * \copyright 2022 SIFT LLC, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -12,8 +12,12 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <vector>
+
 #include "cosm/cosm.hpp"
 #include "cosm/spatial/strategy/flocking/base_flocking.hpp"
+#include "cosm/flocking/interaction_probability.hpp"
+#include "cosm/apf2D/boid_vector.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -28,18 +32,18 @@ namespace cosm::spatial::strategy::flocking {
  * \ingroup spatial strategy flocking
  *
  * \brief Strategy for robot flocking implementing the stochastic Field Of View
- * (FOV) approach from Bagarti2018. Agents stochastically interact with
- * a SINGLE agents chosen from other agents within its FOV according to
- * \ref cflocking::interaction_probability.
+ * (FOV) approach from \cite FLOCK:Bagarti2018-stochfov.
  *
- * Agents do NOT perform collision avoidance.
+ * Agents stochastically interact with a SINGLE agent chosen from other agents
+ * within its FOV according to \ref cflocking::interaction_probability.  Agents
+ * do not perform collision avoidance.
  */
 class stoch_fov : public rer::client<stoch_fov>,
-                       public cssnest::acq::base_acq {
+                  public cssflocking::base_flocking {
  public:
   stoch_fov(const cssflocking::config::flocking_config* config,
-         const csfsm::fsm_params* params,
-         rmath::rng* rng);
+            const csfsm::fsm_params* params,
+            rmath::rng* rng);
 
   /* Not move/copy constructable/assignable by default */
   stoch_fov(const stoch_fov&) = delete;
@@ -47,21 +51,18 @@ class stoch_fov : public rer::client<stoch_fov>,
   stoch_fov(stoch_fov&&) = delete;
   stoch_fov& operator=(stoch_fov&&) = delete;
 
+  void set_inputs(const capf2D::boid_vectorro& boids) { m_boids = boids; }
+
   /* strategy metrics */
-  const cssflocking::base_flocking* flocking_strategy(void) const override {
-    return this;
-  }
 
   /* taskable overrides */
-  void task_start(cta::taskable_argument*) override final;
-  void task_reset(void) override final {
-    m_task_running = false;
-  }
+  void task_start(cta::taskable_argument*) override final {};
+  void task_reset(void) override final;
   bool task_running(void) const override final { return m_task_running; }
   bool task_finished(void) const override final { return !m_task_running; }
   void task_execute(void) override final;
 
-  std::unique_ptr<base_acq> clone(void) const override {
+  std::unique_ptr<base_flocking> clone(void) const override {
     csfsm::fsm_params params {
       saa(),
       inta_tracker(),
@@ -72,7 +73,9 @@ class stoch_fov : public rer::client<stoch_fov>,
 
  private:
   /* clang-format off */
-  bool m_task_running{false};
+  bool                               m_task_running{false};
+  capf2D::boid_vectorro              m_boids{};
+  cflocking::interaction_probability m_prob;
   /* clang-format on */
 };
 

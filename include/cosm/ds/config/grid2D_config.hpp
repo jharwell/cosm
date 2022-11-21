@@ -38,4 +38,3 @@ struct grid2D_config final : public rconfig::base_config {
 };
 
 NS_END(config, ds, cosm);
-

@@ -26,11 +26,16 @@ void sensing_subsystemQ3D_parser::parse(const ticpp::Element& node) {
   m_config = std::make_unique<config_type>();
 
   m_proximity.parse(snode);
-  m_config->proximity = *m_proximity.config_get<
+  if (m_proximity.is_parsed()) {
+    m_config->proximity = *m_proximity.config_get<
       chsensors::config::xml::proximity_sensor_parser::config_type>();
+  }
+
   m_env.parse(snode);
-  m_config->env =
-      *m_env.config_get<chsensors::config::xml::env_sensor_parser::config_type>();
+  if (m_env.is_parsed()) {
+    m_config->env =
+        *m_env.config_get<chsensors::config::xml::env_sensor_parser::config_type>();
+  }
 } /* parse() */
 
 bool sensing_subsystemQ3D_parser::validate(void) const {

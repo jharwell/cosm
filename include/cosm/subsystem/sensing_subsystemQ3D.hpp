@@ -93,18 +93,29 @@ class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
    * \brief Update the current time and position information for the robot.
    */
   void update(const rtypes::timestep& t, const rtypes::discretize_ratio& ratio) {
+    /* update real position info */
+    update(t);
+
+    /* update discrete position info */
+    auto odom = odometry()->reading();
+    m_dpos2D = rmath::dvec2zvec(m_rpos2D, ratio.v());
+    m_dpos3D = rmath::dvec2zvec(m_rpos3D, ratio.v());
+  }
+
+  /**
+   * \brief Update the current time and position information for the robot.
+   */
+  void update(const rtypes::timestep& t) {
     m_tick = t;
     auto odom = odometry()->reading();
 
     /* update 2D position info */
     m_prev_rpos2D = m_rpos2D;
     m_rpos2D = odom.pose.position.project_on_xy();
-    m_dpos2D = rmath::dvec2zvec(m_rpos2D, ratio.v());
 
     /* update 3D position info */
     m_prev_rpos3D = m_rpos3D;
     m_rpos3D = odom.pose.position;
-    m_dpos3D = rmath::dvec2zvec(m_rpos3D, ratio.v());
     m_azimuth = odom.pose.orientation.z();
     m_zenith = odom.pose.orientation.y();
   }
@@ -138,4 +149,3 @@ class sensing_subsystemQ3D final : public chsubsystem::sensing_subsystemQ3D {
 };
 
 NS_END(subsystem, cosm);
-

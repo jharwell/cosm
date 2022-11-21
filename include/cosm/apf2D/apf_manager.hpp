@@ -12,6 +12,7 @@
  * Includes
  ******************************************************************************/
 #include <memory>
+#include <vector>
 
 #include "rcppsw/er/client.hpp"
 #include "rcppsw/rcppsw.hpp"
@@ -33,6 +34,11 @@ class path_following_force;
 class polar_force;
 class wander_force;
 } /* namespace nav */
+
+namespace flocking {
+class constant_speed_force;
+class alignment_force;
+} /* namespace flocking */
 
 namespace config {
 struct apf_manager_config;
@@ -156,8 +162,27 @@ class apf_manager : public rer::client<apf_manager> {
   anti_phototaxis(const nav::phototaxis_force::camera_sensor_readings& readings,
                   const rutils::color& color);
 
-  void accum(const rmath::vector2d& force);
+  /**
+   * \brief Calculate the \ref flocking:alignment_force for this timestep.
+   *
+   * \param others The VELOCITIES of other agents to which the current agent
+   *               should try to align its heading to the centroid of.
+   */
+  rmath::vector2d alignment(const std::vector<rmath::vector2d> others);
 
+  /**
+   * \brief Calculate the \ref flocking:constant_speed_force for this timestep.
+   *
+   * \param others The VELOCITIES of other agents to which the current agent
+   *               should try to align its heading to the centroid of.
+   */
+  rmath::vector2d constant_speed(const std::vector<rmath::vector2d> others);
+
+  /**
+   * \brief Add a calculated force to the running total of the forces acting on
+   * the agent since the last reset. Does not apply the force(s) to the agent.
+   */
+  void accum(const rmath::vector2d& force);
 
   bool within_slowing_radius(void) const;
 
@@ -165,16 +190,20 @@ class apf_manager : public rer::client<apf_manager> {
   const boid& entity(void) const { return m_entity; }
 
   /* clang-format off */
-  bool                                       m_enabled{true};
-  boid&                                      m_entity;
-  rmath::vector2d                            m_force_accum{};
-  std::unique_ptr<nav::avoidance_force>      m_avoidance;
-  std::unique_ptr<nav::arrival_force>        m_arrival;
-  std::unique_ptr<nav::wander_force>         m_wander;
-  std::unique_ptr<nav::polar_force>          m_polar;
-  std::unique_ptr<nav::phototaxis_force>     m_phototaxis;
-  std::unique_ptr<nav::path_following_force> m_path_following;
-  class tracker                              m_tracker{};
+  bool                                            m_enabled{true};
+  boid&                                           m_entity;
+  rmath::vector2d                                 m_force_accum{};
+  std::unique_ptr<nav::avoidance_force>           m_avoidance;
+  std::unique_ptr<nav::arrival_force>             m_arrival;
+  std::unique_ptr<nav::wander_force>              m_wander;
+  std::unique_ptr<nav::polar_force>               m_polar;
+  std::unique_ptr<nav::phototaxis_force>          m_phototaxis;
+  std::unique_ptr<nav::path_following_force>      m_path_following;
+
+  std::unique_ptr<flocking::alignment_force>      m_alignment;
+  std::unique_ptr<flocking::constant_speed_force> m_constant_speed;
+
+  class tracker                                   m_tracker{};
   /* clang-format on */
 };
 

@@ -3,7 +3,7 @@
  *
  * \copyright 2022 SIFT LLC, All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.0-or-later
+ * SPDX-License-Identifier: MIT
  */
 
 #pragma once
@@ -42,10 +42,6 @@ class base_flocking : public csstrategy::base_strategy,
   base_flocking& operator=(const base_flocking&) = delete;
   base_flocking(base_flocking&&) = delete;
   base_flocking& operator=(base_flocking&&) = delete;
-
-  const cssflock::acq::base_flocking* flocking_strategy(void) const override {
-    return this;
-  }
 
  protected:
   const cssflocking::config::flocking_config* config(void) const {

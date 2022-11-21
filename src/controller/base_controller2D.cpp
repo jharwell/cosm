@@ -41,6 +41,10 @@ void base_controller2D::sensing_update(const rtypes::timestep& tick,
   m_saa->sensing()->update(tick, ratio);
 } /* sensing_update() */
 
+void base_controller2D::sensing_update(const rtypes::timestep& tick) {
+  m_saa->sensing()->update(tick);
+} /* sensing_update() */
+
 void base_controller2D::saa(std::unique_ptr<subsystem::saa_subsystemQ3D> saa) {
   m_saa = std::move(saa);
 } /* saa() */

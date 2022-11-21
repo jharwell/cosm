@@ -62,6 +62,11 @@ void swarm_manager_adaptor::arena_map_init(
 
 ::argos::CColor
 swarm_manager_adaptor::GetFloorColor(const ::argos::CVector2& pos) {
+  /* no arena map -> can't change the color */
+  if (nullptr == m_arena_map) {
+    return ::argos::CColor::WHITE;
+  }
+
   rmath::vector2d rpos(pos.GetX(), pos.GetY());
   rmath::vector2z dpos =
       rmath::dvec2zvec(rpos, m_arena_map->grid_resolution().v());

@@ -43,7 +43,7 @@ NS_START(cosm, controller, operations);
  */
 class stop : public rer::client<stop> {
  public:
-  stop(void) : ER_CLIENT_INIT("cosm.events.stop") {}
+  stop(void) : ER_CLIENT_INIT("cosm.controller.operations.stop") {}
   ~stop(void) override = default;
 
   stop(const stop&) = delete;

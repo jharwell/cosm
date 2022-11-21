@@ -132,4 +132,3 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
 };
 
 NS_END(argos, pal, cosm);
-

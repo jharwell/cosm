@@ -64,8 +64,7 @@ struct swarm_iterator {
   }
 
   /**
-   * \brief Iterate through robots using dynamic ordering (OpenMP
-   * implementation).
+   * \brief Iterate through robots using dynamic ordering.
    *
    * \tparam TControllerType The type of the controller.
    * \tparam TFunction Type of the lambda callback (inferred).
@@ -109,8 +108,7 @@ struct swarm_iterator {
   }
 
   /**
-   * \brief Iterate through robots using dynamic ordering (OpenMP
-   * implementation).
+   * \brief Iterate through robots using dynamic ordering.
    *
    * \tparam TFunction Type of the lambda callback (inferred).
    * \tparam order The order of iteration: static or dynamic.

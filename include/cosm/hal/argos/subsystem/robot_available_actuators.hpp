@@ -25,7 +25,8 @@ NS_START(cosm, hal, argos, subsystem);
 #define COSM_HAL_ROBOT_AVAILABLE_ACTUATORS      \
   chal::actuators::diagnostic_actuator,         \
     chargos::actuators::wifi_actuator,          \
-    ckin2D::governed_diff_drive,                 \
+    ckin2D::governed_diff_drive,                \
+    ckin2D::diff_drive,                         \
     chal::actuators::diff_drive_actuator
 
 #elif COSM_HAL_TARGET == COSM_HAL_TARGET_ARGOS_EEPUCK3D
