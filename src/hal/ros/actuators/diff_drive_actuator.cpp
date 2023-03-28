@@ -28,7 +28,7 @@ diff_drive_actuator::diff_drive_actuator(const cros::topic& robot_ns)
 /*******************************************************************************
  * Member Functions
  ******************************************************************************/
-void diff_drive_actuator::reset(void) { set_from_twist({}, {}, 0.0); }
+void diff_drive_actuator::reset(void) { set_from_twist({}, {}); }
 
 void diff_drive_actuator::enable(void) {
   if (is_enabled()) {
@@ -46,8 +46,7 @@ void diff_drive_actuator::enable(void) {
 
 void diff_drive_actuator::set_from_twist(
     const ckin::twist& desired,
-    const rmath::range<rmath::radians>& soft_turn,
-    double) {
+    const rmath::range<rmath::radians>& soft_turn) {
   ER_ASSERT(is_enabled(), "%s called when disabled", __FUNCTION__);
 
   geometry_msgs::Twist t;

@@ -13,6 +13,7 @@ macro(cosm_ros_configure_components)
     "src/kin2D|"
     "src/foraging/metrics|"
     "src/spatial/fsm|"
+    "src/spatial/common/interference_tracker|"
     "src/spatial/metrics|"
     "src/spatial/strategy|"
     "src/repr/operations/block_pickup|"

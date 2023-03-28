@@ -33,7 +33,8 @@ struct payload_type<chros::sensors::metrics::battery_metrics_msg> {
 /*******************************************************************************
  * ROS Message Traits
  ******************************************************************************/
-namespace ros::message_traits {
+namespace ros {
+namespace message_traits {
 
 template<>
 struct MD5Sum<chros::sensors::metrics::battery_metrics_msg> {
@@ -88,4 +89,5 @@ struct Serializer<chros::sensors::metrics::battery_metrics_msg> {
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
-} /* namespace ros::serialization */
+} /* namespace serialization */
+} /* namespace ros */

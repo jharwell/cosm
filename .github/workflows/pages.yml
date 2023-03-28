@@ -2,11 +2,11 @@
 name: docs
 
 on:
-  workflow_call:
   # Runs on pushes targeting the default branch
-  # push:
-  #   branches:
-  #     - master
+  push:
+    branches:
+      - master
+      # - devel
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

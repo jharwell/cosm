@@ -23,7 +23,7 @@
 
 #include "cosm/cosm.hpp"
 #include "cosm/ros/topic.hpp"
-#include "cosm/ros/spatial/metrics/movement_metrics_msg.hpp"
+#include "cosm/ros/kin/metrics/kinematics_metrics_msg.hpp"
 #include "cosm/ros/spatial/metrics/interference_metrics_msg.hpp"
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_msg.hpp"
 #include "cosm/ros/foraging/metrics/block_transportee_metrics_msg.hpp"
@@ -79,7 +79,6 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
   /**
    * \brief Register metrics collectors that do not require extra arguments.
    *
-   * - \ref cmspecs::spatial::kMovement -> \ref csmetrics::movement_metrics
    * - \ref cmspecs::spatial::kInterferenceCounts -> \ref
    *   csmetrics::interference_metrics
    * - \ref cmspecs::blocks::kTransporter -> \ref
@@ -92,6 +91,15 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
    */
   void register_standard(const rmconfig::metrics_config* mconfig,
                          size_t n_robots);
+
+  /**
+   * \brief Register metrics collectors that need the # robots.
+   *
+   * - \ref cmspecs::kinematics::kAvg -> \ref ckin::metrics::kinematics_metrics
+   * - \ref cmspecs::kinematics::kDist -> \ref ckin::metrics::kinematics_metrics
+   */
+  void register_with_n_robots(const rmconfig::metrics_config* mconfig,
+                              size_t n_robots);
 
   /**
    * \brief Register metrics collectors that require the # of block clusters in
@@ -111,7 +119,7 @@ class swarm_metrics_manager : public rer::client<swarm_metrics_manager>,
   msg_tracking_map* msg_tracking(void) { return &m_tracking; }
 
  private:
-  void collect(const boost::shared_ptr<const crsmetrics::movement_metrics_msg>& msg);
+  void collect(const boost::shared_ptr<const crsmetrics::kinematics_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crsmetrics::interference_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crfsm::metrics::block_transporter_metrics_msg>& msg);
   void collect(const boost::shared_ptr<const crfmetrics::block_transportee_metrics_msg>& msg);

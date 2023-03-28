@@ -58,8 +58,7 @@ struct robot_kinematics_context_data {
 
 class kinematics_metrics_data : public rmetrics::base_data {
  public:
-  explicit kinematics_metrics_data(size_t n_robots,
-                                   size_t n_contexts)
+  kinematics_metrics_data(size_t n_robots, size_t n_contexts)
       : m_n_robots(n_robots),
         m_n_contexts(n_contexts),
         m_interval(n_robots, detail::robot_kinematics_context_data(n_contexts)),

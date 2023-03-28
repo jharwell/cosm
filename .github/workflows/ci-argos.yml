@@ -1,8 +1,12 @@
-name: ARGoS build and test
+name: ARGoS build
 
 on:
   workflow_call:
   workflow_dispatch:
+  push:
+    branches:
+      - master
+      - devel
 
 jobs:
   build-and-test:

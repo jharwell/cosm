@@ -33,7 +33,8 @@ struct payload_type<crfsm::metrics::block_transporter_metrics_msg> {
 /*******************************************************************************
  * ROS Message Traits
  ******************************************************************************/
-namespace ros::message_traits {
+namespace ros {
+namespace message_traits {
 
 template<>
 struct MD5Sum<crfsm::metrics::block_transporter_metrics_msg> {
@@ -89,4 +90,5 @@ struct Serializer<crfsm::metrics::block_transporter_metrics_msg> {
   ROS_DECLARE_ALLINONE_SERIALIZER;
 };
 
-} /* namespace ros::serialization */
+} /* namespace serialization */
+} /* namespace ros */

@@ -81,7 +81,6 @@ class robot_metrics_manager :public rer::client<robot_metrics_manager>,
   /**
    * \brief Register metrics collectors that do not require extra arguments.
    *
-   * - \ref cmspecs::spatial::kMovement -> \ref csmetrics::movement_metrics
    * - \ref cmspecs::spatial::kInterferenceCounts -> \ref
    *   csmetrics::interference_metrics
    * - \ref cmspecs::blocks::kTransporter -> \ref
@@ -91,7 +90,9 @@ class robot_metrics_manager :public rer::client<robot_metrics_manager>,
    * - \ref cmspecs::blocks::kAcqCounts -> \ref csmetrics::goal_acq_metrics
    */
   void register_standard(const rmconfig::metrics_config* mconfig);
+
+  void register_with_n_robots(const rmconfig::metrics_config* mconfig,
+                              size_t n_robots);
 };
 
 } /* namespace cosm::ros::metrics */
-

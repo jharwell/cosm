@@ -21,6 +21,7 @@
 #include "cosm/hal/ros/actuators/ros_actuator.hpp"
 #include "cosm/kin/twist.hpp"
 #include "cosm/hal/hal.hpp"
+#include "cosm/hal/actuators/locomotion_actuator.hpp"
 
 /*******************************************************************************
  * Namespaces/Decls
@@ -41,18 +42,23 @@ namespace cosm::hal::ros::actuators {
  * - ROS turtlebot3
  */
 class diff_drive_actuator : public rer::client<diff_drive_actuator>,
-                            public chros::actuators::ros_actuator {
+                            public chros::actuators::ros_actuator,
+                            public chactuators::locomotion_actuator {
  public:
   /**
    * \brief Construct the wrapper actuator.
    */
-  diff_drive_actuator(const cros::topic& robot_ns);
+  explicit diff_drive_actuator(const cros::topic& robot_ns);
 
   /* move constructible/assignable to work with the saa subsystem */
   diff_drive_actuator(diff_drive_actuator&&) = default;
   diff_drive_actuator& operator=(diff_drive_actuator&&) = default;
   diff_drive_actuator(const diff_drive_actuator&) = delete;
   diff_drive_actuator& operator=(const diff_drive_actuator&) = delete;
+
+  /* locomotion actuator overrides */
+  void stop(void) override { reset(); }
+  double max_velocity(void) const override { return mc_max_velocity; }
 
   /**
    * \brief Stop the wheels of a robot. As far as I know, this is an immediate
@@ -63,13 +69,19 @@ class diff_drive_actuator : public rer::client<diff_drive_actuator>,
   void enable(void) override;
 
   void set_from_twist(const ckin::twist& desired,
-                      const rmath::range<rmath::radians>& soft_turn,
-                      double);
+                      const rmath::range<rmath::radians>& soft_turn);
 
  private:
 #if (COSM_HAL_TARGET == COSM_HAL_TARGET_ROS_ETURTLEBOT3)
   static inline const std::string kCmdVelTopic = "cmd_vel";
+
+  /*
+   * From https://emanual.robotis.com/docs/en/platform/turtlebot3/features/, burger
+   */
+  const double mc_max_velocity{0.22}; /* m/s */
 #endif /* COSM_HAL_TARGET */
+
+
 };
 
 } /* namespace cosm::hal::ros::actuators */

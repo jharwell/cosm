@@ -1,4 +1,4 @@
-name: Build and test
+name: CI & Deploy
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - devel
 
 concurrency:
-  group: ${{ github.ref }}
+  group: "CI & Deploy"
   cancel-in-progress: true
 
 jobs:
@@ -15,13 +15,6 @@ jobs:
     uses: ./.github/workflows/ci-argos.yml
   ci-ros1:
     uses: ./.github/workflows/ci-ros1.yml
-
-  docs:
-    uses: ./.github/workflows/pages.yml
-    needs:
-      - ci-argos
-      - ci-ros1
-    secrets: inherit
 
   tag-release:
     runs-on: ubuntu-latest

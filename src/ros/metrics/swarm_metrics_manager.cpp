@@ -34,12 +34,13 @@
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_glue.hpp"
 #include "cosm/ros/metrics/registrable.hpp"
 #include "cosm/ros/spatial/metrics/interference_metrics_glue.hpp"
-#include "cosm/ros/spatial/metrics/movement_metrics_glue.hpp"
+#include "cosm/ros/kin/metrics/kinematics_metrics_glue.hpp"
 #include "cosm/spatial/metrics/interference_metrics_collector.hpp"
 #include "cosm/spatial/metrics/interference_metrics_csv_sink.hpp"
-#include "cosm/spatial/metrics/movement_metrics.hpp"
-#include "cosm/spatial/metrics/movement_metrics_collector.hpp"
-#include "cosm/spatial/metrics/movement_metrics_csv_sink.hpp"
+#include "cosm/kin/metrics/kinematics_metrics.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_collector.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_dist_csv_sink.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_avg_csv_sink.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics_csv_sink.hpp"
 #include "cosm/hal/sensors/metrics/battery_metrics_collector.hpp"
 #include "cosm/hal/ros/sensors/metrics/battery_metrics_glue.hpp"
@@ -93,7 +94,6 @@ void swarm_metrics_manager::register_standard(
   ER_INFO("Register standard collectors: swarm_size=%zu", n_robots);
 
   using sink_list = rmpl::typelist<
-      rmpl::identity<cspatial::metrics::movement_metrics_csv_sink>,
       rmpl::identity<cfsm::metrics::block_transporter_metrics_csv_sink>,
       rmpl::identity<cforaging::metrics::block_transportee_metrics_csv_sink>,
     rmpl::identity<cspatial::metrics::interference_metrics_csv_sink>,
@@ -109,7 +109,6 @@ void swarm_metrics_manager::register_standard(
   boost::mpl::for_each<sink_list>(registerer);
 
   /* initialize counting map to track received metrics */
-  m_tracking.init(cmspecs::spatial::kMovement.scoped());
   m_tracking.init(cmspecs::spatial::kInterferenceCounts.scoped());
   m_tracking.init(cmspecs::blocks::kTransporter.scoped());
   m_tracking.init(cmspecs::blocks::kTransportee.scoped());
@@ -118,11 +117,6 @@ void swarm_metrics_manager::register_standard(
   /* set ROS callbacks for metric collection */
   ::ros::NodeHandle n;
   auto cb = [&](cros::topic robot_ns) {
-    m_subs.push_back(n.subscribe<crsmetrics::movement_metrics_msg>(
-        robot_ns / cmspecs::spatial::kMovement.scoped(),
-        kQueueBufferSize,
-        &swarm_metrics_manager::collect,
-        this));
     m_subs.push_back(n.subscribe<crsmetrics::interference_metrics_msg>(
         robot_ns / cmspecs::spatial::kInterferenceCounts.scoped(),
         kQueueBufferSize,
@@ -147,6 +141,46 @@ void swarm_metrics_manager::register_standard(
   cpros::swarm_iterator::robots(n_robots, cb);
   ER_INFO("Finished registering standard collectors");
 } /* register_standard() */
+
+void swarm_metrics_manager::register_with_n_robots(
+    const rmconfig::metrics_config* mconfig,
+    size_t n_robots) {
+  ER_INFO("Register standard collectors: swarm_size=%zu", n_robots);
+
+  using sink_typelist = rmpl::typelist<
+    rmpl::identity<ckmetrics::kinematics_metrics_dist_csv_sink>,
+    rmpl::identity<ckmetrics::kinematics_metrics_avg_csv_sink>
+      >;
+
+  auto extra_args = std::make_tuple(n_robots, ckmetrics::context_type::ekMAX);
+  rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
+                               rmetrics::file_sink_registerer,
+                               decltype(extra_args)>
+      file(this, registrable::kWithNBlockClusters, extra_args);
+  rmetrics::register_using_config<decltype(file), rmconfig::file_sink_config>
+      registerer(std::move(file), &mconfig->csv);
+  boost::mpl::for_each<sink_typelist>(registerer);
+
+  /* initialize counting map to track received metrics */
+  m_tracking.init(cmspecs::kinematics::kAvg.scoped());
+  m_tracking.init(cmspecs::kinematics::kDist.scoped());
+
+  /* set ROS callbacks for metric collection */
+  ::ros::NodeHandle n;
+  auto cb = [&](cros::topic robot_ns) {
+    m_subs.push_back(n.subscribe<crsmetrics::kinematics_metrics_msg>(
+        robot_ns / cmspecs::kinematics::kAvg.scoped(),
+        kQueueBufferSize,
+        &swarm_metrics_manager::collect,
+        this));
+    m_subs.push_back(n.subscribe<crsmetrics::kinematics_metrics_msg>(
+        robot_ns / cmspecs::kinematics::kDist.scoped(),
+        kQueueBufferSize,
+        &swarm_metrics_manager::collect,
+        this));
+  };
+  cpros::swarm_iterator::robots(n_robots, cb);
+} /* register_with_n_robots() */
 
 void swarm_metrics_manager::register_with_n_block_clusters(
     const rmconfig::metrics_config* mconfig,
@@ -313,14 +347,24 @@ void swarm_metrics_manager::collect(
 } /* collect() */
 
 void swarm_metrics_manager::collect(
-    const boost::shared_ptr<const crsmetrics::movement_metrics_msg>& msg) {
-  auto* collector = get<csmetrics::movement_metrics_collector>(
-      cmspecs::spatial::kMovement.scoped());
-  m_tracking.update_on_receive(cmspecs::spatial::kMovement.scoped(),
+    const boost::shared_ptr<const crsmetrics::kinematics_metrics_msg>& msg) {
+  m_tracking.update_on_receive(cmspecs::kinematics::kAvg.scoped(),
+                               msg->header.seq);
+  m_tracking.update_on_receive(cmspecs::kinematics::kDist.scoped(),
                                msg->header.seq);
   ER_DEBUG("Received '%s' metrics, seq=%u",
-           cmspecs::spatial::kMovement.scoped().c_str(),
+           cmspecs::kinematics::kAvg.scoped().c_str(),
            msg->header.seq);
+  ER_DEBUG("Received '%s' metrics, seq=%u",
+           cmspecs::kinematics::kDist.scoped().c_str(),
+           msg->header.seq);
+
+  auto* collector = get<ckin::metrics::kinematics_metrics_collector>(
+      cmspecs::kinematics::kAvg.scoped());
+  collector->collect(msg->data);
+
+  collector = get<ckin::metrics::kinematics_metrics_collector>(
+      cmspecs::kinematics::kDist.scoped());
   collector->collect(msg->data);
 } /* collect() */
 void swarm_metrics_manager::collect(

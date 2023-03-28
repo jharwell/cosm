@@ -1,5 +1,5 @@
 /**
- * \file movement_metrics_msg.hpp
+ * \file kinematics_metrics_msg.hpp
  *
  * \copyright 2022 John Harwell, All rights reserved.
  *
@@ -13,7 +13,7 @@
  ******************************************************************************/
 #include <std_msgs/Header.h>
 
-#include "cosm/spatial/metrics/movement_metrics_data.hpp"
+#include "cosm/kin/metrics/kinematics_metrics_data.hpp"
 #include "cosm/cosm.hpp"
 
 /*******************************************************************************
@@ -24,9 +24,14 @@ namespace cosm::ros::spatial::metrics {
 /*******************************************************************************
  * ROS Messages
  ******************************************************************************/
-struct movement_metrics_msg {
+struct kinematics_metrics_msg {
+  kinematics_metrics_msg(void) : data(0, 0) {}
+
+  kinematics_metrics_msg(size_t n_robots, size_t n_contexts)
+      : data(n_robots, n_contexts) {}
+
   ::std_msgs::Header               header{};
-  csmetrics::movement_metrics_data data{};
+  ckin::metrics::kinematics_metrics_data data;
 };
 
 } /* namespace cosm::ros::spatial::metrics */

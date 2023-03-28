@@ -13,6 +13,7 @@
  ******************************************************************************/
 #include <vector>
 #include <limits>
+#include <utility>
 #include <boost/optional.hpp>
 
 #include "cosm/hal/hal.hpp"
@@ -66,7 +67,6 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
                                public chsensors::base_sensor<proximity_sensor_impl_type> {
  public:
   using impl_type = chsensors::base_sensor<proximity_sensor_impl_type>;
-
 #if defined(COSM_HAL_TARGET_ARGOS_ROBOT)
   proximity_sensor(proximity_sensor_impl_type&& sensor,
                    const config::proximity_sensor_config* const config)
@@ -76,10 +76,10 @@ class proximity_sensor final : public rer::client<proximity_sensor>,
     enable();
   }
 #elif defined(COSM_HAL_TARGET_ROS_ROBOT)
-  proximity_sensor(const cros::topic& robot_ns,
+  proximity_sensor(proximity_sensor_impl_type&& sensor,
                    const config::proximity_sensor_config* const config)
       : ER_CLIENT_INIT("cosm.hal.sensors.proximity"),
-        impl_type(robot_ns, config),
+        impl_type(std::move(sensor)),
         m_config(*config) {
     enable();
   }

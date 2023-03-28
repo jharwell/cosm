@@ -21,6 +21,7 @@
 namespace cosm::ros::metrics::registrable {
 
 extern rmetrics::creatable_collector_set kStandard;
+extern rmetrics::creatable_collector_set kWithNRobots;
 
 extern rmetrics::creatable_collector_set kWithNBlockClusters;
 

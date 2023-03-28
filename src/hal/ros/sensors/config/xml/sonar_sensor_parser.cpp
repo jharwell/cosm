@@ -1,7 +1,7 @@
 /**
  * \file sonar_sensor_parser.cpp
  *
- * \copyright 2017 John Harwell, All rights reserved.
+ * \copyright 2021 John Harwell, All rights reserved.
  *
  * SPDX-License-Identifier: MIT
  */
@@ -14,7 +14,7 @@
 /*******************************************************************************
  * Namespaces
  ******************************************************************************/
-namespace cosm, hal::ros::sensors::config::xml {
+namespace cosm::hal::ros::sensors::config::xml {
 
 /*******************************************************************************
  * Member Functions

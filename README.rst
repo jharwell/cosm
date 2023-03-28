@@ -35,8 +35,8 @@ COSM (Core Swarm)
    |license| |docs| |maintenance|
 
 This is a collection of non application, method, or controller specific software
-components that can be reused across multiple swarm robotics projects
-(i.e., generic in the context of swarm-robotics, but maybe not more broadly).
+components that can be reused across multiple Multi-Agent Systems (MAS) projects
+(i.e., generic in the context of MAS, but maybe not more broadly).
 
 Project documentation is here: `<https://jharwell.github.io/cosm>`_.
 

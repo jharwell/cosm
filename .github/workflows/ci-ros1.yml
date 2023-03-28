@@ -1,8 +1,12 @@
-name: ROS1 build and test
+name: ROS1 build
 
 on:
   workflow_dispatch:
   workflow_call:
+  push:
+    branches:
+      - master
+      - devel
 
 jobs:
   build-and-test:
@@ -22,7 +26,7 @@ jobs:
       - uses: ./.github/actions/rcsw-setup
       - uses: ./.github/actions/rcppsw-setup
         with:
-          cmake_extra_args: '-DRCPPSW_ER_OLD_LOG4CXX=YES'
+          cmake_extra_args: '-DRCPPSW_ER_OLD_LOG4CXX=YES -DRCPPSW_AL_MT_SAFE_TYPES=NO'
       - uses: ./.github/actions/rosbridge-setup
       - name: Build=${{ matrix.CMAKE_BUILD_TYPE }} HAL_TARGET=${{ matrix.COSM_BUILD_FOR }}
         shell: bash

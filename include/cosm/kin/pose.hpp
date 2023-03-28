@@ -46,6 +46,7 @@ struct pose {
 
     return *this;
   }
+
 };
 
 } /* namespace cosm::kin */
