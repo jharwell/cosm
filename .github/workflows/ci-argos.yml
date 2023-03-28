@@ -12,7 +12,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     container:
-      image: jharwell/ubuntu22.04:2023-03-23
+      image: jharwell/ubuntu22.04:2023-04-12
     strategy:
       matrix:
         CMAKE_BUILD_TYPE:

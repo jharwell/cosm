@@ -4,11 +4,9 @@
 COSM (Core Swarm)
 =================
 
-.. |ci-master| image:: https://github.com/jharwell/cosm/actions/workflows/ci.yml/badge.svg?branch=master
 .. |ci-master-ros1| image:: https://github.com/jharwell/cosm/actions/workflows/ci-ros1.yml/badge.svg?branch=master
 .. |ci-master-argos| image:: https://github.com/jharwell/cosm/actions/workflows/ci-argos.yml/badge.svg?branch=master
 
-.. |ci-devel| image:: https://github.com/jharwell/cosm/actions/workflows/ci.yml/badge.svg?branch=devel
 .. |ci-devel-ros1| image:: https://github.com/jharwell/cosm/actions/workflows/ci-ros1.yml/badge.svg?branch=devel
 .. |ci-devel-argos| image:: https://github.com/jharwell/cosm/actions/workflows/ci-argos.yml/badge.svg?branch=devel
 
@@ -24,11 +22,11 @@ COSM (Core Swarm)
 
 :Release:
 
-   |ci-master| |ci-master-ros1| |ci-master-argos|
+   |ci-master-ros1| |ci-master-argos|
 
 :Development:
 
-   |ci-devel| |ci-devel-ros1| |ci-devel-argos|
+   |ci-devel-ros1| |ci-devel-argos|
 
 :Misc:
 

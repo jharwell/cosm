@@ -1,10 +1,12 @@
 name: CI & Deploy
 
 on:
-  push:
-    branches:
-      - master
-      - devel
+  workflow_run:
+    workflows:
+      - "ARGoS CI"
+      - "ROS1 CI"
+    types:
+      - completed
 
 concurrency:
   group: "CI & Deploy"
@@ -23,7 +25,7 @@ jobs:
       - ci-ros1
 
     container:
-      image: jharwell/ubuntu22.04:2023-03-23
+      image: jharwell/ubuntu22.04:2023-04-12
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
