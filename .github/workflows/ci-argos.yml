@@ -1,4 +1,4 @@
-name: ARGoS build
+name: ARGoS CI
 
 on:
   workflow_call:
@@ -7,6 +7,10 @@ on:
     branches:
       - master
       - devel
+
+concurrency:
+  group: "ARGoS CI"
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -23,8 +27,14 @@ jobs:
           - ARGOS_DRONE
 
     steps:
+      - name: Install RCSW
+        shell: bash
+        run: |
+          curl -s --compressed "https://jharwell.github.io/ppa/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ppa.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/ppa.list "https://jharwell.github.io/ppa/ppa.list"
+          sudo apt update
+          sudo apt-get install rcsw
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/rcsw-setup
       - uses: ./.github/actions/rcppsw-setup
         with:
           cmake_extra_args: ''
@@ -45,3 +55,41 @@ jobs:
           ..
 
           make -j$(nproc)
+
+  deploy-release:
+    runs-on: ubuntu-latest
+    # if: github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        COSM_BUILD_FOR:
+          - ARGOS_FOOTBOT
+          - ARGOS_DRONE
+    needs:
+      - build-and-test
+
+    container:
+      image: jharwell/ubuntu20.04:2023-04-12
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install RCSW
+        shell: bash
+        run: |
+          curl -s --compressed "https://jharwell.github.io/ppa/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ppa.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/ppa.list "https://jharwell.github.io/ppa/ppa.list"
+          sudo apt update
+          sudo apt-get install rcsw
+
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rcppsw-setup
+        with:
+          cmake_extra_args: ''
+      - name: Deploy for ARGoS ${{ matrix.COSM_BUILD_FOR }}
+        uses: ./.github/actions/deploy
+        with:
+          COSM_BUILD_FOR: '${{ matrix.COSM_BUILD_FOR }}'
+          GPG_SECRET_KEY: ${{ secrets.COSM_GPG_SECRET_KEY }}
+          DEPLOY_TOKEN: ${{ secrets.COSM_DEPLOY_TOKEN }}

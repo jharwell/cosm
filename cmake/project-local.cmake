@@ -296,28 +296,31 @@ cosm_pal_configure_buildflags()
 ################################################################################
 # Installation and Deployment
 ################################################################################
-libra_configure_exports_as(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
-
 # Install COSM
+libra_configure_exports_as(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
 libra_register_target_for_install(${cosm_LIBRARY} ${CMAKE_INSTALL_PREFIX})
 libra_register_headers_for_install(include/cosm ${CMAKE_INSTALL_PREFIX})
-
 file(GLOB COSM_CMAKE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/cmake/*.cmake")
-libra_register_extra_configs_for_install(${cosm_LIBRARY}
+libra_register_extra_configs_for_install(
+  ${cosm_LIBRARY}
   "${COSM_CMAKE_FILES}"
-  ${CMAKE_INSTALL_PREFIX})
+  ${CMAKE_INSTALL_PREFIX}
+  )
 
 # Deploy COSM
-set(CPACK_SET_DESTDIR YES)
-set(CPACK_PACKAGE_FILE_NAME
-  ${cosm_LIBRARY}-${cosm_VERSION}-${CMAKE_SYSTEM_PROCESSOR})
+libra_register_copyright_for_install(${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/changelog)
+  libra_register_changelog_for_install(${CMAKE_CURRENT_SOURCE_DIR}/changelog)
+endif()
+set(CPACK_PACKAGE_NAME ${cosm_LIBRARY})
 libra_configure_cpack(
   "DEB;TGZ"
 
   "Core Swarm (COSM) is a collection of non application, method, or controller
 specific software components that can be reused across multiple
 Multi-Agent System (MAS) projects (i.e., generic in the context of
-MAS, but maybe not more broadly).  "
+MAS, but maybe not more broadly).  This COSM: Platform=${COSM_PAL_TARGET},
+hardware=${COSM_HAL_TARGET}."
 
   "John Harwell"
   "https://jharwell.github.io/cosm"

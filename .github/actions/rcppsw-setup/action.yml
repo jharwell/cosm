@@ -13,8 +13,6 @@ runs:
     - name: Install RCPPSW
       shell: bash
       run: |
-        echo ${{ inputs.cmake_extra_args }}
-
         mkdir -p build && cd build
         git clone https://github.com/jharwell/rcppsw.git
         cd rcppsw

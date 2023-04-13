@@ -18,7 +18,7 @@ macro(cosm_hal_configure_target)
     set(COSM_ARGOS_ROBOT_TYPE "foot-bot")
     set(COSM_ARGOS_ROBOT_NAME_PREFIX "fb")
     set(COSM_ARGOS_CONTROLLER_XML_ID "fbc")
-
+    
     # define sensors
     set(COSM_HAL_TARGET_HAS_IR_SENSOR YES)
     set(COSM_HAL_TARGET_HAS_CAMERA_BLOBS_SENSOR YES)
@@ -35,7 +35,7 @@ macro(cosm_hal_configure_target)
     set(COSM_HAL_TARGET_HAS_WIFI_ACTUATOR YES)
 
     set(COSM_HAL_TARGET_OPERATES_IN_Q3D YES)
-
+    
   elseif("${COSM_BUILD_FOR}" MATCHES "ARGOS_EEPUCK3D")
     set(COSM_HAL_TARGET "argos-eepuck3D")
     set(COSM_ARGOS_ROBOT_TYPE "e-puck")

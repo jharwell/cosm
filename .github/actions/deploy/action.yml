@@ -1,0 +1,68 @@
+name: 'Deploy COSM'
+description: 'Build and deploy a COSM variant'
+inputs:
+  COSM_BUILD_FOR:  # id of input
+    description: ''
+    required: True
+  GPG_SECRET_KEY:
+    description: ''
+    required: True
+  DEPLOY_TOKEN:
+    description: ''
+    required: True
+
+# outputs:
+#   time: # id of output
+#     description: 'The time we greeted you'
+runs:
+  using: 'composite'
+  steps:
+    - name: Build for deploy
+      shell: bash
+      run: |
+        git config --global --add safe.directory $PWD
+        git config --global user.email "${{ github.event.pusher.email }}"
+        git config --global user.name "${{ github.event.pusher.name }}"
+        echo "${{ github.ref }}"
+
+        git submodule update --init --remote --recursive
+
+        VERSION_MAJOR=$(sed -nE 's/.*PROJECT_VERSION_MAJOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        VERSION_MINOR=$(sed -nE 's/.*PROJECT_VERSION_MINOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        VERSION_PATCH=$(sed -nE 's/.*PROJECT_VERSION_PATCH ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        PACKAGE_VERSION=$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
+
+        git changelog --start-tag 1.2.9.beta -n -x > changelog
+
+        mkdir -p build && cd build
+
+        cmake  \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=OPT \
+        -DLIBRA_ER=ALL \
+        -DCOSM_BUILD_FOR=${{ inputs.COSM_BUILD_FOR }} \
+        ..
+
+        make package -j$(nproc)
+        lintian *.deb
+
+
+    - name: Clone PPA
+      uses: actions/checkout@v2
+      with:
+        repository: jharwell/ppa
+        path: ppa
+        token: ${{ inputs.DEPLOY_TOKEN }}
+
+    - name: Deploy to PPA
+      shell: bash
+      run: |
+        cd ppa
+        cp ../build/*.deb .
+        ls -al ..
+        echo  "${{ inputs.GPG_SECRET_KEY }}" | base64 --decode | gpg --import
+        ./scripts/update-packages.sh
+        git add -A
+        git commit -m "Deploy COSM ${PACKAGE_VERSION}"
+        git remote set-url origin https://jharwell:${{ inputs.DEPLOY_TOKEN }}@github.com/jharwell/ppa.git
+        git push -u origin master
