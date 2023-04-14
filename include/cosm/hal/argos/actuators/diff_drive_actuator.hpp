@@ -235,8 +235,8 @@ class diff_drive_actuator_impl : public rer::client<diff_drive_actuator_impl<TAc
       double speed_factor = (soft_turn_max.v() - std::fabs(twist.angular.z()) /
                              soft_turn_max.v());
       speed_factor = std::fabs(speed_factor);
-      speed1 = twist.linear.x() - twist.linear.x() * (1.0 - speed_factor);
-      speed2 = twist.linear.x() + twist.linear.x() * (1.0 - speed_factor);
+      speed1 = twist.linear.x() - twist.angular.z() * (1.0 - speed_factor);
+      speed2 = twist.linear.x() + twist.angular.z() * (1.0 - speed_factor);
 
     } else if (twist_translate_mode::ekMATH == mc_mode) {
       speed1 = twist.linear.x() - (twist.angular.z() * mc_axle_length.v() / 2.0);

@@ -19,7 +19,7 @@ namespace cosm::spatial {
  * Member Functions
  ******************************************************************************/
 boost::optional<rtypes::timestep> interference_tracker::interference_duration(void) const {
-  if (exp_interference()) {
+  if (exited_interference()) {
     return boost::make_optional(state_tracker::state_duration());
   }
   return boost::none;

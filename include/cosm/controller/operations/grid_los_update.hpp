@@ -106,14 +106,14 @@ class grid_los_update final
   grid_los_update& operator=(const grid_los_update&) = delete;
 
   void operator()(TController* const controller) const {
-    ER_ASSERT(rmath::is_multiple_of(controller->los_dim(),
+    ER_ASSERT(rmath::is_multiple_of(controller->los_dim().v(),
                                     mc_grid->resolution().v()),
               "LOS dimension (%f) not an even multiple of grid resolution (%f)",
-              controller->los_dim(),
+              controller->los_dim().v(),
               mc_grid->resolution().v());
 
     auto los_grid_size = static_cast<size_t>(
-        std::round(controller->los_dim() / mc_grid->resolution().v()));
+        std::round(controller->los_dim().v() / mc_grid->resolution().v()));
     grid_los_set(controller, los_grid_size);
   }
 

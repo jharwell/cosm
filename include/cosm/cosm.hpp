@@ -90,10 +90,12 @@ namespace metrics {}
  */
 namespace subsystem {
 namespace config {}
+
 namespace perception {
 namespace rlos {}
 namespace config {}
 } /* namespace perception */
+
 } /* namespace subsystem */
 
 /**

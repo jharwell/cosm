@@ -60,6 +60,9 @@ jobs:
 
   deploy-release:
     runs-on: ubuntu-latest
+    concurrency:
+      group: "PPA Deploy"
+
     # if: github.ref == 'refs/heads/master'
     needs:
       - build-and-test

@@ -57,6 +57,9 @@ jobs:
           make -j$(nproc)
 
   deploy-release:
+    concurrency:
+      group: "PPA Deploy"
+
     runs-on: ubuntu-latest
     # if: github.ref == 'refs/heads/master'
     strategy:
@@ -68,7 +71,7 @@ jobs:
       - build-and-test
 
     container:
-      image: jharwell/ubuntu20.04:2023-04-12
+      image: jharwell/ubuntu22.04:2023-04-12
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

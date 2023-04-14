@@ -16,13 +16,11 @@
 /*******************************************************************************
  * Namespaces/Decls
  ******************************************************************************/
-namespace cosm {
-
-namespace tv {
+namespace cosm::tv {
 class robot_dynamics_applicator;
 } /* namespace tv */
 
-namespace controller {
+namespace cosm::controller {
 
 /*******************************************************************************
  * Class Definitions

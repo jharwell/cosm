@@ -50,7 +50,7 @@ class sensing_subsystem :
   explicit sensing_subsystem(sensor_map&& sensors)
       : base_sensing_subsystem(std::move(sensors)) {}
 
-#if defined(COSM_HAL_TARGET_HAS_BLOB_CAMERA_SENSOR)
+#if defined(COSM_HAL_TARGET_HAS_CAMERA_BLOBS_SENSOR)
   COSM_HAL_SENSOR_ACCESSOR(chargos::sensors::colored_blob_camera_sensor, blobs);
   COSM_HAL_SENSOR_ACCESSOR(chargos::sensors::colored_blob_camera_sensor, blobs, const);
 #endif

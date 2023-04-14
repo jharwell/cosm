@@ -9,7 +9,7 @@ set(cosm_CHECK_LANGUAGE "CXX")
 # Each conference tag=minor increment. Each minor feature added=patch increment.
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 3)
-set(PROJECT_VERSION_PATCH 0)
+set(PROJECT_VERSION_PATCH 2)
 set(cosm_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 if(NOT DEFINED COSM_BUILD_ENV)
@@ -31,9 +31,7 @@ libra_configure_version(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/version/version.cpp.in
   ${CMAKE_CURRENT_BINARY_DIR}/src/version/version.cpp
   cosm_components_SRC
-  message("${cosm_components_SRC}")
   )
-# list(APPEND cosm_components_SRC "${CMAKE_CURRENT_BINARY_DIR}/src/version/version.cpp")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/hal.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pal.cmake)
@@ -110,6 +108,8 @@ string(CONCAT common_regex
   "src/ta|"
   "src/init|"
   "src/controller/base_controller.cpp|"
+  "src/controller/operations|"
+  "src/controller/block_carrying_controller.cpp|"
   "src/controller/config|"
   "src/subsystem/base_|"
   "src/subsystem/config|"
@@ -192,6 +192,11 @@ foreach(component ${cosm_FIND_COMPONENTS})
   endif()
 endforeach()
 
+# set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${LIBRA_DEPS_PREFIX}/lib;/opt/ros/noetic/lib")
+# SET(CMAKE_SKIP_BUILD_RPATH TRUE)
+# SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+# set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 # Define the COSM library
 set(cosm_LIBRARY ${target}-${COSM_HAL_TARGET})
 
@@ -203,8 +208,6 @@ add_library(
 
 # Alias so we plug into the LIBRA framework properly
 add_library(cosm ALIAS ${cosm_LIBRARY})
-
-
 set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET})
 
 set_target_properties(${cosm_LIBRARY}
@@ -312,6 +315,9 @@ libra_register_copyright_for_install(${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/changelog)
   libra_register_changelog_for_install(${CMAKE_CURRENT_SOURCE_DIR}/changelog)
 endif()
+
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS python3)
+
 set(CPACK_PACKAGE_NAME ${cosm_LIBRARY})
 libra_configure_cpack(
   "DEB;TGZ"
@@ -319,7 +325,7 @@ libra_configure_cpack(
   "Core Swarm (COSM) is a collection of non application, method, or controller
 specific software components that can be reused across multiple
 Multi-Agent System (MAS) projects (i.e., generic in the context of
-MAS, but maybe not more broadly).  This COSM: Platform=${COSM_PAL_TARGET},
+MAS, but maybe not more broadly).  This COSM is built for: Platform=${COSM_PAL_TARGET},
 hardware=${COSM_HAL_TARGET}."
 
   "John Harwell"

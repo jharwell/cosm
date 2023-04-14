@@ -14,7 +14,7 @@
 #include <memory>
 #include <utility>
 
-#include "cosm/subsystem/perception/rlos_perception_subsystem.hpp"
+#include "cosm/subsystem/perception/rlos/rlos_perception_subsystem.hpp"
 #include "cosm/subsystem/perception/base_memory_model.hpp"
 
 /*******************************************************************************
@@ -33,12 +33,12 @@ namespace cosm::subsystem::perception {
  * includes memory.
  */
 template<typename TLOS>
-class mlos_perception_subsystem : public rlos_perception_subsystem<TLOS> {
+class mlos_perception_subsystem : public rlos::rlos_perception_subsystem<TLOS> {
  public:
   mlos_perception_subsystem(
-      const cspconfig::rlos_config* const config,
+      const csprlos::config::rlos_config* const config,
       std::unique_ptr<base_memory_model> model)
-      : rlos_perception_subsystem<TLOS>(config),
+      : csprlos::rlos_perception_subsystem<TLOS>(config),
         m_model(std::move(model)) {}
 
   ~mlos_perception_subsystem(void) override = default;
@@ -58,4 +58,3 @@ class mlos_perception_subsystem : public rlos_perception_subsystem<TLOS> {
 };
 
 } /* namespace cosm::subsystem::perception */
-

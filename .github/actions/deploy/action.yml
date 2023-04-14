@@ -23,8 +23,6 @@ runs:
         git config --global --add safe.directory $PWD
         git config --global user.email "${{ github.event.pusher.email }}"
         git config --global user.name "${{ github.event.pusher.name }}"
-        echo "${{ github.ref }}"
-
         git submodule update --init --remote --recursive
 
         VERSION_MAJOR=$(sed -nE 's/.*PROJECT_VERSION_MAJOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
@@ -33,6 +31,8 @@ runs:
         PACKAGE_VERSION=$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
 
         git changelog --start-tag 1.2.9.beta -n -x > changelog
+
+        source /usr/local/setup.bash || true
 
         mkdir -p build && cd build
 

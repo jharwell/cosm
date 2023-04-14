@@ -192,4 +192,3 @@ class bcache_vectorro : public rpdecorator::decorator<std::vector<bcache_vectorr
 };
 
 } /* namespace cosm::arena::ds */
-
