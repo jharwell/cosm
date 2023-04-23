@@ -6,11 +6,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(cosm_CHECK_LANGUAGE "CXX")
 
-# Each conference tag=minor increment. Each minor feature added=patch increment.
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 3)
-set(PROJECT_VERSION_PATCH 2)
+set(PROJECT_VERSION_PATCH 3)
 set(cosm_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+set(cosm_SOVERSION 0)
 
 if(NOT DEFINED COSM_BUILD_ENV)
   set(COSM_BUILD_ENV "DEVEL")
@@ -33,20 +33,16 @@ libra_configure_version(
   cosm_components_SRC
   )
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/hal.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pal.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/argos.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ros.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake)
-
 ################################################################################
 # HAL Configuration
 ################################################################################
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/hal.cmake)
 cosm_hal_configure_target()
 
 ################################################################################
 # PAL Configuration
 ################################################################################
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pal.cmake)
 cosm_pal_configure_target()
 
 ################################################################################
@@ -192,13 +188,8 @@ foreach(component ${cosm_FIND_COMPONENTS})
   endif()
 endforeach()
 
-# set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${LIBRA_DEPS_PREFIX}/lib;/opt/ros/noetic/lib")
-# SET(CMAKE_SKIP_BUILD_RPATH TRUE)
-# SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-# set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 # Define the COSM library
-set(cosm_LIBRARY ${target}-${COSM_HAL_TARGET})
+set(cosm_LIBRARY ${PROJECT_NAME}-${COSM_HAL_TARGET})
 
 add_library(
   ${cosm_LIBRARY}
@@ -208,11 +199,10 @@ add_library(
 
 # Alias so we plug into the LIBRA framework properly
 add_library(cosm ALIAS ${cosm_LIBRARY})
-set(cosm_LIBRARY_NAME ${target}-${COSM_HAL_TARGET})
 
 set_target_properties(${cosm_LIBRARY}
   PROPERTIES OUTPUT_NAME
-  ${cosm_LIBRARY_NAME}
+  ${cosm_LIBRARY}
   )
 
 # Setting this results in TWO files being installed: the actual
@@ -221,8 +211,7 @@ set_target_properties(${cosm_LIBRARY}
 # is built as a shared library).
 set_target_properties(${cosm_LIBRARY}
   PROPERTIES
-  VERSION ${cosm_VERSION}
-  SOVERSION ${cosm_VERSION}
+  SOVERSION ${cosm_SOVERSION}
   )
 
 ########################################
@@ -311,12 +300,34 @@ libra_register_extra_configs_for_install(
   )
 
 # Deploy COSM
-libra_register_copyright_for_install(${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
+libra_register_copyright_for_install(${cosm_LIBRARY} ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/changelog)
-  libra_register_changelog_for_install(${CMAKE_CURRENT_SOURCE_DIR}/changelog)
+  libra_register_changelog_for_install(${cosm_LIBRARY} ${CMAKE_CURRENT_SOURCE_DIR}/changelog)
 endif()
 
-# set(CPACK_DEBIAN_PACKAGE_DEPENDS python3)
+if("${COSM_BUILD_FOR}" MATCHES "ARGOS")
+  cosm_argos_configure_packaging()
+elseif("${COSM_BUILD_FOR}" MATCHES "ROS")
+  cosm_ros_configure_packaging()
+endif()
+
+# 2023/4/23: You need one of these to pass the lintian checks. I
+# *think* that the right way to do it is to have a binary package with
+# no debug symbols, and a separate package WITH debug symbols. BUT
+# cpack will only generate the debug symbols package if the generator
+# type is 'Debug' or 'RelWithDbgInfo', which doesn't work with
+# LIBRA. So, for now, declaring that we are generating a debug symbols
+# package while also using LIBRA's build types gives a package which
+# passes lintian's checks and has the debugging symbols embedded,
+# which is what we want.
+#
+# I'm sure I'll revisit this in the future as LIBRA packaging matures.
+# set(CPACK_STRIP_FILES NO)
+set(CPACK_DEBIAN_DEBUGINFO_PACKAGE YES)
+
+SET(CPACK_ADD_LDCONFIG_CALL 1)
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/packaging/triggers")
+set(CPACK_DEBIAN_PACKAGE_CONTROL_STRICT_PERMISSION TRUE)
 
 set(CPACK_PACKAGE_NAME ${cosm_LIBRARY})
 libra_configure_cpack(
@@ -335,5 +346,6 @@ hardware=${COSM_HAL_TARGET}."
 ################################################################################
 # Status
 ################################################################################
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cosm-config-summary.cmake)
 libra_config_summary()
 cosm_config_summary()

@@ -69,3 +69,12 @@ macro(cosm_argos_configure_components)
       )
   endif()
 endmacro()
+
+################################################################################
+# Packaging and Deployment
+################################################################################
+macro(cosm_argos_configure_packaging)
+  # set(CPACK_DEBIAN_PACKAGE_DEPENDS
+  #   argos3_simulator
+  #   )
+endmacro()

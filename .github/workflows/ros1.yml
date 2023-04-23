@@ -3,10 +3,6 @@ name: ROS1 CI
 on:
   workflow_dispatch:
   workflow_call:
-  push:
-    branches:
-      - master
-      - devel
 
 concurrency:
   group: "ROS1 CI"
@@ -57,39 +53,3 @@ jobs:
           ..
 
           make -j$(nproc)
-
-  deploy-release:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: "PPA Deploy"
-
-    # if: github.ref == 'refs/heads/master'
-    needs:
-      - build-and-test
-
-    container:
-      image: jharwell/ubuntu20.04:2023-04-12
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    steps:
-      - name: Install RCSW
-        shell: bash
-        run: |
-          curl -s --compressed "https://jharwell.github.io/ppa/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ppa.gpg >/dev/null
-          sudo curl -s --compressed -o /etc/apt/sources.list.d/ppa.list "https://jharwell.github.io/ppa/ppa.list"
-          sudo apt update
-          sudo apt-get install rcsw
-
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/rcppsw-setup
-        with:
-          cmake_extra_args: '-DRCPPSW_ER_OLD_LOG4CXX=YES -DRCPPSW_AL_MT_SAFE_TYPES=NO'
-      - uses: ./.github/actions/rosbridge-setup
-      - name: Deploy for ROS eturtlebot3
-        uses: ./.github/actions/deploy
-        with:
-          COSM_BUILD_FOR: 'ROS_ETURTLEBOT3'
-          GPG_SECRET_KEY: ${{ secrets.COSM_GPG_SECRET_KEY }}
-          DEPLOY_TOKEN: ${{ secrets.COSM_DEPLOY_TOKEN }}

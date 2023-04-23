@@ -19,7 +19,7 @@
 #include "rcppsw/mpl/identity.hpp"
 
 #include "cosm/arena/base_arena_map.hpp"
-#include "cosm/argos/metrics/registrable.hpp"
+#include "cosm/argos/metrics/library.hpp"
 
 #include "cosm/controller/base_controller2D.hpp"
 #include "cosm/controller/base_controllerQ3D.hpp"
@@ -200,7 +200,7 @@ void fs_output_manager::register_standard(
 
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer>
-      csv(this, registrable::kStandard);
+      csv(this, library().kStandard);
   rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
       registerer(std::move(csv), &mconfig->csv);
   boost::mpl::for_each<sink_list>(registerer);
@@ -220,7 +220,7 @@ void fs_output_manager::register_with_arena_dims2D(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      csv(this, registrable::kWithArenaDims2D, extra_args);
+      csv(this, library().kWithArenaDims2D, extra_args);
   rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
       registerer(std::move(csv), &mconfig->csv);
 
@@ -241,7 +241,7 @@ void fs_output_manager::register_with_arena_dims3D(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      csv(this, registrable::kWithArenaDims3D, extra_args);
+      csv(this, library().kWithArenaDims3D, extra_args);
   rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
       registerer(std::move(csv), &mconfig->csv);
 
@@ -258,7 +258,7 @@ void fs_output_manager::register_with_n_block_clusters(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      csv(this, registrable::kWithNBlockClusters, extra_args);
+      csv(this, library().kWithNBlockClusters, extra_args);
   rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
       registerer(std::move(csv), &mconfig->csv);
 
@@ -276,7 +276,7 @@ void fs_output_manager::register_kinematics(
   rmetrics::register_with_sink<cargos::metrics::fs_output_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      csv(this, registrable::kKinematics, extra_args);
+      csv(this, library().kKinematics, extra_args);
   rmetrics::register_using_config<decltype(csv), rmconfig::file_sink_config>
       registerer(std::move(csv), &mconfig->csv);
 

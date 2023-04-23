@@ -32,7 +32,7 @@
 #include "cosm/ros/foraging/metrics/block_cluster_metrics_glue.hpp"
 #include "cosm/ros/foraging/metrics/block_transportee_metrics_glue.hpp"
 #include "cosm/ros/fsm/metrics/block_transporter_metrics_glue.hpp"
-#include "cosm/ros/metrics/registrable.hpp"
+#include "cosm/ros/metrics/library.hpp"
 #include "cosm/ros/spatial/metrics/interference_metrics_glue.hpp"
 #include "cosm/ros/kin/metrics/kinematics_metrics_glue.hpp"
 #include "cosm/spatial/metrics/interference_metrics_collector.hpp"
@@ -102,7 +102,7 @@ void swarm_metrics_manager::register_standard(
 
   rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
                                rmetrics::file_sink_registerer>
-      file(this, registrable::kStandard);
+      file(this, library().kStandard);
   rmetrics::register_using_config<decltype(file), rmconfig::file_sink_config>
       registerer(std::move(file), &mconfig->csv);
 
@@ -156,7 +156,7 @@ void swarm_metrics_manager::register_with_n_robots(
   rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      file(this, registrable::kWithNBlockClusters, extra_args);
+      file(this, library().kWithNBlockClusters, extra_args);
   rmetrics::register_using_config<decltype(file), rmconfig::file_sink_config>
       registerer(std::move(file), &mconfig->csv);
   boost::mpl::for_each<sink_typelist>(registerer);
@@ -196,7 +196,7 @@ void swarm_metrics_manager::register_with_n_block_clusters(
   rmetrics::register_with_sink<cros::metrics::swarm_metrics_manager,
                                rmetrics::file_sink_registerer,
                                decltype(extra_args)>
-      file(this, registrable::kWithNBlockClusters, extra_args);
+      file(this, library().kWithNBlockClusters, extra_args);
   rmetrics::register_using_config<decltype(file), rmconfig::file_sink_config>
       registerer(std::move(file), &mconfig->csv);
   boost::mpl::for_each<sink_typelist>(registerer);

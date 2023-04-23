@@ -1,28 +1,28 @@
 name: CI & Deploy
 
 on:
-  workflow_run:
-    workflows:
-      - "ARGoS CI"
-      - "ROS1 CI"
-    types:
-      - completed
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - devel
 
 concurrency:
-  group: "CI & Deploy"
+  group: "CI"
   cancel-in-progress: true
 
 jobs:
-  ci-argos:
-    uses: ./.github/workflows/ci-argos.yml
-  ci-ros1:
-    uses: ./.github/workflows/ci-ros1.yml
+  argos-ci:
+    uses: ./.github/workflows/argos.yml
+  ros1-ci:
+    uses: ./.github/workflows/ros1.yml
 
   tag-release:
     runs-on: ubuntu-latest
     needs:
-      - ci-argos
-      - ci-ros1
+      - argos-ci
+      - ros1-ci
 
     container:
       image: jharwell/ubuntu22.04:2023-04-12
@@ -49,10 +49,83 @@ jobs:
             TAG_VERSION=${PACKAGE_VERSION}.beta
             TAG_MESSAGE="Development release ${TAG_VERSION}"
             git tag ${TAG_VERSION} -m "${TAG_MESSAGE}" -f
+            git push -o ci.skip origin ${TAG_VERSION} -f
           else
             TAG_VERSION=${PACKAGE_VERSION}
             TAG_MESSAGE="Release ${TAG_VERSION}"
             git tag ${TAG_VERSION} -m "${TAG_MESSAGE}"
+            git push -o ci.skip origin ${TAG_VERSION}
           fi
 
-          git push -o ci.skip origin ${TAG_VERSION}
+  argos-deploy-release:
+    runs-on: ubuntu-latest
+    # if: github.ref == 'refs/heads/master'
+    strategy:
+      matrix:
+        COSM_BUILD_FOR:
+          - ARGOS_FOOTBOT
+          - ARGOS_DRONE
+    needs:
+      - argos-ci
+      - ros1-ci
+
+    container:
+      image: jharwell/ubuntu22.04:2023-04-12
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install RCSW
+        shell: bash
+        run: |
+          curl -s --compressed "https://jharwell.github.io/ppa/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ppa.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/ppa.list "https://jharwell.github.io/ppa/ppa.list"
+          sudo apt update
+          sudo apt-get install rcsw
+
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rcppsw-setup
+        with:
+          cmake_extra_args: ''
+      - name: Deploy for ARGoS ${{ matrix.COSM_BUILD_FOR }}
+        uses: ./.github/actions/deploy
+        with:
+          COSM_BUILD_FOR: '${{ matrix.COSM_BUILD_FOR }}'
+          GPG_SECRET_KEY: ${{ secrets.COSM_GPG_SECRET_KEY }}
+          DEPLOY_TOKEN: ${{ secrets.COSM_DEPLOY_TOKEN }}
+
+  ros1-deploy-release:
+    runs-on: ubuntu-latest
+
+    # if: github.ref == 'refs/heads/master'
+    needs:
+      - argos-deploy-release
+
+    container:
+      image: jharwell/ubuntu20.04:2023-04-12
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Install RCSW
+        shell: bash
+        run: |
+          curl -s --compressed "https://jharwell.github.io/ppa/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ppa.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/ppa.list "https://jharwell.github.io/ppa/ppa.list"
+          sudo apt update
+          sudo apt-get install rcsw
+
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/rcppsw-setup
+        with:
+          cmake_extra_args: '-DRCPPSW_ER_OLD_LOG4CXX=YES -DRCPPSW_AL_MT_SAFE_TYPES=NO'
+      - uses: ./.github/actions/rosbridge-setup
+      - name: Deploy for ROS eturtlebot3
+        uses: ./.github/actions/deploy
+        with:
+          COSM_BUILD_FOR: 'ROS_ETURTLEBOT3'
+          GPG_SECRET_KEY: ${{ secrets.COSM_GPG_SECRET_KEY }}
+          DEPLOY_TOKEN: ${{ secrets.COSM_DEPLOY_TOKEN }}

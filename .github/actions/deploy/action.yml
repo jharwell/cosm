@@ -25,13 +25,8 @@ runs:
         git config --global user.name "${{ github.event.pusher.name }}"
         git submodule update --init --remote --recursive
 
-        VERSION_MAJOR=$(sed -nE 's/.*PROJECT_VERSION_MAJOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
-        VERSION_MINOR=$(sed -nE 's/.*PROJECT_VERSION_MINOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
-        VERSION_PATCH=$(sed -nE 's/.*PROJECT_VERSION_PATCH ([0-9]+).*/\1/p' cmake/project-local.cmake)
-        PACKAGE_VERSION=$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
-
         git changelog --start-tag 1.2.9.beta -n -x > changelog
-
+        ls -al
         source /usr/local/setup.bash || true
 
         mkdir -p build && cd build
@@ -43,8 +38,9 @@ runs:
         -DCOSM_BUILD_FOR=${{ inputs.COSM_BUILD_FOR }} \
         ..
 
-        make package -j$(nproc)
-        lintian *.deb
+        make -j$(nproc) install
+        make package
+        lintian --allow-root *.deb
 
 
     - name: Clone PPA
@@ -57,12 +53,20 @@ runs:
     - name: Deploy to PPA
       shell: bash
       run: |
+        VERSION_MAJOR=$(sed -nE 's/.*PROJECT_VERSION_MAJOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        VERSION_MINOR=$(sed -nE 's/.*PROJECT_VERSION_MINOR ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        VERSION_PATCH=$(sed -nE 's/.*PROJECT_VERSION_PATCH ([0-9]+).*/\1/p' cmake/project-local.cmake)
+        PACKAGE_VERSION=$VERSION_MAJOR.$VERSION_MINOR.$VERSION_PATCH
+
         cd ppa
         cp ../build/*.deb .
         ls -al ..
         echo  "${{ inputs.GPG_SECRET_KEY }}" | base64 --decode | gpg --import
         ./scripts/update-packages.sh
+
         git add -A
         git commit -m "Deploy COSM ${PACKAGE_VERSION}"
+        git pull --rebase origin master
         git remote set-url origin https://jharwell:${{ inputs.DEPLOY_TOKEN }}@github.com/jharwell/ppa.git
+
         git push -u origin master
