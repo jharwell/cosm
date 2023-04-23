@@ -55,7 +55,7 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
  protected:
   size_t swarm_size(void) const { return mc_n_robots; }
 
-#if (LIBRA_ER >= LIBRA_ER_ALL)
+#if (RCPPSW_ER >= RCPPSW_ER_ALL)
   void ndc_uuid_push(void) const override final {
     ER_NDC_PUSH("[ros_sm]");
   }

@@ -35,7 +35,7 @@ void block_motion_parser::parse(const ticpp::Element& node) {
 
 bool block_motion_parser::validate(void) const {
   if (is_parsed()) {
-    ER_CHECK(RCPPSW_IS_BETWEEN(m_config->random_walk_prob, 0.0, 1.0),
+    ER_CHECK(RCPPSW_IS_BETWEENC(m_config->random_walk_prob, 0.0, 1.0),
              "Probability must be between 0 and 1");
   }
   return true;

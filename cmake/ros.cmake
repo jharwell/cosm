@@ -45,3 +45,16 @@ macro(cosm_ros_configure_components)
   endif()
 
 endmacro()
+
+################################################################################
+# Packaging and Deployment
+################################################################################
+macro(cosm_ros_configure_packaging)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS
+  python3
+  ros-noetic-roscpp
+  ros-noetic-rosconsole
+  ros-noetic-rostime
+  ros-noetic-roscpp-serialization
+  )
+endmacro()

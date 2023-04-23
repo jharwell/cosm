@@ -105,7 +105,7 @@ Developer Setup
             cmake \
             -DCOSM_BUILD_FOR=ARGOS_FOOTBOT \
             -DCMAKE_BUILD_TYPE=OPT \
-            -DLIBRA_ER=NONE
+            -DLIBRA_ERL=NONE
 
         - Build for the ARGoS foot-bot, optimized build with no event reporting.
 

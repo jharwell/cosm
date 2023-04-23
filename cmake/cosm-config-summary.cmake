@@ -24,6 +24,7 @@ function(cosm_config_summary )
   endforeach()
 
   message(STATUS "Build version.........................: COSM_VERSION=${cosm_VERSION}")
+  message(STATUS "API version...........................: COSM_SOVERSION=${cosm_SOVERSION}")
   message(STATUS "Build environment.....................: COSM_BUILD_ENV=${COSM_BUILD_ENV}")
   message(STATUS "Building for..........................: COSM_BUILD_FOR=${COSM_BUILD_FOR}")
   message(STATUS "Platform..............................: COSM_PAL_TARGET=${COSM_PAL_TARGET}")

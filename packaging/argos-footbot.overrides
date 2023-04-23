@@ -1,0 +1,9 @@
+# Strictly speaking, linking libfoo.so -> libfoo.1.2.3.so in package libfoo is
+# BAD. Symlinks like that go in -dev .deb packages (I don't know why). BUT, the
+# packaging guidelines say for small packages with both runtime+development
+# files, it is OK to override this warning. See
+# https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#development-files.
+
+cosm-argos-footbot: link-to-shared-library-in-wrong-package
+cosm-argos-drone: link-to-shared-library-in-wrong-package
+cosm-ros-eturtlebot3: link-to-shared-library-in-wrong-package

@@ -65,7 +65,7 @@ bool convergence_parser::validate(void) const {
     return true;
   }
   ER_CHECK(m_config->n_threads > 0, "# threads = 0");
-  ER_CHECK(RCPPSW_IS_BETWEEN(m_config->epsilon, 0.0, 1.0),
+  ER_CHECK(RCPPSW_IS_BETWEENC(m_config->epsilon, 0.0, 1.0),
            "Epsilon must be between 0 and 1");
   ER_CHECK(m_pos_entropy.validate(), "Positional entropy validation failed");
   ER_CHECK(m_task_entropy.validate(), "Task entroy validation failed");

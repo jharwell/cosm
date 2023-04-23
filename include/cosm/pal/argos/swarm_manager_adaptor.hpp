@@ -91,7 +91,7 @@ class swarm_manager_adaptor : public cpal::base_swarm_manager,
   ::argos::CFloorEntity* floor(void) const { return m_floor; }
 
  protected:
-#if (LIBRA_ER >= LIBRA_ER_ALL)
+#if (RCPPSW_ERL >= RCPPSW_ERL_ALL)
   void ndc_uuid_push(void) const override final {
     ER_NDC_PUSH("[argos_sm]");
   }
